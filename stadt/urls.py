@@ -6,5 +6,5 @@ from entities import views as entities_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^(?P<slug>.*)$', entities_views.GroupDetailView.as_view()),
+    url(r'^(?P<slug>[\w-]+)$', entities_views.GroupDetailView.as_view()),
 ]
