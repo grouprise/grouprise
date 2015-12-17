@@ -1,0 +1,18 @@
+{% extends 'stadt.html' %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ group.name }}</h1>
+
+<ul>
+    <li>{{ group.address|linebreaks }}</li>
+    <li><a href="{{ group.url }}">{{ group.url }}</a></li>
+    <li>Gruppe gegründet: {{ group.date_founded }}</li>
+    <li>Gruppenmitglieder: {{ group.membership_set.count }}</li>
+</ul>
+
+<ul>
+    <li>www.stadtgestalten.org/ {{ group.slug }}</li>
+</ul>
+{% endblock %}
