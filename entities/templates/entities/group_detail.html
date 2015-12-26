@@ -8,7 +8,9 @@
 <div class="row">
     <div class="col-md-6"></div>
     <div class="col-md-6">
-        <img class="pull-right" src="{% static 'logo.png' %}">
+        {% if group.logo %}
+        <img src="{{ group.logo.url }}" class="pull-right">
+        {% endif %}
         <h1>{{ group.name }}</h1>
         <ul>
             <li>{{ group.address|linebreaks }}</li>
