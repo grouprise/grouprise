@@ -29,3 +29,9 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Membership(models.Model):
+    date_joined = models.DateField(auto_now_add=True)
+    gestalt = models.ForeignKey('Gestalt')
+    group = models.ForeignKey('Group')
