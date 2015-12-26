@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'content',
-    'entities',
+    'entities.apps.EntitiesConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
