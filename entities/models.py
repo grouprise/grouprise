@@ -1,6 +1,10 @@
 from django.db import models
 
 
+class Gestalt(models.Model):
+    pass
+
+
 class Group(models.Model):
     address = models.TextField(blank=True)
     date_created = models.DateField(auto_now_add=True)

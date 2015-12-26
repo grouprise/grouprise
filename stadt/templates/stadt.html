@@ -14,6 +14,15 @@
 {% block bootstrap3_content %}
 {% include '_navigation.html' %}
 <div class="container">
+    <div class="row" style="margin-bottom: 23px;">
+        <div class="col-md-12">
+            <p class="text-right pull-right">
+            {{ gestalt_count }} Gestalten<br>
+            {{ group_count }} Gruppen<br>
+            {{ content_count }} Beiträge<br>
+            </p>
+        </div>
+    </div>
     {% bootstrap_messages %}
     {% block content %}{% endblock %}
 </div>

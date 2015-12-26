@@ -1,18 +1,24 @@
 {% extends 'stadt.html' %}
 
+{% load staticfiles %}
+
 {% block title %}{{ group.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ group.name }}</h1>
-
-<ul>
-    <li>{{ group.address|linebreaks }}</li>
-    <li><a href="{{ group.url }}">{{ group.url }}</a></li>
-    <li>Gruppe gegründet: {{ group.date_founded }}</li>
-    <li>Gruppenmitglieder: {{ group.membership_set.count }}</li>
-</ul>
-
-<ul>
-    <li>www.stadtgestalten.org/ {{ group.slug }}</li>
-</ul>
+<div class="row">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+        <img class="pull-right" src="{% static 'logo.png' %}">
+        <h1>{{ group.name }}</h1>
+        <ul>
+            <li>{{ group.address|linebreaks }}</li>
+            <li><a href="{{ group.url }}">{{ group.url }}</a></li>
+            <li>Gruppe gegründet: {{ group.date_founded }}</li>
+            <li>Gruppenmitglieder: {{ group.membership_set.count }}</li>
+        </ul>
+        <ul>
+            <li>www.stadtgestalten.org/ {{ group.slug }}</li>
+        </ul>
+    </div>
+</div>
 {% endblock %}
