@@ -29,8 +29,25 @@
     <div class="col-md-2"></div>
     <div class="col-md-6">
         <h2>Intro</h2>
-
         {% for content in group.groupcontent_set.pinned %}
+        {% with content=content.content %}
+        <p>{{ content.get_display_type_name }}</p>
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.date_created|date:'d.m.Y' }} | {{ content.author }} &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
+        <p>
+        {% with image=content.image_set.first %}
+        {% if image %}
+        <img src="{{ image.image.url }}" class="pull-left">
+        {% endif %}
+        {% endwith %}
+        {{ content.text|truncatewords:58 }}
+        <a href="#">WEITER&gt;</a>
+        </p>
+        {% endwith %}
+        {% endfor %}
+
+        <h2>Blog</h2>
+        {% for content in group.groupcontent_set.unpinned %}
         {% with content=content.content %}
         <p>{{ content.get_display_type_name }}</p>
         <h3>{{ content.title }}</h3>

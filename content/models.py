@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Image(models.Model):
@@ -8,7 +9,7 @@ class Image(models.Model):
 
 class Base(models.Model):
     author = models.ForeignKey('entities.Gestalt')
-    date_created = models.DateField(auto_now_add=True)
+    date_created = models.DateTimeField(default=timezone.now)
     text = models.TextField(blank=True)
 
     class Meta:
@@ -20,6 +21,8 @@ class Comment(Base):
 
 
 class Content(Base):
+    subclass_names = ['Article', 'Event', 'Gallery']
+
     title = models.CharField(max_length=255)
     views = models.PositiveIntegerField(default=0)
 
@@ -30,10 +33,24 @@ class Content(Base):
         return self.get_subclass_instance().display_type_name
 
     def get_subclass_instance(self):
-        subclass_instance_list = [self.article]
-        objects = [o for o in subclass_instance_list if o]
-        return objects[0] if objects else None
+        import sys
+        for subclass_name in self.subclass_names:
+            try:
+                return getattr(self, subclass_name.lower())
+            except getattr(sys.modules[__name__], subclass_name).DoesNotExist:
+                pass
 
 
 class Article(Content):
     display_type_name = 'Artikel'
+    
+
+class Event(Content):
+    display_type_name = 'Termin'
+
+    place = models.CharField(max_length=255)
+    time = models.DateTimeField()
+
+
+class Gallery(Content):
+    display_type_name = 'Galerie'
