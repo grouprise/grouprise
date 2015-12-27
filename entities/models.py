@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Gestalt(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='gestalt')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):
         return self.user.username
@@ -20,6 +20,12 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class GroupContent(models.Model):
+    content = models.OneToOneField('content.Content')
+    group = models.ForeignKey('Group')
+    pinned = models.BooleanField()
 
 
 class Membership(models.Model):
