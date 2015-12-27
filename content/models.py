@@ -16,7 +16,7 @@ class Comment(Base):
 
 class Content(Base):
     title = models.CharField(max_length=255)
-    views = models.PositiveIntegerField()
+    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title

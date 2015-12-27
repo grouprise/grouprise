@@ -1,12 +1,15 @@
 from django.conf import settings
 from django.db import models
 
+from . import querysets
+
 
 class Gestalt(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):
-        return self.user.username
+        name = ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
+        return name if name else self.user.username
 
 
 class Group(models.Model):
@@ -26,6 +29,11 @@ class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')
     group = models.ForeignKey('Group')
     pinned = models.BooleanField()
+
+    objects = models.Manager.from_queryset(querysets.GroupContentQuerySet)()
+
+    def __str__(self):
+        return self.content.title
 
 
 class Membership(models.Model):

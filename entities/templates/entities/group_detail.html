@@ -30,21 +30,19 @@
     <div class="col-md-6">
         <h2>Intro</h2>
 
-        <div>
-            <p>Artikel</p>
-            <h3>Magazin für Bewegung, Motivation und die nachhaltige Kultivierung der Region Rostock</h3>
-            <p>19.05.2015 | Max Mustermann &nbsp; 0 &nbsp; 2</p>
+        {% for content in group.groupcontent_set.pinned %}
+        {% with content=content.content %}
+        <p>{{ content.get_display_type_name }}</p>
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.date_created|date:'d.m.Y' }} | {{ content.author }} &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
 
-            <p><img src="/media/koebe.png" class="pull-left">Die Zeitschrift
-            &raquo;Stadtgespräche&laquo; ist ein Stadtmagazin, das seit 1995
-            quartalsweise in der Hansestadt Rostock erscheint. Im "Magazin für
-            Bewegung, Motivation und die nachhaltige Kultivierung der Region 
-            Rostock" schreiben Menschen aus unterschiedlichen Fachgebieten zu ganz
-            verschiedenen Themenschwerpunkten der Hansestadt. Wenn Ihr Euch
-            intensiv mit einem bestimmten Thema beschäftigt habt, das inhaltlich
-            zum Konzept der Rostocker &raquo;Stadtgespräche&laquo; passt, schreibt
-            uns &hellip; <a href="#">WEITER&gt;</a></p>
-        </div>
+        <p>
+        <img src="/media/koebe.png" class="pull-left">
+        {{ content.text|truncatewords:58 }}
+        <a href="#">WEITER&gt;</a>
+        </p>
+        {% endwith %}
+        {% endfor %}
     </div>
     <div class="col-md-4"></div>
 </div>
