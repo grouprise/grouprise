@@ -5,6 +5,7 @@
 {% block title %}{{ group.name }}{% endblock %}
 
 {% block content %}
+
 <div class="row">
     <div class="col-md-6">
         <div style="background-color: #eee; height: 250px;"></div>
@@ -19,10 +20,33 @@
             <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
             <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>Gruppenmitglieder: {{ group.membership_set.count }}</li>
-        </ul>
-        <ul>
             <li>stadtgestalten.org/ {{ group.slug }}</li>
         </ul>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
+        <h2>Intro</h2>
+
+        <div>
+            <p>Artikel</p>
+            <h3>Magazin für Bewegung, Motivation und die nachhaltige Kultivierung der Region Rostock</h3>
+            <p>19.05.2015 | Max Mustermann &nbsp; 0 &nbsp; 2</p>
+
+            <p><img src="/media/koebe.png" class="pull-left">Die Zeitschrift
+            &raquo;Stadtgespräche&laquo; ist ein Stadtmagazin, das seit 1995
+            quartalsweise in der Hansestadt Rostock erscheint. Im "Magazin für
+            Bewegung, Motivation und die nachhaltige Kultivierung der Region 
+            Rostock" schreiben Menschen aus unterschiedlichen Fachgebieten zu ganz
+            verschiedenen Themenschwerpunkten der Hansestadt. Wenn Ihr Euch
+            intensiv mit einem bestimmten Thema beschäftigt habt, das inhaltlich
+            zum Konzept der Rostocker &raquo;Stadtgespräche&laquo; passt, schreibt
+            uns &hellip; <a href="#">WEITER&gt;</a></p>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
 {% endblock %}
