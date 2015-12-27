@@ -1,6 +1,11 @@
 from django.db import models
 
 
+class Image(models.Model):
+    content = models.ForeignKey('Content')
+    image = models.ImageField()
+
+
 class Base(models.Model):
     author = models.ForeignKey('entities.Gestalt')
     date_created = models.DateField(auto_now_add=True)
@@ -21,6 +26,14 @@ class Content(Base):
     def __str__(self):
         return self.title
 
+    def get_display_type_name(self):
+        return self.get_subclass_instance().display_type_name
+
+    def get_subclass_instance(self):
+        subclass_instance_list = [self.article]
+        objects = [o for o in subclass_instance_list if o]
+        return objects[0] if objects else None
+
 
 class Article(Content):
-    pass
+    display_type_name = 'Artikel'

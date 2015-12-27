@@ -35,9 +35,12 @@
         <p>{{ content.get_display_type_name }}</p>
         <h3>{{ content.title }}</h3>
         <p>{{ content.date_created|date:'d.m.Y' }} | {{ content.author }} &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
-
         <p>
-        <img src="/media/koebe.png" class="pull-left">
+        {% with image=content.image_set.first %}
+        {% if image %}
+        <img src="{{ image.image.url }}" class="pull-left">
+        {% endif %}
+        {% endwith %}
         {{ content.text|truncatewords:58 }}
         <a href="#">WEITER&gt;</a>
         </p>
