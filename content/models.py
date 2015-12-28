@@ -1,5 +1,7 @@
+import autoslug
+
 from django.db import models
-from django.utils import timezone
+from django.utils import text, timezone
 
 
 class Image(models.Model):
@@ -23,6 +25,7 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
+    slug = autoslug.AutoSlugField(populate_from='title', unique=True)
     title = models.CharField(max_length=255)
     views = models.PositiveIntegerField(default=0)
 

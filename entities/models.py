@@ -1,3 +1,5 @@
+import autoslug
+
 from django.conf import settings
 from django.db import models
 
@@ -19,7 +21,7 @@ class Group(models.Model):
     date_founded = models.DateField(null=True, blank=True)
     logo = models.ImageField(blank=True)
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = autoslug.AutoSlugField(populate_from='name', unique=True)
     url = models.URLField(blank=True)
 
     def __str__(self):
@@ -41,3 +43,6 @@ class Membership(models.Model):
     date_joined = models.DateField(auto_now_add=True)
     gestalt = models.ForeignKey('Gestalt')
     group = models.ForeignKey('Group')
+
+    class Meta:
+        unique_together = ('gestalt', 'group')

@@ -21,7 +21,7 @@
     {% endif %}
     {% endwith %}
     {{ content.text|truncatewords:60 }}
-    <a href="#">WEITER&gt;</a>
+    <a href="{% url 'content-detail' group.slug content.slug %}">WEITER&gt;</a>
     </p>
 
     <footer style="clear: both;">
