@@ -17,6 +17,7 @@ class Group(models.Model):
     avatar = models.ImageField(blank=True)
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField(null=True, blank=True)
+    logo = models.ImageField(blank=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     url = models.URLField(blank=True)
