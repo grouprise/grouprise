@@ -28,15 +28,23 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-6">
-        <h2>Intro</h2>
-        {% for content in group.groupcontent_set.pinned %}
-        {% include 'content/_content_preview.html' %}
-        {% endfor %}
+        <section>
+            <h2>Intro</h2>
+            {% for content in group.groupcontent_set.pinned %}
+            {% with content=content.content %}
+            {% include 'content/_content_preview.html' %}
+            {% endwith %}
+            {% endfor %}
+        </section>
 
-        <h2>Blog</h2>
-        {% for content in group.groupcontent_set.unpinned %}
-        {% include 'content/_content_preview.html' %}
-        {% endfor %}
+        <section>
+            <h2>Blog</h2>
+            {% for content in group.groupcontent_set.unpinned %}
+            {% with content=content.content %}
+            {% include 'content/_content_preview.html' %}
+            {% endwith %}
+            {% endfor %}
+        </section>
     </div>
     <div class="col-md-4"></div>
 </div>
