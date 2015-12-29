@@ -9,7 +9,7 @@
 {% block bootstrap3_extra_script %}
 {% endblock %}
 
-{% block bootstrap3_title %}{% block title %}{% endblock %} - Stadtgestalten Rostock{% endblock %}
+{% block bootstrap3_title %}{% block title_prefix %}{% block title %}{% endblock %} - {% endblock %}Stadtgestalten Rostock{% endblock %}
 
 {% block bootstrap3_content %}
 {% include '_navigation.html' %}
@@ -30,7 +30,7 @@
             <div class="col-md-2"></div>
             <div class="col-md-2">
                 <ul>
-                    <li><a href="#">Start</a></li>
+                    <li><a href="{% url 'index' %}">Start</a></li>
                     <li><a href="#">Über uns</a></li>
                     <li><a href="#">Impressum</a></li>
                 </ul>

@@ -1,0 +1,42 @@
+{% extends 'stadt.html' %}
+
+{% block title_prefix %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
+        <h1>Stadtgestalten Rostock</h1>
+
+        <section>
+            <h2>Blog</h2>
+            {% for content in content_list %}
+            {% include 'content/_content_preview.html' %}
+            {% endfor %}
+        </section>
+    </div>
+
+    <div class="col-md-4">
+        <aside>
+            <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+                <h2>Kalender</h2>
+                <div style="background-color: #fff;">
+                    (Kalender, Termine)
+                </div>
+                <button class="btn btn-default">Alle Termine</button>
+            </div>
+
+            <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+                <h2>Empfehlung</h2>
+                <input type="text" class="form-control" placeholder="E-Mail-Adresse">
+                <button class="btn btn-primary">Stadtgestalten empfehlen</button>
+            </div>
+
+            <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+                <h2>Gruppen</h2>
+                (Gruppenavatare)
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
