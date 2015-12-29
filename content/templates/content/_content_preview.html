@@ -1,11 +1,15 @@
+{% url 'content-detail' group.slug content.slug as content_detail_url %}
+
 <article>
     <header>
         <p>{{ content.get_display_type_name }}</p>
         <h3>
-            {% if content.event %}
-            {{ content.event.time|date:'l, j.n.Y:' }}
-            {% endif %}
-            {{ content.title }}
+            <a href="{{ content_detail_url }}">
+                {% if content.event %}
+                {{ content.event.time|date:'l, j.n.Y:' }}
+                {% endif %}
+                {{ content.title }}
+            </a>
         </h3>
         <p>{{ content.date_created|date:'d.m.Y' }} | {{ content.author }} &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
     </header>
@@ -21,7 +25,7 @@
     {% endif %}
     {% endwith %}
     {{ content.text|truncatewords:60 }}
-    <a href="{% url 'content-detail' group.slug content.slug %}">WEITER&gt;</a>
+    <a href="{{ content_detail_url }}">WEITER&gt;</a>
     </p>
 
     <footer style="clear: both;">

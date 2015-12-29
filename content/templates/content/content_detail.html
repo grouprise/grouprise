@@ -1,0 +1,43 @@
+{% extends 'stadt.html' %}
+
+{% block title %}{{ content.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-2">
+        <a href="{% url 'group-detail' group.slug %}" class="btn btn-primary">&lt;&lt;</a>
+    </div>
+
+    <div class="col-md-6">
+        <h2>Beitrag</h2>
+        <article>
+            <header>
+                <p>{{ content.get_display_type_name }}</p>
+                <h1>
+                    {% if content.event %}
+                    {{ content.event.time|date:'l, j.n.Y:' }}
+                    {% endif %}
+                    {{ content.title }}
+                </h1>
+                <p>{{ content.date_created|date:'d.m.Y' }} | {{ content.author }} &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
+            </header>
+
+            {% if content.event %}
+            <p><strong>Ort:</strong> {{ content.event.place }}</p>
+            <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
+            {% endif %}
+            <p>
+            {% with image=content.image_set.first %}
+            {% if image %}
+            <img src="{{ image.image.url }}" class="pull-left">
+            {% endif %}
+            {% endwith %}
+            {{ content.text }}
+            </p>
+        </article>
+    </div>
+
+    <div class="col-md-4">
+    </div>
+</div>
+{% endblock %}
