@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'index' %}">{{ site.name }}</a>
+            <a class="navbar-brand" href="{% url 'index' %}">{{ current_site.name }}</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-navbar-collapse">
@@ -24,15 +24,15 @@
                 <li><a href="#">Über uns</a></li>
                 {% if user.is_authenticated %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user }} <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ current_gestalt }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Mein Dashboard</a></li>
                         <li><a href="#">Einstellungen</a></li>
-                        <li><a href="#">ABMELDEN</a></li>
+                        <li><a href="{% url 'account_logout' %}?next={{ request.path }}">ABMELDEN</a></li>
                     </ul>
                 </li>
                 {% else %}
-                <li><a href="#">Anmelden</a></li>
+                <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
                 {% endif %}
             </ul>
         </div>

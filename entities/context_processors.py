@@ -3,6 +3,14 @@ from django import http
 from . import models
 
 
+def gestalt(request):
+    if request.user.is_authenticated():
+        gestalt = request.user.gestalt
+    else:
+        gestalt = None
+    return {'current_gestalt': gestalt}
+
+
 def group(request):
     try:
         slug = request.resolver_match.kwargs.get('group_slug')
@@ -12,8 +20,11 @@ def group(request):
             group = None
         else:
             raise http.Http404('Group with slug %(slug)s not found.' % {'slug': slug})
-    return {'group': group}
+    return {'current_group': group}
 
 
-def stats(request):
-    return {'gestalt_count': models.Gestalt.objects.count, 'group_count': models.Group.objects.count}
+def statistics(request):
+    return {
+        'gestalt_count': models.Gestalt.objects.count, 
+        'group_count': models.Group.objects.count
+    }

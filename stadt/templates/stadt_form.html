@@ -1,0 +1,12 @@
+{% extends 'stadt.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
+        <h1>{{ current_site.name }}</h1>
+        <h2>{% block title %}{% endblock %}</h2>
+        {% block form_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "stadt_form.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Abmelden{% endblock %}
+
+{% block form_content %}
+<p>Möchtest Du Dich abmelden?</p>
+<form method="post">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  {% buttons submit='Abmelden' %}{% endbuttons %}
+</form>
+{% endblock %}

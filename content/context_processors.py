@@ -1,5 +1,5 @@
 from . import models
 
 
-def stats(request):
+def statistics(request):
     return {'content_count': models.Content.objects.count}
