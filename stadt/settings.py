@@ -36,7 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'bootstrap3',
     'content',
     'entities.apps.EntitiesConfig',
@@ -71,6 +75,7 @@ TEMPLATES = [
                 'content.context_processors.stats',
                 'entities.context_processors.group',
                 'entities.context_processors.stats',
+                'stadt.context_processors.site',
             ],
         },
     },
@@ -88,6 +93,15 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+# Authentication backends
+# https://docs.djangoproject.com/en/1.9/topics/auth/customizing/#authentication-backends
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 
 # Password validation
@@ -135,3 +149,9 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Sites
+# https://docs.djangoproject.com/en/1.9/ref/contrib/sites/
+
+SITE_ID = 1

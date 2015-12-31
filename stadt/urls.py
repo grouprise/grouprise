@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.conf import settings, urls
 from django.conf.urls import static, url
 from django.contrib import admin
 
@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^$', content_views.ContentListView.as_view(), name='index'),
     # root namespace
     url(r'^admin/', admin.site.urls),
+    url(r'^auth/', urls.include('allauth.urls')),
     url(r'^gestalt/(?P<pk>[\w-]+)/$', entities_views.GestaltDetailView.as_view(), name='gestalt-detail'),
     # groups
     url(r'^(?P<slug>[\w-]+)$', entities_views.GroupDetailView.as_view(), name='group-detail'),
