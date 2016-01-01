@@ -20,7 +20,7 @@
             <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
             <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>Gruppenmitglieder: {{ group.membership_set.count }}</li>
-            <li>stadtgestalten.org/ {{ group.slug }}</li>
+            <li>{{ current_site.domain }}/ {{ group.slug }}</li>
         </ul>
     </div>
 </div>

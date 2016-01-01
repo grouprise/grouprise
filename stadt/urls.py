@@ -10,12 +10,14 @@ from entities import views as entities_views
 urlpatterns = [
     # index
     url(r'^$', content_views.ContentListView.as_view(), name='index'),
-    # root namespace
-    url(r'^admin/', admin.site.urls),
-    url(r'^auth/', urls.include('allauth.urls')),
-    url(r'^auth/settings/$', generic.TemplateView.as_view(template_name='entities/gestalt_settings.html'), name='gestalt-settings'),
+    # stadt namespace
+    url(r'^stadt/', urls.include('allauth.urls')),
+    url(r'^stadt/admin/', admin.site.urls),
+    url(r'^stadt/imprint/$', generic.TemplateView.as_view(template_name='imprint.html'), name='imprint'),
+    url(r'^stadt/settings/$', generic.TemplateView.as_view(template_name='entities/gestalt_settings.html'), name='gestalt-settings'),
+    # gestalt namespaces
     url(r'^gestalt/(?P<pk>[\w-]+)/$', entities_views.GestaltDetailView.as_view(), name='gestalt-detail'),
-    # groups
+    # group namespaces
     url(r'^(?P<slug>[\w-]+)$', entities_views.GroupDetailView.as_view(), name='group-detail'),
     url(r'^(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetailView.as_view(), name='content-detail'),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

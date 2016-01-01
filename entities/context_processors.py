@@ -1,4 +1,5 @@
 from django import http
+from django.conf import settings
 
 from . import models
 
@@ -20,7 +21,10 @@ def group(request):
             group = None
         else:
             raise http.Http404('Group with slug %(slug)s not found.' % {'slug': slug})
-    return {'current_group': group}
+    return {
+        'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
+        'current_group': group,
+    }
 
 
 def statistics(request):

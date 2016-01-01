@@ -31,8 +31,8 @@
             <div class="col-md-2">
                 <ul>
                     <li><a href="{% url 'index' %}">Start</a></li>
-                    <li><a href="#">Über uns</a></li>
-                    <li><a href="#">Impressum</a></li>
+                    <li><a href="{% url 'group-detail' about_group.slug %}">Über uns</a></li>
+                    <li><a href="{% url 'imprint' %}">Impressum</a></li>
                 </ul>
             </div>
         </div>

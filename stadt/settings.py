@@ -156,3 +156,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/1.9/ref/contrib/sites/
 
 SITE_ID = 1
+
+
+# Stadtgestalten
+#
+
+ABOUT_GROUP_ID = 2
