@@ -26,8 +26,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ current_gestalt }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Mein Dashboard</a></li>
-                        <li><a href="#">Einstellungen</a></li>
+                        <li><a href="{% url 'gestalt-detail' current_gestalt.pk %}">Meine Seite</a></li>
+                        <li><a href="{% url 'gestalt-settings' %}">Einstellungen</a></li>
                         <li><a href="{% url 'account_logout' %}?next={{ request.path }}">ABMELDEN</a></li>
                     </ul>
                 </li>
