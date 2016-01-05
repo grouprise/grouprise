@@ -3,3 +3,4 @@ django-allauth
 django-autoslug
 django-bootstrap3
 pillow
+rules

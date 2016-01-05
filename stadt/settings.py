@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'content',
     'entities.apps.EntitiesConfig',
+    'rules.apps.AutodiscoverRulesConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -102,6 +103,7 @@ DATABASES = {
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'rules.permissions.ObjectPermissionBackend',
 ]
 
 
