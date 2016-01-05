@@ -29,14 +29,18 @@
     <div class="col-md-2"></div>
 
     <div class="col-md-6">
+        {% with pinned_content=group.groupcontent_set.pinned %}
+        {% if pinned_content %}
         <section>
             <h2>Intro</h2>
-            {% for content in group.groupcontent_set.pinned %}
+            {% for content in pinned_content %}
             {% with content=content.content %}
             {% include 'content/_content_preview.html' %}
             {% endwith %}
             {% endfor %}
         </section>
+        {% endif %}
+        {% endwith %}
 
         <section>
             <h2>Blog</h2>
