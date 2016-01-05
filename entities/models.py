@@ -1,6 +1,7 @@
 import autoslug
 
 from django.conf import settings
+from django.core import urlresolvers
 from django.db import models
 
 from . import querysets
@@ -12,6 +13,9 @@ class Gestalt(models.Model):
     def __str__(self):
         name = ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
         return name if name else self.user.username
+
+    def get_absolute_url(self):
+        return urlresolvers.reverse('gestalt-detail', args=[self.pk])
 
 
 class Group(models.Model):
@@ -26,6 +30,9 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return urlresolvers.reverse('group-detail', args=[self.slug])
 
 
 class GroupContent(models.Model):

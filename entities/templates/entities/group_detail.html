@@ -17,7 +17,7 @@
         <h1>
             {{ group.name }}
             {% if can_edit_group %}
-            (Angaben bearbeiten)
+            <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
             {% endif %}
         </h1>
         <ul>

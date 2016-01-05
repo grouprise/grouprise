@@ -1,0 +1,12 @@
+{% extends 'stadt_form.html' %}
+{% load bootstrap3 %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block form_content %}
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons submit='Angaben speichern' %}{% endbuttons %}
+</form>
+{% endblock %}
