@@ -9,7 +9,7 @@
 {% block bootstrap3_extra_script %}
 {% endblock %}
 
-{% block bootstrap3_title %}{{ current_site.name }}{% endblock %}
+{% block bootstrap3_title %}{% block head_title %}{{ current_site.name }}{% endblock %}{% endblock %}
 
 {% block bootstrap3_content %}
 {% include '_navigation.html' %}

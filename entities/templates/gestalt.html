@@ -1,6 +1,7 @@
 {% extends 'stadt.html' %}
 
 
+{% block head_title %}{% if gestalt %}{{ gestalt }}{% else %}{{ user.gestalt }}{% endif %} - {{ block.super }}{% endblock %}
 {% block title %}{% if gestalt %}{{ gestalt }}{% else %}{{ user.gestalt }}{% endif %}{% endblock %}
 
 

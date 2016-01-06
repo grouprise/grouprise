@@ -2,6 +2,9 @@
 {% load rules %}
 
 
+{% block title %}{% endblock %}
+
+
 {% block headcontent %}
 {% has_perm 'entities.change_group' user group as can_edit_group %}
 <div class="row">
