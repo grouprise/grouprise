@@ -28,7 +28,10 @@
     {% block headcontent %}
     {% endblock %}
     <div class="row">
-        <div class="col-md-2"></div>
+        <div class="col-md-2">
+            {% block leftcontent %}
+            {% endblock %}
+        </div>
         <div class="col-md-6">
             <h1>{% block title %}{{ current_site.name }}{% endblock %}</h1>
             <h2>{% block subtitle %}{% endblock %}</h2>

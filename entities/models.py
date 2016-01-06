@@ -15,7 +15,7 @@ class Gestalt(models.Model):
         return name if name else self.user.username
 
     def get_absolute_url(self):
-        return urlresolvers.reverse('gestalt-detail', args=[self.pk])
+        return urlresolvers.reverse('gestalt', args=[self.pk])
 
 
 class Group(models.Model):

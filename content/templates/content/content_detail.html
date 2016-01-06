@@ -1,83 +1,75 @@
 {% extends 'stadt.html' %}
 
-{% block title %}{{ content.title }}{% endblock %}
 
-{% block content %}
-<div class="row">
-    <div class="col-md-2">
-        <a href="{% url 'group-detail' current_group.slug %}" class="btn btn-primary">&lt;&lt;</a>
-    </div>
+{% block head_title %}{{ content.title }} - {{ block.super }}{% endblock %}
+{% block title %}{% endblock %}
 
-    <div class="col-md-6">
-        <h2>Beitrag</h2>
-        <article>
-            <header>
-                <p>{{ content.get_display_type_name }}</p>
-                <h1>
-                    {% if content.event %}
-                    {{ content.event.time|date:'l, j.n.Y:' }}
-                    {% endif %}
-                    {{ content.title }}
-                </h1>
-                <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt-detail' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
-            </header>
 
+{% block leftcontent %}
+<a href="{% url 'group-detail' current_group.slug %}" class="btn btn-primary">&lt;&lt;</a>
+{% endblock %}
+
+
+{% block subcontent %}
+<h2>Beitrag</h2>
+<article>
+    <header>
+        <p>{{ content.get_display_type_name }}</p>
+        <h1>
             {% if content.event %}
-            <p><strong>Ort:</strong> {{ content.event.place }}</p>
-            <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
+            {{ content.event.time|date:'l, j.n.Y:' }}
             {% endif %}
-            <p>
-            {% with image=content.image_set.first %}
-            {% if image %}
-            <img src="{{ image.image.url }}" class="pull-left">
-            {% endif %}
-            {% endwith %}
-            {{ content.text }}
-            </p>
-        </article>
+            {{ content.title }}
+        </h1>
+        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
+    </header>
 
-        <div style="background-color: #eee; height: 150px;">
-            (creative commons)
-        </div>
+    {% if content.event %}
+    <p><strong>Ort:</strong> {{ content.event.place }}</p>
+    <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
+    {% endif %}
+    <p>
+    {% with image=content.image_set.first %}
+    {% if image %}
+    <img src="{{ image.image.url }}" class="pull-left">
+    {% endif %}
+    {% endwith %}
+    {{ content.text }}
+    </p>
+</article>
 
-        <h2>Kommentare zum Beitrag</h2>
-        
-        {% for comment in content.comment_set.all %}
-        <img src="{{ comment.author.avatar }}" alt="{{ comment.author }}" class="pull-left">
-        <p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
-        <hr style="clear:both">
-        {% endfor %}
-        
-        <form class="form-inline">
-            <img src="{{ current_gestalt.avatar }}" alt="{{ current_gestalt }}" class="pull-left">
-            <textarea class="form-control" rows="2"></textarea>
-            <button class="btn btn-default">&gt;</button>
-        </form>
+<div style="background-color: #eee; height: 150px;">
+    (creative commons)
+</div>
+
+<h2>Kommentare zum Beitrag</h2>
+
+{% for comment in content.comment_set.all %}
+<img src="{{ comment.author.avatar }}" alt="{{ comment.author }}" class="pull-left">
+<p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
+<hr style="clear:both">
+{% endfor %}
+
+<form class="form-inline">
+    <img src="{{ current_gestalt.avatar }}" alt="{{ current_gestalt }}" class="pull-left">
+    <textarea class="form-control" rows="2"></textarea>
+    <button class="btn btn-default">&gt;</button>
+</form>
+{% endblock %}
+
+
+{% block sidecontent %}
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Selbstauskunft</h2>
+    <div style="background-color: #fff;">
+        (content.author.about)
     </div>
+</div>
 
-    <div class="col-md-4">
-        <aside>
-            <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-                <h2>Selbstauskunft</h2>
-                <div style="background-color: #fff;">
-                    (content.author.about)
-                </div>
-            </div>
-
-            <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-                <h2>Teilen</h2>
-                <input type="text" class="form-control" placeholder="Gestalt / E-Mail-Adresse">
-                <button class="btn btn-default">Beitrag empfehlen</button>
-                <p>(Facebook, Twitter, Google+)</p>
-            </div>
-
-            <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-                <h2>Schlagworte</h2>
-                <p>(Schlagworte)</p>
-                <input type="text" class="form-control" placeholder="Schlüsselwort">
-                <button class="btn btn-default">Begriff hinzufügen</button>
-            </div>
-        </aside>
-    </div>
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Teilen</h2>
+    <input type="text" class="form-control" placeholder="Gestalt / E-Mail-Adresse">
+    <button class="btn btn-default">Beitrag empfehlen</button>
+    <p>(Facebook, Twitter, Google+)</p>
 </div>
 {% endblock %}
