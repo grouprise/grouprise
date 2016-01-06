@@ -13,12 +13,12 @@ urlpatterns = [
     # stadt namespace
     url(r'^stadt/', urls.include('allauth.urls')),
     url(r'^stadt/admin/', admin.site.urls),
+    url(r'^stadt/gestalt/settings/$', entities_views.GestaltSettings.as_view(), name='gestalt-settings'),
     url(r'^stadt/group/(?P<pk>[0-9]+)/edit/$', entities_views.GroupUpdate.as_view(), name='group-update'),
     url(r'^stadt/imprint/$', generic.TemplateView.as_view(template_name='imprint.html'), name='imprint'),
-    url(r'^stadt/settings/$', entities_views.GestaltSettings.as_view(), name='gestalt-settings'),
     # gestalt namespaces
     url(r'^gestalt/(?P<pk>[\w-]+)/$', entities_views.Gestalt.as_view(), name='gestalt'),
     # group namespaces
-    url(r'^(?P<slug>[\w-]+)$', entities_views.GroupDetail.as_view(), name='group-detail'),
+    url(r'^(?P<slug>[\w-]+)$', entities_views.GroupDetail.as_view(), name='group'),
     url(r'^(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetailView.as_view(), name='content-detail'),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
