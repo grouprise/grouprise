@@ -1,0 +1,40 @@
+{% extends 'stadt.html' %}
+
+
+{% block title %}{{ group.name }}{% endblock %}
+
+
+{% block sidecontent %}
+<div class="text-right" style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    {% if group.logo %}
+    <img src="{{ group.logo.url }}">
+    {% endif %}
+</div>
+
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Gruppenkalender</h2>
+    <div style="background-color: #fff;">
+        (Kalender, Termine)
+    </div>
+    <button class="btn btn-default">Alle Termine</button>
+</div>
+
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Mitteilung</h2>
+    <input type="text" class="form-control" placeholder="Betreff">
+    <textarea type="form-control" rows="5" placeholder="Deine Nachricht an diese Gruppe &hellip;" style="width: 100%"></textarea>
+    <button class="btn btn-primary">Mitteilung senden</button>
+</div>
+
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Empfehlung</h2>
+    <input type="text" class="form-control" placeholder="Gestalt / E-Mail-Adresse">
+    <button class="btn btn-primary">Gruppe empfehlen</button>
+</div>
+
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Vernetzung</h2>
+    <p>Andere Gruppen:</p>
+    (Gruppenavatare)
+</div>
+{% endblock %}

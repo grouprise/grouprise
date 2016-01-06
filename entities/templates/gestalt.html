@@ -1,0 +1,21 @@
+{% extends 'stadt.html' %}
+
+
+{% block title %}{% if gestalt %}{{ gestalt }}{% else %}{{ user.gestalt }}{% endif %}{% endblock %}
+
+
+{% block sidecontent %}
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Selbstauskunft</h2>
+    <div style="background-color: #fff;">
+        (gestalt.about)
+    </div>
+</div>
+
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Mitteilung</h2>
+    <input type="text" class="form-control" placeholder="Betreff">
+    <textarea type="form-control" rows="5" placeholder="Deine Nachricht an diese Gestalt &hellip;" style="width: 100%"></textarea>
+    <button class="btn btn-primary">Mitteilung senden</button>
+</div>
+{% endblock %}

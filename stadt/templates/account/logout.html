@@ -1,10 +1,11 @@
-{% extends "stadt_form.html" %}
-
+{% extends "gestalt.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Abmelden{% endblock %}
 
-{% block form_content %}
+{% block subtitle %}Abmelden{% endblock %}
+
+
+{% block subcontent %}
 <p>Möchtest Du Dich abmelden?</p>
 <form method="post">
   {% csrf_token %}

@@ -1,10 +1,11 @@
-{% extends "stadt_form.html" %}
-
+{% extends "stadt.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Anmelden{% endblock %}
 
-{% block form_content %}
+{% block subtitle %}Anmelden{% endblock %}
+
+
+{% block subcontent %}
 {#<p>Wenn Du noch kein Benutzerkonto hast, <a href="{{ signup_url }}">registriere</a> Dich bitte zuerst.</p>#}
 <form method="post">
   {% csrf_token %}

@@ -1,9 +1,9 @@
-{% extends 'stadt_form.html' %}
+{% extends 'group.html' %}
 {% load bootstrap3 %}
 
-{% block title %}{{ group.name }}{% endblock %}
+{% block subtitle %}Gruppenangaben{% endblock %}
 
-{% block form_content %}
+{% block subcontent %}
 <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
