@@ -1,5 +1,3 @@
-import autoslug
-
 from django.conf import settings
 from django.core import urlresolvers
 from django.db import models
@@ -25,7 +23,7 @@ class Group(models.Model):
     date_founded = models.DateField(null=True, blank=True)
     logo = models.ImageField(blank=True)
     name = models.CharField(max_length=255)
-    slug = autoslug.AutoSlugField(populate_from='name', unique=True)
+    slug = models.SlugField(unique=True)
     url = models.URLField(blank=True)
 
     def __str__(self):

@@ -21,6 +21,6 @@ class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
 
 
 class GroupUpdate(rules_views.PermissionRequiredMixin, generic.UpdateView):
-    fields = ['address', 'url', 'date_founded']
+    fields = ['address', 'url', 'date_founded', 'slug']
     model = models.Group
     permission_required = 'entities.change_group'
