@@ -1,5 +1,5 @@
 {% extends 'group.html' %}
-{% load bootstrap3 %}
+{% load crispy_forms_tags %}
 
 
 {% block subtitle %}Gruppenangaben{% endblock %}
@@ -11,9 +11,5 @@
 
 
 {% block subcontent %}
-<form method="post">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    {% buttons submit='Angaben speichern' %}{% endbuttons %}
-</form>
+{% crispy form %}
 {% endblock %}

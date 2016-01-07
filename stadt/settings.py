@@ -31,6 +31,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'bootstrap3',
+    'content',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,11 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'bootstrap3',
-    'content',
     'entities.apps.EntitiesConfig',
     'rules.apps.AutodiscoverRulesConfig',
 ]
@@ -164,6 +165,12 @@ SITE_ID = 1
 # http://django-allauth.readthedocs.org/
 
 LOGIN_URL = 'account_login'
+
+
+# Crispy forms
+# http://django-crispy-forms.readthedocs.org/
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
 # Stadtgestalten

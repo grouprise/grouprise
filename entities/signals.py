@@ -20,7 +20,7 @@ def group_pre_save(sender, instance, **kwargs):
     if not group.url:
         group.url = 'http://%(domain)s%(path)s' % {
                 'domain': sites_models.Site.objects.get_current().domain,
-                'path': urlresolvers.reverse('group-detail', args=[group.slug]),
+                'path': urlresolvers.reverse('group', args=[group.slug]),
                 }
     if not group.date_founded:
         group.date_founded = group.date_created

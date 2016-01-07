@@ -30,7 +30,7 @@ class Group(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return urlresolvers.reverse('group-detail', args=[self.slug])
+        return urlresolvers.reverse('group', args=[self.slug])
 
 
 class GroupContent(models.Model):
