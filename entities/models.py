@@ -17,14 +17,14 @@ class Gestalt(models.Model):
 
 
 class Group(models.Model):
-    address = models.TextField(blank=True)
+    address = models.TextField('Anschrift', blank=True)
     avatar = models.ImageField(blank=True)
     date_created = models.DateField(auto_now_add=True)
-    date_founded = models.DateField(null=True, blank=True)
+    date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-    url = models.URLField(blank=True)
+    name = models.CharField('Name', max_length=255)
+    slug = models.SlugField('Adresse der Gruppenseite', unique=True)
+    url = models.URLField('Adresse im Web', blank=True)
 
     def __str__(self):
         return self.name
