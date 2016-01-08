@@ -35,7 +35,9 @@ class GroupUpdate(rules_views.PermissionRequiredMixin, generic.UpdateView):
                 'name',
                 layout.Field('address', rows=4),
                 'url',
-                'date_founded',
+                layout.Field('date_founded', data_provide='datepicker',
+                    data_date_language='de', data_date_min_view_mode='months',
+                    data_date_start_view='decade'),
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': DOMAIN }),
                 bootstrap.FormActions(layout.Submit('submit', 'Angaben speichern')),
                 )

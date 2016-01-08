@@ -3,10 +3,13 @@
 {% load bootstrap3 %}
 
 {% block bootstrap3_extra_head %}
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/css/bootstrap-datepicker3.standalone.min.css">
 {% endblock %}
 
 {% block bootstrap3_extra_script %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/locales/bootstrap-datepicker.de.min.js"></script>
 {% endblock %}
 
 {% block bootstrap3_title %}{% block head_title %}{{ current_site.name }}{% endblock %}{% endblock %}
