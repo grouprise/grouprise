@@ -4,15 +4,7 @@ from django.conf import settings
 from . import models
 
 
-def gestalt(request):
-    if request.user.is_authenticated():
-        gestalt = request.user.gestalt
-    else:
-        gestalt = None
-    return {'current_gestalt': gestalt}
-
-
-def group(request):
+def groups(request):
     try:
         slug = request.resolver_match.kwargs.get('group_slug')
         group = models.Group.objects.get(slug=slug)
@@ -23,7 +15,7 @@ def group(request):
             raise http.Http404('Group with slug %(slug)s not found.' % {'slug': slug})
     return {
         'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
-        'current_group': group,
+        'group': group,
     }
 
 

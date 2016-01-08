@@ -27,7 +27,6 @@ class Content(Base):
 
     slug = autoslug.AutoSlugField(populate_from='title', unique=True)
     title = models.CharField(max_length=255)
-    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title

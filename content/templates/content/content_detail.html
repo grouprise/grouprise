@@ -6,7 +6,7 @@
 
 
 {% block leftcontent %}
-<a href="{% url 'group-detail' current_group.slug %}" class="btn btn-primary">&lt;&lt;</a>
+<a href="{% url 'group' group.slug %}" class="btn btn-primary">&lt;&lt;</a>
 {% endblock %}
 
 
@@ -45,13 +45,13 @@
 <h2>Kommentare zum Beitrag</h2>
 
 {% for comment in content.comment_set.all %}
-<img src="{{ comment.author.avatar }}" alt="{{ comment.author }}" class="pull-left">
+<a href="{% url 'gestalt' comment.author.pk %}"><img src="{{ comment.author.avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="pull-left"></a>
 <p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
 <hr style="clear:both">
 {% endfor %}
 
 <form class="form-inline">
-    <img src="{{ current_gestalt.avatar }}" alt="{{ current_gestalt }}" class="pull-left">
+    <a href="{% url 'gestalt' content.author.pk %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" alt="{{ content.author }}" class="pull-left"></a>
     <textarea class="form-control" rows="2"></textarea>
     <button class="btn btn-default">&gt;</button>
 </form>
@@ -62,7 +62,9 @@
 <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
     <h2>Selbstauskunft</h2>
     <div style="background-color: #fff;">
-        (content.author.about)
+        <a href="{% url 'gestalt' content.author.pk %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" class="pull-left"></a>
+        <a href="{% url 'gestalt' content.author.pk %}"><h3>{{ content.author }}</h3></a>
+        <p>{{ content.author.about }}</p>
     </div>
 </div>
 

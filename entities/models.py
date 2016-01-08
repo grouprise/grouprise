@@ -6,6 +6,8 @@ from . import querysets
 
 
 class Gestalt(models.Model):
+    about = models.TextField('Selbstauskunft', blank=True)
+    avatar = models.ImageField(blank=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):
