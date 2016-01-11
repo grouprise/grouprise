@@ -22,7 +22,7 @@
             {% endif %}
             {{ content.title }}
         </h1>
-        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
+        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
     </header>
 
     {% if content.event %}

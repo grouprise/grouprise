@@ -5,6 +5,13 @@ from django.db import models
 from . import querysets
 
 
+class Attention(models.Model):
+    content = models.ForeignKey('content.Content', null=True, blank=True)
+    gestalt = models.ForeignKey('Gestalt')
+    group = models.ForeignKey('Group', null=True, blank=True)
+    stadtgestalten = models.BooleanField()
+
+
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
     avatar = models.ImageField(blank=True)
