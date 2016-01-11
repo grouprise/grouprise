@@ -1,5 +1,6 @@
 import autoslug
 
+from django.core import urlresolvers
 from django.db import models
 from django.utils import text, timezone
 
@@ -30,6 +31,9 @@ class Content(Base):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return urlresolvers.reverse('content', args=[self.author.pk, self.slug])
 
     def get_display_type_name(self):
         return self.get_subclass_instance().display_type_name

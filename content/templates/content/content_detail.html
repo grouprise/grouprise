@@ -1,5 +1,5 @@
 {% extends 'stadt.html' %}
-{% load content %}
+{% load content rules %}
 
 
 {% block head_title %}{{ content.title }} - {{ block.super }}{% endblock %}
@@ -7,11 +7,14 @@
 
 
 {% block leftcontent %}
+{% if group %}
 <a href="{% url 'group' group.slug %}" class="btn btn-primary">&lt;&lt;</a>
+{% endif %}
 {% endblock %}
 
 
 {% block subcontent %}
+{% has_perm 'content.change_content' user content as can_edit_content %}
 <h2>Beitrag</h2>
 <article>
     <header>
@@ -21,6 +24,9 @@
             {{ content.event.time|date:'l, j.n.Y:' }}
             {% endif %}
             {{ content.title }}
+            {% if can_edit_content %}
+            <a href="{% url 'content-update' content.pk %}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
+            {% endif %}
         </h1>
         <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
     </header>
