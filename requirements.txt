@@ -3,5 +3,6 @@ django-allauth
 django-autoslug
 django-bootstrap3
 django-crispy-forms
+markdown
 pillow
 rules

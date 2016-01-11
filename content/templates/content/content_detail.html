@@ -1,4 +1,5 @@
 {% extends 'stadt.html' %}
+{% load content %}
 
 
 {% block head_title %}{{ content.title }} - {{ block.super }}{% endblock %}
@@ -34,7 +35,7 @@
     <img src="{{ image.image.url }}" class="pull-left">
     {% endif %}
     {% endwith %}
-    {{ content.text }}
+    {{ content.text|markdown }}
     </p>
 </article>
 
