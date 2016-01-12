@@ -1,9 +1,5 @@
-{% extends 'stadt.html' %}
+{% extends 'content.html' %}
 {% load content rules %}
-
-
-{% block head_title %}{{ content.title }} - {{ block.super }}{% endblock %}
-{% block title %}{% endblock %}
 
 
 {% block leftcontent %}
@@ -16,7 +12,7 @@
 {% endblock %}
 
 
-{% block subcontent %}
+{% block maincontent %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
 
 {% if group %}
@@ -25,10 +21,8 @@
 {% url 'content-update' content.pk as content_update_url %}
 {% endif %}
 
-<h2>Beitrag</h2>
 <article>
     <header>
-        <p>{{ content.get_display_type_name }}</p>
         <h1>
             {% if content.event %}
             {{ content.event.time|date:'l, j.n.Y:' }}
@@ -54,11 +48,10 @@
     {{ content.text|markdown }}
     </p>
 </article>
+{% endblock %}
 
-<div style="background-color: #eee; height: 150px;">
-    (creative commons)
-</div>
 
+{% block footcontent %}
 <h2>Kommentare zum Beitrag</h2>
 
 {% for comment in content.comment_set.all %}
@@ -72,23 +65,4 @@
     <textarea class="form-control" rows="2"></textarea>
     <button class="btn btn-default">&gt;</button>
 </form>
-{% endblock %}
-
-
-{% block sidecontent %}
-<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-    <h2>Selbstauskunft</h2>
-    <div style="background-color: #fff;">
-        <a href="{% url 'gestalt' content.author.pk %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" class="pull-left"></a>
-        <a href="{% url 'gestalt' content.author.pk %}"><h3>{{ content.author }}</h3></a>
-        <p>{{ content.author.about }}</p>
-    </div>
-</div>
-
-<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-    <h2>Teilen</h2>
-    <input type="text" class="form-control" placeholder="Gestalt / E-Mail-Adresse">
-    <button class="btn btn-default">Beitrag empfehlen</button>
-    <p>(Facebook, Twitter, Google+)</p>
-</div>
 {% endblock %}

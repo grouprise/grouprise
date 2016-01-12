@@ -1,8 +1,5 @@
-{% extends 'gestalt.html' %}
+{% extends 'content.html' %}
 {% load crispy_forms_tags %}
-
-
-{% block subtitle %}Beitrag bearbeiten{% endblock %}
 
 
 {% block leftcontent %}
@@ -15,6 +12,7 @@
 {% endblock %}
 
 
-{% block subcontent %}
+{% block maincontent %}
+<h1>Beitrag bearbeiten</h1>
 {% crispy form %}
 {% endblock %}

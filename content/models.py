@@ -1,5 +1,4 @@
 import autoslug
-
 from django.core import urlresolvers
 from django.db import models
 from django.utils import text, timezone
@@ -13,7 +12,7 @@ class Image(models.Model):
 class Base(models.Model):
     author = models.ForeignKey('entities.Gestalt')
     date_created = models.DateTimeField(default=timezone.now)
-    text = models.TextField(blank=True)
+    text = models.TextField('Text', blank=True)
 
     class Meta:
         abstract = True
@@ -27,7 +26,7 @@ class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
     slug = autoslug.AutoSlugField(populate_from='title', unique=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField('Titel', max_length=255)
 
     def __str__(self):
         return self.title
