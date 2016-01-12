@@ -1,5 +1,5 @@
 from . import models
-from crispy_forms import bootstrap, helper, layout
+from crispy_forms import bootstrap, layout
 from django.core import urlresolvers
 from django.views import generic
 from entities import models as entities_models
@@ -15,7 +15,7 @@ class ContentList(generic.ListView):
     model = models.Content
 
 
-class ContentUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, generic.UpdateView):
+class ContentUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
     fields = ['text', 'title']
     layout = [
             'title',
@@ -31,6 +31,6 @@ class ContentUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
 
     def get_success_url(self):
         try:
-            return urlresolvers.reverse('group-content', args=[self.get_group().slug, self.get_object().slug])
+            return urlresolvers.reverse('group-content', args=[self.get_group().slug, self.object.slug])
         except entities_models.Group.DoesNotExist:
             return super().get_success_url()

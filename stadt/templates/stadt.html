@@ -33,6 +33,9 @@
     <div class="row">
         <div class="col-md-2">
             {% block leftcontent %}
+            {% if back_url %}
+            <a href="{{ back_url }}" class="btn btn-primary">&lt;&lt;</a>
+            {% endif %}
             {% endblock %}
         </div>
         <div class="col-md-6">
