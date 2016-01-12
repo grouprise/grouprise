@@ -1,10 +1,8 @@
-{% url 'content-detail' group.slug content.slug as content_detail_url %}
-
 <article>
     <header>
         <p>{{ content.get_display_type_name }}</p>
         <h3>
-            <a href="{{ content_detail_url }}">
+            <a href="{{ content_url }}">
                 {% if content.event %}
                 {{ content.event.time|date:'l, j.n.Y:' }}
                 {% endif %}

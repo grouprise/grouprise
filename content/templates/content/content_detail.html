@@ -8,13 +8,23 @@
 
 {% block leftcontent %}
 {% if group %}
-<a href="{% url 'group' group.slug %}" class="btn btn-primary">&lt;&lt;</a>
+{% url 'group' group.slug as back_url %}
+{% else %}
+{% url 'gestalt' content.author.pk as back_url %}
 {% endif %}
+<a href="{{ back_url }}" class="btn btn-primary">&lt;&lt;</a>
 {% endblock %}
 
 
 {% block subcontent %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
+
+{% if group %}
+{% url 'group-content-update' content.pk group.slug as content_update_url %}
+{% else %}
+{% url 'content-update' content.pk as content_update_url %}
+{% endif %}
+
 <h2>Beitrag</h2>
 <article>
     <header>
@@ -25,7 +35,7 @@
             {% endif %}
             {{ content.title }}
             {% if can_edit_content %}
-            <a href="{% url 'content-update' content.pk %}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
+            <a href="{{ content_update_url }}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
             {% endif %}
         </h1>
         <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>

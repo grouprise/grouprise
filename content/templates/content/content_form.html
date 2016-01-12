@@ -5,6 +5,16 @@
 {% block subtitle %}Beitrag bearbeiten{% endblock %}
 
 
+{% block leftcontent %}
+{% if group %}
+{% url 'group-content' group.slug content.slug as back_url %}
+{% else %}
+{% url 'content' content.author.pk content.slug as back_url %}
+{% endif %}
+<a href="{{ back_url }}" class="btn btn-primary">&lt;&lt;</a>
+{% endblock %}
+
+
 {% block subcontent %}
 {% crispy form %}
 {% endblock %}

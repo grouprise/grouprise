@@ -40,6 +40,7 @@
     <h2>Intro</h2>
     {% for content in pinned_content %}
     {% with content=content.content %}
+    {% url 'group-content' group.slug content.slug as content_url %}
     {% include 'content/_content_preview.html' %}
     {% endwith %}
     {% endfor %}
@@ -51,6 +52,7 @@
     <h2>Blog</h2>
     {% for content in group.groupcontent_set.unpinned %}
     {% with content=content.content %}
+    {% url 'group-content' group.slug content.slug as content_url %}
     {% include 'content/_content_preview.html' %}
     {% endwith %}
     {% endfor %}
