@@ -1,7 +1,20 @@
 {% extends 'gestalt.html' %}
+{% load rules %}
+
+
+{% block title %}{% endblock %}
 
 
 {% block subcontent %}
+{% has_perm 'entities.change_gestalt' user gestalt as can_edit_gestalt %}
+
+<h1>
+    {{ gestalt }}
+    {% if can_edit_gestalt %}
+    <a href="{% url 'gestalt-update' gestalt.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
+    {% endif %}
+</h1>
+
 <section>
     <h2>Blog</h2>
     {% for content in gestalt.content_set.all %}

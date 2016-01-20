@@ -13,9 +13,10 @@ class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
     slug_field = 'user__username'
 
 
-class GestaltSettings(rules_views.PermissionRequiredMixin, generic.TemplateView):
+class GestaltUpdate(rules_views.PermissionRequiredMixin, generic.UpdateView):
+    fields = []
+    model = models.Gestalt
     permission_required = 'entities.change_gestalt'
-    template_name = 'entities/gestalt_settings.html'
 
 
 class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
