@@ -5,7 +5,7 @@
 <section>
     <h2>Blog</h2>
     {% for content in gestalt.content_set.all %}
-    {% url 'content' gestalt.pk content.slug as content_url %}
+    {% url 'content' gestalt.user.username content.slug as content_url %}
     {% include 'content/_content_preview.html' %}
     {% endfor %}
 </section>

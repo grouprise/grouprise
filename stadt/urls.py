@@ -18,8 +18,8 @@ urlpatterns = [
     url(r'^stadt/group/(?P<pk>[0-9]+)/edit/$', entities_views.GroupUpdate.as_view(), name='group-update'),
     url(r'^stadt/imprint/$', generic.TemplateView.as_view(template_name='imprint.html'), name='imprint'),
     # gestalt namespaces
-    url(r'^gestalt/(?P<pk>[\w-]+)/$', entities_views.Gestalt.as_view(), name='gestalt'),
-    url(r'^gestalt/(?P<gestalt_pk>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetail.as_view(), name='content'),
+    url(r'^gestalt/(?P<slug>[\w-]+)/$', entities_views.Gestalt.as_view(), name='gestalt'),
+    url(r'^gestalt/(?P<gestalt_slug>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetail.as_view(), name='content'),
     # group namespaces
     url(r'^(?P<slug>[\w-]+)$', entities_views.GroupDetail.as_view(), name='group'),
     url(r'^(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetail.as_view(), name='group-content'),

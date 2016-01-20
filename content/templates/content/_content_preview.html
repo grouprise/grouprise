@@ -9,7 +9,7 @@
                 {{ content.title }}
             </a>
         </h3>
-        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
+        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
     </header>
 
     {% if content.event %}

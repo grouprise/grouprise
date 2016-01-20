@@ -6,7 +6,7 @@
 {% if group %}
 {% url 'group' group.slug as back_url %}
 {% else %}
-{% url 'gestalt' content.author.pk as back_url %}
+{% url 'gestalt' content.author.user.username as back_url %}
 {% endif %}
 <a href="{{ back_url }}" class="btn btn-primary">&lt;&lt;</a>
 {% endblock %}
@@ -32,7 +32,7 @@
             <a href="{{ content_update_url }}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
             {% endif %}
         </h1>
-        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.pk %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
+        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
     </header>
 
     {% if content.event %}
@@ -55,13 +55,13 @@
 <h2>Kommentare zum Beitrag</h2>
 
 {% for comment in content.comment_set.all %}
-<a href="{% url 'gestalt' comment.author.pk %}"><img src="{{ comment.author.avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="pull-left"></a>
+<a href="{% url 'gestalt' comment.author.user.username %}"><img src="{{ comment.author.avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="pull-left"></a>
 <p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
 <hr style="clear:both">
 {% endfor %}
 
 <form class="form-inline">
-    <a href="{% url 'gestalt' content.author.pk %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" alt="{{ content.author }}" class="pull-left"></a>
+    <a href="{% url 'gestalt' content.author.user.username %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" alt="{{ content.author }}" class="pull-left"></a>
     <textarea class="form-control" rows="2"></textarea>
     <button class="btn btn-default">&gt;</button>
 </form>

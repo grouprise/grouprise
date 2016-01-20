@@ -32,7 +32,7 @@ class Content(Base):
         return self.title
 
     def get_absolute_url(self):
-        return urlresolvers.reverse('content', args=[self.author.pk, self.slug])
+        return urlresolvers.reverse('content', args=[self.author.user.username, self.slug])
 
     def get_display_type_name(self):
         return self.get_subclass_instance().display_type_name

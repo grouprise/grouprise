@@ -10,6 +10,7 @@ from util import views as util_views
 class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
     model = models.Gestalt
     permission_required = 'entities.view_gestalt'
+    slug_field = 'user__username'
 
 
 class GestaltSettings(rules_views.PermissionRequiredMixin, generic.TemplateView):
