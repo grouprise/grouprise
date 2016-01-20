@@ -13,7 +13,7 @@ class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
     slug_field = 'user__username'
 
 
-class GestaltUpdate(rules_views.PermissionRequiredMixin, generic.UpdateView):
+class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.NavigationMixin, generic.UpdateView):
     fields = []
     model = models.Gestalt
     permission_required = 'entities.change_gestalt'
@@ -24,7 +24,7 @@ class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
     permission_required = 'entities.view_group'
 
 
-class GroupUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, generic.UpdateView):
+class GroupUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
     model = models.Group
     permission_required = 'entities.change_group'

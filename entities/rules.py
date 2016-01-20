@@ -11,7 +11,7 @@ def is_self(user, gestalt):
 
 
 add_perm('entities.view_gestalt', always_allow)
-add_perm('entities.change_gestalt', is_authenticated)
+add_perm('entities.change_gestalt', is_authenticated & is_self)
 add_perm('entities.mail_gestalt', is_authenticated & ~is_self)
 
 add_perm('entities.view_group', always_allow)

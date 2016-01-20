@@ -5,11 +5,6 @@
 {% block subtitle %}Gruppenangaben{% endblock %}
 
 
-{% block leftcontent %}
-<a href="{% url 'group' group.slug %}" class="btn btn-primary">&lt;&lt;</a>
-{% endblock %}
-
-
 {% block subcontent %}
 {% crispy form %}
 {% endblock %}
