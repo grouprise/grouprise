@@ -5,9 +5,14 @@ from rules import add_perm, always_allow, is_authenticated, predicate
 def is_group_member(user, group):
     return group.membership_set.filter(gestalt__user=user).exists()
 
+@predicate
+def is_self(user, gestalt):
+    return user == gestalt.user
+
 
 add_perm('entities.view_gestalt', always_allow)
 add_perm('entities.change_gestalt', is_authenticated)
+add_perm('entities.mail_gestalt', is_authenticated & ~is_self)
 
 add_perm('entities.view_group', always_allow)
 add_perm('entities.change_group', is_authenticated & is_group_member)
