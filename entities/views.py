@@ -13,8 +13,12 @@ class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
     slug_field = 'user__username'
 
 
-class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.NavigationMixin, generic.UpdateView):
-    fields = []
+class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
+    fields = ['about']
+    layout = [
+            layout.Field('about', rows=5),
+            bootstrap.FormActions(layout.Submit('submit', 'Angaben speichern')),
+            ]
     model = models.Gestalt
     permission_required = 'entities.change_gestalt'
 

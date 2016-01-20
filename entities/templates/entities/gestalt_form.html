@@ -1,4 +1,10 @@
 {% extends 'gestalt.html' %}
+{% load crispy_forms_tags %}
 
 
-{% block subtitle %}Einstellungen{% endblock %}
+{% block subtitle %}Benutzerangaben{% endblock %}
+
+
+{% block subcontent %}
+{% crispy form %}
+{% endblock %}
