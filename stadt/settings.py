@@ -154,6 +154,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+# Email
+# https://docs.djangoproject.com/en/1.9/topics/email/
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 # Sites
 # https://docs.djangoproject.com/en/1.9/ref/contrib/sites/
 
@@ -164,6 +170,10 @@ SITE_ID = 1
 # http://django-allauth.readthedocs.org/
 
 LOGIN_URL = 'account_login'
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_USERNAME_REQUIRED = False
 
 
 # Crispy forms

@@ -2,19 +2,17 @@
 {% load bootstrap3 %}
 
 
-{% block subtitle %}Anmelden{% endblock %}
+{% block subtitle %}Registrieren{% endblock %}
 
 
 {% block subcontent %}
-<p>Wenn Du noch kein Benutzerkonto hast, <a href="{{ signup_url }}">registriere</a> Dich bitte zuerst.</p>
+<p>Hast Du bereits ein Benutzerkonto? Dann <a href="{{ login_url }}">melde Dich bitte an</a>.</p>
 <form method="post">
   {% csrf_token %}
   {% bootstrap_form form %}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  {% buttons submit='Anmelden' %}
-  {#&nbsp;<a href="{% url 'account_reset_password' %}">Kennwort vergessen?</a>#}
-  {% endbuttons %}
+  {% buttons submit='Registrieren' %}{% endbuttons %}
 </form>
 {% endblock %}
