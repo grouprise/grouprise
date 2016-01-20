@@ -16,7 +16,7 @@
 {% has_perm 'content.change_content' user content as can_edit_content %}
 
 {% if group %}
-{% url 'group-content-update' content.pk group.slug as content_update_url %}
+{% url 'content-update' content.pk group.slug as content_update_url %}
 {% else %}
 {% url 'content-update' content.pk as content_update_url %}
 {% endif %}
