@@ -7,4 +7,4 @@ def is_content_author(user, content):
 
 
 add_perm('content.view_content', always_allow)
-add_perm('content.change_content', is_content_author)
+add_perm('content.change_content', is_authenticated & is_content_author)
