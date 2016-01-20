@@ -17,14 +17,9 @@
 
 
 {% block sidecontent %}
-<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-    <h2>Selbstauskunft</h2>
-    <div style="background-color: #fff;">
-        <a href="{% url 'gestalt' content.author.user.username %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" class="pull-left"></a>
-        <a href="{% url 'gestalt' content.author.user.username %}"><h3>{{ content.author }}</h3></a>
-        <p>{{ content.author.about }}</p>
-    </div>
-</div>
+{% with gestalt=content.author %}
+{% include 'entities/_gestalt_about.html' %}
+{% endwith %}
 
 <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
     <h2>Teilen</h2>
