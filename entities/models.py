@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core import urlresolvers
 from django.db import models
 
@@ -14,7 +15,7 @@ class Attention(models.Model):
 
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(default=staticfiles_storage.url('avatar.png'))
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):
