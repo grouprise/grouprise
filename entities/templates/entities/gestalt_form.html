@@ -6,5 +6,8 @@
 
 
 {% block subcontent %}
-{% crispy form %}
+<form method="post">
+    {% crispy user_form %}
+    {% crispy form %}
+</form>
 {% endblock %}

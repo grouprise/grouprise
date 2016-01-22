@@ -1,4 +1,4 @@
-from . import models
+from . import forms, models
 from crispy_forms import bootstrap, layout
 from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import shortcuts
@@ -21,6 +21,39 @@ class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
             ]
     model = models.Gestalt
     permission_required = 'entities.change_gestalt'
+
+    def form_invalid(self, form, user_form):
+        return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
+
+    def form_valid(self, form, user_form):
+        user_form.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        if 'user_form' not in kwargs:
+            kwargs['user_form'] = self.get_user_form()
+        return super().get_context_data(**kwargs)
+
+    def get_form(self):
+        form = super().get_form()
+        form.helper.form_tag = False
+        return form
+
+    def get_user_form(self):
+        kwargs = self.get_form_kwargs()
+        if 'instance' in kwargs:
+            kwargs['instance'] = kwargs['instance'].user
+        return forms.User(**kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        user_form = self.get_user_form()
+        if form.is_valid() and user_form.is_valid():
+            return self.form_valid(form, user_form)
+        else:
+            return self.form_invalid(form, user_form)
+
 
 
 class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
