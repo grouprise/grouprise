@@ -9,7 +9,7 @@
                 {{ content.title }}
             </a>
         </h3>
-        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.views }}</p>
+        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
     </header>
 
     {% if content.event %}
@@ -23,7 +23,7 @@
     {% endif %}
     {% endwith %}
     {{ content.text|truncatewords:60 }}
-    <a href="{{ content_detail_url }}">WEITER&gt;</a>
+    <a href="{{ content_url }}">WEITER&gt;</a>
     </p>
 
     <footer style="clear: both;">
