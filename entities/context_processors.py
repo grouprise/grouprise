@@ -4,6 +4,13 @@ from django.conf import settings
 from . import models
 
 
+def gestalt(request):
+    if request.user.is_authenticated():
+        return {'gestalt': request.user.gestalt}
+    else:
+        return {}
+
+
 def groups(request):
     try:
         slug = request.resolver_match.kwargs.get('group_slug')

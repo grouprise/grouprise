@@ -38,6 +38,8 @@
 
 
 {% block subcontent %}
+{% has_perm 'entities.change_group' user group as can_change_group %}
+
 {% with pinned_content=group.groupcontent_set.pinned_without_head_gallery %}
 {% if pinned_content %}
 <section>
@@ -53,6 +55,9 @@
 {% endwith %}
 
 <section>
+    {% if can_change_group %}
+    <a href="#" class="btn btn-primary pull-right">Neuer Eintrag</a>
+    {% endif %}
     <h2>Blog</h2>
     {% for content in group.groupcontent_set.unpinned %}
     {% with content=content.content %}

@@ -2,8 +2,8 @@
 {% load rules %}
 
 
-{% block head_title %}{% if gestalt %}{{ gestalt }}{% else %}{{ user.gestalt }}{% endif %} - {{ block.super }}{% endblock %}
-{% block title %}{% if gestalt %}{{ gestalt }}{% else %}{{ user.gestalt }}{% endif %}{% endblock %}
+{% block head_title %}{{ gestalt }} - {{ block.super }}{% endblock %}
+{% block title %}{{ gestalt }}{% endblock %}
 
 
 {% block sidecontent %}
