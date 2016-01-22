@@ -9,7 +9,11 @@
 {% has_perm 'entities.change_group' user group as can_edit_group %}
 <div class="row">
     <div class="col-md-6">
-        <div style="background-color: #eee; height: 250px;"></div>
+        {% with head_gallery=group.groupcontent_set.pinned.galleries.first.content %}
+        {% if head_gallery %}
+        <img src="{{ head_gallery.image_set.first.image.url }}">
+        {% endif %}
+        {% endwith %}
     </div>
     <div class="col-md-6">
         {% if group.avatar %}
@@ -34,7 +38,7 @@
 
 
 {% block subcontent %}
-{% with pinned_content=group.groupcontent_set.pinned %}
+{% with pinned_content=group.groupcontent_set.pinned_without_head_gallery %}
 {% if pinned_content %}
 <section>
     <h2>Intro</h2>
