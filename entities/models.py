@@ -23,7 +23,7 @@ class Gestalt(models.Model):
         return name if name else self.user.username
 
     def get_absolute_url(self):
-        return urlresolvers.reverse('gestalt', args=[self.user.username])
+        return urlresolvers.reverse('gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
 
 
 class Group(models.Model):
@@ -40,7 +40,7 @@ class Group(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return urlresolvers.reverse('group', args=[self.slug])
+        return urlresolvers.reverse('group', args=[type(self).objects.get(pk=self.pk).slug])
 
 
 class GroupContent(models.Model):
