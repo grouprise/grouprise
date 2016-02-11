@@ -9,7 +9,17 @@
                 {{ content.title }}
             </a>
         </h3>
-        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
+        <p>
+        {{ content.date_created|date:'d.m.Y' }} |
+        {% with groups=content.groups %}
+        {% if groups.count == 1 %}
+        <a href="{% url 'group' groups.first.slug %}">{{ groups.first }}</a> |
+        {% endif %}
+        {% endwith %}
+        <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
+        {{ content.comment_set.count }} &nbsp;
+        {{ content.attention_set.count }}
+        </p>
     </header>
 
     {% if content.event %}

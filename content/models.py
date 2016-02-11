@@ -2,6 +2,7 @@ import autoslug
 from django.core import urlresolvers
 from django.db import models
 from django.utils import text, timezone
+from entities import models as entities_models
 
 
 class Image(models.Model):
@@ -44,6 +45,9 @@ class Content(Base):
                 return getattr(self, subclass_name.lower())
             except getattr(sys.modules[__name__], subclass_name).DoesNotExist:
                 pass
+
+    def groups(self):
+        return entities_models.Group.objects.filter(groupcontent__content=self)
 
 
 class Article(Content):
