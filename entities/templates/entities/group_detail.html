@@ -57,7 +57,7 @@
 
 <section>
     {% if can_create_group_content %}
-    <a href="{% url 'content-create' group.pk %}" class="btn btn-primary pull-right">Neuer Eintrag</a>
+    <a href="{% url 'content-create' group.slug %}" class="btn btn-primary pull-right">Neuer Eintrag</a>
     {% endif %}
     <h2>Blog</h2>
     {% for content in group.groupcontent_set.unpinned %}
