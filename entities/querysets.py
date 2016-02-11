@@ -8,13 +8,8 @@ class GroupContentQuerySet(models.QuerySet):
     def pinned(self):
         return self.filter(pinned=True)
 
-    def pinned_without_head_gallery(self):
-        pinned = self.pinned()
-        gallery = pinned.galleries().first()
-        if gallery:
-            return pinned.exclude(pk=gallery.pk)
-        else:
-            return pinned
-
     def unpinned(self):
         return self.filter(pinned=False)
+
+    def without_galleries(self):
+        return self.filter(content__gallery=None)

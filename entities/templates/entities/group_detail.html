@@ -40,7 +40,7 @@
 {% block subcontent %}
 {% has_perm 'entities.change_group' user group as can_change_group %}
 
-{% with pinned_content=group.groupcontent_set.pinned_without_head_gallery %}
+{% with pinned_content=group.groupcontent_set.pinned.without_galleries %}
 {% if pinned_content %}
 <section>
     <h2>Intro</h2>
