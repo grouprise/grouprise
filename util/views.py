@@ -1,7 +1,14 @@
 from crispy_forms import helper, layout
+from entities import models as entities_models
 
 
-class LayoutMixin(object):
+class GroupMixin:
+    def get_group(self):
+        slug = self.request.resolver_match.kwargs.get('group_slug')
+        return entities_models.Group.objects.get(slug=slug)
+
+
+class LayoutMixin:
     def get_form(self):
         form = super().get_form()
         form.helper = helper.FormHelper()
@@ -12,7 +19,7 @@ class LayoutMixin(object):
         return self.layout
 
 
-class NavigationMixin(object):
+class NavigationMixin:
     def get_back_url(self):
         return self.get_success_url()
 

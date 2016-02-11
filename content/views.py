@@ -7,15 +7,36 @@ from rules.contrib import views as rules_views
 from util import views as util_views
 
 
-class ContentDetail(generic.DetailView):
+class ContentNavigationMixin(util_views.GroupMixin, util_views.NavigationMixin):
+    def get_success_url(self):
+        try:
+            return urlresolvers.reverse('group-content', args=[self.get_group().slug, self.object.slug])
+        except entities_models.Group.DoesNotExist:
+            return super().get_success_url()
+
+
+class ContentCreate(rules_views.PermissionRequiredMixin, ContentNavigationMixin, generic.CreateView):
+    model = models.Article
+    permission_required = 'content.create_group_content'
+
+
+class ContentDetail(rules_views.PermissionRequiredMixin, util_views.NavigationMixin, util_views.GroupMixin, generic.DetailView):
     model = models.Content
+    permission_required = 'content.view_content'
+
+    def get_back_url(self):
+        try:
+            entity = self.get_group()
+        except entities_models.Group.DoesNotExist:
+            entity = self.object.author
+        return entity.get_absolute_url()
 
 
 class ContentList(generic.ListView):
     model = models.Content
 
 
-class ContentUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
+class ContentUpdate(rules_views.PermissionRequiredMixin, ContentNavigationMixin, util_views.LayoutMixin, generic.UpdateView):
     fields = ['text', 'title']
     layout = [
             'title',
@@ -24,13 +45,3 @@ class ContentUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
             ]
     model = models.Content
     permission_required = 'content.change_content'
-
-    def get_group(self):
-        slug = self.request.resolver_match.kwargs.get('group_slug')
-        return entities_models.Group.objects.get(slug=slug)
-
-    def get_success_url(self):
-        try:
-            return urlresolvers.reverse('group-content', args=[self.get_group().slug, self.object.slug])
-        except entities_models.Group.DoesNotExist:
-            return super().get_success_url()

@@ -2,16 +2,6 @@
 {% load content rules %}
 
 
-{% block leftcontent %}
-{% if group %}
-{% url 'group' group.slug as back_url %}
-{% else %}
-{% url 'gestalt' content.author.user.username as back_url %}
-{% endif %}
-<a href="{{ back_url }}" class="btn btn-primary">&lt;&lt;</a>
-{% endblock %}
-
-
 {% block maincontent %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
 
