@@ -38,6 +38,7 @@
 
 
 {% block subcontent %}
+{% has_perm 'content.create_group_content' user group as can_create_group_content %}
 {% has_perm 'entities.change_group' user group as can_change_group %}
 
 {% with pinned_content=group.groupcontent_set.pinned.without_galleries %}
@@ -55,8 +56,8 @@
 {% endwith %}
 
 <section>
-    {% if can_change_group %}
-    <a href="#" class="btn btn-primary pull-right">Neuer Eintrag</a>
+    {% if can_create_group_content %}
+    <a href="{% url 'content-create' group.pk %}" class="btn btn-primary pull-right">Neuer Eintrag</a>
     {% endif %}
     <h2>Blog</h2>
     {% for content in group.groupcontent_set.unpinned %}

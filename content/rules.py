@@ -1,10 +1,12 @@
-from rules import add_perm, always_allow, is_authenticated, predicate
+from entities import rules as entities_rules
+import rules
 
 
-@predicate
+@rules.predicate
 def is_content_author(user, content):
     return content.author == user.gestalt
 
 
-add_perm('content.view_content', always_allow)
-add_perm('content.change_content', is_authenticated & is_content_author)
+rules.add_perm('content.view_content', rules.always_allow)
+rules.add_perm('content.create_group_content', rules.is_authenticated & entities_rules.is_group_member)
+rules.add_perm('content.change_content', rules.is_authenticated & is_content_author)

@@ -13,6 +13,7 @@ urlpatterns = [
     # stadt namespace
     url(r'^stadt/', urls.include('allauth.urls')),
     url(r'^stadt/admin/', admin.site.urls),
+    url(r'^stadt/content/new/(?:group=(?P<group_slug>[\w-]+))?$', content_views.ContentCreate.as_view(), name='content-create'),
     url(r'^stadt/content/(?P<pk>[0-9]+)/edit/(?:group=(?P<group_slug>[\w-]+))?$', content_views.ContentUpdate.as_view(), name='content-update'),
     url(r'^stadt/gestalt/(?P<pk>[0-9]+)/edit/$', entities_views.GestaltUpdate.as_view(), name='gestalt-update'),
     url(r'^stadt/group/(?P<pk>[0-9]+)/edit/$', entities_views.GroupUpdate.as_view(), name='group-update'),
