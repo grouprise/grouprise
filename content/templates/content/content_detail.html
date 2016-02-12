@@ -22,7 +22,7 @@
             <a href="{{ content_update_url }}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
             {% endif %}
         </h1>
-        <p>{{ content.date_created|date:'d.m.Y' }} | <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp; {{ content.comment_set.count }} &nbsp; {{ content.attention_set.count }}</p>
+        {% include 'content/_content_info.html' %}
     </header>
 
     {% if content.event %}
