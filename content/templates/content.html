@@ -1,7 +1,7 @@
 {% extends 'stadt.html' %}
 
 
-{% block head_title %}{{ content.title }} - {{ block.super }}{% endblock %}
+{% block head_title %}{% block content_head_title %}{{ content.title }}{% endblock %} - {{ block.super }}{% endblock %}
 {% block title %}{% endblock %}
 
 
