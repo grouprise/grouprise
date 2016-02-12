@@ -46,7 +46,7 @@ class Group(models.Model):
 class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')
     group = models.ForeignKey('Group')
-    pinned = models.BooleanField()
+    pinned = models.BooleanField(default=False)
 
     objects = models.Manager.from_queryset(querysets.GroupContentQuerySet)()
 

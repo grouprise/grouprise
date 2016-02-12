@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'bootstrap3',
-    'content',
+    'content.apps.ContentConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
