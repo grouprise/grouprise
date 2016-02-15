@@ -27,6 +27,11 @@ class NavigationMixin:
             return self.get_success_url()
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['back_url'] = self.get_back_url()
-        return context
+        kwargs['back_url'] = self.get_back_url()
+        return super().get_context_data(**kwargs)
+
+
+class SidebarMixin:
+    def get_context_data(self, **kwargs):
+        kwargs['sidebar_template'] = self.sidebar_template
+        return super().get_context_data(**kwargs)

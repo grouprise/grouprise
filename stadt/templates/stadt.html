@@ -47,21 +47,13 @@
         <div class="col-md-4">
             <aside>
                 {% block sidecontent %}
-                <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-                    <h2>Kalender</h2>
-                    <div style="background-color: #fff;">
-                        (Kalender, Termine)
-                    </div>
-                    <button class="btn btn-default">Alle Termine</button>
-                </div>
-
-                {% include 'entities/_group_list.html' %}
-
-                <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-                    <h2>Empfehlung</h2>
-                    <input type="text" class="form-control" placeholder="E-Mail-Adresse">
-                    <button class="btn btn-primary">Stadtgestalten empfehlen</button>
-                </div>
+                {% if sidebar_template %}
+                {% include sidebar_template %}
+                {% else %}
+                {% block default_sidebar %}
+                {% include '_index_sidebar.html' %}
+                {% endblock %}
+                {% endif %}
                 {% endblock %}
             </aside>
         </div>

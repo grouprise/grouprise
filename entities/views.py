@@ -60,6 +60,7 @@ class GroupCreate(
         rules_views.PermissionRequiredMixin, 
         util_views.LayoutMixin, 
         util_views.NavigationMixin,
+        util_views.SidebarMixin,
         generic.CreateView):
     back_url = urlresolvers.reverse_lazy('index')
     fields = ('name',)
@@ -69,6 +70,7 @@ class GroupCreate(
             )
     model = models.Group
     permission_required = 'entities.create_group'
+    sidebar_template = '_index_sidebar.html'
 
 
 class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
