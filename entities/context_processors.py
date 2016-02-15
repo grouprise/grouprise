@@ -21,13 +21,14 @@ def groups(request):
         else:
             raise http.Http404('Group with slug %(slug)s not found.' % {'slug': slug})
     return {
-        'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
-        'group': group,
-    }
+            'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
+            'group': group,
+            'group_list': models.Group.objects.all(),
+            }
 
 
 def statistics(request):
     return {
-        'gestalt_count': models.Gestalt.objects.count, 
-        'group_count': models.Group.objects.count
-    }
+            'gestalt_count': models.Gestalt.objects.count, 
+            'group_count': models.Group.objects.count
+            }

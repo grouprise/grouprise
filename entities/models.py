@@ -28,7 +28,7 @@ class Gestalt(models.Model):
 
 class Group(models.Model):
     address = models.TextField('Anschrift', blank=True)
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(default=staticfiles_storage.url('avatar.png'))
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)

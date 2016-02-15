@@ -1,0 +1,6 @@
+<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    <h2>Gruppen</h2>
+    {% for group in group_list %}
+    <a href="{% url 'group' group.slug %}"><img src="{{ group.avatar.url }}" title="{{ group }}"></a>
+    {% endfor %}
+</div>
