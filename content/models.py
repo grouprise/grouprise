@@ -17,6 +17,7 @@ class Base(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('-date_created',)
 
 
 class Comment(Base):
