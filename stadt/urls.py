@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^stadt/content/new/(?:group=(?P<group_slug>[\w-]+))?$', content_views.ContentCreate.as_view(), name='content-create'),
     url(r'^stadt/content/(?P<pk>[0-9]+)/edit/(?:group=(?P<group_slug>[\w-]+))?$', content_views.ContentUpdate.as_view(), name='content-update'),
     url(r'^stadt/gestalt/(?P<pk>[0-9]+)/edit/$', entities_views.GestaltUpdate.as_view(), name='gestalt-update'),
+    url(r'^stadt/group/new/$', entities_views.GroupCreate.as_view(), name='group-create'),
     url(r'^stadt/group/(?P<pk>[0-9]+)/edit/$', entities_views.GroupUpdate.as_view(), name='group-update'),
     url(r'^stadt/imprint/$', generic.TemplateView.as_view(template_name='imprint.html'), name='imprint'),
          # stadt/media

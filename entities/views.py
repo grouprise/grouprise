@@ -55,13 +55,29 @@ class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
             return self.form_invalid(form, user_form)
 
 
+class GroupCreate(
+        rules_views.PermissionRequiredMixin, 
+        util_views.LayoutMixin, 
+        generic.CreateView):
+    fields = ('name',)
+    layout = (
+            'name',
+            bootstrap.FormActions(layout.Submit('submit', 'Gruppe anlegen')),
+            )
+    model = models.Group
+    permission_required = 'entities.create_group'
+
 
 class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
     model = models.Group
     permission_required = 'entities.view_group'
 
 
-class GroupUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
+class GroupUpdate(
+        rules_views.PermissionRequiredMixin, 
+        util_views.LayoutMixin, 
+        util_views.NavigationMixin, 
+        generic.UpdateView):
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
     model = models.Group
     permission_required = 'entities.change_group'

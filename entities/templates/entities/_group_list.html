@@ -1,6 +1,14 @@
+{% load rules %}
+{% has_perm 'entities.create_group' user as can_create_group %}
+
 <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
     <h2>Gruppen</h2>
+    <p>
     {% for group in group_list %}
     <a href="{% url 'group' group.slug %}"><img src="{{ group.avatar.url }}" title="{{ group }}"></a>
     {% endfor %}
+    </p>
+    {% if can_create_group %}
+    <p><a href="{% url 'group-create' %}" class="btn btn-default">Neue Gruppe anlegen</a></p>
+    {% endif %}
 </div>
