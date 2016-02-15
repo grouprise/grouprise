@@ -1,4 +1,3 @@
-import autoslug
 from django.core import urlresolvers
 from django.db import models
 from django.utils import text, timezone
@@ -27,7 +26,7 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
-    slug = autoslug.AutoSlugField(populate_from='title', unique=True)
+    slug = models.SlugField(unique=True)
     title = models.CharField('Titel', max_length=255)
 
     def __str__(self):
