@@ -6,6 +6,7 @@
 
 
 {% block subcontent %}
+{% has_perm 'content.create_gestalt_content' user gestalt as can_create_gestalt_content %}
 {% has_perm 'entities.change_gestalt' user gestalt as can_edit_gestalt %}
 
 <h1>
@@ -16,6 +17,9 @@
 </h1>
 
 <section>
+    {% if can_create_gestalt_content %}
+    <a href="{% url 'content-create' %}" class="btn btn-primary pull-right">Neuer Beitrag</a>
+    {% endif %}
     <h2>Blog</h2>
     {% for content in gestalt.content_set.all %}
     {% url 'content' gestalt.user.username content.slug as content_url %}

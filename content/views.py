@@ -12,7 +12,10 @@ class BackToEntityMixin(util_views.GroupMixin, util_views.NavigationMixin):
         try:
             entity = self.get_group()
         except entities_models.Group.DoesNotExist:
-            entity = self.object.author
+            if self.object:
+                entity = self.object.author
+            else:
+                entity = self.request.user.gestalt
         return entity.get_absolute_url()
     
 
@@ -37,7 +40,6 @@ class ContentCreate(
             bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern')),
             ]
     model = models.Article
-    permission_required = 'content.create_group_content'
     template_name = 'content/content_form.html'
 
     def form_valid(self, form):
@@ -52,8 +54,11 @@ class ContentCreate(
             pass
         return response
 
-    def get_permission_object(self):
-        return self.get_group()
+    def has_permission(self):
+        try:
+            return self.request.user.has_perm('content.create_group_content', self.get_group())
+        except entities_models.Group.DoesNotExist:
+            return self.request.user.has_perm('content.create_gestalt_content', self.request.user.gestalt)
 
 
 class ContentDetail(

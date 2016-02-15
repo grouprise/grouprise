@@ -1,18 +1,18 @@
-from rules import add_perm, always_allow, is_authenticated, predicate
+import rules
 
 
-@predicate
+@rules.predicate
+def is_gestalt(user, gestalt):
+    return user == gestalt.user
+
+@rules.predicate
 def is_group_member(user, group):
     return group.membership_set.filter(gestalt__user=user).exists()
 
-@predicate
-def is_self(user, gestalt):
-    return user == gestalt.user
 
+rules.add_perm('entities.view_gestalt', rules.always_allow)
+rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)
+rules.add_perm('entities.mail_gestalt', rules.is_authenticated & ~is_gestalt)
 
-add_perm('entities.view_gestalt', always_allow)
-add_perm('entities.change_gestalt', is_authenticated & is_self)
-add_perm('entities.mail_gestalt', is_authenticated & ~is_self)
-
-add_perm('entities.view_group', always_allow)
-add_perm('entities.change_group', is_authenticated & is_group_member)
+rules.add_perm('entities.view_group', rules.always_allow)
+rules.add_perm('entities.change_group', rules.is_authenticated & is_group_member)
