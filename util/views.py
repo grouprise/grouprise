@@ -21,7 +21,10 @@ class LayoutMixin:
 
 class NavigationMixin:
     def get_back_url(self):
-        return self.get_success_url()
+        try:
+            return self.back_url
+        except AttributeError:
+            return self.get_success_url()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

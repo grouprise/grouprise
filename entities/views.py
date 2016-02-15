@@ -2,6 +2,7 @@ from . import forms, models
 from crispy_forms import bootstrap, layout
 from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import shortcuts
+from django.core import urlresolvers
 from django.views import generic
 from rules.contrib import views as rules_views
 from util import views as util_views
@@ -58,7 +59,9 @@ class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
 class GroupCreate(
         rules_views.PermissionRequiredMixin, 
         util_views.LayoutMixin, 
+        util_views.NavigationMixin,
         generic.CreateView):
+    back_url = urlresolvers.reverse_lazy('index')
     fields = ('name',)
     layout = (
             'name',
