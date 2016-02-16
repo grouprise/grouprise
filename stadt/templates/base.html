@@ -1,0 +1,18 @@
+<!doctype html>
+{% load bootstrap3 %}
+<html{% if request.LANGUAGE_CODE %} lang="{{ request.LANGUAGE_CODE }}"{% endif %}>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block stadt_title %}template title{% endblock %}</title>
+        <link type="text/css" rel="stylesheet" href="/stadt/media/css/app.css">
+        {% block stadt_extra_head %}{% endblock %}
+    </head>
+
+    <body>
+    {% block stadt_content %}template content{% endblock %}
+    <script src="/stadt/media/js/app.js"></script>
+    {% block stadt_extra_script %}{% endblock %}
+    </body>
+</html>

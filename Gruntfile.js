@@ -48,6 +48,29 @@ module.exports = function (grunt) {
                 dest: "media/css/app.css"
             }
         },
+        uglify: {
+            options: {
+                sourceMap: true,
+                sourceMapIncludeSources: true
+            },
+            dist: {
+                files: {
+                    "media/js/app.js": [
+                        "node_modules/jquery/dist/jquery.js",
+                        "node_modules/bootstrap/dist/js/bootstrap.js",
+                        "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
+                        "node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js"
+                    ]
+                }
+            }
+        },
+        copy: {
+            fonts: {
+                files: [
+                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "media/fonts", expand: true },
+                ]
+            }
+        },
         watch: {
             less: {
                 files: ["res/**/*.less"],
@@ -57,11 +80,15 @@ module.exports = function (grunt) {
     });
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks("grunt-contrib-less");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-contrib-less");
+    grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-postcss");
 
     // Default task.
     grunt.registerTask("css", ["less", "postcss"]);
-    grunt.registerTask("default", ["css"]);
+    grunt.registerTask("js", ["uglify"]);
+    grunt.registerTask("fonts", ["copy:fonts"]);
+    grunt.registerTask("default", ["css", "js", "fonts"]);
 };
