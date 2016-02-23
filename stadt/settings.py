@@ -149,6 +149,10 @@ STATIC_URL = '/stadt/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+STATICFILES_DIRS = [
+    ('stadt', os.path.join(BASE_DIR, 'stadt', 'static')),
+]
+
 
 # User uploaded files
 # https://docs.djangoproject.com/en/1.9/topics/files/

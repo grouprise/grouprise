@@ -45,7 +45,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: "build/css/app_unprefixed.css",
-                dest: "media/css/app.css"
+                dest: "stadt/static/css/app.css"
             }
         },
         uglify: {
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    "media/js/app.js": [
+                    "stadt/static/js/app.js": [
                         "node_modules/jquery/dist/jquery.js",
                         "node_modules/bootstrap/dist/js/bootstrap.js",
                         "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
@@ -67,7 +67,7 @@ module.exports = function (grunt) {
         copy: {
             fonts: {
                 files: [
-                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "media/fonts", expand: true },
+                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "stadt/static/fonts", expand: true },
                 ]
             }
         },

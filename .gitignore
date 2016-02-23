@@ -1,6 +1,7 @@
 __pycache__
 .idea
+build
 db.sqlite3
 media
-build
 node_modules
+stadt/static
