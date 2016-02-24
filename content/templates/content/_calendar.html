@@ -1,6 +1,9 @@
+{% load calendar %}
+
 <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
     <h2>Kalender</h2>
     <div style="background-color: #fff;">
+        {% calendar %}
         <ul>
             {% for event in events %}
             {% with event_group=event.groups.first %}
