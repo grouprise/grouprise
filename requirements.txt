@@ -1,6 +1,7 @@
 django
 django-allauth
 django-bootstrap3
+git+https://git.hack-hro.de/stadtgestalten/django-calendar.git
 django-crispy-forms
 markdown
 pillow
