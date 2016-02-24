@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-    'django_calendar',
     'entities.apps.EntitiesConfig',
     'rules.apps.AutodiscoverRulesConfig',
 ]
