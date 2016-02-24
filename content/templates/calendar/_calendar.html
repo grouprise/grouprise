@@ -1,0 +1,15 @@
+<h3>{{ month }}</h3>
+<table>
+    <tr>
+        {% for day in days %}
+        <th>{{ day }}</th>
+        {% endfor %}
+    </tr>
+    {% for week in weeks %}
+    <tr>
+        {% for day in week %}
+        <td>{{ day }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
