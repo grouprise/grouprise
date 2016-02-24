@@ -8,7 +8,11 @@
     {% for week in weeks %}
     <tr>
         {% for day in week %}
-        <td>{{ day }}</td>
+        <td>
+            {% if day.today %}<strong>{% endif %}
+            {{ day.day }}
+            {% if day.today %}</strong>{% endif %}
+        </td>
         {% endfor %}
     </tr>
     {% endfor %}
