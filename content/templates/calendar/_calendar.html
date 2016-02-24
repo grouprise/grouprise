@@ -1,5 +1,5 @@
 <h3>{{ month }}</h3>
-<table>
+<table class="table">
     <tr>
         {% for day in days %}
         <th>{{ day }}</th>
@@ -8,10 +8,8 @@
     {% for week in weeks %}
     <tr>
         {% for day in week %}
-        <td>
-            {% if day.today %}<strong>{% endif %}
+        <td class="{% if day.today %}active{% endif %}">
             {{ day.day }}
-            {% if day.today %}</strong>{% endif %}
         </td>
         {% endfor %}
     </tr>
