@@ -1,3 +1,4 @@
+from . import querysets
 from django.core import urlresolvers
 from django.db import models
 from django.utils import text, timezone
@@ -59,6 +60,11 @@ class Event(Content):
 
     place = models.CharField(max_length=255)
     time = models.DateTimeField()
+
+    objects = models.Manager.from_queryset(querysets.EventQuerySet)()
+
+    class Meta:
+        ordering = ('time',)
 
 
 class Gallery(Content):

@@ -3,9 +3,9 @@
 <div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
     <h2>Kalender</h2>
     <div style="background-color: #fff;">
-        {% calendar events %}
+        {% calendar calendar_events %}
         <ul>
-            {% for event in events.values %}
+            {% for event in upcoming_events %}
             {% with event_group=event.groups.first %}
             {% url 'group-content' event_group.slug event.slug as event_url %}
             <li><a href="{{ event_url }}">{{ event.time|date:'l, j.n.Y:' }} {{ event.title }}</a></li>
