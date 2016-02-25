@@ -6,10 +6,10 @@
         {% calendar calendar_events %}
         <ul>
             {% for event in upcoming_events %}
-            {% with event_group=event.groups.first %}
-            {% url 'group-content' event_group.slug event.slug as event_url %}
-            <li><a href="{{ event_url }}">{{ event.time|date:'l, j.n.Y:' }} {{ event.title }}</a></li>
-            {% endwith %}
+            <li>
+                {{ event.time }}<br>
+                <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+            </li>
             {% endfor %}
         </ul>
     </div>
