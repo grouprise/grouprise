@@ -69,6 +69,12 @@ class Event(Content):
     class Meta:
         ordering = ('time',)
 
+    def date(self):
+        return self.time.date()
+
+    def preview(self):
+        return '%s: %s' % (self.time, self.title)
+
 
 class Gallery(Content):
     display_type_name = 'Galerie'

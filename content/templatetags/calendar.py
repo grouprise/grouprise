@@ -1,6 +1,7 @@
 import calendar as python_calendar
 import datetime
 from django import template
+import itertools
 
 register = template.Library()
 
@@ -10,13 +11,17 @@ _today = datetime.date.today()
 class Calendar(python_calendar.LocaleHTMLCalendar):
     def __init__(self, events, firstweekday=0, locale=None):
         super().__init__(firstweekday, locale)
-        self.events = events
+        self.events = {}
+        for date, events in itertools.groupby(events, key=lambda e: e.date()):
+            self.events[date] = list(events)
 
     def formatday(self, thedate, themonth):
+        events = self.events.get(thedate, [])
         return {
                 'day': thedate.day,
-                'event': self.events.get(thedate),
+                'events': events,
                 'in_month': thedate.month == themonth,
+                'previews': map(lambda e: e.preview(), events),
                 'today': thedate == _today,
                 }
 
