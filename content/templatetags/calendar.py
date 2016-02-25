@@ -8,12 +8,16 @@ _today = datetime.date.today()
 
 
 class Calendar(python_calendar.LocaleHTMLCalendar):
-    def formatday(self, day, today):
-        if day == 0:
-            day = '' # day outside month
+    def __init__(self, events, firstweekday=0, locale=None):
+        super().__init__(firstweekday, locale)
+        self.events = events
+
+    def formatday(self, thedate, themonth):
         return {
-                'day': day,
-                'today': day == today,
+                'day': thedate.day,
+                'event': self.events.get(thedate),
+                'in_month': thedate.month == themonth,
+                'today': thedate == _today,
                 }
 
     def formatmonthname(self, theyear=_today.year, themonth=_today.month):
@@ -21,14 +25,10 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
             return '%s %s' % (python_calendar.month_name[themonth], theyear)
 
     def formatmonthweeks(self, theyear=_today.year, themonth=_today.month):
-        if (theyear, themonth) == (_today.year, _today.month):
-            today = _today.day
-        else:
-            today = 0
-        return [self.formatweek(week, today) for week in self.monthdays2calendar(theyear, themonth)]
+        return [self.formatweek(week, themonth) for week in self.monthdatescalendar(theyear, themonth)]
 
-    def formatweek(self, theweek, today):
-        return [self.formatday(d, today) for (d, wd) in theweek]
+    def formatweek(self, theweek, themonth):
+        return [self.formatday(d, themonth) for d in theweek]
 
     def formatweekday(self, day):
         with python_calendar.different_locale(self.locale):
@@ -39,8 +39,8 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 
 
 @register.inclusion_tag('calendar/_calendar.html')
-def calendar():
-    c = Calendar()
+def calendar(events):
+    c = Calendar(events)
     return {
             'days': c.formatweekheader(), 
             'month': c.formatmonthname(), 

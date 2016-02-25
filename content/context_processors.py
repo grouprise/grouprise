@@ -2,7 +2,9 @@ from . import models
 
 
 def events(request):
-    return {'events': models.Event.objects.all()}
+    e = models.Event.objects.all()
+    dates = map(lambda t: t.date(), e.values_list('time', flat=True))
+    return {'events': dict(zip(dates, e))}
 
 
 def statistics(request):

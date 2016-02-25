@@ -8,8 +8,14 @@
     {% for week in weeks %}
     <tr>
         {% for day in week %}
-        <td class="{% if day.today %}active{% endif %}">
+        <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
+            {% comment %}
+            The previous line could be replaced by something like:
+            <td class="{% classes day.today|iftrue:'active' day.in_month|iffalse:'text-muted' %}">
+            {% endcomment %}
+            {% if day.event %}<a href="{{ day.event.get_absolute_url }}" title="{{ day.event }}">{% endif %}
             {{ day.day }}
+            {% if day.event %}</a>{% endif %}
         </td>
         {% endfor %}
     </tr>
