@@ -73,7 +73,7 @@ class Event(Content):
         return self.time.date()
 
     def preview(self):
-        return '%s: %s' % (self.time, self.title)
+        return '{:%R} {}'.format(self.time, self.title)
 
 
 class Gallery(Content):

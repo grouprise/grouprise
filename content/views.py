@@ -86,3 +86,11 @@ class ContentUpdate(
             ]
     model = models.Content
     permission_required = 'content.change_content'
+
+
+class EventDay(generic.DayArchiveView):
+    allow_future = True
+    date_field = 'time'
+    model = models.Event
+    ordering = 'time'
+    template_name_suffix = '_day'

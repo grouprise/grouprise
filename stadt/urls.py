@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^stadt/admin/', admin.site.urls),
     url(r'^stadt/content/new/(?:group=(?P<group_slug>[\w-]+))?$', content_views.ContentCreate.as_view(), name='content-create'),
     url(r'^stadt/content/(?P<pk>[0-9]+)/edit/(?:group=(?P<group_slug>[\w-]+))?$', content_views.ContentUpdate.as_view(), name='content-update'),
+    url(r'^stadt/event/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$', content_views.EventDay.as_view(), name='event-day'),
     url(r'^stadt/gestalt/(?P<pk>[0-9]+)/edit/$', entities_views.GestaltUpdate.as_view(), name='gestalt-update'),
     url(r'^stadt/group/new/$', entities_views.GroupCreate.as_view(), name='group-create'),
     url(r'^stadt/group/(?P<pk>[0-9]+)/edit/$', entities_views.GroupUpdate.as_view(), name='group-update'),

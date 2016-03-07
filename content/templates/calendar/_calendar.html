@@ -9,17 +9,11 @@
     <tr>
         {% for day in week %}
         <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
-            {% if day.events %}
-            {% with title=day.previews|join:', '|truncatechars:50 %}
-            {% if day.events|length_is:1 %}
-            <a href="{{ day.events.0.get_absolute_url }}" title="{{ title }}">
-            {% else %}
-            <a href="#" title="{{ title }}">
-            {% endif %}
-            {% endwith %}
+            {% if day.url %}
+            <a href="{{ day.url }}" title="{{ day.title }}">
             {% endif %}
             {{ day.day }}
-            {% if day.events %}
+            {% if day.url %}
             </a>
             {% endif %}
         </td>

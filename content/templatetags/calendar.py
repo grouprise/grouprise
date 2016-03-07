@@ -1,6 +1,8 @@
 import calendar as python_calendar
 import datetime
 from django import template
+from django.core import urlresolvers
+from django.utils import text
 import itertools
 
 register = template.Library()
@@ -17,12 +19,17 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 
     def formatday(self, thedate, themonth):
         events = self.events.get(thedate, [])
+        url = ''
+        if len(events) == 1:
+            url = events[0].get_absolute_url()
+        elif len(events) > 1:
+            url = urlresolvers.reverse('event-day', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ybd'])
         return {
                 'day': thedate.day,
-                'events': events,
                 'in_month': thedate.month == themonth,
-                'previews': map(lambda e: e.preview(), events),
+                'title': text.Truncator(', '.join(map(lambda e: e.preview(), events))).chars(50),
                 'today': thedate == _today,
+                'url': url,
                 }
 
     def formatmonthname(self, theyear=_today.year, themonth=_today.month):
