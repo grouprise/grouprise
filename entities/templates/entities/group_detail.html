@@ -34,6 +34,8 @@
                 Gruppenmitglieder: {{ group.membership_set.count }}
                 {% if can_join_group %}
                 <a href="{% url 'group-join' group.pk %}"><i class="fa fa-sign-in" title="Der Gruppe beitreten"></i></a>
+                {% elif user.gestalt in group.members.all %}
+                (Du bist Mitglied)
                 {% endif %}
             </li>
             <li>{{ current_site.domain }}/ {{ group.slug }}</li>
