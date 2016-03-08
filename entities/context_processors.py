@@ -11,15 +11,22 @@ def gestalt(request):
         return {}
 
 
+def get_group_by_any_field(request, **kwargs):
+    group = None
+    for field, arg_key in kwargs.items():
+        try:
+            kwarg = request.resolver_match.kwargs.get(arg_key)
+            group = models.Group.objects.get(**{field: kwarg})
+            break
+        except models.Group.DoesNotExist:
+            continue
+    return kwarg, group
+
+
 def groups(request):
-    try:
-        slug = request.resolver_match.kwargs.get('group_slug')
-        group = models.Group.objects.get(slug=slug)
-    except models.Group.DoesNotExist:
-        if not slug:
-            group = None
-        else:
-            raise http.Http404('Group with slug %(slug)s not found.' % {'slug': slug})
+    kwarg, group = get_group_by_any_field(request, pk='group_pk', slug='group_slug')
+    if not group and kwarg:
+        raise http.Http404('Group not found by argument {}.'.format(kwarg))
     return {
             'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
             'group': group,

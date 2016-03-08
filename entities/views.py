@@ -86,12 +86,9 @@ class GroupJoin(
         util_views.NavigationMixin,
         generic.CreateView):
     fields = []
-    layout = (
-            bootstrap.FormActions(layout.Submit('submit', 'Der Gruppe beitreten')),
-            )
+    layout = (bootstrap.FormActions(layout.Submit('submit', 'Der Gruppe beitreten')),)
     model = models.Membership
     permission_required = 'entities.join_group'
-    template_name = 'entities/group_form.html'
 
     def form_valid(self, form):
         group = self.get_group()
