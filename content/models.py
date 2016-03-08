@@ -27,6 +27,7 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
+    groups = models.ManyToManyField('entities.Group', through='entities.GroupContent')
     slug = models.SlugField(unique=True)
     title = models.CharField('Titel', max_length=255)
 
@@ -35,7 +36,7 @@ class Content(Base):
 
     def get_absolute_url(self):
         try:
-            return urlresolvers.reverse('group-content', args=[self.groups().first().slug, self.slug])
+            return urlresolvers.reverse('group-content', args=[self.groups.first().slug, self.slug])
         except AttributeError:
             return urlresolvers.reverse('content', args=[self.author.user.username, self.slug])
 
@@ -49,9 +50,6 @@ class Content(Base):
                 return getattr(self, subclass_name.lower())
             except getattr(sys.modules[__name__], subclass_name).DoesNotExist:
                 pass
-
-    def groups(self):
-        return entities_models.Group.objects.filter(groupcontent__content=self)
 
 
 class Article(Content):
