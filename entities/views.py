@@ -1,5 +1,6 @@
 from . import forms, models
 from crispy_forms import bootstrap, layout
+from django.contrib import messages
 from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import shortcuts
 from django.core import urlresolvers
@@ -76,6 +77,34 @@ class GroupCreate(
 class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
     model = models.Group
     permission_required = 'entities.view_group'
+
+
+class GroupJoin(
+        rules_views.PermissionRequiredMixin, 
+        util_views.GroupMixin,
+        util_views.LayoutMixin,
+        util_views.NavigationMixin,
+        generic.CreateView):
+    fields = []
+    layout = (
+            bootstrap.FormActions(layout.Submit('submit', 'Der Gruppe beitreten')),
+            )
+    model = models.Membership
+    permission_required = 'entities.join_group'
+    template_name = 'entities/group_form.html'
+
+    def form_valid(self, form):
+        group = self.get_group()
+        messages.success(self.request, 'Du bist der Gruppe {} erfolgreich beigetreten.'.format(group))
+        form.instance.gestalt = self.request.user.gestalt
+        form.instance.group = group
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.get_group().get_absolute_url()
+
+    def get_permission_object(self):
+        return self.get_group()
 
 
 class GroupUpdate(

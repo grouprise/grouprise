@@ -32,6 +32,7 @@ class Group(models.Model):
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)
+    members = models.ManyToManyField('Gestalt', through='Membership')
     name = models.CharField('Name', max_length=255)
     slug = models.SlugField('Adresse der Gruppenseite', unique=True)
     url = models.URLField('Adresse im Web', blank=True)

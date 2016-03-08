@@ -4,8 +4,13 @@ from entities import models as entities_models
 
 class GroupMixin:
     def get_group(self):
+        pk = self.request.resolver_match.kwargs.get('group_pk')
         slug = self.request.resolver_match.kwargs.get('group_slug')
-        return entities_models.Group.objects.get(slug=slug)
+        manager = entities_models.Group.objects
+        try:
+            return manager.get(slug=slug)
+        except entities_models.Group.DoesNotExist:
+            return manager.get(pk=pk)
 
 
 class LayoutMixin:

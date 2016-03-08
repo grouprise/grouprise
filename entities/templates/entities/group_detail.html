@@ -7,6 +7,7 @@
 
 {% block headcontent %}
 {% has_perm 'entities.change_group' user group as can_edit_group %}
+{% has_perm 'entities.join_group' user group as can_join_group %}
 <div class="row">
     <div class="col-md-6">
         {% with head_gallery=group.groupcontent_set.pinned.galleries.first.content %}
@@ -29,7 +30,12 @@
             <li>{{ group.address|linebreaks }}</li>
             <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
             <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
-            <li>Gruppenmitglieder: {{ group.membership_set.count }}</li>
+            <li>
+                Gruppenmitglieder: {{ group.membership_set.count }}
+                {% if can_join_group %}
+                <a href="{% url 'group-join' group.pk %}"><i class="fa fa-sign-in" title="Der Gruppe beitreten"></i></a>
+                {% endif %}
+            </li>
             <li>{{ current_site.domain }}/ {{ group.slug }}</li>
         </ul>
     </div>
