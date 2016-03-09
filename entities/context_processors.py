@@ -1,7 +1,6 @@
-from django import http
-from django.conf import settings
-
 from . import models
+from django.conf import settings
+from util import views as util_views
 
 
 def gestalt(request):
@@ -11,25 +10,10 @@ def gestalt(request):
         return {}
 
 
-def get_group_by_any_field(request, **kwargs):
-    group = None
-    for field, arg_key in kwargs.items():
-        try:
-            kwarg = request.resolver_match.kwargs.get(arg_key)
-            group = models.Group.objects.get(**{field: kwarg})
-            break
-        except models.Group.DoesNotExist:
-            continue
-    return kwarg, group
-
-
 def groups(request):
-    kwarg, group = get_group_by_any_field(request, pk='group_pk', slug='group_slug')
-    if not group and kwarg:
-        raise http.Http404('Group not found by argument {}.'.format(kwarg))
     return {
             'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
-            'group': group,
+            'group': util_views.get_group_by_kwarg(request, pk='group_pk', slug='group_slug'),
             'group_list': models.Group.objects.all(),
             }
 

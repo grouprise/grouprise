@@ -1,16 +1,29 @@
 from crispy_forms import helper, layout
+from django import http
 from entities import models as entities_models
+
+
+def get_group_by_kwarg(request, **kwargs):
+    group = None
+    for field, arg_key in kwargs.items():
+        try:
+            kwarg = request.resolver_match.kwargs.get(arg_key)
+            group = entities_models.Group.objects.get(**{field: kwarg})
+            break
+        except entities_models.Group.DoesNotExist:
+            continue
+    if not group and kwarg:
+        raise http.Http404('Group not found by argument {}.'.format(kwarg))
+    return group
 
 
 class GroupMixin:
     def get_group(self):
-        pk = self.request.resolver_match.kwargs.get('group_pk')
-        slug = self.request.resolver_match.kwargs.get('group_slug')
-        manager = entities_models.Group.objects
-        try:
-            return manager.get(slug=slug)
-        except entities_models.Group.DoesNotExist:
-            return manager.get(pk=pk)
+        group = get_group_by_kwarg(self.request, pk='group_pk', slug='group_slug')
+        if group:
+            return group
+        else:
+            raise http.Http404('Expected valid group specification in URL.')
 
 
 class LayoutMixin:

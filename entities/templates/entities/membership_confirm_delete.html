@@ -1,0 +1,9 @@
+{% extends 'group.html' %}
+
+{% block subcontent %}
+<form method="post">
+    {% csrf_token %}
+    <p>Möchtest Du Deine Mitgliedschaft in der Gruppe <em>{{ group }}</em> auf Stadtgestalten wirklich beenden?</p>
+    <button type="submit" class="btn btn-primary">Mitgliedschaft beenden</button>
+</form>
+{% endblock %}

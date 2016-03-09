@@ -5,6 +5,7 @@ from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import shortcuts
 from django.core import urlresolvers
 from django.views import generic
+from django.views.generic import edit as generic_edit_views
 from rules.contrib import views as rules_views
 from util import views as util_views
 
@@ -57,6 +58,18 @@ class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
             return self.form_invalid(form, user_form)
 
 
+class Group(rules_views.PermissionRequiredMixin, generic.DetailView):
+    model = models.Group
+    permission_required = 'entities.view_group'
+
+    def get_context_data(self, **kwargs):
+        gestalt = self.request.user.gestalt
+        group = self.object
+        if gestalt in group.members.all():
+            kwargs['membership'] = models.Membership.objects.get(gestalt=gestalt, group=group)
+        return super().get_context_data(**kwargs)
+
+
 class GroupCreate(
         rules_views.PermissionRequiredMixin, 
         util_views.LayoutMixin, 
@@ -74,25 +87,20 @@ class GroupCreate(
     sidebar_template = '_index_sidebar.html'
 
 
-class GroupDetail(rules_views.PermissionRequiredMixin, generic.DetailView):
-    model = models.Group
-    permission_required = 'entities.view_group'
-
-
-class GroupJoin(
+class GroupMembershipCreate(
         rules_views.PermissionRequiredMixin, 
         util_views.GroupMixin,
         util_views.LayoutMixin,
         util_views.NavigationMixin,
         generic.CreateView):
     fields = []
-    layout = (bootstrap.FormActions(layout.Submit('submit', 'Der Gruppe beitreten')),)
+    layout = (bootstrap.FormActions(layout.Submit('submit', 'Mitglied werden')),)
     model = models.Membership
-    permission_required = 'entities.join_group'
+    permission_required = 'entities.create_group_membership'
 
     def form_valid(self, form):
         group = self.get_group()
-        messages.success(self.request, 'Du bist der Gruppe {} erfolgreich beigetreten.'.format(group))
+        messages.success(self.request, 'Du bist nun Mitglied der Gruppe <em>{}</em>.'.format(group))
         form.instance.gestalt = self.request.user.gestalt
         form.instance.group = group
         return super().form_valid(form)
@@ -102,6 +110,21 @@ class GroupJoin(
 
     def get_permission_object(self):
         return self.get_group()
+
+
+class GroupMembershipDelete(
+        rules_views.PermissionRequiredMixin,
+        util_views.NavigationMixin,
+        generic.DeleteView):
+    model = models.Membership
+    permission_required = 'entities.delete_group_membership'
+
+    def get_context_data(self, **kwargs):
+        kwargs['group'] = self.object.group
+        return super().get_context_data(**kwargs)
+
+    def get_success_url(self):
+        return self.object.group.get_absolute_url()
 
 
 class GroupUpdate(

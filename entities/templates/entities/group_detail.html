@@ -1,47 +1,10 @@
 {% extends 'group.html' %}
 {% load rules %}
 
-
 {% block title %}{% endblock %}
 
-
 {% block headcontent %}
-{% has_perm 'entities.change_group' user group as can_edit_group %}
-{% has_perm 'entities.join_group' user group as can_join_group %}
-<div class="row">
-    <div class="col-md-6">
-        {% with head_gallery=group.groupcontent_set.pinned.galleries.first.content %}
-        {% if head_gallery %}
-        <img src="{{ head_gallery.image_set.first.image.url }}">
-        {% endif %}
-        {% endwith %}
-    </div>
-    <div class="col-md-6">
-        {% if group.avatar %}
-        <img src="{{ group.avatar.url }}" class="pull-right">
-        {% endif %}
-        <h1>
-            {{ group.name }}
-            {% if can_edit_group %}
-            <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
-            {% endif %}
-        </h1>
-        <ul>
-            <li>{{ group.address|linebreaks }}</li>
-            <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
-            <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
-            <li>
-                Gruppenmitglieder: {{ group.membership_set.count }}
-                {% if can_join_group %}
-                <a href="{% url 'group-join' group.pk %}"><i class="fa fa-sign-in" title="Der Gruppe beitreten"></i></a>
-                {% elif user.gestalt in group.members.all %}
-                (Du bist Mitglied)
-                {% endif %}
-            </li>
-            <li>{{ current_site.domain }}/ {{ group.slug }}</li>
-        </ul>
-    </div>
-</div>
+{% include 'entities/_group_head.html' %}
 {% endblock %}
 
 
