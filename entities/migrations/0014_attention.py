@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0009_remove_content_views'),
+        ('content', '0006_content_slug_squashed_0012_auto_20160215_1101'),
         ('entities', '0013_auto_20160108_1026'),
     ]
 
