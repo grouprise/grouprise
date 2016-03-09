@@ -1,12 +1,12 @@
 import datetime
 from django.db import models
+from django.utils import timezone
 
 
 class EventQuerySet(models.QuerySet):
     def around(self, time):
         delta = datetime.timedelta(weeks=6)
-        now = datetime.datetime.now()
-        return self.filter(time__gt=now-delta, time__lt=now+delta)
+        return self.filter(time__gt=time-delta, time__lt=time+delta)
 
     def upcoming(self, count):
-        return self.filter(time__gte=datetime.datetime.now())[:count]
+        return self.filter(time__gte=timezone.now())[:count]
