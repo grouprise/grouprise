@@ -57,7 +57,7 @@ class Article(Content):
     
 
 class Event(Content):
-    display_type_name = 'Termin'
+    display_type_name = 'Ereignis'
 
     place = models.CharField(max_length=255)
     time = models.DateTimeField()
