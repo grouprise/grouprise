@@ -1,6 +1,7 @@
 from . import models
 from crispy_forms import bootstrap, layout
 from django.core import urlresolvers
+from django.db import models as django_models
 from django.views import generic
 from entities import models as entities_models
 from rules.contrib import views as rules_views
@@ -71,7 +72,10 @@ class ContentDetail(
 
 
 class ContentList(generic.ListView):
-    queryset = models.Content.objects.filter(public=True)
+    def get_queryset(self):
+        return models.Content.objects.filter(
+                django_models.Q(public=True) | 
+                django_models.Q(groupcontent__group__in=self.request.user.gestalt.group_set.all()))
 
 
 class ContentUpdate(
