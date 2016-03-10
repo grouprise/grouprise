@@ -71,7 +71,7 @@ class ContentDetail(
 
 
 class ContentList(generic.ListView):
-    model = models.Content
+    queryset = models.Content.objects.filter(public=True)
 
 
 class ContentUpdate(
