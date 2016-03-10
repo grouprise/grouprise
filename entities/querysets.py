@@ -1,5 +1,8 @@
 from django.db import models
 
+class GroupContentManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(content__public=True)
 
 class GroupContentQuerySet(models.QuerySet):
     def galleries(self):

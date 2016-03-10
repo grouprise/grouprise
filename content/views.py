@@ -33,10 +33,11 @@ class ContentCreate(
         SuccessToContentMixin, 
         util_views.LayoutMixin, 
         generic.CreateView):
-    fields = ['text', 'title']
+    fields = ['public', 'text', 'title']
     layout = [
             'title',
             'text',
+            'public',
             bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern')),
             ]
     model = models.Article

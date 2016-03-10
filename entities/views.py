@@ -1,4 +1,5 @@
 from . import forms, models
+from content import models as content_models
 from crispy_forms import bootstrap, layout
 from django.contrib import messages
 from django.contrib.auth import mixins as auth_mixins
@@ -63,10 +64,16 @@ class Group(rules_views.PermissionRequiredMixin, generic.DetailView):
     permission_required = 'entities.view_group'
 
     def get_context_data(self, **kwargs):
-        gestalt = self.request.user.gestalt
-        group = self.object
-        if gestalt in group.members.all():
-            kwargs['membership'] = models.Membership.objects.get(gestalt=gestalt, group=group)
+        try:
+            kwargs['membership'] = models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.object)
+        except models.Membership.DoesNotExist:
+            pass
+        if self.request.user.has_perm('content.view_internal_content', self.object):
+            content = content_models.Content.objects.filter(groupcontent__group=self.object)
+        else:
+            content = content_models.Content.objects.filter(groupcontent__group=self.object, public=True)
+        kwargs['intro_content'] = content.filter(groupcontent__pinned=True)
+        kwargs['blog_content'] = content.filter(groupcontent__pinned=False)
         return super().get_context_data(**kwargs)
 
 

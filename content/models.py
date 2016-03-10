@@ -28,8 +28,14 @@ class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
     groups = models.ManyToManyField('entities.Group', through='entities.GroupContent')
+    public = models.BooleanField('Veröffentlichen', default=False,
+            help_text='Veröffentlichter Inhalt wird im öffentlichen Blog '
+            'angezeigt, Benachrichtigungen werden an Gruppenmitglieder und '
+            'Beobachterinnen versendet. Nicht veröffentlichter Inhalt ist nur '
+            'gruppenintern zugänglich, Benachrichtigungen werden nur an '
+            'Mitglieder versendet.')
     slug = models.SlugField(unique=True)
-    title = models.CharField('Titel', max_length=255)
+    title = models.CharField('Titel / Betreff', max_length=255)
 
     def __str__(self):
         return self.title

@@ -12,30 +12,18 @@
 {% has_perm 'content.create_group_content' user group as can_create_group_content %}
 {% has_perm 'entities.change_group' user group as can_change_group %}
 
-{% with pinned_content=group.groupcontent_set.pinned.without_galleries %}
-{% if pinned_content %}
-<section>
-    <h2>Intro</h2>
-    {% for content in pinned_content %}
-    {% with content=content.content %}
-    {% url 'group-content' group.slug content.slug as content_url %}
-    {% include 'content/_content_preview.html' %}
-    {% endwith %}
-    {% endfor %}
-</section>
+{% if intro_content %}
+<h2>Intro</h2>
+{% for content in intro_content %}
+{% include 'content/_content_preview.html' %}
+{% endfor %}
 {% endif %}
-{% endwith %}
 
-<section>
-    {% if can_create_group_content %}
-    <a href="{% url 'content-create' group.slug %}" class="btn btn-primary pull-right">Neuer Beitrag</a>
-    {% endif %}
-    <h2>Blog</h2>
-    {% for content in group.groupcontent_set.unpinned %}
-    {% with content=content.content %}
-    {% url 'group-content' group.slug content.slug as content_url %}
-    {% include 'content/_content_preview.html' %}
-    {% endwith %}
-    {% endfor %}
-</section>
+{% if can_create_group_content %}
+<a href="{% url 'content-create' group.slug %}" class="btn btn-primary pull-right">Neuer Beitrag</a>
+{% endif %}
+<h2>Blog</h2>
+{% for content in blog_content %}
+{% include 'content/_content_preview.html' %}
+{% endfor %}
 {% endblock %}
