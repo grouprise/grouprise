@@ -7,34 +7,26 @@ from rules.contrib import views as rules_views
 from util import views as util_views
 
 
-class BackToEntityMixin(util_views.GroupMixin, util_views.NavigationMixin):
-    def get_back_url(self):
-        entity = self.get_group()
-        if not entity:
-            if self.object:
-                entity = self.object.author
-            else:
-                entity = self.request.user.gestalt
-        return entity.get_absolute_url()
-    
-
-class SuccessToContentMixin(util_views.GroupMixin, util_views.NavigationMixin):
-    pass
-
-
 class Content(
         rules_views.PermissionRequiredMixin, 
-        BackToEntityMixin, 
+        util_views.GroupMixin,
+        util_views.NavigationMixin,
         generic.DetailView):
     model = models.Content
     permission_required = 'content.view_content'
+    
+    def get_back_url(self):
+        try:
+            return self.get_group().get_absolute_url()
+        except AttributeError:
+            return self.object.author.get_absolute_url()
 
 
 class ContentCreate(
         rules_views.PermissionRequiredMixin, 
-        BackToEntityMixin, 
-        SuccessToContentMixin, 
+        util_views.GroupMixin,
         util_views.LayoutMixin, 
+        util_views.NavigationMixin,
         generic.CreateView):
     fields = ['public', 'text', 'title']
     layout = [
@@ -53,6 +45,12 @@ class ContentCreate(
         if group:
             entities_models.GroupContent(content=self.object, group=group).save()
         return response
+    
+    def get_back_url(self):
+        try:
+            return self.get_group().get_absolute_url()
+        except AttributeError:
+            return self.request.user.gestalt.get_absolute_url()
 
     def has_permission(self):
         return self.request.user.has_perm('entities.create_group_content', self.get_group()) or self.request.user.has_perm('entities.create_gestalt_content', self.request.user.gestalt)
@@ -65,8 +63,8 @@ class ContentList(generic.ListView):
 
 class ContentUpdate(
         rules_views.PermissionRequiredMixin, 
-        SuccessToContentMixin, 
         util_views.LayoutMixin, 
+        util_views.NavigationMixin,
         generic.UpdateView):
     fields = ['text', 'title']
     layout = [
