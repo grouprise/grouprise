@@ -10,9 +10,8 @@ from util import views as util_views
 
 class BackToEntityMixin(util_views.GroupMixin, util_views.NavigationMixin):
     def get_back_url(self):
-        try:
-            entity = self.get_group()
-        except entities_models.Group.DoesNotExist:
+        entity = self.get_group()
+        if not entity:
             if self.object:
                 entity = self.object.author
             else:

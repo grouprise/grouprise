@@ -22,11 +22,7 @@ def get_group_by_kwarg(request, **kwargs):
 
 class GroupMixin:
     def get_group(self):
-        group = get_group_by_kwarg(self.request, pk='group_pk', slug='group_slug')
-        if group:
-            return group
-        else:
-            raise http.Http404('Expected valid group specification in URL.')
+        return get_group_by_kwarg(self.request, pk='group_pk', slug='group_slug')
 
 
 class LayoutMixin:
