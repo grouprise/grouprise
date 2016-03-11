@@ -2,6 +2,9 @@ from crispy_forms import helper, layout
 from django import http
 from entities import models as entities_models
 
+class GestaltMixin:
+    def get_gestalt(self):
+        return self.request.user.gestalt if self.request.user.is_authenticated() else None
 
 def get_group_by_kwarg(request, **kwargs):
     group = None

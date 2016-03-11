@@ -16,6 +16,10 @@ class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
     permission_required = 'entities.view_gestalt'
     slug_field = 'user__username'
 
+    def get_context_data(self, **kwargs):
+        kwargs['content'] = self.object.content_set.permitted(self.request.user)
+        return super().get_context_data(**kwargs)
+
 
 class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
     fields = ['about']
@@ -59,19 +63,16 @@ class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin,
             return self.form_invalid(form, user_form)
 
 
-class Group(rules_views.PermissionRequiredMixin, generic.DetailView):
+class Group(rules_views.PermissionRequiredMixin, util_views.GestaltMixin, generic.DetailView):
     model = models.Group
     permission_required = 'entities.view_group'
 
     def get_context_data(self, **kwargs):
         try:
-            kwargs['membership'] = models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.object)
+            kwargs['membership'] = models.Membership.objects.get(gestalt=self.get_gestalt(), group=self.object)
         except models.Membership.DoesNotExist:
             pass
-        if self.request.user.has_perm('content.view_internal_content', self.object):
-            content = content_models.Content.objects.filter(groupcontent__group=self.object)
-        else:
-            content = content_models.Content.objects.filter(groupcontent__group=self.object, public=True)
+        content = content_models.Content.objects.permitted(self.request.user).filter(groupcontent__group=self.object)
         kwargs['intro_content'] = content.filter(groupcontent__pinned=True)
         kwargs['blog_content'] = content.filter(groupcontent__pinned=False)
         return super().get_context_data(**kwargs)
@@ -96,6 +97,7 @@ class GroupCreate(
 
 class GroupMembershipCreate(
         rules_views.PermissionRequiredMixin, 
+        util_views.GestaltMixin,
         util_views.GroupMixin,
         util_views.LayoutMixin,
         util_views.NavigationMixin,
@@ -108,7 +110,7 @@ class GroupMembershipCreate(
     def form_valid(self, form):
         group = self.get_group()
         messages.success(self.request, 'Du bist nun Mitglied der Gruppe <em>{}</em>.'.format(group))
-        form.instance.gestalt = self.request.user.gestalt
+        form.instance.gestalt = self.get_gestalt()
         form.instance.group = group
         return super().form_valid(form)
 

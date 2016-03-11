@@ -73,9 +73,7 @@ class ContentDetail(
 
 class ContentList(generic.ListView):
     def get_queryset(self):
-        return models.Content.objects.filter(
-                django_models.Q(public=True) | 
-                django_models.Q(groupcontent__group__in=self.request.user.gestalt.group_set.all()))
+        return models.Content.objects.permitted(self.request.user)
 
 
 class ContentUpdate(

@@ -1,7 +1,6 @@
 {% extends 'gestalt.html' %}
 {% load rules %}
 
-
 {% block title %}{% endblock %}
 
 
@@ -16,14 +15,12 @@
     {% endif %}
 </h1>
 
-<section>
-    {% if can_create_gestalt_content %}
-    <a href="{% url 'content-create' %}" class="btn btn-primary pull-right">Neuer Beitrag</a>
-    {% endif %}
-    <h2>Blog</h2>
-    {% for content in gestalt.content_set.all %}
-    {% url 'content' gestalt.user.username content.slug as content_url %}
-    {% include 'content/_content_preview.html' %}
-    {% endfor %}
-</section>
+{% if can_create_gestalt_content %}
+<a href="{% url 'content-create' %}" class="btn btn-primary pull-right">Neuer Beitrag</a>
+{% endif %}
+<h2>Blog</h2>
+{% for content in content %}
+{% url 'content' gestalt.user.username content.slug as content_url %}
+{% include 'content/_content_preview.html' %}
+{% endfor %}
 {% endblock %}

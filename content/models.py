@@ -37,6 +37,8 @@ class Content(Base):
     slug = models.SlugField(unique=True)
     title = models.CharField('Titel / Betreff', max_length=255)
 
+    objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
+
     def __str__(self):
         return self.title
 
