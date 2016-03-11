@@ -2,15 +2,15 @@ import rules
 
 @rules.predicate
 def is_gestalt(user, gestalt):
-    return user == gestalt.user
+    return gestalt and user == gestalt.user
 
 @rules.predicate
 def is_group_member(user, group):
-    return group.members.filter(user=user).exists()
+    return group and group.members.filter(user=user).exists()
 
 @rules.predicate
 def is_group_membership(user, membership):
-    return membership.gestalt == user.gestalt if membership else False
+    return membership and user and membership.gestalt == user.gestalt if membership else False
 
 rules.add_perm('entities.view_gestalt', rules.always_allow)
 rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)

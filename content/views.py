@@ -49,20 +49,13 @@ class ContentCreate(
     def form_valid(self, form):
         form.instance.author = self.request.user.gestalt
         response = super().form_valid(form)
-        try:
-            entities_models.GroupContent(
-                    content=self.object, 
-                    group=self.get_group()
-                    ).save()
-        except entities_models.Group.DoesNotExist:
-            pass
+        group = self.get_group()
+        if group:
+            entities_models.GroupContent(content=self.object, group=group).save()
         return response
 
     def has_permission(self):
-        try:
-            return self.request.user.has_perm('entities.create_group_content', self.get_group())
-        except entities_models.Group.DoesNotExist:
-            return self.request.user.has_perm('entities.create_gestalt_content', self.request.user.gestalt)
+        return self.request.user.has_perm('entities.create_group_content', self.get_group()) or self.request.user.has_perm('entities.create_gestalt_content', self.request.user.gestalt)
 
 
 class ContentList(generic.ListView):
