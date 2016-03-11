@@ -20,7 +20,7 @@
 {% endif %}
 <h2>Blog</h2>
 {% for content in content %}
-{% url 'content' gestalt.user.username content.slug as content_url %}
+{% url 'gestalt-content' gestalt.user.username content.slug as content_url %}
 {% include 'content/_content_preview.html' %}
 {% endfor %}
 {% endblock %}

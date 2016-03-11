@@ -20,11 +20,7 @@ class BackToEntityMixin(util_views.GroupMixin, util_views.NavigationMixin):
     
 
 class SuccessToContentMixin(util_views.GroupMixin, util_views.NavigationMixin):
-    def get_success_url(self):
-        try:
-            return urlresolvers.reverse('group-content', args=[self.get_group().slug, self.object.slug])
-        except entities_models.Group.DoesNotExist:
-            return super().get_success_url()
+    pass
 
 
 class Content(
