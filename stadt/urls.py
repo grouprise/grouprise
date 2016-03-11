@@ -26,8 +26,8 @@ urlpatterns = [
          # stadt/static
     # gestalt namespaces
     url(r'^gestalt/(?P<slug>[\w.@+-]+)/$', entities_views.Gestalt.as_view(), name='gestalt'),
-    url(r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetail.as_view(), name='content'),
+    url(r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/(?P<slug>[\w-]+)/$', content_views.Content.as_view(), name='content'),
     # group namespaces
     url(r'^(?P<slug>[\w-]+)$', entities_views.Group.as_view(), name='group'),
-    url(r'^(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.ContentDetail.as_view(), name='group-content'),
+    url(r'^(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$', content_views.Content.as_view(), name='group-content'),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

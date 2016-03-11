@@ -27,6 +27,14 @@ class SuccessToContentMixin(util_views.GroupMixin, util_views.NavigationMixin):
             return super().get_success_url()
 
 
+class Content(
+        rules_views.PermissionRequiredMixin, 
+        BackToEntityMixin, 
+        generic.DetailView):
+    model = models.Content
+    permission_required = 'content.view_content'
+
+
 class ContentCreate(
         rules_views.PermissionRequiredMixin, 
         BackToEntityMixin, 
@@ -60,14 +68,6 @@ class ContentCreate(
             return self.request.user.has_perm('content.create_group_content', self.get_group())
         except entities_models.Group.DoesNotExist:
             return self.request.user.has_perm('content.create_gestalt_content', self.request.user.gestalt)
-
-
-class ContentDetail(
-        rules_views.PermissionRequiredMixin, 
-        BackToEntityMixin, 
-        generic.DetailView):
-    model = models.Content
-    permission_required = 'content.view_content'
 
 
 class ContentList(generic.ListView):
