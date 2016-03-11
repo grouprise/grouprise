@@ -68,14 +68,30 @@ class Group(rules_views.PermissionRequiredMixin, util_views.GestaltMixin, generi
     permission_required = 'entities.view_group'
 
     def get_context_data(self, **kwargs):
-        try:
-            kwargs['membership'] = models.Membership.objects.get(gestalt=self.get_gestalt(), group=self.object)
-        except models.Membership.DoesNotExist:
-            pass
-        content = content_models.Content.objects.permitted(self.request.user).filter(groupcontent__group=self.object)
-        kwargs['intro_content'] = content.filter(groupcontent__pinned=True)
-        kwargs['blog_content'] = content.filter(groupcontent__pinned=False)
+        kwargs['blog_content'] = self.get_group_content().filter(groupcontent__pinned=False)
+        kwargs['head_gallery'] = self.get_head_gallery()
+        kwargs['intro_content'] = self.get_intro_content()
+        kwargs['membership'] = self.get_membership()
         return super().get_context_data(**kwargs)
+
+    def get_group_content(self):
+        return content_models.Content.objects.permitted(self.request.user).filter(groupcontent__group=self.object)
+
+    def get_head_gallery(self):
+        return self.get_group_content().filter(gallery__isnull=False, groupcontent__pinned=True).first()
+
+    def get_intro_content(self):
+        pinned_content = self.get_group_content().filter(groupcontent__pinned=True)
+        try:
+            return pinned_content.exclude(pk=self.get_head_gallery().pk)
+        except AttributeError:
+            return pinned_content
+
+    def get_membership(self):
+        try:
+            return models.Membership.objects.get(gestalt=self.get_gestalt(), group=self.object)
+        except models.Membership.DoesNotExist:
+            return None
 
 
 class GroupCreate(

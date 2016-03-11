@@ -7,11 +7,9 @@
 <div class="row">
 
     <div class="col-md-6">
-        {% with head_gallery=group.groupcontent_set.pinned.galleries.first.content %}
         {% if head_gallery %}
         <img src="{{ head_gallery.image_set.first.image.url }}">
         {% endif %}
-        {% endwith %}
     </div>
 
     <div class="col-md-6">
