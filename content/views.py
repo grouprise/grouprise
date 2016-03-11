@@ -1,6 +1,5 @@
 from . import models
 from crispy_forms import bootstrap, layout
-from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
 from entities import models as entities_models
