@@ -49,8 +49,6 @@ class GroupContent(models.Model):
     group = models.ForeignKey('Group')
     pinned = models.BooleanField(default=False)
 
-    objects = querysets.GroupContentManager.from_queryset(querysets.GroupContentQuerySet)()
-
     class Meta:
         ordering = ('-content__date_created',)
 
