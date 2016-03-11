@@ -49,7 +49,7 @@ class Content(Base):
             return urlresolvers.reverse('gestalt-content', args=[self.author.user.username, self.slug])
 
     def get_display_type_name(self):
-        return self.get_subclass_instance().display_type_name
+        return self.get_subclass_instance().get_display_type_name()
 
     def get_subclass_instance(self):
         import sys
@@ -61,12 +61,11 @@ class Content(Base):
 
 
 class Article(Content):
-    display_type_name = 'Artikel'
+    def get_display_type_name(self):
+        return 'Artikel' if self.public else 'Interne Nachricht'
     
 
 class Event(Content):
-    display_type_name = 'Ereignis'
-
     place = models.CharField(max_length=255)
     time = models.DateTimeField()
 
@@ -78,9 +77,13 @@ class Event(Content):
     def date(self):
         return self.time.date()
 
+    def get_display_type_name(self):
+        return 'Ereignis' if self.public else 'Internes Ereignis'
+
     def preview(self):
         return '{:%R} {}'.format(self.time, self.title)
 
 
 class Gallery(Content):
-    display_type_name = 'Galerie'
+    def get_display_type_name(self):
+        return 'Galerie' if self.public else 'Interne Galerie'
