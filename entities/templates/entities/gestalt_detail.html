@@ -5,8 +5,8 @@
 
 
 {% block subcontent %}
-{% has_perm 'content.create_gestalt_content' user gestalt as can_create_gestalt_content %}
 {% has_perm 'entities.change_gestalt' user gestalt as can_edit_gestalt %}
+{% has_perm 'entities.create_gestalt_content' user gestalt as can_create_gestalt_content %}
 
 <h1>
     {{ gestalt }}

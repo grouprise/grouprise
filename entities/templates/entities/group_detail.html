@@ -9,8 +9,8 @@
 
 
 {% block subcontent %}
-{% has_perm 'content.create_group_content' user group as can_create_group_content %}
 {% has_perm 'entities.change_group' user group as can_change_group %}
+{% has_perm 'entities.create_group_content' user group as can_create_group_content %}
 
 {% if intro_content %}
 <h2>Intro</h2>

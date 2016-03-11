@@ -60,9 +60,9 @@ class ContentCreate(
 
     def has_permission(self):
         try:
-            return self.request.user.has_perm('content.create_group_content', self.get_group())
+            return self.request.user.has_perm('entities.create_group_content', self.get_group())
         except entities_models.Group.DoesNotExist:
-            return self.request.user.has_perm('content.create_gestalt_content', self.request.user.gestalt)
+            return self.request.user.has_perm('entities.create_gestalt_content', self.request.user.gestalt)
 
 
 class ContentList(generic.ListView):
