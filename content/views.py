@@ -1,5 +1,7 @@
 from . import models
 from crispy_forms import bootstrap, layout
+from django import http
+from django.contrib import messages
 from django.db import models as django_models
 from django.forms import models as model_forms
 from django.views import generic
@@ -33,12 +35,14 @@ class ContentCreate(
     template_name = 'content/content_form.html'
 
     def form_valid(self, form):
+        self.group = self.get_group()
         form.instance.author = self.request.user.gestalt
-        response = super().form_valid(form)
-        group = self.get_group()
-        if group:
-            entities_models.GroupContent(content=self.object, group=group).save()
-        return response
+        self.object = form.save()
+        if self.group:
+            entities_models.GroupContent(content=self.object, group=self.group).save()
+        if not form.instance.public:
+            messages.success(self.request, 'Deine Nachricht wurde gespeichert.')
+        return http.HttpResponseRedirect(self.get_success_url())
     
     def get_any_permission_required(self):
         return {
@@ -55,7 +59,7 @@ class ContentCreate(
 
     def get_back_url(self):
         try:
-            return self.get_group().get_absolute_url()
+            return self.group.get_absolute_url()
         except AttributeError:
             return self.request.user.gestalt.get_absolute_url()
 
@@ -75,6 +79,11 @@ class ContentCreate(
                 'public',
                 bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern / Nachricht senden')),
                 ]
+
+    def get_success_url(self):
+        if not self.object.public:
+            return self.get_back_url()
+        return super().get_success_url()
 
     def has_permission(self, permissions=None):
         perms = []
