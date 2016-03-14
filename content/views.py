@@ -1,6 +1,7 @@
 from . import models
 from crispy_forms import bootstrap, layout
 from django.db import models as django_models
+from django.forms import models as model_forms
 from django.views import generic
 from entities import models as entities_models
 from rules.contrib import views as rules_views
@@ -28,13 +29,6 @@ class ContentCreate(
         util_views.LayoutMixin, 
         util_views.NavigationMixin,
         generic.CreateView):
-    fields = ['public', 'text', 'title']
-    layout = [
-            'title',
-            'text',
-            'public',
-            bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern')),
-            ]
     model = models.Article
     template_name = 'content/content_form.html'
 
@@ -46,14 +40,53 @@ class ContentCreate(
             entities_models.GroupContent(content=self.object, group=group).save()
         return response
     
+    def get_any_permission_required(self):
+        return {
+                'internal_and_public': [
+                    ('entities.create_group_content', self.get_group()),
+                    ],
+                'only_internal': [
+                    ('entities.create_group_message', self.get_group()),
+                    ],
+                'only_public': [
+                    ('entities.create_gestalt_content', self.request.user.gestalt),
+                    ],
+                }
+
     def get_back_url(self):
         try:
             return self.get_group().get_absolute_url()
         except AttributeError:
             return self.request.user.gestalt.get_absolute_url()
 
-    def has_permission(self):
-        return self.request.user.has_perm('entities.create_group_content', self.get_group()) or self.request.user.has_perm('entities.create_gestalt_content', self.request.user.gestalt)
+    def get_fields(self):
+        fields = ['text', 'title']
+        if self.has_permission('internal_and_public'):
+            fields += ['public']
+        return fields
+
+    def get_form_class(self):
+        return model_forms.modelform_factory(self.model, fields=self.get_fields())
+
+    def get_layout(self):
+        return [
+                'title',
+                'text',
+                'public',
+                bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern / Nachricht senden')),
+                ]
+
+    def has_permission(self, permissions=None):
+        perms = []
+        if not permissions:
+            for ps in self.get_any_permission_required().values():
+                perms += ps
+        else:
+            perms = self.get_any_permission_required()[permissions]
+        for perm in perms:
+            if self.request.user.has_perm(perm[0], perm[1]):
+                return True
+        return False
 
 
 class ContentList(generic.ListView):

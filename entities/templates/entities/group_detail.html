@@ -10,7 +10,8 @@
 
 {% block subcontent %}
 {% has_perm 'entities.change_group' user group as can_change_group %}
-{% has_perm 'entities.create_group_content' user group as can_create_group_content %}
+{% has_perm 'entities.create_group_content' user group as can_create_content %}
+{% has_perm 'entities.create_group_message' user group as can_write_message %}
 
 {% if intro_content %}
 <h2>Intro</h2>
@@ -19,8 +20,10 @@
 {% endfor %}
 {% endif %}
 
-{% if can_create_group_content %}
+{% if can_create_content %}
 <a href="{% url 'content-create' group.slug %}" class="btn btn-primary pull-right">Neuer Beitrag</a>
+{% elif can_write_message %}
+<a href="{% url 'content-create' group.slug %}" class="btn btn-primary pull-right">Neue Nachricht</a>
 {% endif %}
 <h2>Blog</h2>
 {% for content in blog_content %}

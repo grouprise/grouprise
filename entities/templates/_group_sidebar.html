@@ -5,16 +5,5 @@
 </div>
 
 {% include 'calendar/_sidebar.html' %}
-
-<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-    <h2>Mitteilung</h2>
-    <input type="text" class="form-control" placeholder="Betreff">
-    <textarea type="form-control" rows="5" placeholder="Deine Nachricht an diese Gruppe &hellip;" style="width: 100%"></textarea>
-    <button class="btn btn-primary">Mitteilung senden</button>
-</div>
-
 {% include 'entities/_group_list.html' %}
-
-{% comment %}
-{% include '_recommend_invite.html' %}
-{% endcomment %}
+{# {% include '_recommend_invite.html' %} #}
