@@ -4,4 +4,5 @@ build
 db.sqlite3
 media
 node_modules
-stadt/static
+prod_*.py
+static
