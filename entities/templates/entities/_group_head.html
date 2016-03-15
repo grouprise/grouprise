@@ -1,8 +1,9 @@
 {% load rules %}
 
-{% has_perm 'entities.change_group' user group as can_edit_group %}
-{% has_perm 'entities.create_group_membership' user group as can_create_group_membership %}
-{% has_perm 'entities.delete_group_membership' user membership as can_delete_group_membership %}
+{% has_perm 'entities.change_group' user group as can_edit %}
+{% has_perm 'entities.create_group_membership' user group as can_create_membership %}
+{% has_perm 'entities.create_group_message' user group as can_write_message %}
+{% has_perm 'entities.delete_group_membership' user membership as can_delete_membership %}
 
 <div class="row">
 
@@ -18,23 +19,26 @@
         {% endif %}
         <h1>
             {{ group.name }}
-            {% if can_edit_group %}
+            {% if can_edit %}
             <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
             {% endif %}
         </h1>
         <ul>
             <li>{{ group.address|linebreaks }}</li>
             <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
+            {% if can_write_message %}
+            <li><a href="{% url 'content-create' group.slug %}">Nachricht schreiben</a></li>
+            {% endif %}
             <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>
                 Gruppenmitglieder: {{ group.membership_set.count }}
                 {% if user.gestalt in group.members.all %}
                 (Du bist Mitglied)
                 {% endif %}
-                {% if can_create_group_membership %}
+                {% if can_create_membership %}
                 <a href="{% url 'group-membership-create' group.slug %}" class="btn btn-default btn-sm">Mitglied werden</a>
                 {% endif %}
-                {% if can_delete_group_membership %}
+                {% if can_delete_membership %}
                 <a href="{% url 'group-membership-delete' membership.pk %}"><i class="fa fa-sign-out" title="Mitgliedschaft beenden"></i></a>
                 {% endif %}
             </li>
