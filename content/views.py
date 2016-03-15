@@ -31,6 +31,10 @@ class ContentCreate(
         util_views.LayoutMixin, 
         util_views.NavigationMixin,
         generic.CreateView):
+    DECIDE_ON_PUBLICATION = 'both'
+    PUBLISH_ONLY_INTERNALLY = 'intern'
+    PUBLISH_ONLY_PUBLICALLY = 'public'
+
     model = models.Article
     template_name = 'content/content_form.html'
 
@@ -46,26 +50,26 @@ class ContentCreate(
     
     def get_any_permission_required(self):
         return {
-                'internal_and_public': [
+                self.DECIDE_ON_PUBLICATION: [
                     ('entities.create_group_content', self.get_group()),
                     ],
-                'only_internal': [
+                self.PUBLISH_ONLY_INTERNALLY: [
                     ('entities.create_group_message', self.get_group()),
                     ],
-                'only_public': [
+                self.PUBLISH_ONLY_PUBLICALLY: [
                     ('entities.create_gestalt_content', self.request.user.gestalt),
                     ],
                 }
 
     def get_back_url(self):
         try:
-            return self.group.get_absolute_url()
+            return self.get_group().get_absolute_url()
         except AttributeError:
             return self.request.user.gestalt.get_absolute_url()
 
     def get_fields(self):
         fields = ['text', 'title']
-        if self.has_permission('internal_and_public'):
+        if self.has_permission(self.DECIDE_ON_PUBLICATION):
             fields += ['public']
         return fields
 
@@ -73,7 +77,7 @@ class ContentCreate(
         return model_forms.modelform_factory(self.model, fields=self.get_fields())
 
     def get_layout(self):
-        public_list = ['public'] if self.has_permission('internal_and_public') else []
+        public_list = ['public'] if self.has_permission(self.DECIDE_ON_PUBLICATION) else []
         layout_list = ['title', 'text'] + public_list + [
                 bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern / Nachricht senden')),
                 ]
