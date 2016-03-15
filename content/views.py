@@ -73,12 +73,11 @@ class ContentCreate(
         return model_forms.modelform_factory(self.model, fields=self.get_fields())
 
     def get_layout(self):
-        return [
-                'title',
-                'text',
-                'public',
+        public_list = ['public'] if self.has_permission('internal_and_public') else []
+        layout_list = ['title', 'text'] + public_list + [
                 bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern / Nachricht senden')),
                 ]
+        return layout_list
 
     def get_success_url(self):
         if not self.object.public:
