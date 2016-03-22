@@ -42,6 +42,8 @@
 
 
 {% block footcontent %}
+{% has_perm 'content.create_comment' user content as can_create_comment %}
+
 <h2>Kommentare zum Beitrag</h2>
 
 {% for comment in content.comment_set.all %}
@@ -50,9 +52,7 @@
 <hr style="clear:both">
 {% endfor %}
 
-<form class="form-inline">
-    <a href="{% url 'gestalt' content.author.user.username %}"><img src="{{ content.author.avatar.url }}" title="{{ content.author }}" alt="{{ content.author }}" class="pull-left"></a>
-    <textarea class="form-control" rows="2"></textarea>
-    <button class="btn btn-default">&gt;</button>
-</form>
+{% if can_create_comment %}
+<a href="{% url 'comment-create' content.pk %}" class="btn btn-primary">Neuer Kommentar</a>
+{% endif %}
 {% endblock %}

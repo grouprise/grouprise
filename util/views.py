@@ -1,4 +1,4 @@
-from crispy_forms import helper, layout
+from crispy_forms import bootstrap, helper, layout
 from django import http
 from entities import models as entities_models
 
@@ -19,7 +19,6 @@ def get_group_by_kwarg(request, **kwargs):
         raise http.Http404('Group not found by argument {}.'.format(kwarg))
     return group
 
-
 class GroupMixin:
     def get_group(self):
         group = get_group_by_kwarg(self.request, pk='group_pk', slug='group_slug')
@@ -30,6 +29,8 @@ class GroupMixin:
                 pass
         return group
 
+def submit(text):
+    return bootstrap.FormActions(layout.Submit('submit', text))
 
 class LayoutMixin:
     def get_form(self):

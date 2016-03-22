@@ -3,6 +3,7 @@ from django.conf import urls
 
 urlpatterns = [
     urls.url(r'^(?P<type>article|event|gallery)/add/(?:group=(?P<group_slug>[\w-]+))?$', views.ContentCreate.as_view(), name='content-create'),
-    urls.url(r'^content/(?P<pk>[0-9]+)/edit/(?:group=(?P<group_slug>[\w-]+))?$', views.ContentUpdate.as_view(), name='content-update'),
+    urls.url(r'^content/(?P<content_pk>[0-9]+)/comment/add/$', views.CommentCreate.as_view(), name='comment-create'),
+    urls.url(r'^content/(?P<pk>[0-9]+)/edit/$', views.ContentUpdate.as_view(), name='content-update'),
     urls.url(r'^event/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$', views.EventDay.as_view(), name='event-day'),
 ]

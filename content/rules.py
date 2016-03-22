@@ -11,3 +11,5 @@ def is_content_author(user, content):
 
 rules.add_perm('content.view_content', content_is_permitted)
 rules.add_perm('content.change_content', rules.is_authenticated & is_content_author)
+
+rules.add_perm('content.create_comment', rules.is_authenticated & content_is_permitted)

@@ -1,5 +1,4 @@
 from . import models
-from crispy_forms import bootstrap, layout
 from django import http
 from django.contrib import messages
 from django.db import models as django_models
@@ -8,6 +7,28 @@ from django.views import generic
 from entities import models as entities_models
 from rules.contrib import views as rules_views
 from util import views as util_views
+
+
+class CommentCreate(
+        rules_views.PermissionRequiredMixin,
+        util_views.LayoutMixin, 
+        generic.CreateView):
+    fields = ['text']
+    layout = ['text', util_views.submit('Kommentar / Antwort speichern / senden')]
+    model = models.Comment
+    permission_required = 'content.create_comment'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.gestalt
+        form.instance.content = self.get_permission_object()
+        return super().form_valid(form)
+
+    def get_permission_object(self):
+        pk = self.request.resolver_match.kwargs['content_pk']
+        return models.Content.objects.get(pk=pk)
+
+    def get_success_url(self):
+        return self.get_permission_object().get_absolute_url()
 
 
 class Content(
@@ -80,9 +101,7 @@ class ContentCreate(
     def get_layout(self):
         public_list = ['public'] if self.has_permission(self.DECIDE_ON_PUBLICATION) else []
         event_list = ['time', 'place'] if self.get_queryset().model == models.Event else []
-        layout_list = ['title'] + event_list + ['text'] + public_list + [
-                bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern / Nachricht senden')),
-                ]
+        layout_list = ['title'] + event_list + ['text'] + public_list + [util_views.submit('Beitrag speichern / Nachricht senden')]
         return layout_list
 
     def get_queryset(self):
@@ -121,11 +140,7 @@ class ContentUpdate(
         util_views.NavigationMixin,
         generic.UpdateView):
     fields = ['text', 'title']
-    layout = [
-            'title',
-            'text',
-            bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern')),
-            ]
+    layout = ['title', 'text', util_views.submit('Beitrag speichern')]
     model = models.Content
     permission_required = 'content.change_content'
 
