@@ -35,7 +35,6 @@ class ContentCreate(
     PUBLISH_ONLY_INTERNALLY = 'intern'
     PUBLISH_ONLY_PUBLICALLY = 'public'
 
-    model = models.Article
     template_name = 'content/content_form.html'
 
     def form_valid(self, form):
@@ -71,17 +70,27 @@ class ContentCreate(
         fields = ['text', 'title']
         if self.has_permission(self.DECIDE_ON_PUBLICATION):
             fields += ['public']
+        if self.get_queryset().model == models.Event:
+            fields += ['place', 'time']
         return fields
 
     def get_form_class(self):
-        return model_forms.modelform_factory(self.model, fields=self.get_fields())
+        return model_forms.modelform_factory(self.get_queryset().model, fields=self.get_fields())
 
     def get_layout(self):
         public_list = ['public'] if self.has_permission(self.DECIDE_ON_PUBLICATION) else []
-        layout_list = ['title', 'text'] + public_list + [
+        event_list = ['time', 'place'] if self.get_queryset().model == models.Event else []
+        layout_list = ['title'] + event_list + ['text'] + public_list + [
                 bootstrap.FormActions(layout.Submit('submit', 'Beitrag speichern / Nachricht senden')),
                 ]
         return layout_list
+
+    def get_queryset(self):
+        try:
+            content_type = self.request.resolver_match.kwargs['type']
+        except KeyError:
+            content_type = 'article'
+        return getattr(models, content_type.title())._default_manager.all()
 
     def get_success_url(self):
         if not self.object.public:

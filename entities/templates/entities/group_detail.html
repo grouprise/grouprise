@@ -22,14 +22,14 @@
 
 {% if can_create_content %}
 <div class="btn-group pull-right">
-    <a href="{% url 'content-create' group.slug %}" class="btn btn-primary">Neuer Artikel</a>
+    <a href="{% url 'content-create' 'article' group.slug %}" class="btn btn-primary">Neuer Artikel</a>
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <li><a href="{% url 'content-create' group.slug %}">Interne Nachricht</a></li>
-        <li><a href="#">Neues Ereignis</a></li>
-        <li><a href="#">Neue Galerie</a></li>
+        <li><a href="{% url 'content-create' 'article' group.slug %}">Interne Nachricht</a></li>
+        <li><a href="{% url 'content-create' 'event' group.slug %}">Neues Ereignis</a></li>
+        <li><a href="{% url 'content-create' 'gallery' group.slug %}">Neue Galerie</a></li>
     </ul>
 </div>
 {% elif can_write_message %}

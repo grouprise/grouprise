@@ -28,9 +28,9 @@
             <li>{{ group.address|linebreaks }}</li>
             <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
             {% if can_write_message %}
-            <li><a href="{% url 'content-create' group.slug %}">Nachricht schreiben</a></li>
+            <li><a href="{% url 'content-create' 'article' group.slug %}">Nachricht schreiben</a></li>
             {% elif can_create_content %}
-            <li><a href="{% url 'content-create' group.slug %}" title="Nachricht an alle Gruppenmitglieder">Interne Nachricht schreiben</a></li>
+            <li><a href="{% url 'content-create' 'article' group.slug %}" title="Nachricht an alle Gruppenmitglieder">Interne Nachricht schreiben</a></li>
             {% endif %}
             <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>

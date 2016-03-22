@@ -66,8 +66,8 @@ class Article(Content):
     
 
 class Event(Content):
-    place = models.CharField(max_length=255)
-    time = models.DateTimeField()
+    place = models.CharField('Ort', max_length=255)
+    time = models.DateTimeField('Datum / Uhrzeit')
 
     objects = models.Manager.from_queryset(querysets.EventQuerySet)()
 
