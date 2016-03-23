@@ -6,9 +6,8 @@ from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import shortcuts
 from django.core import urlresolvers
 from django.views import generic
-from django.views.generic import edit as generic_edit_views
 from rules.contrib import views as rules_views
-from util import views as util_views
+from util import forms as util_forms, views as util_views
 
 
 class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
@@ -21,7 +20,7 @@ class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
         return super().get_context_data(**kwargs)
 
 
-class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.LayoutMixin, util_views.NavigationMixin, generic.UpdateView):
+class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.FormMixin, util_views.NavigationMixin, generic.UpdateView):
     fields = ['about']
     layout = [
             layout.Field('about', rows=5),
@@ -96,7 +95,7 @@ class Group(rules_views.PermissionRequiredMixin, util_views.GestaltMixin, generi
 
 class GroupCreate(
         rules_views.PermissionRequiredMixin, 
-        util_views.LayoutMixin, 
+        util_views.FormMixin, 
         util_views.NavigationMixin,
         util_views.SidebarMixin,
         generic.CreateView):
@@ -115,7 +114,7 @@ class GroupMembershipCreate(
         rules_views.PermissionRequiredMixin, 
         util_views.GestaltMixin,
         util_views.GroupMixin,
-        util_views.LayoutMixin,
+        util_views.FormMixin,
         util_views.NavigationMixin,
         generic.CreateView):
     fields = []
@@ -136,25 +135,22 @@ class GroupMembershipCreate(
     def get_permission_object(self):
         return self.get_group()
 
-
-class GroupMembershipDelete(
-        rules_views.PermissionRequiredMixin,
-        util_views.NavigationMixin,
-        generic.DeleteView):
+class MembershipDelete(util_views.ActionMixin, util_views.DeleteView):
+    action = 'Mitgliedschaft beenden'
+    layout = layout.HTML('<p>Möchtest Du Deine Mitgliedschaft in der Gruppe '
+        '<em>{{ group }}</em> auf {{ site.name }} wirklich beenden?</p>')
     model = models.Membership
-    permission_required = 'entities.delete_group_membership'
+    permission = 'entities.delete_membership'
 
-    def get_context_data(self, **kwargs):
-        kwargs['group'] = self.object.group
-        return super().get_context_data(**kwargs)
+    def get_group(self):
+        return self.object.group
 
-    def get_success_url(self):
-        return self.object.group.get_absolute_url()
-
+    def get_parent(self):
+        return self.get_group()
 
 class GroupUpdate(
         rules_views.PermissionRequiredMixin, 
-        util_views.LayoutMixin, 
+        util_views.FormMixin, 
         util_views.NavigationMixin, 
         generic.UpdateView):
     fields = ['address', 'date_founded', 'name', 'slug', 'url']

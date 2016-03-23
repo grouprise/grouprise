@@ -23,4 +23,4 @@ rules.add_perm('entities.change_group', rules.is_authenticated & is_group_member
 rules.add_perm('entities.create_group_content', rules.is_authenticated & is_group_member)
 rules.add_perm('entities.create_group_message', rules.is_authenticated & ~is_group_member)
 rules.add_perm('entities.create_group_membership', rules.is_authenticated & ~is_group_member)
-rules.add_perm('entities.delete_group_membership', rules.is_authenticated & is_group_membership)
+rules.add_perm('entities.delete_membership', rules.is_authenticated & is_group_membership)

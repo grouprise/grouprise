@@ -4,7 +4,7 @@
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_membership' user group as can_create_membership %}
 {% has_perm 'entities.create_group_message' user group as can_write_message %}
-{% has_perm 'entities.delete_group_membership' user membership as can_delete_membership %}
+{% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 
 <div class="row">
 
@@ -42,10 +42,10 @@
                 <a href="{% url 'group-membership-create' group.slug %}" class="btn btn-default btn-sm">Mitglied werden</a>
                 {% endif %}
                 {% if can_delete_membership %}
-                <a href="{% url 'group-membership-delete' membership.pk %}"><i class="fa fa-sign-out" title="Mitgliedschaft beenden"></i></a>
+                <a href="{% url 'membership-delete' membership.pk %}"><i class="fa fa-sign-out" title="Mitgliedschaft beenden"></i></a>
                 {% endif %}
             </li>
-            <li>{{ current_site.domain }}/ {{ group.slug }}</li>
+            <li>{{ site.domain }}/ {{ group.slug }}</li>
         </ul>
     </div>
 

@@ -6,15 +6,15 @@ from django.forms import models as model_forms
 from django.views import generic
 from entities import models as entities_models
 from rules.contrib import views as rules_views
-from util import views as util_views
+from util import forms as util_forms, views as util_views
 
 
 class CommentCreate(
         rules_views.PermissionRequiredMixin,
-        util_views.LayoutMixin, 
+        util_views.FormMixin, 
         generic.CreateView):
     fields = ['text']
-    layout = ['text', util_views.submit('Kommentar / Antwort speichern / senden')]
+    layout = ['text', util_forms.Submit('Kommentar / Antwort speichern / senden')]
     model = models.Comment
     permission_required = 'content.create_comment'
 
@@ -49,7 +49,7 @@ class Content(
 class ContentCreate(
         rules_views.PermissionRequiredMixin, 
         util_views.GroupMixin,
-        util_views.LayoutMixin, 
+        util_views.FormMixin, 
         util_views.NavigationMixin,
         generic.CreateView):
     DECIDE_ON_PUBLICATION = 'both'
@@ -136,11 +136,11 @@ class ContentList(generic.ListView):
 
 class ContentUpdate(
         rules_views.PermissionRequiredMixin, 
-        util_views.LayoutMixin, 
+        util_views.FormMixin, 
         util_views.NavigationMixin,
         generic.UpdateView):
     fields = ['text', 'title']
-    layout = ['title', 'text', util_views.submit('Beitrag speichern')]
+    layout = ['title', 'text', util_forms.Submit('Beitrag speichern')]
     model = models.Content
     permission_required = 'content.change_content'
 
