@@ -1,6 +1,8 @@
 from . import forms
 from crispy_forms import helper, layout
 from django import forms as django_forms, http
+from django.core import urlresolvers
+from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
 from entities import models as entities_models
@@ -59,10 +61,16 @@ class NavigationMixin:
         kwargs['back_url'] = self.get_back_url()
         return super().get_context_data(**kwargs)
 
+    def get_parent(self):
+        return self.parent
+
     def get_success_url(self):
         parent = self.get_parent()
         if parent:
-            return parent.get_absolute_url()
+            if isinstance(parent, six.string_types):
+                return urlresolvers.reverse(parent)
+            else:
+                return parent.get_absolute_url()
         else:
             return super().get_success_url()
 
@@ -83,8 +91,14 @@ class TemplateMixin:
 
 class TitleMixin:
     def get_context_data(self, **kwargs):
-        kwargs['title'] = self.action
+        kwargs['title'] = self.get_title()
         return super().get_context_data(**kwargs)
+
+    def get_title(self):
+        if hasattr(self, 'title'):
+            return self.title
+        else:
+            return self.action
 
 class ActionMixin(
         FormMixin,

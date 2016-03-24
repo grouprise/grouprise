@@ -163,3 +163,8 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
 
     def get_parent(self):
         return self.get_group()
+
+class Imprint(util_views.NavigationMixin, util_views.TitleMixin, generic.TemplateView):
+    parent = 'index'
+    template_name = 'stadt/imprint.html'
+    title = 'Impressum'

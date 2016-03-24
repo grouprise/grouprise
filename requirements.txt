@@ -1,6 +1,5 @@
 django
 django-allauth
-django-bootstrap3
 django-crispy-forms
 markdown
 pillow
