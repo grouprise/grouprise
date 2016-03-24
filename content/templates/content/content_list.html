@@ -1,10 +1,7 @@
-{% extends 'stadt.html' %}
+{% extends 'stadt/stadt.html' %}
 
-
-{% block subcontent %}
-<section>
-    {% for content in content_list %}
-    {% include 'content/_content_preview.html' %}
-    {% endfor %}
-</section>
+{% block content %}
+{% for content in content_list %}
+{% include 'content/_content_preview.html' %}
+{% endfor %}
 {% endblock %}

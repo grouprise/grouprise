@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-3">
+                <ul>
+                    <li><a href="{% url 'index' %}">Start</a></li>
+                    <li><a href="{% url 'group' about_group.slug %}">Über uns</a></li>
+                    <li><a href="{% url 'imprint' %}">Impressum</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <ul>
+                    <li><a href="#">Gruppen</a></li>
+                    <li><a href="#">Gestalten</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <ul>
+                    <li><a href="#">Artikel</a></li>
+                    <li><a href="#">Ereignisse</a></li>
+                    <li><a href="#">Galerien</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <ul>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'gestalt' user.username %}">Meine Seite</a></li>
+                    <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Einstellungen</a></li>
+                    <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
+                    {% else %}
+                    <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>

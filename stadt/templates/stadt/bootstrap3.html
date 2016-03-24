@@ -1,5 +1,5 @@
-<!doctype html>
 {% load staticfiles %}
+<!doctype html>
 <html{% if request.LANGUAGE_CODE %} lang="{{ request.LANGUAGE_CODE }}"{% endif %}>
     <head>
         <meta charset="utf-8">
@@ -7,12 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %}</title>
         <link type="text/css" rel="stylesheet" href="{% static 'stadt/css/app.css' %}">
-        {% block stadt_extra_head %}{% endblock %}
     </head>
 
     <body>
-    {% block stadt_content %}{% endblock %}
-    <script src="{% static 'stadt/js/app.js' %}"></script>
-    {% block stadt_extra_script %}{% endblock %}
+        {% block body %}{% endblock %}
+        <script src="{% static 'stadt/js/app.js' %}"></script>
     </body>
 </html>

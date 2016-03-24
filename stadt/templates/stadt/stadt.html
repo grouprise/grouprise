@@ -1,60 +1,27 @@
 {% extends 'stadt/bootstrap3.html' %}
 
-{% load bootstrap3 %}
-
 {% block title %}{% if title %}{{ title }} - {% endif %}{{ site.name }}{% endblock %}
 
-{% block stadt_content %}
-{% include '_navigation.html' %}
+{% block body %}
+{% include 'stadt/_menu.html' %}
 <div class="container">
-    {% bootstrap_messages %}
-    <div class="row" style="margin-bottom: 23px;">
-        <div class="col-md-12">
-            <p class="text-right pull-right">
-            {{ group_count }} Gruppen<br>
-            {{ gestalt_count }} Gestalten<br>
-            {{ content_count }} Beiträge<br>
-            </p>
-        </div>
-    </div>
-    {% block headcontent %}
-    {% endblock %}
+    {% include 'stadt/_messages.html' %}
+    {% include 'stadt/_header.html' %}
+    {% block header %}{% endblock %}
     <div class="row">
         <div class="col-md-2">
-            {% block leftcontent %}
             {% if back_url %}
             <a href="{{ back_url }}" class="btn btn-primary">&lt;&lt;</a>
             {% endif %}
-            {% endblock %}
         </div>
         <div class="col-md-6">
             {% block heading %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
             {% block content %}{% endblock %}
         </div>
         <div class="col-md-4">
-            <aside>
-                {% block sidecontent %}
-                {% if sidebar_template %}
-                {% include sidebar_template %}
-                {% else %}
-                {% block default_sidebar %}
-                {% endblock %}
-                {% endif %}
-                {% endblock %}
-            </aside>
+            {% block sidebar %}{% endblock %}
         </div>
     </div>
-    <footer>
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-2">
-                <ul>
-                    <li><a href="{% url 'index' %}">Start</a></li>
-                    <li><a href="{% url 'group' about_group.slug %}">Über uns</a></li>
-                    <li><a href="{% url 'imprint' %}">Impressum</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    {% include 'stadt/_footer.html' %}
 </div>
 {% endblock %}
