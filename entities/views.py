@@ -109,18 +109,17 @@ class GroupCreate(
     permission_required = 'entities.create_group'
     sidebar_template = '_index_sidebar.html'
 
-
-class GroupMembershipCreate(
-        rules_views.PermissionRequiredMixin, 
-        util_views.GestaltMixin,
-        util_views.GroupMixin,
-        util_views.FormMixin,
-        util_views.NavigationMixin,
-        generic.CreateView):
+class MembershipCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Mitglied werden'
     fields = []
-    layout = (bootstrap.FormActions(layout.Submit('submit', 'Mitglied werden')),)
+    layout = layout.HTML('<p>Möchtest Du Mitglied der Gruppe '
+            '<em>{{ group }}</em> auf {{ site.name }} werden?</p>'
+            '<p>Falls Du in der <em>echten Welt</em> noch nicht Mitglied in '
+            'der Gruppe bist und es werden möchtest, sprich bitte die anderen '
+            'Gruppenmitglieder an.</p>')
+    menu = 'group'
     model = models.Membership
-    permission_required = 'entities.create_group_membership'
+    permission = 'entities.create_membership'
 
     def form_valid(self, form):
         group = self.get_group()
@@ -129,8 +128,8 @@ class GroupMembershipCreate(
         form.instance.group = group
         return super().form_valid(form)
 
-    def get_success_url(self):
-        return self.get_group().get_absolute_url()
+    def get_parent(self):
+        return self.get_group()
 
     def get_permission_object(self):
         return self.get_group()
@@ -144,12 +143,12 @@ class MembershipDelete(util_views.ActionMixin, util_views.DeleteView):
     permission = 'entities.delete_membership'
 
     def get_parent(self):
-        return self.group
+        return self.get_group()
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
-    layout = [
+    layout = (
             'name',
             layout.Field('address', rows=4),
             'url',
@@ -157,10 +156,10 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
                 data_date_language='de', data_date_min_view_mode='months',
                 data_date_start_view='decade'),
             bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
-            ]
+            )
     menu = 'group'
     model = models.Group
     permission = 'entities.change_group'
 
     def get_parent(self):
-        return self.group
+        return self.get_group()

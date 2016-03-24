@@ -14,28 +14,20 @@ class GestaltMixin:
         return self.request.user.gestalt if self.request.user.is_authenticated() else None
 
 class GroupMixin:
-    def get(self, request, *args, **kwargs):
-        self.group = self.get_group()
-        return super().get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
-        kwargs['group'] = self.group
+        kwargs['group'] = self.get_group()
         return super().get_context_data(**kwargs)
 
     def get_group(self):
-        # group_pk
+        if 'group_pk' in self.kwargs:
+            return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
         # group_slug
-        obj = self.get_object()
-        if isinstance(obj, entities_models.Group):
-            return obj
-        if hasattr(obj, 'group'):
-            return obj.group
+        if isinstance(self.object, entities_models.Group):
+            return self.object
+        if hasattr(self.object, 'group'):
+            return self.object.group
         # object.groups.first()
         return None
-
-    def post(self, request, *args, **kwargs):
-        self.group = self.get_group()
-        return super().post(request, *args, **kwargs)
 
 class FormMixin(forms.LayoutMixin):
     def get_form(self):
@@ -96,6 +88,7 @@ class TitleMixin:
 
 class ActionMixin(
         FormMixin,
+        GestaltMixin,
         GroupMixin,
         MenuMixin,
         NavigationMixin,
