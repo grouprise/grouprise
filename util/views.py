@@ -56,6 +56,11 @@ class FormMixin(forms.LayoutMixin):
         layout += (forms.Submit(self.action),)
         return layout
 
+class MenuMixin:
+    def get_context_data(self, **kwargs):
+        kwargs['menu'] = self.menu
+        return super().get_context_data(**kwargs)
+
 class NavigationMixin:
     def get_back_url(self):
         try:
@@ -97,6 +102,7 @@ class TitleMixin:
 class ActionMixin(
         FormMixin,
         GroupMixin,
+        MenuMixin,
         NavigationMixin,
         PermissionMixin,
         TemplateMixin,

@@ -139,6 +139,7 @@ class MembershipDelete(util_views.ActionMixin, util_views.DeleteView):
     action = 'Mitgliedschaft beenden'
     layout = layout.HTML('<p>Möchtest Du Deine Mitgliedschaft in der Gruppe '
         '<em>{{ group }}</em> auf {{ site.name }} wirklich beenden?</p>')
+    menu = 'group'
     model = models.Membership
     permission = 'entities.delete_membership'
 
