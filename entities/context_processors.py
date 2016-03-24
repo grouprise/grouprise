@@ -1,12 +1,6 @@
 from . import models
 from django.conf import settings
 
-def gestalt(request):
-    if request.user.is_authenticated():
-        return {'gestalt': request.user.gestalt}
-    else:
-        return {}
-
 def groups(request):
     return {
             'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),

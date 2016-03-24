@@ -6,41 +6,36 @@ from django.views.generic import edit as edit_views
 from entities import models as entities_models
 from rules.contrib import views as rules_views
 
-class DeleteView(
-        edit_views.FormMixin,
-        generic.DeleteView):
+class DeleteView(edit_views.FormMixin, generic.DeleteView):
     pass
 
 class GestaltMixin:
     def get_gestalt(self):
         return self.request.user.gestalt if self.request.user.is_authenticated() else None
 
-def get_group_by_kwarg(request, **kwargs):
-    group = None
-    for field, arg_key in kwargs.items():
-        try:
-            kwarg = request.resolver_match.kwargs.get(arg_key)
-            group = entities_models.Group.objects.get(**{field: kwarg})
-            break
-        except entities_models.Group.DoesNotExist:
-            continue
-    if not group and kwarg:
-        raise http.Http404('Group not found by argument {}.'.format(kwarg))
-    return group
-
 class GroupMixin:
+    def get(self, request, *args, **kwargs):
+        self.group = self.get_group()
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        kwargs['group'] = self.get_group()
+        kwargs['group'] = self.group
         return super().get_context_data(**kwargs)
 
     def get_group(self):
-        group = get_group_by_kwarg(self.request, pk='group_pk', slug='group_slug')
-        if not group:
-            try:
-                group = self.object.groups.first()
-            except AttributeError:
-                pass
-        return group
+        # group_pk
+        # group_slug
+        obj = self.get_object()
+        if isinstance(obj, entities_models.Group):
+            return obj
+        if hasattr(obj, 'group'):
+            return obj.group
+        # object.groups.first()
+        return None
+
+    def post(self, request, *args, **kwargs):
+        self.group = self.get_group()
+        return super().post(request, *args, **kwargs)
 
 class FormMixin(forms.LayoutMixin):
     def get_form(self):
