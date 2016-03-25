@@ -24,11 +24,12 @@ class GroupMixin:
         if 'group_pk' in self.kwargs:
             return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
         # group_slug
-        if isinstance(self.object, entities_models.Group):
-            return self.object
-        if hasattr(self.object, 'group'):
-            return self.object.group
-        # object.groups.first()
+        if hasattr(self, 'object'):
+            if isinstance(self.object, entities_models.Group):
+                return self.object
+            if hasattr(self.object, 'group'):
+                return self.object.group
+            # object.groups.first()
         return None
 
 class FormMixin(forms.LayoutMixin):
@@ -47,7 +48,8 @@ class FormMixin(forms.LayoutMixin):
 
 class MenuMixin:
     def get_context_data(self, **kwargs):
-        kwargs['menu'] = self.menu
+        if hasattr(self, 'menu'):
+            kwargs['menu'] = self.menu
         return super().get_context_data(**kwargs)
 
 class NavigationMixin:
@@ -68,7 +70,10 @@ class NavigationMixin:
         parent = self.get_parent()
         if parent:
             if isinstance(parent, six.string_types):
-                return urlresolvers.reverse(parent)
+                try:
+                    return urlresolvers.reverse(parent)
+                except urlresolvers.NoReverseMatch:
+                    return parent
             else:
                 return parent.get_absolute_url()
         else:
@@ -84,14 +89,20 @@ class SidebarMixin:
         return super().get_context_data(**kwargs)
 
 class TemplateMixin:
+    ignore_base_templates = False
+
     def get_template_names(self):
-        names = super().get_template_names()
+        if not self.ignore_base_templates:
+            names = super().get_template_names()
+        else:
+            names = []
         names += ['stadt/form.html']
         return names
 
 class TitleMixin:
     def get_context_data(self, **kwargs):
         kwargs['title'] = self.get_title()
+        print(kwargs['title'])
         return super().get_context_data(**kwargs)
 
     def get_title(self):

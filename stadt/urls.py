@@ -7,7 +7,7 @@ from entities import views as entities_views
 
 
 urlpatterns = [
-    urls.url(r'^stadt/', urls.include('allauth.urls')),
+    urls.url(r'^stadt/', urls.include('account.urls')),
     urls.url(r'^stadt/', urls.include('content.urls')),
     urls.url(r'^stadt/', urls.include('entities.urls')),
     urls.url(r'^stadt/admin/', admin.site.urls),

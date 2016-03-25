@@ -31,10 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'bootstrap3',
     'content.apps.ContentConfig',
     'crispy_forms',
     'django.contrib.admin',
