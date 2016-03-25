@@ -1,7 +1,16 @@
-{% extends 'stadt/stadt.html' %}
+{% extends 'stadt/list.html' %}
 
-{% block content %}
-{% for content in content_list %}
-{% include 'content/_content_preview.html' %}
-{% endfor %}
+{% block sidebar %}
+{% include 'calendar/_sidebar.html' %}
+{% include 'entities/_group_list.html' %}
+{% endblock %}
+
+{% block list_header %}
+<div class="jumbotron">
+    <h2>Deine Gruppe gestalten</h2>
+    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+    <p><a href="#" class="btn btn-primary">Gruppe finden</a></p>
+    <p>Leg sie mit einem Klick an.</p>
+    <p><a href="{% url 'group-create' %}" class="btn btn-default">Gruppe anlegen</a></p>
+</div>
 {% endblock %}

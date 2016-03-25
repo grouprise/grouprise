@@ -1,0 +1,8 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block content %}
+{% block list_header %}{% endblock %}
+{% for content in content_list %}
+{% include 'content/_content_preview.html' %}
+{% endfor %}
+{% endblock %}
