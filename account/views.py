@@ -1,7 +1,14 @@
+from . import forms
 from allauth.account import views
 from crispy_forms import layout
 from django.views.generic import edit as edit_views
 from util import views as util_views
+
+class Login(util_views.ActionMixin, views.LoginView):
+    action = 'Anmelden'
+    form_class = forms.LoginForm
+    ignore_base_templates = True
+    permission = 'account.login'
 
 class Logout(util_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     action = 'Abmelden'

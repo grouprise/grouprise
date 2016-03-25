@@ -33,9 +33,10 @@ class GroupMixin:
         return None
 
 class FormMixin(forms.LayoutMixin):
-    def get_form(self):
-        form = super().get_form()
-        form.helper = self.get_helper()
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if not hasattr(form, 'helper'):
+            form.helper = self.get_helper()
         return form
 
     def get_form_class(self):
@@ -64,7 +65,10 @@ class NavigationMixin:
         return super().get_context_data(**kwargs)
 
     def get_parent(self):
-        return self.parent
+        if hasattr(self, 'parent'):
+            return self.parent
+        else:
+            return None
 
     def get_success_url(self):
         parent = self.get_parent()

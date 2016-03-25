@@ -176,9 +176,15 @@ SITE_ID = 1
 # Authentication
 # http://django-allauth.readthedocs.org/
 
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = 'index'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_USER_DISPLAY = lambda u: u.gestalt
 
 ACCOUNT_USERNAME_REQUIRED = False
 
