@@ -18,3 +18,9 @@ class Logout(util_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
 
     def get_parent(self):
         return self.get_redirect_url()
+
+class Signup(util_views.ActionMixin, views.SignupView):
+    action = 'Registrieren'
+    form_class = forms.SignupForm
+    ignore_base_templates = True
+    permission = 'account.signup'

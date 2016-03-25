@@ -30,6 +30,7 @@
                     <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
                     {% else %}
                     <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
+                    <li><a href="{% url 'account_signup' %}?next={{ request.path }}">Registrieren</a></li>
                     {% endif %}
                 </ul>
             </div>
