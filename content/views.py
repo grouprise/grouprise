@@ -8,34 +8,34 @@ from entities import models as entities_models
 from rules.contrib import views as rules_views
 from util import forms as util_forms, views as util_views
 
-
-class CommentCreate(
-        rules_views.PermissionRequiredMixin,
-        util_views.FormMixin, 
-        generic.CreateView):
-    fields = ['text']
-    layout = ['text', util_forms.Submit('Kommentar / Antwort speichern / senden')]
+class CommentCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Kommentar hinzufügen'
+    fields = ('text',)
+    layout = 'text'
     model = models.Comment
-    permission_required = 'content.create_comment'
+    permission = 'content.create_comment'
 
     def form_valid(self, form):
         form.instance.author = self.request.user.gestalt
         form.instance.content = self.get_permission_object()
         return super().form_valid(form)
 
-    def get_permission_object(self):
+    def get_menu(self):
+        return self.get_parent().get_type_name()
+
+    def get_parent(self):
         pk = self.request.resolver_match.kwargs['content_pk']
         return models.Content.objects.get(pk=pk)
 
-    def get_success_url(self):
-        return self.get_permission_object().get_absolute_url()
+    def get_permission_object(self):
+        return self.get_parent()
 
 class Content(util_views.PageMixin, generic.DetailView):
     model = models.Content
     permission = 'content.view_content'
     
     def get_menu(self):
-        return type(self.object.get_subclass_instance()).__name__.lower()
+        return self.object.get_type_name()
 
     def get_parent(self):
         return self.get_group() or self.object.author

@@ -101,7 +101,7 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Gruppe anlegen'
     back_url = 'group-index'
     fields = ('name',)
-    layout = ('name',)
+    layout = 'name'
     menu = 'group'
     model = models.Group
     permission = 'entities.create_group'

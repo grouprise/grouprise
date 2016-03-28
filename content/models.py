@@ -59,6 +59,9 @@ class Content(Base):
             except getattr(sys.modules[__name__], subclass_name).DoesNotExist:
                 pass
 
+    def get_type_name(self):
+        return type(self.get_subclass_instance()).__name__
+
 
 class Article(Content):
     def get_display_type_name(self):
