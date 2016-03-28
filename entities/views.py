@@ -92,22 +92,38 @@ class Group(rules_views.PermissionRequiredMixin, util_views.GestaltMixin, generi
         except models.Membership.DoesNotExist:
             return None
 
-
-class GroupCreate(
-        rules_views.PermissionRequiredMixin, 
-        util_views.FormMixin, 
-        util_views.NavigationMixin,
-        util_views.SidebarMixin,
-        generic.CreateView):
-    back_url = urlresolvers.reverse_lazy('index')
+class GroupCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Gruppe anlegen'
+    back_url = 'group-index'
     fields = ('name',)
+    layout = ('name',)
+    menu = 'group'
+    model = models.Group
+    permission = 'entities.create_group'
+
+class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
+    action = 'Gruppenangaben ändern'
+    fields = ['address', 'date_founded', 'name', 'slug', 'url']
     layout = (
             'name',
-            bootstrap.FormActions(layout.Submit('submit', 'Gruppe anlegen')),
+            layout.Field('address', rows=4),
+            'url',
+            layout.Field('date_founded', data_provide='datepicker',
+                data_date_language='de', data_date_min_view_mode='months',
+                data_date_start_view='decade'),
+            bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
             )
+    menu = 'group'
     model = models.Group
-    permission_required = 'entities.create_group'
-    sidebar_template = '_index_sidebar.html'
+    permission = 'entities.change_group'
+
+    def get_parent(self):
+        return self.get_group()
+
+class Imprint(util_views.NavigationMixin, util_views.TitleMixin, generic.TemplateView):
+    parent = 'index'
+    template_name = 'stadt/imprint.html'
+    title = 'Impressum'
 
 class MembershipCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Mitglied werden'
@@ -144,27 +160,3 @@ class MembershipDelete(util_views.ActionMixin, util_views.DeleteView):
 
     def get_parent(self):
         return self.get_group()
-
-class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
-    action = 'Gruppenangaben ändern'
-    fields = ['address', 'date_founded', 'name', 'slug', 'url']
-    layout = (
-            'name',
-            layout.Field('address', rows=4),
-            'url',
-            layout.Field('date_founded', data_provide='datepicker',
-                data_date_language='de', data_date_min_view_mode='months',
-                data_date_start_view='decade'),
-            bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
-            )
-    menu = 'group'
-    model = models.Group
-    permission = 'entities.change_group'
-
-    def get_parent(self):
-        return self.get_group()
-
-class Imprint(util_views.NavigationMixin, util_views.TitleMixin, generic.TemplateView):
-    parent = 'index'
-    template_name = 'stadt/imprint.html'
-    title = 'Impressum'

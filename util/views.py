@@ -55,9 +55,12 @@ class MenuMixin:
 
 class NavigationMixin:
     def get_back_url(self):
-        try:
-            return self.back_url
-        except AttributeError:
+        if hasattr(self, 'back_url'):
+            try:
+                return urlresolvers.reverse(self.back_url)
+            except urlresolvers.NoReverseMatch:
+                return self.back_url
+        else:
             return self.get_success_url()
 
     def get_context_data(self, **kwargs):
