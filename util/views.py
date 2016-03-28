@@ -29,7 +29,8 @@ class GroupMixin:
                 return self.object
             if hasattr(self.object, 'group'):
                 return self.object.group
-            # object.groups.first()
+            if hasattr(self.object, 'groups'):
+                return self.object.groups.first()
         return None
 
 class FormMixin(forms.LayoutMixin):
@@ -49,9 +50,12 @@ class FormMixin(forms.LayoutMixin):
 
 class MenuMixin:
     def get_context_data(self, **kwargs):
-        if hasattr(self, 'menu'):
-            kwargs['menu'] = self.menu
+        kwargs['menu'] = self.get_menu()
         return super().get_context_data(**kwargs)
+
+    def get_menu(self):
+        if hasattr(self, 'menu'):
+            return self.menu
 
 class NavigationMixin:
     def get_back_url(self):
@@ -136,6 +140,7 @@ class ActionMixin(
 
 class PageMixin(
         GestaltMixin,
+        GroupMixin,
         MenuMixin,
         NavigationMixin,
         PermissionMixin,

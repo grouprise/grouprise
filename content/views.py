@@ -30,21 +30,18 @@ class CommentCreate(
     def get_success_url(self):
         return self.get_permission_object().get_absolute_url()
 
-
-class Content(
-        rules_views.PermissionRequiredMixin, 
-        util_views.GroupMixin,
-        util_views.NavigationMixin,
-        generic.DetailView):
+class Content(util_views.PageMixin, generic.DetailView):
     model = models.Content
-    permission_required = 'content.view_content'
+    permission = 'content.view_content'
     
-    def get_back_url(self):
-        try:
-            return self.get_group().get_absolute_url()
-        except AttributeError:
-            return self.object.author.get_absolute_url()
+    def get_menu(self):
+        return type(self.object.get_subclass_instance()).__name__.lower()
 
+    def get_parent(self):
+        return self.get_group() or self.object.author
+
+    def get_title(self):
+        return self.object.title
 
 class ContentCreate(
         rules_views.PermissionRequiredMixin, 

@@ -1,9 +1,9 @@
-{% extends 'content.html' %}
+{% extends 'stadt/stadt.html' %}
 {% load content rules %}
 
-
-{% block maincontent %}
+{% block content %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
+{% has_perm 'content.create_comment' user content as can_create_comment %}
 
 {% if group %}
 {% url 'content-update' content.pk group.slug as content_update_url %}
@@ -11,38 +11,34 @@
 {% url 'content-update' content.pk as content_update_url %}
 {% endif %}
 
-<article>
-    <header>
-        <h1>
-            {% if content.event %}
-            {{ content.event.time|date:'l, j.n.Y:' }}
-            {% endif %}
-            {{ content.title }}
-            {% if can_edit_content %}
-            <a href="{{ content_update_url }}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
-            {% endif %}
-        </h1>
-        {% include 'content/_content_info.html' %}
-    </header>
-
+<h2>Beitrag</h2>
+<p>{{ content.get_display_type_name }}</p>
+<h1>
     {% if content.event %}
-    <p><strong>Ort:</strong> {{ content.event.place }}</p>
-    <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
+    {{ content.event.time|date:'l, j.n.Y:' }}
     {% endif %}
-    <p>
-    {% with image=content.image_set.first %}
-    {% if image %}
-    <img src="{{ image.image.url }}" class="pull-left">
+    {{ content.title }}
+    {% if can_edit_content %}
+    <a href="{{ content_update_url }}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
     {% endif %}
-    {% endwith %}
-    {{ content.text|markdown }}
-    </p>
-</article>
-{% endblock %}
+</h1>
+{% include 'content/_content_info.html' %}
 
-
-{% block footcontent %}
-{% has_perm 'content.create_comment' user content as can_create_comment %}
+{% if content.event %}
+<p><strong>Ort:</strong> {{ content.event.place }}</p>
+<p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
+{% endif %}
+<p>
+{% with image=content.image_set.first %}
+{% if image %}
+<img src="{{ image.image.url }}" class="pull-left">
+{% endif %}
+{% endwith %}
+{{ content.text|markdown }}
+</p>
+<div style="background-color: #eee; height: 150px;">
+    (creative commons)
+</div>
 
 <h2>Kommentare zum Beitrag</h2>
 
@@ -55,4 +51,13 @@
 {% if can_create_comment %}
 <a href="{% url 'comment-create' content.pk %}" class="btn btn-primary">Neuer Kommentar</a>
 {% endif %}
+{% endblock %}
+
+
+{% block heading %}{% endblock %}
+
+{% block sidebar %}
+{% with gestalt=content.author %}
+{% include 'entities/_gestalt_about.html' %}
+{% endwith %}
 {% endblock %}
