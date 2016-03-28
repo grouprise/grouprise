@@ -5,12 +5,6 @@
 {% has_perm 'content.change_content' user content as can_edit_content %}
 {% has_perm 'content.create_comment' user content as can_create_comment %}
 
-{% if group %}
-{% url 'content-update' content.pk group.slug as content_update_url %}
-{% else %}
-{% url 'content-update' content.pk as content_update_url %}
-{% endif %}
-
 <h2>Beitrag</h2>
 <p>{{ content.get_display_type_name }}</p>
 <h1>
@@ -19,7 +13,7 @@
     {% endif %}
     {{ content.title }}
     {% if can_edit_content %}
-    <a href="{{ content_update_url }}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
+    <a href="{% url 'content-update' content.pk %}"><i class="fa fa-pencil" title="Beitrag bearbeiten"></i></a>
     {% endif %}
 </h1>
 {% include 'content/_content_info.html' %}

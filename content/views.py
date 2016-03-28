@@ -132,17 +132,15 @@ class ContentList(util_views.PageMixin, generic.ListView):
     def get_queryset(self):
         return models.Content.objects.permitted(self.request.user)
 
-
-class ContentUpdate(
-        rules_views.PermissionRequiredMixin, 
-        util_views.FormMixin, 
-        util_views.NavigationMixin,
-        generic.UpdateView):
-    fields = ['text', 'title']
-    layout = ['title', 'text', util_forms.Submit('Beitrag speichern')]
+class ContentUpdate(util_views.ActionMixin, generic.UpdateView):
+    action = 'Beitrag ändern'
+    fields = ('text', 'title')
+    layout = ('title', 'text')
     model = models.Content
-    permission_required = 'content.change_content'
+    permission = 'content.change_content'
 
+    def get_menu(self):
+        return self.object.get_type_name()
 
 class EventDay(generic.DayArchiveView):
     allow_future = True
