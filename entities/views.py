@@ -9,16 +9,18 @@ from django.views import generic
 from rules.contrib import views as rules_views
 from util import forms as util_forms, views as util_views
 
-
-class Gestalt(rules_views.PermissionRequiredMixin, generic.DetailView):
+class Gestalt(util_views.PageMixin, generic.DetailView):
+    menu = 'gestalt'
     model = models.Gestalt
-    permission_required = 'entities.view_gestalt'
+    permission = 'entities.view_gestalt'
     slug_field = 'user__username'
 
     def get_context_data(self, **kwargs):
-        kwargs['content'] = self.object.content_set.permitted(self.request.user)
+        kwargs['content_list'] = self.object.content_set.permitted(self.request.user)
         return super().get_context_data(**kwargs)
 
+    def get_title(self):
+        return str(self.object)
 
 class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.FormMixin, util_views.NavigationMixin, generic.UpdateView):
     fields = ['about']
