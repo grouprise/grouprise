@@ -129,7 +129,9 @@ class ContentCreate(
         return False
 
 
-class ContentList(generic.ListView):
+class ContentList(util_views.PageMixin, generic.ListView):
+    permission = 'content.view_content_list'
+
     def get_queryset(self):
         return models.Content.objects.permitted(self.request.user)
 

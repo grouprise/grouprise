@@ -61,13 +61,13 @@ class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.FormMixin, u
         else:
             return self.form_invalid(form, user_form)
 
-
-class Group(rules_views.PermissionRequiredMixin, util_views.GestaltMixin, generic.DetailView):
+class Group(util_views.PageMixin, generic.DetailView):
+    menu = 'group'
     model = models.Group
-    permission_required = 'entities.view_group'
+    permission = 'entities.view_group'
 
     def get_context_data(self, **kwargs):
-        kwargs['blog_content'] = self.get_group_content().filter(groupcontent__pinned=False)
+        kwargs['content_list'] = self.get_group_content().filter(groupcontent__pinned=False)
         kwargs['head_gallery'] = self.get_head_gallery()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
@@ -91,6 +91,9 @@ class Group(rules_views.PermissionRequiredMixin, util_views.GestaltMixin, generi
             return models.Membership.objects.get(gestalt=self.get_gestalt(), group=self.object)
         except models.Membership.DoesNotExist:
             return None
+
+    def get_title(self):
+        return self.object.name
 
 class GroupCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Gruppe anlegen'
@@ -120,8 +123,9 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     def get_parent(self):
         return self.get_group()
 
-class Imprint(util_views.NavigationMixin, util_views.TitleMixin, generic.TemplateView):
+class Imprint(util_views.PageMixin, generic.TemplateView):
     parent = 'index'
+    permission = 'entities.view_imprint'
     template_name = 'stadt/imprint.html'
     title = 'Impressum'
 

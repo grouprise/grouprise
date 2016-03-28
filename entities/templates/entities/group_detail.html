@@ -1,15 +1,14 @@
-{% extends 'group.html' %}
+{% extends 'stadt/list.html' %}
 {% load rules %}
 
-{% block title %}{% endblock %}
-
-{% block headcontent %}
-{% include 'entities/_group_head.html' %}
+{% block header %}
+{% include 'entities/_group_header.html' %}
 {% endblock %}
 
+{% block heading %}{% endblock %}
 
-{% block subcontent %}
-{% has_perm 'entities.change_group' user group as can_change_group %}
+
+{% block list_header %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_write_message %}
 
@@ -22,21 +21,28 @@
 
 {% if can_create_content %}
 <div class="btn-group pull-right">
-    <a href="{% url 'content-create' 'article' group.slug %}" class="btn btn-primary">Neuer Artikel</a>
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="caret"></span>
+        Neuer Beitrag <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <li><a href="{% url 'content-create' 'article' group.slug %}">Interne Nachricht</a></li>
-        <li><a href="{% url 'content-create' 'event' group.slug %}">Neues Ereignis</a></li>
-        <li><a href="{% url 'content-create' 'gallery' group.slug %}">Neue Galerie</a></li>
+        <li><a href="{% url 'content-create' 'article' group.slug %}">Artikel / Interne Nachricht</a></li>
+        <li><a href="{% url 'content-create' 'event' group.slug %}">Ereignis</a></li>
+        <li><a href="{% url 'content-create' 'gallery' group.slug %}">Galerie</a></li>
     </ul>
 </div>
 {% elif can_write_message %}
-<a href="{% url 'content-create' group.slug %}" class="btn btn-primary pull-right">Neue Nachricht</a>
+<a href="{% url 'content-create' 'article' group.slug %}" class="btn btn-primary pull-right">Neue Nachricht</a>
 {% endif %}
 <h2>Blog</h2>
-{% for content in blog_content %}
-{% include 'content/_content_preview.html' %}
-{% endfor %}
+{% endblock %}
+
+
+{% block sidebar %}
+<div class="text-right" style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
+    {% if group.logo %}
+    <img src="{{ group.logo.url }}">
+    {% endif %}
+</div>
+{% include 'calendar/_sidebar.html' %}
+{% include 'entities/_group_list.html' %}
 {% endblock %}

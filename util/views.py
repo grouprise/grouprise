@@ -84,7 +84,10 @@ class NavigationMixin:
             else:
                 return parent.get_absolute_url()
         else:
-            return super().get_success_url()
+            try:
+                return super().get_success_url()
+            except AttributeError:
+                return None
 
 class PermissionMixin(rules_views.PermissionRequiredMixin):
     def get_permission_required(self):
@@ -115,8 +118,10 @@ class TitleMixin:
     def get_title(self):
         if hasattr(self, 'title'):
             return self.title
-        else:
+        elif hasattr(self, 'action'):
             return self.action
+        else:
+            return None
 
 class ActionMixin(
         FormMixin,
@@ -127,5 +132,12 @@ class ActionMixin(
         PermissionMixin,
         TemplateMixin,
         TitleMixin,
-        ):
-    pass
+        ): pass
+
+class PageMixin(
+        GestaltMixin,
+        MenuMixin,
+        NavigationMixin,
+        PermissionMixin,
+        TitleMixin,
+        ): pass
