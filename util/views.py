@@ -1,7 +1,7 @@
 from . import forms
 from crispy_forms import helper, layout
 from django import forms as django_forms, http
-from django.core import urlresolvers
+from django.core import exceptions, urlresolvers
 from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
@@ -21,9 +21,6 @@ class GroupMixin:
         return super().get_context_data(**kwargs)
 
     def get_group(self):
-        if 'group_pk' in self.kwargs:
-            return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
-        # group_slug
         if hasattr(self, 'object'):
             if isinstance(self.object, entities_models.Group):
                 return self.object
@@ -31,6 +28,10 @@ class GroupMixin:
                 return self.object.group
             if hasattr(self.object, 'groups'):
                 return self.object.groups.first()
+        if 'group_pk' in self.kwargs:
+            return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
+        if 'group' in self.request.GET:
+            return entities_models.Group.objects.get(slug=self.request.GET['group'])
         return None
 
 class FormMixin(forms.LayoutMixin):
@@ -94,8 +95,17 @@ class NavigationMixin:
                 return None
 
 class PermissionMixin(rules_views.PermissionRequiredMixin):
-    def get_permission_required(self):
-        return (self.permission,)
+    def get_permissions(self):
+        return {self.permission: self.get_permission_object()}
+
+    def has_permission(self, permission=None):
+        permissions = self.get_permissions()
+        if permission in permissions:
+            permissions = {permission: permissions[permission]}
+        for permission, object in permissions.items():
+            if self.request.user.has_perm(permission, object):
+                return True
+        return False
 
 class SidebarMixin:
     def get_context_data(self, **kwargs):
@@ -107,7 +117,10 @@ class TemplateMixin:
 
     def get_template_names(self):
         if not self.ignore_base_templates:
-            names = super().get_template_names()
+            try:
+                names = super().get_template_names()
+            except exceptions.ImproperlyConfigured:
+                names = []
         else:
             names = []
         names += ['stadt/form.html']

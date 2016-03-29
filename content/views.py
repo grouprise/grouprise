@@ -43,50 +43,28 @@ class Content(util_views.PageMixin, generic.DetailView):
     def get_title(self):
         return self.object.title
 
-class ContentCreate(
-        rules_views.PermissionRequiredMixin, 
-        util_views.GroupMixin,
-        util_views.FormMixin, 
-        util_views.NavigationMixin,
-        generic.CreateView):
-    DECIDE_ON_PUBLICATION = 'both'
-    PUBLISH_ONLY_INTERNALLY = 'intern'
-    PUBLISH_ONLY_PUBLICALLY = 'public'
-
-    template_name = 'content/content_form.html'
+class ContentCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Beitrag erstellen'
 
     def form_valid(self, form):
-        self.group = self.get_group()
         form.instance.author = self.request.user.gestalt
         self.object = form.save()
-        if self.group:
-            entities_models.GroupContent(content=self.object, group=self.group).save()
+        if self.get_group():
+            entities_models.GroupContent(content=self.object, group=self.get_group()).save()
         if not form.instance.public:
             messages.success(self.request, 'Deine Nachricht wurde gespeichert.')
         return http.HttpResponseRedirect(self.get_success_url())
     
-    def get_any_permission_required(self):
+    def get_permissions(self):
         return {
-                self.DECIDE_ON_PUBLICATION: [
-                    ('entities.create_group_content', self.get_group()),
-                    ],
-                self.PUBLISH_ONLY_INTERNALLY: [
-                    ('entities.create_group_message', self.get_group()),
-                    ],
-                self.PUBLISH_ONLY_PUBLICALLY: [
-                    ('entities.create_gestalt_content', self.request.user.gestalt),
-                    ],
+                'entities.create_group_content': self.get_group(),
+                'entities.create_group_message': self.get_group(),
+                'entities.create_gestalt_content': self.request.user.gestalt,
                 }
-
-    def get_back_url(self):
-        try:
-            return self.get_group().get_absolute_url()
-        except AttributeError:
-            return self.request.user.gestalt.get_absolute_url()
 
     def get_fields(self):
         fields = ['text', 'title']
-        if self.has_permission(self.DECIDE_ON_PUBLICATION):
+        if self.has_permission('entities.create_group_content'):
             fields += ['public']
         if self.get_queryset().model == models.Event:
             fields += ['place', 'time']
@@ -96,35 +74,27 @@ class ContentCreate(
         return model_forms.modelform_factory(self.get_queryset().model, fields=self.get_fields())
 
     def get_layout(self):
-        public_list = ['public'] if self.has_permission(self.DECIDE_ON_PUBLICATION) else []
-        event_list = ['time', 'place'] if self.get_queryset().model == models.Event else []
-        layout_list = ['title'] + event_list + ['text'] + public_list + [util_views.submit('Beitrag speichern / Nachricht senden')]
-        return layout_list
+        public_layout = ('public',) if self.has_permission('entitites.create_group_content') else tuple()
+        event_layout = ('time', 'place') if self.get_queryset().model == models.Event else tuple()
+        layout = ('title',) + event_layout + ('text',) + public_layout
+        return layout + super().get_layout()
+
+    def get_menu(self):
+        return self.get_type_name()
+
+    def get_parent(self):
+        return self.get_group() or self.request.user.gestalt
 
     def get_queryset(self):
-        try:
-            content_type = self.request.resolver_match.kwargs['type']
-        except KeyError:
-            content_type = 'article'
-        return getattr(models, content_type.title())._default_manager.all()
+        return getattr(models, self.get_type_name())._default_manager.all()
 
     def get_success_url(self):
-        if not self.object.public:
+        if self.object and not self.object.public:
             return self.get_back_url()
         return super().get_success_url()
 
-    def has_permission(self, permissions=None):
-        perms = []
-        if not permissions:
-            for ps in self.get_any_permission_required().values():
-                perms += ps
-        else:
-            perms = self.get_any_permission_required()[permissions]
-        for perm in perms:
-            if self.request.user.has_perm(perm[0], perm[1]):
-                return True
-        return False
-
+    def get_type_name(self):
+        return self.request.resolver_match.kwargs['type'].title()
 
 class ContentList(util_views.PageMixin, generic.ListView):
     permission = 'content.view_content_list'

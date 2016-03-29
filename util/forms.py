@@ -8,7 +8,7 @@ class LayoutMixin:
         return h
 
     def get_layout(self):
-        layout = self.layout
+        layout = self.layout if hasattr(self, 'layout') else tuple()
         if not isinstance(layout, (tuple, list)):
             layout = (layout,)
         return layout

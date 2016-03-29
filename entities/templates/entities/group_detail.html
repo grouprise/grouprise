@@ -25,9 +25,9 @@
         Neuer Beitrag <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <li><a href="{% url 'content-create' 'article' group.slug %}">Artikel / Interne Nachricht</a></li>
-        <li><a href="{% url 'content-create' 'event' group.slug %}">Ereignis</a></li>
-        <li><a href="{% url 'content-create' 'gallery' group.slug %}">Galerie</a></li>
+        <li><a href="{% url 'content-create' 'article' %}?group={{ group.slug }}">Artikel / Interne Nachricht</a></li>
+        <li><a href="{% url 'content-create' 'event' %}?group={{ group.slug }}">Ereignis</a></li>
+        <li><a href="{% url 'content-create' 'gallery' %}?group={{ group.slug }}">Galerie</a></li>
     </ul>
 </div>
 {% elif can_write_message %}
