@@ -108,8 +108,10 @@ class PermissionMixin(rules_views.PermissionRequiredMixin):
         return False
 
 class SidebarMixin:
+    sidebar = ('calendar', 'groups')
+
     def get_context_data(self, **kwargs):
-        kwargs['sidebar_template'] = self.sidebar_template
+        kwargs['sidebar'] = self.sidebar
         return super().get_context_data(**kwargs)
 
 class TemplateMixin:
@@ -123,8 +125,14 @@ class TemplateMixin:
                 names = []
         else:
             names = []
-        names += ['stadt/form.html']
+        names += [self.fallback_template_name]
         return names
+
+class ActionTemplateMixin(TemplateMixin):
+    fallback_template_name = 'stadt/form.html'
+
+class PageTemplateMixin(TemplateMixin):
+    fallback_template_name = 'stadt/list.html'
 
 class TitleMixin:
     def get_context_data(self, **kwargs):
@@ -141,13 +149,13 @@ class TitleMixin:
             return None
 
 class ActionMixin(
+        ActionTemplateMixin,
         FormMixin,
         GestaltMixin,
         GroupMixin,
         MenuMixin,
         NavigationMixin,
         PermissionMixin,
-        TemplateMixin,
         TitleMixin,
         ): pass
 
@@ -156,6 +164,8 @@ class PageMixin(
         GroupMixin,
         MenuMixin,
         NavigationMixin,
+        PageTemplateMixin,
         PermissionMixin,
+        SidebarMixin,
         TitleMixin,
         ): pass

@@ -19,7 +19,15 @@
             {% block content %}{% endblock %}
         </div>
         <div class="col-md-4">
-            {% block sidebar %}{% endblock %}
+            {% block sidebar %}
+            {% for block in sidebar %}
+            {% if block == 'calendar' %}
+            {% include 'calendar/_sidebar.html' %}
+            {% elif block == 'groups' %}
+            {% include 'entities/_group_list.html' %}
+            {% endif %}
+            {% endfor %}
+            {% endblock %}
         </div>
     </div>
     {% include 'stadt/_footer.html' %}

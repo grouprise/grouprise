@@ -13,6 +13,7 @@ class Gestalt(util_views.PageMixin, generic.DetailView):
     menu = 'gestalt'
     model = models.Gestalt
     permission = 'entities.view_gestalt'
+    sidebar = ('calendar',)
     slug_field = 'user__username'
 
     def get_context_data(self, **kwargs):
@@ -128,7 +129,7 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
 class Imprint(util_views.PageMixin, generic.TemplateView):
     parent = 'index'
     permission = 'entities.view_imprint'
-    template_name = 'stadt/imprint.html'
+    template_name = 'entities/imprint.html'
     title = 'Impressum'
 
 class MembershipCreate(util_views.ActionMixin, generic.CreateView):

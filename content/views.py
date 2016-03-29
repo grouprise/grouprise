@@ -124,7 +124,6 @@ class EventDay(util_views.PageMixin, generic.DayArchiveView):
     ordering = 'time'
     parent = 'event-index'
     permission = 'content.view_event_day'
-    template_name_suffix = '_day'
 
     def get_date(self):
         return dates._date_from_string(
