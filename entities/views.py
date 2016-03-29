@@ -91,8 +91,8 @@ class Group(util_views.PageMixin, generic.DetailView):
 
     def get_membership(self):
         try:
-            return models.Membership.objects.get(gestalt=self.get_gestalt(), group=self.object)
-        except models.Membership.DoesNotExist:
+            return models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.object)
+        except (AttributeError, models.Membership.DoesNotExist):
             return None
 
     def get_title(self):
@@ -147,7 +147,7 @@ class MembershipCreate(util_views.ActionMixin, generic.CreateView):
     def form_valid(self, form):
         group = self.get_group()
         messages.success(self.request, 'Du bist nun Mitglied der Gruppe <em>{}</em>.'.format(group))
-        form.instance.gestalt = self.get_gestalt()
+        form.instance.gestalt = self.request.user.gestalt
         form.instance.group = group
         return super().form_valid(form)
 

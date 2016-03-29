@@ -35,7 +35,7 @@ class Content(Base):
             'gruppenintern zugänglich, Benachrichtigungen werden nur an '
             'Mitglieder versendet.')
     slug = models.SlugField(unique=True)
-    title = models.CharField('Titel / Betreff', max_length=255)
+    title = models.CharField('Titel', max_length=255)
 
     objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
 

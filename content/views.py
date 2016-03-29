@@ -1,4 +1,4 @@
-from . import models
+from . import forms, models
 from django import http
 from django.conf import settings
 from django.contrib import messages
@@ -45,6 +45,23 @@ class Content(util_views.PageMixin, generic.DetailView):
 
     def get_title(self):
         return self.object.title
+
+class MessageCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Nachricht senden'
+    form_class = forms.Message
+    menu = 'group'
+    message = 'Deine Nachricht wurde gesendet.'
+    model = models.Article
+    permission = 'entities.create_group_message'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['author'] = self.request.user.gestalt
+        kwargs['group'] = self.get_group()
+        return kwargs
+
+    def get_parent(self):
+        return self.get_group()
 
 class ContentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Beitrag erstellen'

@@ -10,7 +10,7 @@
 
 {% block list_header %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
-{% has_perm 'entities.create_group_message' user group as can_write_message %}
+{% has_perm 'entities.create_group_message' user group as can_create_message %}
 
 {% if intro_content %}
 <h2>Intro</h2>
@@ -30,8 +30,8 @@
         <li><a href="{% url 'content-create' 'gallery' %}?group={{ group.slug }}">Galerie</a></li>
     </ul>
 </div>
-{% elif can_write_message %}
-<a href="{% url 'content-create' 'article' group.slug %}" class="btn btn-primary pull-right">Neue Nachricht</a>
+{% elif can_create_message %}
+<a href="{% url 'message-create' group.pk %}" class="btn btn-primary pull-right">Neue Nachricht</a>
 {% endif %}
 <h2>Blog</h2>
 {% endblock %}

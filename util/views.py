@@ -1,6 +1,7 @@
 from . import forms
 from crispy_forms import helper, layout
 from django import forms as django_forms, http
+from django.contrib.messages import views as messages_views
 from django.core import exceptions, urlresolvers
 from django.utils import six
 from django.views import generic
@@ -10,10 +11,6 @@ from rules.contrib import views as rules_views
 
 class DeleteView(edit_views.FormMixin, generic.DeleteView):
     pass
-
-class GestaltMixin:
-    def get_gestalt(self):
-        return self.request.user.gestalt if self.request.user.is_authenticated() else None
 
 class GroupMixin:
     def get_context_data(self, **kwargs):
@@ -57,6 +54,13 @@ class MenuMixin:
     def get_menu(self):
         if hasattr(self, 'menu'):
             return self.menu
+
+class MessageMixin(messages_views.SuccessMessageMixin):
+    def get_success_message(self, cleaned_data):
+        if hasattr(self, 'message'):
+            return self.message
+        else:
+            return None
 
 class NavigationMixin:
     def get_back_url(self):
@@ -151,16 +155,15 @@ class TitleMixin:
 class ActionMixin(
         ActionTemplateMixin,
         FormMixin,
-        GestaltMixin,
         GroupMixin,
         MenuMixin,
+        MessageMixin,
         NavigationMixin,
         PermissionMixin,
         TitleMixin,
         ): pass
 
 class PageMixin(
-        GestaltMixin,
         GroupMixin,
         MenuMixin,
         NavigationMixin,

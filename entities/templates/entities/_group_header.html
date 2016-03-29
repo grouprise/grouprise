@@ -2,7 +2,7 @@
 
 {% has_perm 'entities.change_group' user group as can_edit %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
-{% has_perm 'entities.create_group_message' user group as can_write_message %}
+{% has_perm 'entities.create_group_message' user group as can_create_message %}
 {% has_perm 'entities.create_membership' user group as can_create_membership %}
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 
@@ -27,10 +27,8 @@
         <ul>
             <li>{{ group.address|linebreaks }}</li>
             <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
-            {% if can_write_message %}
-            <li><a href="{% url 'content-create' 'article' %}?group={{ group.slug }}">Nachricht schreiben</a></li>
-            {% elif can_create_content %}
-            <li><a href="{% url 'content-create' 'article' %}?group={{ group.slug }}" title="Nachricht an alle Gruppenmitglieder">Interne Nachricht schreiben</a></li>
+            {% if can_create_message %}
+            <li><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></li>
             {% endif %}
             <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>

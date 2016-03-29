@@ -10,5 +10,5 @@ def events(request):
 
 def statistics(request):
     return {
-            'content_count': models.Content.objects.count,
+            'content_count': models.Content.objects.permitted(request.user).count,
             }
