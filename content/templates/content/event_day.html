@@ -1,9 +1,6 @@
-{% extends 'stadt.html' %}
+{% extends 'stadt/list.html' %}
 
-{% block subtitle %}Ereignisse am {{ day|date:'DATE_FORMAT' }}{% endblock %}
-
-{% block subcontent %}
-{% for content in event_list %}
-{% include 'content/_content_preview.html' %}
-{% endfor %}
+{% block sidebar %}
+{% include 'calendar/_sidebar.html' %}
+{% include 'entities/_group_list.html' %}
 {% endblock %}

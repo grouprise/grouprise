@@ -60,7 +60,7 @@ class Content(Base):
                 pass
 
     def get_type_name(self):
-        return type(self.get_subclass_instance()).__name__
+        return self.get_subclass_instance()._meta.model_name
 
 
 class Article(Content):
