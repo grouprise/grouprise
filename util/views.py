@@ -141,7 +141,6 @@ class PageTemplateMixin(TemplateMixin):
 class TitleMixin:
     def get_context_data(self, **kwargs):
         kwargs['title'] = self.get_title()
-        print(kwargs['title'])
         return super().get_context_data(**kwargs)
 
     def get_title(self):
