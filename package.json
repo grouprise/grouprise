@@ -4,14 +4,15 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
-    "csswring": ">=3.0",
+    "csswring": ">=3.0",,
+    "es6-promise": "^3.1.2",
     "grunt": "~0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-less": "^1.2.0",
     "grunt-contrib-uglify": "^0.11.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-postcss": ">=0.3",
+    "grunt-postcss": ">=0.3"
     "postcss-banner": ">=1"
   },
   "dependencies": {

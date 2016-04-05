@@ -1,3 +1,5 @@
+require("es6-promise").polyfill();
+
 module.exports = function (grunt) {
     var pkg = grunt.file.readJSON("package.json");
 
