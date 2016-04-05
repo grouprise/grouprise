@@ -2,7 +2,7 @@
     <header>
         <p>{{ content.get_display_type_name }}</p>
         <h3>
-            <a href="{{ content_url|default:content.get_absolute_url }}">
+            <a href="{{ content.get_absolute_url }}">
                 {% if content.event %}
                 {{ content.event.time|date:'l, j.n.Y:' }}
                 {% endif %}
@@ -23,7 +23,7 @@
     {% endif %}
     {% endwith %}
     {{ content.text|truncatewords:60 }}
-    <a href="{{ content_url }}">WEITER&gt;</a>
+    <a href="{{ content.get_absolute_url }}">WEITER&gt;</a>
     </p>
 
     <footer style="clear: both;">
