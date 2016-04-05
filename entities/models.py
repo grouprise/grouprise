@@ -12,6 +12,7 @@ class Attention(models.Model):
 
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
+    addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
     avatar = models.ImageField(default=staticfiles_storage.url('avatar.png'))
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
@@ -33,7 +34,7 @@ class Group(models.Model):
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)
-    members = models.ManyToManyField('Gestalt', through='Membership')
+    members = models.ManyToManyField('Gestalt', related_name='groups', through='Membership')
     name = models.CharField('Name', max_length=255)
     slug = models.SlugField('Adresse der Gruppenseite', unique=True)
     url = models.URLField('Adresse im Web', blank=True)

@@ -4,14 +4,12 @@ from django.db import models
 from django.utils import text, timezone
 from entities import models as entities_models
 
-
 class Image(models.Model):
     content = models.ForeignKey('Content')
     image = models.ImageField()
 
-
 class Base(models.Model):
-    author = models.ForeignKey('entities.Gestalt')
+    author = models.ForeignKey('entities.Gestalt', related_name='authored_%(class)s')
     date_created = models.DateTimeField(default=timezone.now)
     text = models.TextField('Text', blank=True)
 
@@ -19,10 +17,8 @@ class Base(models.Model):
         abstract = True
         ordering = ('-date_created',)
 
-
 class Comment(Base):
     content = models.ForeignKey('Content')
-
 
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
@@ -60,7 +56,6 @@ class Content(Base):
 
     def get_type_name(self):
         return self.get_subclass_instance()._meta.model_name
-
 
 class Article(Content):
     def get_display_type_name(self):
