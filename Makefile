@@ -7,10 +7,11 @@ GRUNT_BIN = node_modules/.bin/grunt
 .PHONY: default clean
 
 default: $(GRUNT_BIN)
+	$(NPM_BIN) install
 	$(NODE_BIN) $(GRUNT_BIN)
 
 $(GRUNT_BIN):
 	$(NPM_BIN) install
 
 clean:
-	$(RM) -r bower_components static
+	$(RM) -r node_modules bower_components static
