@@ -12,7 +12,7 @@
     "grunt-contrib-less": "^1.2.0",
     "grunt-contrib-uglify": "^0.11.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-postcss": ">=0.3"
+    "grunt-postcss": ">=0.3",
     "postcss-banner": ">=1"
   },
   "dependencies": {
