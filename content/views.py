@@ -54,14 +54,11 @@ class ContentCreate(util_views.ActionMixin, generic.CreateView):
         self.object = form.save()
         if self.get_group():
             entities_models.GroupContent(content=self.object, group=self.get_group()).save()
-        if not form.instance.public:
-            messages.success(self.request, 'Deine Nachricht wurde gespeichert.')
         return http.HttpResponseRedirect(self.get_success_url())
     
     def get_permissions(self):
         return {
                 'entities.create_group_content': self.get_group(),
-                'entities.create_group_message': self.get_group(),
                 'entities.create_gestalt_content': self.request.user.gestalt,
                 }
 
@@ -143,6 +140,9 @@ class BaseMessageCreate(util_views.ActionMixin, generic.CreateView):
         return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
 
     def get_parent(self):
+        return self.get_recipient()
+
+    def get_permission_object(self):
         return self.get_recipient()
 
 class GestaltMessageCreate(BaseMessageCreate):
