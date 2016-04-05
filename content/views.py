@@ -50,15 +50,12 @@ class MessageCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Nachricht senden'
     form_class = forms.Message
     menu = 'group'
-    message = 'Deine Nachricht wurde gesendet.'
+    message = 'Die Nachricht wurde versendet.'
     model = models.Article
     permission = 'entities.create_group_message'
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['author'] = self.request.user.gestalt
-        kwargs['group'] = self.get_group()
-        return kwargs
+    def get_initial(self):
+        return {'recipient': self.get_group().pk, 'sender': self.request.user.email}
 
     def get_parent(self):
         return self.get_group()

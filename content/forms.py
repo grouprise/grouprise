@@ -4,20 +4,17 @@ from entities import models as entities_models
 from util import forms as utils_forms
 
 class Message(utils_forms.FormMixin, forms.ModelForm):
-    layout = ('title', 'text', utils_forms.Submit('Nachricht senden'))
+    layout = ('sender', 'recipient', 'title', 'text', utils_forms.Submit('Nachricht senden'))
+    recipient = forms.ModelChoiceField(disabled=True, label='Empfängerin', queryset=entities_models.Group.objects.all())
+    sender = forms.EmailField(disabled=True, widget=forms.HiddenInput)
 
     class Meta:
         fields = ('text', 'title')
+        labels = {'text': 'Nachricht', 'title': 'Betreff'}
         model = models.Article
 
-    def __init__(self, *args, **kwargs):
-        self.author = kwargs.pop('author')
-        self.group = kwargs.pop('group')
-        super().__init__(*args, **kwargs)
-        self.fields['title'].label = 'Betreff'
-        self.fields['text'].label = 'Nachricht'
-
     def save(self):
-        self.instance.author = self.author
-        message = super().save()
-        entities_models.GroupContent(content=message, group=self.group).save()
+        message = super().save(commit=False)
+        message.author = entities_models.Gestalt.objects.get(user__email=self.cleaned_data['sender'])
+        message.save()
+        entities_models.GroupContent(content=message, group=self.cleaned_data['recipient']).save()
