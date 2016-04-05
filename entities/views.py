@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
+from django.db import models as django_models
 from django.views import generic
 from rules.contrib import views as rules_views
 from util import forms as util_forms, views as util_views
@@ -17,7 +18,7 @@ class Gestalt(util_views.PageMixin, generic.DetailView):
     slug_field = 'user__username'
 
     def get_context_data(self, **kwargs):
-        kwargs['content_list'] = self.object.content_set.permitted(self.request.user)
+        kwargs['content_list'] = content_models.Content.objects.permitted(self.request.user).filter(django_models.Q(gestaltcontent__gestalt=self.object) | django_models.Q(author=self.object))
         return super().get_context_data(**kwargs)
 
     def get_title(self):

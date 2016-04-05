@@ -3,9 +3,8 @@ from django import forms
 from entities import models as entities_models
 from util import forms as utils_forms
 
-class Message(utils_forms.FormMixin, forms.ModelForm):
+class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
     layout = ('sender', 'recipient', 'title', 'text', utils_forms.Submit('Nachricht senden'))
-    recipient = forms.ModelChoiceField(disabled=True, label='Empfängerin', queryset=entities_models.Group.objects.all())
     sender = forms.EmailField(disabled=True, widget=forms.HiddenInput)
 
     class Meta:
@@ -13,8 +12,28 @@ class Message(utils_forms.FormMixin, forms.ModelForm):
         labels = {'text': 'Nachricht', 'title': 'Betreff'}
         model = models.Article
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['recipient'] = forms.ModelChoiceField(disabled=True, label='Empfängerin', queryset=self.get_recipient_queryset())
+
     def save(self):
         message = super().save(commit=False)
         message.author = entities_models.Gestalt.objects.get(user__email=self.cleaned_data['sender'])
         message.save()
-        entities_models.GroupContent(content=message, group=self.cleaned_data['recipient']).save()
+        return message
+
+class GestaltMessage(BaseMessage):
+    def get_recipient_queryset(self):
+        return entities_models.Gestalt.objects.all()
+
+    def save(self):
+        message = super().save()
+        entities_models.GestaltContent.objects.create(content=message, gestalt=self.cleaned_data['recipient'])
+
+class GroupMessage(BaseMessage):
+    def get_recipient_queryset(self):
+        return entities_models.Group.objects.all()
+
+    def save(self):
+        message = super().save()
+        entities_models.GroupContent.objects.create(content=message, group=self.cleaned_data['recipient'])

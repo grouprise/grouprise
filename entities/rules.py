@@ -15,6 +15,7 @@ def is_group_membership(user, membership):
 rules.add_perm('entities.view_gestalt', rules.always_allow)
 rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)
 rules.add_perm('entities.create_gestalt_content', rules.is_authenticated & is_gestalt)
+rules.add_perm('entities.create_gestalt_message', rules.is_authenticated & ~is_gestalt)
 rules.add_perm('entities.mail_gestalt', rules.is_authenticated & ~is_gestalt)
 
 rules.add_perm('entities.view_group', rules.always_allow)

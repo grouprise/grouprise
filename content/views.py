@@ -46,20 +46,6 @@ class Content(util_views.PageMixin, generic.DetailView):
     def get_title(self):
         return self.object.title
 
-class MessageCreate(util_views.ActionMixin, generic.CreateView):
-    action = 'Nachricht senden'
-    form_class = forms.Message
-    menu = 'group'
-    message = 'Die Nachricht wurde versendet.'
-    model = models.Article
-    permission = 'entities.create_group_message'
-
-    def get_initial(self):
-        return {'recipient': self.get_group().pk, 'sender': self.request.user.email}
-
-    def get_parent(self):
-        return self.get_group()
-
 class ContentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Beitrag erstellen'
 
@@ -147,3 +133,30 @@ class EventDay(util_views.PageMixin, generic.DayArchiveView):
 
     def get_title(self):
         return formats.date_format(self.get_date())
+
+class BaseMessageCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Nachricht senden'
+    message = 'Die Nachricht wurde versendet.'
+    model = models.Article
+
+    def get_initial(self):
+        return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
+
+    def get_parent(self):
+        return self.get_recipient()
+
+class GestaltMessageCreate(BaseMessageCreate):
+    form_class = forms.GestaltMessage
+    menu = 'gestalt'
+    permission = 'entities.create_gestalt_message'
+
+    def get_recipient(self):
+        return self.get_gestalt()
+
+class GroupMessageCreate(BaseMessageCreate):
+    form_class = forms.GroupMessage
+    menu = 'group'
+    permission = 'entities.create_group_message'
+
+    def get_recipient(self):
+        return self.get_group()

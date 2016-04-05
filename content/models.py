@@ -27,7 +27,6 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
-    groups = models.ManyToManyField('entities.Group', through='entities.GroupContent')
     public = models.BooleanField('Veröffentlichen', default=False,
             help_text='Veröffentlichter Inhalt wird im öffentlichen Blog '
             'angezeigt, Benachrichtigungen werden an Gruppenmitglieder und '

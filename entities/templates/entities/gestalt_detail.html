@@ -3,6 +3,7 @@
 
 {% block header %}
 {% has_perm 'entities.change_gestalt' user gestalt as can_edit_gestalt %}
+{% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
 <h1>
     {{ gestalt }}
     {% if can_edit_gestalt %}
@@ -11,11 +12,19 @@
 </h1>
 <ul>
     <li>{{ gestalt.about }}</li>
+    {% if can_create_message %}
+    <li><a href="{% url 'gestalt-message-create' gestalt.pk %}">Nachricht schreiben</a></li>
+    {% endif %}
 </ul>
 {% endblock %}
 
 {% block heading %}{% endblock %}
 
 {% block list_header %}
+{% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
+
+{% if can_create_message %}
+<a href="{% url 'gestalt-message-create' gestalt.pk %}" class="btn btn-primary pull-right">Neue Nachricht</a>
+{% endif %}
 <h2>Blog</h2>
 {% endblock %}

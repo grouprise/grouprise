@@ -12,6 +12,16 @@ from rules.contrib import views as rules_views
 class DeleteView(edit_views.FormMixin, generic.DeleteView):
     pass
 
+class GestaltMixin:
+    def get_context_data(self, **kwargs):
+        kwargs['gestalt'] = self.get_gestalt()
+        return super().get_context_data(**kwargs)
+
+    def get_gestalt(self):
+        if 'gestalt_pk' in self.kwargs:
+            return entities_models.Gestalt.objects.get(pk=self.kwargs['gestalt_pk'])
+        return None
+
 class GroupMixin:
     def get_context_data(self, **kwargs):
         kwargs['group'] = self.get_group()
@@ -154,6 +164,7 @@ class TitleMixin:
 class ActionMixin(
         ActionTemplateMixin,
         FormMixin,
+        GestaltMixin,
         GroupMixin,
         MenuMixin,
         MessageMixin,
