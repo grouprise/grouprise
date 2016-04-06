@@ -1,7 +1,7 @@
 from . import models
 from django import forms
 from entities import models as entities_models
-from util import forms as utils_forms
+from utils import forms as utils_forms
 
 class Article(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)

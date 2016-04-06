@@ -8,7 +8,7 @@ from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
 from rules.contrib import views as rules_views
-from util import forms as util_forms, views as util_views
+from utils import forms as util_forms, views as util_views
 
 class Gestalt(util_views.PageMixin, generic.DetailView):
     menu = 'gestalt'

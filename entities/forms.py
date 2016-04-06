@@ -2,7 +2,7 @@ from crispy_forms import bootstrap
 from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import shortcuts
-from util import forms as util_forms
+from utils import forms as util_forms
 
 class User(util_forms.FormMixin, forms.ModelForm):
     class Meta:

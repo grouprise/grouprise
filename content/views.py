@@ -5,7 +5,7 @@ from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
 from entities import models as entities_models
-from util import views as util_views
+from utils import views as util_views
 
 class CommentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Kommentar hinzufügen'

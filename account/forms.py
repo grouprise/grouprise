@@ -1,7 +1,7 @@
 from allauth.account import forms as allauth_forms
 from crispy_forms import layout
 from django import forms
-from util import forms as util_forms
+from utils import forms as util_forms
 
 class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
     layout = (

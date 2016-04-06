@@ -2,7 +2,7 @@ from . import forms
 from allauth.account import views
 from crispy_forms import layout
 from django.views.generic import edit as edit_views
-from util import views as util_views
+from utils import views as util_views
 
 class Login(util_views.ActionMixin, views.LoginView):
     action = 'Anmelden'

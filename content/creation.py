@@ -1,6 +1,6 @@
 from . import forms, models
 from django.views import generic
-from util import views as util_views
+from utils import views as util_views
 
 class Article(util_views.ActionMixin, generic.CreateView):
     action = 'Artikel erstellen'
