@@ -1,7 +1,8 @@
-from . import views
+from . import creation, views
 from django.conf import urls
 
 urlpatterns = [
+    urls.url(r'^article/add/$', creation.Article.as_view(), name='article-create'),
     urls.url(r'^(?P<type>article|event|gallery)/add/$', views.ContentCreate.as_view(), name='content-create'),
     urls.url(r'^content/(?P<content_pk>[0-9]+)/comment/add/$', views.CommentCreate.as_view(), name='comment-create'),
     urls.url(r'^content/(?P<pk>[0-9]+)/edit/$', views.ContentUpdate.as_view(), name='content-update'),

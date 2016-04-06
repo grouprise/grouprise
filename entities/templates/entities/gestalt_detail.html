@@ -21,9 +21,19 @@
 {% block heading %}{% endblock %}
 
 {% block list_header %}
+{% has_perm 'entities.create_gestalt_content' user gestalt as can_create_content %}
 {% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
 
-{% if can_create_message %}
+{% if can_create_content %}
+<div class="btn-group pull-right">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Neuer Beitrag <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'article-create' %}">Artikel</a></li>
+    </ul>
+</div>
+{% elif can_create_message %}
 <a href="{% url 'gestalt-message-create' gestalt.pk %}" class="btn btn-primary pull-right">Neue Nachricht</a>
 {% endif %}
 <h2>Blog</h2>

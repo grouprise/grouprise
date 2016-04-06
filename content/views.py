@@ -1,15 +1,11 @@
-from . import forms, models
+from . import models
 from django import http
-from django.conf import settings
-from django.contrib import messages
-from django.db import models as django_models
 from django.forms import models as model_forms
 from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
 from entities import models as entities_models
-from rules.contrib import views as rules_views
-from util import forms as util_forms, views as util_views
+from util import views as util_views
 
 class CommentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Kommentar hinzufügen'
@@ -130,33 +126,3 @@ class EventDay(util_views.PageMixin, generic.DayArchiveView):
 
     def get_title(self):
         return formats.date_format(self.get_date())
-
-class BaseMessageCreate(util_views.ActionMixin, generic.CreateView):
-    action = 'Nachricht senden'
-    message = 'Die Nachricht wurde versendet.'
-    model = models.Article
-
-    def get_initial(self):
-        return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
-
-    def get_parent(self):
-        return self.get_recipient()
-
-    def get_permission_object(self):
-        return self.get_recipient()
-
-class GestaltMessageCreate(BaseMessageCreate):
-    form_class = forms.GestaltMessage
-    menu = 'gestalt'
-    permission = 'entities.create_gestalt_message'
-
-    def get_recipient(self):
-        return self.get_gestalt()
-
-class GroupMessageCreate(BaseMessageCreate):
-    form_class = forms.GroupMessage
-    menu = 'group'
-    permission = 'entities.create_group_message'
-
-    def get_recipient(self):
-        return self.get_group()

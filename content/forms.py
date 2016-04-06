@@ -3,6 +3,18 @@ from django import forms
 from entities import models as entities_models
 from util import forms as utils_forms
 
+class Article(utils_forms.FormMixin, forms.ModelForm):
+    author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)
+    layout = ('author', 'title', 'text', utils_forms.Submit('Artikel erstellen'))
+
+    class Meta:
+        fields = ('author', 'text', 'title')
+        model = models.Article
+
+    def __init__(self, *args, **kwargs):
+        kwargs['instance'] = models.Article(public=True)
+        super().__init__(*args, **kwargs)
+
 class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
     layout = ('sender', 'recipient', 'title', 'text', utils_forms.Submit('Nachricht senden'))
     sender = forms.EmailField(disabled=True, widget=forms.HiddenInput)
