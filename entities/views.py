@@ -111,18 +111,20 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
-    layout = (
-            'name',
-            layout.Field('address', rows=4),
-            'url',
-            layout.Field('date_founded', data_provide='datepicker',
-                data_date_language='de', data_date_min_view_mode='months',
-                data_date_start_view='decade'),
-            bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
-            )
     menu = 'group'
     model = models.Group
     permission = 'entities.change_group'
+
+    def get_layout(self):
+        return (
+                'name',
+                layout.Field('address', rows=4),
+                'url',
+                layout.Field('date_founded', data_provide='datepicker',
+                    data_date_language='de', data_date_min_view_mode='months',
+                    data_date_start_view='decade'),
+                bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
+                )
 
     def get_parent(self):
         return self.get_group()
