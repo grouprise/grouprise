@@ -27,6 +27,13 @@ class EventList(BaseContentList):
     def get_queryset(self):
         return models.Event.objects.permitted(self.request.user).upcoming()
 
+class GalleryList(BaseContentList):
+    menu = 'gallery'
+    title = 'Galerien'
+
+    def get_queryset(self):
+        return models.Gallery.objects.permitted(self.request.user)
+
 
 class CommentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Kommentar hinzufügen'

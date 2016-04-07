@@ -84,5 +84,7 @@ class Event(Content):
 
 
 class Gallery(Content):
+    objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
+
     def get_display_type_name(self):
         return 'Galerie' if self.public else 'Interne Galerie'
