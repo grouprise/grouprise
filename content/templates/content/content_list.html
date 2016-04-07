@@ -1,4 +1,20 @@
 {% extends 'stadt/list.html' %}
+{% load rules %}
+
+{% block heading %}
+{% has_perm 'content.create_content' user as can_create_content %}
+{% if can_create_content %}
+<div class="btn-group pull-right">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Neuer Beitrag <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'article-create' %}">Artikel</a></li>
+    </ul>
+</div>
+{% endif %}
+<h1>{{ block.super }}</h1>
+{% endblock %}
 
 {% block list_header %}
 <div class="jumbotron">

@@ -4,13 +4,11 @@ from utils import views as util_views
 
 class Article(util_views.ActionMixin, generic.CreateView):
     action = 'Artikel erstellen'
+    back_url = 'article-index'
     form_class = forms.Article
     menu = 'article'
     model = models.Article
     permission = 'entities.create_gestalt_content'
-
-    def get_back_url(self):
-        return self.request.user.gestalt.get_absolute_url()
 
     def get_initial(self):
         return {'author': self.request.user.gestalt.pk}
