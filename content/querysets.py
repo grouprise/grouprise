@@ -9,10 +9,10 @@ class ContentQuerySet(models.QuerySet):
         user_groups = user.gestalt.groups.all() if user.is_authenticated() else entities_models.Group.objects.none()
         return self.filter(models.Q(public=True) | models.Q(author=gestalt) | models.Q(groupcontent__group__in=user_groups) | models.Q(gestaltcontent__gestalt=gestalt))
 
-class EventQuerySet(models.QuerySet):
+class EventQuerySet(ContentQuerySet):
     def around(self, time):
         delta = datetime.timedelta(weeks=6)
         return self.filter(time__gt=time-delta, time__lt=time+delta)
 
-    def upcoming(self, count):
+    def upcoming(self, count=None):
         return self.filter(time__gte=timezone.now())[:count]

@@ -7,15 +7,26 @@ from django.views.generic import dates
 from entities import models as entities_models
 from utils import views as util_views
 
-class ArticleList(util_views.PageMixin, generic.ListView):
+class BaseContentList(util_views.PageMixin, generic.ListView):
     context_object_name = 'content_list'
-    menu = 'article'
     parent = 'index'
     permission = 'content.view_content_list'
+
+class ArticleList(BaseContentList):
+    menu = 'article'
     title = 'Artikel'
 
     def get_queryset(self):
         return models.Article.objects.permitted(self.request.user)
+
+class EventList(BaseContentList):
+    menu = 'event'
+    sidebar = ('groups',)
+    title = 'Ereignisse'
+
+    def get_queryset(self):
+        return models.Event.objects.permitted(self.request.user).upcoming()
+
 
 class CommentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Kommentar hinzufügen'
