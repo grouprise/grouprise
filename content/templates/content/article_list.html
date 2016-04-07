@@ -1,0 +1,18 @@
+{% extends 'stadt/list.html' %}
+{% load rules %}
+
+{% block heading %}
+{% has_perm 'entities.create_gestalt_content' user gestalt as can_create_content %}
+{% if can_create_content %}
+<a href="{% url 'article-create' %}" class="btn btn-primary pull-right">Neuer Artikel</a>
+{% endif %}
+<h1>{{ site.name }}</h1>
+{% endblock %}
+
+{% block list_header %}
+<div class="jumbotron">
+    <h2>Auf Spurensuche</h2>
+    <p>Suchst Du einen Artikel?</p>
+    <p><a href="#" class="btn btn-primary">Artikel finden</a></p>
+</div>
+{% endblock %}

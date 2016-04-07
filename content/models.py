@@ -58,6 +58,8 @@ class Content(Base):
         return self.get_subclass_instance()._meta.model_name
 
 class Article(Content):
+    objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
+
     def get_display_type_name(self):
         return 'Artikel' if self.public else 'Interne Nachricht'
     

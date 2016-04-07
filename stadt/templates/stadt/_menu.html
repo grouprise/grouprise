@@ -12,11 +12,11 @@
 
         <div class="collapse navbar-collapse" id="bs-navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="{% if menu|lower == 'group' %}active{% endif %}"><a href="#">Gruppen</a></li>
-                <li class="{% if menu|lower == 'gestalt' %}active{% endif %}"><a href="#">Gestalten</a></li>
-                <li class="{% if menu|lower == 'article' %}active{% endif %}"><a href="#">Artikel</a></li>
-                <li class="{% if menu|lower == 'event' %}active{% endif %}"><a href="#">Ereignisse</a></li>
-                <li class="{% if menu|lower == 'gallery' %}active{% endif %}"><a href="#">Galerien</a></li>
+                <li class="{% if menu|lower == 'group' %}active{% endif %}"><a href="{% url 'group-index' %}">Gruppen</a></li>
+                <li class="{% if menu|lower == 'gestalt' %}active{% endif %}"><a href="{% url 'gestalt-index' %}">Gestalten</a></li>
+                <li class="{% if menu|lower == 'article' %}active{% endif %}"><a href="{% url 'article-index' %}">Artikel</a></li>
+                <li class="{% if menu|lower == 'event' %}active{% endif %}"><a href="{% url 'event-index' %}">Ereignisse</a></li>
+                <li class="{% if menu|lower == 'gallery' %}active{% endif %}"><a href="{% url 'gallery-index' %}">Galerien</a></li>
             </ul>
       
             <ul class="nav navbar-nav navbar-right">

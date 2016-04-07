@@ -7,6 +7,16 @@ from django.views.generic import dates
 from entities import models as entities_models
 from utils import views as util_views
 
+class ArticleList(util_views.PageMixin, generic.ListView):
+    context_object_name = 'content_list'
+    menu = 'article'
+    parent = 'index'
+    permission = 'content.view_content_list'
+    title = 'Artikel'
+
+    def get_queryset(self):
+        return models.Article.objects.permitted(self.request.user)
+
 class CommentCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Kommentar hinzufügen'
     fields = ('text',)
