@@ -24,46 +24,13 @@ class Gestalt(util_views.PageMixin, generic.DetailView):
     def get_title(self):
         return str(self.object)
 
-class GestaltUpdate(rules_views.PermissionRequiredMixin, util_views.FormMixin, util_views.NavigationMixin, generic.UpdateView):
-    fields = ['about']
-    layout = [
-            layout.Field('about', rows=5),
-            bootstrap.FormActions(layout.Submit('submit', 'Angaben speichern')),
-            ]
+class GestaltUpdate(util_views.ActionMixin, generic.UpdateView):
+    action = 'Profileinstellungen ändern'
+    form_class = forms.Gestalt
+    menu = 'gestalt'
+    message = 'Die Einstellungen wurden geändert.'
     model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
-
-    def form_invalid(self, form, user_form):
-        return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
-
-    def form_valid(self, form, user_form):
-        user_form.save()
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        if 'user_form' not in kwargs:
-            kwargs['user_form'] = self.get_user_form()
-        return super().get_context_data(**kwargs)
-
-    def get_form(self):
-        form = super().get_form()
-        form.helper.form_tag = False
-        return form
-
-    def get_user_form(self):
-        kwargs = self.get_form_kwargs()
-        if 'instance' in kwargs:
-            kwargs['instance'] = kwargs['instance'].user
-        return forms.User(**kwargs)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        user_form = self.get_user_form()
-        if form.is_valid() and user_form.is_valid():
-            return self.form_valid(form, user_form)
-        else:
-            return self.form_invalid(form, user_form)
+    permission = 'entities.change_gestalt'
 
 class Group(util_views.PageMixin, generic.DetailView):
     menu = 'group'
@@ -125,9 +92,6 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
                     data_date_start_view='decade'),
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
                 )
-
-    def get_parent(self):
-        return self.get_group()
 
 class Imprint(util_views.PageMixin, generic.TemplateView):
     parent = 'index'

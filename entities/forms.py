@@ -1,27 +1,36 @@
-from crispy_forms import bootstrap
+from . import models
+from crispy_forms import bootstrap, layout
 from django import forms
 from django.contrib.auth import models as auth_models
-from django.contrib.sites import shortcuts
-from utils import forms as util_forms
+from django.contrib.sites import models as sites_models
+from utils import forms as utils_forms
 
-class User(util_forms.FormMixin, forms.ModelForm):
+
+class User(utils_forms.FormMixin, forms.ModelForm):
     class Meta:
+        fields = ('first_name', 'last_name', 'username')
+        labels = {'username': 'Adresse der Benutzerseite / Pseudonym'}
         model = auth_models.User
-        fields = ['first_name', 'last_name', 'username']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Adresse der Benutzerseite / Pseudonym'
 
-    def get_helper(self):
-        helper = super.get_helper()
-        helper.form_tag = False
-        return helper
-    
+class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
+    extra_form_class = User
+
+    class Meta:
+        fields = ('about',)
+        model = models.Gestalt
+
+    def get_instance(self):
+        return self.instance.user
+
     def get_layout(self):
-        DOMAIN = shortcuts.get_current_site(None).domain
-        return [
-                bootstrap.PrependedText('username', '%(domain)s/gestalt/' % {'domain': DOMAIN }),
+        DOMAIN = sites_models.Site.objects.get_current().domain
+        return (
+                bootstrap.PrependedText(
+                    'username',
+                    '%(domain)s/gestalt/' % {'domain': DOMAIN}),
                 'first_name',
                 'last_name',
-                ]
+                layout.Field('about', rows=5),
+                utils_forms.Submit('Profileinstellungen ändern'),
+                )
