@@ -45,7 +45,7 @@ class Group(util_views.PageMixin, generic.DetailView):
         return super().get_context_data(**kwargs)
 
     def get_group_content(self):
-        return content_models.Content.objects.permitted(self.request.user).filter(groupcontent__group=self.object)
+        return self.object.content.permitted(self.request.user)
 
     def get_head_gallery(self):
         return self.get_group_content().filter(gallery__isnull=False, groupcontent__pinned=True).first()
@@ -74,6 +74,14 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
     menu = 'group'
     model = models.Group
     permission = 'entities.create_group'
+
+class GroupList(util_views.PageMixin, generic.ListView):
+    menu = 'group'
+    model = models.Group
+    parent = 'index'
+    permission = 'content.view_content_list'
+    sidebar = ('calendar',)
+    title = 'Gruppen'
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'

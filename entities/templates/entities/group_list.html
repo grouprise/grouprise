@@ -1,0 +1,42 @@
+{% extends 'stadt/stadt.html' %}
+{% load rules %}
+
+{% block heading %}
+{% has_perm 'entities.create_group' user as can_create_group %}
+{% if can_create_group %}
+<a href="{% url 'group-create' %}" class="btn btn-primary pull-right">Neue Gruppe</a>
+{% endif %}
+<h1>{{ site.name }}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h2>Deine Gruppe gestalten</h2>
+    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+    <p><a href="#" class="btn btn-primary">Gruppe finden</a></p>
+    <p>Leg sie mit einem Klick an.</p>
+    <p><a href="{% url 'group-create' %}" class="btn btn-default">Gruppe anlegen</a></p>
+</div>
+{% for group in group_list %}
+{% has_perm 'entities.create_group_message' user group as can_create_message %}
+<div class="clearfix">
+    <img src="{{ group.avatar.url }}" class="pull-left">
+    <h3>{{ group }} 
+        <small>
+            {{ group.members.count }} Mitglied{{ group.members.count|pluralize:'er' }},
+            ? Aufmerksame,
+            {{ group.content.count }} Beitr{{ group.content.count|pluralize:'ag,äge' }}
+        </small>
+    </h3>
+    {% if can_create_message %}
+    <p><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></p>
+    {% endif %}
+    <ul>
+        {% for content in group.content.all %} {# FIXME: only permitted #}
+        <li>{{ content }}</li>
+        {% endfor %}
+    </ul>
+    <hr>
+</div>
+{% endfor %}
+{% endblock %}
