@@ -1,6 +1,7 @@
 from . import forms, models
 from content import models as content_models
 from crispy_forms import bootstrap, layout
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import models as sites_models
@@ -9,6 +10,17 @@ from django.db import models as django_models
 from django.views import generic
 from rules.contrib import views as rules_views
 from utils import forms as util_forms, views as util_views
+
+class BaseEntityList(util_views.PageMixin, generic.ListView):
+    parent = 'index'
+    permission = 'content.view_content_list'
+
+    def get_context_data(self, **kwargs):
+        entities = []
+        for entity in self.model.objects.all():
+            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:settings.LATEST_ENTITY_CONTENT_PREVIEW_COUNT]))
+        kwargs['entities'] = entities
+        return super().get_context_data(**kwargs)
 
 class Gestalt(util_views.PageMixin, generic.DetailView):
     menu = 'gestalt'
@@ -23,6 +35,15 @@ class Gestalt(util_views.PageMixin, generic.DetailView):
 
     def get_title(self):
         return str(self.object)
+
+class GestaltList(BaseEntityList):
+    menu = 'gestalt'
+    model = models.Gestalt
+    sidebar = ('calendar', 'groups')
+    title = 'Gestalten'
+
+    def get_entity_content(self, entity):
+        return entity.authored_content
 
 class GestaltUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Profileinstellungen ändern'
@@ -74,26 +95,6 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
     menu = 'group'
     model = models.Group
     permission = 'entities.create_group'
-
-class BaseEntityList(util_views.PageMixin, generic.ListView):
-    parent = 'index'
-    permission = 'content.view_content_list'
-
-    def get_context_data(self, **kwargs):
-        entities = []
-        for entity in self.model.objects.all():
-            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:3]))
-        kwargs['entities'] = entities
-        return super().get_context_data(**kwargs)
-
-class GestaltList(BaseEntityList):
-    menu = 'gestalt'
-    model = models.Gestalt
-    sidebar = ('calendar', 'groups')
-    title = 'Gestalten'
-
-    def get_entity_content(self, entity):
-        return entity.authored_content
 
 class GroupList(BaseEntityList):
     menu = 'group'
