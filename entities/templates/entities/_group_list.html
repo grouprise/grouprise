@@ -8,7 +8,10 @@
     <a href="{% url 'group' group.slug %}"><img src="{{ group.avatar.url }}" title="{{ group }}"></a>
     {% endfor %}
     </p>
+    <p>
+    <a href="{% url 'group-index' %}" class="btn btn-default">Alle Gruppen</a>
     {% if can_create_group %}
-    <p><a href="{% url 'group-create' %}" class="btn btn-default">Neue Gruppe anlegen</a></p>
+    <a href="{% url 'group-create' %}" class="btn btn-default">Neue Gruppe</a>
     {% endif %}
+    </p>
 </div>
