@@ -83,6 +83,13 @@ class GroupList(util_views.PageMixin, generic.ListView):
     sidebar = ('calendar',)
     title = 'Gruppen'
 
+    def get_context_data(self, **kwargs):
+        groups = []
+        for group in models.Group.objects.all():
+            groups.append((group, group.content.permitted(self.request.user)[:3]))
+        kwargs['groups'] = groups
+        return super().get_context_data(**kwargs)
+
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
