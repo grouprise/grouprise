@@ -6,12 +6,12 @@ from django.core.mail.backends import base
 import subprocess
 
 
-class EmailBackend(BaseEmailBackend):
+class EmailBackend(base.BaseEmailBackend):
     def send_messages(self, email_messages):
         num_sent = 0
         for message in email_messages:
-        if self._send(message):
-            num_sent += 1
+            if self._send(message):
+                num_sent += 1
         return num_sent
 
     def _send(self, email_message):
@@ -27,7 +27,7 @@ class EmailBackend(BaseEmailBackend):
                 raise
             return False
         if sendmail and sendmail.returncode:
-            if not self.fail_error = stderr if stderr else stdout
+            if not self.fail_silently:
                 raise Exception('sendmail failed: {}'.format(
                     stderr if stderr else stdout))
             return False
