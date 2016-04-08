@@ -75,20 +75,34 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
     model = models.Group
     permission = 'entities.create_group'
 
-class GroupList(util_views.PageMixin, generic.ListView):
-    menu = 'group'
-    model = models.Group
+class BaseEntityList(util_views.PageMixin, generic.ListView):
     parent = 'index'
     permission = 'content.view_content_list'
+
+    def get_context_data(self, **kwargs):
+        entities = []
+        for entity in self.model.objects.all():
+            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:3]))
+        kwargs['entities'] = entities
+        return super().get_context_data(**kwargs)
+
+class GestaltList(BaseEntityList):
+    menu = 'gestalt'
+    model = models.Gestalt
+    sidebar = ('calendar', 'groups')
+    title = 'Gestalten'
+
+    def get_entity_content(self, entity):
+        return entity.authored_content
+
+class GroupList(BaseEntityList):
+    menu = 'group'
+    model = models.Group
     sidebar = ('calendar',)
     title = 'Gruppen'
 
-    def get_context_data(self, **kwargs):
-        groups = []
-        for group in models.Group.objects.all():
-            groups.append((group, group.content.permitted(self.request.user)[:3]))
-        kwargs['groups'] = groups
-        return super().get_context_data(**kwargs)
+    def get_entity_content(self, entity):
+        return entity.content
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'

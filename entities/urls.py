@@ -3,7 +3,7 @@ from content import creation as content_creation, views as content_views
 from django.conf import urls
 
 urlpatterns = [
-    urls.url(r'^gestalt/$', content_views.ContentList.as_view(), name='gestalt-index'),
+    urls.url(r'^gestalt/$', views.GestaltList.as_view(), name='gestalt-index'),
     urls.url(r'^gestalt/(?P<pk>[0-9]+)/edit/$', views.GestaltUpdate.as_view(), name='gestalt-update'),
     urls.url(r'^gestalt/(?P<gestalt_pk>[0-9]+)/contact/$', content_creation.GestaltMessageCreate.as_view(), name='gestalt-message-create'),
     urls.url(r'^group/$', views.GroupList.as_view(), name='group-index'),

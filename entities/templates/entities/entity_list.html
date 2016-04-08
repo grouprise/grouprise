@@ -1,0 +1,32 @@
+{% extends 'stadt/stadt.html' %}
+{% load rules %}
+
+{% block content %}
+{% block list_header %}{% endblock %}
+{% for entity, content in entities %}
+<div class="clearfix">
+    <a href="{{ entity.get_absolute_url }}">
+        <img src="{{ entity.avatar.url }}" class="pull-left">
+    </a>
+    <h3>
+        <a href="{{ entity.get_absolute_url }}">{{ entity }}</a>
+        <small>
+            {% block entity_info %}{% endblock %}
+        </small>
+    </h3>
+    {% block entity_contact %}{% endblock %}
+    <ul>
+        {% for content in content %}
+        <li>
+            <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
+            <a href="{{ content.get_absolute_url }}">{{ content }}</a>
+            <span class="text-muted">
+                {% block content_info %}{% endblock %}
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+    <hr>
+</div>
+{% endfor %}
+{% endblock %}

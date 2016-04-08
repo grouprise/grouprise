@@ -1,4 +1,4 @@
-{% extends 'stadt/stadt.html' %}
+{% extends 'entities/entity_list.html' %}
 {% load rules %}
 
 {% block heading %}
@@ -9,42 +9,28 @@
 <h1>{{ site.name }}</h1>
 {% endblock %}
 
-{% block content %}
+{% block list_header %}
 <div class="jumbotron">
     <h2>Deine Gruppe gestalten</h2>
     <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
     <p><a href="#" class="btn btn-primary">Gruppe finden</a></p>
 </div>
-{% for group, content in groups %}
-{% has_perm 'entities.create_group_message' user group as can_create_message %}
-<div class="clearfix">
-    <a href="{{ group.get_absolute_url }}">
-        <img src="{{ group.avatar.url }}" class="pull-left">
-    </a>
-    <h3>
-        <a href="{{ group.get_absolute_url }}">{{ group }}</a>
-        <small>
-            {{ group.members.count }} Mitglied{{ group.members.count|pluralize:'er' }},
-            ? Aufmerksame,
-            {{ group.content.count }} Beitr{{ group.content.count|pluralize:'ag,äge' }}
-        </small>
-    </h3>
-    {% if can_create_message %}
-    <p><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></p>
-    {% endif %}
-    <ul>
-        {% for content in content %}
-        <li>
-            <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
-            <a href="{{ content.get_absolute_url }}">{{ content }}</a>
-            <span class="text-muted">
-                {{ content.get_display_type_name }} von 
-                <a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a>
-            </span>
-        </li>
-        {% endfor %}
-    </ul>
-    <hr>
-</div>
-{% endfor %}
+{% endblock %}
+
+{% block entity_info %}
+{{ entity.members.count }} Mitglied{{ entity.members.count|pluralize:'er' }},
+? Aufmerksame,
+{{ entity.content.count }} Beitr{{ entity.content.count|pluralize:'ag,äge' }}
+{% endblock %}
+
+{% block entity_contact %}
+{% has_perm 'entities.create_group_message' user entity as can_create_message %}
+{% if can_create_message %}
+<p><a href="{% url 'message-create' entity.pk %}">Nachricht schreiben</a></p>
+{% endif %}
+{% endblock %}
+
+{% block content_info %}
+{{ content.get_display_type_name }} von 
+<a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a>
 {% endblock %}
