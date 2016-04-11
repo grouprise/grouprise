@@ -121,7 +121,7 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
                     data_date_language='de', data_date_min_view_mode='months',
                     data_date_start_view='decade'),
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
-                )
+                ) + super().get_layout()
 
 class Imprint(util_views.PageMixin, generic.TemplateView):
     parent = 'index'
