@@ -7,9 +7,11 @@ def is_gestalt(user, gestalt):
 
 @rules.predicate
 def is_group_attendee(user, group):
+    if group is None:
+        return False
     if type(group) == models.GroupAttention:
         group = group.group
-    return group and user.gestalt in group.attendees.all()
+    return user.gestalt in group.attendees.all()
 
 @rules.predicate
 def is_group_member(user, group):
