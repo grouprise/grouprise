@@ -13,12 +13,14 @@ from django.utils import text
 @dispatch.receiver(signals.post_save, sender=models.GroupContent)
 def content_post_save(sender, instance, created, **kwargs):
     if created:
+        recipients = set()
         if sender == models.GestaltContent:
-            recipients = [instance.gestalt]
+            recipients |= {instance.gestalt}
         elif sender == models.GroupContent:
-            recipients = instance.group.members.exclude(pk=instance.content.author.pk)
-        if not instance.content.public:
-            instance.content.notify(recipients)
+            recipients |= set(instance.group.members.exclude(pk=instance.content.author.pk))
+            if instance.content.public:
+                recipients |= set(instance.group.attendees.all())
+        instance.content.notify(recipients)
 
 
 @dispatch.receiver(signals.pre_save, sender=models.Group)
