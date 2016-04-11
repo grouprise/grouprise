@@ -34,3 +34,22 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
                 layout.Field('about', rows=5),
                 utils_forms.Submit('Profileinstellungen ändern'),
                 )
+
+class GroupAttention(utils_forms.FormMixin, forms.ModelForm):
+    attendee_email = forms.EmailField(disabled=True, widget=forms.HiddenInput)
+    group = forms.ModelChoiceField(disabled=True, queryset=models.Group.objects.all(), widget=forms.HiddenInput)
+    layout = ('attendee_email', 
+            layout.HTML('<p>Möchtest Du per E-Mail benachrichtigt werden, '
+                'wenn Mitglieder der Gruppe <em>{{ group }}</em> neue Beiträge '
+                'veröffentlichen?</p>'),
+            utils_forms.Submit('Benachrichtigungen erhalten'))
+
+    class Meta:
+        fields = ('group',)
+        model = models.GroupAttention
+
+    def save(self):
+        attention = super().save(commit=False)
+        attention.attendee = models.Gestalt.objects.get(user__email=self.cleaned_data['attendee_email'])
+        attention.save()
+        return attention

@@ -87,6 +87,21 @@ class Group(util_views.PageMixin, generic.DetailView):
     def get_title(self):
         return self.object.name
 
+class GroupAttentionCreate(util_views.ActionMixin, generic.CreateView):
+    action = 'Benachrichtigungen erhalten'
+    form_class = forms.GroupAttention
+    menu = 'group'
+    permission = 'entities.create_group_attention'
+
+    def get_initial(self):
+        return {'attendee_email': self.request.user.email, 'group': self.get_group().pk}
+
+    def get_parent(self):
+        return self.get_group()
+
+    def get_permission_object(self):
+        return self.get_group()
+
 class GroupCreate(util_views.ActionMixin, generic.CreateView):
     action = 'Gruppe anlegen'
     back_url = 'group-index'

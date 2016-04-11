@@ -1,6 +1,7 @@
 {% load rules %}
 
 {% has_perm 'entities.change_group' user group as can_edit %}
+{% has_perm 'entities.create_group_attention' user group as can_create_attention %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 {% has_perm 'entities.create_membership' user group as can_create_membership %}
@@ -20,9 +21,14 @@
         {% endif %}
         <h1>
             {{ group.name }}
-            {% if can_edit %}
-            <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
-            {% endif %}
+            <small>
+                {% if can_create_attention %}
+                <a href="{% url 'group-attention-create' group.pk %}"><i class="fa fa-eye" title="Bei neuen Beiträgen benachrichtigt werden"></i></a>
+                {% endif %}
+                {% if can_edit %}
+                <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Gruppenangaben ändern"></i></a>
+                {% endif %}
+            </small>
         </h1>
         <ul>
             <li>{{ group.address|linebreaks }}</li>
