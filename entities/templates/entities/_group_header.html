@@ -5,6 +5,7 @@
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 {% has_perm 'entities.create_membership' user group as can_create_membership %}
+{% has_perm 'entities.delete_group_attention' user attention as can_delete_attention %}
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 
 <div class="row">
@@ -24,6 +25,8 @@
             <small>
                 {% if can_create_attention %}
                 <a href="{% url 'group-attention-create' group.pk %}"><i class="fa fa-eye" title="Bei neuen Beiträgen benachrichtigt werden"></i></a>
+                {% elif can_delete_attention %}
+                <a href="{% url 'group-attention-delete' attention.pk %}"><i class="fa fa-eye" title="Du erhältst Benachrichtungen für diese Gruppe"></i></a>
                 {% endif %}
                 {% if can_edit %}
                 <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Gruppenangaben ändern"></i></a>

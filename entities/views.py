@@ -59,11 +59,18 @@ class Group(util_views.PageMixin, generic.DetailView):
     permission = 'entities.view_group'
 
     def get_context_data(self, **kwargs):
+        kwargs['attention'] = self.get_attention()
         kwargs['content_list'] = self.get_group_content().filter(groupcontent__pinned=False)
         kwargs['head_gallery'] = self.get_head_gallery()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
         return super().get_context_data(**kwargs)
+
+    def get_attention(self):
+        try:
+            return models.GroupAttention.objects.get(attendee=self.request.user.gestalt, group=self.object)
+        except (AttributeError, models.GroupAttention.DoesNotExist):
+            return None
 
     def get_group_content(self):
         return self.object.content.permitted(self.request.user)
@@ -100,6 +107,17 @@ class GroupAttentionCreate(util_views.ActionMixin, generic.CreateView):
         return self.get_group()
 
     def get_permission_object(self):
+        return self.get_group()
+
+class GroupAttentionDelete(util_views.ActionMixin, util_views.DeleteView):
+    action = 'Keine Benachrichtigungen mehr erhalten'
+    layout = layout.HTML('<p>Möchtest Du wirklich keine Benachrichtigungen '
+            'für die Gruppe <em>{{ group }}</em> mehr erhalten?</p>')
+    menu = 'group'
+    model = models.GroupAttention
+    permission = 'entities.delete_group_attention'
+
+    def get_parent(self):
         return self.get_group()
 
 class GroupCreate(util_views.ActionMixin, generic.CreateView):
