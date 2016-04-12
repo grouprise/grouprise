@@ -36,4 +36,4 @@ class ExtraFormMixin(FormMixin):
 
 class Submit(layout.Submit):
     def __init__(self, value):
-        super().__init__('submit', value)
+        super().__init__('', value)

@@ -1,0 +1,12 @@
+{% extends 'stadt/form.html' %}
+
+{% block form_footer %}
+{% if query %}
+<h2>Gruppen</h2>
+{% for result in object_list %}
+<p><a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a></p>
+{% empty %}
+<p>Die Gruppe <em>{{ query }}</em> gibt es noch nicht. Möchtest Du sie anlegen?</p>
+{% endfor %}
+{% endif %}
+{% endblock %}

@@ -13,13 +13,13 @@
 <div class="jumbotron">
     <h2>Deine Gruppe gestalten</h2>
     <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
-    <p><a href="#" class="btn btn-primary">Gruppe finden</a></p>
+    <p><a href="{% url 'group-search' %}" class="btn btn-primary">Gruppe finden</a></p>
 </div>
 {% endblock %}
 
 {% block entity_info %}
 {{ entity.members.count }} Mitglied{{ entity.members.count|pluralize:'er' }},
-? Aufmerksame,
+{{ entity.attendees.count }} Aufmerksame,
 {{ entity.content.count }} Beitr{{ entity.content.count|pluralize:'ag,äge' }}
 {% endblock %}
 

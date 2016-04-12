@@ -141,10 +141,13 @@ class GroupList(BaseEntityList):
 
 class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
     action = 'Gruppe finden'
+    initial = {'models': 'entities.group'}
     layout = ('q',)
     menu = 'group'
+    method = 'GET'
     parent = 'group-index'
     permission = 'entities.search_group'
+    template_name = 'entities/group_search.html'
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'

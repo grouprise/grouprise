@@ -46,6 +46,8 @@ class FormMixin(forms.LayoutMixin):
         form = super().get_form(form_class)
         if not hasattr(form, 'helper'):
             form.helper = self.get_helper()
+        if hasattr(self, 'method'):
+            form.helper.form_method = self.method
         return form
 
     def get_form_class(self):

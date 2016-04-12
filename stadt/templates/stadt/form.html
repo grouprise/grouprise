@@ -3,7 +3,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+{% block form_header %}{% endblock %}
 {% crispy form %}
+{% block form_footer %}{% endblock %}
 {% endblock %}
 
 {% block sidebar %}{% endblock %}
