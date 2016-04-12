@@ -1,6 +1,8 @@
 django
 django-allauth
 django-crispy-forms
+django-haystack
 markdown
 pillow
 rules
+whoosh

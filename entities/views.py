@@ -8,6 +8,7 @@ from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
+from haystack import generic_views as haystack_views
 from rules.contrib import views as rules_views
 from utils import forms as util_forms, views as util_views
 
@@ -137,6 +138,13 @@ class GroupList(BaseEntityList):
 
     def get_entity_content(self, entity):
         return entity.content
+
+class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
+    action = 'Gruppe finden'
+    layout = ('q',)
+    menu = 'group'
+    parent = 'group-index'
+    permission = 'entities.search_group'
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'

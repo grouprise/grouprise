@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'entities.apps.EntitiesConfig',
+    'haystack',
     'rules.apps.AutodiscoverRulesConfig',
 ]
 
@@ -209,3 +210,14 @@ ACCOUNT_USERNAME_REQUIRED = False
 # http://django-crispy-forms.readthedocs.org/
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+
+# Haystack search
+# http://django-haystack.readthedocs.org/
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
