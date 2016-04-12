@@ -111,5 +111,6 @@ module.exports = function (grunt) {
     grunt.registerTask("css", ["less", "postcss"]);
     grunt.registerTask("js", ["uglify"]);
     grunt.registerTask("fonts", ["fontdump", "copy:fonts"]);
-    grunt.registerTask("default", ["fonts", "css", "js"]);
+    grunt.registerTask("images", ["copy:images"]);
+    grunt.registerTask("default", ["fonts", "images", "css", "js"]);
 };
