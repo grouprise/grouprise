@@ -14,6 +14,18 @@ module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
+        fontdump: {
+            google: {
+                options: {
+                    web_directory: "../fonts"
+                },
+                files: {
+                    "build/fonts/google/fonts.css":
+                    "http://fonts.googleapis.com/css?family=" +
+                    "Roboto Slab:300,400,700"
+                }
+            }
+        },
         less: {
             options: {
                 strictMath: true,
@@ -69,7 +81,13 @@ module.exports = function (grunt) {
         copy: {
             fonts: {
                 files: [
-                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "stadt/static/fonts", expand: true },
+                    { cwd: "build/fonts/google", src: "*.!(css)", dest: "stadt/static/fonts", expand: true },
+                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "stadt/static/fonts", expand: true }
+                ]
+            },
+            images: {
+                files: [
+                    { cwd: "res/img", src: "**", dest: "stadt/static/img", expand: true }
                 ]
             }
         },
@@ -77,7 +95,7 @@ module.exports = function (grunt) {
             less: {
                 files: ["res/**/*.less"],
                 tasks: ["css"]
-            },
+            }
         }
     });
 
@@ -86,11 +104,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-less");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-fontdump");
     grunt.loadNpmTasks("grunt-postcss");
 
     // Default task.
     grunt.registerTask("css", ["less", "postcss"]);
     grunt.registerTask("js", ["uglify"]);
-    grunt.registerTask("fonts", ["copy:fonts"]);
-    grunt.registerTask("default", ["css", "js", "fonts"]);
+    grunt.registerTask("fonts", ["fontdump", "copy:fonts"]);
+    grunt.registerTask("default", ["fonts", "css", "js"]);
 };

@@ -7,3 +7,4 @@ node_modules
 prod_*.py
 static
 whoosh_index
+res/img/backdrops
