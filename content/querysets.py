@@ -3,11 +3,19 @@ from django.db import models
 from django.utils import timezone
 from entities import models as entities_models
 
+
 class ContentQuerySet(models.QuerySet):
     def permitted(self, user):
-        gestalt = user.gestalt if user.is_authenticated() else None
-        user_groups = user.gestalt.groups.all() if user.is_authenticated() else entities_models.Group.objects.none()
-        return self.filter(models.Q(public=True) | models.Q(author=gestalt) | models.Q(groupcontent__group__in=user_groups) | models.Q(gestaltcontent__gestalt=gestalt))
+        if user.is_authenticated():
+            return self.filter(
+                    models.Q(public=True) |
+                    models.Q(author=user.gestalt) |
+                    models.Q(groupcontent__group__in=user.gestalt.groups.all()) |
+                    models.Q(gestaltcontent__gestalt=user.gestalt)
+                    )
+        else:
+            return self.filter(models.Q(public=True))
+
 
 class EventQuerySet(ContentQuerySet):
     def around(self, time):
