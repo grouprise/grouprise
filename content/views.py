@@ -70,55 +70,6 @@ class Content(util_views.PageMixin, generic.DetailView):
     def get_title(self):
         return self.object.title
 
-class ContentCreate(util_views.ActionMixin, generic.CreateView):
-    action = 'Beitrag erstellen'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user.gestalt
-        self.object = form.save()
-        if self.get_group():
-            entities_models.GroupContent(content=self.object, group=self.get_group()).save()
-        return http.HttpResponseRedirect(self.get_success_url())
-    
-    def get_permissions(self):
-        return {
-                'entities.create_group_content': self.get_group(),
-                'entities.create_gestalt_content': self.request.user.gestalt,
-                }
-
-    def get_fields(self):
-        fields = ['text', 'title']
-        if self.has_permission('entities.create_group_content'):
-            fields += ['public']
-        if self.get_queryset().model == models.Event:
-            fields += ['place', 'time']
-        return fields
-
-    def get_form_class(self):
-        return model_forms.modelform_factory(self.get_queryset().model, fields=self.get_fields())
-
-    def get_layout(self):
-        public_layout = ('public',) if self.has_permission('entitites.create_group_content') else tuple()
-        event_layout = ('time', 'place') if self.get_queryset().model == models.Event else tuple()
-        layout = ('title',) + event_layout + ('text',) + public_layout
-        return layout + super().get_layout()
-
-    def get_menu(self):
-        return self.get_type_name()
-
-    def get_parent(self):
-        return self.get_group() or self.request.user.gestalt
-
-    def get_queryset(self):
-        return getattr(models, self.get_type_name())._default_manager.all()
-
-    def get_success_url(self):
-        if self.object and not self.object.public:
-            return self.get_back_url()
-        return super().get_success_url()
-
-    def get_type_name(self):
-        return self.request.resolver_match.kwargs['type'].title()
 
 class ContentList(util_views.PageMixin, generic.ListView):
     permission = 'content.view_content_list'

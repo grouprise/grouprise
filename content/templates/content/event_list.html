@@ -4,7 +4,7 @@
 {% block heading %}
 {% has_perm 'content.create_content' user as can_create_content %}
 {% if can_create_content %}
-<a href="#" class="btn btn-primary pull-right">Neues Ereignis</a>
+<a href="{% url 'event-create' %}" class="btn btn-primary pull-right">Neues Ereignis</a>
 {% endif %}
 <h1>{{ site.name }}</h1>
 {% endblock %}

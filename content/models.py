@@ -30,12 +30,12 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
-    public = models.BooleanField('Veröffentlichen', default=False,
-            help_text='Veröffentlichter Inhalt wird im öffentlichen Blog '
-            'angezeigt, Benachrichtigungen werden an Gruppenmitglieder und '
-            'Beobachterinnen versendet. Nicht veröffentlichter Inhalt ist nur '
-            'gruppenintern zugänglich, Benachrichtigungen werden nur an '
-            'Mitglieder versendet.')
+    public = models.BooleanField(
+            'Veröffentlichen',
+            default=False,
+            help_text='Veröffentlichte Beiträge sind auch für Besucherinnen '
+            'sichtbar, die nicht Mitglied der Gruppe sind.'
+            )
     slug = models.SlugField(unique=True)
     title = models.CharField('Titel', max_length=255)
 
@@ -46,11 +46,15 @@ class Content(Base):
 
     def get_absolute_url(self):
         try:
-            return urlresolvers.reverse('content',
-                    args=[self.groups.first().slug, self.slug])
+            return urlresolvers.reverse(
+                    'content',
+                    args=[self.groups.first().slug, self.slug]
+                    )
         except AttributeError:
-            return urlresolvers.reverse('gestalt-content',
-                    args=[self.author.user.username, self.slug])
+            return urlresolvers.reverse(
+                    'gestalt-content',
+                    args=[self.author.user.username, self.slug]
+                    )
 
     def get_display_type_name(self):
         return self.get_subclass_instance().get_display_type_name()

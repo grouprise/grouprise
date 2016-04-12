@@ -1,25 +1,49 @@
 from . import forms, models
+from django.core import urlresolvers
 from django.views import generic
 from utils import views as util_views
 
-class Article(util_views.ActionMixin, generic.CreateView):
+
+class BaseContent(util_views.ActionMixin, generic.CreateView):
+    permission = 'content.create_content'
+
+    def get_back_url(self):
+        if self.get_group():
+            return self.get_group().get_absolute_url()
+        else:
+            return urlresolvers.reverse(self.back_url)
+
+    def get_initial(self):
+        return {'author': self.request.user.gestalt.pk, 'group': self.get_group()}
+
+    def get_permission_object(self):
+        return None
+
+
+class Article(BaseContent):
     action = 'Artikel erstellen'
     back_url = 'article-index'
     form_class = forms.Article
     menu = 'article'
-    model = models.Article
-    permission = 'entities.create_gestalt_content'
 
-    def get_initial(self):
-        return {'author': self.request.user.gestalt.pk}
 
-    def get_permission_object(self):
-        return self.get_gestalt()
+class Event(BaseContent):
+    action = 'Ereignis erstellen'
+    back_url = 'event-index'
+    form_class = forms.Event
+    menu = 'event'
 
-class BaseMessageCreate(util_views.ActionMixin, generic.CreateView):
+
+class Gallery(BaseContent):
+    action = 'Galerie erstellen'
+    back_url = 'gallery-index'
+    form_class = forms.Gallery
+    menu = 'gallery'
+
+
+class BaseMessage(util_views.ActionMixin, generic.CreateView):
     action = 'Nachricht senden'
     message = 'Die Nachricht wurde versendet.'
-    model = models.Article
 
     def get_initial(self):
         return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
@@ -30,7 +54,8 @@ class BaseMessageCreate(util_views.ActionMixin, generic.CreateView):
     def get_permission_object(self):
         return self.get_recipient()
 
-class GestaltMessageCreate(BaseMessageCreate):
+
+class GestaltMessage(BaseMessage):
     form_class = forms.GestaltMessage
     menu = 'gestalt'
     permission = 'entities.create_gestalt_message'
@@ -38,7 +63,8 @@ class GestaltMessageCreate(BaseMessageCreate):
     def get_recipient(self):
         return self.get_gestalt()
 
-class GroupMessageCreate(BaseMessageCreate):
+
+class GroupMessage(BaseMessage):
     form_class = forms.GroupMessage
     menu = 'group'
     permission = 'entities.create_group_message'

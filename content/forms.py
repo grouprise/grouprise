@@ -3,9 +3,26 @@ from django import forms
 from entities import models as entities_models
 from utils import forms as utils_forms
 
-class Article(utils_forms.FormMixin, forms.ModelForm):
+
+class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)
-    layout = ('author', 'title', 'text', utils_forms.Submit('Artikel erstellen'))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['group'] = forms.ModelChoiceField(label='Gruppe', queryset=self.get_group_queryset(), required=False)
+
+    def get_group_queryset(self):
+        return entities_models.Gestalt.objects.get(pk=self.initial['author']).groups
+
+    def save(self):
+        content = super().save()
+        if self.cleaned_data['group']:
+            entities_models.GroupContent.objects.create(content=content, group=self.cleaned_data['group'])
+        return content
+
+
+class Article(BaseContent):
+    layout = ('author', 'group', 'title', 'text', utils_forms.Submit('Artikel erstellen'))
 
     class Meta:
         fields = ('author', 'text', 'title')
@@ -14,6 +31,23 @@ class Article(utils_forms.FormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         kwargs['instance'] = models.Article(public=True)
         super().__init__(*args, **kwargs)
+
+
+class Event(BaseContent):
+    layout = ('author', 'group', 'title', 'time', 'place', 'text', 'public', utils_forms.Submit('Ereignis erstellen'))
+
+    class Meta:
+        fields = ('author', 'place', 'public', 'text', 'time', 'title')
+        model = models.Event
+
+
+class Gallery(BaseContent):
+    layout = ('author', 'group', 'title', 'text', 'public', utils_forms.Submit('Galerie erstellen'))
+
+    class Meta:
+        fields = ('author', 'public', 'text', 'title')
+        model = models.Gallery
+
 
 class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
     layout = ('sender', 'recipient', 'title', 'text', utils_forms.Submit('Nachricht senden'))
@@ -33,6 +67,7 @@ class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
         message.author = entities_models.Gestalt.objects.get(user__email=self.cleaned_data['sender'])
         message.save()
         return message
+
 
 class GestaltMessage(BaseMessage):
     def get_recipient_queryset(self):
