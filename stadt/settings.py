@@ -175,14 +175,28 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
 
 
+# Stadtgestalten
+#
+
+ABOUT_GROUP_ID = 2
+
+HTTP_PROTOCOL = 'http'
+
+LATEST_ENTITY_CONTENT_PREVIEW_COUNT = 3
+
+UPCOMING_EVENTS_PREVIEW_COUNT = 3
+
+
 # Authentication
 # http://django-allauth.readthedocs.org/
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'account_login'
 
 LOGIN_REDIRECT_URL = 'index'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = HTTP_PROTOCOL
 
 ACCOUNT_EMAIL_REQUIRED = True
 
@@ -195,15 +209,3 @@ ACCOUNT_USERNAME_REQUIRED = False
 # http://django-crispy-forms.readthedocs.org/
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-
-# Stadtgestalten
-#
-
-ABOUT_GROUP_ID = 2
-
-HTTP_PROTOCOL = 'http'
-
-LATEST_ENTITY_CONTENT_PREVIEW_COUNT = 3
-
-UPCOMING_EVENTS_PREVIEW_COUNT = 3
