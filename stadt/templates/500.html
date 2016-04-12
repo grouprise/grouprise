@@ -1,0 +1,23 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Fehler{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'index' %}">Stadtgestalten</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <h1>Fehler</h1>
+            <p>Herzlichen Glückwunsch, Du hast einen Fehler in der Stadtgestalten-Software entdeckt! Die Entwickler wurden soeben per E-Mail darüber informiert.</p>
+            <p>Wenn Du das Gefühl hast, dass der Fehler nicht ernst genug genommen wird, schreib gerne eine Nachricht an die Stadtgestalten-Gruppe. Du findest auf den meisten Seiten oben unter "Über uns" einen Verweis zu dieser Gruppe.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
