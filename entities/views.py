@@ -141,6 +141,7 @@ class GroupList(BaseEntityList):
 
 class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
     action = 'Gruppe finden'
+    form_class = forms.GroupSearch
     initial = {'models': 'entities.group'}
     layout = ('q',)
     menu = 'group'
@@ -148,6 +149,9 @@ class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
     parent = 'group-index'
     permission = 'entities.search_group'
     template_name = 'entities/group_search.html'
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('text')
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'

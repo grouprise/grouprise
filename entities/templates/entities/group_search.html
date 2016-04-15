@@ -1,7 +1,7 @@
 {% extends 'stadt/form.html' %}
 
 {% block form_footer %}
-{% if query %}
+{% if True %}
 <h2>Gruppen</h2>
 {% for result in object_list %}
 <p><a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a></p>
