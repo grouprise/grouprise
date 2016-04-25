@@ -56,6 +56,11 @@ class GroupAttention(utils_forms.FormMixin, forms.ModelForm):
         return attention
 
 
-class GroupSearch(haystack_forms.ModelSearchForm):
+class GroupSearch(utils_forms.FormMixin, haystack_forms.ModelSearchForm):
+    initial = {'models': 'entities.group'}
+    inline = True
+    layout = ('q', utils_forms.Submit('Gruppe finden'))
+    method = 'GET'
+
     def no_query_found(self):
-        return self.searchqueryset
+        return self.searchqueryset.order_by('text')
