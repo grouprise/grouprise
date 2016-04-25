@@ -14,7 +14,10 @@ class ContentQuerySet(models.QuerySet):
                     models.Q(gestaltcontent__gestalt=user.gestalt)
                     )
         else:
-            return self.filter(models.Q(public=True))
+            return self.public()
+
+    def public(self):
+        return self.filter(public=True)
 
 
 class EventQuerySet(ContentQuerySet):
