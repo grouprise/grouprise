@@ -1,0 +1,10 @@
+{{ object.name }}
+{{ object.slug }}
+{{ object.address }}
+{{ object.url }}
+{% for content in object.content.public %}
+{{ content.title }}
+{{ content.text }}
+{{ content.slug }}
+{{ content.event.place }}
+{% endfor %}
