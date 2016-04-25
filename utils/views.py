@@ -46,8 +46,6 @@ class FormMixin(forms.LayoutMixin):
         form = super().get_form(form_class)
         if not hasattr(form, 'helper'):
             form.helper = self.get_helper()
-        if hasattr(self, 'method'):
-            form.helper.form_method = self.method
         return form
 
     def get_form_class(self):
@@ -144,11 +142,6 @@ class TemplateMixin:
         names += [self.fallback_template_name]
         return names
 
-class ActionTemplateMixin(TemplateMixin):
-    fallback_template_name = 'stadt/form.html'
-
-class PageTemplateMixin(TemplateMixin):
-    fallback_template_name = 'stadt/list.html'
 
 class TitleMixin:
     def get_context_data(self, **kwargs):
@@ -163,8 +156,8 @@ class TitleMixin:
         else:
             return None
 
+
 class ActionMixin(
-        ActionTemplateMixin,
         FormMixin,
         GestaltMixin,
         GroupMixin,
@@ -172,15 +165,22 @@ class ActionMixin(
         MessageMixin,
         NavigationMixin,
         PermissionMixin,
+        SidebarMixin,
+        TemplateMixin,
         TitleMixin,
-        ): pass
+        ):
+    fallback_template_name = 'stadt/form.html'
+    sidebar = tuple()
+
 
 class PageMixin(
         GroupMixin,
         MenuMixin,
         NavigationMixin,
-        PageTemplateMixin,
         PermissionMixin,
         SidebarMixin,
+        TemplateMixin,
         TitleMixin,
-        ): pass
+        ):
+    fallback_template_name = 'stadt/list.html'
+    sidebar = ('calendar', 'groups')

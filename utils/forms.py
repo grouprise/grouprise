@@ -5,6 +5,9 @@ class LayoutMixin:
     def get_helper(self):
         h = helper.FormHelper()
         h.layout = layout.Layout(*self.get_layout())
+        if hasattr(self, 'inline') and self.inline:
+            h.field_template = 'bootstrap3/layout/inline_field.html'
+            h.form_class = 'form-inline'
         return h
 
     def get_layout(self):
@@ -17,6 +20,8 @@ class FormMixin(LayoutMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = self.get_helper()
+        if hasattr(self, 'method'):
+            self.helper.form_method = self.method
 
 class ExtraFormMixin(FormMixin):
     def __init__(self, *args, **kwargs):
