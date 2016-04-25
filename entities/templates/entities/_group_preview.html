@@ -1,0 +1,32 @@
+{% load content rules %}
+{% has_perm 'entities.create_group_message' user group as can_create_message %}
+
+<div class="clearfix">
+    <a href="{{ group.get_absolute_url }}">
+        <img src="{{ group.avatar.url }}" class="pull-left">
+    </a>
+    <h3>
+        <a href="{{ group.get_absolute_url }}">{{ group }}</a>
+        <small>
+            {{ group.members.count }} Mitglied{{ group.members.count|pluralize:'er' }},
+            {{ group.attendees.count }} Aufmerksame,
+            {{ group.content.count }} Beitr{{ group.content.count|pluralize:'ag,äge' }}
+        </small>
+    </h3>
+    {% if can_create_message %}
+    <p><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></p>
+    {% endif %}
+    <ul>
+        {% for content in group.content|permitted:user|limit:3 %}
+        <li>
+            <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
+            <a href="{{ content.get_absolute_url }}">{{ content }}</a>
+            <span class="text-muted">
+                {{ content.get_display_type_name }} von 
+                <a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+    <hr>
+</div>

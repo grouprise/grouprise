@@ -1,12 +1,24 @@
 {% extends 'stadt/form.html' %}
+{% load crispy_forms_tags rules %}
 
-{% block form_footer %}
-{% if True %}
-<h2>Gruppen</h2>
-{% for result in object_list %}
-<p><a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a></p>
-{% empty %}
-<p>Die Gruppe <em>{{ query }}</em> gibt es noch nicht. Möchtest Du sie anlegen?</p>
-{% endfor %}
+{% block heading %}
+{% has_perm 'entities.create_group' user as can_create_group %}
+{% if can_create_group %}
+<a href="{% url 'group-create' %}" class="btn btn-primary pull-right">Neue Gruppe</a>
 {% endif %}
+<h1>Gruppen</h1>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h2>Deine Gruppe gestalten</h2>
+    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+    {% crispy form %}
+</div>
+{% if query and not exact_match %}
+<p>Die Gruppe <em>{{ query|title }}</em> gibt es noch nicht. <a href="{% url 'group-create' %}?name={{ query|title }}">Möchtest Du sie anlegen?</a></p>
+{% endif %}
+{% for group in group_list %}
+{% include 'entities/_group_preview.html' %}
+{% endfor %}
 {% endblock %}
