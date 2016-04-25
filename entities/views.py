@@ -130,28 +130,37 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
     model = models.Group
     permission = 'entities.create_group'
 
-class GroupList(BaseEntityList):
+    def get_initial(self):
+        if 'name' in self.request.GET:
+            return {'name': self.request.GET['name']}
+
+class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
+    form_class = forms.GroupSearch
     menu = 'group'
-    model = models.Group
+    parent = 'index'
+    permission = 'entities.search_group'
     sidebar = ('calendar',)
+    template_name = 'entities/group_search.html'
     title = 'Gruppen'
+
+    def form_invalid(self, form):
+        context = self.get_context_data(**{
+            self.form_name: form,
+            'object_list': form.no_query_found(),
+            })
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        entities = []
+        for result in kwargs['object_list']:
+            entity = result.object
+            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:settings.LATEST_ENTITY_CONTENT_PREVIEW_COUNT]))
+        kwargs['entities'] = entities
+        kwargs['exact_match'] = models.Group.objects.filter(name__iexact=kwargs.get('query')).exists() or models.Group.objects.filter(slug__iexact=kwargs.get('query')).exists()
+        return super().get_context_data(**kwargs)
 
     def get_entity_content(self, entity):
         return entity.content
-
-class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
-    action = 'Gruppe finden'
-    form_class = forms.GroupSearch
-    initial = {'models': 'entities.group'}
-    layout = ('q',)
-    menu = 'group'
-    method = 'GET'
-    parent = 'group-index'
-    permission = 'entities.search_group'
-    template_name = 'entities/group_search.html'
-
-    def get_queryset(self):
-        return super().get_queryset().order_by('text')
 
 class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'
