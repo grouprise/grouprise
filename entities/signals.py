@@ -9,6 +9,18 @@ from django import dispatch
 from django.utils import text
 
 
+def slugify(model, field, value):
+    orig_slug = slug = text.slugify(value)
+    i = 0
+    while True:
+        try:
+            model.objects.get(**{field: slug})
+            i += 1
+            slug = orig_slug + '-' + str(i)
+        except model.DoesNotExist:
+            return slug
+
+
 @dispatch.receiver(signals.post_save, sender=models.GestaltContent)
 @dispatch.receiver(signals.post_save, sender=models.GroupContent)
 def content_post_save(sender, instance, created, **kwargs):
@@ -27,7 +39,7 @@ def content_post_save(sender, instance, created, **kwargs):
 def group_pre_save(sender, instance, **kwargs):
     group = instance
     if not group.slug:
-        group.slug = text.slugify(group.name)
+        group.slug = slugify(models.Group, 'slug', group.name)
     if not group.address:
         group.address = group.name
     if not group.url:
