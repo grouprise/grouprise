@@ -1,24 +1,30 @@
 {% load calendar %}
 {% load rules %}
 {% has_perm 'content.create_content' user as can_create_content %}
-
-<div style="background-color: #eee; margin-bottom: 25px; padding: 20px;">
-    <h2>Kalender</h2>
-    <div style="background-color: #fff;">
-        {% calendar calendar_events %}
-        <ul>
-            {% for event in upcoming_events %}
-            <li>
-                {{ event.time }}<br>
-                <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
+<div class="box box-striped">
+    <div class="box-inner">
+        <header class="box-header">
+            <h2 class="box-title">
+                <i class="sg sg-calendar"></i>
+                Kalender
+            </h2>
+        </header>
+        <div class="box-content">
+            {% calendar calendar_events %}
+            <ul>
+                {% for event in upcoming_events %}
+                <li>
+                    {{ event.time }}<br>
+                    <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <p>
+        <a href="{% url 'event-index' %}" class="btn btn-default">Alle Ereignisse</a>
+        {% if can_create_content %}
+        <a href="{% url 'event-create' %}" class="btn btn-default">Neues Ereignis</a>
+        {% endif %}
+        </p>
     </div>
-    <p>
-    <a href="{% url 'event-index' %}" class="btn btn-default">Alle Ereignisse</a>
-    {% if can_create_content %}
-    <a href="{% url 'event-create' %}" class="btn btn-default">Neues Ereignis</a>
-    {% endif %}
-    </p>
 </div>
