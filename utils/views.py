@@ -7,6 +7,7 @@ from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
 from entities import models as entities_models
+from haystack import generic_views as haystack_views
 from rules.contrib import views as rules_views
 
 class DeleteView(edit_views.FormMixin, generic.DeleteView):
@@ -155,6 +156,19 @@ class TitleMixin:
             return self.action
         else:
             return None
+
+
+class SearchView(MenuMixin, NavigationMixin, SidebarMixin, TitleMixin, haystack_views.SearchView):
+    template_name = 'entities/group_search.html'
+
+    def form_invalid(self, form):
+        context = self.get_context_data(**{self.form_name: form, 'group_list': self.get_queryset(), 'object_list': self.get_queryset()})
+        return self.render_to_response(context)
+
+    def form_valid(self, form):
+        self.queryset = form.search()
+        context = self.get_context_data(**{self.form_name: form, 'query': form.cleaned_data.get(self.search_field), 'group_list': self.queryset, 'object_list': self.queryset})
+        return self.render_to_response(context)
 
 
 class ActionMixin(

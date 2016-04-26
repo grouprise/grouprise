@@ -4,7 +4,7 @@ from django.conf import settings
 def groups(request):
     return {
             'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
-            'group_list': models.Group.objects.all(),
+            'sidebar_groups': models.Group.objects.all(),
             }
 
 def statistics(request):

@@ -8,11 +8,10 @@ from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
-from haystack import generic_views as haystack_views
 from rules.contrib import views as rules_views
-from utils import forms as util_forms, views as util_views
+from utils import forms as utils_forms, views as utils_views
 
-class BaseEntityList(util_views.PageMixin, generic.ListView):
+class BaseEntityList(utils_views.PageMixin, generic.ListView):
     parent = 'index'
     permission = 'content.view_content_list'
 
@@ -23,7 +22,7 @@ class BaseEntityList(util_views.PageMixin, generic.ListView):
         kwargs['entities'] = entities
         return super().get_context_data(**kwargs)
 
-class Gestalt(util_views.PageMixin, generic.DetailView):
+class Gestalt(utils_views.PageMixin, generic.DetailView):
     menu = 'gestalt'
     model = models.Gestalt
     permission = 'entities.view_gestalt'
@@ -46,7 +45,7 @@ class GestaltList(BaseEntityList):
     def get_entity_content(self, entity):
         return entity.authored_content
 
-class GestaltUpdate(util_views.ActionMixin, generic.UpdateView):
+class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Profileinstellungen ändern'
     form_class = forms.Gestalt
     menu = 'gestalt'
@@ -54,7 +53,7 @@ class GestaltUpdate(util_views.ActionMixin, generic.UpdateView):
     model = models.Gestalt
     permission = 'entities.change_gestalt'
 
-class Group(util_views.PageMixin, generic.DetailView):
+class Group(utils_views.PageMixin, generic.DetailView):
     menu = 'group'
     model = models.Group
     permission = 'entities.view_group'
@@ -95,7 +94,7 @@ class Group(util_views.PageMixin, generic.DetailView):
     def get_title(self):
         return self.object.name
 
-class GroupAttentionCreate(util_views.ActionMixin, generic.CreateView):
+class GroupAttentionCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Benachrichtigungen erhalten'
     form_class = forms.GroupAttention
     menu = 'group'
@@ -110,7 +109,7 @@ class GroupAttentionCreate(util_views.ActionMixin, generic.CreateView):
     def get_permission_object(self):
         return self.get_group()
 
-class GroupAttentionDelete(util_views.ActionMixin, util_views.DeleteView):
+class GroupAttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
     action = 'Keine Benachrichtigungen mehr erhalten'
     layout = layout.HTML('<p>Möchtest Du wirklich keine Benachrichtigungen '
             'für die Gruppe <em>{{ group }}</em> mehr erhalten?</p>')
@@ -121,7 +120,7 @@ class GroupAttentionDelete(util_views.ActionMixin, util_views.DeleteView):
     def get_parent(self):
         return self.get_group()
 
-class GroupCreate(util_views.ActionMixin, generic.CreateView):
+class GroupCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Gruppe anlegen'
     back_url = 'group-index'
     fields = ('name',)
@@ -134,35 +133,15 @@ class GroupCreate(util_views.ActionMixin, generic.CreateView):
         if 'name' in self.request.GET:
             return {'name': self.request.GET['name']}
 
-class GroupSearch(util_views.ActionMixin, haystack_views.SearchView):
+class GroupSearch(utils_views.SearchView):
     form_class = forms.GroupSearch
     menu = 'group'
     parent = 'index'
     permission = 'entities.search_group'
     sidebar = ('calendar',)
-    template_name = 'entities/group_search.html'
     title = 'Gruppen'
 
-    def form_invalid(self, form):
-        context = self.get_context_data(**{
-            self.form_name: form,
-            'object_list': form.no_query_found(),
-            })
-        return self.render_to_response(context)
-
-    def get_context_data(self, **kwargs):
-        entities = []
-        for result in kwargs['object_list']:
-            entity = result.object
-            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:settings.LATEST_ENTITY_CONTENT_PREVIEW_COUNT]))
-        kwargs['entities'] = entities
-        kwargs['exact_match'] = models.Group.objects.filter(name__iexact=kwargs.get('query')).exists() or models.Group.objects.filter(slug__iexact=kwargs.get('query')).exists()
-        return super().get_context_data(**kwargs)
-
-    def get_entity_content(self, entity):
-        return entity.content
-
-class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
+class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
     menu = 'group'
@@ -180,13 +159,13 @@ class GroupUpdate(util_views.ActionMixin, generic.UpdateView):
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
                 ) + super().get_layout()
 
-class Imprint(util_views.PageMixin, generic.TemplateView):
+class Imprint(utils_views.PageMixin, generic.TemplateView):
     parent = 'index'
     permission = 'entities.view_imprint'
     template_name = 'entities/imprint.html'
     title = 'Impressum'
 
-class MembershipCreate(util_views.ActionMixin, generic.CreateView):
+class MembershipCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Mitglied werden'
     fields = []
     layout = layout.HTML('<p>Möchtest Du Mitglied der Gruppe '
@@ -211,7 +190,7 @@ class MembershipCreate(util_views.ActionMixin, generic.CreateView):
     def get_permission_object(self):
         return self.get_group()
 
-class MembershipDelete(util_views.ActionMixin, util_views.DeleteView):
+class MembershipDelete(utils_views.ActionMixin, utils_views.DeleteView):
     action = 'Mitgliedschaft beenden'
     layout = layout.HTML('<p>Möchtest Du Deine Mitgliedschaft in der Gruppe '
         '<em>{{ group }}</em> auf {{ site.name }} wirklich beenden?</p>')

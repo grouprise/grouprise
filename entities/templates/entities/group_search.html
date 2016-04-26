@@ -18,7 +18,9 @@
 {% if query and not exact_match %}
 <p>Die Gruppe <em>{{ query|title }}</em> gibt es noch nicht. <a href="{% url 'group-create' %}?name={{ query|title }}">Möchtest Du sie anlegen?</a></p>
 {% endif %}
-{% for group in group_list %}
+{% for result in object_list %}
+{% with group=result.object %}
 {% include 'entities/_group_preview.html' %}
+{% endwith %}
 {% endfor %}
 {% endblock %}
