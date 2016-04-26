@@ -1,5 +1,0 @@
-* schraffierter Seitenheader nicht ganz klar konzipiert? manchmal titel (impressum) manchmal klassifizierung des kommenden inhalts (beitrag)
-* die einrückung mit den icons in der sidebar nimmt viel raum
-* die roboto slap hat keinen kursiven schnitt? gut für den fließtext?
-* der 3d effekt bei buttons beißt sich imho ein wenig mit der schraffur. etwas ohne verlauft wäre schön
-*
