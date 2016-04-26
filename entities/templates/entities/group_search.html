@@ -4,19 +4,18 @@
 {% block heading %}{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-    <h2>Deine Gruppe gestalten</h2>
-    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
-    {% crispy form %}
-</div>
-{% if query and not exact_match %}
-<p>Die Gruppe <em>{{ query|title }}</em> gibt es noch nicht. <a href="{% url 'group-create' %}?name={{ query|title }}">Möchtest Du sie anlegen?</a></p>
-{% endif %}
 {% has_perm 'entities.create_group' user as can_create_group %}
 {% if can_create_group %}
 <a href="{% url 'group-create' %}" class="btn btn-primary pull-right">Neue Gruppe</a>
 {% endif %}
 <h1 class="content-classification">Gruppen</h1>
+<h2>Deine Gruppe gestalten</h2>
+<p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+{% crispy form %}
+{% if query and not exact_match %}
+<p>Die Gruppe <em>{{ query|title }}</em> gibt es noch nicht. <a href="{% url 'group-create' %}?name={{ query|title }}">Möchtest Du sie anlegen?</a></p>
+{% endif %}
+<hr>
 {% for result in object_list %}
 {% with group=result.object %}
 {% include 'entities/_group_preview.html' %}

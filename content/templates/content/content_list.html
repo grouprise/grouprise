@@ -4,13 +4,14 @@
 {% block heading %}{% endblock %}
 
 {% block list_header %}
-<div class="jumbotron">
-    <h2>Deine Gruppe gestalten</h2>
-    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
-    <p><a href="{% url 'group-index' %}" class="btn btn-primary">Gruppe finden</a></p>
-    <p>Leg sie mit einem Klick an.</p>
-    <p><a href="{% url 'group-create' %}" class="btn btn-default">Gruppe anlegen</a></p>
-</div>
+{% has_perm 'entities.create_group' user as can_create_group %}
+{% if can_create_group %}
+<a href="{% url 'group-create' %}" class="btn btn-primary pull-right">Neue Gruppe</a>
+{% endif %}
+<span class="content-classification">Gruppen</span>
+<h2>Deine Gruppe gestalten</h2>
+<p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+<p><a href="{% url 'group-index' %}" class="btn btn-primary">Gruppe finden</a></p>
 {% has_perm 'content.create_content' user as can_create_content %}
 {% if can_create_content %}
 <div class="btn-group pull-right">

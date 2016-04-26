@@ -13,7 +13,7 @@
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
 {% if intro_content %}
-<h2>Intro</h2>
+<h2 class="content-classification">Intro</h2>
 {% for content in intro_content %}
 {% include 'content/_content_preview.html' %}
 {% endfor %}
@@ -37,16 +37,12 @@
 {% elif can_create_message %}
 <a href="{% url 'message-create' group.pk %}" class="btn btn-primary pull-right">Neue Nachricht</a>
 {% endif %}
-<h2>Blog</h2>
+<h2 class="content-classification">Beiträge</h2>
 {% endblock %}
 
 
 {% block sidebar %}
-<div class="text-right" class="box box-striped">
-    {% if group.logo %}
-    <img src="{{ group.logo.url }}">
-    {% endif %}
-</div>
+{% include 'entities/_sidebar_logo.html' %}
 {% include 'calendar/_sidebar.html' %}
 {% include 'entities/_sidebar_groups.html' %}
 {% endblock %}
