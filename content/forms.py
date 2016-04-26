@@ -6,6 +6,7 @@ from utils import forms as utils_forms
 
 class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)
+    pinned = forms.BooleanField(label='Im Intro der Gruppe anheften', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -17,12 +18,12 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     def save(self):
         content = super().save()
         if self.cleaned_data['group']:
-            entities_models.GroupContent.objects.create(content=content, group=self.cleaned_data['group'])
+            entities_models.GroupContent.objects.create(content=content, group=self.cleaned_data['group'], pinned=self.cleaned_data['pinned'])
         return content
 
 
 class Article(BaseContent):
-    layout = ('author', 'group', 'title', 'text', utils_forms.Submit('Artikel erstellen'))
+    layout = ('author', 'group', 'title', 'text', 'pinned', utils_forms.Submit('Artikel erstellen'))
 
     class Meta:
         fields = ('author', 'text', 'title')
@@ -34,7 +35,7 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = ('author', 'group', 'title', 'time', 'place', 'text', 'public', utils_forms.Submit('Ereignis erstellen'))
+    layout = ('author', 'group', 'title', 'time', 'place', 'text', 'public', 'pinned', utils_forms.Submit('Ereignis erstellen'))
 
     class Meta:
         fields = ('author', 'place', 'public', 'text', 'time', 'title')
@@ -42,7 +43,7 @@ class Event(BaseContent):
 
 
 class Gallery(BaseContent):
-    layout = ('author', 'group', 'title', 'text', 'public', utils_forms.Submit('Galerie erstellen'))
+    layout = ('author', 'group', 'title', 'text', 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')

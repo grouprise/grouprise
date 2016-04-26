@@ -14,7 +14,7 @@ class BaseContent(util_views.ActionMixin, generic.CreateView):
             return urlresolvers.reverse(self.back_url)
 
     def get_initial(self):
-        return {'author': self.request.user.gestalt.pk, 'group': self.get_group()}
+        return {'author': self.request.user.gestalt.pk, 'group': self.get_group(), 'pinned': self.request.GET.get('pinned'), 'public': self.request.GET.get('public')}
 
     def get_permission_object(self):
         return None
