@@ -2,9 +2,21 @@
     .fa();
 }
 
+.sg-author {
+    &:after {
+        content: @fa-var-user;
+    }
+}
+
 .sg-back {
     &:after {
         content: @fa-var-chevron-left@fa-var-chevron-left;
+    }
+}
+
+.sg-calendar {
+    &:after {
+        content: @fa-var-calendar;
     }
 }
 
@@ -14,15 +26,9 @@
     }
 }
 
-.sg-author {
+.sg-edit {
     &:after {
-        content: @fa-var-user;
-    }
-}
-
-.sg-calendar {
-    &:after {
-        content: @fa-var-calendar;
+        content: @fa-var-pencil;
     }
 }
 
