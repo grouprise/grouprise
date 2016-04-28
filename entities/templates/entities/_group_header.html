@@ -12,7 +12,7 @@
 
     <div class="col-md-6">
         {% if head_gallery %}
-        <img src="{{ head_gallery.image_set.first.image.url }}">
+        <img src="{{ head_gallery.image_set.first.file.url }}">
         {% else %}
         <a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1">Intro-Galerie hinzufügen</a>
         {% endif %}

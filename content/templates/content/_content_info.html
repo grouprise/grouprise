@@ -6,6 +6,6 @@
 {% endif %}
 {% endwith %}
 <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
-{{ content.comment_set.count }} &nbsp;
-{{ content.attention_set.count }}
+<i class="sg sg-comments"></i> {{ content.comment_set.count }} &nbsp;
+?
 </p>
