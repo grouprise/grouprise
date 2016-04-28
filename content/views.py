@@ -35,28 +35,6 @@ class GalleryList(BaseContentList):
         return models.Gallery.objects.permitted(self.request.user)
 
 
-class CommentCreate(util_views.ActionMixin, generic.CreateView):
-    action = 'Kommentar hinzufügen'
-    fields = ('text',)
-    layout = 'text'
-    model = models.Comment
-    permission = 'content.create_comment'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user.gestalt
-        form.instance.content = self.get_permission_object()
-        return super().form_valid(form)
-
-    def get_menu(self):
-        return self.get_parent().get_type_name()
-
-    def get_parent(self):
-        pk = self.request.resolver_match.kwargs['content_pk']
-        return models.Content.objects.get(pk=pk)
-
-    def get_permission_object(self):
-        return self.get_parent()
-
 class Content(util_views.PageMixin, generic.DetailView):
     model = models.Content
     permission = 'content.view_content'

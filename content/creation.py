@@ -71,3 +71,48 @@ class GroupMessage(BaseMessage):
 
     def get_recipient(self):
         return self.get_group()
+
+
+class CommentCreate(utils_views.ActionMixin, generic.CreateView):
+    action = 'Kommentar hinzufügen'
+    fields = ('text',)
+    layout = 'text'
+    model = models.Comment
+    permission = 'content.create_comment'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.gestalt
+        form.instance.content = self.get_permission_object()
+        return super().form_valid(form)
+
+    def get_menu(self):
+        return self.get_parent().get_type_name()
+
+    def get_parent(self):
+        pk = self.request.resolver_match.kwargs['content_pk']
+        return models.Content.objects.get(pk=pk)
+
+    def get_permission_object(self):
+        return self.get_parent()
+
+
+class ImageCreate(utils_views.ActionMixin, generic.CreateView):
+    action = 'Bild hinzufügen'
+    fields = ('file',)
+    layout = 'file'
+    model = models.Image
+    permission = 'content.create_image'
+
+    def form_valid(self, form):
+        form.instance.content = self.get_permission_object()
+        return super().form_valid(form)
+
+    def get_menu(self):
+        return self.get_parent().get_type_name()
+
+    def get_parent(self):
+        pk = self.request.resolver_match.kwargs['content_pk']
+        return models.Content.objects.get(pk=pk)
+
+    def get_permission_object(self):
+        return self.get_parent()

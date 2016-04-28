@@ -17,3 +17,4 @@ rules.add_perm('content.create_content', rules.is_authenticated)
 rules.add_perm('content.change_content', rules.is_authenticated & is_content_author)
 
 rules.add_perm('content.create_comment', rules.is_authenticated & content_is_permitted)
+rules.add_perm('content.create_image', rules.is_authenticated & is_content_author)

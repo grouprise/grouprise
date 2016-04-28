@@ -1,0 +1,14 @@
+{% load rules %}
+{% has_perm 'content.create_image' user content as can_create_image %}
+
+<h2>Bilder</h2>
+
+<ul>
+    {% for image in content.image_set.all %}
+    <li><img src="{{ image.file.url }}"></li>
+    {% endfor %}
+</ul>
+
+{% if can_create_image %}
+<a href="{% url 'image-create' content.pk %}" class="btn btn-primary">Bild hinzufügen</a>
+{% endif %}
