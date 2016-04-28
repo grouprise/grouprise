@@ -48,10 +48,10 @@
                 (Du bist Mitglied)
                 {% endif %}
                 {% if can_create_membership %}
-                <a href="{% url 'membership-create' group.pk %}" class="btn btn-default btn-sm">Mitglied werden</a>
+                <a href="{% url 'membership-create' group.pk %}" class="btn btn-default btn-sm"><i class="sg sg-join"></i> Mitglied werden</a>
                 {% endif %}
                 {% if can_delete_membership %}
-                <a href="{% url 'membership-delete' membership.pk %}"><i class="fa fa-sign-out" title="Mitgliedschaft beenden"></i></a>
+                <a href="{% url 'membership-delete' membership.pk %}"><i class="sg sg-resign" title="Mitgliedschaft beenden"></i></a>
                 {% endif %}
             </li>
             <li>{{ site.domain }}/ {{ group.slug }}</li>
