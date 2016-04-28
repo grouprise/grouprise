@@ -1,10 +1,10 @@
 from . import forms, models
 from django.core import urlresolvers
 from django.views import generic
-from utils import views as util_views
+from utils import views as utils_views
 
 
-class BaseContent(util_views.ActionMixin, generic.CreateView):
+class BaseContent(utils_views.ActionMixin, generic.CreateView):
     permission = 'content.create_content'
 
     def get_back_url(self):
@@ -41,7 +41,7 @@ class Gallery(BaseContent):
     menu = 'gallery'
 
 
-class BaseMessage(util_views.ActionMixin, generic.CreateView):
+class BaseMessage(utils_views.ActionMixin, generic.CreateView):
     action = 'Nachricht senden'
     message = 'Die Nachricht wurde versendet.'
 
