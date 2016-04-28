@@ -1,0 +1,24 @@
+{% load rules %}
+{% has_perm 'content.change_content' user content as can_edit_content %}
+
+<div class="content-data">
+    <span class="content-classification">Beitrag</span>
+    <span class="content-type">
+        <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
+        {{ content.get_display_type_name }}
+    </span>
+</div>
+<header class="content-header">
+    <h1 class="content-title">
+        {% if content.event %}
+            {{ content.event.time|date:'l, j.n.Y:'}}
+        {% endif %}
+        {{ content.title }}
+        {% if can_edit_content %}
+            <a href="{% url 'content-update' content.pk %}">
+                <i class="sg sg-edit" title="Beitrag bearbeiten"></i>
+            </a>
+        {% endif %}
+    </h1>
+    {% include 'content/_content_info.html' %}
+</header>

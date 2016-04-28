@@ -1,0 +1,38 @@
+{% comment %}
+{% if content.public %}
+<div class="content-license">
+    <!-- todo content license is probably based on database -->
+    <div class="content-license-logo">
+        <img src="{% static "stadt/img/cc/cc.logo.svg" %}" align="License Logo" />
+    </div>
+    <div class="content-license-terms">
+        <ul class="list-iconified">
+            <li>
+                <span class="list-iconified-icon">
+                    <img src="{% static "stadt/img/cc/sa.svg" %}" alt="" />
+                </span>
+                <span class="list-iconified-text">
+                    Weitergabe unter gleichen Bedingungen
+                </span>
+            </li>
+            <li>
+                <span class="list-iconified-icon">
+                    <img src="{% static "stadt/img/cc/by.svg" %}" alt="" />
+                </span>
+                <span class="list-iconified-text">
+                    Namensnennung
+                </span>
+            </li>
+            <li>
+                <span class="list-iconified-icon">
+                    <img src="{% static "stadt/img/cc/nc.svg" %}" alt="" />
+                </span>
+                <span class="list-iconified-text">
+                    nichtkommerziell
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endcomment %}

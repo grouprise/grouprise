@@ -20,7 +20,7 @@
         {% for content in group.content|permitted:user|limit:3 %}
         <li>
             <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
-            <a href="{{ content.get_absolute_url }}"><i class="fa fa-file-text-o"></i> {{ content }}</a>
+            <a href="{{ content.get_absolute_url }}"><i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i> {{ content }}</a>
             <span class="text-muted">von <a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a></span>
         </li>
         {% endfor %}

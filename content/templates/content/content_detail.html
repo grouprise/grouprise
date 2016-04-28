@@ -1,101 +1,23 @@
 {% extends 'stadt/stadt.html' %}
-{% load staticfiles %}
-{% load content rules %}
+{% load content %}
 
 {% block content %}
-{% has_perm 'content.change_content' user content as can_edit_content %}
-{% has_perm 'content.create_comment' user content as can_create_comment %}
-
 <article class="content">
-    <div class="content-data">
-        <span class="content-classification">Beitrag</span>
-        <span class="content-type">
-            <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
-            {{ content.get_display_type_name }}
-        </span>
-    </div>
-    <header class="content-header">
-        <h1 class="content-title">
-            {% if content.event %}
-                {{ content.event.time|date:'l, j.n.Y:'}}
-            {% endif %}
-            {{ content.title }}
-            {% if can_edit_content %}
-                <a href="{% url 'content-update' content.pk %}">
-                    <i class="sg sg-edit" title="Beitrag bearbeiten"></i>
-                </a>
-            {% endif %}
-        </h1>
-        {% include 'content/_content_info.html' %}
-    </header>
+    {% include 'content/_content_header.html' %}
     <div class="content-body">
         {% if content.event %}
             <!-- todo inline with definitions list -->
             <p><strong>Ort:</strong> {{ content.event.place }}</p>
             <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
         {% endif %}
-        <p>
-            {% with image=content.image_set.first %}
-                {% if image %}
-                    <img src="{{ image.image.url }}" class="pull-left">
-                {% endif %}
-            {% endwith %}
-            {{ content.text|markdown }}
-        </p>
-
-        {% if content.public %}
-        <div class="content-license">
-            <!-- todo content license is probably based on database -->
-            <div class="content-license-logo">
-                <img src="{% static "stadt/img/cc/cc.logo.svg" %}" align="License Logo" />
-            </div>
-            <div class="content-license-terms">
-                <ul class="list-iconified">
-                    <li>
-                        <span class="list-iconified-icon">
-                            <img src="{% static "stadt/img/cc/sa.svg" %}" alt="" />
-                        </span>
-                        <span class="list-iconified-text">
-                            Weitergabe unter gleichen Bedingungen
-                        </span>
-                    </li>
-                    <li>
-                        <span class="list-iconified-icon">
-                            <img src="{% static "stadt/img/cc/by.svg" %}" alt="" />
-                        </span>
-                        <span class="list-iconified-text">
-                            Namensnennung
-                        </span>
-                    </li>
-                    <li>
-                        <span class="list-iconified-icon">
-                            <img src="{% static "stadt/img/cc/nc.svg" %}" alt="" />
-                        </span>
-                        <span class="list-iconified-text">
-                            nichtkommerziell
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        {% endif %}
+        {{ content.text|markdown }}
+        {% include 'content/_content_license.html' %}
     </div>
-
     <footer class="content-footer">
-        <h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
-
-        {% for comment in content.comment_set.all %}
-            <a href="{% url 'gestalt' comment.author.user.username %}"><img src="{{ comment.author.avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="pull-left"></a>
-            <p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
-            <hr style="clear:both">
-        {% endfor %}
-
-        {% if can_create_comment %}
-            <a href="{% url 'comment-create' content.pk %}" class="btn btn-primary">{% if content.public %}Kommentieren{% else %}Antworten{% endif %}</a>
-        {% endif %}
-    {% endblock %}
+        {% include 'content/_content_comments.html' %}
     </footer>
 </article>
+{% endblock %}
 
 {% block heading %}{% endblock %}
 
