@@ -1,4 +1,5 @@
 from . import models
+from crispy_forms import layout
 from django import forms
 from entities import models as entities_models
 from utils import forms as utils_forms
@@ -43,10 +44,11 @@ class Event(BaseContent):
 
 
 class Gallery(BaseContent):
-    layout = ('author', 'group', 'title', 'text', 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
+    layout = ('author', 'group', 'title', layout.Field('text', rows=5), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
+        labels = {'text': 'Beschreibung'}
         model = models.Gallery
 
 
