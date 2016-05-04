@@ -13,7 +13,7 @@
     <div class="col-md-6">
         {% if head_gallery %}
         <a href="{% url 'content' group.slug head_gallery.slug %}">Intro-Galerie anzeigen</a>
-        {% thumbnail head_gallery.image_set.first.file '560x390' crop='center' as image %}
+        {% thumbnail head_gallery.images.first.file '560x390' crop='center' as image %}
         <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
         {% endthumbnail %}
         {% else %}

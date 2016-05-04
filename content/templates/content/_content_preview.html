@@ -1,3 +1,4 @@
+{% load thumbnail %}
 <article>
     <header>
         <p>{{ content.get_display_type_name }}</p>
@@ -17,11 +18,9 @@
     <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
     {% endif %}
     <p>
-    {% with image=content.image_set.first %}
-    {% if image %}
-    <img src="{{ image.image.url }}" class="pull-left">
-    {% endif %}
-    {% endwith %}
+    {% thumbnail content.images.first.file '200x200' crop='center' as image %}
+    <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" class="pull-left">
+    {% endthumbnail %}
     {{ content.text|truncatewords:60 }}
     <a href="{{ content.get_absolute_url }}">WEITER&gt;</a>
     </p>

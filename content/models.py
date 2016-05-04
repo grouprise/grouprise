@@ -7,7 +7,7 @@ from django.utils import timezone
 
 
 class Image(models.Model):
-    content = models.ForeignKey('Content')
+    content = models.ForeignKey('Content', related_name='images')
     file = models.ImageField('Datei')
 
 
