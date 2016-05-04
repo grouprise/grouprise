@@ -1,7 +1,20 @@
+{% load rules thumbnail %}
+{% has_perm 'entities.change_group' user group as can_edit %}
 <div class="box box-striped">
     <div class="box-inner">
-        {% if group.logo %}
-        <img src="{{ group.logo.url }}">
-        {% endif %}
+        <header class="box-header">
+            <h2 class="box-title">
+                <i class="sg sg-logo"></i>
+            </h2>
+        </header>
+        <div class="box-content">
+            {% thumbnail group.logo '250x250' as logo %}
+            <img src="{{ logo.url }}" width="{{ logo.width }}" height="{{ logo.height }}">
+            {% empty %}
+            {% if can_edit %}
+            <a href="#" class="btn btn-default">Logo hochladen</a>
+            {% endif %}
+            {% endthumbnail %}
+        </div>
     </div>
 </div>

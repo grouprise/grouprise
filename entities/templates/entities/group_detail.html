@@ -54,7 +54,10 @@
 
 
 {% block sidebar %}
+{% has_perm 'entities.change_group' user group as can_edit %}
+{% if group.logo or can_edit %}
 {% include 'entities/_sidebar_logo.html' %}
+{% endif %}
 {% include 'calendar/_sidebar.html' %}
 {% include 'entities/_sidebar_groups.html' %}
 {% endblock %}
