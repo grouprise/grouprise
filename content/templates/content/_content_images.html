@@ -4,7 +4,7 @@
 <h2>Bilder</h2>
 
 <ul>
-    {% for image in content.image_set.all %}
+    {% for image in content.images.all %}
     <li><img src="{{ image.file.url }}"></li>
     {% endfor %}
 </ul>
