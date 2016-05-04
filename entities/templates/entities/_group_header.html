@@ -1,4 +1,4 @@
-{% load rules %}
+{% load rules thumbnail %}
 
 {% has_perm 'entities.change_group' user group as can_edit %}
 {% has_perm 'entities.create_group_attention' user group as can_create_attention %}
@@ -13,9 +13,9 @@
     <div class="col-md-6">
         {% if head_gallery %}
         <a href="{% url 'content' group.slug head_gallery.slug %}">Intro-Galerie anzeigen</a>
-        {% if head_gallery.image_set.exists %}
-        <img src="{{ head_gallery.image_set.first.file.url }}">
-        {% endif %}
+        {% thumbnail head_gallery.image_set.first.file '560x390' crop='center' as image %}
+        <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+        {% endthumbnail %}
         {% else %}
         <a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1">Intro-Galerie hinzufügen</a>
         {% endif %}

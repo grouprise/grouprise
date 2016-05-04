@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'entities.apps.EntitiesConfig',
     'haystack',
     'rules.apps.AutodiscoverRulesConfig',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -221,3 +222,7 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     },
 }
+
+
+# Sorl Thumbnail image processing
+# http://sorl-thumbnail.readthedocs.org/
