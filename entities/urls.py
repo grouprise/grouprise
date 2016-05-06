@@ -11,6 +11,7 @@ urlpatterns = [
     urls.url(r'^group/attention/(?P<pk>[0-9]+)/delete/$', views.GroupAttentionDelete.as_view(), name='group-attention-delete'),
     urls.url(r'^group/membership/(?P<pk>[0-9]+)/delete/$', views.MembershipDelete.as_view(), name='membership-delete'),
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/$', views.GroupUpdate.as_view(), name='group-update'),
+    urls.url(r'^group/(?P<pk>[0-9]+)/edit/avatar$', views.GroupAvatarUpdate.as_view(), name='group-avatar-update'),
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/logo$', views.GroupLogoUpdate.as_view(), name='group-logo-update'),
     urls.url(r'^group/(?P<group_pk>[0-9]+)/join/$', views.MembershipCreate.as_view(), name='membership-create'),
     urls.url(r'^group/(?P<group_pk>[0-9]+)/contact/$', content_creation.GroupMessage.as_view(), name='message-create'),

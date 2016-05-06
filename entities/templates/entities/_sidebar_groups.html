@@ -1,4 +1,4 @@
-{% load rules %}
+{% load entities rules %}
 {% has_perm 'entities.create_group' user as can_create_group %}
 <div class="box box-striped">
     <div class="box-inner">
@@ -8,9 +8,9 @@
                 Gruppen
             </h2>
         </header>
-        <div class="box-content">
+        <div class="box-content clearfix">
             {% for group in sidebar_groups %}
-            <a href="{% url 'group' group.slug %}"><img src="{{ group.avatar.url }}" title="{{ group }}"></a>
+            {% group_avatar group %}
             {% endfor %}
         </div>
         <p>

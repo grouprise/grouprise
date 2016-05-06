@@ -226,3 +226,5 @@ HAYSTACK_CONNECTIONS = {
 
 # Sorl Thumbnail image processing
 # http://sorl-thumbnail.readthedocs.org/
+
+THUMBNAIL_DEBUG = False

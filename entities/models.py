@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core import urlresolvers
 from django.db import models
+import randomcolor
 
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
@@ -24,7 +25,8 @@ class GestaltContent(models.Model):
 class Group(models.Model):
     address = models.TextField('Anschrift', blank=True)
     attendees = models.ManyToManyField('Gestalt', related_name='attended_groups', through='GroupAttention')
-    avatar = models.ImageField(default=staticfiles_storage.url('avatar.png'))
+    avatar = models.ImageField(blank=True)
+    avatar_color = models.TextField(max_length='7', default=randomcolor.RandomColor().generate()[0])
     content = models.ManyToManyField('content.Content', related_name='groups', through='GroupContent')
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
@@ -39,6 +41,15 @@ class Group(models.Model):
 
     def get_absolute_url(self):
         return urlresolvers.reverse('group', args=[type(self).objects.get(pk=self.pk).slug])
+
+    def get_initials(self):
+        import re
+        initials = ''
+        for w in self.name.split():
+            m = re.search('[a-zA-Z0-9]', w)
+            initials += m.group(0) if m else ''
+        return initials
+    
 
 class GroupAttention(models.Model):
     attendee = models.ForeignKey('Gestalt')

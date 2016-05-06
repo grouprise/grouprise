@@ -1,4 +1,4 @@
-{% load rules thumbnail %}
+{% load entities rules thumbnail %}
 
 {% has_perm 'content.view_content' user head_gallery as can_view_head_gallery %}
 {% has_perm 'entities.change_group' user group as can_edit %}
@@ -23,9 +23,12 @@
     </div>
 
     <div class="col-md-6">
-        {% if group.avatar %}
-        <img src="{{ group.avatar.url }}" class="pull-right">
-        {% endif %}
+        <div class="pull-right">
+            {% if can_edit %}
+            <a href="{% url 'group-avatar-update' group.pk %}">Avatar ändern</a><br>
+            {% endif %}
+            {% group_avatar group %}
+        </div>
         <h1>
             {{ group.name }}
             <small>

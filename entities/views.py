@@ -120,6 +120,14 @@ class GroupAttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
     def get_parent(self):
         return self.get_group()
 
+class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
+    action = 'Avatar ändern'
+    fields = ('avatar',)
+    layout = ('avatar',)
+    menu = 'group'
+    model = models.Group
+    permission = 'entities.change_group'
+
 class GroupCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Gruppe anlegen'
     back_url = 'group-index'

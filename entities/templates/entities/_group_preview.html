@@ -1,9 +1,9 @@
-{% load content rules %}
+{% load content entities rules %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
 <div class="clearfix">
     <a href="{{ group.get_absolute_url }}">
-        <img src="{{ group.avatar.url }}" class="pull-left">
+        {% group_avatar group %}
     </a>
     <h3>
         <a href="{{ group.get_absolute_url }}">{{ group }}</a>
