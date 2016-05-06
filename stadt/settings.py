@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'haystack',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
+    'utils',
 ]
 
 MIDDLEWARE_CLASSES = [

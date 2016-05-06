@@ -1,4 +1,4 @@
-{% load entities rules %}
+{% load entities rules utils %}
 {% has_perm 'entities.create_group' user as can_create_group %}
 <div class="box box-striped">
     <div class="box-inner">
@@ -8,10 +8,26 @@
                 Gruppen
             </h2>
         </header>
-        <div class="box-content clearfix">
-            {% for group in sidebar_groups %}
-            {% group_avatar group %}
-            {% endfor %}
+        <div class="box-content">
+            <div class="clearfix">
+                {% for group in sidebar_groups %}
+                <a href="{{ group.get_absolute_url }}">
+                    {% group_avatar group %}
+                </a>
+                {% endfor %}
+            </div>
+            <ul>
+                {% for group in sidebar_groups|limit:5 %}
+                <li>
+                    <a href="{{ group.get_absolute_url }}">{{ group }}</a>
+                    <small>
+                        <i class="fa fa-users"></i> {{ group.members.count }}
+                        <i class="fa fa-eye"></i> {{ group.attendees.count }}
+                        <i class="fa fa-file-text-o"></i> {{ group.content.count }}
+                    </small>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
         <p>
         <a href="{% url 'group-index' %}" class="btn btn-default">Alle Gruppen</a>

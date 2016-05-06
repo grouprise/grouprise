@@ -4,10 +4,6 @@ from django.utils import html, safestring
 
 register = template.Library()
 
-@register.filter
-def limit(content, count):
-    return content[:count]
-
 @register.filter(needs_autoescape=True)
 def markdown(text, autoescape=True):
     if autoescape:
