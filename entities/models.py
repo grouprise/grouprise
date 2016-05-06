@@ -5,6 +5,9 @@ from django.core import urlresolvers
 from django.db import models
 import randomcolor
 
+def get_random_color():
+    return randomcolor.RandomColor().generate()[0]
+
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
     addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
@@ -26,7 +29,7 @@ class Group(models.Model):
     address = models.TextField('Anschrift', blank=True)
     attendees = models.ManyToManyField('Gestalt', related_name='attended_groups', through='GroupAttention')
     avatar = models.ImageField(blank=True)
-    avatar_color = models.CharField(max_length=7, default=randomcolor.RandomColor().generate()[0])
+    avatar_color = models.CharField(max_length=7, default=get_random_color)
     content = models.ManyToManyField('content.Content', related_name='groups', through='GroupContent')
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
