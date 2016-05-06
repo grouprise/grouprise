@@ -133,6 +133,14 @@ class GroupCreate(utils_views.ActionMixin, generic.CreateView):
         if 'name' in self.request.GET:
             return {'name': self.request.GET['name']}
 
+class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
+    action = 'Logo ändern'
+    fields = ('logo',)
+    layout = ('logo',)
+    menu = 'group'
+    model = models.Group
+    permission = 'entities.change_group'
+
 class GroupSearch(utils_views.SearchView):
     form_class = forms.GroupSearch
     menu = 'group'
