@@ -26,7 +26,7 @@ class Group(models.Model):
     address = models.TextField('Anschrift', blank=True)
     attendees = models.ManyToManyField('Gestalt', related_name='attended_groups', through='GroupAttention')
     avatar = models.ImageField(blank=True)
-    avatar_color = models.TextField(max_length='7', default=randomcolor.RandomColor().generate()[0])
+    avatar_color = models.CharField(max_length=7, default=randomcolor.RandomColor().generate()[0])
     content = models.ManyToManyField('content.Content', related_name='groups', through='GroupContent')
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
