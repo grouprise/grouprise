@@ -1,3 +1,4 @@
+{% load content %}
 <h3>{{ month }}</h3>
 <table class="table">
     <tr>
@@ -10,7 +11,7 @@
         {% for day in week %}
         <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
             {% if day.url %}
-            <a href="{{ day.url }}" title="{{ day.title }}">
+            <a href="{{ day.url }}" title="{{ day.events|preview|truncatechars:50 }}">
             {% endif %}
             {{ day.day }}
             {% if day.url %}

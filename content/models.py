@@ -107,9 +107,6 @@ class Event(Content):
     def get_display_type_name(self):
         return 'Ereignis' if self.public else 'Internes Ereignis'
 
-    def preview(self):
-        return '{:%R} {}'.format(self.time, self.title)
-
 
 class Gallery(Content):
     objects = models.Manager.from_queryset(querysets.ContentQuerySet)()

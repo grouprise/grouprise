@@ -4,8 +4,8 @@ from django.utils import timezone
 
 def events(request):
     return {
-            'calendar_events': models.Event.objects.around(timezone.now()),
-            'upcoming_events': models.Event.objects.upcoming(settings.UPCOMING_EVENTS_PREVIEW_COUNT),
+            'calendar_events': models.Event.objects.permitted(request.user).around(timezone.now()),
+            'upcoming_events': models.Event.objects.permitted(request.user).upcoming(settings.UPCOMING_EVENTS_PREVIEW_COUNT),
             }
 
 def statistics(request):

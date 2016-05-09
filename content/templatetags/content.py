@@ -1,6 +1,6 @@
 import markdown as python_markdown
 from django import template
-from django.utils import html, safestring
+from django.utils import formats, html, safestring, text, timezone
 
 register = template.Library()
 
@@ -15,3 +15,7 @@ def markdown(text, autoescape=True):
 @register.filter
 def permitted(content, user):
     return content.permitted(user)
+
+@register.filter
+def preview(events):
+    return ', '.join(map(lambda e: '{} {}'.format(formats.time_format(timezone.localtime(e.time)), e.title), events))

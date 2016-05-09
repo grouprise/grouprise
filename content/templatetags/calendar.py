@@ -26,8 +26,8 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
             url = urlresolvers.reverse('event-day', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ybd'])
         return {
                 'day': thedate.day,
+                'events': events,
                 'in_month': thedate.month == themonth,
-                'title': text.Truncator(', '.join(map(lambda e: e.preview(), events))).chars(50),
                 'today': thedate == _today,
                 'url': url,
                 }

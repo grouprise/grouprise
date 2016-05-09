@@ -23,7 +23,9 @@
         <p>
         <a href="{% url 'event-index' %}" class="btn btn-default">Alle Ereignisse</a>
         {% if can_create_content %}
-        <a href="{% url 'event-create' %}" class="btn btn-default">Neues Ereignis</a>
+        <a href="{% url 'event-create' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-default">
+            Neues Ereignis
+        </a>
         {% endif %}
         </p>
     </div>
