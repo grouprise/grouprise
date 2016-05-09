@@ -10,10 +10,5 @@
 {% endblock %}
 
 {% block list_header %}
-<div class="jumbotron">
-    <h2>So ist der Plan</h2>
-    <div style="background-color: #fff;">
-        {% calendar calendar_events %}
-    </div>
-</div>
+{% calendar all_calendar_events %}
 {% endblock %}
