@@ -1,5 +1,4 @@
-{% load calendar %}
-{% load rules %}
+{% load calendar humanize rules %}
 {% has_perm 'content.create_content' user as can_create_content %}
 <div class="box box-striped">
     <div class="box-inner">
@@ -14,7 +13,8 @@
             <ul>
                 {% for event in upcoming_events %}
                 <li>
-                    {{ event.time }}<br>
+                    {{ event.time|naturalday:'DATE_FORMAT'|title }},
+                    {{ event.time|time:'TIME_FORMAT' }} Uhr<br>
                     <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
                 </li>
                 {% endfor %}
