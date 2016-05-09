@@ -1,11 +1,9 @@
 from . import models
-from django.conf import settings
-from django.utils import timezone
 
 def events(request):
     return {
-            'calendar_events': models.Event.objects.permitted(request.user).around(timezone.now()),
-            'upcoming_events': models.Event.objects.permitted(request.user).upcoming(settings.UPCOMING_EVENTS_PREVIEW_COUNT),
+            'all_calendar_events': models.Event.objects.permitted(request.user).around(),
+            'all_upcoming_events': models.Event.objects.permitted(request.user).upcoming(),
             }
 
 def statistics(request):

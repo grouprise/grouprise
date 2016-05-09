@@ -60,10 +60,12 @@ class Group(utils_views.PageMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         kwargs['attention'] = self.get_attention()
+        kwargs['calendar_events'] = self.get_events().around()
         kwargs['content_list'] = self.get_group_content().filter(groupcontent__pinned=False)
         kwargs['head_gallery'] = self.get_head_gallery()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
+        kwargs['upcoming_events'] = self.get_events().upcoming()
         return super().get_context_data(**kwargs)
 
     def get_attention(self):
@@ -71,6 +73,9 @@ class Group(utils_views.PageMixin, generic.DetailView):
             return models.GroupAttention.objects.get(attendee=self.request.user.gestalt, group=self.object)
         except (AttributeError, models.GroupAttention.DoesNotExist):
             return None
+
+    def get_events(self):
+        return content_models.Event.objects.permitted(self.request.user).filter(groups=self.object)
 
     def get_group_content(self):
         return self.object.content.permitted(self.request.user)
