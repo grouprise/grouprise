@@ -81,5 +81,11 @@ class EventDay(util_views.PageMixin, generic.DayArchiveView):
                 self.get_month(), self.get_month_format(),
                 self.get_day(), self.get_day_format())
 
+    def get_queryset(self):
+        if self.get_group():
+            return super().get_queryset().filter(groups=self.get_group())
+        else:
+            return super().get_queryset()
+
     def get_title(self):
         return formats.date_format(self.get_date())

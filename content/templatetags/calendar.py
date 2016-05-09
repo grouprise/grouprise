@@ -50,11 +50,12 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
         return [self.formatweekday(i) for i in self.iterweekdays()]
 
 
-@register.inclusion_tag('calendar/_calendar.html')
-def calendar(events):
+@register.inclusion_tag('calendar/_calendar.html', takes_context=True)
+def calendar(context, events):
     c = Calendar(events)
     return {
-            'days': c.formatweekheader(), 
+            'days': c.formatweekheader(),
+            'group': context.get('group'),
             'month': c.formatmonthname(), 
             'weeks': c.formatmonthweeks(),
             }

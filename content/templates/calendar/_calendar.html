@@ -11,11 +11,11 @@
         {% for day in week %}
         <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
             {% if day.url %}
-            <a href="{{ day.url }}" title="{{ day.events|preview|truncatechars:50 }}">
-            {% endif %}
-            {{ day.day }}
-            {% if day.url %}
+            <a href="{{ day.url }}{% if not day.events|length_is:1 and group %}?group={{ group.slug }}{% endif %}" title="{{ day.events|preview|truncatechars:50 }}">
+                {{ day.day }}
             </a>
+            {% else %}
+            {{ day.day }}
             {% endif %}
         </td>
         {% endfor %}
