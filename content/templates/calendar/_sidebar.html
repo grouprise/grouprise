@@ -1,4 +1,4 @@
-{% load calendar humanize rules %}
+{% load calendar humanize rules utils %}
 {% has_perm 'content.create_content' user as can_create_content %}
 <div class="box box-striped">
     <div class="box-inner">
@@ -9,9 +9,9 @@
             </h2>
         </header>
         <div class="box-content">
-            {% calendar calendar_events|default_if_none:all_calendar_events %}
+            {% calendar calendar_events|override:all_calendar_events %}
             <ul>
-                {% for event in upcoming_events|default_if_none:all_upcoming_events %}
+                {% for event in upcoming_events|override:all_upcoming_events %}
                 <li>
                     {{ event.time|naturalday:'DATE_FORMAT'|title }},
                     {{ event.time|time:'TIME_FORMAT' }} Uhr<br>
