@@ -6,7 +6,7 @@ from django.db import models
 import randomcolor
 
 def get_random_color():
-    return randomcolor.RandomColor().generate()[0]
+    return randomcolor.RandomColor().generate(luminosity='dark')[0]
 
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
