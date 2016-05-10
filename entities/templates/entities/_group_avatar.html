@@ -1,10 +1,10 @@
 {% load thumbnail %}
 {% if group.avatar %}
 {% thumbnail group.avatar '64x64' format='PNG' as avatar %}
-<img src="{{ avatar.url }}" width="{{ avatar.width }}" height="{{ avatar.height }}" title="{{ group.name }}">
+<img src="{{ avatar.url }}" class="avatar avatar-size{{ avatar.width }}x{{ avatar.height }}" title="{{ group.name }}">
 {% endthumbnail %}
 {% else %}
-<div title="{{ group.name }}" style="background-color:{{ group.avatar_color }}; height:64px; width:64px; text-align:center; font-size:xx-large;">
-    {{ group.get_initials }}
+<div title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }};">
+    {{ group.get_initials|truncatechars:4 }}
 </div>
 {% endif %}

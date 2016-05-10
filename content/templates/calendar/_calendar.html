@@ -1,24 +1,29 @@
 {% load content %}
-<h3>{{ month }}</h3>
-<table class="table">
-    <tr>
-        {% for day in days %}
-        <th>{{ day }}</th>
+<table class="calendar calendar-preview">
+    <caption>{{ month }}</caption>
+    <thead class="calendar-daynames">
+        <tr class="calendar-daynames">
+            {% for day in days %}
+            <th>{{ day }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody class="calendar-days">
+        {% for week in weeks %}
+            <tr>
+                {% for day in week %}
+                    <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
+                        {% if day.url %}
+                            <a href="{{ day.url }}{% if not day.events|length_is:1 and group %}?group={{ group.slug }}{% endif %}"
+                               title="{{ day.events|preview|truncatechars:50 }}">
+                                {{ day.day }}
+                            </a>
+                        {% else %}
+                            {{ day.day }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
         {% endfor %}
-    </tr>
-    {% for week in weeks %}
-    <tr>
-        {% for day in week %}
-        <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
-            {% if day.url %}
-            <a href="{{ day.url }}{% if not day.events|length_is:1 and group %}?group={{ group.slug }}{% endif %}" title="{{ day.events|preview|truncatechars:50 }}">
-                {{ day.day }}
-            </a>
-            {% else %}
-            {{ day.day }}
-            {% endif %}
-        </td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
+    </tbody>
 </table>

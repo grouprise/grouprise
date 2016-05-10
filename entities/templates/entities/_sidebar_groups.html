@@ -9,13 +9,15 @@
             </h2>
         </header>
         <div class="box-content">
-            <div class="clearfix">
+            <ul class="avatars">
                 {% for group in sidebar_groups|limit:8 %}
-                <a href="{{ group.get_absolute_url }}">
-                    {% group_avatar group %}
-                </a>
+                    <li>
+                        <a href="{{ group.get_absolute_url }}">
+                            {% group_avatar group %}
+                        </a>
+                    </li>
                 {% endfor %}
-            </div>
+            </ul>
             <ul>
                 {% for group in sidebar_groups|limit:5 %}
                 <li>

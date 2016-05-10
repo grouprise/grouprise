@@ -1,0 +1,49 @@
+.avatar-size(@size) {
+    width: @size;
+    height: @size;
+    max-width: @size;
+    max-height: @size;
+    font-size: (@size / 2);
+
+    &.avatar-initials {
+        &[data-initials="3"] {
+            font-size: (@size / 3);
+        }
+
+        &[data-initials="4"] {
+            font-size: (@size / 4);
+        }
+    }
+}
+
+.avatar {
+    &:extend(.avatar-size-64x64);
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    padding: 0;
+    text-decoration: none;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.avatar,
+.avatar-size-64x64 {
+    .avatar-size(64px);
+}
+
+.avatars {
+    margin: 0;
+    padding: 0;
+
+    > li {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    a {
+        text-decoration: none;
+    }
+}

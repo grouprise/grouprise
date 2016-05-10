@@ -1,7 +1,6 @@
-@box-left-spacing: 3rem;
-
 .box {
     padding-top: .6rem;
+    margin-bottom: 2rem;
 }
 
 .box-striped {
@@ -12,15 +11,7 @@
     font-weight: 300;
     position: relative;
     color: @color-text-light;
-
-    i {
-        position: absolute;
-        left: -@box-left-spacing;
-        width: @box-left-spacing;
-        text-align: center;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+    margin-top: 0;
 }
 
 .box-content {
@@ -34,5 +25,5 @@
 
 .box-inner {
     background-color: rgba(255, 255, 255, 0.8);
-    padding: .4rem .8rem 1rem @box-left-spacing;
+    padding: .4rem .8rem 1rem;
 }
