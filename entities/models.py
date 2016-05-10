@@ -39,6 +39,8 @@ class Group(models.Model):
     slug = models.SlugField('Adresse der Gruppenseite', unique=True)
     url = models.URLField('Adresse im Web', blank=True)
 
+    objects = models.Manager.from_queryset(querysets.Group)()
+
     def __str__(self):
         return self.name
 

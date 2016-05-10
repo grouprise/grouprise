@@ -4,7 +4,7 @@
 <img src="{{ avatar.url }}" width="{{ avatar.width }}" height="{{ avatar.height }}" title="{{ group.name }}">
 {% endthumbnail %}
 {% else %}
-<div title="{{ group.name }}" style="background-color:{{ group.avatar_color }}; float:left; height:64px; width:64px; text-align:center; font-size:xx-large; margin: 2px;">
+<div title="{{ group.name }}" style="background-color:{{ group.avatar_color }}; height:64px; width:64px; text-align:center; font-size:xx-large;">
     {{ group.get_initials }}
 </div>
 {% endif %}
