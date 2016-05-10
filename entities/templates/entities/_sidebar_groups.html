@@ -10,7 +10,7 @@
         </header>
         <div class="box-content">
             <div class="clearfix">
-                {% for group in sidebar_groups %}
+                {% for group in sidebar_groups|limit:8 %}
                 <a href="{{ group.get_absolute_url }}">
                     {% group_avatar group %}
                 </a>
