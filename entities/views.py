@@ -18,7 +18,7 @@ class BaseEntityList(utils_views.PageMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         entities = []
         for entity in self.model.objects.all():
-            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:settings.LATEST_ENTITY_CONTENT_PREVIEW_COUNT]))
+            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:3]))
         kwargs['entities'] = entities
         return super().get_context_data(**kwargs)
 
