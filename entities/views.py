@@ -65,6 +65,7 @@ class Group(utils_views.PageMixin, generic.DetailView):
         kwargs['head_gallery'] = self.get_head_gallery()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
+        kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.object.pk).scored().similar(self.object).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming()
         return super().get_context_data(**kwargs)
 

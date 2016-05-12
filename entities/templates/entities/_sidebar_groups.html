@@ -10,24 +10,12 @@
         </header>
         <div class="box-content">
             <ul class="avatars">
-                {% for group in sidebar_groups|limit:8 %}
+                {% for group in sidebar_groups|override:all_sidebar_groups|limit:8 %}
                     <li>
                         <a href="{{ group.get_absolute_url }}">
                             {% group_avatar group %}
                         </a>
                     </li>
-                {% endfor %}
-            </ul>
-            <ul>
-                {% for group in sidebar_groups|limit:5 %}
-                <li>
-                    <a href="{{ group.get_absolute_url }}">{{ group }}</a>
-                    <small>
-                        <i class="fa fa-users"></i> {{ group.members.count }}
-                        <i class="fa fa-eye"></i> {{ group.attendees.count }}
-                        <i class="fa fa-file-text-o"></i> {{ group.content.count }}
-                    </small>
-                </li>
                 {% endfor %}
             </ul>
         </div>
