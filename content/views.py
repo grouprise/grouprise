@@ -7,7 +7,7 @@ from django.views.generic import dates
 from entities import models as entities_models
 from utils import views as util_views
 
-class BaseContentList(util_views.PageMixin, generic.ListView):
+class BaseContentList(util_views.List):
     context_object_name = 'content_list'
     parent = 'index'
     permission = 'content.view_content_list'
@@ -49,8 +49,8 @@ class Content(util_views.PageMixin, generic.DetailView):
         return self.object.title
 
 
-class ContentList(util_views.PageMixin, generic.ListView):
-    permission = 'content.view_content_list'
+class ContentList(BaseContentList):
+    parent = None
 
     def get_queryset(self):
         return models.Content.objects.permitted(self.request.user)

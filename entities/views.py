@@ -11,17 +11,6 @@ from django.views import generic
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
-class BaseEntityList(utils_views.PageMixin, generic.ListView):
-    parent = 'index'
-    permission = 'content.view_content_list'
-
-    def get_context_data(self, **kwargs):
-        entities = []
-        for entity in self.model.objects.all():
-            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:3]))
-        kwargs['entities'] = entities
-        return super().get_context_data(**kwargs)
-
 class Gestalt(utils_views.PageMixin, generic.DetailView):
     menu = 'gestalt'
     model = models.Gestalt
@@ -36,11 +25,20 @@ class Gestalt(utils_views.PageMixin, generic.DetailView):
     def get_title(self):
         return str(self.object)
 
-class GestaltList(BaseEntityList):
+class GestaltList(utils_views.List):
     menu = 'gestalt'
     model = models.Gestalt
+    parent = 'index'
+    permission = 'content.view_content_list'
     sidebar = ('calendar', 'groups')
     title = 'Gestalten'
+
+    def get_context_data(self, **kwargs):
+        entities = []
+        for entity in self.model.objects.all():
+            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:3]))
+        kwargs['entities'] = entities
+        return super().get_context_data(**kwargs)
 
     def get_entity_content(self, entity):
         return entity.authored_content

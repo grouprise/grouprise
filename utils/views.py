@@ -198,3 +198,7 @@ class PageMixin(
         ):
     fallback_template_name = 'stadt/list.html'
     sidebar = ('calendar', 'groups')
+
+
+class List(PageMixin, generic.ListView):
+    paginate_by = 3
