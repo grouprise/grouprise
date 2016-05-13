@@ -42,7 +42,7 @@ class Group(models.QuerySet):
         query2 = group.members.all().query.sql_with_params()[0] % '"entities_group"."id"'
         counted = self.annotate(
                 num_same_members=models.expressions.RawSQL(
-                    'SELECT COUNT(*) FROM ({} INTERSECT {})'.format(
+                    'SELECT COUNT(*) FROM ({} INTERSECT {}) same_members'.format(
                         query1, query2),
                     [],
                     output_field=models.FloatField()),
