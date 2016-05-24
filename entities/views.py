@@ -145,6 +145,15 @@ class GroupCreate(utils_views.ActionMixin, generic.CreateView):
         if 'name' in self.request.GET:
             return {'name': self.request.GET['name']}
 
+class GroupList(utils_views.List):
+    menu = 'group'
+    ordering = '-score'
+    parent = 'index'
+    queryset = models.Group.objects.scored()
+    permission = 'content.view_content_list'
+    sidebar = ('calendar',)
+    title = 'Gruppen'
+
 class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Logo ändern'
     fields = ('logo',)
@@ -152,14 +161,6 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     menu = 'group'
     model = models.Group
     permission = 'entities.change_group'
-
-class GroupSearch(utils_views.SearchView):
-    form_class = forms.GroupSearch
-    menu = 'group'
-    parent = 'index'
-    permission = 'entities.search_group'
-    sidebar = ('calendar',)
-    title = 'Gruppen'
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppenangaben ändern'

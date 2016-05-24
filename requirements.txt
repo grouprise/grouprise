@@ -1,10 +1,8 @@
 django
 django-allauth
 django-crispy-forms
-django-haystack
 markdown
 pillow
 git+https://github.com/robwa/randomcolor-py.git
 rules
 sorl-thumbnail==12.4a1
-whoosh

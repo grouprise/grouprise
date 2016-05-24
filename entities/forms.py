@@ -3,7 +3,6 @@ from crispy_forms import bootstrap, layout
 from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
-from haystack import forms as haystack_forms
 from utils import forms as utils_forms
 
 
@@ -54,13 +53,3 @@ class GroupAttention(utils_forms.FormMixin, forms.ModelForm):
         attention.attendee = models.Gestalt.objects.get(user__email=self.cleaned_data['attendee_email'])
         attention.save()
         return attention
-
-
-class GroupSearch(utils_forms.FormMixin, haystack_forms.ModelSearchForm):
-    initial = {'models': 'entities.group'}
-    inline = True
-    layout = ('q', utils_forms.Submit('Gruppe finden'))
-    method = 'GET'
-
-    def no_query_found(self):
-        return self.searchqueryset.order_by('text')
