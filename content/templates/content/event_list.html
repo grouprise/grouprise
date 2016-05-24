@@ -6,7 +6,7 @@
 {% if can_create_content %}
 <a href="{% url 'event-create' %}" class="btn btn-primary pull-right">Neues Ereignis</a>
 {% endif %}
-<h1>{{ site.name }}</h1>
+{{ block.super }}
 {% endblock %}
 
 {% block list_header %}

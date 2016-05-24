@@ -6,5 +6,5 @@
 {% if can_create_content %}
 <a href="{% url 'gallery-create' %}" class="btn btn-primary pull-right">Neue Galerie</a>
 {% endif %}
-<h1>{{ site.name }}</h1>
+{{ block.super }}
 {% endblock %}

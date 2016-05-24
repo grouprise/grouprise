@@ -6,13 +6,5 @@
 {% if can_create_content %}
 <a href="{% url 'article-create' %}" class="btn btn-primary pull-right">Neuer Artikel</a>
 {% endif %}
-<h1>{{ site.name }}</h1>
-{% endblock %}
-
-{% block list_header %}
-<div class="jumbotron">
-    <h2>Auf Spurensuche</h2>
-    <p>Suche unter {{ article_count }} Artikeln und Nachrichten.</p>
-    <p><a href="#" class="btn btn-default">Artikel finden</a></p>
-</div>
+{{ block.super }}
 {% endblock %}

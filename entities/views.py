@@ -30,7 +30,6 @@ class GestaltList(utils_views.List):
     model = models.Gestalt
     parent = 'index'
     permission = 'content.view_content_list'
-    #sidebar = ('calendar', 'groups')
     title = 'Gestalten'
 
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
