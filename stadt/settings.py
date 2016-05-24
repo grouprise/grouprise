@@ -167,7 +167,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Email
 # https://docs.djangoproject.com/en/1.9/topics/email/
 
-ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Stadtgestalten] '
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+DEFAULT_FROM_EMAIL = 'noreply@localhost'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

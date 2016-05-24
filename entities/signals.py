@@ -25,10 +25,12 @@ def slugify(model, field, value):
 @dispatch.receiver(signals.post_save, sender=models.GroupContent)
 def content_post_save(sender, instance, created, **kwargs):
     if created:
+        group = None
         recipients = set()
         if sender == models.GestaltContent:
             recipients |= {instance.gestalt}
         elif sender == models.GroupContent:
+            group = instance.group
             recipients |= set(instance.group.members.exclude(pk=instance.content.author.pk))
             if instance.content.public:
                 recipients |= set(instance.group.attendees.all())

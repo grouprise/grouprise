@@ -22,7 +22,11 @@ class Base(models.Model):
         abstract = True
         ordering = ('-date_created',)
 
+    def is_reply(self):
+        return False
+
     def notify(self, gestalten):
+        groups = self.get_content().groups.all()
         for recipient in gestalten:
             if recipient.user.email:
                 to = '{} <{}>'.format(recipient, recipient.user.email)
@@ -32,16 +36,33 @@ class Base(models.Model):
                         protocol=settings.HTTP_PROTOCOL,
                         text=self.text,
                         )
-                message = mail.EmailMessage(body=body, to=[to])
-                message.subject = self.get_content().title
+                slugs = [g.slug for g in groups]
+                subject = '{reply}{groups}{title}'.format(
+                        reply='Re: ' if self.is_reply() else '',
+                        groups='[{}] '.format(','.join(slugs)) if groups else '',
+                        title=self.get_content().title
+                        )
+                from_email = '{gestalt} via {site} <{email}>'.format(
+                        gestalt=self.author,
+                        site=sites_models.Site.objects.get_current().name,
+                        email=settings.DEFAULT_FROM_EMAIL
+                        )
+                message = mail.EmailMessage(body=body, from_email=from_email,
+                        subject=subject, to=[to])
                 message.send()
 
 
 class Comment(Base):
     content = models.ForeignKey('Content', related_name='comments')
 
+    class Meta:
+        ordering = ('date_created',)
+
     def get_content(self):
         return self.content
+
+    def is_reply(self):
+        return True
 
 
 class Content(Base):
