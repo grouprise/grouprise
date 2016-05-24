@@ -3,7 +3,7 @@
 
 <h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
 
-{% for comment in content.comment_set.all %}
+{% for comment in content.comments.all %}
     <a href="{% url 'gestalt' comment.author.user.username %}"><img src="{{ comment.author.avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="pull-left"></a>
     <p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
     <hr style="clear:both">

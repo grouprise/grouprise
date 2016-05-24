@@ -22,14 +22,32 @@ class Base(models.Model):
         abstract = True
         ordering = ('-date_created',)
 
+    def notify(self, gestalten):
+        for recipient in gestalten:
+            if recipient.user.email:
+                to = '{} <{}>'.format(recipient, recipient.user.email)
+                body = '{text}\n\n-- \n{protocol}://{domain}{path}'.format(
+                        domain=sites_models.Site.objects.get_current().domain,
+                        path=self.get_content().get_absolute_url(),
+                        protocol=settings.HTTP_PROTOCOL,
+                        text=self.text,
+                        )
+                message = mail.EmailMessage(body=body, to=[to])
+                message.subject = self.get_content().title
+                message.send()
+
 
 class Comment(Base):
-    content = models.ForeignKey('Content')
+    content = models.ForeignKey('Content', related_name='comments')
+
+    def get_content(self):
+        return self.content
 
 
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
+    comment_authors = models.ManyToManyField('entities.Gestalt', through='Comment')
     public = models.BooleanField(
             'Veröffentlichen',
             default=False,
@@ -56,6 +74,9 @@ class Content(Base):
                     args=[self.author.user.username, self.slug]
                     )
 
+    def get_content(self):
+        return self
+
     def get_display_type_name(self):
         return self.get_subclass_instance().get_display_type_name()
 
@@ -69,20 +90,6 @@ class Content(Base):
 
     def get_type_name(self):
         return self.get_subclass_instance()._meta.model_name
-
-    def notify(self, gestalten):
-        for recipient in gestalten:
-            if recipient.user.email:
-                to = '{} <{}>'.format(recipient, recipient.user.email)
-                body = '{text}\n\n-- \n{protocol}://{domain}{path}'.format(
-                        domain=sites_models.Site.objects.get_current().domain,
-                        path=self.get_absolute_url(),
-                        protocol=settings.HTTP_PROTOCOL,
-                        text=self.text,
-                        )
-                message = mail.EmailMessage(body=body, to=[to])
-                message.subject = self.title
-                message.send()
 
 
 class Article(Content):
