@@ -24,7 +24,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
 
 class Article(BaseContent):
-    layout = ('author', 'group', 'title', 'text', 'pinned', utils_forms.Submit('Artikel erstellen'))
+    layout = ('author', 'group', 'title', layout.Field('text', data_component='editor'), 'pinned', utils_forms.Submit('Artikel erstellen'))
 
     class Meta:
         fields = ('author', 'text', 'title')

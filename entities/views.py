@@ -163,9 +163,7 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
                 'name',
                 layout.Field('address', rows=4),
                 'url',
-                layout.Field('date_founded', data_provide='datepicker',
-                    data_date_language='de', data_date_min_view_mode='months',
-                    data_date_start_view='decade'),
+                layout.Field('date_founded', data_component='date'),
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
                 ) + super().get_layout()
 
