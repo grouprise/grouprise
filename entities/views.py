@@ -30,18 +30,8 @@ class GestaltList(utils_views.List):
     model = models.Gestalt
     parent = 'index'
     permission = 'content.view_content_list'
-    sidebar = ('calendar', 'groups')
+    #sidebar = ('calendar', 'groups')
     title = 'Gestalten'
-
-    def get_context_data(self, **kwargs):
-        entities = []
-        for entity in self.model.objects.all():
-            entities.append((entity, self.get_entity_content(entity).permitted(self.request.user)[:3]))
-        kwargs['entities'] = entities
-        return super().get_context_data(**kwargs)
-
-    def get_entity_content(self, entity):
-        return entity.authored_content
 
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Profileinstellungen ändern'

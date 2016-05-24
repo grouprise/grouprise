@@ -1,0 +1,24 @@
+{% load content rules utils %}
+{% has_perm 'entities.create_gestalt_message' user entity as can_create_message %}
+<div class="clearfix">
+    <a href="{{ gestalt.get_absolute_url }}">
+        <img src="{{ gestalt.avatar.url }}" class="pull-left">
+    </a>
+    <h3>
+        <a href="{{ gestalt.get_absolute_url }}">{{ gestalt }}</a>
+        <small>{{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}</small>
+    </h3>
+    {% if can_create_message %}
+    <p><a href="{% url 'gestalt-message-create' gestalt.pk %}">Nachricht schreiben</a></p>
+    {% endif %}
+    <ul>
+        {% for content in gestalt.authored_content|permitted:user|limit:3 %}
+        <li>
+            <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
+            <a href="{{ content.get_absolute_url }}">{{ content }}</a>
+            <span class="text-muted">{{ content.get_display_type_name }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <hr>
+</div>

@@ -1,21 +1,5 @@
-{% extends 'entities/entity_list.html' %}
-{% load rules %}
+{% extends 'stadt/list.html' %}
 
-{% block heading %}
-<h1>{{ site.name }}</h1>
-{% endblock %}
-
-{% block entity_info %}
-{{ entity.authored_content.count }} Beitr{{ entity.authored_content.count|pluralize:'ag,äge' }}
-{% endblock %}
-
-{% block entity_contact %}
-{% has_perm 'entities.create_gestalt_message' user entity as can_create_message %}
-{% if can_create_message %}
-<p><a href="{% url 'gestalt-message-create' entity.pk %}">Nachricht schreiben</a></p>
-{% endif %}
-{% endblock %}
-
-{% block content_info %}
-{{ content.get_display_type_name }}
+{% block list %}
+{% for gestalt in gestalt_list %}{% include 'entities/_gestalt_preview.html' %}{% endfor %}
 {% endblock %}
