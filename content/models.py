@@ -30,7 +30,7 @@ class Base(models.Model):
         for recipient in gestalten:
             if recipient.user.email:
                 to = '{} <{}>'.format(recipient, recipient.user.email)
-                body = '{text}\n\n-- \n{protocol}://{domain}{path}'.format(
+                body = '{text}\n\n-- \nAntworten und weitere Möglichkeiten:\n{protocol}://{domain}{path}'.format(
                         domain=sites_models.Site.objects.get_current().domain,
                         path=self.get_content().get_absolute_url(),
                         protocol=settings.HTTP_PROTOCOL,
