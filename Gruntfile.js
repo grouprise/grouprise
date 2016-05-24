@@ -63,21 +63,9 @@ module.exports = function (grunt) {
                 dest: "stadt/static/css/app.css"
             }
         },
-        uglify: {
-            options: {
-                sourceMap: true,
-                sourceMapIncludeSources: true
-            },
-            dist: {
-                files: {
-                    "stadt/static/js/app.js": [
-                        "node_modules/jquery/dist/jquery.js",
-                        "node_modules/bootstrap/dist/js/bootstrap.js",
-                        "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
-                        "node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js"
-                    ]
-                }
-            }
+        exec: {
+            webpack_dev: "node_modules/.bin/webpack",
+            webpack_dist: "node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe"
         },
         copy: {
             fonts: {
@@ -99,18 +87,18 @@ module.exports = function (grunt) {
             }
         }
     });
-
+    
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-less");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-fontdump");
     grunt.loadNpmTasks("grunt-postcss");
+    grunt.loadNpmTasks("grunt-exec");
 
     // Default task.
     grunt.registerTask("css", ["less", "postcss"]);
-    grunt.registerTask("js", ["uglify"]);
+    grunt.registerTask("js", ["exec:webpack_dist"]);
     grunt.registerTask("fonts", ["fontdump", "copy:fonts"]);
     grunt.registerTask("images", ["copy:images"]);
     grunt.registerTask("default", ["fonts", "images", "css", "js"]);
