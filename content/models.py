@@ -4,6 +4,7 @@ from django.contrib.sites import models as sites_models
 from django.core import mail, urlresolvers
 from django.db import models
 from django.utils import timezone
+from email import utils as email_utils
 
 
 class Image(models.Model):
@@ -47,8 +48,9 @@ class Base(models.Model):
                         site=sites_models.Site.objects.get_current().name,
                         email=settings.DEFAULT_FROM_EMAIL
                         )
+                date = email_utils.formatdate(localtime=True)
                 message = mail.EmailMessage(body=body, from_email=from_email,
-                        subject=subject, to=[to])
+                        subject=subject, to=[to], headers={'Date': date})
                 message.send()
 
 
