@@ -77,7 +77,7 @@ class Content(Base):
             help_text='Veröffentlichte Beiträge sind auch für Besucherinnen '
             'sichtbar, die nicht Mitglied der Gruppe sind.'
             )
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(default=None, null=True, unique=True)
     title = models.CharField('Titel', max_length=255)
 
     objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
@@ -86,6 +86,8 @@ class Content(Base):
         return self.title
 
     def get_absolute_url(self):
+        if not self.public:
+            return urlresolvers.reverse('internal-content', args=[self.pk])
         try:
             return urlresolvers.reverse(
                     'content',
