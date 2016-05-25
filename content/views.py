@@ -5,9 +5,9 @@ from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
 from entities import models as entities_models
-from utils import views as util_views
+from utils import forms as utils_forms, views as utils_views
 
-class BaseContentList(util_views.List):
+class BaseContentList(utils_views.List):
     context_object_name = 'content_list'
     parent = 'index'
     permission = 'content.view_content_list'
@@ -35,7 +35,7 @@ class GalleryList(BaseContentList):
         return models.Gallery.objects.permitted(self.request.user)
 
 
-class Content(util_views.PageMixin, generic.DetailView):
+class Content(utils_views.PageMixin, generic.DetailView):
     model = models.Content
     permission = 'content.view_content'
     
@@ -55,17 +55,17 @@ class ContentList(BaseContentList):
     def get_queryset(self):
         return models.Content.objects.permitted(self.request.user)
 
-class ContentUpdate(util_views.ActionMixin, generic.UpdateView):
+class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Beitrag ändern'
     fields = ('text', 'title')
-    layout = ('title', 'text')
+    layout = ('title', utils_forms.EditorField('text'))
     model = models.Content
     permission = 'content.change_content'
 
     def get_menu(self):
         return self.object.get_type_name()
 
-class EventDay(util_views.PageMixin, generic.DayArchiveView):
+class EventDay(utils_views.PageMixin, generic.DayArchiveView):
     allow_future = True
     context_object_name = 'content_list'
     date_field = 'time'
