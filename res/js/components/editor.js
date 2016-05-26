@@ -7,6 +7,10 @@ export default (el) => new SimpleMDE({
         allowAtxHeaderWithoutSpace: true,
         strikethrough: false,
     },
+    promptTexts: {
+        link: "Adresse des Linkziels (URL):",
+        image: "Adresse des Bildes (URL):"
+    },
     promptURLs: true,
     shortcuts: {
         "toggleBold": "Shift-Ctrl-F",
@@ -88,9 +92,9 @@ export default (el) => new SimpleMDE({
         "|",
         {
             name: "guide",
-            action: "https://simplemde.com/markdown-guide",
+            action: "/stadt/markdown",
             className: "fa fa-question-circle",
-            title: "Hilfe",
+            title: "Möglichkeiten der Textauszeichnung",
         },
     ],
 });
