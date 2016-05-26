@@ -89,3 +89,10 @@ class EventDay(utils_views.PageMixin, generic.DayArchiveView):
 
     def get_title(self):
         return formats.date_format(self.get_date())
+
+
+class Markdown(utils_views.PageMixin, generic.TemplateView):
+    permission = 'content.view_help'
+    sidebar = tuple()
+    template_name = 'content/markdown.html'
+    title = 'Textauszeichnung'
