@@ -7,6 +7,7 @@ export default (el) => new SimpleMDE({
         allowAtxHeaderWithoutSpace: true,
         strikethrough: false,
     },
+    promptURLs: true,
     shortcuts: {
         "toggleBold": "Shift-Ctrl-F",
         "toggleItalic": "Ctrl-I",
