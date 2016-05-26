@@ -1,7 +1,7 @@
 from . import forms, models
 from django.core import urlresolvers
 from django.views import generic
-from utils import views as utils_views
+from utils import forms as utils_forms, views as utils_views
 
 
 class BaseContent(utils_views.ActionMixin, generic.CreateView):
@@ -76,7 +76,7 @@ class GroupMessage(BaseMessage):
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Kommentar hinzufügen'
     fields = ('text',)
-    layout = 'text'
+    layout = utils_forms.EditorField('text')
     model = models.Comment
     permission = 'content.create_comment'
 

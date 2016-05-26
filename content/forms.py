@@ -44,7 +44,7 @@ class Event(BaseContent):
 
 
 class Gallery(BaseContent):
-    layout = ('author', 'group', 'title', utils_forms.EditorField('text', rows=5), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
+    layout = ('author', 'group', 'title', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
