@@ -1,6 +1,7 @@
 from . import forms
 from crispy_forms import helper, layout
 from django import forms as django_forms, http
+from django.contrib.auth import views as auth_views
 from django.contrib.messages import views as messages_views
 from django.core import exceptions, urlresolvers
 from django.utils import six
@@ -111,6 +112,12 @@ class NavigationMixin:
 class PermissionMixin(rules_views.PermissionRequiredMixin):
     def get_permissions(self):
         return {self.permission: self.get_permission_object()}
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated():
+            raise exceptions.PermissionDenied(self.get_permission_denied_message())
+        else:
+            return auth_views.redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
 
     def has_permission(self, permission=None):
         permissions = self.get_permissions()
