@@ -1,31 +1,7 @@
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-default"><i class="sg sg-prev"></i></a>
-        {% endif %}
-        {% if page_obj.number > 2 %}
-        <a href="?page=1" class="btn btn-default">1</a>
-        {% if page_obj.number > 3 %}
-        &hellip;
-        {% endif %}
-        {% endif %}
-        {% for num in paginator.page_range %}
-        {% if num >= page_obj.number|add:-1 and num <= page_obj.number|add:1 %}
-        {% if page_obj.number == num %}
-        <span class="current"><a href="?page={{ num }}" class="btn btn-primary">{{ num }}</a></span>
-        {% else %}
-        <a href="?page={{ num }}" class="btn btn-default">{{ num }}</a>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.number < paginator.num_pages|add:-1 %}
-        {% if page_obj.number < paginator.num_pages|add:-2 %}
-        &hellip;
-        {% endif %}
-        <a href="?page={{ paginator.num_pages }}" class="btn btn-default">{{ paginator.num_pages }}</a>
-        {% endif %}
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-primary"><i class="sg sg-next"></i></a>
-        {% endif %}
-    </span>
+<div class="btn-toolbar btn-toolbar-centered">
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-default">
+            Weitere Beiträge
+        </a>
+    {% endif %}
 </div>

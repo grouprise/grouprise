@@ -8,28 +8,45 @@
     {% include 'stadt/_messages.html' %}
     {% include 'stadt/_header.html' %}
     {% block header %}{% endblock %}
+<div class="test">
+    <input data-component="date" type="text" />
+</div>
     <div class="row">
-        <div class="col-md-2">
-            {% if back_url %}
-            <a href="{{ back_url }}" class="btn btn-primary btn-back">
-                <i class="sg sg-back"></i>
-            </a>
-            {% endif %}
-        </div>
-        <div class="col-md-6">
-            {% block heading %}<h1 class="content-classification">{{ title|default:site.name }}</h1>{% endblock %}
-            {% block content %}{% endblock %}
+        <div class="col-md-8">
+            <div class="content-wrap">
+                {% if back_url %}
+                    <a href="{{ back_url }}" class="btn btn-default btn-back">
+                        <i class="sg sg-back"></i>
+                    </a>
+                {% endif %}
+
+                {% block heading %}
+                    <header class="content-header">
+                        {% block heading_title %}
+                            <h1 class="content-classification">{{ title|default:site.name }}</h1>
+                        {% endblock %}
+
+                        <div class="btn-toolbar">
+                            {% block heading_toolbar %}{% endblock %}
+                        </div>
+                    </header>
+                {% endblock %}
+
+                {% block content %}{% endblock %}
+            </div>
         </div>
         <div class="col-md-4">
-            {% block sidebar %}
-            {% for block in sidebar %}
-            {% if block == 'calendar' %}
-            {% include 'calendar/_sidebar.html' %}
-            {% elif block == 'groups' %}
-            {% include 'entities/_sidebar_groups.html' %}
-            {% endif %}
-            {% endfor %}
-            {% endblock %}
+            <aside class="sidebar">
+                {% block sidebar %}
+                    {% for block in sidebar %}
+                        {% if block == 'calendar' %}
+                            {% include 'calendar/_sidebar.html' %}
+                        {% elif block == 'groups' %}
+                            {% include 'entities/_sidebar_groups.html' %}
+                        {% endif %}
+                    {% endfor %}
+                {% endblock %}
+            </aside>
         </div>
     </div>
     {% include 'stadt/_footer.html' %}

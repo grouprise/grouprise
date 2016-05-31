@@ -1,10 +1,12 @@
 {% extends 'stadt/list.html' %}
 {% load rules %}
 
+{% block  %}
+
 {% block heading %}
 {% has_perm 'content.create_content' user as can_create_content %}
 {% if can_create_content %}
-<a href="{% url 'gallery-create' %}" class="btn btn-primary pull-right">Neue Galerie</a>
+<a href="{% url 'gallery-create' %}" class="btn btn-default pull-right">Neue Galerie</a>
 {% endif %}
 {{ block.super }}
 {% endblock %}

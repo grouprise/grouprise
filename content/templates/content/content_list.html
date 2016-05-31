@@ -4,26 +4,35 @@
 {% block heading %}{% endblock %}
 
 {% block list_header %}
-{% has_perm 'entities.create_group' user as can_create_group %}
-{% if can_create_group %}
-<a href="{% url 'group-create' %}" class="btn btn-primary pull-right">Neue Gruppe</a>
-{% endif %}
-<span class="content-classification">Gruppen</span>
-<h2>Deine Gruppe gestalten</h2>
-<p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
-<p><a href="{% url 'group-index' %}" class="btn btn-primary">Gruppe finden</a></p>
-{% has_perm 'content.create_content' user as can_create_content %}
-{% if can_create_content %}
-<div class="btn-group pull-right">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Neuer Beitrag <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        <li><a href="{% url 'article-create' %}">Artikel</a></li>
-        <li><a href="{% url 'event-create' %}">Ereignis</a></li>
-        <li><a href="{% url 'gallery-create' %}">Galerie</a></li>
-    </ul>
-</div>
-{% endif %}
-<span class="content-classification">Beiträge</span>
+    <header class="content-header">
+        <span class="content-classification">Gruppen</span>
+        {% has_perm 'entities.create_group' user as can_create_group %}
+        {% if can_create_group %}
+            <div class="btn-toolbar">
+                <a href="{% url 'group-create' %}" class="btn btn-default pull-right">Neue Gruppe</a>
+            </div>
+        {% endif %}
+    </header>
+
+    <h2>Deine Gruppe gestalten</h2>
+    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+    <p><a href="{% url 'group-index' %}" class="btn btn-default">Gruppe finden</a></p>
+
+    {% has_perm 'content.create_content' user as can_create_content %}
+    {% if can_create_content %}
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Neuer Beitrag <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'article-create' %}">Artikel</a></li>
+                <li><a href="{% url 'event-create' %}">Ereignis</a></li>
+                <li><a href="{% url 'gallery-create' %}">Galerie</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <header class="content-header">
+        <span class="content-classification">Beiträge</span>
+    </header>
 {% endblock %}

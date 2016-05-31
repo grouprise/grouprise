@@ -2,23 +2,30 @@
 {% has_perm 'content.change_content' user content as can_edit_content %}
 
 <div class="content-data">
-    <span class="content-classification">Beitrag</span>
+    <div class="content-header">
+        <span class="content-classification">Beitrag</span>
+    </div>
     <span class="content-type">
         <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
         {{ content.get_display_type_name }}
     </span>
 </div>
-<header class="content-header">
+
+<header class="content-teaser">
     <h1 class="content-title">
         {% if content.event %}
             {{ content.event.time|date:'l, j.n.Y:'}}
         {% endif %}
         {{ content.title }}
-        {% if can_edit_content %}
+    </h1>
+
+    {% if can_edit_content %}
+        <div class="btn-toolbar">
             <a href="{% url 'content-update' content.pk %}">
                 <i class="sg sg-edit" title="Beitrag bearbeiten"></i>
             </a>
-        {% endif %}
-    </h1>
+        </div>
+    {% endif %}
+
     {% include 'content/_content_info.html' %}
 </header>

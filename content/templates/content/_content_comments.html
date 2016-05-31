@@ -10,5 +10,5 @@
 {% endfor %}
 
 {% if can_create_comment %}
-    <a href="{% url 'comment-create' content.pk %}" class="btn btn-primary">{% if content.public %}Kommentieren{% else %}Antworten{% endif %}</a>
+    <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">{% if content.public %}Kommentieren{% else %}Antworten{% endif %}</a>
 {% endif %}

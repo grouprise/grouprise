@@ -1,23 +1,29 @@
 {% extends 'stadt/list.html' %}
 {% load rules %}
 
-{% block heading %}
-{% has_perm 'entities.create_group' user as can_create_group %}
-{% if can_create_group %}
-<a href="{% url 'group-create' %}" class="btn btn-primary pull-right">Neue Gruppe</a>
-{% endif %}
-{{ block.super }}
+{% block heading_toolbar %}
+    {% has_perm 'entities.create_group' user as can_create_group %}
+    {% if can_create_group %}
+        <a href="{% url 'group-create' %}" class="btn btn-default pull-right">Neue Gruppe</a>
+    {% endif %}
 {% endblock %}
 
 {% block list %}
-{% for group in group_list %}{% include 'entities/_group_preview.html' %}{% endfor %}
+    {% for group in group_list %}{% include 'entities/_group_preview.html' %}{% endfor %}
 {% endblock %}
 
 {% comment %}
-<h2>Deine Gruppe gestalten</h2>
-<p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
-{% crispy form %}
-{% if query and not exact_match %}
-<p>Die Gruppe <em>{{ query|title }}</em> gibt es noch nicht. <a href="{% url 'group-create' %}?name={{ query|title }}">Möchtest Du sie anlegen?</a></p>
-{% endif %}
+    <h2>Deine Gruppe gestalten</h2>
+    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
+
+    {% crispy form %}
+
+    {% if query and not exact_match %}
+        <p>
+            Die Gruppe <em>{{ query|title }}</em> gibt es noch nicht.
+            <a href="{% url 'group-create' %}?name={{ query|title }}">
+                Möchtest Du sie anlegen?
+            </a>
+        </p>
+    {% endif %}
 {% endcomment %}

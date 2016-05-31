@@ -2,15 +2,30 @@
 
 }
 
+.content-wrap {
+    padding-left: 5rem;
+}
+
 .content-classification {
-    &:extend(.decoration-striped);
     display: block;
-    font-weight: bold;
     font-size: 3.5rem;
-    color: white;
-    padding: 0.2rem 0.4rem;
-    line-height: 1;
     text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+    line-height: 1;
+    position: relative;
+    top: -.01em;
+    margin: 0;
+    font-family: @font-family-headline;
+}
+
+.content-header {
+    &:extend(.decoration-striped);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.2rem 0.4rem;
 }
 
 .content-title {
