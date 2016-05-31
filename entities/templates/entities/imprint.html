@@ -2,7 +2,38 @@
 
 {% block content %}
 <h2>Verantwortlichkeiten</h2>
+<p>Die &bdquo;Stadtgestalten&ldquo; (stadtgestalten.org) sind ein loser Zusammenschluss von Enthusiasten, Gestaltern und Programmierern aus dem Umfeld verschiedener aktiver Gruppen in Rostock.</p>
+<p>Zweck des Zusammenschlusses ist der Betrieb dieser Online-Plattform, um den aktiven Gruppen, Initiativen, Vereinen und Einzelpersonen der Stadt die Möglichkeit zu geben, sich schnell und einfach einer breiten Öffentlichkeit vorzustellen, sich gegenseitig zu informieren, auszutauschen und lokal zu vernetzen.</p>
+<p><strong>Für die Inhalte aller Beiträge sowie die Selbstdarstellung der Personen sind diese jeweils ausschließlich selbst verantwortlich.</strong> Die Entwickler und Betreiber übernehmen keine Haftung für die Inhalte.</p>
+
+<h3>Begleitung und allgemeine Infrastruktur</h3>
 <p>
-Die ...
+projekt:raum<br>
+Warnowufer 29<br>
+18057 Rostock<br>
+<a href="http://www.projekt-raum.info/">projekt-raum.info</a>
+</p>
+
+<h3>Technische Infrastruktur</h3>
+<p>
+Sense.Lab e.V.<br>
+Friedrichstrasse 23<br>
+18057 Rostock<br>
+<a href="https://senselab.org/">senselab.org</a>
+</p>
+
+<h3>Inhaltliche Begleitung</h3>
+<p>
+Transition Initiative Rostock<br>
+<a href="http://transitiontownrostock.org/">transitiontownrostock.org</a>
+</p>
+
+<h3>Entwicklung & Betrieb</h3>
+<p>
+Stadtgestalten<br>
+Warnowufer 29<br>
+18057 Rostock<br>
+<a href="{% url 'group' about_group.slug %}">stadtgestalten.org/stadtgestalten</a><br>
+<a href="{% url 'message-create' about_group.pk %}">Nachricht schreiben</a>
 </p>
 {% endblock %}
