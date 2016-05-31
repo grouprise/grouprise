@@ -24,7 +24,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
 
 class Article(BaseContent):
-    layout = ('author', 'group', 'title', layout.Field('text', data_component='editor'), 'pinned', utils_forms.Submit('Artikel erstellen'))
+    layout = ('author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', utils_forms.Submit('Artikel erstellen'))
 
     class Meta:
         fields = ('author', 'text', 'title')
@@ -36,7 +36,7 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = ('author', 'group', 'title', 'time', 'place', 'text', 'public', 'pinned', utils_forms.Submit('Ereignis erstellen'))
+    layout = ('author', 'group', 'title', 'time', 'place', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Ereignis erstellen'))
 
     class Meta:
         fields = ('author', 'place', 'public', 'text', 'time', 'title')
@@ -44,7 +44,7 @@ class Event(BaseContent):
 
 
 class Gallery(BaseContent):
-    layout = ('author', 'group', 'title', layout.Field('text', rows=5), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
+    layout = ('author', 'group', 'title', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
@@ -53,7 +53,7 @@ class Gallery(BaseContent):
 
 
 class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
-    layout = ('sender', 'recipient', 'title', 'text', utils_forms.Submit('Nachricht senden'))
+    layout = ('sender', 'recipient', 'title', utils_forms.EditorField('text'), utils_forms.Submit('Nachricht senden'))
     sender = forms.EmailField(disabled=True, widget=forms.HiddenInput)
 
     class Meta:

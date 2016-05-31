@@ -30,6 +30,6 @@
     "jquery": "^2.2.0",
     "moment": "^2.13.0",
     "pikaday": "^1.4.0",
-    "simplemde": "^1.10.1"
+    "simplemde": "git+https://github.com/robwa/simplemde-markdown-editor.git"
   }
 }

@@ -1,4 +1,4 @@
-{% load thumbnail %}
+{% load content thumbnail %}
 <article>
     <header>
         <p>{{ content.get_display_type_name }}</p>
@@ -21,7 +21,7 @@
     {% thumbnail content.images.first.file '200x200' crop='center' as image %}
     <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" class="pull-left">
     {% endthumbnail %}
-    {{ content.text|truncatewords:60 }}
+    {{ content.text|markdown|striptags|truncatewords:60 }}
     <a href="{{ content.get_absolute_url }}">WEITER&gt;</a>
     </p>
 

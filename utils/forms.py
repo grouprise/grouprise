@@ -39,6 +39,12 @@ class ExtraFormMixin(FormMixin):
         self.extra_form.save()
         return super().save()
 
+
+class EditorField(layout.Field):
+    def __init__(self, *args, **kwargs):
+        kwargs['data_component'] = 'editor'
+        super().__init__(*args, **kwargs)
+
 class Submit(layout.Submit):
     def __init__(self, value):
         super().__init__('', value)
