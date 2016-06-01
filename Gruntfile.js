@@ -71,7 +71,8 @@ module.exports = function (grunt) {
             fonts: {
                 files: [
                     { cwd: "build/fonts/google", src: "*.!(css)", dest: "stadt/static/fonts", expand: true },
-                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "stadt/static/fonts", expand: true }
+                    { cwd: "node_modules/font-awesome/fonts", src: "*", dest: "stadt/static/fonts", expand: true },
+                    { cwd: "res/fonts", src: "**", dest: "stadt/static/fonts", expand: true }
                 ]
             },
             images: {
