@@ -4,7 +4,7 @@
 {% block content %}
 <article class="content">
     {% include 'content/_content_header.html' %}
-    <div class="content-body">
+    <div class="content-body" data-component="user-content">
         {% if content.event %}
             <!-- todo inline with definitions list -->
             <p><strong>Ort:</strong> {{ content.event.place }}</p>
