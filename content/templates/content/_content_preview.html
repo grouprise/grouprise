@@ -17,13 +17,13 @@
     <p><strong>Ort:</strong> {{ content.event.place }}</p>
     <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
     {% endif %}
-    <p>
+    <div data-component="user-content">
     {% thumbnail content.images.first.file '200x200' crop='center' as image %}
     <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" class="pull-left">
     {% endthumbnail %}
     {{ content.text|markdown|striptags|truncatewords:60 }}
     <a href="{{ content.get_absolute_url }}">WEITER&gt;</a>
-    </p>
+    </div>
 
     <footer style="clear: both;">
         <hr>
