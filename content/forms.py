@@ -36,7 +36,7 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = ('author', 'group', 'title', 'time', 'place', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Ereignis erstellen'))
+    layout = ('author', 'group', 'title', layout.Field('time', data_component='date'), 'place', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Ereignis erstellen'))
 
     class Meta:
         fields = ('author', 'place', 'public', 'text', 'time', 'title')
