@@ -7,7 +7,31 @@ function $$(selector, el = document) {
 }
 
 function component(name, init) {
-    return $$(`[data-component="${name}"]`).map(init);
+    function parse_conf(el) {
+        const default_conf = {};
+
+        try {
+            const conf = JSON.parse(el.getAttribute("data-component-conf"));
+            return conf || default_conf;
+        } catch(e) {
+            return default_conf;
+        }
+    }
+
+    return $$(`[data-component~="${name}"]`)
+        .map((el, index) => {
+            const def = el.getAttribute("data-component").split(" ");
+
+            const options = {
+                index,
+                conf: parse_conf(el),
+                is_type(type) {
+                    return def.indexOf(`${name}-${type}`) !== -1;
+                }
+            };
+
+            return init(el, options);
+        });
 }
 
 export { $, $$, component };
