@@ -18,7 +18,10 @@
                         {{ comment.text|markdown }}
                     </div>
                     <footer class="media-footer">
-                        {{ comment.date_created|date:'d.m.Y' }} · <a href="{% url 'gestalt' comment.author.user.username %}">{{ comment.author }}</a>
+                        <time data-component="time time-from" datetime="{{ comment.date_created|date:"c" }}" title="{{ comment.date_created|date:'d. F Y H:i' }}">
+                            {{ comment.date_created|date:'d. F Y H:i' }}
+                        </time> ·
+                        <a href="{% url 'gestalt' comment.author.user.username %}">{{ comment.author }}</a>
                     </footer>
                 </div>
             </div>
