@@ -13,20 +13,21 @@
     {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
     {% if intro_content %}
-        {% if can_create_content %}
-            <div class="btn-group pull-right">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="content-header">
+            <h2 class="content-classification">Intro</h2>
+            {% if can_create_content %}
+            <div class="dropdown-container">
+                <input type="checkbox" class="dropdown-state" id="intro-content-new" />
+                <label class="btn btn-default" for="intro-content-new">
                     Neuer Beitrag <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
+                </label>
+                <ul class="dropdown">
                     <li><a href="{% url 'article-create' %}?group={{ group.slug }}&pinned=1">Artikel</a></li>
                     <li><a href="{% url 'event-create' %}?group={{ group.slug }}&pinned=1">Ereignis</a></li>
                     <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1">Galerie</a></li>
                 </ul>
             </div>
-        {% endif %}
-        <div class="content-header">
-            <h2 class="content-classification">Intro</h2>
+            {% endif %}
         </div>
 
         {% for content in intro_content %}
