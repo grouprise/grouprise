@@ -1,14 +1,32 @@
 {% load rules %}
-{% has_perm 'content.create_comment' user content as can_create_comment %}
+{% load rules thumbnail %}
+{% load content %}
 
 <h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
 
-{% for comment in content.comments.all %}
-    <a href="{% url 'gestalt' comment.author.user.username %}"><img src="{{ comment.author.avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="pull-left"></a>
-    <p>{{ comment.date_created|date:'d.m.Y' }} | {{ comment.text }}</p>
-    <hr style="clear:both">
-{% endfor %}
+<ol class="medias">
+    {% for comment in content.comments.all %}
+        <li>
+            <div class="media media-comment">
+                <div class="media-image">
+                    {% thumbnail comment.author.avatar '100x100' format='PNG' as avatar %}
+                        <img src="{{ avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
+                    {% endthumbnail %}
+                </div>
+                <div class="media-content">
+                    <div class="media-body">
+                        {{ comment.text|markdown }}
+                    </div>
+                    <footer class="media-footer">
+                        {{ comment.date_created|date:'d.m.Y' }} · <a href="{% url 'gestalt' comment.author.user.username %}">{{ comment.author }}</a>
+                    </footer>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ol>
 
+{% has_perm 'content.create_comment' user content as can_create_comment %}
 {% if can_create_comment %}
     <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">{% if content.public %}Kommentieren{% else %}Antworten{% endif %}</a>
 {% endif %}

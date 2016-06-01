@@ -10,16 +10,29 @@
             </h2>
         </header>
         <div class="box-content">
-            <div>
-                <a href="{{ gestalt_url }}"><img src="{{ gestalt.avatar.url }}" title="{{ gestalt }}" class="pull-left"></a>
-                <h3>
-                    <a href="{{ gestalt_url }}">{{ gestalt }}</a>
-                    {% if can_edit_gestalt %}
-                        <a href="{% url 'gestalt-update' gestalt.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
-                    {% endif %}
-                </h3>
-                <p>{{ gestalt.about }}</p>
+            <div class="profile">
+                <div class="profile-short">
+                    <a href="{{ gestalt_url }}" class="avatar">
+                        <img src="{{ gestalt.avatar.url }}" title="{{ gestalt }}">
+                    </a>
+                    <div class="profile-data">
+                        <h3 class="profile-name">
+                            {{ gestalt }}
+                            {% if can_edit_gestalt %}
+                                <a href="{% url 'gestalt-update' gestalt.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
+                            {% endif %}
+                        </h3>
+                        <div class="profile-meta">
+                            Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} · {{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="profile-about">{{ gestalt.about }}</div>
             </div>
+        </div>
+        <div class="btn-toolbar btn-toolbar-right">
+            <a href="{{ gestalt_url }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
         </div>
     </div>
 </div>

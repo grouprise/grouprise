@@ -1,5 +1,5 @@
 {% load entities rules utils %}
-{% has_perm 'entities.create_group' user as can_create_group %}
+
 <div class="box box-striped">
     <div class="box-inner">
         <header class="box-header">
@@ -19,11 +19,13 @@
                 {% endfor %}
             </ul>
         </div>
-        <p>
-        <a href="{% url 'group-index' %}" class="btn btn-default">Alle Gruppen</a>
-        {% if can_create_group %}
-        <a href="{% url 'group-create' %}" class="btn btn-default">Neue Gruppe</a>
-        {% endif %}
-        </p>
+        <div class="btn-toolbar btn-toolbar-right">
+            <a href="{% url 'group-index' %}" class="btn btn-link">Alle Gruppen</a>
+
+            {% has_perm 'entities.create_group' user as can_create_group %}
+            {% if can_create_group %}
+                <a href="{% url 'group-create' %}" class="btn btn-link">Neue Gruppe</a>
+            {% endif %}
+        </div>
     </div>
 </div>

@@ -1,5 +1,4 @@
 {% load calendar humanize rules utils %}
-{% has_perm 'content.create_content' user as can_create_content %}
 <div class="box box-striped">
     <div class="box-inner">
         <header class="box-header">
@@ -10,23 +9,27 @@
         </header>
         <div class="box-content">
             {% calendar calendar_events|override:all_calendar_events %}
-            <ul>
+            <ul class="events">
                 {% for event in upcoming_events|override:all_upcoming_events %}
                 <li>
-                    {{ event.time|naturalday:'DATE_FORMAT'|title }},
-                    {{ event.time|time:'TIME_FORMAT' }} Uhr<br>
-                    <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+                    <div class="event-preview">
+                        {{ event.time|naturalday:'DATE_FORMAT'|title }},
+                        {{ event.time|time:'TIME_FORMAT' }} Uhr<br>
+                        <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>
         </div>
-        <p>
-        <a href="{% url 'event-index' %}" class="btn btn-default">Alle Ereignisse</a>
-        {% if can_create_content %}
-        <a href="{% url 'event-create' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-default">
-            Neues Ereignis
-        </a>
-        {% endif %}
-        </p>
+        <div class="btn-toolbar btn-toolbar-right">
+            <a href="{% url 'event-index' %}" class="btn btn-link">Alle Ereignisse</a>
+
+            {% has_perm 'content.create_content' user as can_create_content %}
+            {% if can_create_content %}
+                <a href="{% url 'event-create' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-link">
+                    Neues Ereignis
+                </a>
+            {% endif %}
+        </div>
     </div>
 </div>

@@ -2,34 +2,33 @@
 
 }
 
-.content-wrap {
-    padding-left: 5rem;
-}
-
 .content-classification {
     display: block;
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     text-transform: uppercase;
     font-weight: bold;
     color: white;
     line-height: 1;
-    position: relative;
-    top: -.01em;
     margin: 0;
     font-family: @font-family-headline;
 }
 
-.content-header {
-    &:extend(.decoration-striped);
-
+.content-spacer {
+    height: 3.75rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
+}
+
+.content-header {
+    &:extend(.decoration-striped);
+    &:extend(.content-spacer all);
     justify-content: space-between;
     padding: 0.2rem 0.4rem;
 }
 
 .content-title {
-    color: @color-brand-primary;
+    color: @brand-primary;
     font-size: 1.5rem;
     font-weight: normal;
 }

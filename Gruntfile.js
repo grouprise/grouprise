@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                     "build/fonts/google/fonts.css":
                     "http://fonts.googleapis.com/css?family=" +
                     "Roboto Slab:300,400,700|" +
-                    "Roboto:300,400,400italic,700"
+                    "Roboto:300,400,400italic,500,700"
                 }
             }
         },

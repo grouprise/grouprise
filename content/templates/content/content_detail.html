@@ -23,7 +23,7 @@
 {% block heading %}{% endblock %}
 
 {% block sidebar %}
-{% with gestalt=content.author %}
-{% include 'entities/_sidebar_author.html' %}
-{% endwith %}
+    {% with gestalt=content.author %}
+        {% include 'entities/_sidebar_author.html' %}
+    {% endwith %}
 {% endblock %}

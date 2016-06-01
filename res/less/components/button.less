@@ -10,57 +10,58 @@
     z-index: 2;
     overflow: hidden;
     cursor: pointer;
-    transition-property: color, background-color, border-color, transform;
-    transition-duration: .2s;
-    transition-timing-function: ease-in-out;
+    transition: color .1s, background-color .2s, border-color .2s, transform .2s;
+    vertical-align: middle;
+    font-weight: 500;
+    margin: 0;
 
     + & {
         margin-left: 1em;
     }
-
-    &:after {
-        content: " ";
-        position: absolute;
-        pointer-events: none;
-        z-index: -1;
-        transform: translateY(100%);
-        left: -2px;
-        right: -2px;
-        top: 0;
-        bottom: 0;
-        transition: transform .2s ease-in-out;
-    }
 }
 
 .btn-default {
-    border-color: @color-brand-primary;
-    color: @color-brand-primary;
+    border-color: @color-text-default;
+    color: @color-text-default;
     background-color: white;
-
-    &:after {
-        background-color: @color-brand-primary;
-    }
 
     &:hover,
     &:focus {
-        color: white;
-
-        &:after {
-            transform: translateY(0);
-        }
+        //background-color: @gray-light;
+        border-color: @brand-primary;
+        color: @brand-primary;
     }
 }
 
+.btn-link {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+
+    &:hover,
+    &:active,
+    &:focus {
+        text-decoration: underline;
+    }
+}
+
+.btn-header {
+    //background-color: @color-bra;
+}
+
 .btn-primary {
-    border-color: @color-brand-primary;
-    background-color: @color-brand-primary;
+    border-color: @brand-primary;
+    background-color: @brand-primary;
     color: white;
 }
 
 .btn-back {
-    padding: 0.5em 1.25em;
-    position: absolute;
-    left: 0;
+    //background-color: @gray-light;
+    //align-self: stretch;
+    //border-radius: 0;
+    //display: flex;
+    //justify-content: center;
+    //align-items: center;
 }
 
 .btn-toolbar {
@@ -69,6 +70,14 @@
     &:empty {
         display: none;
     }
+
+    > * + *:not(.btn-link) {
+        margin-left: .7em;
+    }
+}
+
+.btn-toolbar-right {
+    justify-content: flex-end;
 }
 
 .btn-toolbar-centered {

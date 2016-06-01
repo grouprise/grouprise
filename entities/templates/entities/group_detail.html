@@ -9,47 +9,55 @@
 
 
 {% block list_header %}
-{% has_perm 'entities.create_group_content' user group as can_create_content %}
-{% has_perm 'entities.create_group_message' user group as can_create_message %}
+    {% has_perm 'entities.create_group_content' user group as can_create_content %}
+    {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
-{% if intro_content %}
-{% if can_create_content %}
-<div class="btn-group pull-right">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Neuer Beitrag <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        <li><a href="{% url 'article-create' %}?group={{ group.slug }}&pinned=1">Artikel</a></li>
-        <li><a href="{% url 'event-create' %}?group={{ group.slug }}&pinned=1">Ereignis</a></li>
-        <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1">Galerie</a></li>
-    </ul>
-</div>
-{% endif %}
-<h2 class="content-classification">Intro</h2>
-{% for content in intro_content %}
-{% include 'content/_content_preview.html' %}
-{% endfor %}
-{% endif %}
-
-{% if can_create_content %}
-<div class="btn-group pull-right">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Neuer Beitrag <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        <li><a href="{% url 'article-create' %}?group={{ group.slug }}">Artikel</a></li>
-        <li><a href="{% url 'event-create' %}?group={{ group.slug }}">Ereignis</a></li>
-        <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}">Galerie</a></li>
-        {% if can_create_message %}
-        <li role="separator" class="divider"></li>
-        <li><a href="{% url 'message-create' group.pk %}">Interne Nachricht</a></li>
+    {% if intro_content %}
+        {% if can_create_content %}
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Neuer Beitrag <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'article-create' %}?group={{ group.slug }}&pinned=1">Artikel</a></li>
+                    <li><a href="{% url 'event-create' %}?group={{ group.slug }}&pinned=1">Ereignis</a></li>
+                    <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1">Galerie</a></li>
+                </ul>
+            </div>
         {% endif %}
-    </ul>
-</div>
-{% elif can_create_message %}
-<a href="{% url 'message-create' group.pk %}" class="btn btn-default pull-right">Neue Nachricht</a>
-{% endif %}
-<h2 class="content-classification">Beiträge</h2>
+        <div class="content-header">
+            <h2 class="content-classification">Intro</h2>
+        </div>
+
+        {% for content in intro_content %}
+            {% include 'content/_content_preview.html' %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="content-header">
+        <h2 class="content-classification">Beiträge</h2>
+        <div class="btn-toolbar">
+            {% if can_create_content %}
+                <div class="dropdown-container">
+                    <input type="checkbox" class="dropdown-state" id="content-new" />
+                    <label class="btn btn-default" for="content-new">
+                        Neuer Beitrag <span class="caret"></span>
+                    </label>
+                    <ul class="dropdown">
+                        <li><a href="{% url 'article-create' %}?group={{ group.slug }}">Artikel</a></li>
+                        <li><a href="{% url 'event-create' %}?group={{ group.slug }}">Ereignis</a></li>
+                        <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}">Galerie</a></li>
+                        {% if can_create_message %}
+                            <li role="separator" class="dropdown-separator"></li>
+                            <li><a href="{% url 'message-create' group.pk %}">Interne Nachricht</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% elif can_create_message %}
+                <a href="{% url 'message-create' group.pk %}" class="btn btn-default">Neue Nachricht</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
 
 

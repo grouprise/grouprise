@@ -1,0 +1,50 @@
+.form-control {
+    border-width: 2px;
+    box-shadow: none !important;
+    height: auto;
+}
+
+.input-group-addon {
+    border-width: 2px;
+}
+
+label {
+    font-weight: 500;
+    user-select: none;
+}
+
+.editor-toolbar {
+    border-width: 2px 2px 0 2px;
+    border-color: @gray-lighter;
+    background-color: @gray-lighter;
+    opacity: 1 !important;
+    padding: @padding-base-vertical;
+    display: flex;
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-color: transparent !important;
+        border-radius: 2px;
+        width: 2rem;
+        height: 2rem;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: white;
+        }
+    }
+}
+
+.CodeMirror {
+    border: 2px solid @input-border;
+    border-bottom-left-radius: @border-radius-base;
+    border-bottom-right-radius: @border-radius-base;
+    transition: border-color .2s;
+}
+
+.CodeMirror-focused {
+    border-color: @input-border-focus;
+}

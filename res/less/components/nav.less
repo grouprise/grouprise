@@ -9,12 +9,13 @@
 
     > li {
         display: inline-block;
+        position: relative;
 
         + li {
             margin-left: 1.5em;
         }
 
-        > a {
+        > a, > label {
             &:extend(.nav-menu-item all);
         }
     }
@@ -27,7 +28,7 @@
     min-height: 50px;
     display: inline-block;
     position: absolute;
-    bottom: 0;
+    bottom: 3px;
 }
 
 .nav-menu-item {
@@ -36,15 +37,19 @@
     font-size: 1.3em;
     text-decoration: none;
     font-weight: bold;
+    margin: 0;
+    transition: background .2s, color .2s;
+    cursor: pointer;
 
     &.nav-menu-item-current {
-        color: @color-brand-primary;
+        color: @brand-primary;
     }
 }
 
 .nav-menu {
     margin: 0;
     padding: 0;
+    user-select: none;
 }
 
 .nav-menu-self {
@@ -53,7 +58,7 @@
     margin-bottom: 1em;
 
     > li {
-        > a {
+        > a, > label {
             font-weight: normal;
             color: @color-text-light;
         }
@@ -61,7 +66,7 @@
 }
 
 .nav-menu-primary {
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid @color-text-default;
     float: right;
     padding-left: 2em;
     &:extend(.clearfix);

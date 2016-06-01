@@ -33,7 +33,7 @@ class GestaltList(utils_views.List):
     title = 'Gestalten'
 
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
-    action = 'Profileinstellungen ändern'
+    action = 'Dein Profil'
     form_class = forms.Gestalt
     menu = 'gestalt'
     message = 'Die Einstellungen wurden geändert.'
@@ -152,7 +152,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     permission = 'entities.change_group'
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
-    action = 'Gruppenangaben ändern'
+    action = 'Gruppe ändern'
     fields = ['address', 'date_founded', 'name', 'slug', 'url']
     menu = 'group'
     model = models.Group

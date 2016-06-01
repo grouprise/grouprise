@@ -18,21 +18,23 @@
     <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
     <p><a href="{% url 'group-index' %}" class="btn btn-default">Gruppe finden</a></p>
 
-    {% has_perm 'content.create_content' user as can_create_content %}
-    {% if can_create_content %}
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Neuer Beitrag <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="{% url 'article-create' %}">Artikel</a></li>
-                <li><a href="{% url 'event-create' %}">Ereignis</a></li>
-                <li><a href="{% url 'gallery-create' %}">Galerie</a></li>
-            </ul>
-        </div>
-    {% endif %}
-
     <header class="content-header">
         <span class="content-classification">Beiträge</span>
+        <div class="btn-toolbar">
+            {% has_perm 'content.create_content' user as can_create_content %}
+            {% if can_create_content %}
+                <div class="dropdown-container">
+                    <input class="dropdown-state" id="content-new" type="checkbox" />
+                    <label class="btn btn-default" for="content-new">
+                        Neuer Beitrag <span class="caret"></span>
+                    </label>
+                    <ul class="dropdown">
+                        <li><a href="{% url 'article-create' %}">Artikel</a></li>
+                        <li><a href="{% url 'event-create' %}">Ereignis</a></li>
+                        <li><a href="{% url 'gallery-create' %}">Galerie</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
     </header>
 {% endblock %}

@@ -74,7 +74,7 @@ class GroupMessage(BaseMessage):
 
 
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Kommentar hinzufügen'
+    action = 'Kommentieren'
     fields = ('text',)
     layout = utils_forms.EditorField('text')
     model = models.Comment

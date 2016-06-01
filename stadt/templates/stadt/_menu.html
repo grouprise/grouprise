@@ -4,9 +4,12 @@
         <ul class="nav-menu nav-menu-self">
             <li><a href="{% url 'group' about_group.slug %}">Über uns</a></li>
             {% if user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.gestalt }} <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
+                <li>
+                    <input class="dropdown-state" id="menu-user" type="checkbox"/>
+                    <label for="menu-user" class="nav-state-toggle">
+                        {{ user.gestalt }} <span class="caret"></span>
+                    </label>
+                    <ul class="nav-menu dropdown">
                         <li><a href="{% url 'gestalt' user.username %}">Meine Seite</a></li>
                         <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Einstellungen</a></li>
                         <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>

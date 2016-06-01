@@ -1,6 +1,6 @@
 .box {
     padding-top: .6rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .box-striped {
@@ -12,18 +12,32 @@
     position: relative;
     color: @color-text-light;
     margin-top: 0;
+    margin-bottom: 0.3em;
 }
 
 .box-content {
     background-color: white;
-    padding: 0.6em 0.8em;
+    padding: 0.6em;
+    border-radius: 2px;
+
+    > :first-child {
+        margin-top: 0;
+    }
+
+    > :last-child {
+        margin-bottom: 0;
+    }
 
     h3 {
         margin-top: 0;
+    }
+
+    + * {
+        margin-top: .4rem;
     }
 }
 
 .box-inner {
     background-color: rgba(255, 255, 255, 0.8);
-    padding: .4rem .8rem 1rem;
+    padding: .4rem .8rem;
 }
