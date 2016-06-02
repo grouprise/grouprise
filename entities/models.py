@@ -41,6 +41,11 @@ class Group(models.Model):
 
     objects = models.Manager.from_queryset(querysets.Group)()
 
+    class Meta:
+        # FIXME: we should use case-insensitive ordering here
+        # https://code.djangoproject.com/ticket/26257
+        ordering = ('name',)
+
     def __str__(self):
         return self.name
 
