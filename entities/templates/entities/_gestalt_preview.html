@@ -1,8 +1,12 @@
-{% load content rules utils %}
+{% load content rules staticfiles thumbnail utils %}
 {% has_perm 'entities.create_gestalt_message' user entity as can_create_message %}
 <div class="clearfix">
-    <a href="{{ gestalt.get_absolute_url }}">
-        <img src="{{ gestalt.avatar.url }}" class="pull-left">
+    <a href="{{ gestalt.get_absolute_url }}" class="avatar">
+        {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
+            <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+        {% empty %}
+            <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+        {% endthumbnail %}
     </a>
     <h3>
         <a href="{{ gestalt.get_absolute_url }}">{{ gestalt }}</a>

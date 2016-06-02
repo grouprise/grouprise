@@ -9,11 +9,13 @@
         <li>
             <div class="media media-comment">
                 <div class="media-image">
+                    <a href="{{ comment.author.get_absolute_url }}" class="avatar">
                     {% thumbnail comment.author.avatar '100x100' format='PNG' as avatar %}
                         <img src="{{ avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
                     {% empty %}
                         <img src="{% static 'avatar.png' %}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
                     {% endthumbnail %}
+                    </a>
                 </div>
                 <div class="media-content">
                     <div class="media-body" data-component="user-content">
@@ -23,7 +25,7 @@
                         <time data-component="time time-from" datetime="{{ comment.date_created|date:"c" }}" title="{{ comment.date_created|date:'d. F Y H:i' }}">
                             {{ comment.date_created|date:'d. F Y H:i' }}
                         </time> ·
-                        <a href="{% url 'gestalt' comment.author.user.username %}">{{ comment.author }}</a>
+                        <a href="{{ comment.author.get_absolute_url }}">{{ comment.author }}</a>
                     </footer>
                 </div>
             </div>
