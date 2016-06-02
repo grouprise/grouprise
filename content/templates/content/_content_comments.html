@@ -1,5 +1,5 @@
 {% load rules %}
-{% load rules thumbnail %}
+{% load rules staticfiles thumbnail %}
 {% load content %}
 
 <h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
@@ -11,6 +11,8 @@
                 <div class="media-image">
                     {% thumbnail comment.author.avatar '100x100' format='PNG' as avatar %}
                         <img src="{{ avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
+                    {% empty %}
+                        <img src="{% static 'avatar.png' %}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
                     {% endthumbnail %}
                 </div>
                 <div class="media-content">

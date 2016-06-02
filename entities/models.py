@@ -11,7 +11,7 @@ def get_random_color():
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
     addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
-    avatar = models.ImageField(default=staticfiles_storage.url('avatar.png'))
+    avatar = models.ImageField(blank=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):

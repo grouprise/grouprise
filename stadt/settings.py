@@ -215,4 +215,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Sorl Thumbnail image processing
 # http://sorl-thumbnail.readthedocs.org/
 
-THUMBNAIL_DEBUG = False
+THUMBNAIL_DEBUG = True

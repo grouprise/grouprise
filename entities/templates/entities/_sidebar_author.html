@@ -1,5 +1,4 @@
-{% load rules %}
-{% has_perm 'entities.change_gestalt' user gestalt as can_edit_gestalt %}
+{% load rules staticfiles thumbnail %}
 {% with gestalt_url=gestalt.get_absolute_url %}
 <div class="box box-striped">
     <div class="box-inner">
@@ -13,14 +12,15 @@
             <div class="profile">
                 <div class="profile-short">
                     <a href="{{ gestalt_url }}" class="avatar">
-                        <img src="{{ gestalt.avatar.url }}" title="{{ gestalt }}">
+                        {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
+                            <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+                        {% empty %}
+                            <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+                        {% endthumbnail %}
                     </a>
                     <div class="profile-data">
                         <h3 class="profile-name">
                             {{ gestalt }}
-                            {% if can_edit_gestalt %}
-                                <a href="{% url 'gestalt-update' gestalt.pk %}"><i class="fa fa-pencil" title="Angaben bearbeiten"></i></a>
-                            {% endif %}
                         </h3>
                         <div class="profile-meta">
                             Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} · {{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}
