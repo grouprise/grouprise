@@ -43,13 +43,14 @@
             </small>
         </h1>
         <ul>
-            <li>{{ group.address|linebreaks }}</li>
-            <li><a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
+            <li><i class="sg sg-address"></i> {{ group.address|linebreaks }}</li>
+            <li><i class="sg sg-url"></i> <a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
             {% if can_create_message %}
-            <li><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></li>
+            <li><i class="sg sg-message"></i> <a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></li>
             {% endif %}
-            <li>Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
+            <li><i class="sg sg-foundation"></i> Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>
+                <i class="sg sg-members"></i>
                 Gruppenmitglieder: {{ group.membership_set.count }}
                 {% if user.gestalt in group.members.all %}
                 (Du bist Mitglied)
@@ -61,7 +62,7 @@
                 <a href="{% url 'membership-delete' membership.pk %}"><i class="sg sg-resign" title="Mitgliedschaft beenden"></i></a>
                 {% endif %}
             </li>
-            <li>{{ site.domain }}/ {{ group.slug }}</li>
+            <li><i class="sg sg-link"></i> {{ site.domain }}/ {{ group.slug }}</li>
         </ul>
     </div>
 
