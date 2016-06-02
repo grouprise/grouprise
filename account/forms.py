@@ -12,7 +12,7 @@ class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
             'remember', 
             util_forms.Submit('Anmelden'),
             layout.HTML('<p style="margin-top:13px;">'
-                '<a href="#">Kennwort vergessen</a> | '
+                "<a href=\"{% url 'account_reset_password' %}\">Kennwort vergessen</a> | "
                 '<a href="{{ signup_url }}">Registrieren</a></p>')
             )
     password = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
@@ -21,6 +21,31 @@ class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['login'] = forms.CharField(label='E-Mail-Adresse oder Pseudonym')
+
+class PasswordReset(util_forms.FormMixin, allauth_forms.ResetPasswordForm):
+    layout = (
+            layout.HTML('<p>Wenn Du Dein Kennwort vergessen hast, gib bitte Deine E-Mail-Adresse ein. Du erhälst dann eine Nachricht mit einem Verweis zum Zurücksetzen des Kennworts an diese Adresse.</p>'),
+            layout.Field('email', placeholder=''),
+            util_forms.Submit('Kennwort zurücksetzen')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label = 'E-Mail-Adresse'
+
+
+class PasswordResetFromKey(util_forms.FormMixin, allauth_forms.ResetPasswordKeyForm):
+    layout = (
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort ändern')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].label = 'Kennwort'
+        self.fields['password2'].label = 'Kennwort (Wiederholung)'
+
 
 class SignupForm(util_forms.FormMixin, allauth_forms.SignupForm):
     layout = (
