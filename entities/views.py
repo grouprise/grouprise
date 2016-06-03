@@ -229,7 +229,7 @@ class MembershipCreate(utils_views.ActionMixin, generic.CreateView):
 
     def form_valid(self, form):
         group = self.get_group()
-        messages.success(self.request, 'Du bist nun Mitglied der Gruppe <em>{}</em>.'.format(group))
+        messages.success(self.request, 'Du bist nun Mitglied der Gruppe {}.'.format(group))
         form.instance.gestalt = self.request.user.gestalt
         form.instance.group = group
         return super().form_valid(form)
