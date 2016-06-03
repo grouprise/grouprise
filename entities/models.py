@@ -1,5 +1,6 @@
 from . import querysets
 from django.conf import settings
+from django.contrib.contenttypes import fields, models as contenttype_models
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core import urlresolvers
 from django.db import models
@@ -7,6 +8,14 @@ import randomcolor
 
 def get_random_color():
     return randomcolor.RandomColor().generate(luminosity='dark')[0]
+
+
+class Attention(models.Model):
+    attendee = models.ForeignKey('Gestalt')
+    content_type = models.ForeignKey(contenttype_models.ContentType)
+    object_id = models.PositiveIntegerField()
+    attended_object = fields.GenericForeignKey()
+
 
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)

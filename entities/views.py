@@ -1,6 +1,7 @@
 from . import forms, models
 from content import models as content_models
 from crispy_forms import bootstrap, layout
+from django import shortcuts
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import mixins as auth_mixins
@@ -10,6 +11,47 @@ from django.db import models as django_models
 from django.views import generic
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
+
+
+class AttentionCreate(utils_views.ActionMixin, generic.CreateView):
+    action = 'Benachrichtigungen erhalten'
+    form_class = forms.Attention
+    permission = 'entities.create_attention'
+
+    def get_attended_object(self):
+        if 'content_pk' in self.request.resolver_match.kwargs:
+            return shortcuts.get_object_or_404(content_models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
+
+    def get_initial(self):
+        return {'attendee_email': self.request.user.email, 'attended_object': self.get_attended_object().pk}
+
+    def get_menu(self):
+        return self.get_parent().get_type_name()
+
+    def get_parent(self):
+        return self.get_attended_object()
+
+    def get_permission_object(self):
+        return self.get_attended_object()
+
+
+class AttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
+    action = 'Keine Benachrichtigungen mehr erhalten'
+    layout = layout.HTML('<p>Möchtest Du wirklich keine Benachrichtigungen '
+            'für den Beitrag <em>{{ attention.attended_object }}</em> mehr erhalten?</p>')
+    permission = 'entities.delete_attention'
+
+    def get_menu(self):
+        return self.get_parent().get_type_name()
+
+    def get_object(self):
+        if 'content_pk' in self.request.resolver_match.kwargs:
+            content = shortcuts.get_object_or_404(content_models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
+            return content.attentions.get(attendee=self.request.user.gestalt)
+
+    def get_parent(self):
+        return self.object.attended_object
+
 
 class Gestalt(utils_views.PageMixin, generic.DetailView):
     menu = 'gestalt'

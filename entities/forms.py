@@ -1,9 +1,30 @@
 from . import models
+from content import models as content_models
 from crispy_forms import bootstrap, layout
 from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
 from utils import forms as utils_forms
+
+
+class Attention(utils_forms.FormMixin, forms.ModelForm):
+    attendee_email = forms.EmailField(disabled=True, widget=forms.HiddenInput)
+    attended_object = forms.ModelChoiceField(disabled=True, queryset=content_models.Content.objects.all(), widget=forms.HiddenInput)
+    layout = ('attendee_email', 
+            layout.HTML('<p>Möchtest Du per E-Mail benachrichtigt werden, '
+                'wenn dem Beitrag neue Kommentare hinzugefügt werden?</p>'),
+            utils_forms.Submit('Benachrichtigungen erhalten'))
+
+    class Meta:
+        fields = ('attended_object',)
+        model = models.Attention
+
+    def save(self):
+        attention = super().save(commit=False)
+        attention.attendee = models.Gestalt.objects.get(user__email=self.cleaned_data['attendee_email'])
+        attention.attended_object = self.cleaned_data['attended_object']
+        attention.save()
+        return attention
 
 
 class User(utils_forms.FormMixin, forms.ModelForm):

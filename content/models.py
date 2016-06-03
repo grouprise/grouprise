@@ -1,5 +1,6 @@
 from . import querysets
 from django.conf import settings
+from django.contrib.contenttypes import fields
 from django.contrib.sites import models as sites_models
 from django.core import mail, urlresolvers
 from django.db import models
@@ -70,6 +71,7 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
+    attentions = fields.GenericRelation('entities.Attention')
     comment_authors = models.ManyToManyField('entities.Gestalt', through='Comment')
     public = models.BooleanField(
             'Veröffentlichen',

@@ -7,5 +7,5 @@
 {% endwith %}
 <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
 <i class="sg sg-comments"></i> {{ content.comments.count }} &nbsp;
-<i class="sg sg-attention"></i> ?
+<i class="sg sg-attention"></i> {{ content.attentions.count }}
 </p>

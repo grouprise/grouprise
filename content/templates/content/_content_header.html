@@ -1,5 +1,7 @@
 {% load rules %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
+{% has_perm 'entities.create_attention' user content as can_create_attention %}
+{% has_perm 'entities.delete_attention' user content as can_delete_attention %}
 
 <div class="content-data">
     <div class="content-header">
@@ -19,6 +21,11 @@
         {{ content.title }}
     </h1>
 
+    {% if can_create_attention %}
+    <a href="{% url 'attention-create' content.pk %}"><i class="sg sg-attention" title="Bei neuen Kommentaren benachrichtigt werden"></i></a>
+    {% elif can_delete_attention %}
+    <a href="{% url 'attention-delete' content.pk %}"><i class="sg sg-attention" title="Du erhältst Benachrichtungen für diesen Beitrag"></i></a>
+    {% endif %}
     {% if can_edit_content %}
         <div class="btn-toolbar">
             <a href="{% url 'content-update' content.pk %}">

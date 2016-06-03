@@ -18,6 +18,7 @@ def comment_post_save(sender, instance, **kwargs):
     recipients |= set(instance.content.comment_authors.all())
     for group in instance.content.groups.all():
         recipients |= set(group.members.all())
-    #recipients |= set(instance.attendees.all())
+    for attention in instance.content.attentions.all():
+        recipients.add(attention.attendee)
     recipients.discard(instance.author)
     instance.notify(recipients)

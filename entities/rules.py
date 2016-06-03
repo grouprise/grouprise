@@ -6,6 +6,14 @@ def is_gestalt(user, gestalt):
     return gestalt and user == gestalt.user
 
 @rules.predicate
+def is_attendee(user, attended_object):
+    if attended_object is None:
+        return False
+    if type(attended_object) == models.Attention:
+        return attended_object.attendee == user.gestalt
+    return attended_object.attentions.filter(attendee=user.gestalt).exists()
+
+@rules.predicate
 def is_group_attendee(user, group):
     if group is None:
         return False
@@ -22,6 +30,9 @@ def is_group_member(user, group):
 @rules.predicate
 def is_group_membership(user, membership):
     return membership and user and membership.gestalt == user.gestalt if membership else False
+
+rules.add_perm('entities.create_attention', rules.is_authenticated & ~is_attendee)
+rules.add_perm('entities.delete_attention', rules.is_authenticated & is_attendee)
 
 rules.add_perm('entities.view_gestalt', rules.always_allow)
 rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)
