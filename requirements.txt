@@ -3,6 +3,7 @@ django-allauth
 django-crispy-forms
 markdown
 pillow
+pymdown-extensions
 git+https://github.com/robwa/randomcolor-py.git
 rules
 sorl-thumbnail==12.4a1
