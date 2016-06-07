@@ -28,18 +28,21 @@ def content_post_save(sender, instance, created, **kwargs):
 @dispatch.receiver(signals.pre_save, sender=models.Group)
 def group_pre_save(sender, instance, **kwargs):
     group = instance
-    if not group.slug:
-        group.slug = text.slugify(models.Group, 'slug', group.name)
     if not group.address:
         group.address = group.name
-    if not group.url:
-        group.url = '{protocol}://{domain}{path}'.format(
-                protocol=settings.HTTP_PROTOCOL,
-                domain=sites_models.Site.objects.get_current().domain,
-                path=urlresolvers.reverse('group', args=[group.slug]),
-                )
     if not group.date_founded:
         group.date_founded = date.today()
+
+
+@dispatch.receiver(signals.post_save, sender=models.Group)
+def group_post_save(sender, instance, created, **kwargs):
+    if created and not instance.url:
+        instance.url = '{protocol}://{domain}{path}'.format(
+                protocol=settings.HTTP_PROTOCOL,
+                domain=sites_models.Site.objects.get_current().domain,
+                path=urlresolvers.reverse('group', args=[instance.slug]),
+                )
+        instance.save()
 
 
 @dispatch.receiver(signals.post_save, sender=auth.get_user_model())
