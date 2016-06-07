@@ -87,3 +87,28 @@ class GroupMessage(BaseMessage):
     def save(self):
         message = super().save()
         entities_models.GroupContent.objects.create(content=message, group=self.cleaned_data['recipient'])
+
+
+class ContentUpdate(utils_forms.FormMixin, forms.ModelForm):
+    class Meta:
+        fields = ('text', 'title')
+        model = models.Content
+
+    def __init__(self, *args, **kwargs):
+        self.groupcontent = kwargs.pop('groupcontent', None)
+        super().__init__(*args, **kwargs)
+        if self.groupcontent:
+            self.fields['pinned'] = forms.BooleanField(label='Im Intro der Gruppe anheften', required=False)
+            self.initial['pinned'] = self.groupcontent.pinned
+    
+    def get_layout(self):
+        fields = layout.Layout('title', utils_forms.EditorField('text'), utils_forms.Submit('Beitrag ändern'))
+        if self.groupcontent:
+            fields.insert(-1, 'pinned')
+        return fields
+
+    def save(self):
+        if self.groupcontent:
+            self.groupcontent.pinned = self.cleaned_data['pinned']
+            self.groupcontent.save()
+        return super().save()

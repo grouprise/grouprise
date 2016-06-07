@@ -1,4 +1,4 @@
-from . import models
+from . import forms, models
 from django import http
 from django.forms import models as model_forms
 from django.utils import formats
@@ -57,10 +57,16 @@ class ContentList(BaseContentList):
 
 class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Beitrag ändern'
-    fields = ('text', 'title')
-    layout = ('title', utils_forms.EditorField('text'))
+    form_class = forms.ContentUpdate
     model = models.Content
     permission = 'content.change_content'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        try:
+            kwargs['groupcontent'] = entities_models.GroupContent.objects.get(content=self.object, group=self.get_group())
+        finally:
+            return kwargs
 
     def get_menu(self):
         return self.object.get_type_name()
