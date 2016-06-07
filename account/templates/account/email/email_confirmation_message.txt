@@ -1,0 +1,6 @@
+{% load account %}{% user_display user as user_display %}Hallo,
+
+Du erhältst diese Nachricht, weil die Gestalt {{ user_display }} auf {{ current_site.name }} Deine E-Mail-Adresse für ihr Benutzerkonto angegeben hat.
+
+Um zu bestätigen, dass dies richtig ist, besuche bitte die folgende Seite:
+{{ activate_url }}
