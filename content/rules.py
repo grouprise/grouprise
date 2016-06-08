@@ -19,3 +19,4 @@ rules.add_perm('content.change_content', rules.is_authenticated & is_content_aut
 
 rules.add_perm('content.create_comment', rules.is_authenticated & content_is_permitted)
 rules.add_perm('content.create_image', rules.is_authenticated & is_content_author)
+rules.add_perm('content.view_image_list', content_is_permitted)

@@ -1,0 +1,17 @@
+{% extends 'stadt/list.html' %}
+
+{% block heading_title %}
+    <h1 class="content-classification">Bilder</h1>
+{% endblock %}
+
+{% block heading_toolbar %}
+<a href="{{ content.get_absolute_url }}" class="btn btn-default pull-right">Beitrag</a>
+{% endblock %}
+
+{% block list %}
+<ul>
+    {% for image in image_list %}
+    <li><img src="{{ image.file.url }}"></li>
+    {% endfor %}
+</ul>
+{% endblock %}

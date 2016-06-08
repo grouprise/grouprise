@@ -6,6 +6,25 @@
 <div class="content-data">
     <div class="content-header">
         <span class="content-classification">Beitrag</span>
+        <div class="btn-toolbar">
+            {% if can_edit_content %}
+            <a href="{% url 'content-update' content.pk %}" class="btn btn-default pull-right">
+                Ändern
+            </a>
+            {% endif %}
+            {% if can_create_attention %}
+            <a href="{% url 'attention-create' content.pk %}" class="btn btn-default pull-right" title="Bei neuen Kommentaren benachrichtigt werden">
+                Benachrichtigungen
+            </a>
+            {% elif can_delete_attention %}
+            <a href="{% url 'attention-delete' content.pk %}" class="btn btn-default pull-right" title="Du erhältst Benachrichtungen für diesen Beitrag">
+                Benachrichtigungen
+            </a>
+            {% endif %}
+            <a href="{% url 'image-list' content.pk %}" class="btn btn-default pull-right">
+                Bilder
+            </a>
+        </div>
     </div>
     <span class="content-type">
         <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
@@ -20,19 +39,6 @@
         {% endif %}
         {{ content.title }}
     </h1>
-
-    {% if can_create_attention %}
-    <a href="{% url 'attention-create' content.pk %}"><i class="sg sg-attention" title="Bei neuen Kommentaren benachrichtigt werden"></i></a>
-    {% elif can_delete_attention %}
-    <a href="{% url 'attention-delete' content.pk %}"><i class="sg sg-attention" title="Du erhältst Benachrichtungen für diesen Beitrag"></i></a>
-    {% endif %}
-    {% if can_edit_content %}
-        <div class="btn-toolbar">
-            <a href="{% url 'content-update' content.pk %}">
-                <i class="sg sg-edit" title="Beitrag bearbeiten"></i>
-            </a>
-        </div>
-    {% endif %}
 
     {% include 'content/_content_info.html' %}
 </header>

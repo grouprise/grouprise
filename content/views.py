@@ -1,5 +1,5 @@
 from . import forms, models
-from django import http
+from django import http, shortcuts
 from django.forms import models as model_forms
 from django.utils import formats
 from django.views import generic
@@ -95,6 +95,29 @@ class EventDay(utils_views.PageMixin, generic.DayArchiveView):
 
     def get_title(self):
         return formats.date_format(self.get_date())
+
+
+class ImageList(utils_views.List):
+    permission = 'content.view_image_list'
+
+    def get_content(self):
+        return shortcuts.get_object_or_404(models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
+
+    def get_context_data(self, **kwargs):
+        kwargs['content'] = self.get_content()
+        return super().get_context_data(**kwargs)
+
+    def get_menu(self):
+        return self.get_content().get_type_name()
+
+    def get_permission_object(self):
+        return self.get_content()
+
+    def get_queryset(self):
+        return models.Image.objects.filter(content=self.get_content())
+
+    def get_title(self):
+        return self.get_content().title
 
 
 class Markdown(utils_views.PageMixin, generic.TemplateView):
