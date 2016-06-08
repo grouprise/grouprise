@@ -11,6 +11,10 @@ from email import utils as email_utils
 class Image(models.Model):
     content = models.ForeignKey('Content', related_name='images')
     file = models.ImageField('Datei')
+    weight = models.PositiveSmallIntegerField()
+
+    class Meta:
+        ordering = ('weight',)
 
 
 class Base(models.Model):
