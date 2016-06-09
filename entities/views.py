@@ -53,19 +53,17 @@ class AttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
         return self.object.attended_object
 
 
-class Gestalt(utils_views.PageMixin, generic.DetailView):
+class Gestalt(utils_views.List):
     menu = 'gestalt'
-    model = models.Gestalt
     permission = 'entities.view_gestalt'
     sidebar = ('calendar',)
-    slug_field = 'user__username'
+    template_name = 'entities/gestalt_detail.html'
 
-    def get_context_data(self, **kwargs):
-        kwargs['content_list'] = content_models.Content.objects.permitted(self.request.user).filter(django_models.Q(gestaltcontent__gestalt=self.object) | django_models.Q(author=self.object))
-        return super().get_context_data(**kwargs)
+    def get_queryset(self):
+        return content_models.Content.objects.permitted(self.request.user).filter(django_models.Q(gestaltcontent__gestalt=self.get_gestalt()) | django_models.Q(author=self.get_gestalt()))
 
     def get_title(self):
-        return str(self.object)
+        return str(self.get_gestalt())
 
 class GestaltList(utils_views.List):
     menu = 'gestalt'

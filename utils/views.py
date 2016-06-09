@@ -21,6 +21,8 @@ class GestaltMixin:
     def get_gestalt(self):
         if 'gestalt_pk' in self.kwargs:
             return entities_models.Gestalt.objects.get(pk=self.kwargs['gestalt_pk'])
+        if 'gestalt_slug' in self.kwargs:
+            return entities_models.Gestalt.objects.get(user__username=self.kwargs['gestalt_slug'])
         return None
 
 class GroupMixin:
@@ -183,6 +185,7 @@ class ActionMixin(
 
 
 class PageMixin(
+        GestaltMixin,
         GroupMixin,
         MenuMixin,
         NavigationMixin,
