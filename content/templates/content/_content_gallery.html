@@ -1,7 +1,6 @@
 {% load rules %}
 {% load rules thumbnail %}
 
-<h2>Bilder</h2>
 <ul class="gallery">
     {% for image in content.images.all %}
         {% thumbnail image.file 'x150' format='PNG' as thumb %}
