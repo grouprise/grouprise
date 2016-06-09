@@ -82,19 +82,18 @@ class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     model = models.Gestalt
     permission = 'entities.change_gestalt'
 
-class Group(utils_views.PageMixin, generic.DetailView):
+class Group(utils_views.List):
     menu = 'group'
-    model = models.Group
     permission = 'entities.view_group'
+    template_name = 'entities/group_detail.html'
 
     def get_context_data(self, **kwargs):
         kwargs['attention'] = self.get_attention()
         kwargs['calendar_events'] = self.get_events().around()
-        kwargs['content_list'] = self.get_group_content().filter(groupcontent__pinned=False)
         kwargs['head_gallery'] = self.get_head_gallery()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
-        kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.object.pk).scored().similar(self.object).order_by('-score')
+        kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming()
         return super().get_context_data(**kwargs)
 
@@ -105,10 +104,10 @@ class Group(utils_views.PageMixin, generic.DetailView):
             return None
 
     def get_events(self):
-        return content_models.Event.objects.permitted(self.request.user).filter(groups=self.object)
+        return content_models.Event.objects.permitted(self.request.user).filter(groups=self.get_group())
 
     def get_group_content(self):
-        return self.object.content.permitted(self.request.user)
+        return self.get_group().content.permitted(self.request.user)
 
     def get_head_gallery(self):
         return self.get_group_content().filter(gallery__isnull=False, groupcontent__pinned=True).first()
@@ -126,8 +125,11 @@ class Group(utils_views.PageMixin, generic.DetailView):
         except (AttributeError, models.Membership.DoesNotExist):
             return None
 
+    def get_queryset(self):
+        return self.get_group_content().filter(groupcontent__pinned=False)
+
     def get_title(self):
-        return self.object.name
+        return self.get_group().name
 
 class GroupAttentionCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Benachrichtigungen erhalten'

@@ -38,6 +38,8 @@ class GroupMixin:
                 return self.object.groups.first()
         if 'group_pk' in self.kwargs:
             return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
+        if 'group_slug' in self.kwargs:
+            return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
         if 'group' in self.request.GET:
             return entities_models.Group.objects.get(slug=self.request.GET['group'])
         return None
