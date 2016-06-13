@@ -22,6 +22,7 @@ class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
     addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
     avatar = models.ImageField(blank=True)
+    background = models.ImageField('Hintergrundbild', blank=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):
