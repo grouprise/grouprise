@@ -74,23 +74,30 @@ class GroupMessage(BaseMessage):
 
 
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Kommentieren'
+    #action = 'Kommentieren'
     fields = ('text',)
     layout = utils_forms.EditorField('text')
     model = models.Comment
     permission = 'content.create_comment'
+
+    def get_action(self):
+        return 'Kommentieren' if self.get_parent().public else 'Antworten'
 
     def form_valid(self, form):
         form.instance.author = self.request.user.gestalt
         form.instance.content = self.get_permission_object()
         return super().form_valid(form)
 
+    def get_helper(self):
+        helper = super().get_helper()
+        helper.form_action = urlresolvers.reverse('comment-create', args=[self.get_parent().pk])
+        return helper
+
     def get_menu(self):
         return self.get_parent().get_type_name()
 
     def get_parent(self):
-        pk = self.request.resolver_match.kwargs['content_pk']
-        return models.Content.objects.get(pk=pk)
+        return models.Content.objects.get(pk=self.kwargs['content_pk'])
 
     def get_permission_object(self):
         return self.get_parent()

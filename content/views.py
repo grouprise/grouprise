@@ -1,4 +1,4 @@
-from . import forms, models
+from . import creation, forms, models
 from django import http, shortcuts
 from django.forms import models as model_forms
 from django.utils import formats
@@ -38,6 +38,15 @@ class GalleryList(BaseContentList):
 class Content(utils_views.PageMixin, generic.DetailView):
     model = models.Content
     permission = 'content.view_content'
+
+    def get_context_data(self, **kwargs):
+        v = creation.CommentCreate()
+        v.request = self.request
+        v.args = self.args
+        v.kwargs = self.kwargs
+        v.kwargs['content_pk'] = self.object.pk
+        kwargs['comment_form'] = v.get_form()
+        return super().get_context_data(**kwargs)
     
     def get_menu(self):
         return self.object.get_type_name()

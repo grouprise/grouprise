@@ -58,7 +58,7 @@ class FormMixin(forms.LayoutMixin):
 
     def get_layout(self):
         layout = super().get_layout()
-        layout += (forms.Submit(self.action),)
+        layout += (forms.Submit(self.get_action()),)
         return layout
 
 class MenuMixin:
@@ -166,6 +166,12 @@ class TemplateMixin:
 
 
 class TitleMixin:
+    def get_action(self):
+        if hasattr(self, 'action'):
+            return self.action
+        else:
+            return None
+
     def get_context_data(self, **kwargs):
         kwargs['title'] = self.get_title()
         return super().get_context_data(**kwargs)
@@ -173,10 +179,8 @@ class TitleMixin:
     def get_title(self):
         if hasattr(self, 'title'):
             return self.title
-        elif hasattr(self, 'action'):
-            return self.action
         else:
-            return None
+            return self.get_action()
 
 
 class ActionMixin(
