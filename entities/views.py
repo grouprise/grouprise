@@ -1,4 +1,4 @@
-from . import forms, models
+from . import filters, forms, models
 from content import models as content_models
 from crispy_forms import bootstrap, layout
 from django import shortcuts
@@ -9,6 +9,7 @@ from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
+from django_filters import views as filters_views
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
@@ -176,7 +177,8 @@ class GroupCreate(utils_views.ActionMixin, generic.CreateView):
         if 'name' in self.request.GET:
             return {'name': self.request.GET['name']}
 
-class GroupList(utils_views.List):
+class GroupList(utils_views.PageMixin, filters_views.FilterView):
+    filterset_class = filters.Group
     menu = 'group'
     ordering = '-score'
     parent = 'index'

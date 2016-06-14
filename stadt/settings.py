@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django_filters',
     'entities.apps.EntitiesConfig',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',

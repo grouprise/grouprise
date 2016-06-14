@@ -76,3 +76,10 @@ class GroupAttention(utils_forms.FormMixin, forms.ModelForm):
         attention.attendee = models.Gestalt.objects.get(user__email=self.cleaned_data['attendee_email'])
         attention.save()
         return attention
+
+
+class GroupFilter(utils_forms.FormMixin, forms.Form):
+    name = forms.CharField()
+    inline = True
+    layout = ('name', utils_forms.Submit('Gruppe finden'))
+    method = 'GET'
