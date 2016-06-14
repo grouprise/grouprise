@@ -22,6 +22,22 @@ class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
         super().__init__(*args, **kwargs)
         self.fields['login'] = forms.CharField(label='E-Mail-Adresse oder Pseudonym')
 
+
+class PasswordChange(util_forms.FormMixin, allauth_forms.ChangePasswordForm):
+    layout = (
+            layout.Field('oldpassword', placeholder=''),
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort ändern')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['oldpassword'].label = 'Aktuelles Kennwort'
+        self.fields['password1'].label = 'Neues Kennwort'
+        self.fields['password2'].label = 'Neues Kennwort (Wiederholung)'
+
+
 class PasswordReset(util_forms.FormMixin, allauth_forms.ResetPasswordForm):
     layout = (
             layout.HTML('<p>Wenn Du Dein Kennwort vergessen hast, gib bitte Deine E-Mail-Adresse ein. Du erhälst dann eine Nachricht mit einem Verweis zum Zurücksetzen des Kennworts an diese Adresse.</p>'),

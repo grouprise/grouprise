@@ -6,6 +6,7 @@ urlpatterns = [
     urls.url(r'^confirm/(?P<key>[-:\w]+)/$', views.Confirm.as_view(), name='account_confirm_email'),
     urls.url(r'^login/$', views.Login.as_view(), name='account_login'),
     urls.url(r'^logout/$', views.Logout.as_view(), name='account_logout'),
+    urls.url(r'^password/change/$', views.PasswordChange.as_view(), name='account_change_password'),
     urls.url(r'^password/reset/$', views.PasswordReset.as_view(), name='account_reset_password'),
     urls.url(r'^password/reset/done/$', views.PasswordResetDone.as_view(), name='account_reset_password_done'),
     urls.url(r'^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$', views.PasswordResetFromKey.as_view(), name='account_reset_password_from_key'),

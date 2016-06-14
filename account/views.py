@@ -4,9 +4,9 @@ from crispy_forms import layout
 from django.contrib import messages
 from django.views import generic
 from django.views.generic import edit as edit_views
-from utils import views as util_views
+from utils import views as utils_views
 
-class Confirm(util_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
+class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
     action = 'E-Mail-Adresse bestätigen'
     ignore_base_templates = True
     layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
@@ -19,13 +19,13 @@ class Confirm(util_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailVi
     def get_parent(self):
         return self.get_redirect_url()
 
-class Login(util_views.ActionMixin, views.LoginView):
+class Login(utils_views.ActionMixin, views.LoginView):
     action = 'Anmelden'
     form_class = forms.LoginForm
     ignore_base_templates = True
     permission = 'account.login'
 
-class Logout(util_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
+class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     action = 'Abmelden'
     ignore_base_templates = True
     layout = layout.HTML('<p>Möchtest Du Dich abmelden?</p>')
@@ -35,7 +35,17 @@ class Logout(util_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
         return self.get_redirect_url()
 
 
-class PasswordReset(util_views.ActionMixin, views.PasswordResetView):
+class PasswordChange(utils_views.ActionMixin, views.PasswordChangeView):
+    action = 'Kennwort ändern'
+    form_class = forms.PasswordChange
+    ignore_base_templates = True
+    permission = 'account.change_password'
+    
+    def get_success_url(self):
+        return self.request.user.gestalt.get_absolute_url()
+
+
+class PasswordReset(utils_views.ActionMixin, views.PasswordResetView):
     action = 'Kennwort zurücksetzen'
     form_class = forms.PasswordReset
     ignore_base_templates = True
@@ -50,19 +60,13 @@ class PasswordResetDone(generic.RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class PasswordResetFromKey(util_views.ActionMixin, views.PasswordResetFromKeyView):
+class PasswordResetFromKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
     action = 'Kennwort ändern'
     form_class = forms.PasswordResetFromKey
     permission = 'account.reset_password'
 
 
-'''
-class PasswordResetFromKeyDone(generic.RedirectView):
-    pattern_name = 'account_login'
-'''
-
-
-class Signup(util_views.ActionMixin, views.SignupView):
+class Signup(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
     form_class = forms.SignupForm
     ignore_base_templates = True

@@ -26,7 +26,8 @@
                     </label>
                     <ul class="nav-menu dropdown">
                         <li><a href="{% url 'gestalt' user.username %}">Meine Seite</a></li>
-                        <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Einstellungen</a></li>
+                        <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a></li>
+                        <li><a href="{% url 'account_change_password' %}">Kennwort ändern</a></li>
                         <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
                     </ul>
                 </li>
