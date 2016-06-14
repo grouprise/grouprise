@@ -22,7 +22,7 @@ class Base(models.Model):
             'entities.Gestalt',
             related_name='authored_%(class)s')
     date_created = models.DateTimeField(default=timezone.now)
-    text = models.TextField('Text', blank=True)
+    text = models.TextField('Text')
 
     class Meta:
         abstract = True
