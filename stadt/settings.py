@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'entities.apps.EntitiesConfig',
+    'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
     'utils',
@@ -219,3 +220,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # http://sorl-thumbnail.readthedocs.org/
 
 THUMBNAIL_DEBUG = False
+
+
+# Django Rest Framework
+# http://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+}

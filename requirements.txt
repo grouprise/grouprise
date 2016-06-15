@@ -2,6 +2,7 @@ django
 django-allauth
 django-crispy-forms
 django-filter
+djangorestframework
 markdown
 pillow
 pymdown-extensions
