@@ -39,7 +39,7 @@ class Base(models.Model):
                 body = '{text}\n\n-- \nAntworten und weitere Möglichkeiten:\n{protocol}://{domain}{path}'.format(
                         domain=sites_models.Site.objects.get_current().domain,
                         path=self.get_content().get_absolute_url(),
-                        protocol=settings.HTTP_PROTOCOL,
+                        protocol=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
                         text=self.text,
                         )
                 slugs = [g.slug for g in groups]

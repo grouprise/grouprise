@@ -38,7 +38,7 @@ def group_pre_save(sender, instance, **kwargs):
 def group_post_save(sender, instance, created, **kwargs):
     if created and not instance.url:
         instance.url = '{protocol}://{domain}{path}'.format(
-                protocol=settings.HTTP_PROTOCOL,
+                protocol=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
                 domain=sites_models.Site.objects.get_current().domain,
                 path=urlresolvers.reverse('group', args=[instance.slug]),
                 )
