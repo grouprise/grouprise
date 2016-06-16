@@ -8,6 +8,7 @@
 {% has_perm 'entities.create_membership' user group as can_create_membership %}
 {% has_perm 'entities.delete_group_attention' user attention as can_delete_attention %}
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
+{% has_perm 'entities.list_members' user group as can_list_members %}
 
 <div class="row">
 
@@ -51,7 +52,11 @@
             <li><i class="sg sg-foundation"></i> Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
             <li>
                 <i class="sg sg-members"></i>
+                {% if can_list_members %}
+                <a href="{% url 'membership-list' group.pk %}">Gruppenmitglieder: {{ group.membership_set.count }}</a>
+                {% else %}
                 Gruppenmitglieder: {{ group.membership_set.count }}
+                {% endif %}
                 {% if user.gestalt in group.members.all %}
                 (Du bist Mitglied)
                 {% endif %}

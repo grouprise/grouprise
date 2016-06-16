@@ -1,0 +1,9 @@
+{% extends 'stadt/list.html' %}
+
+{% block list %}
+{% for membership in membership_list %}
+{% with gestalt=membership.gestalt %}
+{% include 'entities/_gestalt_preview.html' %}
+{% endwith %}
+{% endfor %}
+{% endblock %}

@@ -252,3 +252,12 @@ class MembershipDelete(utils_views.ActionMixin, utils_views.DeleteView):
 
     def get_parent(self):
         return self.get_group()
+
+
+class MembershipList(utils_views.PageMixin, generic.ListView):
+    menu = 'group'
+    permission = 'entities.list_members'
+    title = 'Mitglieder'
+
+    def get_queryset(self):
+        return models.Membership.objects.filter(group_id=self.kwargs['group_pk'])
