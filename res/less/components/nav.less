@@ -3,6 +3,19 @@
     position: relative;
 }
 
+.nav-separator {
+    align-self: flex-end;
+
+    &:after {
+        content: ".";
+        font-weight: bolder;
+    }
+
+    &, + li {
+        margin-left: 1em !important;
+    }
+}
+
 .nav-menu {
     display: flex;
     flex-wrap: nowrap;
