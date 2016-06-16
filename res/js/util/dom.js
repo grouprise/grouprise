@@ -6,6 +6,11 @@ function $$(selector, el = document) {
     return [].slice.call(el.querySelectorAll(selector));
 }
 
+function replace(el_old, el_new) {
+    el_old.parentNode.replaceChild(el_new, el_old);
+    return el_new;
+}
+
 function component(name, init) {
     function parse_conf(el) {
         const default_conf = {};
@@ -34,4 +39,4 @@ function component(name, init) {
         });
 }
 
-export { $, $$, component };
+export { $, $$, component, replace };
