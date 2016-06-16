@@ -131,7 +131,7 @@ class Article(Content):
 
 
 class Event(Content):
-    place = models.CharField('Ort', max_length=255)
+    place = models.CharField('Ort / Anschrift', max_length=255)
     time = models.DateTimeField('Datum / Uhrzeit')
 
     objects = models.Manager.from_queryset(querysets.EventQuerySet)()
