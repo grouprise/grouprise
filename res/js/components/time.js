@@ -28,9 +28,31 @@ function transform_from(el, opts) {
     };
 }
 
+function transform_to(el, opts) {
+    return () => {
+        el.innerHTML = moment(opts.conf.ref || new Date()).to(el.getAttribute("datetime"));
+    };
+}
+
+function transform_days_until(el, opts) {
+    return () => {
+        const days = moment(el.getAttribute("datetime")).diff(opts.conf.ref || new Date(), "days");
+        el.setAttribute("data-days", days);
+        el.innerHTML = moment(el.getAttribute("datetime")).diff(opts.conf.ref || new Date(), "days");
+    };
+}
+
 function create_transform(el, opts) {
     if(opts.is_type("from")) {
         return add_transform(transform_from(el, opts));
+    }
+
+    if(opts.is_type("to")) {
+        return add_transform(transform_to(el, opts));
+    }
+
+    if(opts.is_type("days-until")) {
+        return add_transform((transform_days_until(el, opts)));
     }
 }
 
