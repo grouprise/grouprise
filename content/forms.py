@@ -19,7 +19,9 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     def save(self):
         content = super().save()
         if self.cleaned_data['group']:
-            entities_models.GroupContent.objects.create(content=content, group=self.cleaned_data['group'], pinned=self.cleaned_data['pinned'])
+            entities_models.GroupContent.objects.update_or_create(content=content, group=self.cleaned_data['group'], defaults={'pinned': self.cleaned_data['pinned']})
+        else:
+            entities_models.GroupContent.objects.filter(content=content).delete()
         return content
 
 

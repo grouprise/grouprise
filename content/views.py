@@ -106,6 +106,24 @@ class EventDay(utils_views.PageMixin, generic.DayArchiveView):
         return formats.date_format(self.get_date())
 
 
+class EventUpdate(utils_views.ActionMixin, generic.UpdateView):
+    action = 'Ereignis ändern'
+    form_class = forms.Event
+    menu = 'event'
+    model = models.Event
+    permission = 'content.change_content'
+
+    def get_initial(self):
+        group = self.get_group()
+        if group:
+            return {
+                    'group': group.pk,
+                    'pinned': entities_models.GroupContent.objects.get(group=group, content=self.object).pinned
+                    }
+        else:
+            return {}
+
+
 class ImageList(utils_views.List):
     permission = 'content.view_image_list'
 

@@ -8,7 +8,7 @@
         <span class="content-classification">Beitrag</span>
         <div class="btn-toolbar">
             {% if can_edit_content %}
-            <a href="{% url 'content-update' content.pk %}" class="btn btn-default pull-right">
+            <a href="{% if content.event %}{% url 'event-update' content.pk %}{% else %}{% url 'content-update' content.pk %}{% endif %}" class="btn btn-default pull-right">
                 Ändern
             </a>
             {% endif %}
