@@ -1,4 +1,5 @@
 {% extends 'stadt/list.html' %}
+{% load rules thumbnail %}
 {% load rules %}
 
 {% block heading_title %}
@@ -14,9 +15,15 @@
 {% endblock %}
 
 {% block list %}
-<ul>
+<ul class="gallery">
     {% for image in image_list %}
-    <li><img src="{{ image.file.url }}"></li>
+        {% thumbnail image.file 'x150' format='PNG' as thumb %}
+            <li>
+                <a href="{{ image.file.url }}" class="gallery-link">
+                    <img src="{{ thumb.url }}" class="gallery-image-preview">
+                </a>
+            </li>
+        {% endthumbnail %}
     {% endfor %}
 </ul>
 {% endblock %}
