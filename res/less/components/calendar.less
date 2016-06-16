@@ -1,9 +1,56 @@
 .calendar {
     width: 100%;
+
+    caption {
+        font-family: @font-family-headline;
+        font-size: 1.1rem;
+        margin-bottom: .2em;
+    }
 }
 
 .calendar-preview {
     td, th {
         text-align: center;
+        padding: .2em;
     }
+}
+
+.calendar-day-exclude {
+    color: @color-text-extralight;
+    opacity: 0.5;
+}
+
+.calendar-day-today {
+    //color: @brand-primary;
+    font-weight: bold;
+}
+
+.calendar-day-has-events {
+    //&:extend(.decoration-striped);
+
+    td& {
+        padding: 0;
+    }
+
+    > a {
+        position: relative;
+        display: block;
+        padding: .2em;
+        z-index: 5;
+        font-weight: bold;
+
+        &:after {
+            position: absolute;
+            left: 0; right: 0; top: 0; bottom: 0;
+            display: block;
+            content: " ";
+            background-color: white;
+            opacity: .75;
+            z-index: -1;
+        }
+    }
+}
+
+.calendar-daynames {
+    border-bottom: 2px solid #f0f0f0;
 }
