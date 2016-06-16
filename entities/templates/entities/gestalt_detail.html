@@ -16,7 +16,7 @@
 </header>
 <div class="pull-right">
     {% if can_edit %}
-    <a href="{% url 'gestalt-update' gestalt.pk %}">Avatar ändern</a><br>
+    <a href="{% url 'gestalt-avatar-update' gestalt.pk %}">Avatar ändern</a><br>
     {% endif %}
     <a href="{{ gestalt_url }}" class="avatar">
         {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
@@ -27,7 +27,7 @@
     </a>
 </div>
 {% if can_edit %}
-<a href="{% url 'gestalt-update' gestalt.pk %}">Hintergrundbild ändern</a>
+<a href="{% url 'gestalt-background-update' gestalt.pk %}">Hintergrundbild ändern</a>
 {% endif %}
 {% thumbnail gestalt.background '200x200' crop='center' as image %}
 <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
