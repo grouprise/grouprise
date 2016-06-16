@@ -1,0 +1,13 @@
+[data-component~="time-days-until"][data-component-ready] {
+    &:before {
+        content: "in ";
+    }
+
+    &:after {
+        content: " Tagen";
+    }
+
+    &[data-days="1"]:after {
+        content: " Tage";
+    }
+}
