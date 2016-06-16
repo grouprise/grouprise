@@ -10,7 +10,7 @@
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 {% has_perm 'entities.list_members' user group as can_list_members %}
 
-<div class="group-header">
+<div class="group-header" data-component="group-header">
     <div class="group-gallery">
         {% if head_gallery and can_view_head_gallery %}
             <div class="carousel">
@@ -18,7 +18,7 @@
                     {% for image in head_gallery.images.all %}
                         <li>
                             {% thumbnail image.file 'x500' crop='center' as thumb %}
-                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                                <img src="{{ thumb.url }}" alt="{{ group.name }}">
                             {% endthumbnail %}
                         </li>
                     {% endfor %}

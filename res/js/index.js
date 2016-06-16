@@ -5,6 +5,7 @@ import editor from "./components/editor";
 import time from "./components/time";
 import user_content from "./components/user-content";
 import image_upload from "./components/image-upload";
+import group_header from "./components/group-header";
 
 // create evented functions
 const _replace = evented_function(replace);
@@ -19,6 +20,7 @@ function init(search_in = document) {
     component("editor", editor, search_in);
     component("time", time, search_in);
     component("user-content", user_content, search_in);
+    component("group-header", group_header, search_in);
     component("image-upload", image_upload, { root: search_in, conf: { replace: _replace } });
 }
 
