@@ -104,7 +104,7 @@ class CommentCreate(utils_views.ActionMixin, generic.CreateView):
 
 
 class ImageCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Bild hinzufügen'
+    action = 'Bilder hinzufügen'
     fields = ('file',)
     layout = 'file'
     model = models.Image
@@ -119,9 +119,21 @@ class ImageCreate(utils_views.ActionMixin, generic.CreateView):
     def get_menu(self):
         return self.get_parent().get_type_name()
 
+    def get_pk(self):
+        return int(self.request.resolver_match.kwargs['content_pk'])
+
     def get_parent(self):
-        pk = self.request.resolver_match.kwargs['content_pk']
-        return models.Content.objects.get(pk=pk)
+        return models.Content.objects.get(pk=self.get_pk())
+
+    def get_helper(self):
+        import json
+        helper = super().get_helper()
+        helper.attrs['data-component'] = 'image-upload'
+        helper.attrs['data-component-conf'] = json.dumps({'content': self.get_pk()})
+        return helper
+
+    def get_template_names(self):
+        return 'stadt/form_image.html'
 
     def get_permission_object(self):
         return self.get_parent()

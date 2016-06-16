@@ -1,0 +1,35 @@
+@import (less) "../../../node_modules/dropzone/dist/basic.css";
+@import (less) "../../../node_modules/dropzone/dist/dropzone.css";
+
+.dropzone {
+    padding: 0.6rem;
+    border: 2px solid @color-text-extralight;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+}
+
+.dropzone .dz-preview {
+    margin: 0 .3rem .3rem 0;
+}
+
+.dropzone .dz-preview .dz-image {
+    border-radius: 2px;
+}
+
+.dropzone .dz-preview:hover .dz-image img {
+    filter: none;
+    transform: none;
+}
+
+.dropzone .dz-preview .dz-progress {
+    border-radius: 2px;
+    border: none;
+}
+
+.dropzone .dz-preview .dz-progress .dz-upload {
+    background: @brand-primary;
+}
+
+.dz-details {
+    display: none !important;
+}

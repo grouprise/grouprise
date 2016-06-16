@@ -6,6 +6,23 @@
     <h1 class="content-classification">Bilder</h1>
 {% endblock %}
 
+{% block sidebar %}
+    <div class="box box-striped">
+        <div class="box-inner">
+            <header class="box-header">
+                <h2 class="box-title">
+                    <i class="sg sg-images"></i>
+                    Bilder hinzufügen
+                </h2>
+            </header>
+            <div class="box-content">
+                <form data-component="image-upload" data-component-conf='{"content":{{content.pk}},"update":".content-list"}'></form>
+            </div>
+        </div>
+    </div>
+    {{ block.super }}
+{% endblock %}
+
 {% block heading_toolbar %}
 {% has_perm 'content.create_image' user content as can_create_image %}
 {% if can_create_image %}
