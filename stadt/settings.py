@@ -187,8 +187,6 @@ SITE_ID = 1
 
 ABOUT_GROUP_ID = 2
 
-HTTP_PROTOCOL = 'http'
-
 
 # Authentication
 # http://django-allauth.readthedocs.org/
@@ -199,7 +197,7 @@ LOGIN_REDIRECT_URL = 'index'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = HTTP_PROTOCOL
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
 ACCOUNT_EMAIL_REQUIRED = True
 

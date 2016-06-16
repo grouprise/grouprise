@@ -25,5 +25,5 @@ class EventQuerySet(ContentQuerySet):
         delta = datetime.timedelta(weeks=6)
         return self.filter(time__gt=time-delta, time__lt=time+delta)
 
-    def upcoming(self, count=3):
+    def upcoming(self, count=None):
         return self.filter(time__gte=timezone.now())[:count]

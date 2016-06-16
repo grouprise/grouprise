@@ -49,5 +49,6 @@ rules.add_perm('entities.create_group_message', rules.is_authenticated)
 rules.add_perm('entities.create_membership', rules.is_authenticated & ~is_group_member)
 rules.add_perm('entities.delete_group_attention', rules.is_authenticated & ~is_group_member & is_group_attendee)
 rules.add_perm('entities.delete_membership', rules.is_authenticated & is_group_membership)
+rules.add_perm('entities.list_members', rules.is_authenticated & is_group_member)
 
 rules.add_perm('entities.view_imprint', rules.always_allow)

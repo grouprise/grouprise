@@ -8,6 +8,7 @@
 {% has_perm 'entities.create_membership' user group as can_create_membership %}
 {% has_perm 'entities.delete_group_attention' user attention as can_delete_attention %}
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
+{% has_perm 'entities.list_members' user group as can_list_members %}
 
 <div class="group-header">
     <div class="group-gallery">
@@ -82,7 +83,11 @@
                     <span class="sr-only">Anzahl Mitglieder</span>
                 </dt>
                 <dd>
-                    {{ group.membership_set.count }} Mitglied{{ group.membership_set.count|pluralize:"er" }}
+                    {% if can_list_members %}
+                        <a href="{% url 'membership-list' group.pk %}">
+                    {% endif %}
+                    {{ group.membership_set.count }} Mitglied{{ group.membership_set.count|pluralize:"er" }}{% if can_list_members %}</a>{% endif %}
+
                     {% if user.gestalt in group.members.all %}
                         (Du bist Mitglied)
                     {% endif %}

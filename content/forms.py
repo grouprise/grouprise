@@ -19,7 +19,9 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     def save(self):
         content = super().save()
         if self.cleaned_data['group']:
-            entities_models.GroupContent.objects.create(content=content, group=self.cleaned_data['group'], pinned=self.cleaned_data['pinned'])
+            entities_models.GroupContent.objects.update_or_create(content=content, group=self.cleaned_data['group'], defaults={'pinned': self.cleaned_data['pinned']})
+        else:
+            entities_models.GroupContent.objects.filter(content=content).delete()
         return content
 
 
@@ -36,10 +38,11 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = ('author', 'group', 'title', layout.Field('time', data_component='date'), 'place', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Ereignis erstellen'))
+    layout = ('author', 'group', 'pinned', 'title', layout.Field('time', data_component='date'), 'place', utils_forms.EditorField('text'), 'public', utils_forms.Submit('Ereignis erstellen'))
 
     class Meta:
         fields = ('author', 'place', 'public', 'text', 'time', 'title')
+        labels = {'text': 'Beschreibung'}
         model = models.Event
 
 

@@ -98,7 +98,7 @@ class Group(utils_views.List):
 
     def get_attention(self):
         try:
-            return models.GroupAttention.objects.get(attendee=self.request.user.gestalt, group=self.object)
+            return models.GroupAttention.objects.get(attendee=self.request.user.gestalt, group=self.get_group())
         except (AttributeError, models.GroupAttention.DoesNotExist):
             return None
 
@@ -120,7 +120,7 @@ class Group(utils_views.List):
 
     def get_membership(self):
         try:
-            return models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.object)
+            return models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.get_group())
         except (AttributeError, models.Membership.DoesNotExist):
             return None
 
@@ -252,3 +252,12 @@ class MembershipDelete(utils_views.ActionMixin, utils_views.DeleteView):
 
     def get_parent(self):
         return self.get_group()
+
+
+class MembershipList(utils_views.PageMixin, generic.ListView):
+    menu = 'group'
+    permission = 'entities.list_members'
+    title = 'Mitglieder'
+
+    def get_queryset(self):
+        return models.Membership.objects.filter(group_id=self.kwargs['group_pk'])
