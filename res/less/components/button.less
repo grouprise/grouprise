@@ -20,6 +20,18 @@
     }
 }
 
+.btn-transparent {
+    color: rgba(255, 255, 255, .8);
+    padding: 0;
+    min-width: 0;
+    transition: color .2s;
+
+    &:hover,
+    &:focus {
+        color: white;
+    }
+}
+
 .btn-default {
     border-color: @color-text-default;
     color: @color-text-default;
@@ -75,6 +87,17 @@
 
     > * + *:not(.btn-link) {
         margin-left: .7em;
+    }
+}
+
+.btn-toolbar-fixed {
+    position: absolute;
+    padding: 0.625rem 1rem;
+    left: 0;
+    right: 0;
+
+    &.btn-toolbar-bottom {
+        bottom: 0;
     }
 }
 

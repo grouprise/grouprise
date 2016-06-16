@@ -9,61 +9,121 @@
 {% has_perm 'entities.delete_group_attention' user attention as can_delete_attention %}
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 
-<div class="row">
-
-    <div class="col-md-6">
+<div class="group-header">
+    <div class="group-gallery">
         {% if head_gallery and can_view_head_gallery %}
-        <a href="{% url 'content' group.slug head_gallery.slug %}">Intro-Galerie anzeigen</a>
-        {% thumbnail head_gallery.images.first.file '560x390' crop='center' as image %}
-        <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
-        {% endthumbnail %}
-        {% elif can_create_content %}
-        <a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1">Intro-Galerie hinzufügen</a>
+            <div class="carousel">
+                <div class="carousel-slides">
+                    {% for image in head_gallery.images.all %}
+                        <li>
+                            {% thumbnail image.file 'x500' crop='center' as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                            {% endthumbnail %}
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="disclaimer">
+                <i class="fa fa-5x fa-image"></i><br />
+                Diese Gruppe war zu faul eine Introgalerie anzulegen.
+
+                {% if can_create_content %}
+                    <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
+                        <a class="btn btn-transparent" href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1" title="Intro-Galerie hinzufügen">
+                            <i class="fa fa-2x fa-camera"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
+    <div class="group-info">
+        <div class="group-info-main">
+            <div class="group-avatar">
+                {% group_avatar group %}
+                <div class="btn btn-toolbar-fixed btn-toolbar-bottom">
+                    {% if can_edit %}
+                        <a href="{% url 'group-avatar-update' group.pk %}" title="Avatar ändern" class="btn btn-transparent">
+                            <i class="sg sg-edit"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <h1 class="group-title">
+                {{ group.name }}
+            </h1>
+            <dl class="def def-icons">
+                <dt>
+                    <i class="sg sg-address"></i>
+                    <span class="sr-only">Address</span>
+                </dt>
+                <dd>
+                    <address>
+                        {{ group.address|linebreaks }}
+                    </address>
+                </dd>
+                <dt>
+                    <i class="sg sg-url"></i>
+                    <span class="sr-only">Website</span>
+                </dt>
+                <dd>
+                    <a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a>
+                </dd>
+                <dt>
+                    <i class="sg sg-foundation"></i>
+                    <span class="sr-only">Gründung</span>
+                </dt>
+                <dd>
+                    {{ group.date_founded|date:'Y' }} gegründet
+                </dd>
+                <dt>
+                    <i class="sg sg-members"></i>
+                    <span class="sr-only">Anzahl Mitglieder</span>
+                </dt>
+                <dd>
+                    {{ group.membership_set.count }} Mitglied{{ group.membership_set.count|pluralize:"er" }}
+                    {% if user.gestalt in group.members.all %}
+                        (Du bist Mitglied)
+                    {% endif %}
+                </dd>
+            </dl>
 
-    <div class="col-md-6">
-        <div class="pull-right">
-            {% if can_edit %}
-            <a href="{% url 'group-avatar-update' group.pk %}">Avatar ändern</a><br>
-            {% endif %}
-            {% group_avatar group %}
-        </div>
-        <h1>
-            {{ group.name }}
-            <small>
-                {% if can_create_attention %}
-                <a href="{% url 'group-attention-create' group.pk %}"><i class="sg sg-attention" title="Bei neuen Beiträgen benachrichtigt werden"></i></a>
-                {% elif can_delete_attention %}
-                <a href="{% url 'group-attention-delete' attention.pk %}"><i class="sg sg-attention" title="Du erhältst Benachrichtungen für diese Gruppe"></i></a>
-                {% endif %}
-                {% if can_edit %}
-                <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Gruppenangaben ändern"></i></a>
-                {% endif %}
-            </small>
-        </h1>
-        <ul>
-            <li><i class="sg sg-address"></i> {{ group.address|linebreaks }}</li>
-            <li><i class="sg sg-url"></i> <a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a></li>
             {% if can_create_message %}
-            <li><i class="sg sg-message"></i> <a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></li>
+                <i class="sg sg-message"></i> <a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a>
             {% endif %}
-            <li><i class="sg sg-foundation"></i> Gruppe gegründet: {{ group.date_founded|date:'Y' }}</li>
-            <li>
-                <i class="sg sg-members"></i>
-                Gruppenmitglieder: {{ group.membership_set.count }}
-                {% if user.gestalt in group.members.all %}
-                (Du bist Mitglied)
-                {% endif %}
-                {% if can_create_membership %}
-                <a href="{% url 'membership-create' group.pk %}" class="btn btn-default btn-sm"><i class="sg sg-join"></i> Mitglied werden</a>
-                {% endif %}
-                {% if can_delete_membership %}
-                <a href="{% url 'membership-delete' membership.pk %}"><i class="sg sg-resign" title="Mitgliedschaft beenden"></i></a>
-                {% endif %}
-            </li>
-            <li><i class="sg sg-link"></i> {{ site.domain }}/ {{ group.slug }}</li>
-        </ul>
-    </div>
 
+
+
+            {% if can_create_membership %}
+                <a href="{% url 'membership-create' group.pk %}" class="btn btn-default btn-sm"><i class="sg sg-join"></i> Mitglied werden</a>
+            {% endif %}
+
+            {% if can_delete_membership %}
+                <a href="{% url 'membership-delete' membership.pk %}"><i class="sg sg-resign" title="Mitgliedschaft beenden"></i></a>
+            {% endif %}
+
+
+            {% if can_create_attention %}
+                <a href="{% url 'group-attention-create' group.pk %}"><i class="sg sg-attention" title="Bei neuen Beiträgen benachrichtigt werden"></i></a>
+            {% elif can_delete_attention %}
+                <a href="{% url 'group-attention-delete' attention.pk %}"><i class="sg sg-attention" title="Du erhältst Benachrichtungen für diese Gruppe"></i></a>
+            {% endif %}
+            {% if can_edit %}
+                <a href="{% url 'group-update' group.pk %}"><i class="fa fa-pencil" title="Gruppenangaben ändern"></i></a>
+            {% endif %}
+        </div>
+        <div class="group-info-slug">
+            <dl class="def def-icons">
+                <dt>
+                    <i class="sg sg-link"></i>
+                    <span class="sr-only">URL auf Stadtgestalten</span>
+                </dt>
+                <dd>
+                    {{ site.domain }}/ {{ group.slug }}
+                </dd>
+            </dl>
+
+        </div>
+    </div>
 </div>
