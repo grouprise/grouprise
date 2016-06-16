@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
     'utils',
+    'macros'
 ]
 
 MIDDLEWARE_CLASSES = [

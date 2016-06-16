@@ -10,3 +10,4 @@ git+https://github.com/robwa/randomcolor-py.git
 rules
 sorl-thumbnail==12.4a1
 translitcodec
+django-macros
