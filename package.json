@@ -24,6 +24,7 @@
     "webpack": "^1.13.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.9.2",
     "bootstrap": "^3.3.6",
     "bootstrap-datepicker": "^1.6.0",
     "dropzone": "^4.3.0",
