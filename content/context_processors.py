@@ -3,7 +3,7 @@ from . import models
 def events(request):
     return {
             'all_calendar_events': models.Event.objects.permitted(request.user).around(),
-            'all_upcoming_events': models.Event.objects.permitted(request.user).upcoming(),
+            'all_upcoming_events': models.Event.objects.permitted(request.user).upcoming(3),
             }
 
 def statistics(request):
