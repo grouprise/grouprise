@@ -1,0 +1,8 @@
+{% load macros %}
+
+{% macro content_type content %}
+    <span class="content-type">
+        <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
+        {{ content.get_display_type_name }}
+    </span>
+{% endmacro %}
