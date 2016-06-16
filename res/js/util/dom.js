@@ -11,7 +11,7 @@ function replace(el_old, el_new) {
     return el_new;
 }
 
-function component(name, init) {
+function component(name, init, opts = {}) {
     function parse_conf(el) {
         const default_conf = {};
 
@@ -22,20 +22,25 @@ function component(name, init) {
             return default_conf;
         }
     }
+    
+    opts = opts instanceof HTMLElement ? { root: opts } : opts;
 
-    return $$(`[data-component~="${name}"]`)
+    return $$(`[data-component~="${name}"]`, opts.root || document)
+        .filter((el) => !el.hasAttribute("data-component-ready"))
         .map((el, index) => {
             const def = el.getAttribute("data-component").split(" ");
+            const conf = Object.assign({}, init.DEFAULTS || {}, opts.conf || {}, parse_conf(el));
 
             const options = {
-                index,
-                conf: parse_conf(el),
+                index, conf,
                 is_type(type) {
                     return def.indexOf(`${name}-${type}`) !== -1;
                 }
             };
 
-            return init(el, options);
+            const component = init(el, options);
+            el.setAttribute("data-component-ready", "");
+            return component;
         });
 }
 
