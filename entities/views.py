@@ -81,6 +81,25 @@ class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     model = models.Gestalt
     permission = 'entities.change_gestalt'
 
+
+class GestaltAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
+    action = 'Avatar ändern'
+    fields = ('avatar',)
+    layout = ('avatar',)
+    menu = 'gestalt'
+    model = models.Gestalt
+    permission = 'entities.change_gestalt'
+
+
+class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
+    action = 'Hintergrundbild ändern'
+    fields = ('background',)
+    layout = ('background',)
+    menu = 'gestalt'
+    model = models.Gestalt
+    permission = 'entities.change_gestalt'
+
+
 class Group(utils_views.List):
     menu = 'group'
     permission = 'entities.view_group'

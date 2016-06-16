@@ -38,7 +38,7 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
     extra_form_class = User
 
     class Meta:
-        fields = ('about', 'avatar', 'background')
+        fields = ('about',)
         model = models.Gestalt
 
     def get_instance(self):
@@ -53,8 +53,6 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
                 'first_name',
                 'last_name',
                 layout.Field('about', rows=5),
-                'avatar',
-                'background',
                 utils_forms.Submit('Profil ändern'),
                 )
 
