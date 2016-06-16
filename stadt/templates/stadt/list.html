@@ -1,15 +1,17 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block content %}
-    {% block list_header %}{% endblock %}
+    <div class="content-list">
+        {% block list_header %}{% endblock %}
 
-    {% block list %}
-        {% for content in content_list %}
-            {% include 'content/_content_preview.html' %}
-        {% endfor %}
-    {% endblock %}
+        {% block list %}
+            {% for content in content_list %}
+                {% include 'content/_content_preview.html' %}
+            {% endfor %}
+        {% endblock %}
 
-    {% if is_paginated %}
-        {% include 'stadt/_pagination.html' %}
-    {% endif %}
+        {% if is_paginated %}
+            {% include 'stadt/_pagination.html' %}
+        {% endif %}
+    </div>
 {% endblock %}
