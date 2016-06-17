@@ -1,10 +1,8 @@
 {% load content thumbnail %}
-{% load macros %}
-{% loadmacros "macros.html" %}
 
 <article class="content-preview">
     <header class="content-preview-header">
-        {% use_macro content_type content %}
+        {% include "macros/content_type.html" with content=content %}
 
         <a href="{{ content.get_absolute_url }}">
             <h3 class="content-title">
