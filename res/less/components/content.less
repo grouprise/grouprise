@@ -31,6 +31,10 @@
     &:extend(.content-spacer all);
     justify-content: space-between;
     padding: 0.2rem 0.4rem;
+
+    &:not(:first-child) {
+        margin-top: 2rem;
+    }
 }
 
 .content-title {
@@ -73,10 +77,6 @@
     }
 }
 
-.content-preview + .content-preview {
-
-}
-
 .content-publication-meta {
     font-size: @font-size-small;
     color: @color-text-extralight;
@@ -92,7 +92,7 @@
     display: flex;
 }
 
-.content-preview-image {
+.content-image {
     margin: 0 1rem 0 0;
     min-width: 200px;
 
