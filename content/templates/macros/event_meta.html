@@ -4,7 +4,7 @@
         <span class="sr-only">Datum & Zeit</span>
     </dt>
     <dd>
-        {{ event.time|date:'d. F Y H:i' }}
+        Am {{ event.time|date:'d. F Y' }} um {{ event.time|date:'H:i' }} Uhr
     </dd>
     <dt>
         <i class="sg sg-fw sg-marker"></i>
