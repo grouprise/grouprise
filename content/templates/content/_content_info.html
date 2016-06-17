@@ -1,5 +1,5 @@
 <p class="content-publication-meta">
-    {{ content.date_created|date:'d.m.Y' }} |
+    Veröffentlicht: {{ content.date_created|date:'d.m.Y' }} |
 
     {% with groups=content.groups %}
         {% if groups.count == 1 %}
@@ -7,7 +7,7 @@
         {% endif %}
     {% endwith %}
 
-    <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
+    Von <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
 
     {% if content.gallery %}
         <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
