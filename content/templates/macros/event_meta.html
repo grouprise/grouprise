@@ -1,0 +1,16 @@
+<dl class="def def-icons">
+    <dt>
+        <i class="sg sg-fw sg-calendar"></i>
+        <span class="sr-only">Datum & Zeit</span>
+    </dt>
+    <dd>
+        {{ event.time|date:'d. F Y H:i' }}
+    </dd>
+    <dt>
+        <i class="sg sg-fw sg-marker"></i>
+        <span class="sr-only">Ort</span>
+    </dt>
+    <dd>
+        {{ event.place }}
+    </dd>
+</dl>

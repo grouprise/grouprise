@@ -54,3 +54,38 @@
 .calendar-daynames {
     border-bottom: 2px solid #f0f0f0;
 }
+
+.calendar-sheet {
+    @size: 12.5em;
+
+    min-width: @size;
+    min-height: @size;
+    max-width: @size;
+    max-height: @size;
+    border: .4em solid @color-text-extralight;
+    border-radius: 2px;
+    color: @color-text-extralight;
+    font-family: @font-family-headline;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    margin: 0 1rem 0 0;
+
+    > * {
+        line-height: 1;
+    }
+}
+
+.calendar-sheet-dayname {
+    font-size: 1.5em;
+}
+
+.calendar-sheet-month {
+    font-size: 2.25em;
+}
+
+.calendar-sheet-daynumber {
+    font-size: 5em;
+}
