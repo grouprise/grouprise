@@ -12,7 +12,7 @@
         {% for week in weeks %}
             <tr>
                 {% for day in week %}
-                    <td class="{% if day.today %}active{% endif %} {% if not day.in_month %}text-muted{% endif %}">
+                    <td class="{% if day.today %} calendar-day-today {% endif %} {% if not day.in_month %} calendar-day-exclude {% endif %} {% if day.url %} calendar-day-has-events {% endif %}">
                         {% if day.url %}
                             <a href="{{ day.url }}{% if not day.events|length_is:1 and group %}?group={{ group.slug }}{% endif %}"
                                title="{{ day.events|preview|truncatechars:50 }}">

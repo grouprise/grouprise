@@ -15,7 +15,7 @@ from utils import forms as utils_forms, views as utils_views
 
 
 class AttentionCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Benachrichtigungen erhalten'
+    action = 'Benachrichtigungen'
     form_class = forms.Attention
     permission = 'entities.create_attention'
 

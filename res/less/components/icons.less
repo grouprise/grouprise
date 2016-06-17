@@ -2,6 +2,10 @@
     .fa();
 }
 
+.sg-fw {
+    .fa-fw();
+}
+
 .sg-address {
     &:after {
         content: @fa-var-envelope-o;
@@ -56,7 +60,8 @@
     }
 }
 
-.sg-edit {
+.sg-edit,
+.sg-pen {
     &:after {
         content: @fa-var-pencil;
     }
@@ -137,5 +142,17 @@
 .sg-url {
     &:after {
         content: @fa-var-globe;
+    }
+}
+
+.sg-pin {
+    &:after {
+        content: @fa-var-thumb-tack;
+    }
+}
+
+.sg-marker {
+    &:after {
+        content: @fa-var-map-marker;
     }
 }

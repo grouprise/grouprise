@@ -1,14 +1,18 @@
-<p class="publication-meta">
-{{ content.date_created|date:'d.m.Y' }} |
-{% with groups=content.groups %}
-{% if groups.count == 1 %}
-<a href="{% url 'group' groups.first.slug %}">{{ groups.first }}</a> |
-{% endif %}
-{% endwith %}
-<a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
-{% if content.gallery %}
-<i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
-{% endif %}
-<i class="sg sg-comments"></i> {{ content.comments.count }} &nbsp;
-<i class="sg sg-attention"></i> {{ content.attentions.count }}
+<p class="content-publication-meta">
+    Veröffentlicht: {{ content.date_created|date:'d.m.Y' }} |
+
+    {% with groups=content.groups %}
+        {% if groups.count == 1 %}
+            <a href="{% url 'group' groups.first.slug %}">{{ groups.first }}</a> |
+        {% endif %}
+    {% endwith %}
+
+    Von <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
+
+    {% if content.gallery %}
+        <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
+    {% endif %}
+
+    <i class="sg sg-comments"></i> {{ content.comments.count }} &nbsp;
+    <i class="sg sg-attention"></i> {{ content.attentions.count }}
 </p>

@@ -2,24 +2,26 @@
 {% load content %}
 
 {% block content %}
-<article class="content">
-    {% include 'content/_content_header.html' %}
-    <div class="content-body" data-component="user-content">
-        {% if content.event %}
-            <!-- todo inline with definitions list -->
-            <p><strong>Ort:</strong> {{ content.event.place }}</p>
-            <p><strong>Zeit:</strong> {{ content.event.time|date:'G:i' }}</p>
-        {% endif %}
-        {% if content.gallery %}
-        {% include 'content/_content_gallery.html' %}
-        {% endif %}
-        {{ content.text|markdown }}
-        {% include 'content/_content_license.html' %}
-    </div>
-    <footer class="content-footer">
-        {% include 'content/_content_comments.html' %}
-    </footer>
-</article>
+    <article class="content">
+        {% include 'content/_content_header.html' %}
+
+        <div class="content-body" data-component="user-content">
+            {% if content.event %}
+                {% include "macros/event_meta.html" with event=content.event %}
+            {% endif %}
+
+            {% if content.gallery %}
+                {% include 'content/_content_gallery.html' %}
+            {% endif %}
+
+            {{ content.text|markdown }}
+            {% include 'content/_content_license.html' %}
+        </div>
+
+        <footer class="content-footer">
+            {% include 'content/_content_comments.html' %}
+        </footer>
+    </article>
 {% endblock %}
 
 {% block heading %}{% endblock %}

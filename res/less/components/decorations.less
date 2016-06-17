@@ -1,3 +1,33 @@
 .decoration-striped {
     background: url("../img/stripe.png") repeat;
 }
+
+.decoration-icon {
+    position: relative;
+
+    &:after,
+    &:before {
+        &:extend(.sg);
+        position: absolute;
+        right: 100%;
+        margin-right: .75em;
+        color: #eaeaea;
+    }
+
+    &.sg-pin:after {
+        transform: rotate(45deg);
+        margin-right: .9em;
+    }
+
+    &.sg-pen {
+        &:before {
+            content: " ";
+            display: block;
+            width: .5em;
+            bottom: 4px;
+            height: 3px;
+            background-color: currentColor;
+            margin-right: 1.7em;
+        }
+    }
+}
