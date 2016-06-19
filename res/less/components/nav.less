@@ -86,3 +86,25 @@
     padding-left: 2em;
     &:extend(.clearfix);
 }
+
+.nav-footer {
+    display: flex;
+
+    &, ul, ol {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul, ol {
+        margin-right: 2rem;
+    }
+
+    li {
+        display: block;
+    }
+
+    a {
+        color: @color-text-default;
+        text-decoration: none;
+    }
+}

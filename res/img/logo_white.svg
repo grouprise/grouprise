@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="81.010704"
+   height="104.68568"
+   viewBox="0 0 81.010704 104.68568"
+   id="svg4212"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="logo_white.svg"
+   inkscape:export-filename="/home/konrad/projects/current/stadtgestalten/res/img/logo.png"
+   inkscape:export-xdpi="180"
+   inkscape:export-ydpi="180">
+  <defs
+     id="defs4214" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-121.74047"
+     inkscape:cy="93.516129"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4217">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-23.494647,-936.01932)">
+    <g
+       id="g4839"
+       transform="matrix(2.0269709,0,0,2.0269709,-949.48547,-420.82726)"
+       style="fill:#ffffff;fill-opacity:1">
+      <path
+         style="fill:#ffffff;fill-opacity:1"
+         inkscape:connector-curvature="0"
+         id="path25"
+         d="M 498.8615,696.52785" />
+      <polygon
+         transform="translate(292.1775,644.22585)"
+         style="fill:#ffffff;fill-opacity:1"
+         id="polygon27"
+         points="204.264,38.956 199.994,75.83 204.01,75.83 207.372,44.179 207.704,44.179 210.17,75.83 214.186,75.83 210.91,38.956 " />
+      <rect
+         style="fill:#ffffff;fill-opacity:1"
+         id="rect57"
+         height="3.4059999"
+         width="21.26"
+         y="676.36786"
+         x="489.1015" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1"
+         id="rect59"
+         height="3.4059999"
+         width="37.993"
+         y="670.38287"
+         x="481.00351" />
+    </g>
+  </g>
+</svg>

@@ -4,3 +4,39 @@
     padding: 2em 0;
     text-align: right;
 }
+
+.page-footer {
+    &:extend(.decoration-striped);
+    margin: 4rem 0 0;
+    display: flex;
+    align-items: stretch;
+}
+
+.page-footer-content,
+.page-footer-sidebar {
+    padding: 2rem 2rem 3rem;
+    position: relative;;
+}
+
+.page-footer-content {
+    background: url("../img/logo_white.svg") no-repeat 2rem 2rem rgba(255, 255, 255, .8);
+    background-size: 5rem auto;
+    padding-left: 9rem;
+    min-height: 7rem;
+    flex: 1;
+}
+
+.page-footer-sidebar {
+    flex-basis: 31.5%;
+
+    &:after {
+        content: " ";
+        display: block;
+        background-color: rgba(255, 255, 255, .8);
+        position: absolute;
+        top: .6rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
