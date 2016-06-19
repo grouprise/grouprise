@@ -11,13 +11,12 @@
             {% calendar calendar_events|override:all_calendar_events %}
             <ul class="events">
                 {% for event in upcoming_events|override:all_upcoming_events %}
-                <li>
-                    <div class="event-preview">
-                        {{ event.time|naturalday:'DATE_FORMAT'|title }},
-                        {{ event.time|time:'TIME_FORMAT' }} Uhr<br>
-                        <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
-                    </div>
-                </li>
+                    <li>
+                        <div class="event-preview">
+                            {{ event.time|naturalday:'d. m.'|title }}
+                            <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
+                        </div>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
