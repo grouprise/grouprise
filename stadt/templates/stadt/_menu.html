@@ -1,23 +1,40 @@
+{% load rules %}
 <nav class="nav">
     <div class="container">
         <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
         <ul class="nav-menu nav-menu-self">
+
+            {# about link #}
             <li><a href="{% url 'group' about_group.slug %}">Über {{ site.name }}</a></li>
             {% if user.is_authenticated and user.gestalt.groups.exists %}
+
+            {# groups menu #}
             <li>
                 <input class="dropdown-state" id="menu-groups" type="checkbox"/>
                 <label for="menu-groups" class="nav-state-toggle">
                     {{ group|default:'Meine Gruppen' }} <span class="caret"></span>
                 </label>
                 <ul class="nav-menu dropdown">
+                    {% if group %}
+                    {% has_perm 'entities.create_group_attention' user group as can_pay_attention %}
+                    <li><a href="{{ group.get_absolute_url }}">{{ group }}</a></li>
+                    {% if can_pay_attention %}
+                    <li><a href="{% url 'group-attention-create' group.pk %}"><i class="sg sg-attention"></i> Benachrichtigungen abonnieren</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'message-create' group.pk %}"><i class="sg sg-message"></i> Nachricht schreiben</a></li>
+                    <li role="separator" class="dropdown-separator"></li>
+                    <li class="dropdown-header">Meine Gruppen</li>
+                    {% endif %}
                     {% for group in user.gestalt.groups.all %}
-                    <li><a href="{% url 'group' group.slug %}">{{ group }}</a></li>
+                    <li><a href="{{ group.get_absolute_url }}">{{ group }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
             {% elif group %}
             <li><a href="{% url 'group' group.slug %}">{{ group }}</a></li>
             {% endif %}
+
+            {# user menu #}
             {% if user.is_authenticated %}
                 <li>
                     <input class="dropdown-state" id="menu-user" type="checkbox"/>
@@ -34,6 +51,7 @@
             {% else %}
                 <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
             {% endif %}
+
         </ul>
         <div class="clearfix"></div>
         <ul class="nav-menu nav-menu-primary">
