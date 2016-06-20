@@ -9,5 +9,12 @@
 {% endblock %}
 
 {% block list %}
-{% for gestalt in gestalt_list %}{% include 'entities/_gestalt_preview.html' %}{% endfor %}
+    <ol class="profiles">
+        {% for gestalt in gestalt_list %}
+            <li>
+                {% include 'macros/profile_short.html' with gestalt=gestalt gestalt_url=gestalt.get_absolute_url %}
+            </li>
+        {% endfor %}
+    </ol>
+
 {% endblock %}

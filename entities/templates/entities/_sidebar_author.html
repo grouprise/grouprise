@@ -1,5 +1,3 @@
-{% load rules staticfiles thumbnail %}
-{% with gestalt_url=gestalt.get_absolute_url %}
 <div class="box box-striped">
     <div class="box-inner">
         <header class="box-header">
@@ -9,31 +7,10 @@
             </h2>
         </header>
         <div class="box-content">
-            <div class="profile">
-                <div class="profile-short">
-                    <a href="{{ gestalt_url }}" class="avatar">
-                        {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
-                            <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-                        {% empty %}
-                            <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-                        {% endthumbnail %}
-                    </a>
-                    <div class="profile-data">
-                        <h3 class="profile-name">
-                            {{ gestalt }}
-                        </h3>
-                        <div class="profile-meta">
-                            Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} · {{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}
-                        </div>
-                    </div>
-
-                </div>
-                <div class="profile-about" data-component="user-content">{{ gestalt.about }}</div>
-            </div>
+            {% include "macros/profile_short.html" with gestalt=gestalt %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
-            <a href="{{ gestalt_url }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
+            <a href="{{ gestalt.get_absolute_url }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
         </div>
     </div>
 </div>
-{% endwith %}
