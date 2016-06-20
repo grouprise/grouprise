@@ -112,7 +112,7 @@ class Group(utils_views.List):
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
         kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
-        kwargs['upcoming_events'] = self.get_events().upcoming()
+        kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
     def get_attention(self):
