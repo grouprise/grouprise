@@ -9,16 +9,20 @@
         </header>
         <div class="box-content">
             {% calendar calendar_events|override:all_calendar_events %}
-            <ul class="events">
-                {% for event in upcoming_events|override:all_upcoming_events %}
-                    <li>
-                        <div class="event-preview">
-                            {{ event.time|naturalday:'d. m.'|title }}
-                            <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+            {% spaceless %}
+                {% if upcoming_events|override:all_upcoming_events|length > 0 %}
+                    <ul class="events">
+                        {% for event in upcoming_events|override:all_upcoming_events %}
+                            <li>
+                                <div class="event-preview">
+                                    {{ event.time|naturalday:'d. m.'|title }}
+                                    <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endspaceless %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{% url 'event-index' %}" class="btn btn-link">Alle Ereignisse</a>
