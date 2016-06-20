@@ -108,7 +108,7 @@ class Group(utils_views.List):
     def get_context_data(self, **kwargs):
         kwargs['attention'] = self.get_attention()
         kwargs['calendar_events'] = self.get_events().around()
-        kwargs['head_gallery'] = self.get_head_gallery()
+        kwargs['head_gallery'] = self.get_group().get_head_gallery()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
         kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
@@ -127,8 +127,8 @@ class Group(utils_views.List):
     def get_group_content(self):
         return self.get_group().content.permitted(self.request.user)
 
-    def get_head_gallery(self):
-        return self.get_group_content().filter(gallery__isnull=False, groupcontent__pinned=True).first()
+    #def get_head_gallery(self):
+    #    return self.get_group_content().filter(gallery__isnull=False, groupcontent__pinned=True).first()
 
     def get_intro_content(self):
         pinned_content = self.get_group_content().filter(groupcontent__pinned=True)
