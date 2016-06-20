@@ -1,5 +1,5 @@
 {% extends 'stadt/stadt.html' %}
-{% load content %}
+{% load content rules %}
 
 {% block content %}
     <article class="content">
@@ -27,7 +27,10 @@
 {% block heading %}{% endblock %}
 
 {% block sidebar %}
-    {% with gestalt=content.author %}
-        {% include 'entities/_sidebar_author.html' %}
-    {% endwith %}
+    {% has_perm 'content.view_author' user content as can_view_author %}
+    {% if can_view_author %}
+        {% with gestalt=content.author %}
+            {% include 'entities/_sidebar_author.html' %}
+        {% endwith %}
+    {% endif %}
 {% endblock %}

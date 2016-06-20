@@ -1,3 +1,6 @@
+{% load rules %}
+{% has_perm 'content.view_author' user content as can_view_author %}
+
 <p class="content-publication-meta">
     Veröffentlicht: {{ content.date_created|date:'d.m.Y' }} |
 
@@ -7,7 +10,9 @@
         {% endif %}
     {% endwith %}
 
+    {% if can_view_author %}
     Von <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
+    {% endif %}
 
     {% if content.gallery %}
         <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
