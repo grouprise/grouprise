@@ -216,7 +216,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppe ändern'
-    fields = ['address', 'date_founded', 'name', 'slug', 'url']
+    fields = ['address', 'description', 'date_founded', 'name', 'slug', 'url']
     menu = 'group'
     model = models.Group
     permission = 'entities.change_group'
@@ -224,6 +224,7 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     def get_layout(self):
         return (
                 'name',
+                layout.Field('description', rows=4),
                 layout.Field('address', rows=4),
                 'url',
                 layout.Field('date_founded', data_component='date'),

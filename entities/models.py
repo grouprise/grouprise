@@ -77,6 +77,7 @@ class Group(models.Model):
     name = models.CharField('Name', max_length=255)
     slug = AutoSlugField('Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
     url = models.URLField('Adresse im Web', blank=True)
+    description = models.TextField('Kurzbeschreibung', blank=True, default='', max_length=200)
 
     objects = models.Manager.from_queryset(querysets.Group)()
 
