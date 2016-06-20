@@ -6,9 +6,13 @@
     .fa-fw();
 }
 
+.sg-active {
+    color: @brand-primary;
+}
+
 .sg-address {
     &:after {
-        content: @fa-var-envelope-o;
+        content: @fa-var-map-marker;
     }
 }
 
@@ -160,5 +164,11 @@
 .sg-dots {
     &:after {
         content: @fa-var-ellipsis-h;
+    }
+}
+
+.sg-question {
+    &:after {
+        content: @fa-var-question-circle;
     }
 }

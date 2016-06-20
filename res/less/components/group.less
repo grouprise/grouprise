@@ -23,6 +23,12 @@
     .carousel-slides img {
         height: 390px;
     }
+
+    .group-avatar {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 }
 
 .group-info {
@@ -68,12 +74,6 @@
     font-size: 1.5rem;
 }
 
-.group-avatar {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
 .group-toolbar {
     margin: 1rem 0 3rem;
     display: flex;
@@ -82,4 +82,101 @@
 
 .group-actions {
     align-self: flex-end;
+}
+
+.groups {
+    margin: 0 -1rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    > li {
+        flex-basis: 50%;
+        max-width: 50%;
+        display: block;
+        padding: 0 1rem;
+        margin: 0 0 2rem;
+    }
+}
+
+.group-preview {
+    display: block;
+    color: @color-text-default;
+    text-decoration: none;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.group-preview-body {
+    position: relative;
+    font-size: @font-size-small;
+    border: 2px solid #f2f2f2;
+    padding: calc(32px + 1rem) 1rem 1rem 1rem;
+
+    h3 {
+        position: absolute;
+        left: calc(64px + 3rem);
+        top: 0;
+        line-height: 32px;
+        margin: 0;
+    }
+
+    p {
+        margin: 1rem 0 0;
+        color: @color-text-light;
+    }
+}
+
+.group-preview-header {
+    background-color: white;
+    position: relative;
+
+    .group-avatar {
+        position: absolute;
+        top: 100%;
+        left: 2rem;
+        transform: translateY(-50%);
+        border: 4px solid white;
+        background-color: white;
+        z-index: 10;
+        box-shadow: 0 0 0 2px #f2f2f2;
+    }
+}
+
+.group-preview-image {
+    position: relative;
+    height: 120px;
+
+    img {
+        display: block;
+    }
+}
+
+.group-preview-stats {
+    position: absolute;
+    bottom: -2px;
+    right: 2px;
+    padding: .3em .6em;
+    background-color: white;
+    //border-top-left-radius: 2px;
+    //border-top-right-radius: 2px;
+    line-height: 1;
+    z-index: 10;
+
+    > i + i {
+        margin-left: .2em;
+    }
+}
+
+.group-preview-image-placeholder {
+    &:extend(.decoration-striped);
+
+    &:after {
+        content: " ";
+        display: block;
+        position: absolute;
+        left: 0; right: 0;
+        top: 0; bottom: 0;
+        background-color: rgba(255, 255, 255, .6);
+    }
 }

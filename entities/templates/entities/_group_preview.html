@@ -1,29 +1,26 @@
 {% load content entities rules utils %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
-<div class="clearfix">
-    <a href="{{ group.get_absolute_url }}">
-        {% group_avatar group %}
-    </a>
-    <h3>
-        <a href="{{ group.get_absolute_url }}">{{ group }}</a>
-        <small>
-            <i class="fa fa-users"></i> {{ group.members.count }}
-            <i class="fa fa-eye"></i> {{ group.attendees.count }}
-            <i class="fa fa-file-text-o"></i> {{ group.content.count }}
-        </small>
-    </h3>
-    {% if can_create_message %}
-    <p><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></p>
-    {% endif %}
-    <ul>
-        {% for content in group.content|permitted:user|limit:3 %}
-        <li>
-            <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
-            <a href="{{ content.get_absolute_url }}"><i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i> {{ content }}</a>
-            <span class="text-muted">von <a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a></span>
-        </li>
-        {% endfor %}
-    </ul>
-    <hr>
-</div>
+<a href="{{ group.get_absolute_url }}">
+    {% group_avatar group %}
+</a>
+<h3>
+    <a href="{{ group.get_absolute_url }}">{{ group }}</a>
+    <small>
+        <i class="fa fa-users"></i> {{ group.members.count }}
+        <i class="fa fa-eye"></i> {{ group.attendees.count }}
+        <i class="fa fa-file-text-o"></i> {{ group.content.count }}
+    </small>
+</h3>
+{% if can_create_message %}
+<p><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></p>
+{% endif %}
+<ul>
+    {% for content in group.content|permitted:user|limit:3 %}
+    <li>
+        <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
+        <a href="{{ content.get_absolute_url }}"><i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i> {{ content }}</a>
+        <span class="text-muted">von <a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a></span>
+    </li>
+    {% endfor %}
+</ul>

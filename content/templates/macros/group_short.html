@@ -1,0 +1,35 @@
+{% load entities rules thumbnail content utils %}
+{% has_perm 'content.view_content' user head_gallery as can_view_head_gallery %}
+
+<a href="{{ group.get_absolute_url }}" class="group-preview">
+    <header class="group-preview-header">
+        {% if group.get_head_gallery %}
+            <div class="group-preview-image">
+                {% thumbnail group.get_head_gallery.images.first.file '360x120' crop='center' as thumb %}
+                    <img src="{{ thumb.url }}" />
+                {% endthumbnail %}
+            </div>
+        {% else %}
+            <div class="group-preview-image group-preview-image-placeholder"></div>
+        {% endif %}
+        <div class="group-avatar">
+            {% include "entities/_group_avatar.html" with group=group %}
+        </div>
+        <div class="group-preview-stats">
+            {% if user.gestalt in group.members.all %}
+                <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
+            {% else %}
+                <i class="sg sg-members" title="Du bist nichtMitglied dieser Gruppe"></i>
+            {% endif %}
+            {% if can_delete_attention %}
+                <i class="sg sg-attention sg-active" title="Du wirst bei neuen Beiträgen benachrichtigt"></i>
+            {% else %}
+                <i class="sg sg-attention" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
+            {% endif %}
+        </div>
+    </header>
+    <div class="group-preview-body">
+        <h3>{{ group.name }}</h3>
+        <p>{{ group.description|default:"Diese Gruppe hat noch keine Beschreibung auf Stadtgestalten hinterlegt." }}</p>
+    </div>
+</a>
