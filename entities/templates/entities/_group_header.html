@@ -1,6 +1,6 @@
 {% load entities rules thumbnail %}
 
-{% has_perm 'content.view_content' user head_gallery as can_view_head_gallery %}
+{% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'entities.change_group' user group as can_edit %}
 {% has_perm 'entities.create_group_attention' user group as can_create_attention %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
@@ -12,10 +12,10 @@
 
 <div class="group-header" data-component="group-header">
     <div class="group-gallery">
-        {% if head_gallery and can_view_head_gallery %}
+        {% if group.get_head_gallery and can_view_head_gallery %}
             <div class="carousel">
                 <div class="carousel-slides">
-                    {% for image in head_gallery.images.all %}
+                    {% for image in group.get_head_gallery.images.all %}
                         <li>
                             {% thumbnail image.file 'x500' crop='center' as thumb %}
                                 <img src="{{ thumb.url }}" alt="{{ group.name }}">
@@ -31,7 +31,7 @@
 
                 {% if can_create_content %}
                     <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
-                        <a class="btn btn-transparent" href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1" title="Intro-Galerie hinzufügen">
+                        <a class="btn btn-transparent" href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1" title="Introgalerie hinzufügen">
                             <i class="fa fa-2x fa-camera"></i>
                         </a>
                     </div>
