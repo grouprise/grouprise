@@ -25,8 +25,10 @@ module.exports = {
                 loader: "json-loader"
             },
             {
-                test: /\.jsx?$/,
-                exclude: /(node_modules|bower_components)/,
+                include: [
+                    path.resolve(__dirname, "res/js"),
+                    path.resolve(__dirname, "node_modules/flatpickr")
+                ],
                 cacheDirectory: __dirname + "/build/babel",
                 loader: "babel",
                 query: {

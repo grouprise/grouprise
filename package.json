@@ -30,10 +30,10 @@
     "dropzone": "^4.3.0",
     "emoji-regex": "^6.0.0",
     "eventemitter2": "^1.0.3",
+    "flatpickr": "github:kmohrf/flatpickr#gh-pages",
     "font-awesome": "^4.5.0",
     "jquery": "^2.2.0",
     "moment": "^2.13.0",
-    "pikaday": "^1.4.0",
     "qwest": "^4.4.4",
     "simplemde": "git+https://github.com/robwa/simplemde-markdown-editor.git"
   }
