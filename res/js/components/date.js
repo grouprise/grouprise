@@ -26,7 +26,7 @@ const base = {
     timeFormat: "H:i:00",
     dateFormat: "d.m.Y",
     minuteIncrement: 15,
-    parseDate: (date) => moment(date, "DD.MM.YYYY HH:mm:ss", "de", true).toDate()
+    parseDate: (date) => moment(date, "DD.MM.YYYY", "de", true).toDate()
 };
 
 export default (el, opts) => {
@@ -34,9 +34,8 @@ export default (el, opts) => {
 
     if(opts.is_type("datetime")) {
         config.enableTime = true;
+        config.parseDate = (date) => moment(date, "DD.MM.YYYY HH:mm:ss", "de", true).toDate()
     }
-
-    console.log(config);
     
     return flatpickr(el, config);
 };
