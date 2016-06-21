@@ -3,7 +3,9 @@ import rules
 
 @rules.predicate
 def is_permitted(user, content):
-    return content in models.Content.objects.permitted(user)
+    if content:
+        return models.Content.objects.permitted(user).filter(pk=content.pk).exists()
+    return False
 
 @rules.predicate
 def is_author(user, content):
@@ -16,7 +18,7 @@ def is_group_content(user, content):
 @rules.predicate
 def is_group_member(user, content):
     for group in content.groups.all():
-        if user.gestalt in group.members.all():
+        if group.members.filter(pk=user.gestalt.pk).exists():
             return True
     return False
 
