@@ -1,5 +1,6 @@
 import Dropzone from "dropzone";
 import qwest from "qwest";
+import cookie from "cookie_js";
 import { $ } from "../util/dom";
 import { success  } from "../util/notify";
 
@@ -32,6 +33,7 @@ export default function image_upload(el, opts) {
     dropzone.on("sending", (file, xhr, form_data) => {
         form_data.set("content", opts.conf.content);
         form_data.set("weight", 0);
+        form_data.set("csrfmiddlewaretoken", cookie.get("csrftoken"));
         counter++;
     });
 
