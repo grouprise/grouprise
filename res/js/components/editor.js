@@ -1,5 +1,4 @@
-// TODO https://github.com/NextStepWebs/simplemde-markdown-editor/issues/150
-import SimpleMDE from "simplemde/dist/simplemde.min";
+import SimpleMDE from "simplemde";
 
 export default (el) => new SimpleMDE({
     element: el,

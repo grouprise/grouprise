@@ -35,6 +35,6 @@
     "jquery": "^2.2.0",
     "moment": "^2.13.0",
     "qwest": "^4.4.4",
-    "simplemde": "git+https://github.com/robwa/simplemde-markdown-editor.git"
+    "simplemde": "^1.11.2"
   }
 }
