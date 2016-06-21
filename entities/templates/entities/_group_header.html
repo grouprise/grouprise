@@ -1,4 +1,4 @@
-{% load entities rules thumbnail %}
+{% load entities rules thumbnail utils %}
 
 {% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'entities.change_group' user group as can_edit %}
@@ -67,7 +67,7 @@
                     <span class="sr-only">Website</span>
                 </dt>
                 <dd>
-                    <a href="{{ group.url }}">{{ group.url|cut:'http://' }}</a>
+                    <a href="{{ group.url }}">{{ group.url|cut:'http://'|cut:'https://'|cuttrailing:'/' }}</a>
                 </dd>
                 <dt>
                     <i class="sg sg-foundation"></i>
