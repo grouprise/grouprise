@@ -53,7 +53,7 @@
                         {% endif %}
                     </ul>
                 </div>
-            {% elif can_create_message %}
+            {% else %}
                 <a href="{% url 'message-create' group.pk %}" class="btn btn-default">Neue Nachricht</a>
             {% endif %}
         </div>

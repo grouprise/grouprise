@@ -132,26 +132,24 @@
             {% endif %}
 
             <div class="btn-group group-actions-user">
-                {% if can_create_message %}
-                    <a href="{% url 'message-create' group.pk %}" class="btn btn-default btn-sm">
-                        <i class="sg sg-message"></i> Nachricht schreiben
-                    </a>
-                {% endif %}
+                <a href="{% url 'message-create' group.pk %}" class="btn btn-default btn-sm">
+                    <i class="sg sg-message"></i> Nachricht schreiben
+                </a>
 
                 <div class="dropdown-container group-actions-admin">
                     <input class="dropdown-state" id="group-more" type="checkbox" />
                     <label class="btn btn-default btn-sm btn-more" for="group-more"></label>
                     <ul class="dropdown dropdown-small">
-                        {% if can_create_attention %}
-                            <li>
-                                <a href="{% url 'group-attention-create' group.pk %}" title="Bei neuen Beiträgen benachrichtigt werden">
-                                    <i class="sg sg-attention"></i> Abbonieren
-                                </a>
-                            </li>
-                        {% elif can_delete_attention %}
+                        {% if can_delete_attention %}
                             <li>
                                 <a href="{% url 'group-attention-delete' attention.pk %}" title="Du erhältst Benachrichtungen für diese Gruppe">
                                     <i class="sg sg-attention"></i> Deabbonnieren
+                                </a>
+                            </li>
+                        {% elif not can_delete_membership %}
+                            <li>
+                                <a href="{% url 'group-attention-create' group.pk %}" title="Bei neuen Beiträgen benachrichtigt werden">
+                                    <i class="sg sg-attention"></i> Abbonieren
                                 </a>
                             </li>
                         {% endif %}
@@ -167,8 +165,8 @@
                 </div>
             </div>
 
-            {% if can_create_membership %}
-                <a href="{% url 'membership-create' group.pk %}" class="btn btn-primary btn-sm">
+            {% if not can_delete_membership %}
+                <a href="{% url 'membership-create' group.pk %}" class="btn btn-default btn-sm">
                     <i class="sg sg-join"></i> Mitglied werden
                 </a>
             {% endif %}
