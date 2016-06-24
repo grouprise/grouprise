@@ -19,7 +19,10 @@
         </div>
 
         <footer class="content-footer">
-            {% include 'content/_content_comments.html' %}
+            {% has_perm 'content.create_comment' user content as can_create_comment %}
+            {% if can_create_comment or content.comments.exists %}
+                {% include 'content/_content_comments.html' %}
+            {% endif %}
         </footer>
     </article>
 {% endblock %}
