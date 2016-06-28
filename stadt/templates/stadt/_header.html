@@ -1,3 +1,8 @@
+<div class="breadcrumb">
+    {% for text, url in parent.items %}
+    <a href="{{ url }}">{{ text }}</a>
+    {% endfor %}
+</div>
 <div class="page-meta">
     {{ group_count }} Gruppen / {{ gestalt_count }} Gestalten / {{ content_count }} Beiträge
 </div>

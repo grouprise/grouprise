@@ -78,17 +78,8 @@ class MessageMixin(messages_views.SuccessMessageMixin):
             return None
 
 class NavigationMixin:
-    def get_back_url(self):
-        if hasattr(self, 'back_url'):
-            try:
-                return urlresolvers.reverse(self.back_url)
-            except urlresolvers.NoReverseMatch:
-                return self.back_url
-        else:
-            return self.get_success_url()
-
     def get_context_data(self, **kwargs):
-        kwargs['back_url'] = self.get_back_url()
+        kwargs['parent'] = {'Navigation': self.get_parent_url()} if self.get_parent_url() else {}
         return super().get_context_data(**kwargs)
 
     def get_parent(self):
@@ -97,7 +88,7 @@ class NavigationMixin:
         else:
             return None
 
-    def get_success_url(self):
+    def get_parent_url(self):
         parent = self.get_parent()
         if parent:
             if isinstance(parent, six.string_types):
@@ -107,6 +98,13 @@ class NavigationMixin:
                     return parent
             else:
                 return parent.get_absolute_url()
+        else:
+            return None
+
+    def get_success_url(self):
+        parent_url = self.get_parent_url()
+        if parent_url:
+            return parent_url
         else:
             try:
                 return super().get_success_url()
