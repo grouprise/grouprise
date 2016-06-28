@@ -1,8 +1,14 @@
-<div class="breadcrumb">
-    {% for text, url in parent.items %}
-    <a href="{{ url }}">{{ text }}</a>
-    {% endfor %}
+<div class="page-prefix">
+    <div class="breadcrumb">{% spaceless %}
+        {% for text, url in parent.items %}
+            <a href="{{ url }}">{{ text }}</a>
+            {% if not forloop.last %}
+                <span class="breadcrumb-separator"></span>
+            {% endif %}
+        {% endfor %}
+    {% endspaceless %}</div>
+    <div class="page-meta">
+        {{ group_count }} Gruppen / {{ gestalt_count }} Gestalten / {{ content_count }} Beiträge
+    </div>
 </div>
-<div class="page-meta">
-    {{ group_count }} Gruppen / {{ gestalt_count }} Gestalten / {{ content_count }} Beiträge
-</div>
+
