@@ -1,0 +1,33 @@
+.breadcrumb {
+    background-color: #f2f2f2;
+    padding: .6em .8em;
+    line-height: 1;
+    white-space: nowrap;
+    border-radius: 2px;
+
+    &:empty {
+        visibility: hidden;
+    }
+
+    > * {
+        color: @color-text-default;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    > a {
+        &:hover,
+        &:focus {
+            color: @brand-primary;
+        }
+    }
+}
+
+.breadcrumb-separator {
+    display: inline-block;
+    padding: 0 .525em 0 .475em;
+
+    &:before {
+        content: " / ";
+    }
+}
