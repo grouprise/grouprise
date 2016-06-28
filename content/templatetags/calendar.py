@@ -7,12 +7,11 @@ import itertools
 
 register = template.Library()
 
-_today = datetime.date.today()
-
 
 class Calendar(python_calendar.LocaleHTMLCalendar):
     def __init__(self, events, firstweekday=0, locale=None):
         super().__init__(firstweekday, locale)
+        self.today = datetime.date.today()
         self.events = {}
         for date, events in itertools.groupby(events, key=lambda e: e.date()):
             self.events[date] = list(events)
@@ -28,15 +27,15 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
                 'day': thedate.day,
                 'events': events,
                 'in_month': thedate.month == themonth,
-                'today': thedate == _today,
+                'today': thedate == self.today,
                 'url': url,
                 }
 
-    def formatmonthname(self, theyear=_today.year, themonth=_today.month):
+    def formatmonthname(self, theyear, themonth):
         with python_calendar.different_locale(self.locale):
             return '%s %s' % (python_calendar.month_name[themonth], theyear)
 
-    def formatmonthweeks(self, theyear=_today.year, themonth=_today.month):
+    def formatmonthweeks(self, theyear, themonth):
         return [self.formatweek(week, themonth) for week in self.monthdatescalendar(theyear, themonth)]
 
     def formatweek(self, theweek, themonth):
@@ -56,6 +55,6 @@ def calendar(context, events):
     return {
             'days': c.formatweekheader(),
             'group': context.get('group'),
-            'month': c.formatmonthname(), 
-            'weeks': c.formatmonthweeks(),
+            'month': c.formatmonthname(c.today.year, c.today.month), 
+            'weeks': c.formatmonthweeks(c.today.year, c.today.month),
             }
