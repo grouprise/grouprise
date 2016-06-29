@@ -38,6 +38,9 @@
     {% endif %}
     <li><i class="sg sg-gestalt"></i> <strong>Über mich:</strong> {{ gestalt.about }}</li>
     <li><i class="sg sg-link"></i> {{ site.domain }}/gestalt/ {{ gestalt.user.username }}</li>
+    {% if not gestalt.public %}
+    <li><i class="sg sg-private"></i> Deine Benutzerseite ist nur für Dich sichtbar.</li>
+    {% endif %}
 </ul>
 {% endblock %}
 

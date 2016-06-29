@@ -31,10 +31,14 @@ def is_group_member(user, group):
 def is_group_membership(user, membership):
     return membership and user and membership.gestalt == user.gestalt if membership else False
 
+@rules.predicate
+def is_public(user, gestalt):
+    return gestalt.public
+
 rules.add_perm('entities.create_attention', rules.is_authenticated & ~is_attendee)
 rules.add_perm('entities.delete_attention', rules.is_authenticated & is_attendee)
 
-rules.add_perm('entities.view_gestalt', rules.always_allow)
+rules.add_perm('entities.view_gestalt', is_public | is_gestalt)
 rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)
 rules.add_perm('entities.create_gestalt_content', rules.is_authenticated & is_gestalt)
 rules.add_perm('entities.create_gestalt_message', rules.is_authenticated & ~is_gestalt)

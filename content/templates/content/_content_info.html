@@ -1,5 +1,6 @@
 {% load rules %}
 {% has_perm 'content.view_author' user content as can_view_author %}
+{% has_perm 'entities.view_gestalt' user content.author as can_view_gestalt %}
 
 <p class="content-publication-meta">
     Veröffentlicht: {{ content.date_created|date:'d.m.Y' }} |
@@ -11,7 +12,7 @@
     {% endwith %}
 
     {% if can_view_author %}
-    Von <a href="{% url 'gestalt' content.author.user.username %}">{{ content.author }}</a> &nbsp;
+    Von <a href="{% if can_view_gestalt %}{% url 'gestalt' content.author.user.username %}{% else %}{% url 'gestalt-message-create' content.author.pk %}{% endif %}">{{ content.author }}</a> &nbsp;
     {% endif %}
 
     {% if content.gallery %}

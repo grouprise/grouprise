@@ -23,6 +23,11 @@ class Gestalt(models.Model):
     addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
     avatar = models.ImageField(blank=True)
     background = models.ImageField('Hintergrundbild', blank=True)
+    public = models.BooleanField(
+            'Benutzerseite veröffentlichen',
+            default=False,
+            help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.'
+            )
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     
     def __str__(self):
