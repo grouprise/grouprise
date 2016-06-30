@@ -112,8 +112,6 @@ class ImageCreate(utils_views.ActionMixin, generic.CreateView):
 
     def form_valid(self, form):
         form.instance.content = self.get_permission_object()
-        # FIXME: race condition
-        form.instance.weight = form.instance.content.images.last().weight + 1 if form.instance.content.images.exists() else 0
         return super().form_valid(form)
 
     def get_menu(self):
