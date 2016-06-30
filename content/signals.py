@@ -16,6 +16,8 @@ def content_pre_save(sender, instance, **kwargs):
 def comment_post_save(sender, instance, **kwargs):
     recipients = {instance.content.author}
     recipients |= set(instance.content.comment_authors.all())
+    for gestalt in instance.content.gestalten.all():
+        recipients |= {gestalt}
     for group in instance.content.groups.all():
         recipients |= set(group.members.all())
     for attention in instance.content.attentions.all():
