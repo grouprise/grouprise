@@ -60,6 +60,9 @@ class Gestalt(utils_views.List):
     sidebar = ('calendar',)
     template_name = 'entities/gestalt_detail.html'
 
+    def get_permission_object(self):
+        return self.get_gestalt()
+
     def get_queryset(self):
         return content_models.Content.objects.permitted(self.request.user).filter(django_models.Q(gestaltcontent__gestalt=self.get_gestalt()) | django_models.Q(author=self.get_gestalt()))
 
@@ -68,9 +71,9 @@ class Gestalt(utils_views.List):
 
 class GestaltList(utils_views.List):
     menu = 'gestalt'
-    model = models.Gestalt
     parent = 'index'
     permission = 'content.view_content_list'
+    queryset = models.Gestalt.objects.filter(public=True)
     title = 'Gestalten'
 
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):

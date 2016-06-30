@@ -2,14 +2,20 @@ from . import models
 import rules
 
 @rules.predicate
-def is_permitted(user, content):
-    if content:
-        return models.Content.objects.permitted(user).filter(pk=content.pk).exists()
+def is_permitted(user, instance):
+    if instance:
+        if hasattr(instance, 'content'):
+            return models.Content.objects.permitted(user).filter(pk=instance.content.pk).exists()
+        else:
+            return models.Content.objects.permitted(user).filter(pk=instance.pk).exists()
     return False
 
 @rules.predicate
-def is_author(user, content):
-    return content.author == user.gestalt
+def is_author(user, instance):
+    if hasattr(instance, 'author'):
+        return instance.author == user.gestalt
+    else:
+        return instance.content.author == user.gestalt
 
 @rules.predicate
 def is_group_content(user, content):
@@ -36,5 +42,8 @@ rules.add_perm('content.create_content', rules.is_authenticated)
 rules.add_perm('content.change_content', rules.is_authenticated & is_author)
 
 rules.add_perm('content.create_comment', rules.is_authenticated & is_permitted)
+
 rules.add_perm('content.create_image', rules.is_authenticated & is_author)
+rules.add_perm('content.update_image', rules.is_authenticated & is_author)
+rules.add_perm('content.view_image', is_permitted)
 rules.add_perm('content.view_image_list', is_permitted)

@@ -1,6 +1,7 @@
-import markdown as python_markdown
 from django import template
 from django.utils import formats, html, safestring, text, timezone
+import markdown as python_markdown
+from markdown.extensions import nl2br
 from pymdownx import magiclink
 
 register = template.Library()
@@ -11,7 +12,7 @@ def markdown(text, autoescape=True):
         esc = html.conditional_escape
     else:
         esc = lambda x: x
-    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=[magiclink.MagiclinkExtension()]))
+    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=[magiclink.MagiclinkExtension(), nl2br.Nl2BrExtension()]))
 
 @register.filter
 def permitted(content, user):

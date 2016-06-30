@@ -3,7 +3,7 @@ from django.conf import urls
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'images', views.ImageSet)
+router.register(r'images', views.ImageSet, 'image')
 
 urlpatterns = [
     urls.url(r'^', urls.include(router.urls)),
