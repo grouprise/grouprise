@@ -1,4 +1,5 @@
 from . import forms
+from content import models as content_models
 from crispy_forms import helper, layout
 from django import forms as django_forms, http
 from django.contrib.auth import views as auth_views
@@ -78,9 +79,33 @@ class MessageMixin(messages_views.SuccessMessageMixin):
             return None
 
 class NavigationMixin:
+    def get_breadcrumb(self):
+        objects = [self.get_parent(), self.get_breadcrumb_object()]
+        objects = [o for o in objects if o is not None]
+        if objects:
+            entity = self.get_parent_entity(objects[0])
+            if entity:
+                objects.insert(0, entity)
+            breadcrumb = [self.get_navigation_data(o) for o in objects[:-1]]
+            breadcrumb.append((str(objects[-1]),))
+            return breadcrumb
+        return []
+
     def get_context_data(self, **kwargs):
-        kwargs['parent'] = {'Navigation': self.get_parent_url()} if self.get_parent_url() else {}
+        kwargs['breadcrumb'] = self.get_breadcrumb()
         return super().get_context_data(**kwargs)
+
+    def get_navigation_data(self, instance):
+        title = str(instance)
+        try:
+            if isinstance(instance, six.string_types):
+                url = urlresolvers.reverse(instance)
+                title = urlresolvers.resolve(url).func.view_class.title
+            else:
+                url = instance.get_absolute_url()
+        except (AttributeError, urlresolvers.NoReverseMatch):
+            url = None
+        return title, url
 
     def get_parent(self):
         if hasattr(self, 'parent'):
@@ -88,21 +113,17 @@ class NavigationMixin:
         else:
             return None
 
-    def get_parent_url(self):
-        parent = self.get_parent()
-        if parent:
-            if isinstance(parent, six.string_types):
-                try:
-                    return urlresolvers.reverse(parent)
-                except urlresolvers.NoReverseMatch:
-                    return parent
+    def get_parent_entity(self, child):
+        if isinstance(child, content_models.Content):
+            if child.groups.exists():
+                return child.groups.first()
             else:
-                return parent.get_absolute_url()
+                return child.author
         else:
             return None
 
     def get_success_url(self):
-        parent_url = self.get_parent_url()
+        parent_url = self.get_navigation_data(self.get_parent())[1]
         if parent_url:
             return parent_url
         else:
@@ -169,6 +190,9 @@ class TitleMixin:
             return self.action
         else:
             return None
+
+    def get_breadcrumb_object(self):
+        return self.get_title()
 
     def get_context_data(self, **kwargs):
         kwargs['title'] = self.get_title()

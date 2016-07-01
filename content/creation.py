@@ -7,12 +7,6 @@ from utils import forms as utils_forms, views as utils_views
 class BaseContent(utils_views.ActionMixin, generic.CreateView):
     permission = 'content.create_content'
 
-    def get_back_url(self):
-        if self.get_group():
-            return self.get_group().get_absolute_url()
-        else:
-            return urlresolvers.reverse(self.back_url)
-
     def get_initial(self):
         return {'author': self.request.user.gestalt.pk, 'group': self.get_group(), 'pinned': self.request.GET.get('pinned'), 'public': self.request.GET.get('public')}
 
@@ -22,23 +16,23 @@ class BaseContent(utils_views.ActionMixin, generic.CreateView):
 
 class Article(BaseContent):
     action = 'Artikel erstellen'
-    back_url = 'article-index'
     form_class = forms.Article
     menu = 'article'
+    parent = 'article-index'
 
 
 class Event(BaseContent):
     action = 'Ereignis erstellen'
-    back_url = 'event-index'
     form_class = forms.Event
     menu = 'event'
+    parent = 'event-index'
 
 
 class Gallery(BaseContent):
     action = 'Galerie erstellen'
-    back_url = 'gallery-index'
     form_class = forms.Gallery
     menu = 'gallery'
+    parent = 'gallery-index'
 
 
 class BaseMessage(utils_views.ActionMixin, generic.CreateView):

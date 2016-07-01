@@ -9,7 +9,6 @@ from utils import forms as utils_forms, views as utils_views
 
 class BaseContentList(utils_views.List):
     context_object_name = 'content_list'
-    parent = 'index'
     permission = 'content.view_content_list'
 
 class ArticleList(BaseContentList):
@@ -59,8 +58,6 @@ class Content(utils_views.PageMixin, generic.DetailView):
 
 
 class ContentList(BaseContentList):
-    parent = None
-
     def get_queryset(self):
         return models.Content.objects.permitted(self.request.user)
 
@@ -79,6 +76,9 @@ class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
 
     def get_menu(self):
         return self.object.get_type_name()
+
+    def get_parent(self):
+        return self.object
 
 class EventDay(utils_views.PageMixin, generic.DayArchiveView):
     allow_future = True
@@ -123,9 +123,15 @@ class EventUpdate(utils_views.ActionMixin, generic.UpdateView):
         else:
             return {}
 
+    def get_parent(self):
+        return self.object
+
 
 class ImageList(utils_views.List):
     permission = 'content.view_image_list'
+
+    def get_breadcrumb_object(self):
+        return self.get_content()
 
     def get_content(self):
         return shortcuts.get_object_or_404(models.Content, pk=self.request.resolver_match.kwargs['content_pk'])

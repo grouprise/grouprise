@@ -71,7 +71,6 @@ class Gestalt(utils_views.List):
 
 class GestaltList(utils_views.List):
     menu = 'gestalt'
-    parent = 'index'
     permission = 'content.view_content_list'
     queryset = models.Gestalt.objects.filter(public=True)
     title = 'Gestalten'
@@ -84,6 +83,9 @@ class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     model = models.Gestalt
     permission = 'entities.change_gestalt'
 
+    def get_parent(self):
+        return self.object
+
 
 class GestaltAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Avatar ändern'
@@ -93,6 +95,9 @@ class GestaltAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     model = models.Gestalt
     permission = 'entities.change_gestalt'
 
+    def get_parent(self):
+        return self.object
+
 
 class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Hintergrundbild ändern'
@@ -101,6 +106,9 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
     menu = 'gestalt'
     model = models.Gestalt
     permission = 'entities.change_gestalt'
+
+    def get_parent(self):
+        return self.object
 
 
 class Group(utils_views.List):
@@ -174,6 +182,7 @@ class GroupAttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
     def get_parent(self):
         return self.get_group()
 
+
 class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Avatar ändern'
     fields = ('avatar',)
@@ -182,13 +191,17 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     model = models.Group
     permission = 'entities.change_group'
 
+    def get_parent(self):
+        return self.object
+
+
 class GroupCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Gruppe anlegen'
-    back_url = 'group-index'
     fields = ('name',)
     layout = 'name'
     menu = 'group'
     model = models.Group
+    parent = 'group-index'
     permission = 'entities.create_group'
 
     def get_initial(self):
@@ -199,7 +212,6 @@ class GroupList(utils_views.PageMixin, filters_views.FilterView):
     filterset_class = filters.Group
     menu = 'group'
     ordering = '-score'
-    parent = 'index'
     queryset = models.Group.objects.scored()
     permission = 'content.view_content_list'
     sidebar = ('calendar',)
@@ -212,6 +224,10 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     menu = 'group'
     model = models.Group
     permission = 'entities.change_group'
+
+    def get_parent(self):
+        return self.object
+
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppe ändern'
@@ -230,8 +246,11 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
                 ) + super().get_layout()
 
+    def get_parent(self):
+        return self.object
+
+
 class Imprint(utils_views.PageMixin, generic.TemplateView):
-    parent = 'index'
     permission = 'entities.view_imprint'
     template_name = 'entities/imprint.html'
     title = 'Impressum'
@@ -277,6 +296,9 @@ class MembershipList(utils_views.PageMixin, generic.ListView):
     menu = 'group'
     permission = 'entities.list_members'
     title = 'Mitglieder'
+
+    def get_parent(self):
+        return self.get_group()
 
     def get_queryset(self):
         return models.Membership.objects.filter(group_id=self.kwargs['group_pk'])

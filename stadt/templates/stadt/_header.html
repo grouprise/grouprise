@@ -1,7 +1,11 @@
 <div class="page-prefix">
     <div class="breadcrumb">{% spaceless %}
-        {% for text, url in parent.items %}
-            <a href="{{ url }}">{{ text }}</a>
+        {% for text, url in breadcrumb %}
+            {% if url %}
+                <a href="{{ url }}">{{ text|truncatechars:25 }}</a>
+            {% else %}
+                <span>{{ text|truncatechars:50 }}</span>
+            {% endif %}
             {% if not forloop.last %}
                 <span class="breadcrumb-separator"></span>
             {% endif %}

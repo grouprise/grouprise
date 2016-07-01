@@ -23,6 +23,7 @@ class Login(utils_views.ActionMixin, views.LoginView):
     action = 'Anmelden'
     form_class = forms.LoginForm
     ignore_base_templates = True
+    parent = 'gestalt-index'
     permission = 'account.login'
 
 class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
@@ -32,7 +33,7 @@ class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     permission = 'account.logout'
 
     def get_parent(self):
-        return self.get_redirect_url()
+        return self.request.user.gestalt
 
 
 class PasswordChange(utils_views.ActionMixin, views.PasswordChangeView):
@@ -41,8 +42,8 @@ class PasswordChange(utils_views.ActionMixin, views.PasswordChangeView):
     ignore_base_templates = True
     permission = 'account.change_password'
     
-    def get_success_url(self):
-        return self.request.user.gestalt.get_absolute_url()
+    def get_parent(self):
+        return self.request.user.gestalt
 
 
 class PasswordReset(utils_views.ActionMixin, views.PasswordResetView):
@@ -70,4 +71,5 @@ class Signup(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
     form_class = forms.SignupForm
     ignore_base_templates = True
+    parent = 'gestalt-index'
     permission = 'account.signup'
