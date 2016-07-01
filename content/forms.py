@@ -1,6 +1,7 @@
 from . import models
 from crispy_forms import layout
 from django import forms
+from django.contrib import auth
 from entities import models as entities_models
 from utils import forms as utils_forms
 
@@ -56,8 +57,8 @@ class Gallery(BaseContent):
 
 
 class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
-    layout = ('sender', 'recipient', 'title', utils_forms.EditorField('text'), utils_forms.Submit('Nachricht senden'))
-    sender = forms.EmailField(disabled=True, widget=forms.HiddenInput)
+    layout = ('recipient', 'sender', 'title', utils_forms.EditorField('text'), utils_forms.Submit('Nachricht senden'))
+    sender = forms.EmailField(label='E-Mail-Adresse')
 
     class Meta:
         fields = ('text', 'title')
@@ -66,10 +67,24 @@ class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['recipient'] = forms.ModelChoiceField(disabled=True, label='Empfängerin', queryset=self.get_recipient_queryset())
+        self.fields['recipient'] = forms.ModelChoiceField(disabled=True, label='Empfängerin', queryset=self.get_recipient_queryset(), widget=forms.HiddenInput)
+        if self.initial.get('sender'):
+            self.fields['sender'].disabled = True
+            self.fields['sender'].widget = forms.HiddenInput
+
+    def clean(self):
+        if not self.fields['sender'].disabled:
+            try:
+                auth.get_user_model().objects.get(email=self.cleaned_data['sender'])
+                if True: # TODO password is usable
+                    self.add_error('sender', forms.ValidationError('Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde Dich mit E-Mail-Adresse und Kennwort an.', code='existing'))
+            except auth.get_user_model().DoesNotExist:
+                pass
+        return super().clean()
 
     def save(self):
         message = super().save(commit=False)
+        auth.get_user_model().objects.get_or_create(email=self.cleaned_data['sender'])
         message.author = entities_models.Gestalt.objects.get(user__email=self.cleaned_data['sender'])
         message.save()
         return message

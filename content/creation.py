@@ -40,7 +40,10 @@ class BaseMessage(utils_views.ActionMixin, generic.CreateView):
     message = 'Die Nachricht wurde versendet.'
 
     def get_initial(self):
-        return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
+        if self.request.user.is_authenticated():
+            return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
+        else:
+            return {'recipient': self.get_recipient().pk}
 
     def get_parent(self):
         return self.get_recipient()
