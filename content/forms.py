@@ -71,7 +71,7 @@ class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
         self.fields['recipient'] = forms.ModelChoiceField(disabled=True, label='Empfängerin', queryset=self.get_recipient_queryset(), widget=forms.HiddenInput)
         if self.initial.get('sender'):
             self.fields['sender'].disabled = True
-            self.fields['sender'].widget = forms.HiddenInput
+            self.helper['sender'].wrap(layout.Field, type='hidden')
 
     def clean(self):
         if not self.fields['sender'].disabled:
