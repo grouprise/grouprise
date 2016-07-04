@@ -87,7 +87,7 @@ class NavigationMixin:
             if entity:
                 objects.insert(0, entity)
             breadcrumb = [self.get_navigation_data(o) for o in objects[:-1]]
-            breadcrumb.append((str(objects[-1]),))
+            breadcrumb.append((str(objects[-1]), None))
             return breadcrumb
         return []
 
