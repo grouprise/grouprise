@@ -1,4 +1,5 @@
 from . import models
+from allauth.account import adapter as allauth_adapter
 from crispy_forms import layout
 from django import forms
 from django.contrib import auth
@@ -75,8 +76,8 @@ class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
     def clean(self):
         if not self.fields['sender'].disabled:
             try:
-                auth.get_user_model().objects.get(email=self.cleaned_data['sender'])
-                if True: # TODO password is usable
+                user = auth.get_user_model().objects.get(email=self.cleaned_data['sender'])
+                if user.has_usable_password():
                     self.add_error('sender', forms.ValidationError('Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde Dich mit E-Mail-Adresse und Kennwort an.', code='existing'))
             except auth.get_user_model().DoesNotExist:
                 pass
@@ -84,7 +85,11 @@ class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
 
     def save(self):
         message = super().save(commit=False)
-        auth.get_user_model().objects.get_or_create(email=self.cleaned_data['sender'])
+        user, created = auth.get_user_model().objects.get_or_create(email=self.cleaned_data['sender'])
+        if created:
+            allauth_adapter.get_adapter().populate_username(None, user)
+            user.set_unusable_password()
+            user.save()
         message.author = entities_models.Gestalt.objects.get(user__email=self.cleaned_data['sender'])
         message.save()
         return message
