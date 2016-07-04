@@ -1,6 +1,7 @@
-from allauth.account import forms as allauth_forms
+from allauth.account import adapter as allauth_adapter, forms as allauth_forms, utils as allauth_utils
 from crispy_forms import layout
 from django import forms
+from django.contrib import auth
 from utils import forms as util_forms
 
 class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
@@ -78,3 +79,25 @@ class SignupForm(util_forms.FormMixin, allauth_forms.SignupForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'] = forms.EmailField(label='E-Mail-Adresse')
+
+    def clean_email(self):
+        try:
+            return super().clean_email()
+        except forms.ValidationError as e:
+            try:
+                user = auth.get_user_model().objects.get(email=self.cleaned_data['email'])
+                if user.has_usable_password():
+                    raise e
+            except auth.get_user_model().DoesNotExist:
+                raise e
+        return self.cleaned_data['email']
+
+    def save(self, request):
+        try:
+            adapter = allauth_adapter.get_adapter(request)
+            user = auth.get_user_model().objects.get(email=self.cleaned_data['email'])
+            adapter.set_password(user, self.cleaned_data["password1"])
+            allauth_utils.setup_user_email(request, user, [])
+            return user
+        except auth.get_user_model().DoesNotExist:
+            return super().save(request)
