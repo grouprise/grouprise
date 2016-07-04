@@ -26,6 +26,9 @@ class Login(utils_views.ActionMixin, views.LoginView):
     parent = 'gestalt-index'
     permission = 'account.login'
 
+    def get_success_url(self):
+        return views.LoginView.get_success_url(self)
+
 class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     action = 'Abmelden'
     ignore_base_templates = True
@@ -73,3 +76,6 @@ class Signup(utils_views.ActionMixin, views.SignupView):
     ignore_base_templates = True
     parent = 'gestalt-index'
     permission = 'account.signup'
+
+    def get_success_url(self):
+        return views.LoginView.get_success_url(self)
