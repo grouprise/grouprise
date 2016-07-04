@@ -12,9 +12,8 @@
     <ol class="profiles">
         {% for gestalt in gestalt_list %}
             <li>
-                {% include 'macros/profile_short.html' with gestalt=gestalt gestalt_url=gestalt.get_absolute_url %}
+                {% include 'entities/_gestalt_preview.html' with gestalt=gestalt link=True %}
             </li>
         {% endfor %}
     </ol>
-
 {% endblock %}

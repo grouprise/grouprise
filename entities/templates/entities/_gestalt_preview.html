@@ -1,28 +1,16 @@
-{% load content rules staticfiles thumbnail utils %}
-{% has_perm 'entities.create_gestalt_message' user entity as can_create_message %}
-<div class="clearfix">
-    <a href="{{ gestalt.get_absolute_url }}" class="avatar">
-        {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
-            <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-        {% empty %}
-            <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-        {% endthumbnail %}
-    </a>
-    <h3>
-        <a href="{{ gestalt.get_absolute_url }}">{{ gestalt }}</a>
-        <small>{{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}</small>
-    </h3>
-    {% if can_create_message %}
-    <p><a href="{% url 'gestalt-message-create' gestalt.pk %}">Nachricht schreiben</a></p>
-    {% endif %}
-    <ul>
-        {% for content in gestalt.authored_content|permitted:user|limit:3 %}
-        <li>
-            <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
-            <a href="{{ content.get_absolute_url }}">{{ content }}</a>
-            <span class="text-muted">{{ content.get_display_type_name }}</span>
-        </li>
-        {% endfor %}
-    </ul>
-    <hr>
-</div>
+{% load rules staticfiles thumbnail %}
+
+<{% if link %}a href="{{ gestalt.get_absolute_url }}"{% else %}div{% endif %} class="profile">
+    <div class="profile-short">
+        {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
+        <div class="profile-data">
+            <h3 class="profile-name">
+                {{ gestalt }}
+            </h3>
+            <div class="profile-meta">
+                Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} · {{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}
+            </div>
+        </div>
+    </div>
+    <div class="profile-about" data-component="user-content">{{ gestalt.about }}</div>
+</{% if link %}a{% else %}div{% endif %}>

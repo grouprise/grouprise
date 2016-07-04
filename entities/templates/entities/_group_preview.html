@@ -1,26 +1,31 @@
-{% load content entities rules utils %}
-{% has_perm 'entities.create_group_message' user group as can_create_message %}
-
-<a href="{{ group.get_absolute_url }}">
-    {% group_avatar group %}
+{% load thumbnail %}
+<a href="{{ group.get_absolute_url }}" class="group-preview">
+    <header class="group-preview-header">
+        {% if group.get_head_gallery %}
+            <div class="group-preview-image">
+                {% thumbnail group.get_head_gallery.images.first.file '360x120' crop='center' as thumb %}
+                    <img src="{{ thumb.url }}" />
+                {% endthumbnail %}
+            </div>
+        {% else %}
+            <div class="group-preview-image group-preview-image-placeholder"></div>
+        {% endif %}
+        {% include "entities/_group_avatar.html" with group=group link=False %}
+        <div class="group-preview-stats">
+            {% if user.gestalt in group.members.all %}
+                <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
+            {% else %}
+                <i class="sg sg-members" title="Du bist nicht Mitglied dieser Gruppe"></i>
+            {% endif %}
+            {% if user.gestalt in group.attendees.all %}
+                <i class="sg sg-attention sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
+            {% else %}
+                <i class="sg sg-attention" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
+            {% endif %}
+        </div>
+    </header>
+    <div class="group-preview-body">
+        <h3>{{ group.name }}</h3>
+        <p>{{ group.description|default:"Diese Gruppe hat noch keine Beschreibung auf Stadtgestalten hinterlegt." }}</p>
+    </div>
 </a>
-<h3>
-    <a href="{{ group.get_absolute_url }}">{{ group }}</a>
-    <small>
-        <i class="fa fa-users"></i> {{ group.members.count }}
-        <i class="fa fa-eye"></i> {{ group.attendees.count }}
-        <i class="fa fa-file-text-o"></i> {{ group.content.count }}
-    </small>
-</h3>
-{% if can_create_message %}
-<p><a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a></p>
-{% endif %}
-<ul>
-    {% for content in group.content|permitted:user|limit:3 %}
-    <li>
-        <span class="text-muted">vor {{ content.date_created|timesince }}:</span>
-        <a href="{{ content.get_absolute_url }}"><i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i> {{ content }}</a>
-        <span class="text-muted">von <a href="{{ content.author.get_absolute_url }}">{{ content.author }}</a></span>
-    </li>
-    {% endfor %}
-</ul>

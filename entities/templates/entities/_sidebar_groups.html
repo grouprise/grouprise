@@ -12,9 +12,7 @@
             <ul class="avatars">
                 {% for group in sidebar_groups|override:all_sidebar_groups|limit:8 %}
                     <li>
-                        <a href="{{ group.get_absolute_url }}">
-                            {% group_avatar group %}
-                        </a>
+                        {% include 'entities/_group_avatar.html' with group=group link=True %}
                     </li>
                 {% endfor %}
             </ul>

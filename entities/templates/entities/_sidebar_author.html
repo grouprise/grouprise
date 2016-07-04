@@ -7,7 +7,7 @@
             </h2>
         </header>
         <div class="box-content">
-            {% include "macros/profile_short.html" with gestalt=gestalt %}
+            {% include "entities/_gestalt_preview.html" with gestalt=gestalt link=True %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{{ gestalt.get_absolute_url }}" class="btn btn-link">Mehr von {{ gestalt }}</a>

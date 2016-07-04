@@ -41,9 +41,7 @@
     </div>
     <div class="group-info">
         <div class="group-info-main">
-            <div class="group-avatar">
-                {% group_avatar group %}
-            </div>
+            {% include 'entities/_group_avatar.html' with group=group link=False %}
             <h1 class="group-title">
                 {{ group.name }}
             </h1>

@@ -1,0 +1,8 @@
+{% load staticfiles thumbnail %}
+<{% if link %}a href="{{ gestalt.get_absolute_url }}"{% else %}div{% endif %} class="avatar">
+    {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
+        <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+    {% empty %}
+        <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+    {% endthumbnail %}
+</{% if link %}a{% else %}div{% endif %}>

@@ -1,5 +1,5 @@
 {% extends 'stadt/list.html' %}
-{% load rules staticfiles thumbnail %}
+{% load rules thumbnail %}
 
 {% block header %}
 {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
@@ -18,13 +18,7 @@
     {% if can_edit %}
     <a href="{% url 'gestalt-avatar-update' gestalt.pk %}">Avatar ändern</a><br>
     {% endif %}
-    <a href="{{ gestalt_url }}" class="avatar">
-        {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
-            <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-        {% empty %}
-            <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-        {% endthumbnail %}
-    </a>
+    {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
 </div>
 {% if can_edit %}
 <a href="{% url 'gestalt-background-update' gestalt.pk %}">Hintergrundbild ändern</a>
