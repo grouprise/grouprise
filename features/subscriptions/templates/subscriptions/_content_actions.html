@@ -4,7 +4,7 @@
 {% has_perm 'subscriptions.delete_subscription' user content|subscription:user as can_delete_subscription %}
 
 {% if can_create_subscription %}
-<a href="{#{% url 'subscription-create' content.pk %}#}" class="btn btn-default" title="Bei neuen Kommentaren benachrichtigt werden">
+<a href="{% url 'content-subscribe' content.pk %}" class="btn btn-default" title="Bei neuen Kommentaren benachrichtigt werden">
         <i class="sg sg-subscription"></i> Abonnieren
     </a>
 {% endif %}

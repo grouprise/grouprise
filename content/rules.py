@@ -32,6 +32,13 @@ def is_group_member(user, content):
 def is_public(user, content):
     return content.public
 
+@rules.predicate
+def is_recipient(user, content):
+    for gestalt in content.gestalten.all():
+        if user.gestalt == gestalt:
+            return True
+    return False
+
 rules.add_perm('content.view_content_list', rules.always_allow)
 rules.add_perm('content.view_event_day', rules.always_allow)
 rules.add_perm('content.view_help', rules.always_allow)

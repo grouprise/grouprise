@@ -14,6 +14,14 @@ from rules.contrib import views as rules_views
 class DeleteView(edit_views.FormMixin, generic.DeleteView):
     pass
 
+
+class ContentMixin:
+    def get_content(self):
+        if 'content_pk' in self.kwargs:
+            return content_models.Content.objects.get(pk=self.kwargs['content_pk'])
+        return None
+
+
 class GestaltMixin:
     def get_context_data(self, **kwargs):
         kwargs['gestalt'] = self.get_gestalt()
@@ -206,6 +214,7 @@ class TitleMixin:
 
 
 class ActionMixin(
+        ContentMixin,
         FormMixin,
         GestaltMixin,
         GroupMixin,
@@ -234,6 +243,10 @@ class PageMixin(
         ):
     fallback_template_name = 'stadt/list.html'
     sidebar = ('calendar', 'groups')
+
+
+class Create(ActionMixin, generic.CreateView):
+    pass
 
 
 class List(PageMixin, generic.ListView):

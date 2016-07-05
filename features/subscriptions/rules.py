@@ -22,8 +22,10 @@ def is_subscriber(user, subscription):
 rules.add_perm(
         'subscriptions.create_content_subscription',
         rules.is_authenticated &
+        content_rules.is_permitted &
         ~content_rules.is_author &
         ~content_rules.is_group_member &
+        ~content_rules.is_recipient &
         ~is_subscribed_to)
 
 rules.add_perm(

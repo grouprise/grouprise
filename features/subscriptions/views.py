@@ -1,26 +1,46 @@
+from . import models
+from django.contrib.contenttypes import models as contenttypes_models
+from utils import views
 
-class AttentionCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Benachrichtigungen'
-    form_class = forms.Attention
-    permission = 'entities.create_attention'
 
-    def get_attended_object(self):
-        if 'content_pk' in self.request.resolver_match.kwargs:
-            return shortcuts.get_object_or_404(content_models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
+class Subscribe(views.Create):
+    fields = ('content_type', 'object_id', 'subscriber',)
+    model = models.Subscription
 
     def get_initial(self):
-        return {'attendee_email': self.request.user.email, 'attended_object': self.get_attended_object().pk}
+        return {
+                'content_type': contenttypes_models.ContentType.objects \
+                        .get_for_model(self.subscribe_to),
+                'object_id': self.subscribe_to.pk,
+                'subscriber': self.request.user.gestalt.pk,
+                }
 
-    def get_menu(self):
-        return self.get_parent().get_type_name()
+    # TODO: move this to base class as well
+    #def get_menu(self):
+    #    return self.get_parent().get_type_name()
 
     def get_parent(self):
-        return self.get_attended_object()
+        return self.subscribe_to
+
+    # TODO: move this to base class (related_object)
+    def dispatch(self, request, *args, **kwargs):
+        self.subscribe_to = self.get_subscribe_to()
+        if not self.subscribe_to:
+            raise http.Http404('Zu abonnierendes Objekt nicht gefunden')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_permission_object(self):
-        return self.get_attended_object()
+        return self.subscribe_to
 
 
+class ContentSubscribe(Subscribe):
+    permission = 'subscriptions.create_content_subscription'
+
+    def get_subscribe_to(self):
+        return self.get_content()
+
+
+'''
 class AttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
     action = 'Keine Benachrichtigungen mehr erhalten'
     layout = layout.HTML('<p>Möchtest Du wirklich keine Benachrichtigungen '
@@ -65,3 +85,4 @@ class GroupAttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
 
     def get_parent(self):
         return self.get_group()
+'''
