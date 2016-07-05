@@ -73,7 +73,7 @@ class Group(models.Model):
     members = models.ManyToManyField('Gestalt', related_name='groups', through='Membership')
     name = models.CharField('Name', max_length=255)
     slug = AutoSlugField('Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
-    subscriptions = contenttypes_fields.GenericRelation('subscriptions.Subscription')
+    #subscriptions = contenttypes_fields.GenericRelation('subscriptions.Subscription')
     url = models.URLField('Adresse im Web', blank=True)
     description = models.TextField('Kurzbeschreibung', blank=True, default='', max_length=200)
 

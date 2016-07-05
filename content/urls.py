@@ -5,8 +5,6 @@ from entities import views as entities_views
 urlpatterns = [
     urls.url(r'^article/$', views.ArticleList.as_view(), name='article-index'),
     urls.url(r'^article/add/$', creation.Article.as_view(), name='article-create'),
-    urls.url(r'^content/(?P<content_pk>[0-9]+)/attention/pay/$', entities_views.AttentionCreate.as_view(), name='attention-create'),
-    urls.url(r'^content/(?P<content_pk>[0-9]+)/attention/unpay/$', entities_views.AttentionDelete.as_view(), name='attention-delete'),
     urls.url(r'^content/(?P<content_pk>[0-9]+)/comment/add/$', creation.CommentCreate.as_view(), name='comment-create'),
     urls.url(r'^content/(?P<content_pk>[0-9]+)/image/$', views.ImageList.as_view(), name='content-image-list'),
     urls.url(r'^content/(?P<content_pk>[0-9]+)/image/add/$', creation.ImageCreate.as_view(), name='image-create'),
