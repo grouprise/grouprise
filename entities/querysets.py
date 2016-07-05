@@ -10,7 +10,7 @@ class Group(models.QuerySet):
     def scored(self):
         counted = self.annotate(
                 num_attendees=models.ExpressionWrapper(
-                    models.Count('attendees', distinct=True),
+                    models.Count('subscriptions', distinct=True),
                     output_field=models.FloatField()),
                 num_content=models.ExpressionWrapper(
                     models.Count('content', distinct=True),

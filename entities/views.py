@@ -10,6 +10,7 @@ from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
 from django_filters import views as filters_views
+from features.subscriptions import models as subscriptions_models
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
@@ -176,7 +177,7 @@ class GroupAttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
     layout = layout.HTML('<p>Möchtest Du wirklich keine Benachrichtigungen '
             'für die Gruppe <em>{{ group }}</em> mehr erhalten?</p>')
     menu = 'group'
-    model = models.GroupAttention
+    model = subscriptions_models.Subscription
     permission = 'entities.delete_group_attention'
 
     def get_parent(self):

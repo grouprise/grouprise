@@ -4,6 +4,7 @@ from crispy_forms import bootstrap, layout
 from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
+from features.subscriptions import models as subscriptions_models
 from utils import forms as utils_forms
 
 
@@ -17,7 +18,7 @@ class Attention(utils_forms.FormMixin, forms.ModelForm):
 
     class Meta:
         fields = ('attended_object',)
-        model = models.Attention
+        model = subscriptions_models.Subscription
 
     def save(self):
         attention = super().save(commit=False)
@@ -68,7 +69,7 @@ class GroupAttention(utils_forms.FormMixin, forms.ModelForm):
 
     class Meta:
         fields = ('group',)
-        model = models.GroupAttention
+        model = subscriptions_models.Subscription
 
     def save(self):
         attention = super().save(commit=False)
