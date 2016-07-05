@@ -1,28 +1,18 @@
-{% load rules %}
+{% load rules utils %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
-{% has_perm 'entities.create_attention' user content as can_create_attention %}
-{% has_perm 'entities.delete_attention' user content as can_delete_attention %}
 
 <div class="content-data">
     <div class="content-header">
         <span class="content-classification">Beitrag</span>
         <div class="btn-toolbar">
             {% if can_edit_content %}
-            <a href="{% if content.event %}{% url 'event-update' content.pk %}{% else %}{% url 'content-update' content.pk %}{% endif %}" class="btn btn-default pull-right">
+            <a href="{% if content.event %}{% url 'event-update' content.pk %}{% else %}{% url 'content-update' content.pk %}{% endif %}" class="btn btn-default">
                 Ändern
             </a>
             {% endif %}
-            {% if can_create_attention %}
-            <a href="{% url 'attention-create' content.pk %}" class="btn btn-default pull-right" title="Bei neuen Kommentaren benachrichtigt werden">
-                Benachrichtigungen
-            </a>
-            {% elif can_delete_attention %}
-            <a href="{% url 'attention-delete' content.pk %}" class="btn btn-default pull-right" title="Du erhältst Benachrichtungen für diesen Beitrag">
-                Benachrichtigungen
-            </a>
-            {% endif %}
-            {% if not content.gallery %}
-            <a href="{% url 'content-image-list' content.pk %}" class="btn btn-default pull-right">
+            {% include_features '_content_actions.html' %}
+            {% if can_edit_content and not content.gallery %}
+            <a href="{% url 'content-image-list' content.pk %}" class="btn btn-default">
                 Bilder
             </a>
             {% endif %}
