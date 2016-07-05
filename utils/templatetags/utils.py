@@ -1,4 +1,6 @@
-from django import template
+from django import apps, template
+from django.template import loader
+from django.utils import safestring
 
 register = template.Library()
 
@@ -18,3 +20,14 @@ def override(override, overridden):
         return override
     else:
         return overridden
+
+@register.simple_tag(takes_context=True)
+def include_features(context, template_name):
+    result = ''
+    for app in apps.apps.get_app_configs():
+        try:
+            t = loader.get_template('{}/{}'.format(app.label, template_name))
+            result += t.render(context)
+        except template.TemplateDoesNotExist:
+            pass
+    return safestring.mark_safe(result)

@@ -1,3 +1,4 @@
+from . import querysets
 from django.contrib.contenttypes import (
         fields as contenttypes_fields,
         models as contenttypes_models)
@@ -9,3 +10,8 @@ class Subscription(models.Model):
     object_id = models.PositiveIntegerField()
     subscribed_to = contenttypes_fields.GenericForeignKey()
     subscriber = models.ForeignKey('entities.Gestalt')
+
+    objects = models.Manager.from_queryset(querysets.Subscription)()
+
+    class Meta:
+        unique_together = ('content_type', 'object_id', 'subscriber')

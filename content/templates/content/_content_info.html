@@ -1,4 +1,4 @@
-{% load rules %}
+{% load rules utils %}
 {% has_perm 'content.view_author' user content as can_view_author %}
 {% has_perm 'entities.view_gestalt' user content.author as can_view_gestalt %}
 
@@ -19,6 +19,7 @@
         <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
     {% endif %}
 
-    <i class="sg sg-comments"></i> {{ content.comments.count }} &nbsp;
-    <i class="sg sg-attention"></i> ?
+    <i class="sg sg-comments"></i> {{ content.comments.count }}
+
+    {% include_features '_content_meta.html' %}
 </p>
