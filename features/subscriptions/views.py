@@ -4,40 +4,44 @@ from utils import views
 
 
 class Subscribe(views.Create):
+    action = 'Abonnieren'
+    description = (
+            'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
+            'neue Kommentare veröffentlicht werden')
     fields = ('content_type', 'object_id', 'subscriber',)
     model = models.Subscription
+    title = 'Abonnement'
 
     def get_initial(self):
         return {
                 'content_type': contenttypes_models.ContentType.objects \
-                        .get_for_model(self.subscribe_to),
-                'object_id': self.subscribe_to.pk,
+                        .get_for_model(self.related_object),
+                'object_id': self.related_object.pk,
                 'subscriber': self.request.user.gestalt.pk,
                 }
-
-    # TODO: move this to base class as well
-    #def get_menu(self):
-    #    return self.get_parent().get_type_name()
-
-    def get_parent(self):
-        return self.subscribe_to
-
-    # TODO: move this to base class (related_object)
-    def dispatch(self, request, *args, **kwargs):
-        self.subscribe_to = self.get_subscribe_to()
-        if not self.subscribe_to:
-            raise http.Http404('Zu abonnierendes Objekt nicht gefunden')
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_permission_object(self):
-        return self.subscribe_to
 
 
 class ContentSubscribe(Subscribe):
     permission = 'subscriptions.create_content_subscription'
 
-    def get_subscribe_to(self):
+    def get_related_object(self):
         return self.get_content()
+
+
+class Unsubscribe(views.Delete):
+    model = models.Subscription
+    permission = 'subscriptions.delete_subscription'
+
+    def get_parent(self):
+        return self.object.subscribed_to
+
+
+class ContentUnsubscribe(Unsubscribe):
+    def get_object(self):
+        return models.Subscription.objects.filter(
+                subscribed_to=self.get_content(),
+                subscriber=self.request.user.gestalt
+                ).first()
 
 
 '''

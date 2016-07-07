@@ -11,9 +11,6 @@ from django.views.generic import edit as edit_views
 from entities import models as entities_models
 from rules.contrib import views as rules_views
 
-class DeleteView(edit_views.FormMixin, generic.DeleteView):
-    pass
-
 
 class ContentMixin:
     def get_content(self):
@@ -72,7 +69,10 @@ class FormMixin(forms.LayoutMixin):
 
 class MenuMixin:
     def get_context_data(self, **kwargs):
-        kwargs['menu'] = self.get_menu()
+        menu = self.get_menu()
+        if not isinstance(menu, six.string_types):
+            menu = menu.__name__
+        kwargs['menu'] = menu
         return super().get_context_data(**kwargs)
 
     def get_menu(self):
@@ -246,6 +246,26 @@ class PageMixin(
 
 
 class Create(ActionMixin, generic.CreateView):
+    def get_menu(self):
+        t = type(self.related_object)
+        if t == content_models.Content:
+            return type(self.related_object.get_content())
+        return t
+
+    def get_parent(self):
+        return self.related_object
+
+    def dispatch(self, request, *args, **kwargs):
+        self.related_object = self.get_related_object()
+        if not self.related_object:
+            raise http.Http404('Zugehöriges Objekt nicht gefunden')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_permission_object(self):
+        return self.related_object
+
+
+class Delete(ActionMixin, edit_views.FormMixin, generic.DeleteView):
     pass
 
 

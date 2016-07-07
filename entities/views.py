@@ -215,7 +215,7 @@ class MembershipCreate(utils_views.ActionMixin, generic.CreateView):
     def get_permission_object(self):
         return self.get_group()
 
-class MembershipDelete(utils_views.ActionMixin, utils_views.DeleteView):
+class MembershipDelete(utils_views.Delete):
     action = 'Mitgliedschaft beenden'
     layout = layout.HTML('<p>Möchtest Du Deine Mitgliedschaft in der Gruppe '
         '<em>{{ group }}</em> auf {{ site.name }} wirklich beenden?</p>')

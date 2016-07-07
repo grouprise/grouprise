@@ -106,7 +106,7 @@ class Content(Base):
                     )
 
     def get_content(self):
-        return self
+        return self.get_subclass_instance()
 
     def get_display_type_name(self):
         return self.get_subclass_instance().get_display_type_name()

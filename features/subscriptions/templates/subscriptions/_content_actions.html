@@ -10,7 +10,7 @@
 {% endif %}
 
 {% if can_delete_subscription %}
-<a href="{#{% url 'subscription-delete' content.pk %}#}" class="btn btn-default" title="Du erhältst Benachrichtungen für diesen Beitrag">
+<a href="{% url 'content-unsubscribe' content.pk %}" class="btn btn-default" title="Du erhältst Benachrichtungen für diesen Beitrag">
         <i class="sg sg-subscription"></i> Abonniert
     </a>
 {% endif %}
