@@ -37,20 +37,25 @@ class GroupMixin:
         return super().get_context_data(**kwargs)
 
     def get_group(self):
-        if hasattr(self, 'object'):
-            if isinstance(self.object, entities_models.Group):
-                return self.object
-            if hasattr(self.object, 'group'):
-                return self.object.group
-            if hasattr(self.object, 'groups'):
-                return self.object.groups.first()
+        for attr in ('object', 'related_object'):
+            if hasattr(self, attr):
+                instance = getattr(self, attr)
+                if isinstance(instance, entities_models.Group):
+                    return instance
+                if hasattr(instance, 'group'):
+                    return instance.group
+                if hasattr(instance, 'groups'):
+                    return instance.groups.first()
         if 'group_pk' in self.kwargs:
             return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
         if 'group_slug' in self.kwargs:
             return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
         if 'group' in self.request.GET:
             return entities_models.Group.objects.get(slug=self.request.GET['group'])
+        if 'content_pk' in self.kwargs:
+            return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
         return None
+
 
 class FormMixin(forms.LayoutMixin):
     def get_form(self, form_class=None):
