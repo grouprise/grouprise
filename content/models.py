@@ -75,7 +75,6 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
-    attentions = fields.GenericRelation('entities.Attention')
     comment_authors = models.ManyToManyField('entities.Gestalt', through='Comment')
     public = models.BooleanField(
             'Veröffentlichen',

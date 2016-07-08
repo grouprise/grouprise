@@ -1,16 +1,13 @@
 {% load rules subscriptions %}
 
-{% has_perm 'subscriptions.create_group_subscription' user group as can_create_subscription %}
 {% has_perm 'subscriptions.delete_subscription' user group|subscription:user as can_delete_subscription %}
-
-{% if can_create_subscription %}
-<a href="{% url 'group-subscribe' group.pk %}" class="btn btn-default btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
-        <i class="sg sg-subscription"></i> Abonnieren
-    </a>
-{% endif %}
 
 {% if can_delete_subscription %}
 <a href="{% url 'group-unsubscribe' group.pk %}" class="btn btn-default btn-sm" title="Du erhältst Benachrichtungen für diese Gruppe">
         <i class="sg sg-subscription"></i> Abonniert
+    </a>
+{% else %}
+<a href="{% url 'group-subscribe' group.pk %}" class="btn btn-default btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+        <i class="sg sg-subscription"></i> Abonnieren
     </a>
 {% endif %}

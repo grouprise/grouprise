@@ -1,16 +1,13 @@
 {% load rules subscriptions %}
 
-{% has_perm 'subscriptions.create_content_subscription' user content as can_create_subscription %}
 {% has_perm 'subscriptions.delete_subscription' user content|subscription:user as can_delete_subscription %}
-
-{% if can_create_subscription %}
-<a href="{% url 'content-subscribe' content.pk %}" class="btn btn-default" title="Bei neuen Kommentaren benachrichtigt werden">
-        <i class="sg sg-subscription"></i> Abonnieren
-    </a>
-{% endif %}
 
 {% if can_delete_subscription %}
 <a href="{% url 'content-unsubscribe' content.pk %}" class="btn btn-default" title="Du erhältst Benachrichtungen für diesen Beitrag">
         <i class="sg sg-subscription"></i> Abonniert
+    </a>
+{% else %}
+<a href="{% url 'content-subscribe' content.pk %}" class="btn btn-default" title="Bei neuen Kommentaren benachrichtigt werden">
+        <i class="sg sg-subscription"></i> Abonnieren
     </a>
 {% endif %}

@@ -1,4 +1,4 @@
-{% load rules %}
+{% load rules utils %}
 <nav class="nav">
     <div class="container">
         <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
@@ -6,9 +6,9 @@
 
             {# about link #}
             <li><a href="{% url 'group' about_group.slug %}">Über {{ site.name }}</a></li>
-            {% if user.is_authenticated and user.gestalt.groups.exists %}
 
             {# groups menu #}
+            {% if user.gestalt.groups.exists or group %}
             <li>
                 <input class="dropdown-state" id="menu-groups" type="checkbox"/>
                 <label for="menu-groups" class="nav-state-toggle">
@@ -16,22 +16,19 @@
                 </label>
                 <ul class="nav-menu dropdown">
                     {% if group %}
-                    {% has_perm 'entities.create_group_attention' user group as can_pay_attention %}
                     <li><a href="{{ group.get_absolute_url }}">{{ group }}</a></li>
-                    {% if can_pay_attention %}
-                    <li><a href="{% url 'group-attention-create' group.pk %}"><i class="sg sg-attention"></i> Benachrichtigungen abonnieren</a></li>
-                    {% endif %}
+                    {% include_features '_group_menu_actions.html' %}
                     <li><a href="{% url 'message-create' group.pk %}"><i class="sg sg-message"></i> Nachricht schreiben</a></li>
+                    {% if user.gestalt.groups.exists %}
                     <li role="separator" class="dropdown-separator"></li>
                     <li class="dropdown-header">Meine Gruppen</li>
                     {% endif %}
                     {% for group in user.gestalt.groups.all %}
                     <li><a href="{{ group.get_absolute_url }}">{{ group }}</a></li>
                     {% endfor %}
+                    {% endif %}
                 </ul>
             </li>
-            {% elif group %}
-            <li><a href="{% url 'group' group.slug %}">{{ group }}</a></li>
             {% endif %}
 
             {# user menu #}
