@@ -12,6 +12,13 @@ urlpatterns = [
         views.ContentUnsubscribe.as_view(),
         name='content-unsubscribe'),
 
-    #urls.url(r'^group/attention/(?P<pk>[0-9]+)/delete/$', views.GroupAttentionDelete.as_view(), name='group-attention-delete'),
-    #urls.url(r'^group/(?P<group_pk>[0-9]+)/pay_attention/$', views.GroupAttentionCreate.as_view(), name='group-attention-create'),
+    urls.url(
+        r'^group/(?P<group_pk>[0-9]+)/subscribe/$',
+        views.GroupSubscribe.as_view(),
+        name='group-subscribe'),
+
+    urls.url(
+        r'^group/(?P<group_pk>[0-9]+)/unsubscribe/$',
+        views.GroupUnsubscribe.as_view(),
+        name='group-unsubscribe'),
 ]

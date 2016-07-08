@@ -267,17 +267,19 @@ class PageMixin(
     sidebar = ('calendar', 'groups')
 
 
-class Create(ActionMixin, generic.CreateView):
-    def __init__(self, *args, **kwargs):
-        self._fields = self.fields
-        self.fields = self.get_fields()
-        super().__init__(*args, **kwargs)
-
+class RelatedObjectMixin:
     def dispatch(self, request, *args, **kwargs):
         self.related_object = self.get_related_object()
         if not self.related_object:
             raise http.Http404('Zugehöriges Objekt nicht gefunden')
         return super().dispatch(request, *args, **kwargs)
+
+
+class Create(RelatedObjectMixin, ActionMixin, generic.CreateView):
+    def __init__(self, *args, **kwargs):
+        self._fields = self.fields
+        self.fields = self.get_fields()
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def get_field_name(field):
@@ -303,7 +305,7 @@ class Create(ActionMixin, generic.CreateView):
         return self.related_object
 
 
-class Delete(ActionMixin, edit_views.FormMixin, generic.DeleteView):
+class Delete(RelatedObjectMixin, ActionMixin, edit_views.FormMixin, generic.DeleteView):
     pass
 
 

@@ -78,19 +78,12 @@ class Group(utils_views.List):
     template_name = 'entities/group_detail.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['attention'] = self.get_attention()
         kwargs['calendar_events'] = self.get_events().around()
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['membership'] = self.get_membership()
         kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
-
-    def get_attention(self):
-        try:
-            return models.GroupAttention.objects.get(attendee=self.request.user.gestalt, group=self.get_group())
-        except (AttributeError, models.GroupAttention.DoesNotExist):
-            return None
 
     def get_events(self):
         return content_models.Event.objects.permitted(self.request.user).filter(groups=self.get_group())

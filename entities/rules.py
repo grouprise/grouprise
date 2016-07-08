@@ -7,8 +7,6 @@ def is_gestalt(user, gestalt):
 
 @rules.predicate
 def is_group_member(user, group):
-    if type(group) == models.GroupAttention:
-        group = group.group
     return group and group.members.filter(user=user).exists()
 
 @rules.predicate
