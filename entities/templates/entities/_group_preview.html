@@ -1,4 +1,4 @@
-{% load thumbnail %}
+{% load subscriptions thumbnail %}
 <a href="{{ group.get_absolute_url }}" class="group-preview">
     <header class="group-preview-header">
         {% if group.get_head_gallery %}
@@ -11,18 +11,20 @@
             <div class="group-preview-image group-preview-image-placeholder"></div>
         {% endif %}
         {% include "entities/_group_avatar.html" with group=group link=False %}
+        {% if user.is_authenticated %}
         <div class="group-preview-stats">
+            {% if group|is_subscriber:user.gestalt %}
+                <i class="sg sg-subscription sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
+            {% else %}
+                <i class="sg sg-subscription" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
+            {% endif %}
             {% if user.gestalt in group.members.all %}
                 <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
             {% else %}
                 <i class="sg sg-members" title="Du bist nicht Mitglied dieser Gruppe"></i>
             {% endif %}
-            {% if user.gestalt in group.attendees.all %}
-                <i class="sg sg-attention sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
-            {% else %}
-                <i class="sg sg-attention" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
-            {% endif %}
         </div>
+        {% endif %}
     </header>
     <div class="group-preview-body">
         <h3>{{ group.name }}</h3>
