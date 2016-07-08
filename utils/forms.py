@@ -45,6 +45,16 @@ class EditorField(layout.Field):
         kwargs['data_component'] = 'editor'
         super().__init__(*args, **kwargs)
 
+
+class Field(layout.Field):
+    def __init__(self, name, **kwargs):
+        self.constant = False
+        if 'type' in kwargs and kwargs['type'] == 'constant':
+            self.constant = True
+            kwargs['type'] = 'hidden'
+        super().__init__(name, **kwargs)
+
+
 class Submit(layout.Submit):
     def __init__(self, value):
         super().__init__('', value)

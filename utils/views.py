@@ -13,6 +13,10 @@ from rules.contrib import views as rules_views
 
 
 class ContentMixin:
+    def get_context_data(self, **kwargs):
+        kwargs['content'] = self.get_content()
+        return super().get_context_data(**kwargs)
+
     def get_content(self):
         if 'content_pk' in self.kwargs:
             return content_models.Content.objects.get(pk=self.kwargs['content_pk'])
@@ -68,14 +72,20 @@ class FormMixin(forms.LayoutMixin):
         return super().get_form_class() or django_forms.Form
 
     def get_layout(self):
-        layout = super().get_layout()
-        layout += (forms.Submit(self.get_action()),)
-        return layout
+        if hasattr(self, '_fields'):
+            l = self._fields
+        else:
+            l = super().get_layout()
+        if hasattr(self, 'description'):
+            l = (layout.HTML('<p>{}</p>'.format(self.description)),) + l
+        l += (forms.Submit(self.get_action()),)
+        return l
+
 
 class MenuMixin:
     def get_context_data(self, **kwargs):
         menu = self.get_menu()
-        if not isinstance(menu, six.string_types):
+        if menu and not isinstance(menu, six.string_types):
             menu = menu.__name__
         kwargs['menu'] = menu
         return super().get_context_data(**kwargs)
@@ -83,13 +93,20 @@ class MenuMixin:
     def get_menu(self):
         if hasattr(self, 'menu'):
             return self.menu
+        for instance in (getattr(self, 'related_object', None), self.get_parent()):
+            if instance:
+                t = type(instance)
+                if t == content_models.Content:
+                    return type(instance.get_content())
+                return t
+        return None
+
 
 class MessageMixin(messages_views.SuccessMessageMixin):
     def get_success_message(self, cleaned_data):
         if hasattr(self, 'message'):
             return self.message
-        else:
-            return None
+        return None
 
 class NavigationMixin:
     def get_breadcrumb(self):
@@ -251,20 +268,36 @@ class PageMixin(
 
 
 class Create(ActionMixin, generic.CreateView):
-    def get_menu(self):
-        t = type(self.related_object)
-        if t == content_models.Content:
-            return type(self.related_object.get_content())
-        return t
-
-    def get_parent(self):
-        return self.related_object
+    def __init__(self, *args, **kwargs):
+        self._fields = self.fields
+        self.fields = self.get_fields()
+        super().__init__(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         self.related_object = self.get_related_object()
         if not self.related_object:
             raise http.Http404('Zugehöriges Objekt nicht gefunden')
         return super().dispatch(request, *args, **kwargs)
+
+    @staticmethod
+    def get_field_name(field):
+        if isinstance(field, layout.Field):
+            return field.fields[0]
+        else:
+            return field
+
+    def get_fields(self):
+        return [self.get_field_name(f) for f in self._fields]
+
+    def get_form(self):
+        form = super().get_form()
+        for field in self._fields:
+            if getattr(field, 'constant', False):
+                form.fields[self.get_field_name(field)].disabled = True
+        return form
+
+    def get_parent(self):
+        return self.related_object
 
     def get_permission_object(self):
         return self.related_object

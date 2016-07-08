@@ -1,35 +1,43 @@
 from . import models
+from crispy_forms import layout
+from django import forms as django_forms
 from django.contrib.contenttypes import models as contenttypes_models
-from utils import views
+from utils import forms as utils_forms, views
 
 
-class Subscribe(views.Create):
-    action = 'Abonnieren'
-    description = (
-            'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
-            'neue Kommentare veröffentlicht werden')
-    fields = ('content_type', 'object_id', 'subscriber',)
+class SubscriptionMixin:
     model = models.Subscription
     title = 'Abonnement'
+
+
+class Subscribe(SubscriptionMixin, views.Create):
+    action = 'Abonnieren'
+    fields = (
+            utils_forms.Field('content_type', type='constant'), 
+            utils_forms.Field('object_id', type='constant'),
+            utils_forms.Field('subscriber', type='constant'))
 
     def get_initial(self):
         return {
                 'content_type': contenttypes_models.ContentType.objects \
-                        .get_for_model(self.related_object),
+                        .get_for_model(self.related_object).pk,
                 'object_id': self.related_object.pk,
                 'subscriber': self.request.user.gestalt.pk,
                 }
 
 
 class ContentSubscribe(Subscribe):
+    description = (
+            'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
+            'neue Kommentare veröffentlicht werden')
     permission = 'subscriptions.create_content_subscription'
 
     def get_related_object(self):
         return self.get_content()
 
 
-class Unsubscribe(views.Delete):
-    model = models.Subscription
+class Unsubscribe(SubscriptionMixin, views.Delete):
+    action = 'Abonnement aufheben'
     permission = 'subscriptions.delete_subscription'
 
     def get_parent(self):
@@ -37,6 +45,10 @@ class Unsubscribe(views.Delete):
 
 
 class ContentUnsubscribe(Unsubscribe):
+    description = (
+            'Keine Benachrichtigungen mehr für den Beitrag '
+            '<em>{{ content }}</em> erhalten')
+
     def get_object(self):
         return models.Subscription.objects.filter(
                 subscribed_to=self.get_content(),
@@ -45,25 +57,6 @@ class ContentUnsubscribe(Unsubscribe):
 
 
 '''
-class AttentionDelete(utils_views.ActionMixin, utils_views.DeleteView):
-    action = 'Keine Benachrichtigungen mehr erhalten'
-    layout = layout.HTML('<p>Möchtest Du wirklich keine Benachrichtigungen '
-            'für den Beitrag <em>{{ attention.attended_object }}</em> mehr erhalten?</p>')
-    permission = 'entities.delete_attention'
-
-    def get_menu(self):
-        return self.get_parent().get_type_name()
-
-    def get_object(self):
-        if 'content_pk' in self.request.resolver_match.kwargs:
-            content = shortcuts.get_object_or_404(content_models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
-            return content.attentions.get(attendee=self.request.user.gestalt)
-
-    def get_parent(self):
-        return self.object.attended_object
-
-
-
 class GroupAttentionCreate(utils_views.ActionMixin, generic.CreateView):
     action = 'Benachrichtigungen erhalten'
     form_class = forms.GroupAttention
