@@ -1,4 +1,4 @@
-{% load subscriptions thumbnail %}
+{% load thumbnail utils %}
 <a href="{{ group.get_absolute_url }}" class="group-preview">
     <header class="group-preview-header">
         {% if group.get_head_gallery %}
@@ -13,11 +13,7 @@
         {% include "entities/_group_avatar.html" with group=group link=False %}
         {% if user.is_authenticated %}
         <div class="group-preview-stats">
-            {% if group|is_subscriber:user.gestalt %}
-                <i class="sg sg-subscription sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
-            {% else %}
-                <i class="sg sg-subscription" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
-            {% endif %}
+            {% include_features '_group_preview_stats.html' %}
             {% if user.gestalt in group.members.all %}
                 <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
             {% else %}
