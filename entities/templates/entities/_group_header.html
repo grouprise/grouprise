@@ -14,7 +14,7 @@
     <div class="group-gallery">
         {% if group.get_head_gallery and can_view_head_gallery %}
             <div class="carousel">
-                <div class="carousel-slides">
+                <ol class="carousel-slides">
                     {% for image in group.get_head_gallery.images.all %}
                         <li>
                             {% thumbnail image.file 'x500' crop='center' as thumb %}
@@ -22,7 +22,7 @@
                             {% endthumbnail %}
                         </li>
                     {% endfor %}
-                </div>
+                </ol>
             </div>
         {% else %}
             <div class="disclaimer">
