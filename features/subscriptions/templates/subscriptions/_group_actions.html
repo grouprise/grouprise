@@ -1,12 +1,13 @@
 {% load rules subscriptions %}
 
+{% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 {% has_perm 'subscriptions.delete_subscription' user group|subscription:user as can_delete_subscription %}
 
 {% if can_delete_subscription %}
 <a href="{% url 'group-unsubscribe' group.pk %}" class="btn btn-default btn-sm" title="Du erhältst Benachrichtungen für diese Gruppe">
         <i class="sg sg-subscription"></i> Abonniert
     </a>
-{% else %}
+{% elif not can_delete_membership %}
 <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-default btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
         <i class="sg sg-subscription"></i> Abonnieren
     </a>
