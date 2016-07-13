@@ -219,6 +219,9 @@ class MembershipDelete(utils_views.Delete):
     def get_parent(self):
         return self.get_group()
 
+    def get_related_object(self):
+        return self.get_object().group
+
 
 class MembershipList(utils_views.PageMixin, generic.ListView):
     menu = 'group'

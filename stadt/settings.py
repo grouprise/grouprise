@@ -188,6 +188,17 @@ SITE_ID = 1
 
 ABOUT_GROUP_ID = 2
 
+NOTIFIERS = [
+    'features.subscriptions.notifiers.Subscription',
+]
+
+SCORERS = [
+    {
+        'SCORER': 'features.subscriptions.scorers.Subscription',
+        'WEIGHT': 1,
+    }
+]
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/
