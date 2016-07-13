@@ -58,7 +58,7 @@
                     <i class="sg sg-question"></i>
                     <span class="sr-only">Kurzbeschreibung</span>
                 </dt>
-                <dd>{{ group.description }}</dd>
+                <dd>{{ group.description|default:"Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen" }}</dd>
                 <dt>
                     <i class="sg sg-address"></i>
                     <span class="sr-only">Adresse</span>
