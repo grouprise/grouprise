@@ -10,9 +10,7 @@
             {% thumbnail gestalt.background '1140x456' crop="left center" as image %}
                 <img src="{{ image.url }}" alt="Titelbild von {{ gestalt }}">
             {% empty %}
-                <div class="disclaimer">
-                    We’re all mad here.
-                </div>
+                <div class="disclaimer"></div>
             {% endthumbnail %}
 
             {% if can_edit %}
@@ -71,12 +69,6 @@
                         </dd>
                     </dl>
                 </div>
-            </div>
-
-            <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
-                {% if can_create_message %}
-
-                {% endif %}
             </div>
         </div>
     </header>
