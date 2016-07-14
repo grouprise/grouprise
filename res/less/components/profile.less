@@ -55,3 +55,84 @@
     font-size: @font-size-small;
     color: @color-text-extralight;
 }
+
+.profile-header {
+    position: relative;
+
+    &-info {
+        &:extend(.decoration-striped);
+
+        display: flex;
+        flex-direction: column;
+        padding-bottom: .6rem;
+        border-radius: 2px 0 0 2px;
+        overflow: hidden;
+
+        &-main {
+            background-color: white;
+            padding: .6rem .8rem;
+        }
+
+        &-slug {
+            background-color: rgba(255,255,255,.8);
+            padding: .4rem .8rem;
+        }
+    }
+
+    &-title {
+        padding-top: calc(20px + .5rem);
+        padding-bottom: 1rem;
+        margin-bottom: 3rem;
+
+        &:before,
+        &:after {
+            content: " ";
+            display: block;
+            position: absolute;
+            left: 0; right: 0;
+            height: 10px;
+        }
+
+        &:before {
+            background: url("../img/stripe.png") repeat;
+            top: 0;
+        }
+
+        &:after {
+            background: url("../img/stripe_white.png") repeat -2px 0;
+            top: 10px;
+            clear: both;
+        }
+
+        .avatar {
+            margin-right: 1rem;
+            border: 2px solid white;
+            border-radius: 2px;
+            float: right;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            margin: -.05em 0 0;
+            line-height: 1.2;
+        }
+    }
+
+    &-data {
+        position: absolute;
+        top: 0; bottom: 0; right: 0;
+        width: 40%;
+    }
+
+    &-title-image {
+        img {
+            display: block;
+        }
+    }
+
+    .disclaimer {
+        min-height: 450px;
+    }
+}

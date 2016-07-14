@@ -1,12 +1,13 @@
 {% load thumbnail %}
-<{% if link %}a href="{{ group.get_absolute_url }}"{% else %}div{% endif %} class="group-avatar">
-    {% if group.avatar %}
-        {% thumbnail group.avatar '64x64' format='PNG' as avatar %}
-            <img src="{{ avatar.url }}" class="avatar avatar-size{{ avatar.width }}x{{ avatar.height }}" title="{{ group.name }}">
+
+{% if group.avatar %}
+    <a href="{{ group.get_absolute_url }}" class="avatar" title="{{ group.name }}">
+        {% thumbnail group.avatar '64x64' format='PNG' crop="center" as avatar %}
+            <img src="{{ avatar.url }}" alt="{{ group.name }}">
         {% endthumbnail %}
-    {% else %}
-        <div title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }};">
-            {{ group.get_initials|truncatechars:4 }}
-        </div>
-    {% endif %}
-</{% if link %}a{% else %}div{% endif %}>
+    </a>
+{% else %}
+    <a href="{{ group.get_absolute_url }}" title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }}">
+        {{ group.get_initials|truncatechars:4 }}
+    </a>
+{% endif %}

@@ -20,15 +20,21 @@
 
 .avatar {
     &:extend(.avatar-size-64x64);
-    display: table-cell;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     vertical-align: middle;
     color: white;
-    text-align: center;
     overflow: hidden;
     padding: 0;
     text-decoration: none;
     font-weight: 300;
     line-height: 1;
+
+    img {
+        display: block;
+    }
 }
 
 .avatar,

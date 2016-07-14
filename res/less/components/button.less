@@ -26,16 +26,23 @@
     }
 }
 
-.btn-transparent {
-    color: rgba(255, 255, 255, .8);
+.btn-backdrop {
+    color: white;
+    transform-origin: 50% 50%;
     padding: 0;
     min-width: 0;
-    transition: color .2s;
+    transition: transform .2s;
 
     &:hover,
-    &:focus {
-        color: white;
+    &:focus,
+    &:active {
+        transform: scale(1.1);
     }
+}
+
+.btn-ts {
+    overflow: visible;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .btn-default {
