@@ -74,7 +74,7 @@ class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
             self.helper['sender'].wrap(layout.Field, type='hidden')
 
     def clean(self):
-        if not self.fields['sender'].disabled:
+        if not self.fields['sender'].disabled and 'sender' in self.cleaned_data:
             try:
                 user = auth.get_user_model().objects.get(email=self.cleaned_data['sender'])
                 if user.has_usable_password():

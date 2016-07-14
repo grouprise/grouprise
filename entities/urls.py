@@ -3,6 +3,11 @@ from content import creation as content_creation, views as content_views
 from django.conf import urls
 
 urlpatterns = [
+    urls.url(
+        r'^abuse/path=(?P<path>.*)',
+        content_creation.AbuseMessage.as_view(),
+        name='abuse'),
+
     urls.url(r'^gestalt/$', views.GestaltList.as_view(), name='gestalt-index'),
     urls.url(r'^gestalt/(?P<pk>[0-9]+)/edit/$', views.GestaltUpdate.as_view(), name='gestalt-update'),
     urls.url(r'^gestalt/(?P<pk>[0-9]+)/edit/avatar/$', views.GestaltAvatarUpdate.as_view(), name='gestalt-avatar-update'),
