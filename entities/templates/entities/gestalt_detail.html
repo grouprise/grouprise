@@ -1,60 +1,91 @@
 {% extends 'stadt/list.html' %}
 {% load rules staticfiles thumbnail %}
 
-{% block header %}
 {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
 {% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
-<header class="content-header">
-    <h1 class="content-classification">
-        {{ gestalt }}
-    </h1>
-    <div class="btn-toolbar">
+{% has_perm 'entities.create_gestalt_content' user gestalt as can_create_content %}
+
+{% block header %}
+    <header class="content-header">
+        <h1 class="content-classification">
+            {{ gestalt }}
+        </h1>
+
+        <div class="btn-toolbar">
+            {% if can_edit %}
+                <a href="{% url 'gestalt-update' gestalt.pk %}" class="btn btn-default">
+                    <i class="fa fa-pencil"></i>
+                    Profil ändern
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="pull-right">
         {% if can_edit %}
-        <a href="{% url 'gestalt-update' gestalt.pk %}" class="btn btn-default"><i class="fa fa-pencil"></i> Profil ändern</a>
+            <a href="{% url 'gestalt-avatar-update' gestalt.pk %}">Avatar ändern</a><br>
         {% endif %}
+
+        <a href="{{ gestalt_url }}" class="avatar">
+            {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
+                <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+                {% empty %}
+                <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+            {% endthumbnail %}
+        </a>
     </div>
-</header>
-<div class="pull-right">
+
     {% if can_edit %}
-    <a href="{% url 'gestalt-avatar-update' gestalt.pk %}">Avatar ändern</a><br>
+        <a href="{% url 'gestalt-background-update' gestalt.pk %}">
+            Hintergrundbild ändern
+        </a>
     {% endif %}
-    <a href="{{ gestalt_url }}" class="avatar">
-        {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
-            <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-        {% empty %}
-            <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
-        {% endthumbnail %}
-    </a>
-</div>
-{% if can_edit %}
-<a href="{% url 'gestalt-background-update' gestalt.pk %}">Hintergrundbild ändern</a>
-{% endif %}
-{% thumbnail gestalt.background '200x200' crop='center' as image %}
-<img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
-{% endthumbnail %}
-<ul>
-    {% if can_create_message %}
-    <li><i class="sg sg-message"></i> <a href="{% url 'gestalt-message-create' gestalt.pk %}">Nachricht schreiben</a></li>
-    {% endif %}
-    <li><i class="sg sg-gestalt"></i> <strong>Über mich:</strong> {{ gestalt.about }}</li>
-    <li><i class="sg sg-link"></i> {{ site.domain }}/gestalt/ {{ gestalt.user.username }}</li>
-    {% if not gestalt.public %}
-    <li><i class="sg sg-private"></i> Deine Benutzerseite ist nur für Dich sichtbar.</li>
-    {% endif %}
-</ul>
+
+    {% thumbnail gestalt.background '200x200' crop='center' as image %}
+        <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+    {% endthumbnail %}
+
+    <ul>
+        {% if can_create_message %}
+            <li>
+                <i class="sg sg-message"></i>
+                <a href="{% url 'gestalt-message-create' gestalt.pk %}">
+                    Nachricht schreiben
+                </a>
+            </li>
+        {% endif %}
+
+        <li>
+            <i class="sg sg-gestalt"></i>
+            <strong>Über mich:</strong> {{ gestalt.about }}
+        </li>
+        <li>
+            <i class="sg sg-link"></i>
+            {{ site.domain }}/gestalt/ {{ gestalt.user.username }}
+        </li>
+
+        {% if not gestalt.public %}
+            <li>
+                <i class="sg sg-private"></i>
+                Deine Benutzerseite ist nur für Dich sichtbar.
+            </li>
+        {% endif %}
+    </ul>
 {% endblock %}
 
 {% block heading %}
-{% has_perm 'entities.create_gestalt_content' user gestalt as can_create_content %}
-{% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
-<div class="content-header">
-    <h2 class="content-classification">Beiträge</h2>
-    <div class="btn-toolbar">
-        {% if can_create_content %}
-        <a href="{% url 'article-create' %}" class="btn btn-default">Neuer Artikel</a>
-        {% elif can_create_message %}
-        <a href="{% url 'gestalt-message-create' gestalt.pk %}" class="btn btn-default">Neue Nachricht</a>
-        {% endif %}
+    <div class="content-header">
+        <h2 class="content-classification">Beiträge</h2>
+        <div class="btn-toolbar">
+            {% if can_create_content %}
+                <a href="{% url 'article-create' %}" class="btn btn-default">
+                    Neuer Artikel
+                </a>
+            {% elif can_create_message %}
+                <a href="{% url 'gestalt-message-create' gestalt.pk %}" class="btn btn-default">
+                    Neue Nachricht
+                </a>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}
