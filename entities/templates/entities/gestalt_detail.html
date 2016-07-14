@@ -24,14 +24,7 @@
 
         <div class="profile-header-data">
             <div class="profile-header-title">
-                <span class="avatar">
-                    {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
-                        <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}">
-                        {% empty %}
-                        <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}">
-                    {% endthumbnail %}
-                </span>
-
+                {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
                 <h1>{{ gestalt }}</h1>
                 <span class="clearfix"></span>
             </div>
