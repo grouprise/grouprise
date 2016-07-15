@@ -1,6 +1,10 @@
 {% extends 'stadt/stadt.html' %}
 {% load content rules %}
 
+
+{% block heading %}{% endblock %}
+
+
 {% block content %}
     <article class="content">
         {% include 'content/_content_header.html' %}
@@ -27,14 +31,15 @@
     </article>
 {% endblock %}
 
-{% block heading %}{% endblock %}
 
 {% block sidebar %}
+    {% if group %}
+        {% include 'entities/_sidebar_group.html' with group=group %}
+    {% endif %}
+
     {% has_perm 'content.view_author' user content as can_view_author %}
     {% has_perm 'entities.view_gestalt' user content.author as can_view_gestalt %}
     {% if can_view_gestalt and can_view_author %}
-        {% with gestalt=content.author %}
-            {% include 'entities/_sidebar_author.html' %}
-        {% endwith %}
+        {% include 'entities/_sidebar_author.html' with gestalt=content.author %}
     {% endif %}
 {% endblock %}

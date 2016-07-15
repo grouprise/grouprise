@@ -2,15 +2,15 @@
     <div class="box-inner">
         <header class="box-header">
             <h2 class="box-title">
-                <i class="sg sg-author"></i>
-                Autor
+                <i class="sg sg-group"></i>
+                Gruppe
             </h2>
         </header>
         <div class="box-content">
-            {% include "entities/_gestalt_preview.html" with gestalt=gestalt link=True %}
+            {% include "entities/_group_preview.html" with group=group link=True %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
-            <a href="{{ gestalt.get_absolute_url }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
+            <a href="{{ group.get_absolute_url }}" class="btn btn-link">Zur Gruppenseite</a>
         </div>
     </div>
 </div>
