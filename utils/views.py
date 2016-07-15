@@ -50,15 +50,20 @@ class GroupMixin:
                     return instance.group
                 if hasattr(instance, 'groups'):
                     return instance.groups.first()
-        if 'group_pk' in self.kwargs:
-            return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
-        if 'group_slug' in self.kwargs:
-            return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
-        if 'group' in self.request.GET:
-            return entities_models.Group.objects.get(slug=self.request.GET['group'])
-        if 'content_pk' in self.kwargs:
-            return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
-        return None
+        try:
+            if 'group_pk' in self.kwargs:
+                return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
+            if 'group_slug' in self.kwargs:
+                return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
+            if 'group' in self.request.GET:
+                return entities_models.Group.objects.get(slug=self.request.GET['group'])
+            if 'content_pk' in self.kwargs:
+                return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
+        except (content_models.Content.DoesNotExist,
+                entities_models.Group.DoesNotExist):
+            pass
+        finally:
+            return None
 
 
 class FormMixin(forms.LayoutMixin):

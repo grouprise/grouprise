@@ -1,7 +1,7 @@
 from . import filters, forms, models
 from content import models as content_models
 from crispy_forms import bootstrap, layout
-from django import shortcuts
+from django import http, shortcuts
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import mixins as auth_mixins
@@ -76,6 +76,11 @@ class Group(utils_views.List):
     menu = 'group'
     permission = 'entities.view_group'
     template_name = 'entities/group_detail.html'
+
+    def get(self, *args, **kwargs):
+        if not self.get_group():
+            raise http.Http404('Gruppe nicht gefunden')
+        return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         kwargs['calendar_events'] = self.get_events().around()

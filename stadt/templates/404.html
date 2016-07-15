@@ -6,5 +6,6 @@
 
 {% block content %}
 <h2>Die gewünschte Seite gibt es nicht!</h2>
+<p>{{ exception }}.</p>
 <p>Wenn Du glaubst, dass dies ein Fehler ist, <a href="{% url 'message-create' about_group.pk %}">schreib uns bitte eine Nachricht</a>.</p>
 {% endblock %}
