@@ -4,6 +4,17 @@ from django import forms
 from django.contrib import auth
 from utils import forms as util_forms
 
+
+class Email(util_forms.FormMixin, allauth_forms.AddEmailForm):
+    layout = (
+            layout.Field('email', placeholder=''),
+            util_forms.Submit('E-Mail-Adresse hinzufügen', 'action_add'))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label = 'E-Mail-Adresse'
+
+
 class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
     layout = (
             layout.HTML('<p>Noch kein Benutzerkonto? '

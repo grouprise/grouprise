@@ -23,10 +23,10 @@
                     <li role="separator" class="dropdown-separator"></li>
                     <li class="dropdown-header">Meine Gruppen</li>
                     {% endif %}
+                    {% endif %}
                     {% for group in user.gestalt.groups.all %}
                     <li><a href="{{ group.get_absolute_url }}">{{ group }}</a></li>
                     {% endfor %}
-                    {% endif %}
                 </ul>
             </li>
             {% endif %}
@@ -41,7 +41,10 @@
                     <ul class="nav-menu dropdown">
                         <li><a href="{% url 'gestalt' user.username %}">Meine Seite</a></li>
                         <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a></li>
+                        <li role="separator" class="dropdown-separator"></li>
                         <li><a href="{% url 'account_change_password' %}">Kennwort ändern</a></li>
+                        <li><a href="{% url 'account_email' %}">E-Mail-Adressen</a></li>
+                        <li role="separator" class="dropdown-separator"></li>
                         <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
                     </ul>
                 </li>

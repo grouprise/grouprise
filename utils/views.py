@@ -153,14 +153,10 @@ class NavigationMixin:
             return None
 
     def get_success_url(self):
-        parent_url = self.get_navigation_data(self.get_parent())[1]
-        if parent_url:
-            return parent_url
-        else:
-            try:
-                return super().get_success_url()
-            except AttributeError:
-                return None
+        try:
+            return super().get_success_url()
+        except AttributeError:
+            return self.get_navigation_data(self.get_parent())[1]
 
 
 class PaginationMixin:

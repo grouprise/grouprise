@@ -1,0 +1,12 @@
+{% extends 'stadt/form.html' %}
+
+{% block form_header %}
+<h2>Verknüpfte E-Mail-Adressen</h2>
+<ul>
+{% for address in user.emailaddress_set.all %}
+<li>{{ address.email }}</li>
+{% endfor %}
+</ul>
+
+<h2>E-Mail-Adresse hinzufügen</h2>
+{% endblock %}

@@ -56,5 +56,5 @@ class Field(layout.Field):
 
 
 class Submit(layout.Submit):
-    def __init__(self, value):
-        super().__init__('', value)
+    def __init__(self, value, name=''):
+        super().__init__(name, value)

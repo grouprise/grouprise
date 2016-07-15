@@ -19,6 +19,16 @@ class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailV
     def get_parent(self):
         return self.get_redirect_url()
 
+
+class Email(utils_views.ActionMixin, views.EmailView):
+    form_class = forms.Email
+    permission = 'account.email'
+    title = 'E-Mail-Adressen'
+
+    def get_parent(self):
+        return self.request.user.gestalt
+
+
 class Login(utils_views.ActionMixin, views.LoginView):
     action = 'Anmelden'
     form_class = forms.LoginForm
