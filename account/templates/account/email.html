@@ -2,11 +2,47 @@
 
 {% block form_header %}
 <h2>Verknüpfte E-Mail-Adressen</h2>
-<ul>
-{% for address in user.emailaddress_set.all %}
-<li>{{ address.email }}</li>
-{% endfor %}
-</ul>
+<form method="post">
+    {% csrf_token %}
+    <ul>
+        {% for address in user.emailaddress_set.all %}
+        <li>
+            <label for="email_radio_{{forloop.counter}}">
+                <input
+                   {% if address.primary or user.emailaddress_set.count == 1 %}
+                   checked="checked"
+                   {% endif %}
+                   id="email_radio_{{forloop.counter}}"
+                   name="email"
+                   type="radio"
+                   value="{{ address.email }}"
+                   />
+                {{ address.email }}
+                {% if address.verified %}
+                <span class="verified">bestätigt</span>
+                {% else %}
+                <span class="unverified">unbestätigt</span>
+                {% endif %}
+                {% if address.primary %}
+                <span class="primary">Hauptadresse</span>
+                {% endif %}
+            </label>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div>
+        <button class="btn btn-default" type="submit" name="action_primary" >
+            Hauptadresse wählen
+        </button>
+        <button class="btn btn-default" type="submit" name="action_send" >
+            Adresse bestätigen
+        </button>
+        <button class="btn btn-danger" type="submit" name="action_remove" >
+            Adresse entfernen
+        </button>
+    </div>
+</form>
 
 <h2>E-Mail-Adresse hinzufügen</h2>
 {% endblock %}
