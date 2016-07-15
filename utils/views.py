@@ -62,8 +62,7 @@ class GroupMixin:
         except (content_models.Content.DoesNotExist,
                 entities_models.Group.DoesNotExist):
             pass
-        finally:
-            return None
+        return None
 
 
 class FormMixin(forms.LayoutMixin):
