@@ -35,17 +35,12 @@ class GalleryList(BaseContentList):
 
 
 class Content(utils_views.PageMixin, generic.DetailView):
+    inline_view = (creation.CommentCreate, 'comment_form')
     model = models.Content
     permission = 'content.view_content'
 
-    def get_context_data(self, **kwargs):
-        v = creation.CommentCreate()
-        v.request = self.request
-        v.args = self.args
-        v.kwargs = self.kwargs
-        v.kwargs['content_pk'] = self.object.pk
-        kwargs['comment_form'] = v.get_form()
-        return super().get_context_data(**kwargs)
+    def get_inline_view_kwargs(self):
+        return {'content_pk': self.object.pk}
     
     def get_menu(self):
         return self.object.get_type_name()

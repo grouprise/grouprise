@@ -1,5 +1,5 @@
 from . import filters, forms, models
-from content import models as content_models
+from content import creation as content_creation, models as content_models
 from crispy_forms import bootstrap, layout
 from django import http, shortcuts
 from django.conf import settings
@@ -73,6 +73,7 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
 
 
 class Group(utils_views.List):
+    inline_view = (content_creation.Gallery, 'intro_gallery_form')
     menu = 'group'
     permission = 'entities.view_group'
     template_name = 'entities/group_detail.html'
@@ -95,6 +96,14 @@ class Group(utils_views.List):
 
     def get_group_content(self):
         return self.get_group().content.permitted(self.request.user)
+
+    def get_inline_view_form(self):
+        form = super().get_inline_view_form()
+        form.initial['pinned'] = True
+        form.initial['public'] = True
+        form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
+        form.initial['title'] = self.get_group()
+        return form
 
     def get_intro_content(self):
         pinned_content = self.get_group_content().filter(groupcontent__pinned=True)

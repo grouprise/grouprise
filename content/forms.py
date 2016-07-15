@@ -3,6 +3,7 @@ from allauth.account import adapter as allauth_adapter
 from crispy_forms import layout
 from django import forms
 from django.contrib import auth
+from django.core import urlresolvers
 from entities import models as entities_models
 from utils import forms as utils_forms
 
@@ -55,6 +56,11 @@ class Gallery(BaseContent):
         fields = ('author', 'public', 'text', 'title')
         labels = {'text': 'Beschreibung'}
         model = models.Gallery
+
+    def get_helper(self):
+        helper = super().get_helper()
+        helper.form_action = urlresolvers.reverse('gallery-create')
+        return helper
 
 
 class BaseMessage(utils_forms.FormMixin, forms.ModelForm):

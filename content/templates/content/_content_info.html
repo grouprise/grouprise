@@ -2,11 +2,11 @@
 {% has_perm 'content.view_author' user content as can_view_author %}
 
 <p class="content-publication-meta">
-    verfasst: {{ content.date_created|date:'d.m.Y' }} |
+    verfasst am {{ content.date_created|date:'d.m.Y' }}
 
     {% with groups=content.groups %}
         {% if groups.count == 1 %}
-            in <a href="{% url 'group' groups.first.slug %}">{{ groups.first }}</a> |
+            in <a href="{% url 'group' groups.first.slug %}">{{ groups.first }}</a>
         {% endif %}
     {% endwith %}
 
