@@ -39,7 +39,7 @@
                         {{ user.gestalt }} <span class="caret"></span>
                     </label>
                     <ul class="nav-menu dropdown">
-                        <li><a href="{% url 'gestalt' user.username %}">Meine Seite</a></li>
+                        <li><a href="{{ user.gestalt|url_for:user }}">Meine Seite</a></li>
                         <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a></li>
                         <li role="separator" class="dropdown-separator"></li>
                         <li><a href="{% url 'account_change_password' %}">Kennwort ändern</a></li>

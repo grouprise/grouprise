@@ -1,6 +1,6 @@
-{% load rules staticfiles thumbnail %}
+{% load rules staticfiles thumbnail utils %}
 
-<{% if link %}a href="{{ gestalt.get_absolute_url }}"{% else %}div{% endif %} class="profile">
+<{% if link %}a href="{{ gestalt|url_for:user }}"{% else %}div{% endif %} class="profile">
     <div class="profile-short">
         {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
         <div class="profile-data">

@@ -1,4 +1,5 @@
 from django import apps, template
+from django.core import urlresolvers
 from django.utils import safestring
 
 register = template.Library()
@@ -19,6 +20,13 @@ def override(override, overridden):
         return override
     else:
         return overridden
+
+@register.filter
+def url_for(gestalt, user):
+    if user.has_perm('entities.view_gestalt', gestalt):
+        return gestalt.get_profile_url()
+    else:
+        return gestalt.get_contact_url()
 
 @register.simple_tag(takes_context=True)
 def include_features(context, template_name):

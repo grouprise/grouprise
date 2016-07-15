@@ -1,6 +1,7 @@
 {% load thumbnail %}
 
 {% if group.avatar %}
+    {% if link %}{# FIXME: render link #}{% else %}{# render div/span #}{% endif %}
     <a href="{{ group.get_absolute_url }}" class="avatar" title="{{ group.name }}">
         {% thumbnail group.avatar '64x64' format='PNG' crop="center" as avatar %}
             <img src="{{ avatar.url }}" alt="{{ group.name }}">

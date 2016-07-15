@@ -29,6 +29,15 @@ class Gestalt(models.Model):
         return name if name else self.user.username
 
     def get_absolute_url(self):
+        if self.public:
+            return self.get_profile_url()
+        else:
+            return self.get_contact_url()
+
+    def get_contact_url(self):
+        return urlresolvers.reverse('gestalt-message-create', args=(self.pk,))
+
+    def get_profile_url(self):
         return urlresolvers.reverse('gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
 
     # FIXME: move to template filter
