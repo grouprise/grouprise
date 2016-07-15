@@ -1,8 +1,10 @@
-{% load staticfiles thumbnail %}
+{% load thumbnail %}
 <{% if link %}a href="{{ gestalt.get_absolute_url }}"{% else %}div{% endif %} class="avatar">
     {% thumbnail gestalt.avatar '100x100' format='PNG' as avatar %}
         <img src="{{ avatar.url }}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
     {% empty %}
-        <img src="{% static 'avatar.png' %}" title="{{ gestalt }}" alt="{{ gestalt }}" class="avatar">
+        <span title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
+            {{ gestalt.get_initials|truncatechars:4 }}
+        </span>
     {% endthumbnail %}
 </{% if link %}a{% else %}div{% endif %}>

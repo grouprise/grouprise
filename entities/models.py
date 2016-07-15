@@ -15,6 +15,7 @@ class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
     addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
     avatar = models.ImageField(blank=True)
+    avatar_color = models.CharField(max_length=7, default=get_random_color)
     background = models.ImageField('Hintergrundbild', blank=True)
     public = models.BooleanField(
             'Benutzerseite veröffentlichen',
@@ -29,6 +30,16 @@ class Gestalt(models.Model):
 
     def get_absolute_url(self):
         return urlresolvers.reverse('gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
+
+    # FIXME: move to template filter
+    def get_initials(self):
+        import re
+        initials = ''
+        for w in str(self).split():
+            m = re.search('[a-zA-Z0-9]', w)
+            initials += m.group(0) if m else ''
+        return initials
+
 
 class GestaltContent(models.Model):
     content = models.OneToOneField('content.Content')
