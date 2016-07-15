@@ -5,18 +5,17 @@
 
 {% block list_header %}
     <header class="content-header">
-        <span class="content-classification">Gruppen</span>
-        {% has_perm 'entities.create_group' user as can_create_group %}
-        {% if can_create_group %}
-            <div class="btn-toolbar">
-                <a href="{% url 'group-create' %}" class="btn btn-default pull-right">Neue Gruppe</a>
-            </div>
-        {% endif %}
+        <span class="content-classification">Stadtgestalten</span>
     </header>
-
-    <h2>Deine Gruppe gestalten</h2>
-    <p>Ist Deine Gruppe schon auf Stadtgestalten?</p>
-    <p><a href="{% url 'group-index' %}" class="btn btn-default">Gruppe finden</a></p>
+    <ul>
+        <li><a href="{% url 'group-index' %}"><i class="sg sg-group"></i> Öffentliche Gruppenseiten</a> <small>eine Website für Deine Gruppe</small></li>
+        <li><i class="sg sg-message"></i> Mailingliste inbegriffen <small>Schreibe Nachrichten an Gruppenmitglieder.</small></li>
+        <li><i class="sg sg-subscription"></i> Newsletter inbegriffen <small>Abonniere Gruppen, die Dir gefallen.</small></li>
+        <li><a href="{% url 'event-index' %}"><i class="sg sg-calendar"></i> Ereignisse in der Übersicht</a> <small>Kalender für Rostock, je Gruppe und auch intern</small></li>
+        <li><a href="{% if user.is_authenticated %}{% url 'gestalt-index' %}{% else %}{% url 'account_signup' %}{% endif %}"><i class="sg sg-gestalt"></i> Hier sind die Aktiven!</a> <small>schon {{ gestalt_count }} engagierte Gestalten</small></li>
+        <li><a href="{{ about_group.get_absolute_url }}"><i class="sg sg-private"></i> Aus Rostock für Rostock</a> <small>Wir verdienen kein Geld mit Deinen Daten!</small></li>
+        <li><a href="#"><i class="sg sg-video"></i> Stadtgestalten-Rundreise</a> <small>im Video einmal durch die Plattform reisen</small></li>
+    </ul>
 
     <header class="content-header">
         <span class="content-classification">Beiträge</span>
