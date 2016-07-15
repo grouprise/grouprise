@@ -99,6 +99,7 @@ class Group(utils_views.List):
 
     def get_inline_view_form(self):
         form = super().get_inline_view_form()
+        form.initial['image_creation_redirect'] = True
         form.initial['pinned'] = True
         form.initial['public'] = True
         form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
