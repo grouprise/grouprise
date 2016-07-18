@@ -129,8 +129,8 @@ class GroupContent(models.Model):
 
 class Membership(models.Model):
     date_joined = models.DateField(auto_now_add=True)
-    gestalt = models.ForeignKey('Gestalt')
-    group = models.ForeignKey('Group')
+    gestalt = models.ForeignKey('Gestalt', related_name='old_memberships')
+    group = models.ForeignKey('Group', related_name='old_memberships')
 
     class Meta:
         unique_together = ('gestalt', 'group')
