@@ -12,10 +12,12 @@ def num_subscriptions(instance):
 @register.filter
 def subscription(instance, user):
     if user.is_authenticated():
-        return models.Subscription.objects.filter(subscribed_to=instance, subscriber=user.gestalt).first()
+        return models.Subscription.objects.filter(
+                subscribed_to=instance, subscriber=user.gestalt).first()
     return None
 
 
 @register.filter
 def is_subscriber(instance, gestalt):
-    return models.Subscription.objects.filter(subscribed_to=instance, subscriber=gestalt).exists()
+    return models.Subscription.objects.filter(
+            subscribed_to=instance, subscriber=gestalt).exists()
