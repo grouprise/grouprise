@@ -14,11 +14,6 @@
         {% if user.is_authenticated %}
         <div class="group-preview-stats">
             {% include_features '_group_preview_stats.html' %}
-            {% if user.gestalt in group.members.all %}
-                <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
-            {% else %}
-                <i class="sg sg-members" title="Du bist nicht Mitglied dieser Gruppe"></i>
-            {% endif %}
         </div>
         {% endif %}
     </header>

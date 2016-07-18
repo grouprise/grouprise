@@ -1,0 +1,6 @@
+{% load memberships %}
+{% if user.gestalt|is_member:group %}
+    <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
+{% else %}
+    <i class="sg sg-members" title="Du bist nicht Mitglied dieser Gruppe"></i>
+{% endif %}
