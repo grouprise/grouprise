@@ -85,7 +85,6 @@ class Group(utils_views.List):
     def get_context_data(self, **kwargs):
         kwargs['calendar_events'] = self.get_events().around()
         kwargs['intro_content'] = self.get_intro_content()
-        kwargs['membership'] = self.get_membership()
         kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
@@ -102,12 +101,6 @@ class Group(utils_views.List):
             return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
         except AttributeError:
             return pinned_content
-
-    def get_membership(self):
-        try:
-            return memberships_models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.get_group())
-        except (AttributeError, memberships_models.Membership.DoesNotExist):
-            return None
 
     def get_queryset(self):
         return self.get_group_content().filter(groupcontent__pinned=False)

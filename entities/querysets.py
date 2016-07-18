@@ -24,23 +24,4 @@ class Group(models.QuerySet):
                 )
 
     def similar(self, group):
-        query1 = str(group.members.all().query)
-        query2 = group.members.all().query.sql_with_params()[0] % '"entities_group"."id"'
-        counted = self.annotate(
-                num_same_members=models.expressions.RawSQL(
-                    'SELECT COUNT(*) FROM ({} INTERSECT {}) same_members'.format(
-                        query1, query2),
-                    [],
-                    output_field=models.FloatField()),
-                )
-        if group.members.count() > 0:
-            maximum = float(group.members.count())
-        else:
-            maximum = 1.0
-        scored = counted.annotate(
-                similarity_score=models.F('num_same_members') / maximum,
-                )
-        return scored.annotate(score=
-                models.F('score') +
-                models.F('similarity_score') * Group.SIMILARITY_WEIGHT
-                )
+        return self
