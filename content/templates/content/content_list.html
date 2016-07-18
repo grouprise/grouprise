@@ -15,6 +15,7 @@
         <li><a href="{% if user.is_authenticated %}{% url 'gestalt-index' %}{% else %}{% url 'account_signup' %}{% endif %}"><i class="sg sg-gestalt"></i> Hier sind die Aktiven!</a> <small>schon {{ gestalt_count }} engagierte Gestalten</small></li>
         <li><a href="{{ about_group.get_absolute_url }}"><i class="sg sg-private"></i> Aus Rostock für Rostock</a> <small>Wir verdienen kein Geld mit Deinen Daten!</small></li>
         <li><a href="#"><i class="sg sg-video"></i> Stadtgestalten-Rundreise</a> <small>im Video einmal durch die Plattform reisen</small></li>
+        <li><a href="{% url 'message-create' about_group.pk %}"><i class="sg sg-improve"></i> Verbessere Stadtgestalten!</a> <small>Wir freuen uns, wenn Du uns Deine Verbesserungsvorschläge schickst.</small></li>
     </ul>
 
     <header class="content-header">
