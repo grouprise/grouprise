@@ -10,7 +10,7 @@ from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
 from django_filters import views as filters_views
-from features.subscriptions import models as subscriptions_models
+from features.memberships import models as memberships_models
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
@@ -105,8 +105,8 @@ class Group(utils_views.List):
 
     def get_membership(self):
         try:
-            return models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.get_group())
-        except (AttributeError, models.Membership.DoesNotExist):
+            return memberships_models.Membership.objects.get(gestalt=self.request.user.gestalt, group=self.get_group())
+        except (AttributeError, memberships_models.Membership.DoesNotExist):
             return None
 
     def get_queryset(self):
@@ -197,7 +197,7 @@ class MembershipCreate(utils_views.ActionMixin, generic.CreateView):
             'der Gruppe bist und es werden möchtest, sprich bitte die anderen '
             'Gruppenmitglieder an.</p>')
     menu = 'group'
-    model = models.Membership
+    model = memberships_models.Membership
     permission = 'entities.create_membership'
 
     def form_valid(self, form):
@@ -218,7 +218,7 @@ class MembershipDelete(utils_views.Delete):
     layout = layout.HTML('<p>Möchtest Du Deine Mitgliedschaft in der Gruppe '
         '<em>{{ group }}</em> auf {{ site.name }} wirklich beenden?</p>')
     menu = 'group'
-    model = models.Membership
+    model = memberships_models.Membership
     permission = 'entities.delete_membership'
 
     def get_parent(self):
@@ -237,4 +237,4 @@ class MembershipList(utils_views.PageMixin, generic.ListView):
         return self.get_group()
 
     def get_queryset(self):
-        return models.Membership.objects.filter(group_id=self.kwargs['group_pk'])
+        return memberships_models.Membership.objects.filter(group_id=self.kwargs['group_pk'])
