@@ -3,7 +3,6 @@ from django.db import models
 
 class Group(models.QuerySet):
     CONTENT_WEIGHT = 1.0
-    MEMBERS_WEIGHT = 1.0
     SIMILARITY_WEIGHT = 3.0
 
     def scored(self):
@@ -11,23 +10,17 @@ class Group(models.QuerySet):
                 num_content=models.ExpressionWrapper(
                     models.Count('content', distinct=True),
                     output_field=models.FloatField()),
-                num_members=models.ExpressionWrapper(
-                    models.Count('members', distinct=True),
-                    output_field=models.FloatField()),
                 )
         maxima = counted.aggregate(
                 content=models.Max('num_content'),
-                members=models.Max('num_members'),
                 )
         for m in maxima:
             maxima[m] = 1.0 if maxima[m] == 0.0 else maxima[m]
         scored = counted.annotate(
                 content_score=models.F('num_content') / maxima['content'],
-                members_score=models.F('num_members') / maxima['members'],
                 )
         return scored.annotate(score=
-                models.F('content_score') * Group.CONTENT_WEIGHT +
-                models.F('members_score') * Group.MEMBERS_WEIGHT
+                models.F('content_score') * Group.CONTENT_WEIGHT
                 )
 
     def similar(self, group):

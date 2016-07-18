@@ -90,7 +90,6 @@ class Group(models.Model):
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)
-    members = models.ManyToManyField('Gestalt', related_name='groups', through='memberships.Membership')
     name = models.CharField('Name', max_length=255)
     slug = AutoSlugField('Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
     #subscriptions = contenttypes_fields.GenericRelation('subscriptions.Subscription')
