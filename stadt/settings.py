@@ -193,13 +193,6 @@ NOTIFIERS = [
     'features.subscriptions.notifiers.Subscription',
 ]
 
-SCORERS = [
-    {
-        'SCORER': 'features.subscriptions.scorers.Subscription',
-        'WEIGHT': 1,
-    }
-]
-
 
 # Authentication
 # http://django-allauth.readthedocs.org/
