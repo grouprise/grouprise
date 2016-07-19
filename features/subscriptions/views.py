@@ -50,7 +50,7 @@ class GroupSubscribe(Subscribe):
 
 
 class Unsubscribe(SubscriptionMixin, views.Delete):
-    action = 'Abonnement aufheben'
+    action = 'Abbestellen'
     permission = 'subscriptions.delete_subscription'
 
     def get_object(self):
@@ -58,9 +58,6 @@ class Unsubscribe(SubscriptionMixin, views.Delete):
                 subscribed_to=self.related_object,
                 subscriber=self.request.user.gestalt
                 ).first()
-
-    def get_parent(self):
-        return self.object.subscribed_to
 
 
 class ContentUnsubscribe(Unsubscribe):

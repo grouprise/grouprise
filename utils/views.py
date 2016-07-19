@@ -145,7 +145,7 @@ class NavigationMixin:
         if hasattr(self, 'parent'):
             return self.parent
         else:
-            return None
+            return getattr(self, 'related_object', None)
 
     def get_parent_entity(self, child):
         if isinstance(child, content_models.Content):
