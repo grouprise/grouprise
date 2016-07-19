@@ -276,9 +276,6 @@ class RelatedObjectMixin:
             raise http.Http404('Zugehöriges Objekt nicht gefunden')
         return super().dispatch(request, *args, **kwargs)
 
-    def get_parent(self):
-        return self.related_object
-
 
 class Create(RelatedObjectMixin, ActionMixin, generic.CreateView):
     def __init__(self, *args, **kwargs):
@@ -303,12 +300,16 @@ class Create(RelatedObjectMixin, ActionMixin, generic.CreateView):
                 form.fields[self.get_field_name(field)].disabled = True
         return form
 
+    def get_parent(self):
+        return self.related_object
+
     def get_permission_object(self):
         return self.related_object
 
 
 class Delete(RelatedObjectMixin, ActionMixin, edit_views.FormMixin, generic.DeleteView):
-    pass
+    def get_parent(self):
+        return self.related_object
 
 
 class List(RelatedObjectMixin, PageMixin, generic.ListView):

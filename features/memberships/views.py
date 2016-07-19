@@ -33,6 +33,9 @@ class Members(MembershipMixin, entities_views.GestaltList):
     related_object_mandatory = True
     title = 'Mitglieder'
 
+    def get_parent(self):
+        return self.related_object
+
     def get_queryset(self):
         return entities_models.Gestalt.objects.filter(
                 membership__group=self.related_object)
