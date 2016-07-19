@@ -10,7 +10,6 @@ from django.core import urlresolvers
 from django.db import models as django_models
 from django.views import generic
 from django_filters import views as filters_views
-from features.memberships import models as memberships_models
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
@@ -105,6 +104,9 @@ class Group(utils_views.List):
     def get_queryset(self):
         return self.get_group_content().filter(groupcontent__pinned=False)
 
+    def get_related_object(self):
+        return self.get_group()
+
     def get_title(self):
         return self.get_group().name
 
@@ -183,54 +185,3 @@ class Imprint(utils_views.PageMixin, generic.TemplateView):
     permission = 'entities.view_imprint'
     template_name = 'entities/imprint.html'
     title = 'Impressum'
-
-class MembershipCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Mitglied werden'
-    fields = []
-    layout = layout.HTML('<p>Möchtest Du Mitglied der Gruppe '
-            '<em>{{ group }}</em> auf {{ site.name }} werden?</p>'
-            '<p>Falls Du in der <em>echten Welt</em> noch nicht Mitglied in '
-            'der Gruppe bist und es werden möchtest, sprich bitte die anderen '
-            'Gruppenmitglieder an.</p>')
-    menu = 'group'
-    model = memberships_models.Membership
-    permission = 'entities.create_membership'
-
-    def form_valid(self, form):
-        group = self.get_group()
-        messages.success(self.request, 'Du bist nun Mitglied der Gruppe {}.'.format(group))
-        form.instance.gestalt = self.request.user.gestalt
-        form.instance.group = group
-        return super().form_valid(form)
-
-    def get_parent(self):
-        return self.get_group()
-
-    def get_permission_object(self):
-        return self.get_group()
-
-class MembershipDelete(utils_views.Delete):
-    action = 'Mitgliedschaft beenden'
-    layout = layout.HTML('<p>Möchtest Du Deine Mitgliedschaft in der Gruppe '
-        '<em>{{ group }}</em> auf {{ site.name }} wirklich beenden?</p>')
-    menu = 'group'
-    model = memberships_models.Membership
-    permission = 'entities.delete_membership'
-
-    def get_parent(self):
-        return self.get_group()
-
-    def get_related_object(self):
-        return self.get_object().group
-
-
-class MembershipList(utils_views.PageMixin, generic.ListView):
-    menu = 'group'
-    permission = 'entities.list_members'
-    title = 'Mitglieder'
-
-    def get_parent(self):
-        return self.get_group()
-
-    def get_queryset(self):
-        return memberships_models.Membership.objects.filter(group_id=self.kwargs['group_pk'])

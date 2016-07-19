@@ -1,10 +1,14 @@
 from . import models
+from entities import models as entities_models, views as entities_views
 from utils import forms, views
 
 
 class MembershipMixin:
     model = models.Membership
     title = 'Mitgliedschaft'
+
+    def get_related_object(self):
+        return self.get_group()
 
 
 class Join(MembershipMixin, views.Create):
@@ -22,8 +26,15 @@ class Join(MembershipMixin, views.Create):
                 'member': self.request.user.gestalt.pk,
                 }
 
-    def get_related_object(self):
-        return self.get_group()
+
+class Members(MembershipMixin, entities_views.GestaltList):
+    menu = 'group'
+    permission = 'memberships.list_memberships'
+    title = 'Mitglieder'
+
+    def get_queryset(self):
+        return entities_models.Gestalt.objects.filter(
+                membership__group=self.related_object)
 
 
 class Resign(MembershipMixin, views.Delete):
@@ -32,10 +43,6 @@ class Resign(MembershipMixin, views.Delete):
     permission = 'memberships.delete_membership'
 
     def get_object(self):
-        return models.Membership.objects.filter(
+        return models.Membership.objects.get(
                 group=self.related_object,
-                member=self.request.user.gestalt
-                ).first()
-
-    def get_related_object(self):
-        return self.get_group()
+                member=self.request.user.gestalt)

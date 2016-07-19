@@ -8,6 +8,11 @@ urlpatterns = [
         name='join'),
 
     urls.url(
+        r'^group/(?P<group_pk>[0-9]+)/members/$',
+        views.Members.as_view(),
+        name='members'),
+
+    urls.url(
         r'^group/(?P<group_pk>[0-9]+)/resign/$',
         views.Resign.as_view(),
         name='resign'),

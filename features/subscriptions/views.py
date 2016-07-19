@@ -54,10 +54,9 @@ class Unsubscribe(SubscriptionMixin, views.Delete):
     permission = 'subscriptions.delete_subscription'
 
     def get_object(self):
-        return models.Subscription.objects.filter(
+        return models.Subscription.objects.get(
                 subscribed_to=self.related_object,
-                subscriber=self.request.user.gestalt
-                ).first()
+                subscriber=self.request.user.gestalt)
 
 
 class ContentUnsubscribe(Unsubscribe):

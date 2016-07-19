@@ -1,0 +1,16 @@
+{% load memberships rules %}
+{% has_perm 'memberships.list_memberships' user group as can_list %}
+
+<dt>
+    <i class="sg sg-members"></i>
+    <span class="sr-only">Anzahl Mitglieder</span>
+</dt>
+<dd>
+    {% if can_list %}
+        <a href="{% url 'members' group.pk %}">
+    {% endif %}
+    {% with num_members=group.membership_set.count %}
+        {{ num_members }} Mitglied{{ num_members|pluralize:"er" }}
+    {% endwith %}
+    {% if can_list %}</a>{% endif %}
+</dd>

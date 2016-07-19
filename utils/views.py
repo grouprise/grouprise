@@ -145,7 +145,7 @@ class NavigationMixin:
         if hasattr(self, 'parent'):
             return self.parent
         else:
-            return getattr(self, 'related_object', None)
+            None
 
     def get_parent_entity(self, child):
         if isinstance(child, content_models.Content):
@@ -274,6 +274,9 @@ class RelatedObjectMixin:
             raise http.Http404('Zugehöriges Objekt nicht gefunden')
         return super().dispatch(request, *args, **kwargs)
 
+    def get_parent(self):
+        return self.related_object
+
 
 class Create(RelatedObjectMixin, ActionMixin, generic.CreateView):
     def __init__(self, *args, **kwargs):
@@ -298,9 +301,6 @@ class Create(RelatedObjectMixin, ActionMixin, generic.CreateView):
                 form.fields[self.get_field_name(field)].disabled = True
         return form
 
-    def get_parent(self):
-        return self.related_object
-
     def get_permission_object(self):
         return self.related_object
 
@@ -309,5 +309,6 @@ class Delete(RelatedObjectMixin, ActionMixin, edit_views.FormMixin, generic.Dele
     pass
 
 
-class List(PageMixin, generic.ListView):
-    pass
+class List(RelatedObjectMixin, PageMixin, generic.ListView):
+    def get_permission_object(self):
+        return self.related_object

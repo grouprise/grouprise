@@ -4,9 +4,6 @@
 {% has_perm 'entities.change_group' user group as can_edit %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
-{% has_perm 'entities.create_membership' user group as can_create_membership %}
-{% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
-{% has_perm 'entities.list_members' user group as can_list_members %}
 
 <div class="group-header" data-component="group-header">
     <div class="group-gallery">
@@ -78,20 +75,7 @@
                 <dd>
                     {{ group.date_founded|date:'Y' }} gegründet
                 </dd>
-                <dt>
-                    <i class="sg sg-members"></i>
-                    <span class="sr-only">Anzahl Mitglieder</span>
-                </dt>
-                <dd>
-                    {% if can_list_members %}
-                        <a href="{% url 'membership-list' group.pk %}">
-                    {% endif %}
-                    {{ group.membership_set.count }} Mitglied{{ group.membership_set.count|pluralize:"er" }}{% if can_list_members %}</a>{% endif %}
-
-                    {% if user.gestalt in group.members.all %}
-                        (Du bist Mitglied)
-                    {% endif %}
-                </dd>
+                {% include_features '_group_meta.html' %}
             </dl>
         </div>
         <div class="group-info-slug">
@@ -139,20 +123,6 @@
                 <a href="{% url 'message-create' group.pk %}" class="btn btn-default btn-sm">
                     <i class="sg sg-message"></i> Nachricht schreiben
                 </a>
-
-                <div class="dropdown-container group-actions-admin">
-                    <input class="dropdown-state" id="group-more" type="checkbox" />
-                    <label class="btn btn-default btn-sm btn-more" for="group-more"></label>
-                    <ul class="dropdown dropdown-small">
-                        {% if can_delete_membership %}
-                            <li>
-                                <a href="{% url 'membership-delete' membership.pk %}">
-                                    <i class="sg sg-resign"></i> Mitgliedschaft beenden
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
