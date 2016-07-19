@@ -186,7 +186,7 @@ SITE_ID = 1
 # Stadtgestalten
 #
 
-ABOUT_GROUP_ID = 2
+ABOUT_GROUP_ID = 1
 
 NOTIFIERS = [
     'features.subscriptions.notifiers.Subscription',
