@@ -155,10 +155,13 @@ class GroupList(utils_views.PageMixin, filters_views.FilterView):
     filterset_class = filters.Group
     menu = 'group'
     ordering = '-score'
-    queryset = models.Group.objects.scored()
     permission = 'content.view_content_list'
     sidebar = ('calendar',)
     title = 'Gruppen'
+
+    def get_queryset(self):
+        return models.Group.objects.scored()
+
 
 class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Logo ändern'
