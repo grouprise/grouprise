@@ -5,7 +5,7 @@
         <ul class="nav-menu nav-menu-self">
 
             {# about link #}
-            <li><a href="{% url 'group' about_group.slug %}">Über {{ site.name }}</a></li>
+            <li><a href="{{ about_group.get_absolute_url }}">Über {{ site.name }}</a></li>
 
             {# groups menu #}
             {% if user.gestalt.groups.exists or group %}
