@@ -1,6 +1,7 @@
 from . import models
 from content import rules as content
-import rules, rules.permissions
+import rules
+import rules.permissions
 
 
 @rules.predicate
@@ -59,8 +60,8 @@ rules.add_perm(
 
 # redefinition of groups permissions
 
-rules.remove_perm(
-        'groups.change_group')
+if rules.perm_exists('groups.change_group'):
+    rules.remove_perm('groups.change_group')
 
 rules.add_perm(
         'groups.change_group',

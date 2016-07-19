@@ -30,6 +30,7 @@ class Join(MembershipMixin, views.Create):
 class Members(MembershipMixin, entities_views.GestaltList):
     menu = 'group'
     permission = 'memberships.list_memberships'
+    related_object_mandatory = True
     title = 'Mitglieder'
 
     def get_queryset(self):

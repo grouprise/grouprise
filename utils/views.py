@@ -268,9 +268,11 @@ class PageMixin(
 
 
 class RelatedObjectMixin:
+    related_object_mandatory = True
+
     def dispatch(self, request, *args, **kwargs):
         self.related_object = self.get_related_object()
-        if not self.related_object:
+        if self.related_object_mandatory and not self.related_object:
             raise http.Http404('Zugehöriges Objekt nicht gefunden')
         return super().dispatch(request, *args, **kwargs)
 
@@ -310,5 +312,10 @@ class Delete(RelatedObjectMixin, ActionMixin, edit_views.FormMixin, generic.Dele
 
 
 class List(RelatedObjectMixin, PageMixin, generic.ListView):
+    related_object_mandatory = False
+
     def get_permission_object(self):
         return self.related_object
+
+    def get_related_object(self):
+        return None
