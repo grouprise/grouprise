@@ -1,6 +1,8 @@
 from . import forms, models
+from django.conf import settings
 from django.core import urlresolvers
 from django.views import generic
+from entities import models as entities_models
 from utils import forms as utils_forms, views as utils_views
 
 
@@ -68,6 +70,19 @@ class GroupMessage(BaseMessage):
 
     def get_recipient(self):
         return self.get_group()
+
+
+class AbuseMessage(GroupMessage):
+    action = 'Missbrauch melden'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['text'] = '{}\n\nIch bin der Ansicht, dass diese Seite gegen allgemeine oder spezielle Stadtgestalten-Regeln verstößt.'.format(self.request.build_absolute_uri(self.kwargs['path']))
+        initial['title'] = 'Missbrauch melden'
+        return initial
+
+    def get_recipient(self):
+        return entities_models.Group.objects.get(id=settings.ABOUT_GROUP_ID)
 
 
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):

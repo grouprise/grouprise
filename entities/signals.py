@@ -1,11 +1,12 @@
 from . import models
 from datetime import date
+from django import dispatch
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
 from django.core import mail, urlresolvers
 from django.db.models import signals
-from django import dispatch
+from django.utils import module_loading
 from utils import text
 
 
@@ -21,7 +22,9 @@ def content_post_save(sender, instance, created, **kwargs):
             group = instance.group
             recipients |= set(instance.group.members.exclude(pk=instance.content.author.pk))
             if instance.content.public:
-                recipients |= set(instance.group.attendees.all())
+                for notifier_str in settings.NOTIFIERS:
+                    Notifier = module_loading.import_string(notifier_str)
+                    recipients |= set(Notifier.get_recipients_for(instance.group))
         instance.content.notify(recipients)
 
 

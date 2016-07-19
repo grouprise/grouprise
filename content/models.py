@@ -75,7 +75,6 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
-    attentions = fields.GenericRelation('entities.Attention')
     comment_authors = models.ManyToManyField('entities.Gestalt', through='Comment')
     public = models.BooleanField(
             'Veröffentlichen',
@@ -106,7 +105,7 @@ class Content(Base):
                     )
 
     def get_content(self):
-        return self
+        return self.get_subclass_instance()
 
     def get_display_type_name(self):
         return self.get_subclass_instance().get_display_type_name()

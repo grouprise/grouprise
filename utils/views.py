@@ -11,8 +11,17 @@ from django.views.generic import edit as edit_views
 from entities import models as entities_models
 from rules.contrib import views as rules_views
 
-class DeleteView(edit_views.FormMixin, generic.DeleteView):
-    pass
+
+class ContentMixin:
+    def get_context_data(self, **kwargs):
+        kwargs['content'] = self.get_content()
+        return super().get_context_data(**kwargs)
+
+    def get_content(self):
+        if 'content_pk' in self.kwargs:
+            return content_models.Content.objects.get(pk=self.kwargs['content_pk'])
+        return None
+
 
 class GestaltMixin:
     def get_context_data(self, **kwargs):
@@ -32,20 +41,29 @@ class GroupMixin:
         return super().get_context_data(**kwargs)
 
     def get_group(self):
-        if hasattr(self, 'object'):
-            if isinstance(self.object, entities_models.Group):
-                return self.object
-            if hasattr(self.object, 'group'):
-                return self.object.group
-            if hasattr(self.object, 'groups'):
-                return self.object.groups.first()
-        if 'group_pk' in self.kwargs:
-            return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
-        if 'group_slug' in self.kwargs:
-            return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
-        if 'group' in self.request.GET:
-            return entities_models.Group.objects.get(slug=self.request.GET['group'])
+        for attr in ('object', 'related_object'):
+            if hasattr(self, attr):
+                instance = getattr(self, attr)
+                if isinstance(instance, entities_models.Group):
+                    return instance
+                if hasattr(instance, 'group'):
+                    return instance.group
+                if hasattr(instance, 'groups'):
+                    return instance.groups.first()
+        try:
+            if 'group_pk' in self.kwargs:
+                return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
+            if 'group_slug' in self.kwargs:
+                return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
+            if 'group' in self.request.GET:
+                return entities_models.Group.objects.get(slug=self.request.GET['group'])
+            if 'content_pk' in self.kwargs:
+                return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
+        except (content_models.Content.DoesNotExist,
+                entities_models.Group.DoesNotExist):
+            pass
         return None
+
 
 class FormMixin(forms.LayoutMixin):
     def get_form(self, form_class=None):
@@ -58,25 +76,41 @@ class FormMixin(forms.LayoutMixin):
         return super().get_form_class() or django_forms.Form
 
     def get_layout(self):
-        layout = super().get_layout()
-        layout += (forms.Submit(self.get_action()),)
-        return layout
+        if hasattr(self, '_fields'):
+            l = self._fields
+        else:
+            l = super().get_layout()
+        if hasattr(self, 'description'):
+            l = (layout.HTML('<p>{}</p>'.format(self.description)),) + l
+        l += (forms.Submit(self.get_action()),)
+        return l
+
 
 class MenuMixin:
     def get_context_data(self, **kwargs):
-        kwargs['menu'] = self.get_menu()
+        menu = self.get_menu()
+        if menu and not isinstance(menu, six.string_types):
+            menu = menu.__name__
+        kwargs['menu'] = menu
         return super().get_context_data(**kwargs)
 
     def get_menu(self):
         if hasattr(self, 'menu'):
             return self.menu
+        for instance in (getattr(self, 'related_object', None), self.get_parent()):
+            if instance:
+                t = type(instance)
+                if t == content_models.Content:
+                    return type(instance.get_content())
+                return t
+        return None
+
 
 class MessageMixin(messages_views.SuccessMessageMixin):
     def get_success_message(self, cleaned_data):
         if hasattr(self, 'message'):
             return self.message
-        else:
-            return None
+        return None
 
 class NavigationMixin:
     def get_breadcrumb(self):
@@ -123,14 +157,10 @@ class NavigationMixin:
             return None
 
     def get_success_url(self):
-        parent_url = self.get_navigation_data(self.get_parent())[1]
-        if parent_url:
-            return parent_url
-        else:
-            try:
-                return super().get_success_url()
-            except AttributeError:
-                return None
+        try:
+            return super().get_success_url()
+        except (AttributeError, exceptions.ImproperlyConfigured):
+            return self.get_navigation_data(self.get_parent())[1]
 
 
 class PaginationMixin:
@@ -206,6 +236,7 @@ class TitleMixin:
 
 
 class ActionMixin(
+        ContentMixin,
         FormMixin,
         GestaltMixin,
         GroupMixin,
@@ -234,6 +265,48 @@ class PageMixin(
         ):
     fallback_template_name = 'stadt/list.html'
     sidebar = ('calendar', 'groups')
+
+
+class RelatedObjectMixin:
+    def dispatch(self, request, *args, **kwargs):
+        self.related_object = self.get_related_object()
+        if not self.related_object:
+            raise http.Http404('Zugehöriges Objekt nicht gefunden')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class Create(RelatedObjectMixin, ActionMixin, generic.CreateView):
+    def __init__(self, *args, **kwargs):
+        self._fields = self.fields
+        self.fields = self.get_fields()
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def get_field_name(field):
+        if isinstance(field, layout.Field):
+            return field.fields[0]
+        else:
+            return field
+
+    def get_fields(self):
+        return [self.get_field_name(f) for f in self._fields]
+
+    def get_form(self):
+        form = super().get_form()
+        for field in self._fields:
+            if getattr(field, 'constant', False):
+                form.fields[self.get_field_name(field)].disabled = True
+        return form
+
+    def get_parent(self):
+        return self.related_object
+
+    def get_permission_object(self):
+        return self.related_object
+
+
+class Delete(RelatedObjectMixin, ActionMixin, edit_views.FormMixin, generic.DeleteView):
+    pass
 
 
 class List(PageMixin, generic.ListView):

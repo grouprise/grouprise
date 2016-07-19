@@ -25,7 +25,7 @@ SECRET_KEY = '_^n8g4hg!u&c9u_+wve-euni)cr-tov*f5k45*akwg@k)a2s+m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'entities.apps.EntitiesConfig',
+    'features.subscriptions',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
@@ -185,7 +186,18 @@ SITE_ID = 1
 # Stadtgestalten
 #
 
-ABOUT_GROUP_ID = 2
+ABOUT_GROUP_ID = 1
+
+NOTIFIERS = [
+    'features.subscriptions.notifiers.Subscription',
+]
+
+SCORERS = [
+    {
+        'SCORER': 'features.subscriptions.scorers.Subscription',
+        'WEIGHT': 1,
+    }
+]
 
 
 # Authentication

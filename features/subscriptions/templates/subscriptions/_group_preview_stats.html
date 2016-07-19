@@ -1,0 +1,6 @@
+{% load subscriptions %}
+{% if group|is_subscriber:user.gestalt %}
+    <i class="sg sg-subscription sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
+{% else %}
+    <i class="sg sg-subscription" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
+{% endif %}

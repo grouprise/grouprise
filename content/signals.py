@@ -1,6 +1,8 @@
 from . import models
 from django import dispatch
+from django.conf import settings
 from django.db.models import signals
+from django.utils import module_loading
 from utils import text
 
 
@@ -20,7 +22,9 @@ def comment_post_save(sender, instance, **kwargs):
         recipients |= {gestalt}
     for group in instance.content.groups.all():
         recipients |= set(group.members.all())
-    for attention in instance.content.attentions.all():
-        recipients.add(attention.attendee)
+    # FIXME: What about private content?
+    for notifier_str in settings.NOTIFIERS:
+        Notifier = module_loading.import_string(notifier_str)
+        recipients |= set(Notifier.get_recipients_for(instance.content))
     recipients.discard(instance.author)
     instance.notify(recipients)

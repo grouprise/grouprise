@@ -1,12 +1,10 @@
-{% load entities rules thumbnail utils %}
+{% load rules thumbnail utils %}
 
 {% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'entities.change_group' user group as can_edit %}
-{% has_perm 'entities.create_group_attention' user group as can_create_attention %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 {% has_perm 'entities.create_membership' user group as can_create_membership %}
-{% has_perm 'entities.delete_group_attention' user attention as can_delete_attention %}
 {% has_perm 'entities.delete_membership' user membership as can_delete_membership %}
 {% has_perm 'entities.list_members' user group as can_list_members %}
 
@@ -47,9 +45,7 @@
     </div>
     <div class="group-info">
         <div class="group-info-main">
-            <div class="group-avatar">
-                {% group_avatar group %}
-            </div>
+            {% include 'entities/_group_avatar.html' with group=group link=False %}
             <h1 class="group-title">
                 {{ group.name }}
             </h1>
@@ -138,6 +134,8 @@
             {% endif %}
 
             <div class="btn-group group-actions-user">
+                {% include_features '_group_actions.html' %}
+
                 <a href="{% url 'message-create' group.pk %}" class="btn btn-default btn-sm">
                     <i class="sg sg-message"></i> Nachricht schreiben
                 </a>
@@ -146,20 +144,6 @@
                     <input class="dropdown-state" id="group-more" type="checkbox" />
                     <label class="btn btn-default btn-sm btn-more" for="group-more"></label>
                     <ul class="dropdown dropdown-small">
-                        {% if can_delete_attention %}
-                            <li>
-                                <a href="{% url 'group-attention-delete' attention.pk %}" title="Du erhältst Benachrichtungen für diese Gruppe">
-                                    <i class="sg sg-attention"></i> Deabbonnieren
-                                </a>
-                            </li>
-                        {% elif not can_delete_membership %}
-                            <li>
-                                <a href="{% url 'group-attention-create' group.pk %}" title="Bei neuen Beiträgen benachrichtigt werden">
-                                    <i class="sg sg-attention"></i> Abbonieren
-                                </a>
-                            </li>
-                        {% endif %}
-
                         {% if can_delete_membership %}
                             <li>
                                 <a href="{% url 'membership-delete' membership.pk %}">

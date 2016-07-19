@@ -6,7 +6,7 @@ djangorestframework
 markdown
 pillow
 pymdown-extensions
-git+https://github.com/robwa/randomcolor-py.git
+randomcolor
 rules
 sorl-thumbnail==12.4a1
 translitcodec

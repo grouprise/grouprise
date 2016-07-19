@@ -1,3 +1,5 @@
+{% load utils %}
+
 <div class="page-footer">
     <div class="page-footer-content">
         <ul class="nav-footer">
@@ -6,6 +8,7 @@
                     <li><a href="{% url 'index' %}">Start</a></li>
                     <li><a href="{% url 'group' about_group.slug %}">Über uns</a></li>
                     <li><a href="{% url 'imprint' %}">Impressum</a></li>
+                    <li><a href="{% url 'abuse' request.path %}">Missbrauch melden</a></li>
                 </ul>
             </li>
             <li>
@@ -24,7 +27,7 @@
             <li>
                 <ul>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'gestalt' user.username %}">Meine Seite</a></li>
+                        <li><a href="{{ user.gestalt|url_for:user }}">Meine Seite</a></li>
                         <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Einstellungen</a></li>
                         <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
                     {% else %}

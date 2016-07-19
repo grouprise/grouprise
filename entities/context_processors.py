@@ -3,7 +3,7 @@ from django.conf import settings
 
 def groups(request):
     return {
-            'about_group': models.Group.objects.get(id=settings.ABOUT_GROUP_ID),
+            'about_group': models.Group.objects.filter(id=settings.ABOUT_GROUP_ID).first(),
             'all_sidebar_groups': models.Group.objects.scored().order_by('-score'),
             }
 

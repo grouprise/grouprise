@@ -1,6 +1,6 @@
 from . import querysets
 from django.conf import settings
-from django.contrib.contenttypes import fields, models as contenttype_models
+from django.contrib.contenttypes import fields as contenttypes_fields, models as contenttype_models
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core import exceptions, urlresolvers, validators
 from django.db import models
@@ -11,17 +11,11 @@ def get_random_color():
     return randomcolor.RandomColor().generate(luminosity='dark')[0]
 
 
-class Attention(models.Model):
-    attendee = models.ForeignKey('Gestalt')
-    content_type = models.ForeignKey(contenttype_models.ContentType)
-    object_id = models.PositiveIntegerField()
-    attended_object = fields.GenericForeignKey()
-
-
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
     addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
     avatar = models.ImageField(blank=True)
+    avatar_color = models.CharField(max_length=7, default=get_random_color)
     background = models.ImageField('Hintergrundbild', blank=True)
     public = models.BooleanField(
             'Benutzerseite veröffentlichen',
@@ -35,7 +29,26 @@ class Gestalt(models.Model):
         return name if name else self.user.username
 
     def get_absolute_url(self):
+        if self.public:
+            return self.get_profile_url()
+        else:
+            return self.get_contact_url()
+
+    def get_contact_url(self):
+        return urlresolvers.reverse('gestalt-message-create', args=(self.pk,))
+
+    def get_profile_url(self):
         return urlresolvers.reverse('gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
+
+    # FIXME: move to template filter
+    def get_initials(self):
+        import re
+        initials = ''
+        for w in str(self).split():
+            m = re.search('[a-zA-Z0-9]', w)
+            initials += m.group(0) if m else ''
+        return initials
+
 
 class GestaltContent(models.Model):
     content = models.OneToOneField('content.Content')
@@ -71,7 +84,6 @@ class AutoSlugField(models.SlugField):
 
 class Group(models.Model):
     address = models.TextField('Anschrift', blank=True)
-    attendees = models.ManyToManyField('Gestalt', related_name='attended_groups', through='GroupAttention')
     avatar = models.ImageField(blank=True)
     avatar_color = models.CharField(max_length=7, default=get_random_color)
     content = models.ManyToManyField('content.Content', related_name='groups', through='GroupContent')
@@ -81,6 +93,7 @@ class Group(models.Model):
     members = models.ManyToManyField('Gestalt', related_name='groups', through='Membership')
     name = models.CharField('Name', max_length=255)
     slug = AutoSlugField('Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
+    #subscriptions = contenttypes_fields.GenericRelation('subscriptions.Subscription')
     url = models.URLField('Adresse im Web', blank=True)
     description = models.TextField('Kurzbeschreibung', blank=True, default='', max_length=200)
 
@@ -108,10 +121,6 @@ class Group(models.Model):
             initials += m.group(0) if m else ''
         return initials
     
-
-class GroupAttention(models.Model):
-    attendee = models.ForeignKey('Gestalt')
-    group = models.ForeignKey('Group')
 
 class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')

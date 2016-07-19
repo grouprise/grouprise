@@ -9,13 +9,7 @@
         <li>
             <div class="media media-comment">
                 <div class="media-image">
-                    <a href="{{ comment.author.get_absolute_url }}" class="avatar">
-                    {% thumbnail comment.author.avatar '100x100' format='PNG' as avatar %}
-                        <img src="{{ avatar.url }}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
-                    {% empty %}
-                        <img src="{% static 'avatar.png' %}" title="{{ comment.author }}" alt="{{ comment.author }}" class="avatar">
-                    {% endthumbnail %}
-                    </a>
+                    {% include 'entities/_gestalt_avatar.html' with gestalt=comment.author link=True %}
                 </div>
                 <div class="media-content">
                     <div class="media-body" data-component="user-content">

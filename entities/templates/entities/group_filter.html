@@ -12,7 +12,7 @@
     <ol class="groups">
         {% for group in object_list %}
             <li>
-                {% include 'macros/group_short.html' with group=group %}
+                {% include 'entities/_group_preview.html' with group=group %}
             </li>
         {% endfor %}
     </ol>
