@@ -7,4 +7,4 @@ register = template.Library()
 @register.filter
 def is_member(gestalt, group):
     return models.Membership.objects.filter(
-            gestalt=gestalt, group=group).exists()
+            group=group, member=gestalt).exists()
