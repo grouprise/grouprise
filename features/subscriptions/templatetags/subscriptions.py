@@ -16,8 +16,6 @@ def num_subscriptions(instance):
 
 
 @register.filter
-def subscription(instance, user):
-    if user.is_authenticated():
-        return models.Subscription.objects.filter(
-                subscribed_to=instance, subscriber=user.gestalt).first()
-    return None
+def subscription(gestalt, instance):
+    return models.Subscription.objects.filter(
+            subscribed_to=instance, subscriber=gestalt or None).first()

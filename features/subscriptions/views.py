@@ -1,6 +1,6 @@
 from . import models
 from django.contrib.contenttypes import models as contenttypes_models
-from utils import forms as utils_forms, views
+from utils import forms, views
 
 
 class SubscriptionMixin:
@@ -11,9 +11,9 @@ class SubscriptionMixin:
 class Subscribe(SubscriptionMixin, views.Create):
     action = 'Abonnieren'
     fields = (
-            utils_forms.Field('content_type', type='constant'),
-            utils_forms.Field('object_id', type='constant'),
-            utils_forms.Field('subscriber', type='constant'))
+            forms.Field('content_type', type='constant'),
+            forms.Field('object_id', type='constant'),
+            forms.Field('subscriber', type='constant'))
 
     def get_initial(self):
         return {

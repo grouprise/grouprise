@@ -1,0 +1,9 @@
+{% load memberships rules %}
+
+{% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
+
+{% if not can_resign %}
+    <a href="{% url 'join' group.pk %}" class="btn btn-default btn-sm">
+        <i class="sg sg-join"></i> Beitreten
+    </a>
+{% endif %}

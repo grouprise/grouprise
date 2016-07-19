@@ -154,12 +154,6 @@
                     </ul>
                 </div>
             </div>
-
-            {% if not can_delete_membership %}
-                <a href="{% url 'membership-create' group.pk %}" class="btn btn-default btn-sm">
-                    <i class="sg sg-join"></i> Mitglied werden
-                </a>
-            {% endif %}
         </div>
     </div>
 </div>
