@@ -159,7 +159,7 @@ class NavigationMixin:
     def get_success_url(self):
         try:
             return super().get_success_url()
-        except AttributeError:
+        except (AttributeError, exceptions.ImproperlyConfigured):
             return self.get_navigation_data(self.get_parent())[1]
 
 
