@@ -6,4 +6,4 @@
     python manage.py runserver
     
 * Add a group: http://localhost:8000/stadt/admin/entities/group/add/
-* Logout: localhost:8000/stadt/logout/
+* Logout: http://localhost:8000/stadt/logout/
