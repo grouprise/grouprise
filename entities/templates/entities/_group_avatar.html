@@ -1,14 +1,25 @@
-{% load thumbnail %}
+{% load thumbnail content %}
 
-{% if group.avatar %}
-    {% if link %}{# FIXME: render link #}{% else %}{# render div/span #}{% endif %}
-    <a href="{{ group.get_absolute_url }}" class="avatar" title="{{ group.name }}">
-        {% thumbnail group.avatar '64x64' format='PNG' crop="center" as avatar %}
-            <img src="{{ avatar.url }}" alt="{{ group.name }}">
-        {% endthumbnail %}
+{% kwacro avatar %}
+    {% if group.avatar %}
+        <div title="{{ group.name }}" class="avatar">
+            {% thumbnail group.avatar '64x64' format='PNG' crop="center" as avatar %}
+                <img src="{{ avatar.url }}" alt="{{ group.name }}">
+            {% endthumbnail %}
+        </div>
+    {% else %}
+        <div title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }}">
+            {{ group.get_initials|truncatechars:4 }}
+        </div>
+    {% endif %}
+{% endkwacro %}
+
+{% if link %}
+    <a class="group-avatar" href="{{ group.get_absolute_url }}">
+        {% usekwacro avatar %}
     </a>
 {% else %}
-    <a href="{{ group.get_absolute_url }}" title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }}">
-        {{ group.get_initials|truncatechars:4 }}
-    </a>
+    <div class="group-avatar">
+        {% usekwacro avatar %}
+    </div>
 {% endif %}
