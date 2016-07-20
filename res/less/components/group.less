@@ -174,3 +174,29 @@
         background-color: rgba(255, 255, 255, .6);
     }
 }
+
+
+// todo this is more or less a hack to ease gallery creation in groups
+// the underlying form should be using hidden inputs and the submit
+// button should use the correct css classes that are enforced here
+// with a high-specificity style
+.group-intro-add {
+    form * {
+        display: none;
+    }
+
+    form button[type="submit"] {
+        display: flex;
+        background-color: transparent;
+        border-color: transparent;
+        .btn-ts();
+        .btn-backdrop();
+        .sg();
+        .sg-camera();
+        font-size: 0;
+
+        &:after {
+            font-size: 2rem;
+        }
+    }
+}

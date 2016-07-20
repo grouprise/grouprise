@@ -1,4 +1,4 @@
-{% load rules thumbnail utils %}
+{% load rules thumbnail utils crispy_forms_tags  %}
 
 {% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'entities.change_group' user group as can_edit %}
@@ -36,9 +36,9 @@
                         <i class="fa fa-2x fa-camera"></i>
                     </a>
                 {% else %}
-                    <a class="btn btn-backdrop btn-ts" href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1&public=1" title="Introgalerie hinzufügen">
-                        <i class="fa fa-2x fa-camera"></i>
-                    </a>
+                    <div class="group-intro-add" title="Introgalerie hinzufügen">
+                        {% crispy intro_gallery_form %}
+                    </div>
                 {% endif %}
             </div>
         {% endif %}

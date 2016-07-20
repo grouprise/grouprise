@@ -1,8 +1,8 @@
 {% extends 'stadt/list.html' %}
-{% load crispy_forms_tags rules %}
+{% load rules %}
 
 {% block header %}
-{% include 'entities/_group_header.html' %}
+    {% include 'entities/_group_header.html' %}
 {% endblock %}
 
 {% block heading %}{% endblock %}
@@ -67,6 +67,4 @@
     {% endif %}
     {% include 'calendar/_sidebar.html' %}
     {% include 'entities/_sidebar_groups.html' %}
-
-    {% crispy intro_gallery_form %}
 {% endblock %}
