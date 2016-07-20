@@ -17,6 +17,7 @@
     user-select: none;
     white-space: nowrap;
     border-radius: @border-radius-base;
+    width: 280px;
     .material-shadow(1);
 
     z-index: -1;
@@ -43,7 +44,8 @@
 
 
         + li {
-            margin: 0;
+            margin-left: 0;
+            margin-right: 0;
         }
 
         > a, > label {
@@ -54,6 +56,7 @@
             transition: background-color .2s;
             min-width: 140px;
             color: @color-text-default;
+            font-family: @font-family-default;
 
             &:hover,
             &:active,
@@ -67,7 +70,25 @@
 .dropdown-separator {
     margin: @padding-small-vertical @padding-base-horizontal !important;
     height: 1px;
-    background-color: @color-text-extralight;
+    background-color: @color-divider-light;
+}
+
+.dropdown-header {
+    padding: .5rem 1rem;
+    color: @color-text-default;
+    font-weight: 500;
+    margin-top: .5rem;
+    font-size: .8rem;
+    background-color: #fafafa;
+    text-transform: uppercase;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &:first-child {
+        margin-top: 0;
+    }
 }
 
 .dropdown-small {
