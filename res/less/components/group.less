@@ -140,9 +140,16 @@
 .group-preview-image {
     position: relative;
     height: 120px;
+    overflow: hidden;
 
     img {
+        max-width: none;
         display: block;
+        height: 100%;
+        width: auto;
+        transform: translateX(-50%);
+        position: absolute;
+        left: 50%; top: 0;
     }
 }
 
@@ -152,8 +159,6 @@
     right: 2px;
     padding: .3em .6em;
     background-color: white;
-    //border-top-left-radius: 2px;
-    //border-top-right-radius: 2px;
     line-height: 1;
     z-index: 10;
 
