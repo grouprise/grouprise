@@ -98,13 +98,16 @@ class Group(utils_views.List):
         return self.get_group().content.permitted(self.request.user)
 
     def get_inline_view_form(self):
-        form = super().get_inline_view_form()
-        form.initial['image_creation_redirect'] = True
-        form.initial['pinned'] = True
-        form.initial['public'] = True
-        form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
-        form.initial['title'] = self.get_group()
-        return form
+        if (self.request.user.has_perm('entities.create_group_content', self.get_group())
+                and not self.get_group().get_head_gallery()):
+            form = super().get_inline_view_form()
+            form.initial['image_creation_redirect'] = True
+            form.initial['pinned'] = True
+            form.initial['public'] = True
+            form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
+            form.initial['title'] = self.get_group()
+            return form
+        return None
 
     def get_intro_content(self):
         pinned_content = self.get_group_content().filter(groupcontent__pinned=True)
