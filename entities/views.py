@@ -8,6 +8,7 @@ from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
 from django.db import models as django_models
+from django.utils import six
 from django.views import generic
 from django_filters import views as filters_views
 from features.subscriptions import models as subscriptions_models
@@ -101,6 +102,8 @@ class Group(utils_views.List):
         if (self.request.user.has_perm('entities.create_group_content', self.get_group())
                 and not self.get_group().get_head_gallery()):
             form = super().get_inline_view_form()
+            form.helper.filter(six.string_types).wrap(layout.Field)
+            form.helper.all().update_attributes(type='hidden')
             form.initial['image_creation_redirect'] = True
             form.initial['pinned'] = True
             form.initial['public'] = True
