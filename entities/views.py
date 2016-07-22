@@ -103,7 +103,8 @@ class Group(utils_views.List):
                 and not self.get_group().get_head_gallery()):
             form = super().get_inline_view_form()
             form.helper.filter(six.string_types).wrap(layout.Field)
-            form.helper.all().update_attributes(type='hidden')
+            form.helper.filter(layout.Field).update_attributes(
+                    **{'data-component': '', 'type': 'hidden'})
             form.initial['image_creation_redirect'] = True
             form.initial['pinned'] = True
             form.initial['public'] = True

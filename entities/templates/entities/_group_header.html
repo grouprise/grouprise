@@ -32,11 +32,11 @@
         {% if can_create_content %}
             <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
                 {% if group.get_head_gallery and can_view_head_gallery %}
-                    <a class="btn btn-backdrop btn-ts" href="{{ group.get_head_gallery.get_absolute_url }}" title="Introgalerie bearbeiten">
+                    <a class="btn btn-backdrop btn-ts" href="{{ group.get_head_gallery.get_absolute_url }}" title="Introgalerie anzeigen">
                         <i class="fa fa-2x fa-camera"></i>
                     </a>
                 {% else %}
-                    <div class="group-intro-add" title="Introgalerie hinzufügen">
+                    <div class="group-intro-add" title="Introgalerie anlegen">
                         {% crispy intro_gallery_form %}
                     </div>
                 {% endif %}
