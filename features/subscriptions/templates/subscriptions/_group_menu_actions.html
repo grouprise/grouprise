@@ -1,5 +1,10 @@
 {% load rules subscriptions %}
 {% has_perm 'subscriptions.delete_subscription' user group|subscription:user as can_delete_subscription %}
+
 {% if not can_delete_subscription %}
-<li><a href="{% url 'group-subscribe' group.pk %}"><i class="sg sg-subscription"></i> Abonnieren</a></li>
+    <li>
+        <a href="{% url 'group-subscribe' group.pk %}">
+            <i class="sg sg-subscription"></i> Abonnieren
+        </a>
+    </li>
 {% endif %}

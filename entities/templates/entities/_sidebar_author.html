@@ -9,7 +9,7 @@
             </h2>
         </header>
         <div class="box-content">
-            {% include "entities/_gestalt_preview.html" with gestalt=gestalt link=True %}
+            {% include "entities/_gestalt_preview.html" with gestalt=gestalt link=False %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{{ gestalt|url_for:user }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
