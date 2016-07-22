@@ -10,41 +10,32 @@
             </li>
 
             {# groups menu #}
-            {% if user.gestalt.groups.exists or group %}
-                <li>
-                    <input class="dropdown-state" id="menu-groups" type="checkbox"/>
-                    <label for="menu-groups" class="nav-state-toggle">
-                        {{ group|default:'Meine Gruppen' }} <span class="caret"></span>
-                    </label>
-                    <ul class="nav-menu dropdown">
-                        {% if group %}
-                            <li class="dropdown-header">{{ group }}</li>
-                            {% if request.path !=  group.get_absolute_url %}
-                                <li>
-                                    <a href="{{ group.get_absolute_url }}">
-                                        <i class="sg sg-prev"></i> Zur Gruppenseite
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% include_features '_group_menu_actions.html' %}
+            <li>
+                <input class="dropdown-state" id="menu-groups" type="checkbox"/>
+                <label for="menu-groups" class="nav-state-toggle">
+                    {{ group|default:'Gruppen' }} <span class="caret"></span>
+                </label>
+                <ul class="nav-menu dropdown">
+                    {% if group %}
+                        <li class="dropdown-header">{{ group }}</li>
+                        {% if request.path != group.get_absolute_url %}
                             <li>
-                                <a href="{% url 'message-create' group.pk %}">
-                                    <i class="sg sg-message"></i> Nachricht schreiben
+                                <a href="{{ group.get_absolute_url }}">
+                                    <i class="sg sg-prev"></i> Zur Gruppenseite
                                 </a>
                             </li>
-                            {% if user.gestalt.groups.exists %}
-                                <li class="dropdown-header">Meine Gruppen</li>
-                            {% endif %}
                         {% endif %}
+                        {% include_features '_group_menu_actions.html' %}
+                        <li>
+                            <a href="{% url 'message-create' group.pk %}">
+                                <i class="sg sg-message"></i> Nachricht schreiben
+                            </a>
+                        </li>
+                    {% endif %}
 
-                        {% for group in user.gestalt.groups.all %}
-                            <li>
-                                <a href="{{ group.get_absolute_url }}">{{ group }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endif %}
+                    {% include_features '_group_menu_groups.html' %}
+                </ul>
+            </li>
 
             {# user menu #}
             {% if user.is_authenticated %}
