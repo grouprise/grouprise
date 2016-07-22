@@ -1,7 +1,7 @@
 {% load rules thumbnail utils crispy_forms_tags  %}
 
 {% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
-{% has_perm 'entities.change_group' user group as can_edit %}
+{% has_perm 'groups.change_group' user group as can_edit %}
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
