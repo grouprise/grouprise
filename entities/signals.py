@@ -20,11 +20,12 @@ def content_post_save(sender, instance, created, **kwargs):
             recipients |= {instance.gestalt}
         elif sender == models.GroupContent:
             group = instance.group
-            recipients |= set(instance.group.members.exclude(pk=instance.content.author.pk))
+            recipients |= set(models.Gestalt.objects.filter(membership__group=instance.group))
             if instance.content.public:
                 for notifier_str in settings.NOTIFIERS:
                     Notifier = module_loading.import_string(notifier_str)
                     recipients |= set(Notifier.get_recipients_for(instance.group))
+        recipients.discard(instance.content.author)
         instance.content.notify(recipients)
 
 
