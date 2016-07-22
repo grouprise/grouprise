@@ -32,6 +32,7 @@
             <div class="profile-header-info">
                 <div class="profile-header-info-main">
                     <dl class="def def-icons">
+                        {% if can_edit %}
                         <dt>
                             <i class="sg sg-private"></i>
                             <span class="sr-only">Privatsphäre</span>
@@ -43,6 +44,7 @@
                                 Dein Profil ist <strong>nicht öffentlich</strong>
                             {% endif %}
                         </dd>
+                        {% endif %}
                         <dt>
                             <i class="sg sg-gestalt"></i>
                             <span class="sr-only">Über mich</span>
