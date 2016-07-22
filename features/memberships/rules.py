@@ -28,9 +28,14 @@ def is_member_of_content_group(user, content):
 
 
 rules.add_perm(
-        'memberships.create_membership',
+        'memberships.join_group',
         rules.is_authenticated
         & ~is_member_of)
+
+rules.add_perm(
+        'memberships.create_membership',
+        rules.is_authenticated
+        & is_member_of)
 
 rules.add_perm(
         'memberships.delete_membership',

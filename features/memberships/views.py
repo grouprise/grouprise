@@ -1,4 +1,5 @@
 from . import models
+from django.core import urlresolvers
 from entities import models as entities_models, views as entities_views
 from utils import forms, views
 
@@ -18,7 +19,7 @@ class Join(MembershipMixin, views.Create):
     fields = (
             forms.Field('group', type='constant'),
             forms.Field('member', type='constant'),)
-    permission = 'memberships.create_membership'
+    permission = 'memberships.join_group'
 
     def get_initial(self):
         return {
@@ -31,6 +32,7 @@ class Members(MembershipMixin, entities_views.GestaltList):
     menu = 'group'
     permission = 'memberships.list_memberships'
     related_object_mandatory = True
+    template_name = 'memberships/gestalt_list.html'
     title = 'Mitglieder'
 
     def get_parent(self):
@@ -39,6 +41,20 @@ class Members(MembershipMixin, entities_views.GestaltList):
     def get_queryset(self):
         return entities_models.Gestalt.objects.filter(
                 membership__group=self.related_object)
+
+
+class MemberCreate(MembershipMixin, views.Create):
+    action = 'Mitglied aufnehmen'
+    fields = (
+            forms.Field('group', type='constant'),
+            forms.Field('member'))
+    permission = 'memberships.create_membership'
+
+    def get_initial(self):
+        return {'group': self.related_object.pk}
+
+    def get_success_url(self):
+        return urlresolvers.reverse('members', args=(self.related_object.pk,))
 
 
 class Resign(MembershipMixin, views.Delete):

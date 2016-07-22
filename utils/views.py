@@ -227,6 +227,7 @@ class TemplateMixin:
         else:
             names = []
         names += [self.fallback_template_name]
+        print(names)
         return names
 
 

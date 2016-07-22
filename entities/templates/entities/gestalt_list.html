@@ -4,7 +4,7 @@
 {% block heading_toolbar %}
     {% has_perm 'account.signup' user as can_signup %}
     {% if can_signup %}
-        <a href="{% url 'account_signup' %}" class="btn btn-default pull-right">Neue Gestalt</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-default">Neue Gestalt</a>
     {% endif %}
 {% endblock %}
 
