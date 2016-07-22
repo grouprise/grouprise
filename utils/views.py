@@ -86,6 +86,22 @@ class FormMixin(forms.LayoutMixin):
         return l
 
 
+class InlineViewMixin:
+    def get_context_data(self, **kwargs):
+        if hasattr(self, 'inline_view'):
+            kwargs[self.inline_view[1]] = self.get_inline_view_form()
+        return super().get_context_data(**kwargs)
+
+    def get_inline_view_form(self):
+        v = self.inline_view[0]()
+        v.request = self.request
+        v.args = self.args
+        v.kwargs = self.kwargs
+        if hasattr(self, 'get_inline_view_kwargs'):
+            v.kwargs.update(self.get_inline_view_kwargs())
+        return v.get_form()
+
+
 class MenuMixin:
     def get_context_data(self, **kwargs):
         menu = self.get_menu()
@@ -240,6 +256,7 @@ class ActionMixin(
         FormMixin,
         GestaltMixin,
         GroupMixin,
+        InlineViewMixin,
         MenuMixin,
         MessageMixin,
         NavigationMixin,
@@ -255,6 +272,7 @@ class ActionMixin(
 class PageMixin(
         GestaltMixin,
         GroupMixin,
+        InlineViewMixin,
         MenuMixin,
         NavigationMixin,
         PaginationMixin,

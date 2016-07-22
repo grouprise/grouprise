@@ -1,4 +1,4 @@
-from crispy_forms import helper, layout
+from crispy_forms import helper, layout, bootstrap
 from django import forms
 
 class LayoutMixin:
@@ -55,6 +55,8 @@ class Field(layout.Field):
         super().__init__(name, **kwargs)
 
 
-class Submit(layout.Submit):
+class Submit(bootstrap.StrictButton):
+    field_classes = "btn btn-primary"
+
     def __init__(self, value, name=''):
-        super().__init__(name, value)
+        super().__init__(value, name=name, value=value, type="submit")

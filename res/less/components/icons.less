@@ -2,12 +2,22 @@
     .fa();
 }
 
+.sg-2x {
+    .fa-2x();
+}
+
 .sg-fw {
     .fa-fw();
 }
 
 .sg-active {
     color: @brand-primary;
+}
+
+.sg-camera {
+    &:after {
+        content: @fa-var-camera;
+    }
 }
 
 .sg-address {

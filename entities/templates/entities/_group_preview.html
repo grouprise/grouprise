@@ -1,7 +1,8 @@
-{% load thumbnail utils %}
-<a href="{{ group.get_absolute_url }}" class="group-preview">
+{% load thumbnail utils content %}
+
+{% kwacro preview_body %}
     <header class="group-preview-header">
-        {% if group.get_head_gallery %}
+        {% if group.get_head_gallery and group.get_head_gallery.images.first %}
             <div class="group-preview-image">
                 {% thumbnail group.get_head_gallery.images.first.file '360x120' crop='center' as thumb %}
                     <img src="{{ thumb.url }}" />
@@ -12,13 +13,23 @@
         {% endif %}
         {% include "entities/_group_avatar.html" with group=group link=False %}
         {% if user.is_authenticated %}
-        <div class="group-preview-stats">
-            {% include_features '_group_preview_stats.html' %}
-        </div>
+            <div class="group-preview-stats">
+                {% include_features '_group_preview_stats.html' %}
+            </div>
         {% endif %}
     </header>
     <div class="group-preview-body">
         <h3>{{ group.name }}</h3>
         <p>{{ group.description|default:"Diese Gruppe hat noch keine Beschreibung auf Stadtgestalten hinterlegt." }}</p>
     </div>
-</a>
+{% endkwacro %}
+
+{% if link %}
+    <a class="group-preview" href="{{ group.get_absolute_url }}">
+        {%  usekwacro preview_body %}
+    </a>
+{% else %}
+    <div class="group-preview">
+        {%  usekwacro preview_body %}
+    </div>
+{% endif %}

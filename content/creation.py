@@ -36,6 +36,11 @@ class Gallery(BaseContent):
     menu = 'gallery'
     parent = 'gallery-index'
 
+    def get_success_url(self):
+        if self.request.POST.get('image_creation_redirect', False):
+            return urlresolvers.reverse('image-create', args=(self.object.pk,))
+        return super().get_success_url()
+
 
 class BaseMessage(utils_views.ActionMixin, generic.CreateView):
     action = 'Nachricht senden'
@@ -77,7 +82,7 @@ class AbuseMessage(GroupMessage):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial['text'] = '{}\n\nIch bin der Ansicht, dass diese Seite gegen allgemeine oder spezielle Stadtgestalten-Regeln verstößt.'.format(self.request.build_absolute_uri(self.kwargs['path']))
+        initial['text'] = '{}\n\nIch bin der Ansicht, dass der Inhalt dieser Seite gegen Regeln verstößt.'.format(self.request.build_absolute_uri(self.kwargs['path']))
         initial['title'] = 'Missbrauch melden'
         return initial
 

@@ -140,9 +140,16 @@
 .group-preview-image {
     position: relative;
     height: 120px;
+    overflow: hidden;
 
     img {
+        max-width: none;
         display: block;
+        height: 100%;
+        width: auto;
+        transform: translateX(-50%);
+        position: absolute;
+        left: 50%; top: 0;
     }
 }
 
@@ -152,8 +159,6 @@
     right: 2px;
     padding: .3em .6em;
     background-color: white;
-    //border-top-left-radius: 2px;
-    //border-top-right-radius: 2px;
     line-height: 1;
     z-index: 10;
 
@@ -172,5 +177,31 @@
         left: 0; right: 0;
         top: 0; bottom: 0;
         background-color: rgba(255, 255, 255, .6);
+    }
+}
+
+
+// todo this is more or less a hack to ease gallery creation in groups
+// the underlying form should be using hidden inputs and the submit
+// button should use the correct css classes that are enforced here
+// with a high-specificity style
+.group-intro-add {
+    form * {
+        display: none;
+    }
+
+    form button[type="submit"] {
+        display: flex;
+        background-color: transparent;
+        border-color: transparent;
+        .btn-ts();
+        .btn-backdrop();
+        .sg();
+        .sg-camera();
+        font-size: 0;
+
+        &:after {
+            font-size: 2rem;
+        }
     }
 }

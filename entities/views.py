@@ -1,5 +1,5 @@
 from . import filters, forms, models
-from content import models as content_models
+from content import creation as content_creation, models as content_models
 from crispy_forms import bootstrap, layout
 from django import http, shortcuts
 from django.conf import settings
@@ -8,6 +8,7 @@ from django.contrib.auth import mixins as auth_mixins
 from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
 from django.db import models as django_models
+from django.utils import six
 from django.views import generic
 from django_filters import views as filters_views
 from rules.contrib import views as rules_views
@@ -72,6 +73,7 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
 
 
 class Group(utils_views.List):
+    inline_view = (content_creation.Gallery, 'intro_gallery_form')
     menu = 'group'
     permission = 'entities.view_group'
     template_name = 'entities/group_detail.html'
@@ -93,6 +95,21 @@ class Group(utils_views.List):
 
     def get_group_content(self):
         return self.get_group().content.permitted(self.request.user)
+
+    def get_inline_view_form(self):
+        if (self.request.user.has_perm('entities.create_group_content', self.get_group())
+                and not self.get_group().get_head_gallery()):
+            form = super().get_inline_view_form()
+            form.helper.filter(six.string_types).wrap(layout.Field)
+            form.helper.filter(layout.Field).update_attributes(
+                    **{'data-component': '', 'type': 'hidden'})
+            form.initial['image_creation_redirect'] = True
+            form.initial['pinned'] = True
+            form.initial['public'] = True
+            form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
+            form.initial['title'] = self.get_group()
+            return form
+        return None
 
     def get_intro_content(self):
         pinned_content = self.get_group_content().filter(groupcontent__pinned=True)
