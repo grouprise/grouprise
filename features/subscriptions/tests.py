@@ -9,13 +9,29 @@ from features.memberships import models as memberships_models
 class GroupSubscription(test.TestCase):
     @classmethod
     def setUpTestData(cls):
+        cls.gestalt = auth.get_user_model().objects.create(
+                email='test@example.org').gestalt
         cls.group = entities_models.Group.objects.create(name='Test')
 
     def setUp(self):
         self.client = test.Client()
 
+    def assertForbidden(self, method, url):
+        response = getattr(self.client, method)(url)
+        self.assertEqual(response.status_code, 403)
+
+    def assertForbiddenOrLoginRedirect(self, response, next_url):
+        if auth.get_user(self.client).is_authenticated():
+            self.assertEqual(response.status_code, 403)
+        else:
+            self.assertRedirects(response, self.get_login_url(next_url))
+
     def get_link(self, link_type, group):
         return 'href="{}"'.format(self.get_url(link_type, group))
+
+    def get_login_url(self, next_url):
+        return '{}?next={}'.format(
+                urlresolvers.reverse('account_login'), next_url)
 
     def get_url(self, link_type, group):
         return urlresolvers.reverse(
@@ -30,11 +46,16 @@ class GroupSubscription(test.TestCase):
     def test_subscribe(self):
         subscribe_url = self.get_url('subscribe', self.group)
         response = self.client.get(subscribe_url)
-        self.assertRedirects(response, '{}?next={}'.format(
-            urlresolvers.reverse('account_login'), subscribe_url))
+        self.assertRedirects(response, self.get_login_url(subscribe_url))
         response = self.client.post(subscribe_url)
-        self.assertRedirects(response, '{}?next={}'.format(
-            urlresolvers.reverse('account_login'), subscribe_url))
+        self.assertRedirects(response, self.get_login_url(subscribe_url))
+
+    def test_unsubscribe(self):
+        unsubscribe_url = self.get_url('unsubscribe', self.group)
+        response = self.client.get(unsubscribe_url)
+        self.assertForbiddenOrLoginRedirect(response, unsubscribe_url)
+        response = self.client.post(unsubscribe_url)
+        self.assertForbiddenOrLoginRedirect(response, unsubscribe_url)
 
 
 class AuthenticatedGroupSubscription(GroupSubscription):
@@ -43,10 +64,12 @@ class AuthenticatedGroupSubscription(GroupSubscription):
         super().setUpTestData()
         cls.member_group = entities_models.Group.objects.create(
                 name="Member Test")
-        cls.gestalt = auth.get_user_model().objects.create(
-                email='test@example.org').gestalt
+        cls.subscribed_group = entities_models.Group.objects.create(
+                name="Subscribed Test")
         memberships_models.Membership.objects.create(
                 group=cls.member_group, member=cls.gestalt)
+        models.Subscription.objects.create(
+                subscribed_to=cls.subscribed_group, subscriber=cls.gestalt)
 
     def setUp(self):
         super().setUp()
@@ -68,9 +91,26 @@ class AuthenticatedGroupSubscription(GroupSubscription):
             subscribed_to=self.group, subscriber=self.gestalt))
 
     def test_member_subscribe(self):
-        response = self.client.get(
-                self.get_url('subscribe', self.member_group))
-        self.assertEqual(response.status_code, 403)
-        response = self.client.post(
-                self.get_url('subscribe', self.member_group))
-        self.assertEqual(response.status_code, 403)
+        subscribe_url = self.get_url('subscribe', self.member_group)
+        self.assertForbidden('get', subscribe_url)
+        self.assertForbidden('post', subscribe_url)
+
+    def test_member_unsubscribe(self):
+        unsubscribe_url = self.get_url('unsubscribe', self.member_group)
+        self.assertForbidden('get', unsubscribe_url)
+        self.assertForbidden('post', unsubscribe_url)
+
+    def test_subscribed_subscribe(self):
+        subscribe_url = self.get_url('subscribe', self.subscribed_group)
+        self.assertForbidden('get', subscribe_url)
+        self.assertForbidden('post', subscribe_url)
+
+    def test_subscribed_unsubscribe(self):
+        unsubscribe_url = self.get_url('unsubscribe', self.subscribed_group)
+        response = self.client.get(unsubscribe_url)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(unsubscribe_url)
+        self.assertRedirects(
+                response, self.subscribed_group.get_absolute_url())
+        self.assertFalse(models.Subscription.objects.filter(
+            subscribed_to=self.subscribed_group, subscriber=self.gestalt))
