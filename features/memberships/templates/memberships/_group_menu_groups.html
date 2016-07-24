@@ -1,6 +1,6 @@
-{% if user.gestalt.membership_set.exists %}
-    <li class="dropdown-header">Meine Gruppen</li>
-{% endif %}
+<li class="dropdown-header">
+    {% if user.gestalt.membership_set.exists %}Meine{% endif %} Gruppen
+</li>
 
 {% for membership in user.gestalt.membership_set.all %}
     <li>
