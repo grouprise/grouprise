@@ -13,13 +13,14 @@ class MembershipMixin:
 
 
 class Join(MembershipMixin, views.Create):
-    action = 'Beitreten'
+    action = 'Beitreten *'
     description = (
-            'Der Gruppe <em>{{ group }}</em> auf {{ site.name }} beitreten')
+            'Der Gruppe <em>{{ group }}</em> auf {{ site.name }} beitreten *')
     fields = (
             forms.Field('group', type='constant'),
             forms.Field('member', type='constant'),)
     permission = 'memberships.join_group'
+    template_name = 'memberships/join.html'
 
     def get_initial(self):
         return {
