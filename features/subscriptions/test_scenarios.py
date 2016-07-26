@@ -2,6 +2,7 @@ from . import (
         test_content as content_subscriptions,
         test_groups as group_subscriptions,
         test_mixins as mixins)
+from features.memberships import test_mixins as memberships
 from utils import tests
 
 
@@ -57,7 +58,7 @@ class GroupMember(
         group_subscriptions.NoLink,
         group_subscriptions.SubscribeForbidden,
         group_subscriptions.UnsubscribeForbidden,
-        tests.MemberMixin, tests.Test):
+        memberships.MemberMixin, tests.Test):
     pass
 
 
@@ -73,5 +74,5 @@ class GroupSubscribedMember(
         group_subscriptions.OnlyUnsubscribeLink,
         group_subscriptions.SubscribeForbidden,
         group_subscriptions.UnsubscribeAllowed,
-        mixins.GroupSubscribedMixin, tests.MemberMixin, tests.Test):
+        mixins.GroupSubscribedMixin, memberships.MemberMixin, tests.Test):
     pass

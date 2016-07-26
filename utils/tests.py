@@ -51,14 +51,6 @@ class GroupMixin:
         cls.group = entities_models.Group.objects.create(name='Test')
 
 
-class MemberMixin(AuthenticatedMixin, GroupMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        memberships_models.Membership.objects.create(
-                group=cls.group, member=cls.gestalt)
-
-
 class NoAuthorContentMixin(AuthenticatedMixin, ContentMixin, OtherGestaltMixin):
     @classmethod
     def setUpTestData(cls):

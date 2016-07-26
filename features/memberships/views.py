@@ -63,6 +63,7 @@ class Resign(MembershipMixin, views.Delete):
     permission = 'memberships.delete_membership'
 
     def get_object(self):
-        return models.Membership.objects.get(
+        return models.Membership.objects.filter(
                 group=self.related_object,
-                member=self.request.user.gestalt)
+                member=self.request.user.gestalt
+                ).first()
