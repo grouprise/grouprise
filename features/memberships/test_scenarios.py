@@ -22,6 +22,16 @@ class GroupAuthenticated(
     pass
 
 
+class GroupClosed(
+        memberships.NoLink,
+        memberships.JoinForbidden,
+        memberships.ResignForbidden,
+        memberships.MemberListForbidden,
+        memberships.MemberCreateForbidden,
+        tests.AuthenticatedMixin, tests.ClosedGroupMixin, tests.Test):
+    pass
+
+
 class GroupMember(
         memberships.OnlyResignLink,
         memberships.JoinForbidden,

@@ -134,7 +134,7 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     layout = ('avatar',)
     menu = 'group'
     model = models.Group
-    permission = 'entities.change_group'
+    permission = 'groups.change_group'
 
     def get_parent(self):
         return self.object
@@ -171,7 +171,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     layout = ('logo',)
     menu = 'group'
     model = models.Group
-    permission = 'entities.change_group'
+    permission = 'groups.change_group'
 
     def get_parent(self):
         return self.object
@@ -179,10 +179,10 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppe ändern'
-    fields = ['address', 'description', 'date_founded', 'name', 'slug', 'url']
+    fields = ['address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url']
     menu = 'group'
     model = models.Group
-    permission = 'entities.change_group'
+    permission = 'groups.change_group'
 
     def get_layout(self):
         return (
@@ -192,6 +192,7 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
                 'url',
                 layout.Field('date_founded', data_component='date'),
                 bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
+                'closed',
                 ) + super().get_layout()
 
     def get_parent(self):

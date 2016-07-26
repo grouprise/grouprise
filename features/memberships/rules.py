@@ -1,5 +1,6 @@
 from . import models
 from content import rules as content
+from features.groups import rules as groups
 import rules
 import rules.permissions
 
@@ -30,7 +31,8 @@ def is_member_of_content_group(user, content):
 rules.add_perm(
         'memberships.join_group',
         rules.is_authenticated
-        & ~is_member_of)
+        & ~is_member_of
+        & ~groups.is_closed)
 
 rules.add_perm(
         'memberships.create_membership',

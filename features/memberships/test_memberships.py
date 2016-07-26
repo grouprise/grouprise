@@ -63,6 +63,15 @@ class MemberListForbidden:
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
 
 
+class NoLink:
+    def test_group(self):
+        response = self.request(
+                tests.HTTP_GET, url='group', key=self.group.slug)
+        self.assertNotContainsLink(response, 'join', self.group.pk)
+        self.assertNotContainsLink(
+                response, 'resign', self.group.pk)
+
+
 class OnlyJoinLink:
     def test_group(self):
         response = self.request(

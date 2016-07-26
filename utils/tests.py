@@ -51,6 +51,14 @@ class GroupMixin:
         cls.group = entities_models.Group.objects.create(name='Test')
 
 
+class ClosedGroupMixin(GroupMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.group.closed = True
+        cls.group.save()
+
+
 class NoAuthorContentMixin(AuthenticatedMixin, ContentMixin, OtherGestaltMixin):
     @classmethod
     def setUpTestData(cls):
