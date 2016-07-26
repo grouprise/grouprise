@@ -11,6 +11,7 @@ from utils import forms as utils_forms
 class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)
     pinned = forms.BooleanField(label='Im Intro der Gruppe anheften', required=False)
+    images = forms.ModelMultipleChoiceField(queryset=models.Image.objects.filter(content__isnull=True), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,7 +30,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
 
 class Article(BaseContent):
-    layout = ('author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', utils_forms.Submit('Artikel erstellen'))
+    layout = ('author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', utils_forms.Submit('Artikel erstellen'), 'images')
 
     class Meta:
         fields = ('author', 'text', 'title')

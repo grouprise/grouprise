@@ -9,7 +9,7 @@ from email import utils as email_utils
 
 
 class Image(models.Model):
-    content = models.ForeignKey('Content', related_name='images')
+    content = models.ForeignKey('Content', blank=True, null=True, related_name='images')
     file = models.ImageField('Datei')
     weight = models.PositiveSmallIntegerField(default=0)
 
