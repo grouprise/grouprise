@@ -2,14 +2,6 @@ from . import models
 from utils import tests
 
 
-class GroupSubscribedMixin(tests.AuthenticatedMixin, tests.GroupMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        models.Subscription.objects.create(
-                subscribed_to=cls.group, subscriber=cls.gestalt)
-
-
 class NoLinkMixin:
     def test_group(self):
         response = self.request(
@@ -36,7 +28,7 @@ class OnlyUnsubscribeLinkMixin:
         self.assertContainsLink(response, 'group-unsubscribe', self.group.pk)
 
 
-class GroupSubscribeAllowedMixin:
+class SubscribeAllowedMixin:
     def test_group_subscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET],
@@ -51,7 +43,7 @@ class GroupSubscribeAllowedMixin:
                 subscribed_to=self.group, subscriber=self.gestalt)
 
 
-class GroupSubscribeForbiddenMixin:
+class SubscribeForbiddenMixin:
     def test_group_subscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
@@ -59,7 +51,7 @@ class GroupSubscribeForbiddenMixin:
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
 
 
-class GroupUnsubscribeAllowedMixin:
+class UnsubscribeAllowedMixin:
     def test_group_unsubscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET],
@@ -74,49 +66,9 @@ class GroupUnsubscribeAllowedMixin:
                 subscribed_to=self.group, subscriber=self.gestalt)
 
 
-class GroupUnsubscribeForbiddenMixin:
+class UnsubscribeForbiddenMixin:
     def test_group_unsubscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
                 url='group-unsubscribe', key=self.group.pk,
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
-
-
-class Anonymous(
-        OnlySubscribeLinkMixin,
-        GroupSubscribeForbiddenMixin,
-        GroupUnsubscribeForbiddenMixin,
-        tests.GroupMixin, tests.Test):
-    pass
-
-
-class Authenticated(
-        OnlySubscribeLinkMixin,
-        GroupSubscribeAllowedMixin,
-        GroupUnsubscribeForbiddenMixin,
-        tests.AuthenticatedMixin, tests.GroupMixin, tests.Test):
-    pass
-
-
-class Member(
-        NoLinkMixin,
-        GroupSubscribeForbiddenMixin,
-        GroupUnsubscribeForbiddenMixin,
-        tests.MemberMixin, tests.Test):
-    pass
-
-
-class GroupSubscribed(
-        OnlyUnsubscribeLinkMixin,
-        GroupSubscribeForbiddenMixin,
-        GroupUnsubscribeAllowedMixin,
-        GroupSubscribedMixin, tests.Test):
-    pass
-
-
-class GroupSubscribedMember(
-        OnlyUnsubscribeLinkMixin,
-        GroupSubscribeForbiddenMixin,
-        GroupUnsubscribeAllowedMixin,
-        GroupSubscribedMixin, tests.MemberMixin, tests.Test):
-    pass
