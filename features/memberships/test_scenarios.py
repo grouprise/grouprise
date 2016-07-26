@@ -6,6 +6,8 @@ class GroupAnonymous(
         memberships.OnlyJoinLink,
         memberships.JoinForbidden,
         memberships.ResignForbidden,
+        memberships.MemberListForbidden,
+        memberships.MemberCreateForbidden,
         tests.GroupMixin, tests.Test):
     pass
 
@@ -14,6 +16,8 @@ class GroupAuthenticated(
         memberships.OnlyJoinLink,
         memberships.JoinAllowed,
         memberships.ResignForbidden,
+        memberships.MemberListForbidden,
+        memberships.MemberCreateForbidden,
         tests.AuthenticatedMixin, tests.GroupMixin, tests.Test):
     pass
 
@@ -22,5 +26,7 @@ class GroupMember(
         memberships.OnlyResignLink,
         memberships.JoinForbidden,
         memberships.ResignAllowed,
-        mixins.MemberMixin, tests.Test):
+        memberships.MemberListCreateLink,
+        memberships.MemberCreateAllowed,
+        mixins.MemberMixin, tests.OtherGestaltMixin, tests.Test):
     pass
