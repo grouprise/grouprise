@@ -2,7 +2,7 @@ from . import models
 from utils import tests
 
 
-class NoLinkMixin:
+class NoLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
@@ -11,7 +11,7 @@ class NoLinkMixin:
                 response, 'group-unsubscribe', self.group.pk)
 
 
-class OnlySubscribeLinkMixin:
+class OnlySubscribeLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
@@ -20,7 +20,7 @@ class OnlySubscribeLinkMixin:
                 response, 'group-unsubscribe', self.group.pk)
 
 
-class OnlyUnsubscribeLinkMixin:
+class OnlyUnsubscribeLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
@@ -28,7 +28,7 @@ class OnlyUnsubscribeLinkMixin:
         self.assertContainsLink(response, 'group-unsubscribe', self.group.pk)
 
 
-class SubscribeAllowedMixin:
+class SubscribeAllowed:
     def test_group_subscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET],
@@ -43,7 +43,7 @@ class SubscribeAllowedMixin:
                 subscribed_to=self.group, subscriber=self.gestalt)
 
 
-class SubscribeForbiddenMixin:
+class SubscribeForbidden:
     def test_group_subscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
@@ -51,7 +51,7 @@ class SubscribeForbiddenMixin:
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
 
 
-class UnsubscribeAllowedMixin:
+class UnsubscribeAllowed:
     def test_group_unsubscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET],
@@ -66,7 +66,7 @@ class UnsubscribeAllowedMixin:
                 subscribed_to=self.group, subscriber=self.gestalt)
 
 
-class UnsubscribeForbiddenMixin:
+class UnsubscribeForbidden:
     def test_group_unsubscribe(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],

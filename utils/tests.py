@@ -1,3 +1,4 @@
+from content import models as content_models
 from django import test
 from django.contrib import auth
 from django.core import urlresolvers
@@ -12,10 +13,35 @@ HTTP_REDIRECTS = 'redirects'
 HTTP_OK = 'ok'
 
 
-class AuthenticatedMixin:
+class GestaltMixin:
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.gestalt = auth.get_user_model().objects.create(
+                email='test@example.org', username='test').gestalt
+
+
+class OtherGestaltMixin:
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.other_gestalt = auth.get_user_model().objects.create(
+                email='test2@example.org', username='test2').gestalt
+
+
+class AuthenticatedMixin(GestaltMixin):
     def setUp(self):
         super().setUp()
         self.client.force_login(self.gestalt.user)
+
+
+class ContentMixin(GestaltMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        article = content_models.Article.objects.create(
+                author=cls.gestalt, text='Test', title='Test', public=True)
+        cls.content = content_models.Content.objects.get(article=article)
 
 
 class GroupMixin:
@@ -33,12 +59,15 @@ class MemberMixin(AuthenticatedMixin, GroupMixin):
                 group=cls.group, member=cls.gestalt)
 
 
-class Test(test.TestCase):
+class NoAuthorContentMixin(AuthenticatedMixin, ContentMixin, OtherGestaltMixin):
     @classmethod
     def setUpTestData(cls):
-        cls.gestalt = auth.get_user_model().objects.create(
-                email='test@example.org').gestalt
+        super().setUpTestData()
+        cls.content.author = cls.other_gestalt
+        cls.content.save()
 
+
+class Test(test.TestCase):
     def setUp(self):
         self.client = test.Client()
 
@@ -67,8 +96,10 @@ class Test(test.TestCase):
             if HTTP_FORBIDDEN_OR_LOGIN in tests:
                 self.assertForbiddenOrLogin(response, self.get_url(kwargs['url'], kwargs['key']))
             if HTTP_REDIRECTS in tests:
-                data = tests[HTTP_REDIRECTS]
-                self.assertRedirects(response, self.get_url(*data))
+                url = tests[HTTP_REDIRECTS]
+                if isinstance(url, tuple):
+                    url = self.get_url(*url)
+                self.assertRedirects(response, url)
             if HTTP_OK in tests:
                 self.assertEqual(response.status_code, 200)
 
