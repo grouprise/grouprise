@@ -1,3 +1,4 @@
+bleach
 django
 django-allauth
 django-crispy-forms

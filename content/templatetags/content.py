@@ -1,3 +1,4 @@
+import bleach as python_bleach
 from django import template
 from django.utils import formats, html, safestring, text, timezone
 import markdown as python_markdown
@@ -11,6 +12,14 @@ register = template.Library()
 from django import template
 from django.template.base import FilterExpression
 from django.template.loader import get_template
+
+@register.filter
+def bleach(text):
+    bleached = python_bleach.clean(text, strip=True,
+            tags=['br', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ol', 'p', 'strong', 'ul'])
+    if isinstance(text, safestring.SafeString):
+        return safestring.mark_safe(bleached)
+    return bleached
 
 @register.filter(needs_autoescape=True)
 def markdown(text, autoescape=True):
