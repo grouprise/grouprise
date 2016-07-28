@@ -3,6 +3,7 @@ from django.utils import formats, html, safestring, text, timezone
 import markdown as python_markdown
 from markdown.extensions import nl2br
 from pymdownx import magiclink
+import utils.markdown
 
 register = template.Library()
 
@@ -17,7 +18,7 @@ def markdown(text, autoescape=True):
         esc = html.conditional_escape
     else:
         esc = lambda x: x
-    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=[magiclink.MagiclinkExtension(), nl2br.Nl2BrExtension()]))
+    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=[magiclink.MagiclinkExtension(), nl2br.Nl2BrExtension(), utils.markdown.GroupReferenceExtension()]))
 
 @register.filter
 def permitted(content, user):
