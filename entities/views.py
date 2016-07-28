@@ -86,6 +86,7 @@ class Group(utils_views.List):
     def get_context_data(self, **kwargs):
         kwargs['calendar_events'] = self.get_events().around()
         kwargs['intro_content'] = self.get_intro_content()
+        kwargs['internal_messages'] = self.get_messages()
         kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
@@ -121,8 +122,11 @@ class Group(utils_views.List):
         except AttributeError:
             return pinned_content
 
+    def get_messages(self):
+        return self.get_group_content().filter(groupcontent__pinned=False).filter(article__isnull=False, public=False)
+
     def get_queryset(self):
-        return self.get_group_content().filter(groupcontent__pinned=False)
+        return self.get_group_content().filter(groupcontent__pinned=False).exclude(article__isnull=False, public=False)
 
     def get_related_object(self):
         return self.get_group()
