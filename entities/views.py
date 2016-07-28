@@ -97,12 +97,15 @@ class Group(utils_views.List):
         return self.get_group().content.permitted(self.request.user)
 
     def get_inline_view_form(self):
+        # FIXME: hacky code follows
         if (self.request.user.has_perm('entities.create_group_content', self.get_group())
                 and not self.get_group().get_head_gallery()):
             form = super().get_inline_view_form()
             form.helper.filter(six.string_types).wrap(layout.Field)
             form.helper.filter(layout.Field).update_attributes(
                     **{'data-component': '', 'type': 'hidden'})
+            del form.helper[-1]
+            form.helper.layout.append(utils_forms.Submit('<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
             form.initial['image_creation_redirect'] = True
             form.initial['pinned'] = True
             form.initial['public'] = True
