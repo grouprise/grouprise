@@ -15,13 +15,15 @@ class Subscribe(SubscriptionMixin, views.Create):
             views.Field('subscriber', data='actor', type='constant'))
 
     def get_initial(self):
-        return {
-                'content_type':
-                self.related_object.content_type.pk,
+        initial = super().get_initial()
+        initial.update({
+            'content_type':
+            self.related_object.content_type.pk,
 
-                'object_id':
-                self.related_object.pk,
-                }
+            'object_id':
+            self.related_object.pk,
+            })
+        return initial
 
 
 class ContentSubscribe(Subscribe):
