@@ -6,10 +6,13 @@ import rules
 
 @rules.predicate
 def is_subscribed_to(user, instance):
-    return models.Subscription.objects.filter(
-            subscribed_to=instance,
-            subscriber=user.gestalt
-            ).exists()
+    try:
+        return models.Subscription.objects.filter(
+                subscribed_to=instance,
+                subscriber=user.gestalt
+                ).exists()
+    except AttributeError:
+        return None
 
 
 @rules.predicate
@@ -30,9 +33,9 @@ rules.add_perm(
 
 rules.add_perm(
         'subscriptions.create_group_subscription',
-        rules.is_authenticated
-        & ~memberships.is_member_of
-        & ~is_subscribed_to)
+        ~memberships.is_member_of
+        & ~is_subscribed_to
+        & rules.always_allow)
 
 rules.add_perm(
         'subscriptions.delete_subscription',

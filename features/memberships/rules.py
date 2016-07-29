@@ -14,10 +14,13 @@ def is_member(user, membership):
 
 @rules.predicate
 def is_member_of(user, group):
-    return models.Membership.objects.filter(
-            group=group,
-            member=user.gestalt
-            ).exists()
+    try:
+        return models.Membership.objects.filter(
+                group=group,
+                member=user.gestalt
+                ).exists()
+    except AttributeError:
+        return None
 
 
 @rules.predicate

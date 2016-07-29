@@ -1,13 +1,13 @@
 {% load memberships rules subscriptions %}
 
-{% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
+{% has_perm 'subscriptions.create_group_subscription' user group as can_subscribe %}
 {% has_perm 'subscriptions.delete_subscription' user user.gestalt|subscription:group as can_unsubscribe %}
 
 {% if can_unsubscribe %}
     <a href="{% url 'group-unsubscribe' group.pk %}" class="btn btn-default btn-sm" title="Du erhältst Benachrichtungen für diese Gruppe">
         <i class="sg sg-subscription"></i> Abonniert
     </a>
-{% elif not can_resign %}
+{% elif can_subscribe %}
     <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-default btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
         <i class="sg sg-subscription"></i> Abonnieren
     </a>
