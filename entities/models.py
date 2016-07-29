@@ -1,4 +1,5 @@
 from . import querysets
+import core.models
 from django.conf import settings
 from django.contrib.contenttypes import fields as contenttypes_fields, models as contenttype_models
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -82,7 +83,7 @@ class AutoSlugField(models.SlugField):
             return super().pre_save(model_instance, add)
 
 
-class Group(models.Model):
+class Group(core.models.Model):
     address = models.TextField('Anschrift', blank=True)
     avatar = models.ImageField(blank=True)
     avatar_color = models.CharField(max_length=7, default=get_random_color)
