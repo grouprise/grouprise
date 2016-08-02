@@ -1,11 +1,13 @@
 class Field:
     def __init__(self, name):
-        pass
+        self.name = name
 
 
-class CurrentUser(Field):
-    pass
+class CurrentGestalt(Field):
+    def get_data(self):
+        return self.view.request.user.gestalt
 
 
 class RelatedObject(Field):
-    pass
+    def get_data(self):
+        return self.view.related_object

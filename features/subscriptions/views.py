@@ -1,5 +1,7 @@
 from . import models
 from core import fields, views
+from features.content import views as content
+from features.groups import views as groups
 
 
 class SubscriptionMixin:
@@ -11,10 +13,10 @@ class Subscribe(SubscriptionMixin, views.Create):
     action = 'Abonnieren'
     fields = (
             fields.RelatedObject('subscribed_to'),
-            fields.CurrentUser('subscriber'))
+            fields.CurrentGestalt('subscriber'))
 
 
-class ContentSubscribe(Subscribe):
+class ContentSubscribe(content.ContentMixin, Subscribe):
     description = (
             'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
             'neue Kommentare veröffentlicht werden')
@@ -24,7 +26,7 @@ class ContentSubscribe(Subscribe):
         return self.get_content()
 
 
-class GroupSubscribe(Subscribe):
+class GroupSubscribe(groups.GroupMixin, Subscribe):
     description = (
             'Benachrichtigt werden, wenn in der Gruppe <em>{{ group }}</em> '
             'neue Beiträge veröffentlicht werden')

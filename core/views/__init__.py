@@ -1,7 +1,8 @@
+from . import actions
 import utils.views
 
 
-class Create(utils.views.Create):
+class Create(actions.TemplateResponseMixin, actions.BaseCreateView):
     pass
 
 
