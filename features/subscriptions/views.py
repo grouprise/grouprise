@@ -1,5 +1,5 @@
 from . import models
-from core import views
+from core import fields, views
 
 
 class SubscriptionMixin:
@@ -10,20 +10,8 @@ class SubscriptionMixin:
 class Subscribe(SubscriptionMixin, views.Create):
     action = 'Abonnieren'
     fields = (
-            views.Field('content_type', type='constant'),
-            views.Field('object_id', type='constant'),
-            views.Field('subscriber', data='actor', type='constant'))
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial.update({
-            'content_type':
-            self.related_object.content_type.pk,
-
-            'object_id':
-            self.related_object.pk,
-            })
-        return initial
+            fields.RelatedObject('subscribed_to'),
+            fields.CurrentUser('subscriber'))
 
 
 class ContentSubscribe(Subscribe):
