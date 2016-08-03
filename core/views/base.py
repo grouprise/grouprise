@@ -6,7 +6,7 @@ from rules.contrib import views as rules
 
 class PermissionMixin(rules.PermissionRequiredMixin):
     def get_permission_required(self):
-        return self.permission
+        return (self.permission,)
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated():

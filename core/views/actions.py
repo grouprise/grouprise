@@ -32,9 +32,12 @@ class ProcessFormView(django_edit.ProcessFormView, base.View):
 
 class BaseCreateView(
         ModelFormMixin, ProcessFormView, django_edit.BaseCreateView):
-    def post(self, *args, **kwargs):
+    def dispatch(self, *args, **kwargs):
         self.related_object = self.get_related_object()
-        return super().post(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
+
+    def get_permission_object(self):
+        return self.related_object
 
 
 class TemplateResponseMixin(django_base.TemplateResponseMixin):
