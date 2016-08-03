@@ -1,15 +1,10 @@
+from . import base
 from .. import forms
 from django.forms import models as model_forms
-from django.views.generic import (
-        base as django_base, detail as django_detail, edit as django_edit)
+from django.views.generic import base as django_base, edit as django_edit
 
 
-class FormMixin(django_edit.FormMixin):
-    def get_success_url(self):
-        return self.related_object.get_absolute_url()
-
-
-class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
+class ModelFormMixin(django_edit.ModelFormMixin):
     def get_form_class(self):
         return model_forms.modelform_factory(
                 self.model,
@@ -27,8 +22,16 @@ class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
     def get_form_fields(self):
         return []
 
+    def get_success_url(self):
+        return self.related_object.get_absolute_url()
 
-class BaseCreateView(ModelFormMixin, django_edit.BaseCreateView):
+
+class ProcessFormView(django_edit.ProcessFormView, base.View):
+    pass
+
+
+class BaseCreateView(
+        ModelFormMixin, ProcessFormView, django_edit.BaseCreateView):
     def post(self, *args, **kwargs):
         self.related_object = self.get_related_object()
         return super().post(*args, **kwargs)
