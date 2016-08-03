@@ -10,11 +10,6 @@ class FormMixin(django_edit.FormMixin):
 
 
 class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.get_data_fields():
-            field.view = self
-
     def get_form_class(self):
         return model_forms.modelform_factory(
                 self.model,
@@ -27,7 +22,7 @@ class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
         return kwargs
 
     def get_data_fields(self):
-        return self.fields
+        return [field_class(self) for field_class in self.data_field_classes]
 
     def get_form_fields(self):
         return []

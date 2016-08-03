@@ -11,9 +11,9 @@ class SubscriptionMixin:
 
 class Subscribe(SubscriptionMixin, views.Create):
     action = 'Abonnieren'
-    fields = (
-            fields.RelatedObject('subscribed_to'),
-            fields.CurrentGestalt('subscriber'))
+    data_field_classes = (
+            fields.related_object('subscribed_to'),
+            fields.current_gestalt('subscriber'))
 
 
 class ContentSubscribe(content.ContentMixin, Subscribe):
