@@ -1,6 +1,7 @@
 from django.contrib.auth import views as auth
 from django.core import exceptions
 from django.views import generic as django
+from django.views.generic import base as django_base
 from rules.contrib import views as rules
 
 
@@ -19,5 +20,15 @@ class PermissionMixin(rules.PermissionRequiredMixin):
                     self.get_redirect_field_name())
 
 
-class View(PermissionMixin, django.View):
-    pass
+class TitleMixin(django_base.ContextMixin):
+    def get_context_data(self, **kwargs):
+        kwargs['title'] = self.get_title()
+        return super().get_context_data(**kwargs)
+
+    def get_title(self):
+        return getattr(self, 'title', None)
+
+
+class View(PermissionMixin, TitleMixin, django.View):
+    def get_breadcrumb_object(self):
+        return self.get_title()
