@@ -7,6 +7,9 @@ from rules.contrib import views as rules
 
 
 class PermissionMixin(rules.PermissionRequiredMixin):
+    """
+    Handle permissions
+    """
     def get_permission_required(self):
         return (self.permission,)
 
@@ -68,4 +71,7 @@ class StadtMixin(django_base.ContextMixin):
 
 
 class View(PermissionMixin, StadtMixin, django.View):
+    """
+    Stadtgestalten base view
+    """
     pass

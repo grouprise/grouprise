@@ -16,7 +16,9 @@ class ModelFormMixin(django_edit.ModelFormMixin):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['action'] = self.action
         kwargs['data_fields'] = self.data_fields
+        kwargs['description'] = self.description
         return kwargs
 
     def get_model_form_fields(self):

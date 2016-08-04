@@ -1,19 +1,38 @@
-from crispy_forms import helper
+from crispy_forms import bootstrap, helper, layout
 from django.forms import models as django
 
 
 class ModelForm(django.ModelForm):
     def __init__(self, **kwargs):
-        self.data_fields = kwargs.pop('data_fields')
+        action = kwargs.pop('action')
+        data_fields = kwargs.pop('data_fields')
+        description = kwargs.pop('description')
         super().__init__(**kwargs)
+        self.data_fields = data_fields
+        self.fields.update(self.get_form_fields())
         self.helper = helper.FormHelper()
-        for data_field in self.data_fields:
-            form_field = data_field.get_form_field()
-            if form_field:
-                self.fields[form_field[0]] = form_field[1]
+        self.helper.layout = self.get_layout(
+                action=action, description=description)
+
+    def get_form_fields(self):
+        fields = [f.get_form_field() for f in self.data_fields]
+        return dict(filter(None, fields))
+
+    def get_layout(self, **kwargs):
+        l = [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
+        l += filter(None, [f.get_layout() for f in self.data_fields])
+        l += [Submit(kwargs['action'])]
+        return layout.Layout(*l)
 
     def save(self, commit=True):
         for field in self.data_fields:
             setattr(self.instance, field.name, field.get_data(
                 self.cleaned_data.get(field.name)))
         return super().save()
+
+
+class Submit(bootstrap.StrictButton):
+    field_classes = "btn btn-primary"
+
+    def __init__(self, value, name=''):
+        super().__init__(value, name=name, value=value, type="submit")
