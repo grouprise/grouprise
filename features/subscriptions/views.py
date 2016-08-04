@@ -14,6 +14,7 @@ class Subscribe(SubscriptionMixin, views.Create):
     data_field_classes = (
             fields.related_object('subscribed_to'),
             fields.current_gestalt('subscriber'))
+    message = 'Du erhältst nun Benachrichtigungen.'
 
 
 class ContentSubscribe(content.ContentMixin, Subscribe):

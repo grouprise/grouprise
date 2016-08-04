@@ -40,7 +40,7 @@ class ContentSubscribed(
 
 class GroupAnonymous(
         group_subscriptions.OnlySubscribeLink,
-        group_subscriptions.SubscribeForbidden,
+        group_subscriptions.SubscribeAllowed,
         group_subscriptions.UnsubscribeForbidden,
         tests.GroupMixin, tests.Test):
     pass

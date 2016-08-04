@@ -1,7 +1,13 @@
 from . import base
 from .. import forms
+from django.contrib.messages import views as messages_views
 from django.forms import models as model_forms
 from django.views.generic import base as django_base, edit as django_edit
+
+
+class MessageMixin(messages_views.SuccessMessageMixin):
+    def get_success_message(self, cleaned_data):
+        return getattr(self, 'message', None)
 
 
 class ModelFormMixin(django_edit.ModelFormMixin):
@@ -41,7 +47,7 @@ class ProcessFormView(base.View):
             return self.form_invalid(form)
 
 
-class BaseCreateView(ModelFormMixin, ProcessFormView):
+class BaseCreateView(MessageMixin, ModelFormMixin, ProcessFormView):
     def dispatch(self, *args, **kwargs):
         self.object = None
         self.related_object = self.get_related_object()

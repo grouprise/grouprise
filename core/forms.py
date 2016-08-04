@@ -14,9 +14,14 @@ class ModelForm(django.ModelForm):
         self.helper.layout = self.get_layout(
                 action=action, description=description)
 
+    def clean(self):
+        for field in self.data_fields:
+            field.clean(self)
+        return super().clean()
+
     def get_form_fields(self):
-        fields = [f.get_form_field() for f in self.data_fields]
-        return dict(filter(None, fields))
+        fields = [(f.get_name(), f.get_form_field()) for f in self.data_fields]
+        return dict(filter(lambda x: x[0] and x[1], fields))
 
     def get_layout(self, **kwargs):
         l = [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
@@ -27,7 +32,7 @@ class ModelForm(django.ModelForm):
     def save(self, commit=True):
         for field in self.data_fields:
             setattr(self.instance, field.name, field.get_data(
-                self.cleaned_data.get(field.name)))
+                self.cleaned_data.get(field.get_name())))
         return super().save()
 
 
