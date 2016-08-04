@@ -11,3 +11,12 @@ class ContentMixin:
             return content_models.Content.objects.get(
                     pk=self.kwargs['content_pk'])
         return None
+    
+    def get_grandparent(self, parent):
+        if isinstance(parent, content_models.Content):
+            if parent.groups.exists():
+                return parent.groups.first()
+            else:
+                return parent.author
+        else:
+            return None

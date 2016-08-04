@@ -45,6 +45,12 @@ class BaseCreateView(ModelFormMixin, ProcessFormView):
         self.related_object = self.get_related_object()
         return super().dispatch(*args, **kwargs)
 
+    def get_menu(self):
+        return type(self.related_object).__name__
+
+    def get_parent(self):
+        return self.related_object
+
     def get_permission_object(self):
         return self.related_object
 
