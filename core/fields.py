@@ -33,7 +33,7 @@ class CurrentGestalt(Field):
         if not self.view.request.user.is_authenticated():
             try:
                 gestalt = entities_models.Gestalt.objects.get(
-                        user__email=form.cleaned_data[self.get_name()])
+                        user__email=form.cleaned_data.get(self.get_name()))
                 if gestalt.can_login():
                     form.add_error(self.get_name(), forms.ValidationError(
                         'Es gibt bereits ein Benutzerkonto mit dieser '
@@ -49,7 +49,8 @@ class CurrentGestalt(Field):
             return entities_models.Gestalt.create_unusable(form_data)
 
     def get_form_field(self):
-        return self.if_not_authenticated(forms.EmailField(label='E-Mail-Adresse'))
+        return self.if_not_authenticated(
+                forms.EmailField(label='E-Mail-Adresse'))
 
     def get_layout(self):
         return self.if_not_authenticated(self.get_name())

@@ -22,7 +22,8 @@ class Subscribe(SubscriptionMixin, views.Create):
         try:
             return super().form_valid(form)
         except db.IntegrityError:
-            messages.info(self.request, 'Du erhältst bereits Benachrichtigungen.')
+            messages.info(
+                    self.request, 'Du erhältst bereits Benachrichtigungen.')
             return http.HttpResponseRedirect(self.get_success_url())
 
 
