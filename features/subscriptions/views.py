@@ -1,5 +1,7 @@
 from . import models
 from core import fields, views
+from django import db, http
+from django.contrib import messages
 from features.content import views as content
 from features.groups import views as groups
 
@@ -15,6 +17,13 @@ class Subscribe(SubscriptionMixin, views.Create):
             fields.related_object('subscribed_to'),
             fields.current_gestalt('subscriber'))
     message = 'Du erhältst nun Benachrichtigungen.'
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except db.IntegrityError:
+            messages.info(self.request, 'Du erhältst bereits Benachrichtigungen.')
+            return http.HttpResponseRedirect(self.get_success_url())
 
 
 class ContentSubscribe(content.ContentMixin, Subscribe):
