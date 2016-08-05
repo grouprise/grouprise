@@ -25,7 +25,7 @@ class JoinForbidden:
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
 
 
-class MemberCreateAllowed:
+class MemberCreateAllowedWithEmail:
     def test_member_create(self):
         self.assertRequest(
                 methods=[tests.HTTP_GET],
@@ -33,7 +33,7 @@ class MemberCreateAllowed:
                 response={tests.HTTP_OK})
         response = self.client.post(
                 self.get_url('member-create', self.group.pk),
-                {'member': self.other_gestalt.pk})
+                {'member_email': self.other_gestalt.user.email})
         self.assertRedirects(response, self.get_url('members', self.group.pk))
         self.assertExists(
                 models.Membership,

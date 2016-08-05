@@ -34,7 +34,7 @@ def fieldclass_factory(superclass, name):
 class EmailGestalt(Field):
     def get_data(self, form_data):
         return entities_models.Gestalt.get_or_create(form_data)
-        
+
     def get_form_field(self):
         return forms.EmailField(label='E-Mail-Adresse')
 
