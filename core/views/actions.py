@@ -24,7 +24,7 @@ class ModelFormMixin(django_edit.ModelFormMixin):
         kwargs = super().get_form_kwargs()
         kwargs['action'] = self.action
         kwargs['data_fields'] = self.data_fields
-        kwargs['description'] = self.description
+        kwargs['description'] = getattr(self, 'description', None)
         return kwargs
 
     def get_model_form_fields(self):

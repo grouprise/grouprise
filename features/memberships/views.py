@@ -1,10 +1,12 @@
 from . import models
+from core import fields, views
 from django.core import urlresolvers
 from entities import models as entities_models, views as entities_views
-from utils import forms, views
+from features.groups import views as groups
+from utils import forms, views as utils_views
 
 
-class MembershipMixin:
+class MembershipMixin(groups.GroupMixin):
     model = models.Membership
     title = 'Mitgliedschaft'
 
@@ -12,7 +14,7 @@ class MembershipMixin:
         return self.get_group()
 
 
-class Join(MembershipMixin, views.Create):
+class Join(MembershipMixin, utils_views.Create):
     action = 'Beitreten *'
     description = (
             'Der Gruppe <em>{{ group }}</em> auf {{ site.name }} beitreten *')
@@ -46,19 +48,16 @@ class Members(MembershipMixin, entities_views.GestaltList):
 
 class MemberCreate(MembershipMixin, views.Create):
     action = 'Mitglied aufnehmen'
-    fields = (
-            forms.Field('group', type='constant'),
-            forms.Field('member'))
+    data_field_classes = (
+            fields.related_object('group'),
+            fields.email_gestalt('member'))
     permission = 'memberships.create_membership'
-
-    def get_initial(self):
-        return {'group': self.related_object.pk}
 
     def get_success_url(self):
         return urlresolvers.reverse('members', args=(self.related_object.pk,))
 
 
-class Resign(MembershipMixin, views.Delete):
+class Resign(MembershipMixin, utils_views.Delete):
     action = 'Austreten'
     description = 'Aus der Gruppe <em>{{ group }}</em> austreten'
     permission = 'memberships.delete_membership'

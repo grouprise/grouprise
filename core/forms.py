@@ -21,10 +21,12 @@ class ModelForm(django.ModelForm):
 
     def get_form_fields(self):
         fields = [(f.get_name(), f.get_form_field()) for f in self.data_fields]
-        return dict(filter(lambda x: x[0] and x[1], fields))
+        return dict(filter(lambda x: x[1], fields))
 
     def get_layout(self, **kwargs):
-        l = [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
+        l = []
+        if kwargs['description']:
+            l += [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
         l += filter(None, [f.get_layout() for f in self.data_fields])
         l += [Submit(kwargs['action'])]
         return layout.Layout(*l)

@@ -10,11 +10,14 @@ class Field:
     def clean(self, form):
         pass
 
+    def get_data(self, form_data):
+        return form_data
+
     def get_form_field(self):
         return None
 
     def get_layout(self):
-        return None
+        return self.get_name()
 
     def get_model_form_field(self):
         return None
@@ -26,6 +29,16 @@ class Field:
 def fieldclass_factory(superclass, name):
     classname = name.replace('_', '').capitalize() + superclass.__name__
     return type(classname, (superclass,), {'name': name})
+
+
+class EmailGestalt(Field):
+    def get_form_field(self):
+        return forms.EmailField(label='E-Mail-Adresse')
+
+    def get_name(self):
+        return '{}_email'.format(self.name)
+
+email_gestalt = functools.partial(fieldclass_factory, EmailGestalt)
 
 
 class CurrentGestalt(Field):
@@ -53,10 +66,10 @@ class CurrentGestalt(Field):
                 forms.EmailField(label='E-Mail-Adresse'))
 
     def get_layout(self):
-        return self.if_not_authenticated(self.get_name())
+        return self.if_not_authenticated(super().get_layout())
 
     def get_name(self):
-        return self.if_not_authenticated('{}_email'.format(self.name))
+        return '{}_email'.format(self.name)
 
     def if_not_authenticated(self, v1, v2=None):
         return v1 if not self.view.request.user.is_authenticated() else v2
@@ -67,5 +80,8 @@ current_gestalt = functools.partial(fieldclass_factory, CurrentGestalt)
 class RelatedObject(Field):
     def get_data(self, form_data):
         return self.view.related_object
+
+    def get_layout(self):
+        return None
 
 related_object = functools.partial(fieldclass_factory, RelatedObject)
