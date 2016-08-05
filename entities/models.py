@@ -28,7 +28,7 @@ class Gestalt(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
 
     @staticmethod
-    def create_unusable(email):
+    def get_or_create(email):
         user, created = auth.get_user_model().objects.get_or_create(
                 email=email)
         if created:

@@ -32,6 +32,9 @@ def fieldclass_factory(superclass, name):
 
 
 class EmailGestalt(Field):
+    def get_data(self, form_data):
+        return entities_models.Gestalt.get_or_create(form_data)
+        
     def get_form_field(self):
         return forms.EmailField(label='E-Mail-Adresse')
 
@@ -59,7 +62,7 @@ class CurrentGestalt(Field):
         if self.view.request.user.is_authenticated():
             return self.view.request.user.gestalt
         else:
-            return entities_models.Gestalt.create_unusable(form_data)
+            return entities_models.Gestalt.get_or_create(form_data)
 
     def get_form_field(self):
         return self.if_not_authenticated(

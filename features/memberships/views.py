@@ -1,5 +1,7 @@
 from . import models
 from core import fields, views
+from django import db, http
+from django.contrib import messages
 from django.core import urlresolvers
 from entities import models as entities_models, views as entities_views
 from features.groups import views as groups
@@ -52,6 +54,14 @@ class MemberCreate(MembershipMixin, views.Create):
             fields.related_object('group'),
             fields.email_gestalt('member'))
     permission = 'memberships.create_membership'
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except db.IntegrityError:
+            messages.info(
+                    self.request, 'Die Gestalt ist bereits Mitglied.')
+            return http.HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return urlresolvers.reverse('members', args=(self.related_object.pk,))
