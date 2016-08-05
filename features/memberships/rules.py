@@ -40,6 +40,7 @@ rules.add_perm(
 rules.add_perm(
         'memberships.create_membership',
         rules.is_authenticated
+        & groups.is_closed
         & is_member_of)
 
 rules.add_perm(
