@@ -14,3 +14,15 @@
     {% endwith %}
     {% if can_list %}</a>{% endif %}
 </dd>
+
+{% if group.closed %}
+<dt>
+    <i class="sg sg-closed"></i>
+    <span class="sr-only">Geschlossene Gruppe</span>
+</dt>
+<dd>
+    Geschlossene Gruppe{% if not can_list %}:
+    <a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a> 
+    um beizutreten{% endif %}
+</dd>
+{% endif %}
