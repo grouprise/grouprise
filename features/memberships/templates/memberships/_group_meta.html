@@ -1,4 +1,5 @@
 {% load memberships rules %}
+{% has_perm 'memberships.create_membership' user group as can_create %}
 {% has_perm 'memberships.list_memberships' user group as can_list %}
 
 <dt>
@@ -13,4 +14,7 @@
         {{ num_members }} Mitglied{{ num_members|pluralize:"er" }}
     {% endwith %}
     {% if can_list %}</a>{% endif %}
+    {% if can_create %}
+    <a href="{% url 'member-create' group.pk %}">Mitglied aufnehmen</a>
+    {% endif %}
 </dd>
