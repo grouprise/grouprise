@@ -5,6 +5,10 @@ from django.utils import safestring
 register = template.Library()
 
 @register.filter
+def connect(val1, val2):
+    return val1, val2
+
+@register.filter
 def cuttrailing(s1, s2):
     if s1.endswith(s2):
         return s1[:-len(s2)]

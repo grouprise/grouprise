@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'entities.apps.EntitiesConfig',
+    'features.associations',
     'features.memberships',
     'features.subscriptions',
     'rest_framework',

@@ -1,5 +1,6 @@
 from . import models
 from content import rules as content
+from features.associations import rules as associations
 from features.memberships import rules as memberships
 import rules
 
@@ -26,7 +27,7 @@ rules.add_perm(
            & content.is_permitted
            & ~content.is_author
            & ~content.is_recipient
-           & ~memberships.is_member_of_content_group
+           & ~associations.is_member_of_any_content_group
            & ~is_subscribed_to))
 
 rules.add_perm(

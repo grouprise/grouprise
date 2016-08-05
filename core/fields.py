@@ -26,9 +26,10 @@ class Field:
         return self.name
 
 
-def fieldclass_factory(superclass, name):
+def fieldclass_factory(superclass, name, **kwargs):
     classname = name.replace('_', '').capitalize() + superclass.__name__
-    return type(classname, (superclass,), {'name': name})
+    kwargs['name'] = name
+    return type(classname, (superclass,), kwargs)
 
 
 class EmailGestalt(Field):
@@ -80,11 +81,18 @@ class CurrentGestalt(Field):
 current_gestalt = functools.partial(fieldclass_factory, CurrentGestalt)
 
 
-class RelatedObject(Field):
+class ViewObject(Field):
     def get_data(self, form_data):
-        return self.view.related_object
+        return self.view.get_view_object(self.key)
 
     def get_layout(self):
         return None
+
+view_object = functools.partial(fieldclass_factory, ViewObject)
+
+
+class RelatedObject(ViewObject):
+    def get_data(self, form_data):
+        return self.view.related_object
 
 related_object = functools.partial(fieldclass_factory, RelatedObject)

@@ -50,7 +50,7 @@ class ProcessFormView(base.View):
 class BaseCreateView(MessageMixin, ModelFormMixin, ProcessFormView):
     def dispatch(self, *args, **kwargs):
         self.object = None
-        self.related_object = self.get_related_object()
+        self.related_object = self.get_view_object(None)
         return super().dispatch(*args, **kwargs)
 
     def get_menu(self):
@@ -61,6 +61,11 @@ class BaseCreateView(MessageMixin, ModelFormMixin, ProcessFormView):
 
     def get_permission_object(self):
         return self.related_object
+
+    def get_view_object(self, key):
+        if key is None:
+            return self.get_related_object()
+        return None
 
 
 class TemplateResponseMixin(django_base.TemplateResponseMixin):

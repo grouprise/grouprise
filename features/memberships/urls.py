@@ -13,7 +13,7 @@ urlpatterns = [
         name='members'),
 
     urls.url(
-        r'^groups/(?P<group_pk>[0-9]+)/members/add$',
+        r'^groups/(?P<group_pk>[0-9]+)/members/add/$',
         views.MemberCreate.as_view(),
         name='member-create'),
 

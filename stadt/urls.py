@@ -11,6 +11,7 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('account.urls')),
     urls.url(r'^stadt/', urls.include('content.urls')),
     urls.url(r'^stadt/', urls.include('entities.urls')),
+    urls.url(r'^stadt/', urls.include('features.associations.urls')),
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),
     urls.url(r'^stadt/admin/', admin.site.urls),

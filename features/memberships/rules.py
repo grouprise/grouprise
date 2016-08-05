@@ -1,5 +1,4 @@
 from . import models
-from content import rules as content
 from features.groups import rules as groups
 import rules
 import rules.permissions
@@ -23,14 +22,6 @@ def is_member_of(user, group):
         return None
 
 
-@rules.predicate
-def is_member_of_content_group(user, content):
-    for group in content.groups.all():
-        if is_member_of(user, group):
-            return True
-    return False
-
-
 rules.add_perm(
         'memberships.join_group',
         rules.is_authenticated
@@ -52,21 +43,6 @@ rules.add_perm(
         'memberships.list_memberships',
         rules.is_authenticated
         & is_member_of)
-
-
-# redefinition of content permissions
-
-content_view_author = rules.permissions.permissions['content.view_author']
-
-rules.remove_perm(
-        'content.view_author')
-
-rules.add_perm(
-        'content.view_author',
-        content_view_author
-        | (content.is_permitted
-           & rules.is_authenticated
-           & is_member_of_content_group))
 
 
 # redefinition of groups permissions
