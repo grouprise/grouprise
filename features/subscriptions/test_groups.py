@@ -52,7 +52,7 @@ class SubscribeAllowedWithEmail:
         response = self.client.post(
                 self.get_url('group-subscribe', self.group.pk),
                 {'subscriber_email': self.gestalt.user.email})
-        self.assertRedirects(response, self.get_url('group', self.group.slug))
+        self.assertRedirects(response, self.group.get_absolute_url())
         self.assertExists(
                 models.Subscription,
                 subscribed_to=self.group, subscriber=self.gestalt)
