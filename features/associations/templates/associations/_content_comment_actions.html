@@ -1,6 +1,6 @@
-{% load content crispy_forms_tags rules staticfiles thumbnail utils %}
+{% load rules utils %}
 {% has_perm 'associations.create_content_group_membership' user group|connect:content.author as can_create %}
 
 {% if can_create %}
-<p><a href="{% url 'content-group-member-create' group.pk content.author.pk %}">{{ content.author }} als Mitglied aufnehmen</a></p>
+<p><a href="{% url 'gestalt-member-create' group.pk content.author.pk %}">{{ content.author }} als Mitglied aufnehmen</a></p>
 {% endif %}

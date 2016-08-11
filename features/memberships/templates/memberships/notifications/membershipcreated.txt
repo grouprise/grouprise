@@ -1,0 +1,6 @@
+Du wurdest auf {{ site.name }} in die Gruppe {{ membership.group }} aufgenommen:
+{{ membership.group.get_absolute_url }}
+{% if not membership.gestalt.can_login %}
+Bitte leg Dir ein Benutzerkonto an, um als Mitglied der Gruppe aktiv werden zu können:
+{% url 'account_signup' %}?next={{ membership.group.get_absolute_url }}
+{% endif %}

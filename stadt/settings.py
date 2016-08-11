@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django_filters',
     'entities.apps.EntitiesConfig',
     'features.associations',
-    'features.memberships',
+    'features.memberships.apps.MembershipsConfig',
     'features.subscriptions',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
