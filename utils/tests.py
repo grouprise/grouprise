@@ -32,7 +32,8 @@ class OtherGestaltMixin:
 class AuthenticatedMixin(GestaltMixin):
     def setUp(self):
         super().setUp()
-        self.client.force_login(self.gestalt.user)
+        self.client.force_login(
+                self.gestalt.user, 'django.contrib.auth.backends.ModelBackend')
 
 
 class ContentMixin(GestaltMixin):
