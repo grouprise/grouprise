@@ -13,9 +13,15 @@ urlpatterns = [
         name='members'),
 
     urls.url(
-        r'^groups/(?P<group_pk>[0-9]+)/members/add$',
-        views.MemberCreate.as_view(),
+        r'^groups/(?P<group_pk>[0-9]+)/members/add/$',
+        views.MemberAdd.as_view(),
         name='member-create'),
+
+    urls.url(
+        r'^groups/(?P<group_pk>[0-9]+)/members/add/gestalt/'
+        r'(?P<gestalt_pk>[0-9]+)/$',
+        views.GestaltMemberAdd.as_view(),
+        name='gestalt-member-create'),
 
     urls.url(
         r'^groups/(?P<group_pk>[0-9]+)/resign/$',

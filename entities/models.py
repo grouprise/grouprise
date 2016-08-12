@@ -1,5 +1,8 @@
 from . import querysets
+from allauth.account import adapter as allauth_adapter
+import core.models
 from django.conf import settings
+from django.contrib import auth
 from django.contrib.contenttypes import fields as contenttypes_fields, models as contenttype_models
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core import exceptions, urlresolvers, validators
@@ -23,10 +26,23 @@ class Gestalt(models.Model):
             help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.'
             )
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
+
+    @staticmethod
+    def get_or_create(email):
+        user, created = auth.get_user_model().objects.get_or_create(
+                email=email)
+        if created:
+            allauth_adapter.get_adapter().populate_username(None, user)
+            user.set_unusable_password()
+            user.save()
+        return user.gestalt
     
     def __str__(self):
         name = ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
         return name if name else self.user.username
+
+    def can_login(self):
+        return self.user.has_usable_password()
 
     def get_absolute_url(self):
         if self.public:
@@ -82,7 +98,7 @@ class AutoSlugField(models.SlugField):
             return super().pre_save(model_instance, add)
 
 
-class Group(models.Model):
+class Group(core.models.Model):
     address = models.TextField('Anschrift', blank=True)
     avatar = models.ImageField(blank=True)
     avatar_color = models.CharField(max_length=7, default=get_random_color)

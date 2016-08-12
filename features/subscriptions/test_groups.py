@@ -43,6 +43,21 @@ class SubscribeAllowed:
                 subscribed_to=self.group, subscriber=self.gestalt)
 
 
+class SubscribeAllowedWithEmail:
+    def test_group_subscribe(self):
+        self.assertRequest(
+                methods=[tests.HTTP_GET],
+                url='group-subscribe', key=self.group.pk,
+                response={tests.HTTP_OK})
+        response = self.client.post(
+                self.get_url('group-subscribe', self.group.pk),
+                {'subscriber_email': self.gestalt.user.email})
+        self.assertRedirects(response, self.group.get_absolute_url())
+        self.assertExists(
+                models.Subscription,
+                subscribed_to=self.group, subscriber=self.gestalt)
+
+
 class SubscribeForbidden:
     def test_group_subscribe(self):
         self.assertRequest(

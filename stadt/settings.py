@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'entities.apps.EntitiesConfig',
-    'features.memberships',
+    'features.associations',
+    'features.memberships.apps.MembershipsConfig',
     'features.subscriptions',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
@@ -70,11 +71,11 @@ ROOT_URLCONF = 'stadt.urls'
 
 TEMPLATES = [
     {
+        'APP_DIRS': True,
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'stadt', 'templates'),
             ],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -87,6 +88,7 @@ TEMPLATES = [
                 'entities.context_processors.statistics',
                 'stadt.context_processors.site',
             ],
+            'debug': True,
         },
     },
 ]
