@@ -19,5 +19,6 @@ urlpatterns = [
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/avatar/$', views.GroupAvatarUpdate.as_view(), name='group-avatar-update'),
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/logo/$', views.GroupLogoUpdate.as_view(), name='group-logo-update'),
     urls.url(r'^group/(?P<group_pk>[0-9]+)/contact/$', content_creation.GroupMessage.as_view(), name='message-create'),
+    urls.url(r'^group/(?P<group_pk>[0-9]+)/messages/$', views.GroupMessages.as_view(), name='group-messages'),
     urls.url(r'^imprint/$', views.Imprint.as_view(), name='imprint'),
 ]

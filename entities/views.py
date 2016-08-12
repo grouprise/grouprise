@@ -123,7 +123,7 @@ class Group(utils_views.List):
             return pinned_content
 
     def get_messages(self):
-        return self.get_group_content().filter(groupcontent__pinned=False).filter(article__isnull=False, public=False)
+        return self.get_group_content().filter(groupcontent__pinned=False).filter(article__isnull=False, public=False).order_by('-comments__date_created', '-date_created')[:3]
 
     def get_queryset(self):
         return self.get_group_content().filter(groupcontent__pinned=False).exclude(article__isnull=False, public=False)
@@ -182,6 +182,23 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
 
     def get_parent(self):
         return self.object
+
+
+class GroupMessages(utils_views.List):
+    menu = 'group'
+    permission = 'content.view_content_list'
+    sidebar = []
+    template_name = 'stadt/list.html'
+    title = 'Nachrichten'
+
+    def get_queryset(self):
+        return self.get_group().content.permitted(self.request.user).filter(article__isnull=False, public=False).order_by('-comments__date_created', '-date_created')
+
+    def get_parent(self):
+        return self.get_group()
+
+    def get_related_object(self):
+        return self.get_group()
 
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):

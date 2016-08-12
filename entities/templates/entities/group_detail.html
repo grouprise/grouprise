@@ -34,6 +34,23 @@
         {% endfor %}
     {% endif %}
 
+    {% if internal_messages %}
+        <div class="content-header">
+            <h2 class="content-classification">Nachrichten</h2>
+            {% if can_create_message %}
+                <a href="{% url 'message-create' group.pk %}" class="btn btn-default">Neue Nachricht</a>
+            {% endif %}
+        </div>
+        {% for content in internal_messages %}
+            {% include 'content/_content_preview.html' %}
+        {% endfor %}
+        <div class="btn-toolbar btn-toolbar-centered">
+            <a href="{% url 'group-messages' group.pk %}" class="btn btn-default">
+                Weitere Nachrichten
+            </a>
+        </div>
+    {% endif %}
+
     <div class="content-header">
         <h2 class="content-classification decoration-icon sg-pen">Beiträge</h2>
         <div class="btn-toolbar">
