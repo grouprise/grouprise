@@ -1,4 +1,6 @@
 from django import apps, template
+from django.conf import settings
+from django.contrib.sites import models as sites_models
 from django.core import urlresolvers
 from django.utils import safestring
 
@@ -13,6 +15,13 @@ def cuttrailing(s1, s2):
     if s1.endswith(s2):
         return s1[:-len(s2)]
     return s1
+
+@register.filter
+def full_url(path):
+    return '{proto}://{domain}{path}'.format(
+            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
+            domain=sites_models.Site.objects.get_current().domain,
+            path=path)
 
 @register.filter
 def limit(indexable, count):

@@ -9,10 +9,12 @@ class MembershipCreated:
     def __init__(self, membership):
         recipient = membership.member
         subject = 'Stadtgestalten: In Gruppe aufgenommen'
+        site = sites_models.Site.objects.get_current()
         to = '{} <{}>'.format(recipient, recipient.user.email)
-        body = loader.render_to_string(self.get_template_name())
+        body = loader.render_to_string(self.get_template_name(), {
+            'membership': membership, 'site': site})
         from_email = '{site} <{email}>'.format(
-                site=sites_models.Site.objects.get_current().name,
+                site=site.name,
                 email=settings.DEFAULT_FROM_EMAIL)
         date = email_utils.formatdate(localtime=True)
         message = mail.EmailMessage(
