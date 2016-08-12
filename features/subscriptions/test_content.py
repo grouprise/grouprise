@@ -44,6 +44,21 @@ class SubscribeAllowed:
                 subscribed_to=self.content, subscriber=self.gestalt)
 
 
+class SubscribeAllowedWithEmail:
+    def test_content_subscribe(self):
+        self.assertRequest(
+                methods=[tests.HTTP_GET],
+                url='content-subscribe', key=self.content.pk,
+                response={tests.HTTP_OK})
+        response = self.client.post(
+                self.get_url('content-subscribe', self.content.pk),
+                {'subscriber_email': self.gestalt.user.email})
+        self.assertRedirects(response, self.content.get_absolute_url())
+        self.assertExists(
+                models.Subscription,
+                subscribed_to=self.content, subscriber=self.gestalt)
+
+
 class SubscribeForbidden:
     def test_content_subscribe(self):
         self.assertRequest(

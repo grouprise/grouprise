@@ -37,6 +37,17 @@ class GroupMember(
         memberships.JoinForbidden,
         memberships.ResignAllowed,
         memberships.MemberListCreateLink,
-        memberships.MemberCreateAllowed,
+        memberships.MemberCreateForbidden,
         mixins.MemberMixin, tests.OtherGestaltMixin, tests.Test):
+    pass
+
+
+class GroupClosedMember(
+        memberships.OnlyResignLink,
+        memberships.JoinForbidden,
+        memberships.ResignAllowed,
+        memberships.MemberListCreateLink,
+        memberships.MemberCreateAllowedWithEmail,
+        mixins.MemberMixin, tests.ClosedGroupMixin, tests.OtherGestaltMixin,
+        tests.Test):
     pass

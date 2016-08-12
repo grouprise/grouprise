@@ -7,4 +7,4 @@ class MemberMixin(tests.AuthenticatedMixin, tests.GroupMixin):
     def setUpTestData(cls):
         super().setUpTestData()
         models.Membership.objects.create(
-                group=cls.group, member=cls.gestalt)
+                created_by=cls.gestalt, group=cls.group, member=cls.gestalt)

@@ -8,7 +8,7 @@ from utils import tests
 
 class ContentAnonymous(
         content_subscriptions.OnlySubscribeLink,
-        content_subscriptions.SubscribeForbidden,
+        content_subscriptions.SubscribeAllowedWithEmail,
         content_subscriptions.UnsubscribeForbidden,
         tests.ContentMixin, tests.Test):
     pass
@@ -40,9 +40,9 @@ class ContentSubscribed(
 
 class GroupAnonymous(
         group_subscriptions.OnlySubscribeLink,
-        group_subscriptions.SubscribeForbidden,
+        group_subscriptions.SubscribeAllowedWithEmail,
         group_subscriptions.UnsubscribeForbidden,
-        tests.GroupMixin, tests.Test):
+        tests.GestaltMixin, tests.GroupMixin, tests.Test):
     pass
 
 

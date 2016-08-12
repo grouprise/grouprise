@@ -1,4 +1,5 @@
 from . import querysets
+import core.models
 from django.conf import settings
 from django.contrib.contenttypes import fields
 from django.contrib.sites import models as sites_models
@@ -17,7 +18,7 @@ class Image(models.Model):
         ordering = ('weight',)
 
 
-class Base(models.Model):
+class Base(core.models.Model):
     author = models.ForeignKey(
             'entities.Gestalt',
             related_name='authored_%(class)s')

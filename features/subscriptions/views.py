@@ -1,6 +1,9 @@
 from . import models
-from django.contrib.contenttypes import models as contenttypes_models
-from utils import forms, views
+from core import fields, views
+from django import db, http
+from django.contrib import messages
+from features.content import views as content
+from features.groups import views as groups
 
 
 class SubscriptionMixin:
@@ -10,26 +13,21 @@ class SubscriptionMixin:
 
 class Subscribe(SubscriptionMixin, views.Create):
     action = 'Abonnieren'
-    fields = (
-            forms.Field('content_type', type='constant'),
-            forms.Field('object_id', type='constant'),
-            forms.Field('subscriber', type='constant'))
+    data_field_classes = (
+            fields.related_object('subscribed_to'),
+            fields.current_gestalt('subscriber'))
+    message = 'Du erhältst nun Benachrichtigungen.'
 
-    def get_initial(self):
-        return {
-                'content_type':
-                contenttypes_models.ContentType.objects
-                .get_for_model(self.related_object).pk,
-
-                'object_id':
-                self.related_object.pk,
-
-                'subscriber':
-                self.request.user.gestalt.pk,
-                }
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except db.IntegrityError:
+            messages.info(
+                    self.request, 'Du erhältst bereits Benachrichtigungen.')
+            return http.HttpResponseRedirect(self.get_success_url())
 
 
-class ContentSubscribe(Subscribe):
+class ContentSubscribe(content.ContentMixin, Subscribe):
     description = (
             'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
             'neue Kommentare veröffentlicht werden')
@@ -39,7 +37,7 @@ class ContentSubscribe(Subscribe):
         return self.get_content()
 
 
-class GroupSubscribe(Subscribe):
+class GroupSubscribe(groups.GroupMixin, Subscribe):
     description = (
             'Benachrichtigt werden, wenn in der Gruppe <em>{{ group }}</em> '
             'neue Beiträge veröffentlicht werden')

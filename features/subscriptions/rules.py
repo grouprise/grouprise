@@ -1,5 +1,6 @@
 from . import models
 from content import rules as content
+from features.associations import rules as associations
 from features.memberships import rules as memberships
 import rules
 
@@ -21,18 +22,21 @@ def is_subscriber(user, subscription):
 
 rules.add_perm(
         'subscriptions.create_content_subscription',
-        rules.is_authenticated
-        & content.is_permitted
-        & ~content.is_author
-        & ~content.is_recipient
-        & ~memberships.is_member_of_content_group
-        & ~is_subscribed_to)
+        ~rules.is_authenticated
+        | (rules.is_authenticated
+           & content.is_permitted
+           & ~content.is_author
+           & ~content.is_recipient
+           & ~associations.is_member_of_any_content_group
+           & ~is_subscribed_to))
 
 rules.add_perm(
         'subscriptions.create_group_subscription',
-        rules.is_authenticated
-        & ~memberships.is_member_of
-        & ~is_subscribed_to)
+        ~rules.is_authenticated
+        | (rules.is_authenticated
+           & ~memberships.is_member_of
+           & ~is_subscribed_to
+           & rules.always_allow))
 
 rules.add_perm(
         'subscriptions.delete_subscription',

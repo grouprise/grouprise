@@ -76,15 +76,6 @@
                     {{ group.date_founded|date:'Y' }} gegründet
                 </dd>
                 {% include_features '_group_meta.html' %}
-                {% if group.closed %}
-                <dt>
-                    <i class="sg sg-closed"></i>
-                    <span class="sr-only">Geschlossene Gruppe</span>
-                </dt>
-                <dd>
-                Geschlossene Gruppe: <a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a> um beizutreten
-                </dd>
-                {% endif %}
             </dl>
         </div>
         <div class="group-info-slug">
