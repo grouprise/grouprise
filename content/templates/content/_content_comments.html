@@ -1,6 +1,4 @@
-{% load rules %}
-{% load crispy_forms_tags rules staticfiles thumbnail %}
-{% load content %}
+{% load content crispy_forms_tags rules utils %}
 
 <h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
 
@@ -33,3 +31,5 @@
 {% else %}
     <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">Kommentieren</a>
 {% endif %}
+
+{% include_features '_content_comment_actions.html' %}

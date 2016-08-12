@@ -1,4 +1,5 @@
 {% load memberships rules %}
+{% has_perm 'memberships.create_membership' user group as can_create %}
 {% has_perm 'memberships.list_memberships' user group as can_list %}
 
 <dt>
@@ -9,8 +10,23 @@
     {% if can_list %}
         <a href="{% url 'members' group.pk %}">
     {% endif %}
-    {% with num_members=group.membership_set.count %}
+    {% with num_members=group.memberships.count %}
         {{ num_members }} Mitglied{{ num_members|pluralize:"er" }}
     {% endwith %}
     {% if can_list %}</a>{% endif %}
+    {% if can_create %}
+    <a href="{% url 'member-create' group.pk %}">Mitglied aufnehmen</a>
+    {% endif %}
 </dd>
+
+{% if group.closed %}
+<dt>
+    <i class="sg sg-closed"></i>
+    <span class="sr-only">Geschlossene Gruppe</span>
+</dt>
+<dd>
+    Geschlossene Gruppe{% if not can_list %}:
+    <a href="{% url 'message-create' group.pk %}">Nachricht schreiben</a> 
+    um beizutreten{% endif %}
+</dd>
+{% endif %}
