@@ -22,7 +22,7 @@ def comment_post_save(sender, instance, **kwargs):
     for gestalt in instance.content.gestalten.all():
         recipients |= {gestalt}
     for group in instance.content.groups.all():
-        recipients |= set(entities_models.Gestalt.objects.filter(membership__group=group))
+        recipients |= set(entities_models.Gestalt.objects.filter(memberships__group=group))
     # FIXME: What about private content?
     for notifier_str in settings.NOTIFIERS:
         Notifier = module_loading.import_string(notifier_str)
