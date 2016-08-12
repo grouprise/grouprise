@@ -11,7 +11,7 @@ from utils import forms as utils_forms
 class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)
     pinned = forms.BooleanField(label='Im Intro der Gruppe anheften', required=False)
-    images = forms.ModelMultipleChoiceField(queryset=models.Image.objects.filter(content__isnull=True), required=False)
+    images = forms.ModelMultipleChoiceField(queryset=models.Image.objects.filter(content__isnull=True), required=False, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,6 +26,9 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
             entities_models.GroupContent.objects.update_or_create(content=content, group=self.cleaned_data['group'], defaults={'pinned': self.cleaned_data['pinned']})
         else:
             entities_models.GroupContent.objects.filter(content=content).delete()
+        for image in self.cleaned_data['images']:
+            image.content = content
+            image.save()
         return content
 
 
@@ -42,7 +45,7 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = ('author', 'group', 'pinned', 'title', layout.Field('time', data_component='date date-datetime'), 'place', utils_forms.EditorField('text'), 'public', utils_forms.Submit('Ereignis erstellen'))
+    layout = ('author', 'group', 'pinned', 'title', layout.Field('time', data_component='date date-datetime'), 'place', utils_forms.EditorField('text'), 'public', utils_forms.Submit('Ereignis erstellen'), 'images')
 
     class Meta:
         fields = ('author', 'place', 'public', 'text', 'time', 'title')
@@ -52,7 +55,7 @@ class Event(BaseContent):
 
 class Gallery(BaseContent):
     image_creation_redirect = forms.BooleanField(required=False, widget=forms.HiddenInput)
-    layout = ('image_creation_redirect', 'author', 'group', 'title', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'))
+    layout = ('image_creation_redirect', 'author', 'group', 'title', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'), 'images')
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
