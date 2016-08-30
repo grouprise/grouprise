@@ -2,6 +2,7 @@ import SimpleMDE from "simplemde";
 
 export default (el) => new SimpleMDE({
     element: el,
+    forceSync: true,
     parsingConfig: {
         allowAtxHeaderWithoutSpace: true,
         strikethrough: false,
