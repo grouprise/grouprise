@@ -18,7 +18,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
         self.fields['group'] = forms.ModelChoiceField(label='Gruppe', queryset=self.get_group_queryset(), required=False)
 
     def get_group_queryset(self):
-        return entities_models.Group.objects.filter(membership__member=self.initial['author'])
+        return entities_models.Group.objects.filter(memberships__member=self.initial['author'])
 
     def save(self):
         content = super().save()

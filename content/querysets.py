@@ -10,7 +10,7 @@ class ContentQuerySet(models.QuerySet):
             return self.filter(
                     models.Q(public=True) |
                     models.Q(author=user.gestalt) |
-                    models.Q(groupcontent__group__in=entities_models.Group.objects.filter(membership__member=user.gestalt)) |
+                    models.Q(groupcontent__group__in=entities_models.Group.objects.filter(memberships__member=user.gestalt)) |
                     models.Q(gestaltcontent__gestalt=user.gestalt)
                     )
         else:
