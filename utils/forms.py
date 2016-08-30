@@ -58,7 +58,7 @@ class Field(layout.Field):
 class Submit(bootstrap.StrictButton):
     field_classes = "btn btn-primary"
 
-    def __init__(self, value, name='', field_classes=None):
+    def __init__(self, content, name='', field_classes=None, value="submit"):
         if field_classes is not None:
             self.field_classes = field_classes
-        super().__init__(value, name=name, value=value, type="submit")
+        super().__init__(content, name=name, value=value, type="submit")
