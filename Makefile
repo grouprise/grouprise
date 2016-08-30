@@ -7,6 +7,7 @@ DJANGO_SETTINGS ?= stadt.prod_settings
 VIRTUALENV_BASE ?= /srv/virtualenvs
 BUILD_PATH = $(shell pwd)/build
 SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
+PYTHON_DIRS = content entities stadt
 
 # symlink magic for badly packaged dependencies using "node" explicitely
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
@@ -14,7 +15,7 @@ HELPER_PATH_ENV = PATH=$(HELPER_BIN_PATH):$$PATH
 NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
 
 
-.PHONY: default clean deploy deploy-git reload static update-virtualenv
+.PHONY: default clean deploy deploy-git reload static update-virtualenv test
 
 
 default: $(GRUNT_BIN)
@@ -40,6 +41,8 @@ update-virtualenv:
 	$(SOURCE_VIRTUALENV) && python manage.py migrate --settings "$(DJANGO_SETTINGS)"
 
 deploy:
+	# TODO: Probleme beheben und dann Abbruch bei Testfehlschlag aktivieren
+	$(MAKE) test || true
 	$(MAKE) default
 	$(MAKE) update-virtualenv
 	$(MAKE) static
@@ -48,6 +51,9 @@ deploy:
 deploy-git:
 	git pull
 	$(MAKE) deploy
+
+test:
+	$(SOURCE_VIRTUALENV) && python -m flake8 $(PYTHON_DIRS) && python manage.py test
 
 clean:
 	$(RM) -r node_modules bower_components static
