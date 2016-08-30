@@ -42,7 +42,7 @@ class ExtraFormMixin(FormMixin):
 
 class EditorField(layout.Field):
     def __init__(self, *args, **kwargs):
-        #kwargs['data_component'] = 'editor'
+        kwargs['data_component'] = 'editor'
         super().__init__(*args, **kwargs)
 
 
