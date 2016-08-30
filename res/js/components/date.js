@@ -23,7 +23,6 @@ flatpickr.init.prototype.l10n.firstDayOfWeek = 1;
 
 const base = {
     time_24hr: true,
-    timeFormat: "H:i:00",
     dateFormat: "d.m.Y",
     minuteIncrement: 15,
     parseDate: (date) => moment(date, "DD.MM.YYYY", "de", true).toDate()
@@ -34,6 +33,7 @@ export default (el, opts) => {
 
     if(opts.is_type("datetime")) {
         config.enableTime = true;
+        config.dateFormat = `${config.dateFormat} H:i:00`;
         config.parseDate = (date) => moment(date, "DD.MM.YYYY HH:mm:ss", "de", true).toDate()
     }
     
