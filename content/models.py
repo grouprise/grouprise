@@ -13,6 +13,7 @@ class Image(models.Model):
     content = models.ForeignKey('Content', blank=True, null=True, related_name='images')
     file = models.ImageField('Datei')
     weight = models.PositiveSmallIntegerField(default=0)
+    creator = models.ForeignKey('entities.Gestalt', related_name='+', null=True, blank=True)
 
     class Meta:
         ordering = ('weight',)
