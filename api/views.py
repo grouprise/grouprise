@@ -19,7 +19,7 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
             if content_pk:
                 content = content_models.Content.objects.get(pk=content_pk)
                 return self.request.user.has_perm('content.create_image', content)
-            return False
+            return True
         elif self.action == 'list':
             return True
         elif self.action == 'retrieve':
