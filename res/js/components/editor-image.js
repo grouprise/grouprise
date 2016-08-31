@@ -59,30 +59,32 @@ function create_user_image_view(emitter) {
     })
 }
 
-function created_tabbed(emitter) {
-    const content_image_view = create_content_image_view(emitter);
-    const user_image_view = create_user_image_view(emitter);
+function created_tabbed(emitter, tab_config = {}) {
+    const opts = Object.assign({}, { user: true, content: true }, tab_config);
+    const tabs = [];
 
-    emitter.on("files:add", function() {
-        content_image_view.refresh();
-        user_image_view.refresh();
-    });
+    if(opts.content) {
+        const content_image_view = create_content_image_view(emitter);
+        emitter.on("files:add", content_image_view.refresh);
+        tabs.push({
+            content: content_image_view.el,
+            label: bel`<span>Beitragsbilder</span>`
+        });
+    }
 
-    return tabbed({
-        tabs: [
-            {
-                content: content_image_view.el,
-                label: bel`<span>Beitragsbilder</span>`
-            },
-            {
-                content: user_image_view.el,
-                label: bel`<span>Deine Bilder</span>`
-            }
-        ]
-    });
+    if(opts.user) {
+        const user_image_view = create_user_image_view(emitter);
+        emitter.on("files:add", user_image_view.refresh);
+        tabs.push({
+            content: user_image_view.el,
+            label: bel`<span>Deine Bilder</span>`
+        });
+    }
+
+    return tabbed({ tabs });
 }
 
-export default () => {
+export default (opts = {}) => {
     const iface = {};
     const emitter = new EventEmitter();
 
@@ -91,7 +93,7 @@ export default () => {
         <h3>Bilder</h3>
         ${create_file_picker(emitter).el}
     </div>
-    ${created_tabbed(emitter).el}
+    ${created_tabbed(emitter, opts.tabs).el}
 </div>`;
 
     iface.remove = function() {
