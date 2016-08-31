@@ -12,10 +12,14 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(disabled=True, queryset=entities_models.Gestalt.objects.all(), widget=forms.HiddenInput)
     pinned = forms.BooleanField(label='Im Intro der Gruppe anheften', required=False)
     images = forms.ModelMultipleChoiceField(queryset=models.Image.objects.filter(content__isnull=True), required=False, widget=forms.HiddenInput)
+    content_id = forms.IntegerField(disabled=True, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['group'] = forms.ModelChoiceField(label='Gruppe', queryset=self.get_group_queryset(), required=False)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.id:
+            self.fields["content_id"].initial = instance.id
 
     def get_group_queryset(self):
         return entities_models.Group.objects.filter(memberships__member=self.initial['author'])
@@ -33,7 +37,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
 
 class Article(BaseContent):
-    layout = ('author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', utils_forms.Submit('Artikel erstellen'), 'images')
+    layout = ('content_id', 'author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', utils_forms.Submit('Artikel erstellen'), 'images')
 
     class Meta:
         fields = ('author', 'text', 'title')
@@ -45,7 +49,7 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = ('author', 'group', 'pinned', 'title', layout.Field('time', data_component='date date-datetime'), 'place', utils_forms.EditorField('text'), 'public', utils_forms.Submit('Ereignis erstellen'), 'images')
+    layout = ('content_id', 'author', 'group', 'pinned', 'title', layout.Field('time', data_component='date date-datetime'), 'place', utils_forms.EditorField('text'), 'public', utils_forms.Submit('Ereignis erstellen'), 'images')
 
     class Meta:
         fields = ('author', 'place', 'public', 'text', 'time', 'title')
@@ -55,7 +59,7 @@ class Event(BaseContent):
 
 class Gallery(BaseContent):
     image_creation_redirect = forms.BooleanField(required=False, widget=forms.HiddenInput)
-    layout = ('image_creation_redirect', 'author', 'group', 'title', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'), 'images')
+    layout = ('content_id', 'image_creation_redirect', 'author', 'group', 'title', utils_forms.EditorField('text'), 'public', 'pinned', utils_forms.Submit('Galerie erstellen'), 'images')
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
