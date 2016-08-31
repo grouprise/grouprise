@@ -19,7 +19,7 @@
 
         <script>
             window.gestalt = {
-                id: {{ user.gestalt.pk }}
+                id: {{ user.gestalt.pk|default:"null" }}
             }
         </script>
     </head>
