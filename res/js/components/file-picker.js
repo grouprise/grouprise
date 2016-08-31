@@ -3,7 +3,7 @@ import { remove } from "../util/dom";
 
 export default (opts) => {
     const iface = {};
-    const input = bel`<input type="file" style=${{display: "none"}} onchange=${(e) => opts.callback([].slice.call(e.target.files))} />`;
+    const input = bel`<input type="file" style="display: none" onchange=${(e) => opts.callback([].slice.call(e.target.files))} />`;
 
     if(opts.accept) {
         input.setAttribute("accept", opts.accept);
