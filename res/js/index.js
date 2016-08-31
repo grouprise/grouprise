@@ -1,11 +1,11 @@
 import { component, replace } from "./util/dom";
 import { evented_function } from "./util/events";
-import date from "./components/date";
-import editor from "./components/editor";
-import time from "./components/time";
-import user_content from "./components/user-content";
-import image_upload from "./components/image-upload";
-import group_header from "./components/group-header";
+import date from "./transforms/date";
+import editor from "./transforms/editor";
+import time from "./transforms/time";
+import user_content from "./transforms/user-content";
+import image_upload from "./transforms/image-upload";
+import group_header from "./transforms/group-header";
 
 // create evented functions
 const _replace = evented_function(replace);
