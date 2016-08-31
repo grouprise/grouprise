@@ -30,7 +30,7 @@
     "cookie_js": "^1.2.0",
     "dropzone": "^4.3.0",
     "emoji-regex": "^6.0.0",
-    "eventemitter2": "^1.0.3",
+    "eventemitter3": "^1.2.0",
     "flatpickr": "^1.8.9",
     "font-awesome": "^4.5.0",
     "jquery": "^2.2.0",
