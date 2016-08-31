@@ -2,6 +2,7 @@ import SimpleMDE from "simplemde";
 
 export default (el, opts) => {
     const editor =  new SimpleMDE({
+        autoDownloadFontAwesome: false,
         element: el,
         forceSync: true,
         parsingConfig: {
