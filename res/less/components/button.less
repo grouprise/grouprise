@@ -85,6 +85,7 @@
 
 .btn-toolbar {
     display: flex;
+    align-items: center;
 
     &:empty {
         display: none;
@@ -93,6 +94,14 @@
     > * + *:not(.btn-link) {
         margin-left: .7em;
     }
+
+    h3 {
+        margin: 0;
+    }
+}
+
+.btn-toolbar-spread {
+    justify-content: space-between;
 }
 
 .btn-toolbar-fixed {
