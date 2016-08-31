@@ -27,6 +27,7 @@
     "babel-runtime": "^6.9.2",
     "bel": "latest",
     "bootstrap": "^3.3.6",
+    "closest": "0.0.1",
     "cookie_js": "^1.2.0",
     "delegate": "^3.0.1",
     "dropzone": "^4.3.0",

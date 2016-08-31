@@ -1,6 +1,7 @@
 import SimpleMDE from "simplemde";
 import Drop from "tether-drop";
 import bel from "bel";
+import closest from "closest";
 
 import editor_images from "../components/editor-image";
 
@@ -8,6 +9,7 @@ const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
 
 export default (el, opts) => {
+    const form = closest(el, "form");
     const editor =  new SimpleMDE({
         autoDownloadFontAwesome: false,
         element: el,
@@ -121,6 +123,12 @@ export default (el, opts) => {
 
         editor.codemirror.doc.replaceSelection(code);
         drop.close();
+    });
+
+    image_editor.emitter.on("files:add", (files) => {
+        files.forEach((file) => {
+            form.appendChild(bel`<input type="hidden" name="images" value="${file.id}">`)
+        });
     });
 
     return editor;
