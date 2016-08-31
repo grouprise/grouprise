@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 class Image(serializers.ModelSerializer):
     title = serializers.CharField(source='file.name', read_only=True)
+    path = serializers.CharField(source='file.url', read_only=True)
 
     def create(self, validated_data):
         validated_data.update({"creator": self.context['request'].user.gestalt})
@@ -15,4 +16,4 @@ class Image(serializers.ModelSerializer):
 
     class Meta:
         model = content_models.Image
-        fields = ('id', 'file', 'weight', 'content', 'title', 'creator')
+        fields = ('id', 'file', 'weight', 'content', 'title', 'creator', 'path')

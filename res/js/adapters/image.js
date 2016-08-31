@@ -7,7 +7,7 @@ function transform(file) {
     return {
         id: file.id,
         label: file.title,
-        content: file.file
+        content: file.path
     };
 }
 
