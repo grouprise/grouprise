@@ -39,3 +39,22 @@ export function create(opts = {}) {
             });
     };
 }
+
+export function update(opts = {}) {
+    return function(file) {
+        const _data = Object.assign({}, opts, file);
+        const data = {};
+
+        data.id = _data.id;
+        data.weight = _data.weight;
+
+        if(_data.content_id) {
+            data.content = _data.content_id;
+        }
+
+        return qwest.put(endpoint, data)
+            .then((xhr, data) => {
+                return Promise.resolve(transform(data));
+            });
+    }
+}
