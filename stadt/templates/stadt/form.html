@@ -5,7 +5,9 @@
 {% block content %}
     {% block form_header %}{% endblock %}
         {% block form %}
-            <input type="hidden" name="content_id" value="{{ form.instance.id }}" disabled>
+            {% if form.instance.id %}
+                <input type="hidden" name="content_id" value="{{ form.instance.id }}" disabled>
+            {% endif %}
             {% crispy form %}
         {% endblock %}
     {% block form_footer %}{% endblock %}
