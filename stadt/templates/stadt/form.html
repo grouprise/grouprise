@@ -3,9 +3,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-{% block form_header %}{% endblock %}
-{% block form %}
-{% crispy form %}
-{% endblock %}
-{% block form_footer %}{% endblock %}
+    {% block form_header %}{% endblock %}
+        {% block form %}
+            <input type="hidden" name="content_id" value="{{ form.instance.id }}" disabled>
+            {% crispy form %}
+        {% endblock %}
+    {% block form_footer %}{% endblock %}
 {% endblock %}
