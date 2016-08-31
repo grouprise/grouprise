@@ -1,0 +1,66 @@
+.editor-dialog {
+    width: 400px;
+    height: 330px;
+    overflow: hidden;
+    padding: 1rem;
+    background-color: white;
+}
+
+.editor-toolbar {
+    border-width: 2px 2px 0 2px;
+    border-color: @gray-lighter;
+    background-color: @gray-lighter;
+    opacity: 1 !important;
+    padding: @padding-base-vertical;
+    display: flex;
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-color: transparent !important;
+        border-radius: 2px;
+        width: 2rem;
+        height: 2rem;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: white;
+        }
+    }
+}
+
+.editor-images {
+    .tabbed-content {
+        height: 230px;
+        overflow: auto;
+        overflow-x: hidden;
+        background-color: #eaeaea;
+        padding: 3px;
+        border-radius: 2px 2px 2px 0;
+    }
+
+    .tabbed-tabs {
+        border-top: 6px solid #eaeaea;
+    }
+
+    .tabbed-tab {
+        font-size: @font-size-small;
+    }
+
+    .btn-toolbar {
+        margin: -.5rem 0 .3rem;
+    }
+}
+
+.CodeMirror {
+    border: 2px solid @input-border;
+    border-bottom-left-radius: @border-radius-base;
+    border-bottom-right-radius: @border-radius-base;
+    transition: border-color .2s;
+}
+
+.CodeMirror-focused {
+    border-color: @input-border-focus;
+}

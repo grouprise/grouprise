@@ -1,0 +1,21 @@
+.drop {
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.drop-open {
+    pointer-events: all;
+}
+
+.drop-content {
+    box-shadow: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: box-shadow .2s, transform .2s, opacity .4s;
+
+    .drop-open & {
+        opacity: 1;
+        transform: none;
+        .material-shadow(3);
+    }
+}

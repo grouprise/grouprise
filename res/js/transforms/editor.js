@@ -1,4 +1,11 @@
 import SimpleMDE from "simplemde";
+import Drop from "tether-drop";
+import bel from "bel";
+
+import editor_images from "../components/editor-image";
+
+const image_editor = editor_images();
+const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
 
 export default (el, opts) => {
     const editor =  new SimpleMDE({
@@ -85,6 +92,11 @@ export default (el, opts) => {
                 className: "fa fa-link",
                 title: "Link/Verweis",
             },
+            {
+                name: "image",
+                className: "fa fa-picture-o",
+                title: "Bild",
+            },
             "|",
             {
                 name: "guide",
@@ -94,5 +106,22 @@ export default (el, opts) => {
             },
         ],
     });
+
+    const drop = new Drop({
+        target: editor.toolbarElements["image"],
+        content: image_dialog,
+        position: "bottom left",
+        openOn: "click"
+    });
+
+    image_editor.emitter.on("files:select", (files) => {
+        const code = files.map((file) => {
+            return `![${file.label}](${file.content})`;
+        }).join("\n");
+
+        editor.codemirror.doc.replaceSelection(code);
+        drop.close();
+    });
+
     return editor;
 }

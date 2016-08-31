@@ -1,0 +1,70 @@
+.pickii-images {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+
+    > li {
+        display: block;
+        padding: 3px;
+        width: 25%;
+    }
+}
+
+.pickii-image {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+    display: block;
+    padding: 0;
+    position: relative;
+
+    background: no-repeat 50% 50% transparent;
+    background-size: cover;
+    transition: transform .2s;
+    transform-origin: 50% 50%;
+
+    &:before {
+        content: " ";
+        display: block;
+        padding-top: 100%;
+    }
+
+    &:after {
+        .fa-icon();
+        content: @fa-var-check;
+        background-color: fadeout(@brand-success, 40%);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60%;
+        height: 60%;
+        position: absolute;
+        left: 50%; top: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform .2s, opacity .2s;
+        border-radius: 50%;
+        transform-origin: 50% 50%;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+        //transform: scale(1.25);
+
+        &:after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+    }
+}
+
+.pickii-dummy {
+    color: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    padding: 1rem;
+}
