@@ -39,7 +39,8 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.BannerPlugin(banner)
+        new webpack.BannerPlugin(banner),
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de/)
     ],
     node: {
         fs: "empty",
