@@ -29,8 +29,8 @@ export function create(opts = {}) {
         data.set("weight", file.weight || 0);
         data.set("csrfmiddlewaretoken", cookie.get("csrftoken"));
 
-        if(opts.content_id) {
-            data.set("content", opts.content_id);
+        if(file.content_id) {
+            data.set("content", file.content_id);
         }
 
         return qwest.post(endpoint, data)
