@@ -3,7 +3,7 @@ import delegate from "delegate";
 import qwest from "qwest";
 import bel from "bel";
 
-import { $, $$, replace } from "../util/dom";
+import { $, replace } from "../util/dom";
 import { evented_function } from "../util/events";
 import editor_images from "../components/editor-image";
 
@@ -49,10 +49,10 @@ export default (el) => {
     }
 
     const editor = create_editor(editor_add);
-    editor.emitter.on("files:select", (files) => {
+    editor.emitter.on("files:select", () => {
         reload().then((gallery) => {
             const old_gallery = $(".gallery", el);
             _replace(old_gallery, gallery);
         })
-    })
+    });
 }
