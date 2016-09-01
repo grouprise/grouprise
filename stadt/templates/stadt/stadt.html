@@ -33,7 +33,7 @@
                 {% block sidebar %}
                     {% for block in sidebar %}
                         {% if block == 'calendar' %}
-                            {% include 'calendar/_sidebar.html' %}
+                            {% include 'events/_sidebar.html' %}
                         {% elif block == 'groups' %}
                             {% include 'entities/_sidebar_groups.html' %}
                         {% endif %}

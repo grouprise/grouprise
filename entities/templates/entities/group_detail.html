@@ -1,5 +1,5 @@
 {% extends 'stadt/list.html' %}
-{% load rules %}
+{% load fragments rules %}
 
 {% block header %}
     {% include 'entities/_group_header.html' %}
@@ -65,6 +65,6 @@
     {% if group.logo or can_edit %}
         {% include 'entities/_sidebar_logo.html' %}
     {% endif %}
-    {% include 'calendar/_sidebar.html' %}
+    {% include_fragments 'group-sidebar' %}
     {% include 'entities/_sidebar_groups.html' %}
 {% endblock %}
