@@ -17,7 +17,7 @@ class TemplateResponseMixin(django_base.TemplateResponseMixin):
         return ['stadt/form.html']
 
 
-class FormMixin(django_edit.FormMixin):
+class FormMixin(MessageMixin, django_edit.FormMixin):
     def __init__(self, **kwargs):
         self.data_fields = [c(self) for c in self.data_field_classes]
 
@@ -59,7 +59,7 @@ class ProcessFormView(base.View):
             return self.form_invalid(form)
 
 
-class BaseFormView(MessageMixin, FormMixin, ProcessFormView):
+class BaseFormView(FormMixin, ProcessFormView):
     pass
 
 
@@ -67,7 +67,7 @@ class FormView(TemplateResponseMixin, BaseFormView):
     pass
 
 
-class BaseCreateView(MessageMixin, ModelFormMixin, ProcessFormView):
+class BaseCreateView(ModelFormMixin, ProcessFormView):
     pass
 
 
