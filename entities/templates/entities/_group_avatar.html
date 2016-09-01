@@ -2,13 +2,13 @@
 
 {% kwacro avatar %}
     {% if group.avatar %}
-        <div title="{{ group.name }}" class="avatar">
+        <div title="{{ group.name }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }}">
             {% thumbnail group.avatar '64x64' format='PNG' crop="center" as avatar %}
                 <img src="{{ avatar.url }}" alt="{{ group.name }}">
             {% endthumbnail %}
         </div>
     {% else %}
-        <div title="{{ group.name }}" class="avatar avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }}">
+        <div title="{{ group.name }}" class="avatar  avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }}">
             {{ group.get_initials|truncatechars:4 }}
         </div>
     {% endif %}
