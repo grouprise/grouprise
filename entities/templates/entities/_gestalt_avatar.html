@@ -2,22 +2,22 @@
 
 {% kwacro avatar %}
     {% thumbnail gestalt.avatar '64x64' format='PNG' crop="center" as avatar %}
-        <span title="{{ gestalt }}" class="avatar">
+        <span title="{{ gestalt }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }}">
             <img src="{{ avatar.url }}" alt="{{ gestalt}}">
         </span>
     {% empty %}
-        <span title="{{ gestalt }}" class="avatar avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
+        <span title="{{ gestalt }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
             {{ gestalt.get_initials|truncatechars:4 }}
         </span>
     {% endthumbnail %}
 {% endkwacro %}
 
 {% if link %}
-    <a class="profile-avatar" href="{{ gestalt.get_absolute_url }}">
+    <a class="avatar-wrap profile-avatar" href="{{ gestalt.get_absolute_url }}">
         {% usekwacro avatar %}
     </a>
 {% else %}
-    <div class="profile-avatar">
+    <div class="avatar-wrap profile-avatar">
         {% usekwacro avatar %}
     </div>
 {% endif %}

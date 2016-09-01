@@ -5,10 +5,10 @@
     <div class="content-meta-avatar">
         {% with groups=content.groups %}
             {% if groups.count == 1 %}
-                {% include 'entities/_group_avatar.html' with group=groups.first link=True %}
+                {% include 'entities/_group_avatar.html' with group=groups.first link=True size=48 %}
             {% else %}
                 {% if can_view_author %}
-                    {% include 'entities/_gestalt_avatar.html' with gestalt=content.author link=True %}
+                    {% include 'entities/_gestalt_avatar.html' with gestalt=content.author link=True size=48 %}
                 {% endif %}
             {% endif %}
         {% endwith %}
@@ -29,8 +29,8 @@
             {% endwith %}
         </div>
         <div class="content-meta-extra">
-            <time data-component="time time-from" datetime="{{ content.date_created|date:'Y-m-d' }}T{{ content.date_created|date:'H:i:s' }}.000000+02:00" title="{{ content.date_created|date:'d. m. Y' }}">
-                {{ content.date_created|date:'d. m. Y' }}
+            <time data-component="time time-from" datetime="{{ content.date_created|date:'Y-m-d' }}T{{ content.date_created|date:'H:i:s' }}.000000+02:00" title="{{ content.date_created|date:'d. m. Y H:i' }}">
+                {{ content.date_created|date:'d. m. Y H:i' }}
             </time> ·
             {% if content.gallery %}
                 <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
