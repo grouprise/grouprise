@@ -1,9 +1,6 @@
-from . import actions
+from .base import View
+from .edit import CreateView as Create, FormView as Form
 import utils.views
-
-
-class Create(actions.TemplateResponseMixin, actions.BaseCreateView):
-    pass
 
 
 class Delete(utils.views.Delete):

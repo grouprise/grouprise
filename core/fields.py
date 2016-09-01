@@ -32,15 +32,19 @@ def fieldclass_factory(superclass, name, **kwargs):
     return type(classname, (superclass,), kwargs)
 
 
-class EmailGestalt(Field):
-    def get_data(self, form_data):
-        return entities_models.Gestalt.get_or_create(form_data)
-
+class Email(Field):
     def get_form_field(self):
         return forms.EmailField(label='E-Mail-Adresse')
 
     def get_name(self):
         return '{}_email'.format(self.name)
+
+email = functools.partial(fieldclass_factory, Email)
+
+
+class EmailGestalt(Email):
+    def get_data(self, form_data):
+        return entities_models.Gestalt.get_or_create(form_data)
 
 email_gestalt = functools.partial(fieldclass_factory, EmailGestalt)
 

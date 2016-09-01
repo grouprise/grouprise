@@ -1,5 +1,5 @@
 {% load core %}
 
 {% sidebarblock 'Teilen' 'share' %}
-<a href="#">Gruppe empfehlen</a>
+<a href="{% url 'group-recommend' group.pk %}" class="btn btn-default btn-sm"><i class="sg sg-recommend"></i> Gruppe empfehlen</a>
 {% endsidebarblock %}
