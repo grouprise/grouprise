@@ -73,8 +73,8 @@
 }
 
 .content-preview {
-    padding: 1rem 0;
-    margin-bottom: 3rem;
+    padding: 1rem 0 0;
+    margin-bottom: 4rem;
     page-break-inside: avoid;
     border-top: 2px solid #f2f2f2;
 
@@ -118,20 +118,18 @@
     font-size: @font-size-small;
 }
 
-.content-meta-avatar {
-    .avatar {
-        @size: 48px;
-        width: @size;
-        height: @size;
-        min-width: @size;
-        max-width: @size;
-        min-height: @size;
-        max-height: @size;
-        font-size: 24px;
+.content-preview-body {
+    padding: 1rem;
+    background-color: #f2f2f2;
+    display: block;
+    border-radius: 2px;
+
+    .content-title {
+        margin-top: 0;
     }
 }
 
-.content-preview-body {
+.content-preview-body-content {
     display: flex;
 }
 
