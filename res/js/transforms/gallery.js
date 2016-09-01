@@ -32,6 +32,10 @@ function create_editor(trigger) {
         drop.toggle();
     });
 
+    image_editor.emitter.on("files:select", () => {
+        drop.close();
+    });
+
     return {
         emitter: image_editor.emitter,
         remove: function() {
