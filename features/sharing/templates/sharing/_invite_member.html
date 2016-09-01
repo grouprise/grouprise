@@ -1,0 +1,5 @@
+{% load rules %}
+{% has_perm 'sharing.invite_member' user group as can_invite %}
+{% if can_invite %}
+    <a href="{% url 'member-invite' group.pk %}">Mitglied einladen</a>
+{% endif %}
