@@ -15,11 +15,11 @@
 {% endkwacro %}
 
 {% if link %}
-    <a class="group-avatar" href="{{ group.get_absolute_url }}">
+    <a class="avatar-wrap group-avatar" href="{{ group.get_absolute_url }}">
         {% usekwacro avatar %}
     </a>
 {% else %}
-    <div class="group-avatar">
+    <div class="avatar-wrap group-avatar">
         {% usekwacro avatar %}
     </div>
 {% endif %}
