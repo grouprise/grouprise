@@ -1,7 +1,17 @@
 from django import template
+from django.conf import settings
+from django.contrib.sites import models as sites_models
 from django.utils import safestring
 
 register = template.Library()
+
+
+@register.filter
+def full_url(path):
+    return '{proto}://{domain}{path}'.format(
+            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
+            domain=sites_models.Site.objects.get_current().domain,
+            path=path)
 
 
 @register.tag
