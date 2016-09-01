@@ -35,11 +35,21 @@ class FormMixin(MessageMixin, django_edit.FormMixin):
 
 
 class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
     def get_form_class(self):
         return model_forms.modelform_factory(
                 self.model,
                 fields=self.get_model_form_fields(),
                 form=forms.ModelForm)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if hasattr(self, 'object'):
+            kwargs.update({'instance': self.object})
+        return kwargs
 
     def get_model_form_fields(self):
         fields = [f.get_model_form_field() for f in self.data_fields]
