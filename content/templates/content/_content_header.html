@@ -6,9 +6,9 @@
         <span class="content-classification">Beitrag</span>
         <div class="btn-toolbar">
             {% if can_edit_content %}
-            <a href="{% if content.event %}{% url 'event-update' content.pk %}{% else %}{% url 'content-update' content.pk %}{% endif %}" class="btn btn-default">
-                Ändern
-            </a>
+                <a href="{% if content.event %}{% url 'event-update' content.pk %}{% else %}{% url 'content-update' content.pk %}{% endif %}" class="btn btn-default">
+                    Ändern
+                </a>
             {% endif %}
             {% include_features '_content_actions.html' %}
             {% if can_edit_content and not content.gallery %}
@@ -18,19 +18,21 @@
             {% endif %}
         </div>
     </div>
+</div>
+
+<header class="content-teaser">
     <span class="content-type">
         <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
         {{ content.get_display_type_name }}
     </span>
-</div>
 
-<header class="content-teaser">
+    {% include 'content/_content_info.html' %}
+
+
     <h1 class="content-title">
         {% if content.event %}
             {{ content.event.time|date:'l, j.n.Y:'}}
         {% endif %}
         {{ content.title }}
     </h1>
-
-    {% include 'content/_content_info.html' %}
 </header>
