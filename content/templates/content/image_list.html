@@ -6,46 +6,37 @@
     <h1 class="content-classification">Bilder</h1>
 {% endblock %}
 
-{% block sidebar %}
-    {% has_perm 'content.create_image' user content as can_create_image %}
-    {% if can_create_image %}
-        <div class="box box-striped">
-            <div class="box-inner">
-                <header class="box-header">
-                    <h2 class="box-title">
-                        <i class="sg sg-images"></i>
-                        Bilder hinzufügen
-                    </h2>
-                </header>
-                <div class="box-content">
-                    <form data-component="image-upload" data-component-conf='{"content":{{content.pk}},"update":".content-list"}'></form>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
-    {{ block.super }}
-{% endblock %}
-
 {% block heading_toolbar %}
-    {% has_perm 'content.create_image' user content as can_create_image %}
-    {% if can_create_image %}
-        <a href="{% url 'image-create' content.pk %}" class="btn btn-default pull-right">Neues Bild</a>
-    {% endif %}
-
     <a href="{{ content.get_absolute_url }}" class="btn btn-default pull-right">Beitrag</a>
 {% endblock %}
 
 {% block list %}
-    <ul class="gallery">
-        {% for image in image_list %}
-            {% thumbnail image.file 'x150' format='PNG' as thumb %}
-                <li>
-                    <a href="{{ image.file.url }}" class="gallery-link">
-                        <img src="{{ thumb.url }}" class="gallery-image-preview">
+    <div class="gallery-container" data-component="gallery">
+        <input type="hidden" name="content_id" value="{{ content.id }}" />
+        <header class="gallery-header">
+            <div class="gallery-header-description">
+                Artikelbilder für {{ content.title }}
+            </div>
+            {% has_perm 'content.create_image' user content as can_create_image %}
+            {% if can_create_image %}
+                <div class="btn-toolbar gallery-header-actions">
+                    <a href="{% url 'image-create' content.pk %}" class="btn btn-default btn-sm" data-purpose="gallery-add">
+                        Bild hinzufügen
                     </a>
-                </li>
-            {% endthumbnail %}
-        {% endfor %}
-    </ul>
+                </div>
+            {% endif %}
+        </header>
+
+        <ul class="gallery">
+            {% for image in image_list %}
+                {% thumbnail image.file '250' format='PNG' as thumb %}
+                    <li style="width: {{ thumb.width }}px; height: {{ thumb.height }}px">
+                        <a href="{{ image.file.url }}" class="gallery-link">
+                            <img src="{{ thumb.url }}" class="gallery-image-preview">
+                        </a>
+                    </li>
+                {% endthumbnail %}
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
