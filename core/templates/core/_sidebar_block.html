@@ -1,0 +1,20 @@
+<div class="box box-striped">
+    <div class="box-inner">
+        <header class="box-header">
+            <h2 class="box-title">
+                <i class="sg sg-{{ block_icon }}"></i>
+                {{ block_title }}
+            </h2>
+        </header>
+        {% if block_content %}
+        <div class="box-content">
+            {{ block_content }}
+        </div>
+        {% endif %}
+        {% if block_actions %}
+        <div class="btn-toolbar btn-toolbar-right">
+            {{ block_actions }}
+        </div>
+        {% endif %}
+    </div>
+</div>

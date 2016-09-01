@@ -7,4 +7,4 @@ fragments.insert(
         'group-sidebar',
         fragments.always,
         after=['sidebar-logo'],
-        before=['sidebar-share', 'sidebar-groups'])
+        before=['sidebar-share-group', 'sidebar-groups'])

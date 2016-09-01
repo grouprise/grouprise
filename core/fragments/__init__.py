@@ -6,7 +6,7 @@ def register(key, fragment):
     fragments[key] = fragment
 
 
-def insert(key, group_name, predicate, after, before):
+def insert(key, group_name, predicate, after=[], before=[]):
     group = groups.get(group_name, [])
     min_index = 0
     for item in after:
