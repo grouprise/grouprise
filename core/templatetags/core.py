@@ -1,7 +1,6 @@
 from django import template
 from django.conf import settings
 from django.contrib.sites import models as sites_models
-from django.utils import safestring
 
 register = template.Library()
 
@@ -32,7 +31,8 @@ def sidebarblock(parser, token):
         parser.delete_first_token()
     else:
         actions_nodelist = None
-    return SidebarBlockNode(title[1:-1], icon[1:-1], content_nodelist, actions_nodelist)
+    return SidebarBlockNode(
+            title[1:-1], icon[1:-1], content_nodelist, actions_nodelist)
 
 
 class SidebarBlockNode(template.Node):

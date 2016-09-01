@@ -1,7 +1,6 @@
 from . import base
 from .. import forms
 from django.contrib.messages import views as messages_views
-import django.forms
 from django.forms import models as model_forms
 from django.views.generic import (
         base as django_base, detail as django_detail, edit as django_edit)
