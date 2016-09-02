@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'content.apps.ContentConfig',
-    'core',
+    'core.apps.CoreConfig',
     'core.fragments.apps.AutodiscoverFragmentsConfig',
     'crispy_forms',
     'django.contrib.admin',
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'entities.apps.EntitiesConfig',
+    'features.articles',
     'features.associations',
     'features.events',
     'features.groups',
@@ -196,9 +197,7 @@ SITE_ID = 1
 
 ABOUT_GROUP_ID = 1
 
-NOTIFIERS = [
-    'features.subscriptions.notifiers.Subscription',
-]
+ROOT_SIGNALCONF = 'stadt.signals'
 
 
 # Authentication

@@ -21,12 +21,12 @@ def content_post_save(sender, instance, created, **kwargs):
         elif sender == models.GroupContent:
             group = instance.group
             recipients |= set(models.Gestalt.objects.filter(memberships__group=instance.group))
-            if instance.content.public:
-                for notifier_str in settings.NOTIFIERS:
-                    Notifier = module_loading.import_string(notifier_str)
-                    recipients |= set(Notifier.get_recipients_for(instance.group))
+            #if instance.content.public:
+            #    for notifier_str in settings.NOTIFIERS:
+            #        Notifier = module_loading.import_string(notifier_str)
+            #        recipients |= set(Notifier.get_recipients_for(instance.group))
         recipients.discard(instance.content.author)
-        instance.content.notify(recipients)
+        #instance.content.notify(recipients)
 
 
 @dispatch.receiver(signals.pre_save, sender=models.Group)

@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core import mail
@@ -32,15 +33,14 @@ class Notification:
         return self.subject
 
     def get_template_name(self):
-        from django.apps import apps
-        print(apps.get_containing_app_config(type(self)))
-        return self.template_name
+        app_label = apps.get_containing_app_config(type(self).__module__).label
+        return 'notifications/{}/{}.txt'.format(app_label, type(self).__name__.lower())
 
     def send(self):
         for recipient_str in self.get_recipient_strs():
             subject = self.get_subject()
             site = sites_models.Site.objects.get_current()
-            context = self._kwargs.copy()
+            context = self.kwargs.copy()
             context.update({'site': site})
             body = loader.render_to_string(self.get_template_name(), context)
             sender = self.get_sender()

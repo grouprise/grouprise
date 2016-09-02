@@ -3,15 +3,15 @@ from core import notifications
 
 class GroupShare(notifications.Notification):
     def get_recipient_str(self):
-        return '<{}>'.format(self.recipient_email)
+        return '<{}>'.format(self.kwargs['recipient_email'])
 
     def get_subject(self):
-        return 'Stadtgestalten: {}'.format(str(self.group))
+        return 'Stadtgestalten: {}'.format(str(self.kwargs['group']))
 
 
 class GroupRecommend(GroupShare):
-    template_name = 'sharing/notifications/grouprecommend.txt'
+    pass
 
 
 class MemberInvite(GroupShare):
-    template_name = 'sharing/notifications/memberinvite.txt'
+    pass
