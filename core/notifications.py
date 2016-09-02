@@ -15,13 +15,10 @@ class Notification:
         return '{} <{}>'.format(recipient, recipient.user.email)
 
     def get_recipient_strs(self):
-        recipients = self.get_recipients()
-        if recipients:
+        if hasattr(self, 'get_recipients'):
+            recipients = self.get_recipients()
             return ['{} <{}>'.format(r, r.user.email) for r in recipients]
         return [self.get_recipient_str()]
-
-    def get_recipients(self):
-        return []
 
     def get_sender(self):
         return None

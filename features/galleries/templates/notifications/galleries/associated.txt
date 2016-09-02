@@ -1,0 +1,3 @@
+{% with num_images=association.content.images.count %}Galerie mit {{ num_images }} Bild{{ num_images|pluralize:'ern' }}{% endwith %}
+
+{{ association.content.text }}

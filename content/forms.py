@@ -22,13 +22,13 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
     def save(self):
         content = super().save()
+        for image in self.cleaned_data['images']:
+            image.content = content
+            image.save()
         if self.cleaned_data['group']:
             entities_models.GroupContent.objects.update_or_create(content=content, group=self.cleaned_data['group'], defaults={'pinned': self.cleaned_data['pinned']})
         else:
             entities_models.GroupContent.objects.filter(content=content).delete()
-        for image in self.cleaned_data['images']:
-            image.content = content
-            image.save()
         return content
 
 
