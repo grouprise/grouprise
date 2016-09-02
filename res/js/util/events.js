@@ -1,4 +1,4 @@
-import EventEmitter from "eventemitter2";
+import EventEmitter from "eventemitter3";
 
 function evented(obj) {
     Object.assign(obj, EventEmitter.prototype);

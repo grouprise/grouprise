@@ -46,6 +46,12 @@
     }
 }
 
+.on-small-devices(@rules) {
+    @media (max-width: @screen-sm-max) {
+        @rules();
+    }
+}
+
 .on-page-break(@rules) {
     @media(max-width: 980px) {
         @rules();

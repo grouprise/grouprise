@@ -1,19 +1,28 @@
-{% load rules %}
-{% load rules thumbnail %}
+{% load content rules thumbnail %}
 
-<ul class="gallery">
-    {% for image in content.images.all %}
-        {% thumbnail image.file 'x150' format='PNG' as thumb %}
-            <li>
-                <a href="{{ image.file.url }}" class="gallery-link">
-                    <img src="{{ thumb.url }}" class="gallery-image-preview">
-                </a>
-            </li>
-        {% endthumbnail %}
-    {% endfor %}
-</ul>
+<div class="gallery-container" data-component="gallery">
+    <input type="hidden" name="content_id" value="{{ content.id }}" />
+    <header class="gallery-header">
+        <div class="gallery-header-description {% if content.text|length > 250 %}gallery-header-description-large{% endif %}">
+            {{ content.text|markdown }}
+        </div>
+        {% has_perm 'content.create_image' user content as can_create_image %}
+        {% if can_create_image %}
+            <div class="btn-toolbar gallery-header-actions">
+                <a href="{% url 'image-create' content.pk %}" class="btn btn-default btn-sm" data-purpose="gallery-add">Bild hinzufügen</a>
+            </div>
+        {% endif %}
+    </header>
 
-{% has_perm 'content.create_image' user content as can_create_image %}
-{% if can_create_image %}
-    <a href="{% url 'image-create' content.pk %}" class="btn btn-default">Bild hinzufügen</a>
-{% endif %}
+    <ul class="gallery">
+        {% for image in content.images.all %}
+            {% thumbnail image.file '250' format='PNG' as thumb %}
+                <li style="width: {{ thumb.width }}px; height: {{ thumb.height }}px">
+                    <a href="{{ image.file.url }}" class="gallery-link">
+                        <img src="{{ thumb.url }}" class="gallery-image-preview">
+                    </a>
+                </li>
+            {% endthumbnail %}
+        {% endfor %}
+    </ul>
+</div>

@@ -1,9 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 {% load content rules %}
 
-
 {% block heading %}{% endblock %}
-
 
 {% block content %}
     <article class="content">
@@ -16,9 +14,10 @@
 
             {% if content.gallery %}
                 {% include 'content/_content_gallery.html' %}
+            {% else %}
+                {{ content.text|markdown }}
             {% endif %}
 
-            {{ content.text|markdown }}
             {% include 'content/_content_license.html' %}
         </div>
 

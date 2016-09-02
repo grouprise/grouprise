@@ -17,13 +17,6 @@ def cuttrailing(s1, s2):
     return s1
 
 @register.filter
-def full_url(path):
-    return '{proto}://{domain}{path}'.format(
-            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
-            domain=sites_models.Site.objects.get_current().domain,
-            path=path)
-
-@register.filter
 def limit(indexable, count):
     return indexable[:count]
 

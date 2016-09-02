@@ -37,7 +37,7 @@ class ContentSubscribe(content.ContentMixin, Subscribe):
         return self.get_content()
 
 
-class GroupSubscribe(groups.GroupMixin, Subscribe):
+class GroupSubscribe(groups.Mixin, Subscribe):
     description = (
             'Benachrichtigt werden, wenn in der Gruppe <em>{{ group }}</em> '
             'neue Beiträge veröffentlicht werden')

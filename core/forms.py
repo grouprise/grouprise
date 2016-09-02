@@ -1,8 +1,8 @@
 from crispy_forms import bootstrap, helper, layout
-from django.forms import models as django
+from django import forms as django
 
 
-class ModelForm(django.ModelForm):
+class StadtMixin:
     def __init__(self, **kwargs):
         action = kwargs.pop('action')
         data_fields = kwargs.pop('data_fields')
@@ -31,6 +31,12 @@ class ModelForm(django.ModelForm):
         l += [Submit(kwargs['action'])]
         return layout.Layout(*l)
 
+
+class Form(StadtMixin, django.Form):
+    pass
+
+
+class ModelForm(StadtMixin, django.ModelForm):
     def save(self, commit=True):
         for field in self.data_fields:
             setattr(self.instance, field.name, field.get_data(

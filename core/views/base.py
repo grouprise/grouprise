@@ -74,4 +74,21 @@ class View(PermissionMixin, StadtMixin, django.View):
     """
     Stadtgestalten base view
     """
-    pass
+    def dispatch(self, *args, **kwargs):
+        self.object = None
+        self.related_object = self.get_view_object(None)
+        return super().dispatch(*args, **kwargs)
+
+    def get_menu(self):
+        return type(self.related_object).__name__
+
+    def get_parent(self):
+        return self.related_object
+
+    def get_permission_object(self):
+        return self.related_object
+
+    def get_view_object(self, key):
+        if key is None:
+            return self.get_related_object()
+        return None

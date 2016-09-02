@@ -32,6 +32,7 @@
     padding: 0;
     min-width: 0;
     transition: transform .2s;
+    background-color: transparent;
 
     &:hover,
     &:focus,
@@ -73,7 +74,6 @@
 
 .btn-sm {
     font-size: @font-size-small;
-    min-height: 34px;
 }
 
 .btn-primary {
@@ -84,6 +84,7 @@
 
 .btn-toolbar {
     display: flex;
+    align-items: center;
 
     &:empty {
         display: none;
@@ -92,6 +93,14 @@
     > * + *:not(.btn-link) {
         margin-left: .7em;
     }
+
+    h3 {
+        margin: 0;
+    }
+}
+
+.btn-toolbar-spread {
+    justify-content: space-between;
 }
 
 .btn-toolbar-fixed {

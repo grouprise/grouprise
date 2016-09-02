@@ -2,7 +2,7 @@ from content import models as content_models
 from entities import models as entities_models
 
 
-class GroupMixin:
+class Mixin:
     def get_context_data(self, **kwargs):
         kwargs['group'] = self.get_group()
         return super().get_context_data(**kwargs)

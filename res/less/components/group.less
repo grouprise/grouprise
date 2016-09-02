@@ -105,19 +105,19 @@
     position: relative;
     font-size: @font-size-small;
     border: 2px solid #f2f2f2;
-    padding: calc(32px + 1rem) 1rem 1rem 1rem;
+    padding: 1rem;
 
     h3 {
-        position: absolute;
-        left: calc(64px + 3rem);
-        top: 0;
-        line-height: 32px;
-        margin: 0;
+        margin: -10px 0 1rem calc(2rem + 72px);
     }
 
     p {
         margin: 1rem 0 0;
         color: @color-text-light;
+
+        &:first-of-type {
+            margin-top: 0;
+        }
     }
 }
 
@@ -156,11 +156,12 @@
 .group-preview-stats {
     position: absolute;
     bottom: -2px;
-    right: 2px;
+    right: .5rem;
     padding: .3em .6em;
     background-color: white;
     line-height: 1;
     z-index: 10;
+    border-radius: 2px 2px 0 0;
 
     > i + i {
         margin-left: .2em;

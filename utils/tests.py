@@ -69,9 +69,6 @@ class NoAuthorContentMixin(AuthenticatedMixin, ContentMixin, OtherGestaltMixin):
 
 
 class Test(test.TestCase):
-    def setUp(self):
-        self.client = test.Client()
-
     def assertContainsLink(self, response, url, key):
         self.assertContains(response, self.get_link(url, key))
 

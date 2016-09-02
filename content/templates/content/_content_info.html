@@ -1,24 +1,43 @@
 {% load rules utils %}
 {% has_perm 'content.view_author' user content as can_view_author %}
 
-<p class="content-publication-meta">
-    verfasst am {{ content.date_created|date:'d.m.Y' }}
+<div class="content-meta">
+    <div class="content-meta-avatar">
+        {% with groups=content.groups %}
+            {% if groups.count == 1 %}
+                {% include 'entities/_group_avatar.html' with group=groups.first link=True size=48 %}
+            {% else %}
+                {% if can_view_author %}
+                    {% include 'entities/_gestalt_avatar.html' with gestalt=content.author link=True size=48 %}
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="content-meta-info">
+        <div class="content-meta-author">
+            {% with groups=content.groups %}
+                {% if groups.count == 1 %}
+                    <a href="{{ groups.first.get_absolute_url }}">{{ groups.first }}</a>
+                    {% if can_view_author %}
+                        (<a href="{{ content.author|url_for:user }}">{{ content.author }}</a>)
+                    {% endif %}
+                {% else %}
+                    {% if can_view_author %}
+                        <a href="{{ content.author|url_for:user }}">{{ content.author }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="content-meta-extra">
+            <time data-component="time time-from" datetime="{{ content.date_created|date:'Y-m-d' }}T{{ content.date_created|date:'H:i:s' }}.000000+02:00" title="{{ content.date_created|date:'d. m. Y H:i' }}">
+                {{ content.date_created|date:'d. m. Y H:i' }}
+            </time> ·
+            {% if content.gallery %}
+                <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
+            {% endif %}
+            <i class="sg sg-comments"></i> {{ content.comments.count }}
+            {% include_features '_content_meta_stats.html' %}
 
-    {% with groups=content.groups %}
-        {% if groups.count == 1 %}
-            in <a href="{% url 'group' groups.first.slug %}">{{ groups.first }}</a>
-        {% endif %}
-    {% endwith %}
-
-    {% if can_view_author %}
-    von <a href="{{ content.author|url_for:user }}">{{ content.author }}</a> &nbsp;
-    {% endif %}
-
-    {% if content.gallery %}
-        <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
-    {% endif %}
-
-    <i class="sg sg-comments"></i> {{ content.comments.count }}
-
-    {% include_features '_content_meta_stats.html' %}
-</p>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,8 @@ from . import base
 from .. import forms
 from django.contrib.messages import views as messages_views
 from django.forms import models as model_forms
-from django.views.generic import base as django_base, edit as django_edit
+from django.views.generic import (
+        base as django_base, detail as django_detail, edit as django_edit)
 
 
 class MessageMixin(messages_views.SuccessMessageMixin):
@@ -10,9 +11,33 @@ class MessageMixin(messages_views.SuccessMessageMixin):
         return getattr(self, 'message', None)
 
 
-class ModelFormMixin(django_edit.ModelFormMixin):
+class TemplateResponseMixin(django_base.TemplateResponseMixin):
+    def get_template_names(self):
+        return ['stadt/form.html']
+
+
+class FormMixin(MessageMixin, django_edit.FormMixin):
     def __init__(self, **kwargs):
         self.data_fields = [c(self) for c in self.data_field_classes]
+
+    def get_form_class(self):
+        return forms.Form
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['action'] = self.action
+        kwargs['data_fields'] = self.data_fields
+        kwargs['description'] = getattr(self, 'description', None)
+        return kwargs
+
+    def get_success_url(self):
+        return self.related_object.get_absolute_url()
+
+
+class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
 
     def get_form_class(self):
         return model_forms.modelform_factory(
@@ -22,17 +47,13 @@ class ModelFormMixin(django_edit.ModelFormMixin):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['action'] = self.action
-        kwargs['data_fields'] = self.data_fields
-        kwargs['description'] = getattr(self, 'description', None)
+        if hasattr(self, 'object'):
+            kwargs.update({'instance': self.object})
         return kwargs
 
     def get_model_form_fields(self):
         fields = [f.get_model_form_field() for f in self.data_fields]
         return list(filter(None, fields))
-
-    def get_success_url(self):
-        return self.related_object.get_absolute_url()
 
 
 class ProcessFormView(base.View):
@@ -47,27 +68,17 @@ class ProcessFormView(base.View):
             return self.form_invalid(form)
 
 
-class BaseCreateView(MessageMixin, ModelFormMixin, ProcessFormView):
-    def dispatch(self, *args, **kwargs):
-        self.object = None
-        self.related_object = self.get_view_object(None)
-        return super().dispatch(*args, **kwargs)
-
-    def get_menu(self):
-        return type(self.related_object).__name__
-
-    def get_parent(self):
-        return self.related_object
-
-    def get_permission_object(self):
-        return self.related_object
-
-    def get_view_object(self, key):
-        if key is None:
-            return self.get_related_object()
-        return None
+class BaseFormView(FormMixin, ProcessFormView):
+    pass
 
 
-class TemplateResponseMixin(django_base.TemplateResponseMixin):
-    def get_template_names(self):
-        return ['stadt/form.html']
+class FormView(TemplateResponseMixin, BaseFormView):
+    pass
+
+
+class BaseCreateView(ModelFormMixin, ProcessFormView):
+    pass
+
+
+class CreateView(TemplateResponseMixin, BaseCreateView):
+    pass

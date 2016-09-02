@@ -1,17 +1,10 @@
-import { component, replace } from "./util/dom";
-import { evented_function } from "./util/events";
-import date from "./components/date";
-import editor from "./components/editor";
-import time from "./components/time";
-import user_content from "./components/user-content";
-import image_upload from "./components/image-upload";
-import group_header from "./components/group-header";
-
-// create evented functions
-const _replace = evented_function(replace);
-
-// add evented function event listeners
-_replace.on("call", init);
+import { component } from "./util/dom";
+import date from "./transforms/date";
+import editor from "./transforms/editor";
+import time from "./transforms/time";
+import user_content from "./transforms/user-content";
+import group_header from "./transforms/group-header";
+import gallery from "./transforms/gallery";
 
 
 function init(search_in = document) {
@@ -21,7 +14,7 @@ function init(search_in = document) {
     component("time", time, search_in);
     component("user-content", user_content, search_in);
     component("group-header", group_header, search_in);
-    component("image-upload", image_upload, { root: search_in, conf: { replace: _replace } });
+    component("gallery", gallery, search_in);
 }
 
 init();

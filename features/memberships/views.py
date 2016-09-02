@@ -8,7 +8,7 @@ from features.groups import views as groups
 from utils import views as utils_views
 
 
-class MembershipMixin(groups.GroupMixin):
+class MembershipMixin(groups.Mixin):
     model = models.Membership
     title = 'Mitgliedschaft'
 

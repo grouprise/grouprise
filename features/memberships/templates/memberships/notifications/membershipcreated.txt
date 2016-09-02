@@ -1,4 +1,4 @@
-{% load utils %}Du wurdest auf {{ site.name }} in die Gruppe {{ membership.group }} aufgenommen:
+{% load core %}Du wurdest auf {{ site.name }} in die Gruppe {{ membership.group }} aufgenommen:
 {{ membership.group.get_absolute_url|full_url }}
 {% if not membership.member.can_login %}
 Bitte leg Dir ein Benutzerkonto an, um als Mitglied der Gruppe aktiv werden zu können:
