@@ -1,3 +1,5 @@
-{% with num_images=association.content.images.count %}Galerie mit {{ num_images }} Bild{{ num_images|pluralize:'ern' }}{% endwith %}
+{% extends 'notifications/associations/contentassociated.txt' %}
 
-{{ association.content.text }}
+{% block content %}{% with num_images=association.content.images.count %}Galerie mit {{ num_images }} Bild{{ num_images|pluralize:'ern' }}{% endwith %}
+
+{{ block.super }}{% endblock %}

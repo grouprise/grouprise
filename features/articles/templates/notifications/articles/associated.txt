@@ -1,1 +1,1 @@
-{{ association.content.text }}
+{% extends 'notifications/associations/contentassociated.txt' %}
