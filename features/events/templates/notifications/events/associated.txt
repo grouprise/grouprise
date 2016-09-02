@@ -1,0 +1,4 @@
+Ereignis am {{ association.content.event.time|date:'DATE_FORMAT' }} um {{ association.content.event.time|date:'G:i' }} Uhr
+Ort: {{ association.content.event.place }}
+
+{{ association.content.text }}

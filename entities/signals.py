@@ -10,25 +10,6 @@ from django.utils import module_loading
 from utils import text
 
 
-@dispatch.receiver(signals.post_save, sender=models.GestaltContent)
-@dispatch.receiver(signals.post_save, sender=models.GroupContent)
-def content_post_save(sender, instance, created, **kwargs):
-    if created:
-        group = None
-        recipients = set()
-        if sender == models.GestaltContent:
-            recipients |= {instance.gestalt}
-        elif sender == models.GroupContent:
-            group = instance.group
-            recipients |= set(models.Gestalt.objects.filter(memberships__group=instance.group))
-            #if instance.content.public:
-            #    for notifier_str in settings.NOTIFIERS:
-            #        Notifier = module_loading.import_string(notifier_str)
-            #        recipients |= set(Notifier.get_recipients_for(instance.group))
-        recipients.discard(instance.content.author)
-        #instance.content.notify(recipients)
-
-
 @dispatch.receiver(signals.pre_save, sender=models.Group)
 def group_pre_save(sender, instance, **kwargs):
     group = instance
