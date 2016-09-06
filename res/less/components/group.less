@@ -29,6 +29,21 @@
         top: 0;
         right: 0;
     }
+
+    .on-handhelds({
+        flex-direction: column;
+
+        .group-gallery {
+            height: 190px;
+        }
+
+        .group-gallery,
+        .group-info {
+            width: 100%;
+            min-height: 0;
+            margin: 0;
+        }
+    })
 }
 
 .group-info {
