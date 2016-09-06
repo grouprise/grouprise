@@ -49,7 +49,17 @@
                             <i class="sg sg-gestalt"></i>
                             <span class="sr-only">Über mich</span>
                         </dt>
-                        <dd data-component="user-content">{{ gestalt.about }}</dd>
+                        <dd data-component="user-content">
+                            {% if not gestalt.about %}
+                                {% if request.user.gestalt == gestalt %}
+                                    Schreib doch ein paar Zeilen zu dir!
+                                {% else %}
+                                    Dieser Mensch hat nichts zu sich geschrieben.
+                                {% endif %}
+                            {% else %}
+                                {{ gestalt.about }}
+                            {% endif %}
+                        </dd>
                     </dl>
                 </div>
 
