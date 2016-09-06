@@ -1,14 +1,14 @@
 .profiles {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -1rem;
+    margin: 0;
     padding: 0;
 
+    column-count: 2;
+    column-gap: 1rem;
+
     > li {
-        margin: 0 0 2rem 0;
-        padding: 0 1rem;
-        flex-basis: 50%;
-        display: inline-block;
+        padding: 0 0 1rem;
+        page-break-inside: avoid;
+        display: block;
     }
 }
 
@@ -37,7 +37,6 @@
 
     .avatar {
         margin-right: @padding-base-horizontal;
-        border-radius: 50%;
     }
 }
 

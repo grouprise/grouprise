@@ -37,8 +37,30 @@
     }
 }
 
+.avatar-initials {
+    background-color: @brand-primary;
+}
+
 .avatar-wrap {
     text-decoration: none;
+}
+
+.avatar-more {
+    background-color: rgba(0, 0, 0, .1);
+    color: @color-text-default;
+    text-align: center;
+    position: relative;
+
+    &:before {
+        content: "...";
+        line-height: 1;
+        vertical-align: text-top;
+        position: absolute;
+        top: 40%;
+        left: 0; right: 0;
+        transform: translateY(-50%);
+        font-weight: bold;
+    }
 }
 
 .avatar,
@@ -48,6 +70,10 @@
 
 .avatar-size-48-48 {
     .avatar-size(48px);
+}
+
+.avatar-size-32-32 {
+    .avatar-size(32px);
 }
 
 .avatars {

@@ -10,15 +10,19 @@
 
 .media {
     display: flex;
+
+    .on-handhelds({
+        flex-direction: row;
+    })
 }
 
 .media-image {
     min-width: 64px;
     margin-right: @padding-large-horizontal;
 
-    img {
-        border-radius: 50%;
-    }
+    .on-handhelds({
+        display: none;
+    })
 }
 
 .media-content {
@@ -44,6 +48,10 @@
         border-top: @size solid transparent;
         border-bottom: @size solid transparent;
         border-right: @size solid @gray-lighter;
+
+        .on-handhelds({
+            display: none;
+        })
     }
 
     > :first-child {
