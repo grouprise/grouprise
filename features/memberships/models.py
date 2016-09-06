@@ -8,5 +8,11 @@ class Membership(models.Model):
     group = models.ForeignKey('entities.Group', related_name='memberships')
     member = models.ForeignKey('entities.Gestalt', related_name='memberships')
 
+    def __str__(self):
+        return "%s is member of %s since %s" % (
+            str(self.member.user.get_username()),
+            str(self.group.slug), str(self.date_joined)
+        )
+
     class Meta:
         unique_together = ('group', 'member')
