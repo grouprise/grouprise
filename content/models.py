@@ -128,7 +128,7 @@ class Article(Content):
     objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
 
     def get_display_type_name(self):
-        return 'Artikel' if self.public else 'Interne Nachricht'
+        return 'Artikel' if self.public else 'Gespräch'
 
 
 class Event(Content):

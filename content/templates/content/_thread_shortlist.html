@@ -1,0 +1,24 @@
+<div class="content-block">
+    <header class="content-header">
+        <h2 class="content-classification">Gespräche</h2>
+        {% if can_create_message %}
+            <a href="{% url 'message-create' group.pk %}" class="btn btn-default">Neues Gespräch</a>
+        {% endif %}
+    </header>
+
+    <ol class="thread-preview-list">
+        {% for thread in conversations %}
+            <li>
+                {% include 'content/_thread_preview.html' %}
+            </li>
+        {% endfor %}
+    </ol>
+
+    {% if has_more_conversations %}
+        <div class="btn-toolbar btn-toolbar-centered">
+            <a href="{% url 'group-messages' group.pk %}" class="btn btn-default">
+                Weitere Gespräche
+            </a>
+        </div>
+    {% endif %}
+</div>
