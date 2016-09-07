@@ -1,17 +1,24 @@
 import bleach as python_bleach
 from django import template
 from django.utils import formats, html, safestring, text, timezone
+from django.template.defaultfilters import truncatewords_html
 import markdown as python_markdown
-from markdown.extensions import nl2br
+from markdown.extensions import nl2br, toc
 from pymdownx import magiclink
 import utils.markdown
 
 register = template.Library()
 
-
 from django import template
 from django.template.base import FilterExpression
 from django.template.loader import get_template
+
+markdown_extensions = (
+    magiclink.MagiclinkExtension(),
+    nl2br.Nl2BrExtension(),
+    utils.markdown.GroupReferenceExtension()
+)
+
 
 @register.filter
 def bleach(text):
@@ -21,17 +28,30 @@ def bleach(text):
         return safestring.mark_safe(bleached)
     return bleached
 
+
 @register.filter(needs_autoescape=True)
 def markdown(text, autoescape=True):
-    if autoescape:
-        esc = html.conditional_escape
-    else:
-        esc = lambda x: x
-    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=[magiclink.MagiclinkExtension(), nl2br.Nl2BrExtension(), utils.markdown.GroupReferenceExtension()]))
+    esc = html.conditional_escape if autoescape else lambda x: x
+    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=markdown_extensions))
+
+
+@register.simple_tag(name="markdown")
+def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, autoescape=True):
+    print(heading_baselevel, filter_tags, truncate, autoescape)
+    esc = html.conditional_escape if autoescape else lambda x: x
+    extensions = markdown_extensions + (toc.TocExtension(baselevel=heading_baselevel), )
+    result = python_markdown.markdown(esc(text), extensions=extensions)
+    if filter_tags:
+        result = bleach(result)
+    if truncate:
+        result = truncatewords_html(result, truncate)
+    return safestring.mark_safe(result)
+
 
 @register.filter
 def permitted(content, user):
     return content.permitted(user)
+
 
 @register.filter
 def preview(events):
