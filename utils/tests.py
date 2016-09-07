@@ -1,7 +1,7 @@
 from content import models as content_models
 from django import test
 from django.contrib import auth
-from django.core import urlresolvers
+from django.core import mail, urlresolvers
 from entities import models as entities_models
 from features.memberships import models as memberships_models
 
@@ -87,6 +87,12 @@ class Test(test.TestCase):
         else:
             self.assertRedirects(response, self.get_login_url(next_url))
 
+    def assertNotificationRecipient(self, gestalt):
+        self.assertTrue(mail.outbox[0].to[0].find(gestalt.user.email))
+
+    def assertNotificationSent(self):
+        self.assertEqual(len(mail.outbox), 1)
+
     def assertRequest(self, **kwargs):
         for method in kwargs['methods']:
             response = self.request(method, **kwargs)
@@ -111,9 +117,10 @@ class Test(test.TestCase):
     def get_response(self, method, url):
         return getattr(self.client, method)(url)
 
-    def get_url(self, url, key):
+    def get_url(self, url, key=None):
+        args = [key] if key else []
         return urlresolvers.reverse(
-                '{}'.format(url), args=[key])
+                '{}'.format(url), args=args)
 
     def request(self, method, **kwargs):
         url = self.get_url(kwargs['url'], kwargs['key'])

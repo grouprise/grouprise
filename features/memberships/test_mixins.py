@@ -8,3 +8,13 @@ class MemberMixin(tests.AuthenticatedMixin, tests.GroupMixin):
         super().setUpTestData()
         models.Membership.objects.create(
                 created_by=cls.gestalt, group=cls.group, member=cls.gestalt)
+
+
+class TwoMembersMixin(tests.OtherGestaltMixin, MemberMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        models.Membership.objects.create(
+                created_by=cls.other_gestalt,
+                group=cls.group,
+                member=cls.other_gestalt)
