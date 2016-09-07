@@ -204,6 +204,15 @@
 .read-more {
     color: @brand-primary;
     text-decoration: underline;
+
+    .content-preview & {
+        &:extend(.btn all);
+        &:extend(.btn-link all);
+
+        float: right;
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 .content-footer {

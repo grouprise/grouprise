@@ -28,8 +28,9 @@
                 {% endif %}
 
                 {% markdown content.text truncate=50 heading_baselevel=4 %}
-                <span class="read-more"> Weiterlesen...</span>
             </div>
         </div>
     </a>
+
+    <a href="{{ content.get_absolute_url }}" class="read-more">Zum Beitrag...</a>
 </article>
