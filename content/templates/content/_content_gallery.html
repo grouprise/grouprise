@@ -4,7 +4,7 @@
     <input type="hidden" name="content_id" value="{{ content.id }}" />
     <header class="gallery-header">
         <div class="gallery-header-description {% if content.text|length > 250 %}gallery-header-description-large{% endif %}">
-            {{ content.text|markdown }}
+            {% markdown content.text heading_baselevel=2 %}
         </div>
         {% has_perm 'content.create_image' user content as can_create_image %}
         {% if can_create_image %}

@@ -11,7 +11,7 @@
                 </div>
                 <div class="media-content">
                     <div class="media-body" data-component="user-content">
-                        {{ comment.text|markdown }}
+                        {% markdown comment.text heading_baselevel=3 %}
                     </div>
                     <footer class="media-footer">
                         <time data-component="time time-from" datetime="{{ comment.date_created|date:"c" }}" title="{{ comment.date_created|date:'d. F Y H:i' }}">
