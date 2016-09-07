@@ -76,14 +76,14 @@ export default (el, opts) => {
             },
             "|",
             {
-                name: "heading-2",
-                action: SimpleMDE.toggleHeading2,
+                name: "heading-1",
+                action: SimpleMDE.toggleHeading1,
                 className: "fa fa-header",
                 title: "Überschrift"
             },
             {
-                name: "heading-3",
-                action: SimpleMDE.toggleHeading3,
+                name: "heading-2",
+                action: SimpleMDE.toggleHeading2,
                 className: "fa fa-header fa-header-x fa-header-2",
                 title: "Unterüberschrift"
             },
