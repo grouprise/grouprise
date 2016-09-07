@@ -2,7 +2,8 @@ from django import dispatch
 from django.db.models import signals
 
 
-def connect(signal, notification_class, instance=None, predicate=None, senders=[]):
+def connect(
+        signal, notification_class, instance=None, predicate=None, senders=[]):
     def receiver(sender, **kwargs):
         if predicate:
             if predicate(kwargs['instance']):
@@ -12,6 +13,7 @@ def connect(signal, notification_class, instance=None, predicate=None, senders=[
 
 
 model_created = dispatch.Signal()
+
 
 def model_saved(sender, **kwargs):
     if kwargs['created']:
