@@ -2,11 +2,19 @@ import SimpleMDE from "simplemde";
 import Drop from "tether-drop";
 import bel from "bel";
 import closest from "closest";
+import delegate from "delegate";
 
 import editor_images from "../components/editor-image";
+import { $, get_attr } from "../util/dom";
 
 const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
+
+function quote(text) {
+    return text.split("\n")
+        .map(line => `> ${line}`)
+        .join("\n");
+}
 
 export default (el, opts) => {
     const form = closest(el, "form");
@@ -136,6 +144,14 @@ export default (el, opts) => {
         files.forEach((file) => {
             form.appendChild(bel`<input type="hidden" name="images" value="${file.id}">`)
         });
+    });
+
+    delegate(document.body, "[data-component='cite']", "click", function(event) {
+        event.preventDefault();
+        const target = $(`${event.delegateTarget.getAttribute('href')} .media-body`);
+        const author = get_attr(target, "data-author", false);
+        const text = target.innerText + (author ? `\n — ${author}` : "");
+        editor.codemirror.doc.replaceSelection(quote(text));
     });
 
     return editor;
