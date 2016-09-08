@@ -90,6 +90,9 @@ class Test(test.TestCase):
     def assertNotificationRecipient(self, gestalt):
         self.assertTrue(mail.outbox[0].to[0].find(gestalt.user.email))
 
+    def assertNoNotificationSent(self):
+        self.assertEqual(len(mail.outbox), 0)
+
     def assertNotificationSent(self):
         self.assertEqual(len(mail.outbox), 1)
 

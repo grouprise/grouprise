@@ -4,58 +4,56 @@ from features.subscriptions import test_mixins as subscriptions
 from utils import tests
 
 
-class InternalEventMixin:
+class InternalGalleryMixin:
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.content = content.Event.objects.create(
-                author=cls.gestalt, time='2000-01-01 12:00+00:00')
+        cls.content = content.Gallery.objects.create(author=cls.gestalt)
 
 
-class PublicEventMixin:
+class PublicGalleryMixin:
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.content = content.Event.objects.create(
-                author=cls.gestalt, public=True, time='2000-01-01 12:00+00:00',
-                title='Test Event')
+        cls.content = content.Gallery.objects.create(
+                author=cls.gestalt, public=True, title='Test Event')
 
 
-class InternalEventInGroupWithOtherMember(
+class InternalGalleryInGroupWithOtherMember(
         subscriptions.NotificationToOtherGestalt,
-        InternalEventMixin, memberships.OtherMemberMixin,
+        InternalGalleryMixin, memberships.OtherMemberMixin,
         memberships.MemberMixin, tests.Test):
     """
-    If a group member creates an internal event
+    If a group member creates an internal gallery
     * a notification to other members should be sent.
     """
 
 
-class InternalEventInGroupWithOtherSubscriber(
+class InternalGalleryInGroupWithOtherSubscriber(
         subscriptions.NoNotificationToOtherGestalt,
-        InternalEventMixin, subscriptions.OtherGroupSubscriberMixin,
+        InternalGalleryMixin, subscriptions.OtherGroupSubscriberMixin,
         memberships.MemberMixin, tests.Test):
     """
-    If a group member creates an internal event
+    If a group member creates an internal gallery
     * no notification to subscribers should be sent.
     """
 
 
-class PublicEventInGroupWithOtherMember(
+class PublicGalleryInGroupWithOtherMember(
         subscriptions.NotificationToOtherGestalt,
-        PublicEventMixin, memberships.OtherMemberMixin,
+        PublicGalleryMixin, memberships.OtherMemberMixin,
         memberships.MemberMixin, tests.Test):
     """
-    If a group member creates a public event
+    If a group member creates a public gallery
     * a notification to other members should be sent.
     """
 
 
-class PublicEventInGroupWithOtherSubscriber(
+class PublicGalleryInGroupWithOtherSubscriber(
         subscriptions.NotificationToOtherGestalt,
-        PublicEventMixin, subscriptions.OtherGroupSubscriberMixin,
+        PublicGalleryMixin, subscriptions.OtherGroupSubscriberMixin,
         memberships.MemberMixin, tests.Test):
     """
-    If a group member creates a public event
+    If a group member creates a public gallery
     * a notification to subscribers should be sent.
     """

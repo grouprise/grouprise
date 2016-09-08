@@ -10,7 +10,7 @@ class MemberMixin(tests.AuthenticatedMixin, tests.GroupMixin):
                 created_by=cls.gestalt, group=cls.group, member=cls.gestalt)
 
 
-class TwoMembersMixin(tests.OtherGestaltMixin, MemberMixin):
+class OtherMemberMixin(tests.OtherGestaltMixin, tests.GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
