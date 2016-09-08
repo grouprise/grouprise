@@ -149,8 +149,9 @@ export default (el, opts) => {
     delegate(document.body, "[data-component='cite']", "click", function(event) {
         event.preventDefault();
         const target = $(`${event.delegateTarget.getAttribute('href')} .media-body`);
-        const author = get_attr(target, "data-author", false);
-        const text = target.innerText + (author ? `\n — ${author}` : "");
+        const author = get_attr(target, "data-author");
+        const permalink = get_attr(target, "data-permalink");
+        const text = target.innerText + (author ? `\n — [${author}](${permalink})` : "");
         editor.codemirror.doc.replaceSelection(quote(text));
     });
 
