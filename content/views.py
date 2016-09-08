@@ -4,6 +4,7 @@ from django.forms import models as model_forms
 from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
+from django.db.models import Q
 from entities import models as entities_models
 from utils import forms as utils_forms, views as utils_views
 
@@ -54,7 +55,7 @@ class Content(utils_views.PageMixin, generic.DetailView):
 
 class ContentList(BaseContentList):
     def get_queryset(self):
-        return models.Content.objects.permitted(self.request.user).filter(public=True)
+        return models.Content.objects.permitted(self.request.user).filter(~Q(article__isnull=False, public=False))
 
 class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Beitrag ändern'
