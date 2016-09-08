@@ -1,5 +1,6 @@
 from . import models
 from django.conf import settings
+from django.contrib.auth import hashers
 
 def groups(request):
     return {
@@ -9,6 +10,6 @@ def groups(request):
 
 def statistics(request):
     return {
-            'gestalt_count': models.Gestalt.objects.count, 
+            'gestalt_count': models.Gestalt.objects.exclude(user__password__startswith=hashers.UNUSABLE_PASSWORD_PREFIX).count, 
             'group_count': models.Group.objects.count
             }
