@@ -43,8 +43,9 @@ content_allowed_attributes = {
 
 
 @register.filter
-def bleach(text):
-    bleached = python_bleach.clean(text, strip=True, tags=content_allowed_tags, attributes=content_allowed_attributes)
+def bleach(text, disable_tags=tuple()):
+    allowed_tags = set(content_allowed_tags) - set(disable_tags)
+    bleached = python_bleach.clean(text, strip=True, tags=allowed_tags, attributes=content_allowed_attributes)
     if isinstance(text, safestring.SafeString):
         return safestring.mark_safe(bleached)
     return bleached
@@ -57,11 +58,12 @@ def markdown(text, autoescape=True):
 
 
 @register.simple_tag(name="markdown")
-def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False):
+def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags=""):
     extensions = markdown_extensions + (toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
     if filter_tags:
-        result = bleach(result)
+        disabled_tags = tuple(disable_tags.split(","))
+        result = bleach(result, disabled_tags)
     if truncate:
         result = truncatewords_html(result, truncate)
     return safestring.mark_safe(result)
