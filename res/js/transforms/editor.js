@@ -63,6 +63,13 @@ export default (el, opts) => {
             },
             "|",
             {
+                name: "blockquote",
+                action: SimpleMDE.toggleBlockquote,
+                className: "fa fa-quote-left",
+                title: "Zitat"
+
+            },
+            {
                 name: "unordered-list",
                 action: SimpleMDE.toggleUnorderedList,
                 className: "fa fa-list-ul",
