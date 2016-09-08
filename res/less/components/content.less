@@ -60,6 +60,8 @@
 
     .content-preview & {
         margin: 0 0 .75rem;
+        position: relative;
+        top: -.125em;
     }
 
     .content & {
@@ -89,6 +91,9 @@
 
     > li {
         display: block;
+        page-break-inside: avoid;
+        border-top: 2px solid #f2f2f2;
+        padding: 1rem 0 3rem;
     }
 
     &:after {
@@ -108,9 +113,7 @@
 }
 
 .content-preview {
-    padding: 1rem 0 4rem;
-    page-break-inside: avoid;
-    border-top: 2px solid #f2f2f2;
+    padding: 0;
 
     a {
         text-decoration: none;
@@ -120,6 +123,12 @@
         color: @color-text-default;
         text-decoration: none;
         margin-top: .5rem;
+    }
+
+    &:after {
+        content: " ";
+        display: block;
+        clear: both;
     }
 }
 
@@ -150,9 +159,10 @@
 
 .content-preview-body {
     padding: 1rem;
-    background-color: #f2f2f2;
+    border: 2px solid #f2f2f2;
     display: block;
     border-radius: 2px;
+    background-color: white;
 
     .content-title {
         margin-top: 0;
@@ -180,11 +190,31 @@
     color: @color-text-default;
     flex: 1;
 
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: .75rem 0 .25rem;
+    }
+
+    p, ol, ul, dl, blockquote {
+        margin-top: 0;
+        margin-bottom: .5rem;
+    }
+
+    blockquote {
+        margin-left: 10px;
+    }
+
+    ul, ol {
+        padding-left: 25px;
+    }
+
     > :first-child {
         margin-top: 0;
     }
 
-    > :last-child {
+    > :last-child,
+    li > :last-child {
         margin-bottom: 0;
     }
 }
@@ -192,6 +222,16 @@
 .read-more {
     color: @brand-primary;
     text-decoration: underline;
+
+    .content-preview & {
+        &:extend(.btn all);
+        &:extend(.btn-link all);
+
+        float: right;
+        padding-left: 0;
+        padding-right: 0;
+        transform: translateY(.5rem);
+    }
 }
 
 .content-footer {
@@ -229,4 +269,9 @@
 .content-data + .content-teaser {
     position: relative;
     top: -.75rem;
+}
+
+.link-plain {
+    color: inherit;
+    text-decoration: none;
 }

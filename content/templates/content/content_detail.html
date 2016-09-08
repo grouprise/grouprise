@@ -15,7 +15,7 @@
             {% if content.gallery %}
                 {% include 'content/_content_gallery.html' %}
             {% else %}
-                {{ content.text|markdown }}
+                {% markdown content.text heading_baselevel=2 %}
             {% endif %}
 
             {% include 'content/_content_license.html' %}

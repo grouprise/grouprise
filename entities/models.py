@@ -132,6 +132,16 @@ class Group(core.models.Model):
     def get_head_gallery(self):
         return self.content.exclude(gallery=None).filter(public=True, groupcontent__pinned=True).first()
 
+    def get_conversations(self, user):
+        from django.db.models import Max
+        from django.db.models.functions import Coalesce
+        return self.content \
+            .permitted(user) \
+            .filter(article__isnull=False, public=False) \
+            .annotate(last_comment=Max('comments__date_created')) \
+            .annotate(last_activity=Coalesce("last_comment", "date_created")) \
+            .order_by("-last_activity")
+
     def get_initials(self):
         import re
         initials = ''

@@ -4,7 +4,7 @@
 {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
 
 {% if can_resign %}
-    <a href="{% url 'resign' group.pk %}" class="btn btn-default btn-sm" title="Aus der Gruppe austreten">
+    <a href="{% url 'resign' group.pk %}" class="btn btn-default btn-sm btn-addon-ok" title="Aus der Gruppe austreten">
         <i class="sg sg-group"></i> Beigetreten
     </a>
 {% elif can_join or not user.is_authenticated %}

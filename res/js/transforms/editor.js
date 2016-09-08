@@ -2,11 +2,19 @@ import SimpleMDE from "simplemde";
 import Drop from "tether-drop";
 import bel from "bel";
 import closest from "closest";
+import delegate from "delegate";
 
 import editor_images from "../components/editor-image";
+import { $, get_attr } from "../util/dom";
 
 const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
+
+function quote(text) {
+    return text.split("\n")
+        .map(line => `> ${line}`)
+        .join("\n");
+}
 
 export default (el, opts) => {
     const form = closest(el, "form");
@@ -63,6 +71,13 @@ export default (el, opts) => {
             },
             "|",
             {
+                name: "blockquote",
+                action: SimpleMDE.toggleBlockquote,
+                className: "fa fa-quote-left",
+                title: "Zitat"
+
+            },
+            {
                 name: "unordered-list",
                 action: SimpleMDE.toggleUnorderedList,
                 className: "fa fa-list-ul",
@@ -76,14 +91,14 @@ export default (el, opts) => {
             },
             "|",
             {
-                name: "heading-2",
-                action: SimpleMDE.toggleHeading2,
+                name: "heading-1",
+                action: SimpleMDE.toggleHeading1,
                 className: "fa fa-header",
                 title: "Überschrift"
             },
             {
-                name: "heading-3",
-                action: SimpleMDE.toggleHeading3,
+                name: "heading-2",
+                action: SimpleMDE.toggleHeading2,
                 className: "fa fa-header fa-header-x fa-header-2",
                 title: "Unterüberschrift"
             },
@@ -129,6 +144,15 @@ export default (el, opts) => {
         files.forEach((file) => {
             form.appendChild(bel`<input type="hidden" name="images" value="${file.id}">`)
         });
+    });
+
+    delegate(document.body, "[data-component='cite']", "click", function(event) {
+        event.preventDefault();
+        const target = $(`${event.delegateTarget.getAttribute('href')} .media-body`);
+        const author = get_attr(target, "data-author");
+        const permalink = get_attr(target, "data-permalink");
+        const text = target.innerText + (author ? `\n — [${author}](${permalink})` : "");
+        editor.codemirror.doc.replaceSelection(quote(text));
     });
 
     return editor;

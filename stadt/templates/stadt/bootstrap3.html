@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!doctype html>
-<html{% if request.LANGUAGE_CODE %} lang="{{ request.LANGUAGE_CODE }}"{% endif %}>
+<html lang="{{ request.LANGUAGE_CODE|default:"de" }}">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />

@@ -84,8 +84,11 @@ class Group(utils_views.List):
         return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        conversations = self.get_conversations()
         kwargs['calendar_events'] = self.get_events().around()
         kwargs['intro_content'] = self.get_intro_content()
+        kwargs['conversations'] = conversations[:3]
+        kwargs['has_more_conversations'] = len(conversations) > 3
         kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
@@ -121,8 +124,11 @@ class Group(utils_views.List):
         except AttributeError:
             return pinned_content
 
+    def get_conversations(self):
+        return self.get_group().get_conversations(self.request.user)[:3]
+
     def get_queryset(self):
-        return self.get_group_content().filter(groupcontent__pinned=False)
+        return self.get_group_content().filter(groupcontent__pinned=False).exclude(article__isnull=False, public=False)
 
     def get_related_object(self):
         return self.get_group()
@@ -178,6 +184,23 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
 
     def get_parent(self):
         return self.object
+
+
+class GroupMessages(utils_views.List):
+    menu = 'group'
+    permission = 'content.view_content_list'
+    sidebar = []
+    template_name = 'content/_thread_list.html'
+    title = 'Gespräche'
+
+    def get_queryset(self):
+        return self.get_group().get_conversations(self.request.user)
+
+    def get_parent(self):
+        return self.get_group()
+
+    def get_related_object(self):
+        return self.get_group()
 
 
 class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):

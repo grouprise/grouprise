@@ -154,3 +154,30 @@
         transform: translateY(1px);
     }
 }
+
+.btn-addon-ok {
+    padding-right: 2.7rem;
+
+    &:after {
+        .fa-icon();
+        content: @fa-var-check;
+        width: 2rem;
+        text-align: center;
+        position: absolute;
+        top: 0; bottom: 0; right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-indent: 2px;
+    }
+
+    &.btn-default:after {
+        background-color: @color-text-default;
+        color: white;
+    }
+
+    &.btn-primary:after {
+        background-color: rgba(0, 0, 0, .2);
+        color: white;
+    }
+}

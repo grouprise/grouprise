@@ -1,37 +1,78 @@
 import bleach as python_bleach
 from django import template
 from django.utils import formats, html, safestring, text, timezone
+from django.template.defaultfilters import truncatewords_html
 import markdown as python_markdown
-from markdown.extensions import nl2br
+from markdown.extensions import nl2br, toc, sane_lists, fenced_code
 from pymdownx import magiclink
 import utils.markdown
 
 register = template.Library()
 
-
 from django import template
 from django.template.base import FilterExpression
 from django.template.loader import get_template
 
+markdown_extensions = (
+    magiclink.MagiclinkExtension(),
+    nl2br.Nl2BrExtension(),
+    utils.markdown.GroupReferenceExtension(),
+    sane_lists.SaneListExtension(),
+    fenced_code.FencedCodeExtension()
+)
+
+content_allowed_tags = (
+    # text
+    'p', 'em', 'strong', 'br', 'a', 'img',
+    # citation
+    'blockquote', 'cite',
+    # headings
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    # lists
+    'ol', 'ul', 'li',
+    # code
+    'pre', 'code'
+)
+
+content_allowed_attributes = {
+    '*': 'title',
+    'a': ['href'],
+    'code': ['class'],
+    'img': ['src', 'alt']
+}
+
+
 @register.filter
-def bleach(text):
-    bleached = python_bleach.clean(text, strip=True,
-            tags=['br', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ol', 'p', 'strong', 'ul'])
+def bleach(text, disable_tags=tuple()):
+    allowed_tags = set(content_allowed_tags) - set(disable_tags)
+    bleached = python_bleach.clean(text, strip=True, tags=allowed_tags, attributes=content_allowed_attributes)
     if isinstance(text, safestring.SafeString):
         return safestring.mark_safe(bleached)
     return bleached
 
+
 @register.filter(needs_autoescape=True)
 def markdown(text, autoescape=True):
-    if autoescape:
-        esc = html.conditional_escape
-    else:
-        esc = lambda x: x
-    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=[magiclink.MagiclinkExtension(), nl2br.Nl2BrExtension(), utils.markdown.GroupReferenceExtension()]))
+    esc = html.conditional_escape if autoescape else lambda x: x
+    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=markdown_extensions))
+
+
+@register.simple_tag(name="markdown")
+def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags=""):
+    extensions = markdown_extensions + (toc.TocExtension(baselevel=heading_baselevel), )
+    result = python_markdown.markdown(text, extensions=extensions)
+    if filter_tags:
+        disabled_tags = tuple(disable_tags.split(","))
+        result = bleach(result, disabled_tags)
+    if truncate:
+        result = truncatewords_html(result, truncate)
+    return safestring.mark_safe(result)
+
 
 @register.filter
 def permitted(content, user):
     return content.permitted(user)
+
 
 @register.filter
 def preview(events):

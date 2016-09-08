@@ -37,8 +37,31 @@
     }
 }
 
+.avatar-initials {
+    background-color: @brand-primary;
+    text-transform: uppercase;
+}
+
 .avatar-wrap {
     text-decoration: none;
+}
+
+.avatar-more {
+    background-color: rgba(0, 0, 0, .1);
+    color: @color-text-default;
+    text-align: center;
+    position: relative;
+
+    &:before {
+        content: "...";
+        line-height: 1;
+        vertical-align: text-top;
+        position: absolute;
+        top: 40%;
+        left: 0; right: 0;
+        transform: translateY(-50%);
+        font-weight: bold;
+    }
 }
 
 .avatar,
@@ -48,6 +71,10 @@
 
 .avatar-size-48-48 {
     .avatar-size(48px);
+}
+
+.avatar-size-32-32 {
+    .avatar-size(32px);
 }
 
 .avatars {
@@ -63,5 +90,38 @@
 
     a {
         text-decoration: none;
+    }
+}
+
+.avatar-edit-inline {
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+
+    &:after {
+        content: @fa-var-pencil;
+        .fa-icon();
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        width: 65%;
+        height: 65%;
+        text-align: center;
+        display: block;
+        background-color: rgba(255, 255, 255, .9);
+        color: @color-text-default;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: opacity .2s;
+        line-height: (64px / 100 * 65);
+        pointer-events: none;
+    }
+
+    &:hover:after,
+    &:active:after,
+    &:focus:after {
+        opacity: 1;
     }
 }
