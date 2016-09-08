@@ -54,7 +54,7 @@ class Content(utils_views.PageMixin, generic.DetailView):
 
 class ContentList(BaseContentList):
     def get_queryset(self):
-        return models.Content.objects.permitted(self.request.user)
+        return models.Content.objects.permitted(self.request.user).filter(public=True)
 
 class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Beitrag ändern'
