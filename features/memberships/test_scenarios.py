@@ -48,6 +48,7 @@ class GroupClosedMember(
         memberships.ResignAllowed,
         memberships.MemberListCreateLink,
         memberships.MemberCreateAllowedWithEmail,
+        memberships.MemberCreateSendsNotification,
         mixins.MemberMixin, tests.ClosedGroupMixin, tests.OtherGestaltMixin,
         tests.Test):
     pass

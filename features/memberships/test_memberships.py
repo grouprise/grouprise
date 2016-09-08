@@ -40,6 +40,15 @@ class MemberCreateAllowedWithEmail:
                 group=self.group, member=self.other_gestalt)
 
 
+class MemberCreateSendsNotification:
+    def test_member_create(self):
+        self.client.post(
+                self.get_url('member-create', self.group.pk),
+                {'member_email': self.other_gestalt.user.email})
+        self.assertNotificationSent()
+        self.assertNotificationRecipient(self.other_gestalt)
+
+
 class MemberCreateForbidden:
     def test_member_create(self):
         self.assertRequest(
