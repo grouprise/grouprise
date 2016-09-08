@@ -92,3 +92,36 @@
         text-decoration: none;
     }
 }
+
+.avatar-edit-inline {
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+
+    &:after {
+        content: @fa-var-pencil;
+        .fa-icon();
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        width: 65%;
+        height: 65%;
+        text-align: center;
+        display: block;
+        background-color: rgba(255, 255, 255, .9);
+        color: @color-text-default;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: opacity .2s;
+        line-height: (64px / 100 * 65);
+        pointer-events: none;
+    }
+
+    &:hover:after,
+    &:active:after,
+    &:focus:after {
+        opacity: 1;
+    }
+}

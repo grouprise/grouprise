@@ -42,7 +42,9 @@
     </div>
     <div class="group-info">
         <div class="group-info-main">
-            {% include 'entities/_group_avatar.html' with group=group link=False %}
+            <a href="{% url 'group-avatar-update' group.pk %}" class="avatar-edit-inline">
+                {% include 'entities/_group_avatar.html' with group=group link=False %}
+            </a>
             <h1 class="group-title">
                 {{ group.name }}
             </h1>
@@ -97,32 +99,21 @@
     <div class="group-actions">
         <div class="btn-toolbar">
             {% if can_edit %}
-                <div class="dropdown-container group-actions-admin">
-                    <input class="dropdown-state" id="group-admin" type="checkbox" />
-                    <label class="btn btn-default btn-sm" for="group-admin">
-                        <i class="sg sg-edit"></i> Gruppe bearbeiten <span class="caret"></span>
-                    </label>
-                    <ul class="dropdown dropdown-small">
-                        <li>
-                            <a href="{% url 'group-update' group.pk %}">
-                                Gruppenangaben ändern
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'group-avatar-update' group.pk %}">
-                                Avatar ändern
-                            </a>
-                        </li>
-                    </ul>
+                <div class="btn-group">
+                    <a class="btn btn-default btn-sm" href="{% url 'group-update' group.pk %}">
+                        <i class="sg sg-edit"></i> Gruppe bearbeiten
+                    </a>
                 </div>
             {% endif %}
 
-            <div class="btn-group group-actions-user">
-                {% include_features '_group_actions.html' %}
-
+            <div class="btn-group">
                 <a href="{% url 'message-create' group.pk %}" class="btn btn-default btn-sm">
                     <i class="sg sg-message"></i> Nachricht schreiben
                 </a>
+            </div>
+
+            <div class="btn-group">
+                {% include_features '_group_actions.html' %}
             </div>
         </div>
     </div>

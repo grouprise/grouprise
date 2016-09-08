@@ -8,7 +8,7 @@
         <i class="sg sg-subscription"></i> Abonniert
     </a>
 {% elif can_subscribe %}
-    <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-default btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+    <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
         <i class="sg sg-subscription"></i> Abonnieren
     </a>
 {% endif %}

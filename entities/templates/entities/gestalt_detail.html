@@ -24,7 +24,9 @@
 
         <div class="profile-header-data">
             <div class="profile-header-title">
-                {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
+                <a href="{% url 'gestalt-avatar-update' gestalt.pk %}" class="avatar-edit-inline">
+                    {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
+                </a>
                 <h1>{{ gestalt }}</h1>
                 <span class="clearfix"></span>
             </div>
@@ -81,23 +83,11 @@
     <div class="content-toolbar">
         <div class="btn-toolbar">
             {% if can_edit %}
-                <div class="dropdown-container group-actions-admin">
-                    <input class="dropdown-state" id="user-admin" type="checkbox" />
-                    <label class="btn btn-default btn-sm" for="user-admin">
-                        <i class="sg sg-edit"></i> Profil bearbeiten <span class="caret"></span>
-                    </label>
-                    <ul class="dropdown dropdown-small">
-                        <li>
-                            <a href="{% url 'gestalt-update' gestalt.pk %}">
-                                Profildaten ändern
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'gestalt-avatar-update' gestalt.pk %}">
-                                Avatar ändern
-                            </a>
-                        </li>
-                    </ul>
+                <div class="btn-group">
+                    <a href="{% url 'gestalt-update' gestalt.pk %}" class="btn btn-default btn-sm">
+                        <i class="sg sg-edit"></i>
+                        Profil bearbeiten
+                    </a>
                 </div>
             {% endif %}
 
