@@ -23,7 +23,7 @@ markdown_extensions = (
 
 content_allowed_tags = (
     # text
-    'p', 'em', 'strong', 'br', 'a',
+    'p', 'em', 'strong', 'br', 'a', 'img',
     # citation
     'blockquote', 'cite',
     # headings
@@ -37,7 +37,8 @@ content_allowed_tags = (
 content_allowed_attributes = {
     '*': 'title',
     'a': ['href'],
-    'code': ['class']
+    'code': ['class'],
+    'img': ['src', 'alt']
 }
 
 
