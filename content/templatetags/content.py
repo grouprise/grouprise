@@ -23,7 +23,7 @@ markdown_extensions = (
 
 content_allowed_tags = (
     # text
-    'p', 'em', 'strong', 'br',
+    'p', 'em', 'strong', 'br', 'a',
     # citation
     'blockquote', 'cite',
     # headings
@@ -34,9 +34,11 @@ content_allowed_tags = (
     'pre', 'code'
 )
 
-content_allowed_attributes = (
-    'class', 'title'
-)
+content_allowed_attributes = {
+    '*': 'title',
+    'a': ['href'],
+    'code': ['class']
+}
 
 
 @register.filter
