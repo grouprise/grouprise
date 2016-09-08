@@ -4,6 +4,7 @@ django-allauth
 django-crispy-forms
 django-filter
 djangorestframework
+django-debug-toolbar
 flake8
 markdown
 pillow
