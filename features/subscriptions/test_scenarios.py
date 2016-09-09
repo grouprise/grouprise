@@ -3,6 +3,7 @@ from . import (
         test_groups as group_subscriptions,
         test_mixins as mixins)
 from core import tests
+from features.comments import tests as comments
 from features.content import tests as content
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
@@ -39,6 +40,15 @@ class ContentSubscribed(
         content_subscriptions.UnsubscribeAllowed,
         mixins.ContentSubscribedMixin, tests.Test):
     pass
+
+
+class OtherContentSubscriber(
+        comments.NotificationToOtherGestalt,
+        mixins.OtherContentSubscriberMixin, tests.Test):
+    """
+    If an author creates a comment
+    * a notification to content subscribers should be sent.
+    """
 
 
 class GroupAnonymous(

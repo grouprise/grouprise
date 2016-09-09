@@ -1,20 +1,39 @@
-from content import models as comments
+from content import models
 from core import tests
-from features.subscriptions import test_mixins as subscriptions
+from features.content import tests as content
+from features.gestalten import tests as gestalten
+
+
+class OtherCommentedMixin(content.ContentMixin, gestalten.OtherGestaltMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        models.Comment.objects.create(
+                author=cls.other_gestalt, content=cls.content,
+                text='Other Text')
 
 
 class NotificationToOtherGestalt:
     def test_comment(self):
-        comments.Comment.objects.create(
+        models.Comment.objects.create(
                 author=self.gestalt, content=self.content, text='Test')
         self.assertNotificationSent()
         self.assertNotificationRecipient(self.other_gestalt)
 
 
-class OtherSubscriber(
+class CommentContent(
         NotificationToOtherGestalt,
-        subscriptions.OtherContentSubscriberMixin, tests.Test):
+        content.NoAuthorContentMixin, tests.Test):
     """
-    If an author creates a comment
-    * a notification to content subscribers should be sent.
+    If a gestalt comments on other gestaltens' content:
+    * a notification is sent to the content author.
+    """
+
+
+class CommentCommentedContent(
+        NotificationToOtherGestalt,
+        OtherCommentedMixin, tests.Test):
+    """
+    If a gestalt comments on content commented by another gestalt:
+    * a notification is sent to the other gestalt.
     """
