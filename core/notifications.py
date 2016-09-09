@@ -31,7 +31,7 @@ class Notification:
 
     def get_template_name(self):
         app_label = apps.get_containing_app_config(type(self).__module__).label
-        return 'notifications/{}/{}.txt'.format(
+        return '{}/{}.txt'.format(
                 app_label, type(self).__name__.lower())
 
     def send(self):
