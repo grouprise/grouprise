@@ -1,5 +1,6 @@
 from django import test
 from django.contrib import auth
+from django.contrib.sites import models as sites_models
 from django.core import mail, urlresolvers
 
 HTTP_GET = 'get'
@@ -31,6 +32,13 @@ class Test(test.TestCase):
 
     def assertNotificationRecipient(self, gestalt):
         self.assertTrue(mail.outbox[0].to[0].find(gestalt.user.email))
+
+    def assertNotificationSenderAnonymous(self):
+        self.assertTrue(mail.outbox[0].from_email.startswith(
+            sites_models.Site.objects.get_current().name))
+
+    def assertNotificationSenderName(self, gestalt):
+        self.assertTrue(mail.outbox[0].from_email.startswith(str(gestalt)))
 
     def assertNoNotificationSent(self):
         self.assertEqual(len(mail.outbox), 0)

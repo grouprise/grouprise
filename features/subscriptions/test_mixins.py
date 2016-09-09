@@ -21,6 +21,16 @@ class GroupSubscribedMixin(gestalten.AuthenticatedMixin, groups.GroupMixin):
                 subscribed_to=cls.group, subscriber=cls.gestalt)
 
 
+class OtherGroupSubscriberMixin(
+        gestalten.OtherGestaltMixin, groups.GroupMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        models.Subscription.objects.create(
+                subscribed_to=cls.group,
+                subscriber=cls.other_gestalt)
+
+
 class NoNotificationToOtherGestalt:
     def test_associate_content(self):
         entities.GroupContent.objects.create(
@@ -36,11 +46,15 @@ class NotificationToOtherGestalt:
         self.assertNotificationRecipient(self.other_gestalt)
 
 
-class OtherGroupSubscriberMixin(
-        gestalten.OtherGestaltMixin, groups.GroupMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        models.Subscription.objects.create(
-                subscribed_to=cls.group,
-                subscriber=cls.other_gestalt)
+class SenderIsAnonymous:
+    def test_sender_name(self):
+        entities.GroupContent.objects.create(
+                content=self.content, group=self.group)
+        self.assertNotificationSenderAnonymous()
+
+
+class SenderNameIsGestalt:
+    def test_sender_name(self):
+        entities.GroupContent.objects.create(
+                content=self.content, group=self.group)
+        self.assertNotificationSenderName(self.gestalt)

@@ -16,21 +16,25 @@ class MessageMixin:
 
 class NoMemberAndMember(
         subscriptions.NotificationToOtherGestalt,
+        subscriptions.SenderNameIsGestalt,
         MessageMixin, memberships.OtherMemberMixin, gestalten.GestaltMixin,
         groups.GroupMixin, tests.Test):
     """
     If a group member creates a message
     * a notification to other members should be sent.
+    * the sender name should be mentioned.
     """
 
 
 class MemberAndOtherMember(
         subscriptions.NotificationToOtherGestalt,
+        subscriptions.SenderNameIsGestalt,
         MessageMixin, memberships.OtherMemberMixin, memberships.MemberMixin,
         tests.Test):
     """
     If a group member creates a message
     * a notification to other members should be sent.
+    * the sender name should be mentioned.
     """
 
 

@@ -23,11 +23,13 @@ class PublicEventMixin:
 
 class InternalEventInGroupWithOtherMember(
         subscriptions.NotificationToOtherGestalt,
+        subscriptions.SenderNameIsGestalt,
         InternalEventMixin, memberships.OtherMemberMixin,
         memberships.MemberMixin, tests.Test):
     """
     If a group member creates an internal event
     * a notification to other members should be sent.
+    * the sender name should be mentioned.
     """
 
 
@@ -43,19 +45,23 @@ class InternalEventInGroupWithOtherSubscriber(
 
 class PublicEventInGroupWithOtherMember(
         subscriptions.NotificationToOtherGestalt,
+        subscriptions.SenderNameIsGestalt,
         PublicEventMixin, memberships.OtherMemberMixin,
         memberships.MemberMixin, tests.Test):
     """
     If a group member creates a public event
     * a notification to other members should be sent.
+    * the sender name should be mentioned.
     """
 
 
 class PublicEventInGroupWithOtherSubscriber(
         subscriptions.NotificationToOtherGestalt,
+        subscriptions.SenderIsAnonymous,
         PublicEventMixin, subscriptions.OtherGroupSubscriberMixin,
         memberships.MemberMixin, tests.Test):
     """
     If a group member creates a public event
     * a notification to subscribers should be sent.
+    * the sender name should not be mentioned.
     """
