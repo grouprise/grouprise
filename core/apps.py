@@ -8,4 +8,4 @@ class CoreConfig(AppConfig):
     def ready(self):
         from django.utils import module_loading
         module_loading.import_string(
-                settings.ROOT_SIGNALCONF + '.signalpatterns')
+                settings.ROOT_SIGNALCONF + '.connections')

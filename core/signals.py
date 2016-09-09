@@ -1,5 +1,6 @@
 from django import dispatch
 from django.db.models import signals
+from django.utils import module_loading
 
 
 def connect(
@@ -10,6 +11,10 @@ def connect(
                 notification_class(**{instance: kwargs['instance']}).send()
     for sender in senders:
         signal.connect(receiver, sender=sender, weak=False)
+
+
+def include(module_name):
+    module_loading.import_string(module_name + '.connections')
 
 
 model_created = dispatch.Signal()
