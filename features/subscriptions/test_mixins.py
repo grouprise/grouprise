@@ -21,6 +21,16 @@ class GroupSubscribedMixin(gestalten.AuthenticatedMixin, groups.GroupMixin):
                 subscribed_to=cls.group, subscriber=cls.gestalt)
 
 
+class OtherContentSubscriberMixin(
+        content.ContentMixin, gestalten.OtherGestaltMixin, groups.GroupMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        models.Subscription.objects.create(
+                subscribed_to=cls.content,
+                subscriber=cls.other_gestalt)
+
+
 class OtherGroupSubscriberMixin(
         gestalten.OtherGestaltMixin, groups.GroupMixin):
     @classmethod

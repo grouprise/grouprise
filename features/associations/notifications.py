@@ -1,5 +1,17 @@
 from core import notifications
 from entities import models
+from features.comments import notifications as comments
+
+
+class Commented(comments.Commented):
+    def get_recipients(self):
+        recipients = super().get_recipients()
+        recipients.update(self.comment.content.gestalten.all())
+        for group in self.comment.content.groups.all():
+            recipients.update(
+                models.Gestalt.objects.filter(memberships__group=group))
+        recipients.discard(self.comment.author)
+        return recipients
 
 
 class ContentAssociated(notifications.Notification):

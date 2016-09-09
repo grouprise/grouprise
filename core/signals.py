@@ -3,6 +3,10 @@ from django.db.models import signals
 from django.utils import module_loading
 
 
+def always(instance):
+    return True
+
+
 def connect(
         signal, notification_class, instance=None, predicate=None, senders=[]):
     def receiver(sender, **kwargs):
