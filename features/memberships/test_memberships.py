@@ -1,5 +1,5 @@
 from . import models
-from utils import tests
+from core import tests
 
 
 class JoinAllowed:

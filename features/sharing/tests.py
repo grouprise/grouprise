@@ -1,7 +1,9 @@
-from utils import tests
+from core import tests
+from features.gestalten import tests as gestalten
+from features.groups import tests as groups
 
 
-class GroupRecommend(tests.GestaltMixin, tests.GroupMixin, tests.Test):
+class GroupRecommend(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
     def test_recommend(self):
         self.client.post(
                 self.get_url('group-recommend', self.group.pk),
@@ -10,7 +12,7 @@ class GroupRecommend(tests.GestaltMixin, tests.GroupMixin, tests.Test):
         self.assertNotificationRecipient(self.gestalt)
 
 
-class MemberInvite(tests.GestaltMixin, tests.GroupMixin, tests.Test):
+class MemberInvite(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
     def test_recommend(self):
         self.client.post(
                 self.get_url('member-invite', self.group.pk),

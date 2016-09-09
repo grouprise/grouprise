@@ -1,9 +1,11 @@
 from . import models
 from entities import models as entities
-from utils import tests
+from features.content import tests as content
+from features.gestalten import tests as gestalten
+from features.groups import tests as groups
 
 
-class ContentSubscribedMixin(tests.NoAuthorContentMixin):
+class ContentSubscribedMixin(content.NoAuthorContentMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -11,7 +13,7 @@ class ContentSubscribedMixin(tests.NoAuthorContentMixin):
                 subscribed_to=cls.content, subscriber=cls.gestalt)
 
 
-class GroupSubscribedMixin(tests.AuthenticatedMixin, tests.GroupMixin):
+class GroupSubscribedMixin(gestalten.AuthenticatedMixin, groups.GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -34,7 +36,8 @@ class NotificationToOtherGestalt:
         self.assertNotificationRecipient(self.other_gestalt)
 
 
-class OtherGroupSubscriberMixin(tests.OtherGestaltMixin, tests.GroupMixin):
+class OtherGroupSubscriberMixin(
+        gestalten.OtherGestaltMixin, groups.GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()

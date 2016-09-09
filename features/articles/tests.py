@@ -1,7 +1,7 @@
 from content import models as content
+from core import tests
 from features.memberships import test_mixins as memberships
 from features.subscriptions import test_mixins as subscriptions
-from utils import tests
 
 
 class ArticleMixin:
