@@ -51,8 +51,10 @@ INSTALLED_APPS = [
     'entities.apps.EntitiesConfig',
     'features.articles',
     'features.associations',
+    'features.conversations',
     'features.events',
     'features.galleries',
+    'features.gestalten',
     'features.groups',
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
@@ -131,16 +133,24 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation'
+        '.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation'
+        '.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation'
+        '.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation'
+        '.NumericPasswordValidator',
     },
 ]
 
@@ -218,7 +228,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
-ACCOUNT_USER_DISPLAY = lambda u: u.gestalt
+ACCOUNT_USER_DISPLAY = lambda u: u.gestalt  # NOQA
 
 ACCOUNT_USERNAME_REQUIRED = False
 

@@ -15,7 +15,7 @@ def content_pre_save(sender, instance, **kwargs):
         instance.slug = text.slugify(models.Content, 'slug', instance.title)
 
 
-@dispatch.receiver(signals.post_save, sender=models.Comment)
+# @dispatch.receiver(signals.post_save, sender=models.Comment)
 def comment_post_save(sender, instance, **kwargs):
     recipients = {instance.content.author}
     recipients |= set(instance.content.comment_authors.all())

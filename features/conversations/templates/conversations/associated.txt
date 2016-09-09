@@ -1,0 +1,1 @@
+{% extends 'associations/contentassociated.txt' %}

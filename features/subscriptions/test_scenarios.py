@@ -2,15 +2,18 @@ from . import (
         test_content as content_subscriptions,
         test_groups as group_subscriptions,
         test_mixins as mixins)
+from core import tests
+from features.content import tests as content
+from features.gestalten import tests as gestalten
+from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
-from utils import tests
 
 
 class ContentAnonymous(
         content_subscriptions.OnlySubscribeLink,
         content_subscriptions.SubscribeAllowedWithEmail,
         content_subscriptions.UnsubscribeForbidden,
-        tests.ContentMixin, tests.Test):
+        content.ContentMixin, tests.Test):
     pass
 
 
@@ -18,7 +21,7 @@ class ContentAuthor(
         content_subscriptions.NoLink,
         content_subscriptions.SubscribeForbidden,
         content_subscriptions.UnsubscribeForbidden,
-        tests.AuthenticatedMixin, tests.ContentMixin, tests.Test):
+        gestalten.AuthenticatedMixin, content.ContentMixin, tests.Test):
     pass
 
 
@@ -26,7 +29,7 @@ class ContentNoAuthor(
         content_subscriptions.OnlySubscribeLink,
         content_subscriptions.SubscribeAllowed,
         content_subscriptions.UnsubscribeForbidden,
-        tests.NoAuthorContentMixin, tests.Test):
+        content.NoAuthorContentMixin, tests.Test):
     pass
 
 
@@ -42,7 +45,7 @@ class GroupAnonymous(
         group_subscriptions.OnlySubscribeLink,
         group_subscriptions.SubscribeAllowedWithEmail,
         group_subscriptions.UnsubscribeForbidden,
-        tests.GestaltMixin, tests.GroupMixin, tests.Test):
+        gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
     pass
 
 
@@ -50,7 +53,7 @@ class GroupAuthenticated(
         group_subscriptions.OnlySubscribeLink,
         group_subscriptions.SubscribeAllowed,
         group_subscriptions.UnsubscribeForbidden,
-        tests.AuthenticatedMixin, tests.GroupMixin, tests.Test):
+        gestalten.AuthenticatedMixin, groups.GroupMixin, tests.Test):
     pass
 
 

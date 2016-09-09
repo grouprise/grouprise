@@ -1,5 +1,7 @@
 from . import test_memberships as memberships, test_mixins as mixins
-from utils import tests
+from core import tests
+from features.gestalten import tests as gestalten
+from features.groups import tests as groups
 
 
 class GroupAnonymous(
@@ -8,7 +10,7 @@ class GroupAnonymous(
         memberships.ResignForbidden,
         memberships.MemberListForbidden,
         memberships.MemberCreateForbidden,
-        tests.GroupMixin, tests.Test):
+        groups.GroupMixin, tests.Test):
     pass
 
 
@@ -18,7 +20,7 @@ class GroupAuthenticated(
         memberships.ResignForbidden,
         memberships.MemberListForbidden,
         memberships.MemberCreateForbidden,
-        tests.AuthenticatedMixin, tests.GroupMixin, tests.Test):
+        gestalten.AuthenticatedMixin, groups.GroupMixin, tests.Test):
     pass
 
 
@@ -28,7 +30,7 @@ class GroupClosed(
         memberships.ResignForbidden,
         memberships.MemberListForbidden,
         memberships.MemberCreateForbidden,
-        tests.AuthenticatedMixin, tests.ClosedGroupMixin, tests.Test):
+        gestalten.AuthenticatedMixin, groups.ClosedGroupMixin, tests.Test):
     pass
 
 
@@ -38,7 +40,7 @@ class GroupMember(
         memberships.ResignAllowed,
         memberships.MemberListCreateLink,
         memberships.MemberCreateForbidden,
-        mixins.MemberMixin, tests.OtherGestaltMixin, tests.Test):
+        mixins.MemberMixin, gestalten.OtherGestaltMixin, tests.Test):
     pass
 
 
@@ -48,6 +50,7 @@ class GroupClosedMember(
         memberships.ResignAllowed,
         memberships.MemberListCreateLink,
         memberships.MemberCreateAllowedWithEmail,
-        mixins.MemberMixin, tests.ClosedGroupMixin, tests.OtherGestaltMixin,
-        tests.Test):
+        memberships.MemberCreateSendsNotification,
+        mixins.MemberMixin, groups.ClosedGroupMixin,
+        gestalten.OtherGestaltMixin, tests.Test):
     pass

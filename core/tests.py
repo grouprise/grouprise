@@ -1,9 +1,7 @@
-from content import models as content_models
 from django import test
 from django.contrib import auth
+from django.contrib.sites import models as sites_models
 from django.core import mail, urlresolvers
-from entities import models as entities_models
-from features.memberships import models as memberships_models
 
 HTTP_GET = 'get'
 HTTP_POST = 'post'
@@ -11,61 +9,6 @@ HTTP_POST = 'post'
 HTTP_FORBIDDEN_OR_LOGIN = 'forbidden_or_login'
 HTTP_REDIRECTS = 'redirects'
 HTTP_OK = 'ok'
-
-
-class GestaltMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.gestalt = auth.get_user_model().objects.create(
-                email='test@example.org', username='test').gestalt
-
-
-class OtherGestaltMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.other_gestalt = auth.get_user_model().objects.create(
-                email='test2@example.org', username='test2').gestalt
-
-
-class AuthenticatedMixin(GestaltMixin):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(
-                self.gestalt.user, 'django.contrib.auth.backends.ModelBackend')
-
-
-class ContentMixin(GestaltMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        article = content_models.Article.objects.create(
-                author=cls.gestalt, text='Test', title='Test', public=True)
-        cls.content = content_models.Content.objects.get(article=article)
-
-
-class GroupMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.group = entities_models.Group.objects.create(name='Test')
-
-
-class ClosedGroupMixin(GroupMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.group.closed = True
-        cls.group.save()
-
-
-class NoAuthorContentMixin(AuthenticatedMixin, ContentMixin, OtherGestaltMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.content.author = cls.other_gestalt
-        cls.content.save()
 
 
 class Test(test.TestCase):
@@ -90,6 +33,13 @@ class Test(test.TestCase):
     def assertNotificationRecipient(self, gestalt):
         self.assertTrue(mail.outbox[0].to[0].find(gestalt.user.email))
 
+    def assertNotificationSenderAnonymous(self):
+        self.assertTrue(mail.outbox[0].from_email.startswith(
+            sites_models.Site.objects.get_current().name))
+
+    def assertNotificationSenderName(self, gestalt):
+        self.assertTrue(mail.outbox[0].from_email.startswith(str(gestalt)))
+
     def assertNoNotificationSent(self):
         self.assertEqual(len(mail.outbox), 0)
 
@@ -101,7 +51,8 @@ class Test(test.TestCase):
             response = self.request(method, **kwargs)
             tests = kwargs['response']
             if HTTP_FORBIDDEN_OR_LOGIN in tests:
-                self.assertForbiddenOrLogin(response, self.get_url(kwargs['url'], kwargs['key']))
+                self.assertForbiddenOrLogin(
+                        response, self.get_url(kwargs['url'], kwargs['key']))
             if HTTP_REDIRECTS in tests:
                 url = tests[HTTP_REDIRECTS]
                 if isinstance(url, tuple):

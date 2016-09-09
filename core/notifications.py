@@ -10,15 +10,17 @@ class Notification:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
 
-    def get_recipient_str(self):
-        recipient = self.get_recipient()
-        return '{} <{}>'.format(recipient, recipient.user.email)
+    @staticmethod
+    def format_recipient(gestalt):
+        return '{} <{}>'.format(gestalt, gestalt.user.email)
 
-    def get_recipient_strs(self):
-        if hasattr(self, 'get_recipients'):
-            recipients = self.get_recipients()
-            return ['{} <{}>'.format(r, r.user.email) for r in recipients]
-        return [self.get_recipient_str()]
+    def get_formatted_recipients(self):
+        recipients = self.get_recipients()
+        if type(recipients) == dict:
+            return [(self.format_recipient(r), with_name)
+                    for r, with_name in recipients.items()]
+        else:
+            return [(self.format_recipient(r), True) for r in recipients]
 
     def get_sender(self):
         return None
@@ -31,18 +33,18 @@ class Notification:
 
     def get_template_name(self):
         app_label = apps.get_containing_app_config(type(self).__module__).label
-        return 'notifications/{}/{}.txt'.format(
+        return '{}/{}.txt'.format(
                 app_label, type(self).__name__.lower())
 
     def send(self):
-        for recipient_str in self.get_recipient_strs():
+        for recipient, with_name in self.get_formatted_recipients():
             subject = self.get_subject()
             site = sites_models.Site.objects.get_current()
             context = self.kwargs.copy()
             context.update({'site': site})
             body = loader.render_to_string(self.get_template_name(), context)
             sender = self.get_sender()
-            name = '{} via '.format(sender) if sender else ''
+            name = '{} via '.format(sender) if sender and with_name else ''
             from_email = '{name}{site} <{email}>'.format(
                     name=name,
                     site=site.name,
@@ -50,5 +52,5 @@ class Notification:
             date = email_utils.formatdate(localtime=True)
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
-                    to=[recipient_str], headers={'Date': date})
+                    to=[recipient], headers={'Date': date})
             message.send()

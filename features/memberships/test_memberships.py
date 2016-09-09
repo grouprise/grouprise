@@ -1,5 +1,5 @@
 from . import models
-from utils import tests
+from core import tests
 
 
 class JoinAllowed:
@@ -38,6 +38,15 @@ class MemberCreateAllowedWithEmail:
         self.assertExists(
                 models.Membership,
                 group=self.group, member=self.other_gestalt)
+
+
+class MemberCreateSendsNotification:
+    def test_member_create(self):
+        self.client.post(
+                self.get_url('member-create', self.group.pk),
+                {'member_email': self.other_gestalt.user.email})
+        self.assertNotificationSent()
+        self.assertNotificationRecipient(self.other_gestalt)
 
 
 class MemberCreateForbidden:
