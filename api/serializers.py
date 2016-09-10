@@ -6,12 +6,18 @@ class Image(serializers.ModelSerializer):
     title = serializers.CharField(source='file.name', read_only=True)
     path = serializers.CharField(source='file.url', read_only=True)
 
+    def _get_gestalt(self):
+        try:
+            return self.context['request'].user.gestalt
+        except AttributeError:
+            return None
+
     def create(self, validated_data):
-        validated_data.update({"creator": self.context['request'].user.gestalt})
+        validated_data.update({"creator": self._get_gestalt()})
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data.update({"creator": self.context['request'].user.gestalt})
+        validated_data.update({"creator": self._get_gestalt()})
         return super().update(instance, validated_data)
 
     class Meta:
