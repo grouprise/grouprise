@@ -11,40 +11,42 @@
 
             {% block header %}{% endblock %}
 
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="content-wrap">
-                        {% block heading %}
-                            <header class="content-header">
-                                {% block heading_title %}
-                                    <h1 class="content-classification">{{ title|default:site.name }}</h1>
-                                {% endblock %}
+            {% block content_row %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="content-wrap">
+                            {% block heading %}
+                                <header class="content-header">
+                                    {% block heading_title %}
+                                        <h1 class="content-classification">{{ title|default:site.name }}</h1>
+                                    {% endblock %}
 
-                                <div class="btn-toolbar">
-                                    {% block heading_toolbar %}{% endblock %}
-                                </div>
-                            </header>
-                        {% endblock %}
+                                    <div class="btn-toolbar">
+                                        {% block heading_toolbar %}{% endblock %}
+                                    </div>
+                                </header>
+                            {% endblock %}
 
-                        {% block content %}{% endblock %}
+                            {% block content %}{% endblock %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <aside class="sidebar">
+                            <div class="content-spacer decoration-striped"></div>
+
+                            {% block sidebar %}
+                                {% for block in sidebar %}
+                                    {% if block == 'calendar' %}
+                                        {% include 'events/_sidebar.html' %}
+                                    {% elif block == 'groups' %}
+                                        {% include 'groups/_sidebar_list.html' %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endblock %}
+                        </aside>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <aside class="sidebar">
-                        <div class="content-spacer decoration-striped"></div>
-
-                        {% block sidebar %}
-                            {% for block in sidebar %}
-                                {% if block == 'calendar' %}
-                                    {% include 'events/_sidebar.html' %}
-                                {% elif block == 'groups' %}
-                                    {% include 'groups/_sidebar_list.html' %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endblock %}
-                    </aside>
-                </div>
-            </div>
+            {% endblock %}
 
             {% include 'stadt/_footer.html' %}
         </div>
