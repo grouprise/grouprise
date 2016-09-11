@@ -2,7 +2,9 @@
 
 {% kwacro preview %}
     <div class="profile-short">
-        {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
+        {%  if not hide_avatar|default:False %}
+            {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
+        {% endif %}
         <div class="profile-data">
             <h3 class="profile-name">
                 {{ gestalt }}
@@ -12,7 +14,9 @@
             </div>
         </div>
     </div>
-    <div class="profile-about" data-component="user-content">{{ gestalt.about }}</div>
+    {% if not hide_about|default:False %}
+        <div class="profile-about" data-component="user-content">{{ gestalt.about }}</div>
+    {% endif %}
 {% endkwacro %}
 
 {% if link %}
