@@ -77,7 +77,14 @@ module.exports = function (grunt) {
             },
             images: {
                 files: [
-                    { cwd: "res/img", src: "**", dest: "stadt/static/img", expand: true }
+                    { cwd: "res/img", src: "**/*.!(svg)", dest: "stadt/static/img", expand: true }
+                ]
+            }
+        },
+        svgmin: {
+            dist: {
+                files: [
+                    { cwd: "res/img", src: "**/*.svg", dest: "stadt/static/img", expand: true }
                 ]
             }
         },
@@ -95,12 +102,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-fontdump");
     grunt.loadNpmTasks("grunt-postcss");
+    grunt.loadNpmTasks("grunt-svgmin");
     grunt.loadNpmTasks("grunt-exec");
 
     // Default task.
     grunt.registerTask("css", ["less", "postcss"]);
     grunt.registerTask("js", ["exec:webpack_dist"]);
     grunt.registerTask("fonts", ["fontdump", "copy:fonts"]);
-    grunt.registerTask("images", ["copy:images"]);
+    grunt.registerTask("images", ["copy:images", "svgmin"]);
     grunt.registerTask("default", ["fonts", "images", "css", "js"]);
 };
