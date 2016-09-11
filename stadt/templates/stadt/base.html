@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!doctype html>
-<html lang="{{ request.LANGUAGE_CODE|default:"de" }}">
+<html lang="{{ request.LANGUAGE_CODE|default:"de" }}" class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,6 +18,7 @@
         <link rel="icon" href="{% static "stadt/img/logos/logo_192.png" %}" sizes="192x192" type="image/png">
 
         <script>
+            document.documentElement.setAttribute("class", "js");
             window.gestalt = {
                 id: {{ user.gestalt.pk|default:"null" }}
             }
