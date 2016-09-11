@@ -35,6 +35,7 @@ class Login(utils_views.ActionMixin, views.LoginView):
     ignore_base_templates = True
     parent = 'gestalt-index'
     permission = 'account.login'
+    fallback_template_name = 'account/login.html'
 
     def get_success_url(self):
         return views.LoginView.get_success_url(self)

@@ -17,22 +17,27 @@ class Email(util_forms.FormMixin, allauth_forms.AddEmailForm):
 
 class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
     layout = (
-            layout.HTML('<p>Noch kein Benutzerkonto? '
-                '<a href="{{ signup_url }}">Leg Dir eins an.</a></p>'),
-            'login', 
-            'password', 
-            'remember', 
+        layout.Div(
+            'login',
+            'password',
+            'remember',
             util_forms.Submit('Anmelden'),
-            layout.HTML('<p style="margin-top:13px;">'
-                "<a href=\"{% url 'account_reset_password' %}\">Kennwort vergessen</a> | "
-                '<a href="{{ signup_url }}">Registrieren</a></p>')
-            )
+        ),
+        layout.Div(
+            layout.HTML(
+                '<a class="btn btn-link" href="{{ signup_url }}">Konto anlegen</a>'
+                '<a class="btn btn-link" href="{% url \'account_reset_password\' %}">Passwort vergessen</a>'
+            ),
+            css_class="account-actions"
+        )
+    )
     password = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
     remember = forms.BooleanField(label='Anmeldung merken', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['login'] = forms.CharField(label='E-Mail-Adresse oder Pseudonym')
+        self.helper.form_class += " form-login form-modern"
 
 
 class PasswordChange(util_forms.FormMixin, allauth_forms.ChangePasswordForm):

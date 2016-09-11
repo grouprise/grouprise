@@ -1,0 +1,14 @@
+{% extends 'stadt/stadt.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content_row %}
+    {% block form_header %}{% endblock %}
+    {% block form %}
+        {% if form.instance.id %}
+            <input type="hidden" name="content_id" value="{{ form.instance.id }}" disabled>
+        {% endif %}
+        {% crispy form %}
+    {% endblock %}
+    {% block form_footer %}{% endblock %}
+{% endblock %}

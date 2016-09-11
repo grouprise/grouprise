@@ -16,3 +16,159 @@ label {
     font-weight: 500;
     user-select: none;
 }
+
+.form-login {
+    width: 400px;
+    margin: 0 auto;
+    background-color: #f2f2f2;
+    margin-top: 2rem;
+    padding: 4rem 2rem 2rem;
+    border-radius: 2px;
+    position: relative;
+
+    &::after {
+        content: " ";
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: -3rem;
+        height: 6rem;
+        width: 6rem;
+        transform: translateX(-50%);
+        background: url("../img/logos/logo_large.svg");
+        background-size: contain;
+        border-radius: 2px;
+    }
+
+    #div_id_password + div {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+    }
+
+    .btn-primary {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    h3:first-child {
+        margin-top: 0;
+    }
+
+    .account-actions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-size: @font-size-small;
+
+        .btn {
+            padding: 0;
+            margin: .5rem 0;
+        }
+    }
+}
+
+.form-modern {
+    .form-group,
+    .form-control {
+        font-size: 1rem;
+        background-color: white;
+        border-radius: 2px;
+        transition: border-color .2s;
+        border: 2px solid @color-text-ultralight;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+        position: relative;
+        padding: 0 1rem;
+
+        .no-js & {
+            border: none;
+            padding: 0;
+        }
+
+        &.input-focused {
+            border-color: @brand-primary;
+        }
+
+        &.has-error {
+            margin-bottom: 3rem;
+            border-color: @brand-danger;
+            border-radius: 2px 2px 0 2px;
+        }
+    }
+
+    .help-block {
+        position: absolute;
+        font-size: 0.9rem;
+        z-index: 5;
+        background-color: @brand-danger;
+        color: white;
+        top: 100%;
+        padding: .3em .5em;
+        right: 0;
+        margin: 0;
+        border-radius: 0 0 2px 2px;
+
+        .js & {
+            margin: 0 -2px 0 0;
+        }
+
+        strong {
+            font-weight: normal;
+        }
+    }
+
+    .form-control {
+        padding: 1.09375rem 1rem;
+        display: block;
+        width: 100%;
+
+        .no-js .has-error & {
+            border-color: @brand-danger;
+            border-radius: 2px 2px 0 2px;
+        }
+
+        .js & {
+            padding: 1.5625rem 0 .625rem;
+            border: none;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: @brand-primary;
+        }
+    }
+
+    .control-label {
+        color: @color-text-light;
+        transition: top .2s, transform .2s, font-size .2s, color .2s;
+        display: block;
+        transform-origin: 0 50%;
+
+        .no-js & {
+            margin-bottom: .3125rem;
+        }
+
+        .js & {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+}
+
+
+.js .form-modern .input-empty.input-type-textarea .control-label {
+    top: .825rem;
+    transform: none;
+}
+
+.js .form-modern .input-filled .control-label,
+.js .form-modern .input-focused .control-label {
+    top: .225rem !important;
+    transform: scale(0.675) !important;
+    color: @brand-primary;
+}
