@@ -21,7 +21,7 @@
                     <label class="btn btn-default" for="intro-content-new">
                         Neuer Beitrag <span class="caret"></span>
                     </label>
-                    <ul class="dropdown">
+                    <ul class="dropdown" data-dropdown>
                         <li><a href="{% url 'article-create' %}?group={{ group.slug }}&pinned=1">Artikel</a></li>
                         <li><a href="{% url 'event-create' %}?group={{ group.slug }}&pinned=1">Ereignis</a></li>
                         <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1">Galerie</a></li>
@@ -49,7 +49,7 @@
                     <label class="btn btn-default" for="content-new">
                         Neuer Beitrag <span class="caret"></span>
                     </label>
-                    <ul class="dropdown">
+                    <ul class="dropdown" data-dropdown>
                         <li><a href="{% url 'article-create' %}?group={{ group.slug }}">Artikel</a></li>
                         <li><a href="{% url 'event-create' %}?group={{ group.slug }}">Ereignis</a></li>
                         <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}">Galerie</a></li>
