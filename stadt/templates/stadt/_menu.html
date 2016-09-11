@@ -14,7 +14,11 @@
                         <span class="tcon-menu__lines" aria-hidden="true"></span>
                     </span>
                     <span class="dock-trigger-label">
-                        {{ user.gestalt }} <i class="caret"></i>
+                        {% if group %}
+                            {{ group }} /
+                        {% endif %}
+                        {{ user.gestalt|default:"Du" }}
+                        <i class="caret"></i>
                     </span>
                 </label>
                 <div class="dock dock-light" data-dropdown>
