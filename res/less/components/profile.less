@@ -98,12 +98,13 @@
         }
 
         &:before {
-            background: url("../img/stripe.png") repeat;
+            .stripes(@color-text-default, transparent, "../img/stripe.png");
             top: 0;
         }
 
         &:after {
-            background: url("../img/stripe_white.png") repeat -2px 0;
+            .stripes(white, transparent, "../img/stripe_white.png");
+            background-position: -2px 0;
             top: 10px;
             clear: both;
         }

@@ -1,5 +1,13 @@
+.stripes(@color, @bg, @fallback, @spacing: 12%) {
+    @step-1: (0% + @spacing);
+    @step-2: (50% + @spacing);
+    background: url(@fallback) repeat @bg;
+    background-image: linear-gradient(-45deg, @color @step-1, transparent @step-1, transparent 50%, @color 50%, @color @step-2, transparent @step-2, transparent);
+    background-size: 4px 4px;
+}
+
 .decoration-striped {
-    background: url("../img/stripe.png") repeat white;
+    .stripes(@color-text-default, white, "../img/stripe.png");
 }
 
 .decoration-icon {
