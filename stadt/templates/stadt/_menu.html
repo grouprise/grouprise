@@ -3,63 +3,96 @@
     <div class="container">
         <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
         <ul class="nav-menu nav-menu-self">
-
             {# about link #}
-            <li>
+            <li class="hidden-xs">
                 <a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a>
             </li>
-
-            {# groups menu #}
             <li>
-                <input class="dropdown-state" id="menu-groups" type="checkbox"/>
-                <label for="menu-groups" class="nav-state-toggle">
-                    {{ group|default:'Gruppen' }} <span class="caret"></span>
+                <input class="dropdown-state" id="menu-user" type="checkbox" />
+                <label for="menu-user" class="dock-trigger tcon-wrap nav-state-toggle" aria-label="Zeige Menü">
+                    <span class="tcon tcon-menu--xbutterfly">
+                        <span class="tcon-menu__lines" aria-hidden="true"></span>
+                    </span>
+                    <span class="dock-trigger-label">
+                        {{ user.gestalt }} <i class="caret"></i>
+                    </span>
                 </label>
-                <ul class="nav-menu dropdown">
-                    {% if group %}
-                        <li class="dropdown-header">{{ group }}</li>
-                        {% if request.path != group.get_absolute_url %}
-                            <li>
-                                <a href="{{ group.get_absolute_url }}">
-                                    <i class="sg sg-prev"></i> Zur Gruppenseite
+                <div class="dock dock-light" data-dropdown>
+                    <div class="dock-inner">
+                        <span class="dock-decoration"></span>
+                        <header class="dock-header">
+                            {% if user.is_authenticated %}
+                                {% include 'entities/_gestalt_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
+                                <a href="{% url 'account_logout' %}?next={{ request.path }}" class="dock-session">
+                                    <i class="sg sg-logout"></i>
+                                    <span>Abmelden</span>
                                 </a>
-                            </li>
-                        {% endif %}
-                        {% include_features '_group_menu_actions.html' %}
-                        <li>
-                            <a href="{% url 'message-create' group.pk %}">
-                                <i class="sg sg-message"></i> Nachricht schreiben
-                            </a>
-                        </li>
-                    {% endif %}
+                            {% else %}
+                                <h2>Willkommen!</h2>
+                                <a href="{% url 'account_login' %}?next={{ request.path }}" class="dock-session">
+                                    <i class="sg sg-login"></i>
+                                    <span>Anmelden</span>
+                                </a>
+                            {% endif %}
+                        </header>
+                        <div class="dock-content">
+                            <div class="dock-content-inner">
+                                <ol class="tabbls">
+                                    {% if group %}
+                                        <li data-order="high">
+                                            <div class="tabbl">
+                                                <header class="tabbl-header">
+                                                    <span class="tabbl-title">
+                                                        {{ group }}
+                                                    </span>
+                                                </header>
+                                                <div class="tabbl-content">
+                                                    <a href="{{ group.get_absolute_url }}">
+                                                        Zur Gruppenseite
+                                                    </a>
 
-                    {% include_features '_group_menu_groups.html' %}
-                </ul>
+                                                    {% include_features '_group_menu_actions.html' %}
+
+                                                    <a href="{% url 'message-create' group.pk %}">
+                                                        Nachricht schreiben
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                    <li data-order="low">
+                                        <div class="tabbl">
+                                            <header class="tabbl-header">
+                                                <span class="tabbl-title">Meine Gruppen</span>
+                                            </header>
+                                            <div class="tabbl-content">
+                                                {% include_features '_group_menu_groups.html' %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% if user.is_authenticated %}
+                                        <li data-order="high">
+                                            <div class="tabbl">
+                                                <header class="tabbl-header">
+                                                    <span class="tabbl-title">Profil</span>
+                                                </header>
+                                                <div class="tabbl-content">
+                                                    <a href="{{ user.gestalt|url_for:user }}">Meine Seite</a>
+                                                    <a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a>
+                                                    <a href="{% url 'account_change_password' %}">Kennwort ändern</a>
+                                                    <a href="{% url 'account_email' %}">E-Mail-Adressen</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
-
-            {# user menu #}
-            {% if user.is_authenticated %}
-                <li>
-                    <input class="dropdown-state" id="menu-user" type="checkbox"/>
-                    <label for="menu-user" class="nav-state-toggle">
-                        {{ user.gestalt }} <span class="caret"></span>
-                    </label>
-                    <ul class="nav-menu dropdown">
-                        <li><a href="{{ user.gestalt|url_for:user }}">Meine Seite</a></li>
-                        <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a></li>
-                        <li role="separator" class="dropdown-separator"></li>
-                        <li><a href="{% url 'account_change_password' %}">Kennwort ändern</a></li>
-                        <li><a href="{% url 'account_email' %}">E-Mail-Adressen</a></li>
-                        <li role="separator" class="dropdown-separator"></li>
-                        <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
-                    </ul>
-                </li>
-            {% else %}
-                <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
-            {% endif %}
-
         </ul>
-        <div class="clearfix"></div>
+        <div class="clearfix hidden-xs hidden-sm"></div>
         <ul class="nav-menu nav-menu-primary">
             <li>
                 <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' %}nav-menu-item-current{% endif %}">Gruppen</a>

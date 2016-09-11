@@ -1,13 +1,6 @@
-<li class="dropdown-header">
-    {% if user.gestalt.memberships.exists %}Meine{% endif %} Gruppen
-</li>
 
 {% for membership in user.gestalt.memberships.all %}
-    <li>
-        <a href="{{ membership.group.get_absolute_url }}">{{ membership.group }}</a>
-    </li>
+    <a href="{{ membership.group.get_absolute_url }}">{{ membership.group }}</a>
 {% empty %}
-    <li>
-        <a href="{% url 'group-index' %}">Gruppe finden</a>
-    </li>
+    <a href="{% url 'group-index' %}">Gruppe finden</a>
 {% endfor %}

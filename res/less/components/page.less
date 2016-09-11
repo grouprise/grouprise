@@ -2,6 +2,10 @@
     font-size: 0.85em;
     color: @color-text-extralight;
     text-align: right;
+
+    .on-handhelds({
+        display: none;
+    });
 }
 
 .page-footer {
@@ -46,4 +50,18 @@
     justify-content: space-between;
     align-items: center;
     height: 5.25rem;
+
+    .on-handhelds({
+        padding: 0;
+        height: auto;
+        display: block;
+        margin: 0 -15px;
+
+        .breadcrumb {
+            border-radius: 0;
+            display: block;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    });
 }

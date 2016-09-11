@@ -1,4 +1,4 @@
-import { component } from "./util/dom";
+import { $, component } from "./util/dom";
 import date from "./transforms/date";
 import editor from "./transforms/editor";
 import time from "./transforms/time";
@@ -6,6 +6,9 @@ import user_content from "./transforms/user-content";
 import group_header from "./transforms/group-header";
 import gallery from "./transforms/gallery";
 
+import tcon from "./util/transformicons";
+
+tcon.add($(".tcon-wrap"));
 
 function init(search_in = document) {
     // initialize components on load
