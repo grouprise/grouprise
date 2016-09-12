@@ -97,17 +97,20 @@
 }
 
 .groups {
-    margin: 0 -1rem;
+    margin: 0;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
+
+    column-count: 2;
+    column-gap: 2rem;
+
+    .on-handhelds({
+        column-count: unset;
+    });
 
     > li {
-        flex-basis: 50%;
-        max-width: 50%;
         display: block;
-        padding: 0 1rem;
-        margin: 0 0 2rem;
+        padding: 0 0 2rem;
+        page-break-inside: avoid;
     }
 }
 
@@ -145,9 +148,9 @@
 
     .group-avatar {
         position: absolute;
-        top: 100%;
+        // absolute group-preview-header-size - (avatar size + border times two) / in half
+        top: (120px - (64px + 4px * 2) / 2);
         left: 2rem;
-        transform: translateY(-50%);
         border: 4px solid white;
         background-color: white;
         z-index: 10;
