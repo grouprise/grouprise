@@ -11,7 +11,11 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
     def get_queryset(self):
         user = self.request.user
         content = content_models.Content.objects.permitted(user)
-        return content_models.Image.objects.filter(Q(content__in=content) | Q(creator=user.gestalt)).order_by('-weight')
+        try:
+            gestalt = user.gestalt
+        except AttributeError:
+            gestalt = None
+        return content_models.Image.objects.filter(Q(content__in=content) | Q(creator=gestalt)).order_by('-weight')
 
     def has_permission(self):
         if self.action == 'create':
