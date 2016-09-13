@@ -37,7 +37,7 @@
             </div>
 
             {% for content in intro_content %}
-                {% include 'content/_content_preview.html' %}
+                {% include 'content/_content_preview.html' with exclude_header=True %}
             {% endfor %}
         </div>
     {% endif %}

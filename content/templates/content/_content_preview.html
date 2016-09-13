@@ -1,10 +1,12 @@
 {% load content thumbnail %}
 
 <article class="content-preview">
+    {% if not exclude_header %}
     <header class="content-preview-header">
         {% include 'content/_content_info.html' %}
         {% include "macros/content_type.html" with content=content %}
     </header>
+    {% endif %}
 
     <a href="{{ content.get_absolute_url }}" class="content-preview-body">
         <div class="content-preview-body-content">
