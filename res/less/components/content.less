@@ -110,8 +110,7 @@
     > li {
         display: block;
         page-break-inside: avoid;
-        border-top: 2px solid #f2f2f2;
-        padding: 1rem 0 3rem;
+        padding: 0 0 3rem;
     }
 
     &:after {
@@ -131,8 +130,6 @@
 }
 
 .content-preview {
-    padding: 0;
-
     a {
         text-decoration: none;
     }
@@ -153,7 +150,8 @@
 .content-meta {
     display: flex;
     align-items: flex-start;
-    margin: 0 0 1rem;
+    flex: 1;
+    margin: 0;
 }
 
 .content-meta-info {
@@ -175,12 +173,26 @@
     font-size: @font-size-small;
 }
 
+.content-teaser,
+.content-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .content-type {
+        order: 2;
+    }
+}
+
+.content-preview-header {
+    margin-bottom: 1rem;
+}
+
 .content-preview-body {
     padding: 1rem;
-    border: 2px solid #f2f2f2;
-    display: block;
+    background-color: @component-bg-default;
     border-radius: 2px;
-    background-color: white;
+    display: block;
 
     .content-title {
         margin-top: 0;
