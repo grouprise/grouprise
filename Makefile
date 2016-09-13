@@ -14,8 +14,13 @@ HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
 HELPER_PATH_ENV = PATH=$(HELPER_BIN_PATH):$$PATH
 NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
 
+ASSET_VERSION_PATH = $(shell pwd)/stadt/ASSET_VERSION
+
 
 .PHONY: default clean deploy deploy-git reload static update-virtualenv test
+
+asset_version:
+	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
 
 
 default: $(GRUNT_BIN)
@@ -42,6 +47,7 @@ update-virtualenv:
 
 deploy:
 	# TODO: Probleme beheben und dann Abbruch bei Testfehlschlag aktivieren
+	$(MAKE) asset_version
 	$(MAKE) test || true
 	$(MAKE) default
 	$(MAKE) update-virtualenv

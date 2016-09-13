@@ -8,14 +8,15 @@
         <title>{% block title %}{% endblock %}</title>
 
         <!-- css -->
-        <link type="text/css" rel="stylesheet" href="{% static "stadt/css/app.css" %}">
+        <link type="text/css" rel="stylesheet" href="{% static "stadt/css/app.css" %}?v={{ asset_version }}">
 
         <!-- favicon -->
-        <link rel="icon" href="{% static "stadt/img/logos/logo_16.png" %}" sizes="16x16" type="image/png">
-        <link rel="icon" href="{% static "stadt/img/logos/logo_32.png" %}" sizes="32x32" type="image/png">
-        <link rel="icon" href="{% static "stadt/img/logos/logo_48.png" %}" sizes="48x48" type="image/png">
-        <link rel="icon" href="{% static "stadt/img/logos/logo_62.png" %}" sizes="62x62" type="image/png">
-        <link rel="icon" href="{% static "stadt/img/logos/logo_192.png" %}" sizes="192x192" type="image/png">
+        <link rel="icon" href="{% static "stadt/img/logos/logo_16.png" %}?v={{ asset_version }}" sizes="16x16" type="image/png">
+        <link rel="icon" href="{% static "stadt/img/logos/logo_32.png" %}?v={{ asset_version }}" sizes="32x32" type="image/png">
+        <link rel="icon" href="{% static "stadt/img/logos/logo_48.png" %}?v={{ asset_version }}" sizes="48x48" type="image/png">
+        <link rel="icon" href="{% static "stadt/img/logos/logo_62.png" %}?v={{ asset_version }}" sizes="62x62" type="image/png">
+        <link rel="icon" href="{% static "stadt/img/logos/logo_144.png" %}?v={{ asset_version }}" sizes="144x144" type="image/png">
+        <link rel="icon" href="{% static "stadt/img/logos/logo_192.png" %}?v={{ asset_version }}" sizes="192x192" type="image/png">
 
         <script>
             document.documentElement.setAttribute("class", "js");
@@ -34,7 +35,7 @@
             </div>
         </div>
         {% block body %}{% endblock %}
-        <script src="{% static 'stadt/js/app.js' %}" async defer></script>
         <script src="{% static 'stadt/js/proton-1.0.0.min.js' %}" async defer></script>
+        <script src="{% static 'stadt/js/app.js' %}?v={{ asset_version }}" async defer></script>
     </body>
 </html>

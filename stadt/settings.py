@@ -99,6 +99,7 @@ TEMPLATES = [
                 'entities.context_processors.groups',
                 'entities.context_processors.statistics',
                 'stadt.context_processors.site',
+                'stadt.context_processors.assets',
             ],
             'debug': True,
         },
@@ -267,3 +268,8 @@ REST_FRAMEWORK = {
 }
 
 INTERNAL_IPS = ("127.0.0.1", )
+
+try:
+    ASSET_VERSION = open(os.path.join(BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()
+except IOError:
+    ASSET_VERSION = "trunk"
