@@ -125,7 +125,7 @@ class Group(utils_views.List):
             return pinned_content
 
     def get_conversations(self):
-        return self.get_group().get_conversations(self.request.user)[:3]
+        return self.get_group().get_conversations(self.request.user)
 
     def get_queryset(self):
         return self.get_group_content().filter(groupcontent__pinned=False).exclude(article__isnull=False, public=False)
