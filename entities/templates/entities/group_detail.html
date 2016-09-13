@@ -11,8 +11,14 @@
     {% has_perm 'entities.create_group_content' user group as can_create_content %}
     {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
-    <div class="content-block">
-        {% if intro_content %}
+    {% if conversations %}
+        <div class="content-block">
+            {% include 'content/_thread_shortlist.html' %}
+        </div>
+    {% endif %}
+
+    {% if intro_content %}
+        <div class="content-block">
             <div class="content-header">
                 <h2 class="content-classification decoration-icon sg-pin">Intro</h2>
                 {% if can_create_content %}
@@ -33,11 +39,7 @@
             {% for content in intro_content %}
                 {% include 'content/_content_preview.html' %}
             {% endfor %}
-        {% endif %}
-    </div>
-
-    {% if conversations %}
-        {% include 'content/_thread_shortlist.html' %}
+        </div>
     {% endif %}
 
     <div class="content-header">
