@@ -6,7 +6,11 @@ def register(key, fragment):
     fragments[key] = fragment
 
 
-def insert(key, group_name, predicate, after=[], before=[]):
+def always():
+    return True
+
+
+def insert(key, group_name, predicate=always, after=[], before=[]):
     group = groups.get(group_name, [])
     min_index = 0
     for item in after:
@@ -23,7 +27,3 @@ def insert(key, group_name, predicate, after=[], before=[]):
     if min_index <= max_index:
         group.insert(max_index, key)
         groups[group_name] = group
-
-
-def always():
-    return True

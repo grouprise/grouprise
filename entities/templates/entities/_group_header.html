@@ -1,4 +1,4 @@
-{% load rules thumbnail utils crispy_forms_tags  %}
+{% load fragments rules thumbnail utils crispy_forms_tags  %}
 
 {% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'groups.change_group' user group as can_edit %}
@@ -77,7 +77,7 @@
                 <dd>
                     {{ group.date_founded|date:'Y' }} gegründet
                 </dd>
-                {% include_features '_group_meta.html' %}
+                {% include_fragments 'group-meta' %}
             </dl>
         </div>
         <div class="group-info-slug">

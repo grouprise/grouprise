@@ -1,0 +1,12 @@
+{% load fragments subscriptions %}
+
+<dt>
+    <i class="sg sg-subscription"></i>
+    <span class="sr-only">Anzahl Abonnentinnen</span>
+</dt>
+<dd>
+    {% with num_subs=group|num_subscriptions %}
+        {{ num_subs }} Abonnentin{{ num_subs|pluralize:'nen' }}
+    {% endwith %}
+    {% include_fragments 'group-meta-subscriptions' %}
+</dd>
