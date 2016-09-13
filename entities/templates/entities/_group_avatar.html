@@ -3,7 +3,7 @@
 {% kwacro avatar %}
     {% if group.avatar %}
         <div title="{{ group.name }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }}">
-            {% thumbnail group.avatar '64x64' format='PNG' crop="center" as avatar %}
+            {% thumbnail group.avatar '64x64' format='PNG' padding=True as avatar %}
                 <img src="{{ avatar.url }}" alt="{{ group.name }}">
             {% endthumbnail %}
         </div>
