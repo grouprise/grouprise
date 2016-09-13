@@ -11,8 +11,6 @@ import group_header from "./transforms/group-header";
 import gallery from "./transforms/gallery";
 import input from "./transforms/input";
 
-import fireworks from "./fireworks";
-
 tcon.add($(".tcon-wrap"));
 $$("input, textarea").forEach((el) => input(el, { target: closest(el, ".form-group") }));
 
@@ -29,6 +27,7 @@ function init(search_in = document) {
 
 init();
 
+import fireworks from "./fireworks";
 const today = new Date();
 if(today.getFullYear() === 2016 && today.getMonth() === 8 && today.getDate() === 13 && location.pathname === "/") {
     fireworks();
