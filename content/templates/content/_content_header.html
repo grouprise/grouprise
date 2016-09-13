@@ -21,10 +21,6 @@
 </div>
 
 <header class="content-teaser">
-    <span class="content-type">
-        <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
-        {{ content.get_display_type_name }}
-    </span>
-
+    {% include "macros/content_type.html" with content=content %}
     {% include 'content/_content_info.html' %}
 </header>
