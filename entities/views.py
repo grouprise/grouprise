@@ -121,7 +121,7 @@ class Group(utils_views.List):
         return None
 
     def get_intro_content(self):
-        pinned_content = self.get_group_content().filter(groupcontent__pinned=True)
+        pinned_content = self.get_group_content().filter(groupcontent__pinned=True).order_by('date_created')
         try:
             return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
         except AttributeError:
