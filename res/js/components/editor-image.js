@@ -26,7 +26,7 @@ function dummy_adapter() {
 
 function create_file_picker(emitter) {
     return file_picker({
-        accept: "image/*;capture=camera",
+        accept: ["image/*", "capture=camera"],
         multiple: true,
         callback: (files) => {
             upload(files)
