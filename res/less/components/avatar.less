@@ -40,10 +40,15 @@
 .avatar-initials {
     background-color: @brand-primary;
     text-transform: uppercase;
+
+    a:has(&) {
+        text-decoration: none;
+    }
 }
 
 .avatar-wrap {
     text-decoration: none;
+    text-decoration-skip: objects;
 }
 
 .avatar-more {
@@ -96,6 +101,7 @@
 .avatar-edit-inline {
     position: relative;
     display: inline-block;
+    text-decoration: none;
     z-index: 10;
 
     &:after {
