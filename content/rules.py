@@ -42,8 +42,3 @@ rules.add_perm('content.create_content', rules.is_authenticated)
 rules.add_perm('content.change_content', rules.is_authenticated & is_author)
 
 rules.add_perm('content.create_comment', rules.is_authenticated & is_permitted)
-
-rules.add_perm('content.create_image', rules.is_authenticated & is_author)
-rules.add_perm('content.update_image', rules.is_authenticated & is_author)
-rules.add_perm('content.view_image', is_permitted)
-rules.add_perm('content.view_image_list', is_permitted)

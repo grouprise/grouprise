@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'features.galleries',
     'features.gestalten',
     'features.groups',
+    'features.images',
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
     'features.subscriptions',
