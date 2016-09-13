@@ -2,15 +2,11 @@
 
 <article class="content-preview">
     <header class="content-preview-header">
-        {% include "macros/content_type.html" with content=content %}
         {% include 'content/_content_info.html' %}
+        {% include "macros/content_type.html" with content=content %}
     </header>
 
     <a href="{{ content.get_absolute_url }}" class="content-preview-body">
-        <h3 class="content-title">
-            {{ content.title }}
-        </h3>
-
         <div class="content-preview-body-content">
             {% if content.event %}
                 {% include "macros/calendar_sheet.html" with time=content.event.date %}
@@ -23,11 +19,15 @@
             {% endif %}
 
             <div class="content-preview-text" data-component="user-content">
+                <h3 class="content-title">
+                    {{ content.title }}
+                </h3>
+
                 {% if content.event %}
                     {% include "macros/event_meta.html" with event=content.event %}
                 {% endif %}
 
-                {% markdown content.text truncate=50 heading_baselevel=4 disable_tags="a" %}
+                {% markdown content.text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
             </div>
         </div>
     </a>

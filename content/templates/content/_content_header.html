@@ -21,18 +21,6 @@
 </div>
 
 <header class="content-teaser">
-    <span class="content-type">
-        <i class="sg sg-content-type-{{ content.get_type_name | default:"article" | lower }}"></i>
-        {{ content.get_display_type_name }}
-    </span>
-
     {% include 'content/_content_info.html' %}
-
-
-    <h1 class="content-title">
-        {% if content.event %}
-            {{ content.event.time|date:'l, j.n.Y:'}}
-        {% endif %}
-        {{ content.title }}
-    </h1>
+    {% include "macros/content_type.html" with content=content %}
 </header>
