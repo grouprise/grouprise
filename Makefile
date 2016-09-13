@@ -7,7 +7,7 @@ DJANGO_SETTINGS ?= stadt.prod_settings
 VIRTUALENV_BASE ?= /srv/virtualenvs
 BUILD_PATH = $(shell pwd)/build
 SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
-PYTHON_DIRS = content entities stadt
+PYTHON_DIRS = content entities stadt features core utils
 
 # symlink magic for badly packaged dependencies using "node" explicitely
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
