@@ -79,17 +79,27 @@
 }
 
 .content-type {
-    font-weight: 300;
     color: @color-text-extralight;
     font-size: 1.1rem;
-    font-family: @font-family-headline;
     letter-spacing: -0.02em;
     text-transform: uppercase;
-    float: right;
+    display: flex;
+    align-items: center;
 
     .sg {
-        margin-right: .2em;
+        font-size: 1.5rem;
     }
+
+    span {
+        display: inline-block;
+        margin-left: .5em;
+    }
+
+    .on-handhelds({
+        span {
+            display: none;
+        }
+    })
 }
 
 .content-preview-list {

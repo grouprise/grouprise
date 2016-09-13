@@ -2,8 +2,8 @@
 
 <article class="content-preview">
     <header class="content-preview-header">
-        {% include "macros/content_type.html" with content=content %}
         {% include 'content/_content_info.html' %}
+        {% include "macros/content_type.html" with content=content %}
     </header>
 
     <a href="{{ content.get_absolute_url }}" class="content-preview-body">
