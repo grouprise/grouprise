@@ -112,7 +112,6 @@ class Group(utils_views.List):
                     form.helper.layout.pop(i)
                     break
             form.helper.layout.append(utils_forms.Submit('<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
-            form.initial['image_creation_redirect'] = True
             form.initial['pinned'] = True
             form.initial['public'] = True
             form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)

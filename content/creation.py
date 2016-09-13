@@ -36,11 +36,6 @@ class Gallery(BaseContent):
     menu = 'gallery'
     parent = 'gallery-index'
 
-    def get_success_url(self):
-        if self.request.POST.get('image_creation_redirect', False):
-            return urlresolvers.reverse('image-create', args=(self.object.pk,))
-        return super().get_success_url()
-
 
 class BaseMessage(utils_views.ActionMixin, generic.CreateView):
     action = 'Nachricht senden'

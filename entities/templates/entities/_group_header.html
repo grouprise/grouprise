@@ -7,7 +7,7 @@
 
 <div class="group-header" data-component="group-header">
     <div class="group-gallery">
-        {% if group.get_head_gallery and can_view_head_gallery %}
+        {% if group.get_head_gallery and can_view_head_gallery and group.get_head_gallery.images.all %}
             <div class="carousel">
                 <ol class="carousel-slides">
                     {% for image in group.get_head_gallery.images.all %}
