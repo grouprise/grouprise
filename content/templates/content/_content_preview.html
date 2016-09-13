@@ -7,10 +7,6 @@
     </header>
 
     <a href="{{ content.get_absolute_url }}" class="content-preview-body">
-        <h3 class="content-title">
-            {{ content.title }}
-        </h3>
-
         <div class="content-preview-body-content">
             {% if content.event %}
                 {% include "macros/calendar_sheet.html" with time=content.event.date %}
@@ -23,6 +19,10 @@
             {% endif %}
 
             <div class="content-preview-text" data-component="user-content">
+                <h3 class="content-title">
+                    {{ content.title }}
+                </h3>
+
                 {% if content.event %}
                     {% include "macros/event_meta.html" with event=content.event %}
                 {% endif %}
