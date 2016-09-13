@@ -26,9 +26,3 @@ function init(search_in = document) {
 }
 
 init();
-
-import fireworks from "./fireworks";
-const today = new Date();
-if(today.getFullYear() === 2016 && today.getMonth() === 8 && today.getDate() === 13 && location.pathname === "/") {
-    fireworks();
-}
