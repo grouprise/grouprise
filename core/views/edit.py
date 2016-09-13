@@ -13,7 +13,10 @@ class MessageMixin(messages_views.SuccessMessageMixin):
 
 class TemplateResponseMixin(django_base.TemplateResponseMixin):
     def get_template_names(self):
-        return ['stadt/form.html']
+        names = ['stadt/form.html']
+        if hasattr(self, 'template_name'):
+            names.insert(0, self.template_name)
+        return names
 
 
 class FormMixin(MessageMixin, django_edit.FormMixin):
