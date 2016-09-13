@@ -107,7 +107,10 @@ class Group(utils_views.List):
             form.helper.filter(six.string_types).wrap(layout.Field)
             form.helper.filter(layout.Field).update_attributes(
                     **{'data-component': '', 'type': 'hidden'})
-            del form.helper[-1]
+            for i, item in enumerate(form.helper.layout):
+                if type(item) == utils_forms.Submit:
+                    form.helper.layout.pop(i)
+                    break
             form.helper.layout.append(utils_forms.Submit('<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
             form.initial['image_creation_redirect'] = True
             form.initial['pinned'] = True
