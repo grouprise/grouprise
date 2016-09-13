@@ -36,9 +36,14 @@
                 {% endif %}
             </div>
 
-            {% for content in intro_content %}
-                {% include 'content/_content_preview.html' with exclude_header=True %}
-            {% endfor %}
+
+            <ol class="content-preview-list">
+                {% for content in intro_content %}
+                    <li>
+                        {% include 'content/_content_preview.html' with exclude_header=True %}
+                    </li>
+                {% endfor %}
+            </ol>
         </div>
     {% endif %}
 
