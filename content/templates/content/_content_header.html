@@ -27,12 +27,4 @@
     </span>
 
     {% include 'content/_content_info.html' %}
-
-
-    <h1 class="content-title">
-        {% if content.event %}
-            {{ content.event.time|date:'l, j.n.Y:'}}
-        {% endif %}
-        {{ content.title }}
-    </h1>
 </header>
