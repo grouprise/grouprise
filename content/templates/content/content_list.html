@@ -7,16 +7,89 @@
     <header class="content-header">
         <span class="content-classification">Stadtgestalten</span>
     </header>
-    <ul>
-        <li><a href="{% url 'group-index' %}"><i class="sg sg-group"></i> Öffentliche Gruppenseiten</a> <small>eine Website für Deine Gruppe</small></li>
-        <li><i class="sg sg-message"></i> Mailingliste inbegriffen <small>Schreibe Nachrichten an Gruppenmitglieder.</small></li>
-        <li><i class="sg sg-subscription"></i> Newsletter inbegriffen <small>Abonniere Gruppen, die Dir gefallen.</small></li>
-        <li><a href="{% url 'event-index' %}"><i class="sg sg-calendar"></i> Ereignisse in der Übersicht</a> <small>Kalender für Rostock, je Gruppe und auch intern</small></li>
-        <li><a href="{% if user.is_authenticated %}{% url 'gestalt-index' %}{% else %}{% url 'account_signup' %}{% endif %}"><i class="sg sg-gestalt"></i> Hier sind die Aktiven!</a> <small>schon {{ gestalt_count }} engagierte Gestalten</small></li>
-        <li><a href="{{ about_group.get_absolute_url }}"><i class="sg sg-private"></i> Aus Rostock für Rostock</a> <small>Wir verdienen kein Geld mit Deinen Daten!</small></li>
-        <li><a href="#"><i class="sg sg-video"></i> Stadtgestalten-Rundreise</a> <small>im Video einmal durch die Plattform reisen</small></li>
-        <li><a href="{% url 'message-create' about_group.pk %}"><i class="sg sg-improve"></i> Verbessere Stadtgestalten!</a> <small>Wir freuen uns, wenn Du uns Deine Verbesserungsvorschläge schickst.</small></li>
+    <ul class="actions">
+        <li>
+            <label class="action" for="sg-help-group">
+                <span class="action-inner">
+                    <span class="action-icon">
+                        <i class="fa fa-users"></i>
+                    </span>
+                    <span class="action-description">
+                        Deine Gruppe jetzt!
+                    </span>
+                </span>
+            </label>
+        </li>
+        <li>
+            <label class="action" for="sg-help-local">
+                <span class="action-inner">
+                    <span class="action-icon">
+                        <i class="fa fa-anchor"></i>
+                    </span>
+                    <span class="action-description">
+                        Für Rostock
+                    </span>
+                </span>
+            </label>
+        </li>
+        <li>
+            <label class="action" for="sg-help-privacy">
+                <span class="action-inner">
+                    <span class="action-icon">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    <span class="action-description">
+                        Ohne Schabernack
+                    </span>
+                </span>
+            </label>
+        </li>
+        <li>
+            <label class="action" for="sg-help-participate">
+                <span class="action-inner">
+                    <span class="action-icon">
+                        <i class="fa fa-road"></i>
+                    </span>
+                    <span class="action-description">
+                        Du bestimmst!
+                    </span>
+                </span>
+            </label>
+        </li>
     </ul>
+    <div class="content-state-enabled">
+        <input type="radio" name="sg-help" id="sg-help-group" class="content-state">
+        <div class="content-state-target content-info">
+            <p>
+                In 0, nix kannst Du bei Stadtgestalten eine Gruppe anlegen, Beiträge schreiben, Diskussionen führen, Veranstaltungen
+                ankündigen und mit anderen Gruppen in Kontakt treten und deren Aktivitäten im Auge behalten.
+            </p>
+        </div>
+        <input type="radio" name="sg-help" id="sg-help-local" class="content-state">
+        <div class="content-state-target content-info">
+            <p>
+                Mit dem Fokus auf’s Lokale wollen wir ein wenig Licht in’s Dunkle bringen. Hier wohnen und leben wir und hier
+                wollen wir auch Dinge bewegen.
+            </p>
+        </div>
+        <input type="radio" name="sg-help" id="sg-help-privacy" class="content-state">
+        <div class="content-state-target content-info">
+            <p>
+                Stadtgestalten ist ein unkommerzielles Projekt, das von Freiwilligen in ihrer Freizeit entwickelt wird.
+                Deine Daten sind uns so wichtig, dass wir sie nach Möglichkeit gar nicht erst speichern. Und wenn doch,
+                dann kannst Du sicher sein, dass wir damit verantwortungsvoll umgehen.
+            </p>
+            <p>Hier wird nichts verkauft, beworben oder ausgewertet. <strong>Deine Daten gehören Dir!</strong></p>
+        </div>
+        <input type="radio" name="sg-help" id="sg-help-participate" class="content-state">
+        <div class="content-state-target content-info">
+            <p>
+                Stadtgestalten ist keine Einbahnstraße. Wir freuen uns über Deine Ideen, Anregungen und Vorschläge.<br />
+                Ohne unsere Mitstreiter_innen sind wir aufgeschmissen. Darum wollen wir mit Euch weiter an Stadtgestalten arbeiten.
+            </p>
+            <p><a href="{% url 'message-create' about_group.pk %}">Schreib uns</a>!</p>
+        </div>
+    </div>
 
     <header class="content-header">
         <span class="content-classification">Beiträge</span>
