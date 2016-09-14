@@ -81,4 +81,6 @@ tcon.toggle = function (elements) {
     return tcon;
 };
 
-export default tcon;
+export default (el) => {
+    tcon.add(el);
+};
