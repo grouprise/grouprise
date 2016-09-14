@@ -1,3 +1,5 @@
+import "./setup";
+
 import closest from "closest";
 
 import { $, $$, component } from "./util/dom";

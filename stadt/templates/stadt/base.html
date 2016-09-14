@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %}</title>
 
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-brh3Rq/4PNvWgeYlcjq0mqrdgPQAgetDw6jhQloENf4='; style-src 'self' 'unsafe-inline'">
         <!-- css -->
         <link type="text/css" rel="stylesheet" href="{% static "stadt/css/app.css" %}?v={{ asset_version }}">
 
@@ -18,10 +19,12 @@
         <link rel="icon" href="{% static "stadt/img/logos/logo_144.png" %}?v={{ asset_version }}" sizes="144x144" type="image/png">
         <link rel="icon" href="{% static "stadt/img/logos/logo_192.png" %}?v={{ asset_version }}" sizes="192x192" type="image/png">
 
-        <script>
-            document.documentElement.setAttribute("class", "js");
-            window.gestalt = {
-                id: {{ user.gestalt.pk|default:"null" }}
+        <script>document.documentElement.setAttribute("class", "js");</script>
+        <script type="application/json" id="app-configuration">
+            {
+                "gestalt": {
+                    "id": {{ user.gestalt.pk|default:"null" }}
+                }
             }
         </script>
     </head>

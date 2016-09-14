@@ -53,8 +53,8 @@ function create_content_image_view(emitter) {
 function create_user_image_view(emitter) {
     return pickii({
         emit: emitter.emit.bind(emitter),
-        adapter: window.gestalt.id ? get_images({
-            filters: { creator: window.gestalt.id }
+        adapter: window.app.conf.gestalt.id ? get_images({
+            filters: { creator: window.app.conf.gestalt.id }
         }) : dummy_adapter
     })
 }
