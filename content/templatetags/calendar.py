@@ -50,9 +50,10 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 
 
 @register.inclusion_tag('calendar/_calendar.html', takes_context=True)
-def calendar(context, events):
+def calendar(context, events, size='preview'):
     c = Calendar(events)
     return {
+            'size': size,
             'days': c.formatweekheader(),
             'group': context.get('group'),
             'month': c.formatmonthname(c.today.year, c.today.month), 
