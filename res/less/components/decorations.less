@@ -11,20 +11,30 @@
 }
 
 .decoration-icon {
-    position: relative;
+    position: absolute;
+    width: 0;
+    left: 0;
+    top: 0; bottom: 0;
 
     &:after,
     &:before {
         &:extend(.sg);
         position: absolute;
-        right: 100%;
+        right: 0;
         margin-right: .75em;
         color: #eaeaea;
+        top: 50%;
+    }
+
+    &:after {
+        transform: translateY(-50%);
+        transform-origin: 50% 50%;
     }
 
     &.sg-pin:after {
-        transform: rotate(45deg);
+        transform: rotate(45deg) translateY(-22.5%);
         margin-right: .9em;
+        transform-origin: 100% 0;
     }
 
     &.sg-pen {
@@ -32,10 +42,15 @@
             content: " ";
             display: block;
             width: .5em;
-            bottom: 4px;
+            bottom: 0;
             height: 3px;
             background-color: currentColor;
             margin-right: 1.7em;
+            transform: translateY(.35em)
         }
     }
+
+    .on-small-devices({
+        display: none;
+    });
 }

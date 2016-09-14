@@ -93,6 +93,7 @@
 
     <header class="content-header">
         <span class="content-classification">Beiträge</span>
+        {% include "macros/decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
             {% has_perm 'content.create_content' user as can_create_content %}
             {% if can_create_content %}
