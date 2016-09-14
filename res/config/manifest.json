@@ -1,0 +1,66 @@
+{
+    "lang": "de",
+    "background_color": "#ffffff",
+    "theme_color": "#2a62ac",
+    "name": "Stadtgestalten",
+    "short_name": "Stadtgestalten",
+    "description": "Stadtgestalten ist eine neue Internet-Plattform und ermöglicht aktiven, engagierten Menschen und Gruppen in der Stadt, sich unkompliziert zu informieren, zu präsentieren und miteinander zu vernetzen.",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_62.png",
+            "sizes": "62x62",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/stadt/static/stadt/img/logos/logo_512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

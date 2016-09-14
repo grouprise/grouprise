@@ -79,6 +79,11 @@ module.exports = function (grunt) {
                 files: [
                     { cwd: "res/img", src: "**/*.!(svg)", dest: "stadt/static/img", expand: true }
                 ]
+            },
+            configs: {
+                files: [
+                    { src: "res/config/manifest.json", dest: "stadt/static/config/manifest.json" }
+                ]
             }
         },
         svgmin: {
@@ -110,5 +115,6 @@ module.exports = function (grunt) {
     grunt.registerTask("js", ["exec:webpack_dist"]);
     grunt.registerTask("fonts", ["fontdump", "copy:fonts"]);
     grunt.registerTask("images", ["copy:images", "svgmin"]);
-    grunt.registerTask("default", ["fonts", "images", "css", "js"]);
+    grunt.registerTask("misc", ["copy:configs"]);
+    grunt.registerTask("default", ["fonts", "images", "css", "js", "misc"]);
 };

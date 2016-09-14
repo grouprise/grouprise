@@ -8,10 +8,25 @@
         <title>{% block title %}{% endblock %}</title>
 
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-brh3Rq/4PNvWgeYlcjq0mqrdgPQAgetDw6jhQloENf4='; style-src 'self' 'unsafe-inline'">
+
+        <meta name="application-name" content="Stadtgestalten">
+
+        <!-- metadata -->
+        <meta property="fb:app_id" content="1374810199203337">
+        <meta property="fb:admins" content="100001589611513">
+        {% block meta %}
+            {% include "meta/default.html" %}
+        {% endblock %}
+
+        <meta name="robots" content="index,follow,noodp">
+        <meta name="rating" content="General">
+        <meta name="referrer" content="never">
+
         <!-- css -->
         <link type="text/css" rel="stylesheet" href="{% static "stadt/css/app.css" %}?v={{ asset_version }}">
 
-        <!-- favicon -->
+        <!-- app icons and configuration -->
+        <link rel="manifest" href="{% static "stadt/config/manifest.json" %}?v={{ asset_version }}">
         <link rel="icon" href="{% static "stadt/img/logos/logo_16.png" %}?v={{ asset_version }}" sizes="16x16" type="image/png">
         <link rel="icon" href="{% static "stadt/img/logos/logo_32.png" %}?v={{ asset_version }}" sizes="32x32" type="image/png">
         <link rel="icon" href="{% static "stadt/img/logos/logo_48.png" %}?v={{ asset_version }}" sizes="48x48" type="image/png">
