@@ -3,6 +3,14 @@
 
 {% block heading %}{% endblock %}
 
+{% block meta %}
+    {% if content.event %}
+        {% include "meta/event.html" %}
+    {% else %}
+        {% include "meta/article.html" %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <article class="content">
         {% include 'content/_content_header.html' %}

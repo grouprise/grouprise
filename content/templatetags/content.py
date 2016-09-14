@@ -1,7 +1,7 @@
 import bleach as python_bleach
 from django import template
 from django.utils import formats, html, safestring, text, timezone
-from django.template.defaultfilters import truncatewords_html
+from django.template.defaultfilters import truncatewords_html, truncatewords
 import markdown as python_markdown
 from markdown.extensions import nl2br, toc, sane_lists, fenced_code
 from pymdownx import magiclink
@@ -44,7 +44,7 @@ content_allowed_attributes = {
 
 @register.filter
 def bleach(text, disable_tags=tuple()):
-    allowed_tags = set(content_allowed_tags) - set(disable_tags)
+    allowed_tags = set(content_allowed_tags) - set(disable_tags) if not disable_tags == "all" else tuple()
     bleached = python_bleach.clean(text, strip=True, tags=allowed_tags, attributes=content_allowed_attributes)
     if isinstance(text, safestring.SafeString):
         return safestring.mark_safe(bleached)
@@ -58,7 +58,7 @@ def markdown(text, autoescape=True):
 
 
 @register.simple_tag(name="markdown")
-def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags=""):
+def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="", plain_preview=False):
     extensions = markdown_extensions + (toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
     if filter_tags:
@@ -66,6 +66,11 @@ def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, di
         result = bleach(result, disabled_tags)
     if truncate:
         result = truncatewords_html(result, truncate)
+    if plain_preview:
+        result = bleach(result, disable_tags="all")
+        result = truncatewords(result, plain_preview)
+        result = html.conditional_escape(result)
+
     return safestring.mark_safe(result)
 
 
