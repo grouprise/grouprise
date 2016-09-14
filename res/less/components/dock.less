@@ -128,6 +128,16 @@
     display: flex;
     align-items: center;
 
+    &:hover,
+    &:focus,
+    &:active {
+        text-decoration: none;
+
+        span {
+            text-decoration: underline;
+        }
+    }
+
     i {
         color: @brand-primary;
         font-size: 1.75rem;
