@@ -15,8 +15,14 @@ function replace(el_old, el_new) {
     return el_new;
 }
 
-function index(el, parent = null) {
-    return to_array((parent || el.parentNode).childNodes).indexOf(el);
+function index(el) {
+    let index = 0;
+
+    while(el = el.previousElementSibling) {
+        index++;
+    }
+
+    return index;
 }
 
 function remove(el) {
