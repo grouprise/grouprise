@@ -6,6 +6,7 @@ import bel from "bel";
 import { $, replace } from "../util/dom";
 import { evented_function } from "../util/events";
 import editor_images from "../components/editor-image";
+import lightbox from "./lightbox";
 
 // create evented functions
 const _replace = evented_function(replace);
@@ -47,16 +48,20 @@ function create_editor(trigger) {
 
 export default (el) => {
     const editor_add = $("[data-purpose='gallery-add']", el);
+    let _lightbox = lightbox(el);
 
-    if(!editor_add) {
-        return;
+    if(editor_add) {
+        const editor = create_editor(editor_add);
+        editor.emitter.on("files:select", () => {
+            reload().then((gallery) => {
+                const old_gallery = $(".gallery", el);
+                _replace(old_gallery, gallery);
+            }).then(() => {
+                _lightbox.remove();
+                _lightbox = lightbox(el);
+            });
+        });
     }
 
-    const editor = create_editor(editor_add);
-    editor.emitter.on("files:select", () => {
-        reload().then((gallery) => {
-            const old_gallery = $(".gallery", el);
-            _replace(old_gallery, gallery);
-        })
-    });
+    return el;
 }
