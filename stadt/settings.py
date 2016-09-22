@@ -270,6 +270,7 @@ REST_FRAMEWORK = {
 INTERNAL_IPS = ("127.0.0.1", )
 
 try:
-    ASSET_VERSION = open(os.path.join(BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()
+    ASSET_VERSION = open(os.path.join(
+        BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()
 except IOError:
     ASSET_VERSION = "trunk"
