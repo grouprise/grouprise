@@ -106,7 +106,7 @@ class Group(core.models.Model):
             'Geschlossene Gruppe',
             default=False,
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
-    content = models.ManyToManyField('content.Content', related_name='groups', through='GroupContent')
+    # content = models.ManyToManyField('content.Content', related_name='old_groups', through='GroupContent')
     date_created = models.DateField(auto_now_add=True)
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)
@@ -153,5 +153,5 @@ class Group(core.models.Model):
 
 class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')
-    group = models.ForeignKey('Group')
+    group = models.ForeignKey('groups.Group')
     pinned = models.BooleanField(default=False)
