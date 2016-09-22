@@ -8,11 +8,11 @@ def always(instance):
 
 
 def connect(
-        signal, notification_class, instance=None, predicate=None, senders=[]):
+        signal, notification_class, instance=None, predicate=always,
+        senders=[]):
     def receiver(sender, **kwargs):
-        if predicate:
-            if predicate(kwargs['instance']):
-                notification_class(**{instance: kwargs['instance']}).send()
+        if predicate(kwargs['instance']):
+            notification_class(**{instance: kwargs['instance']}).send()
     for sender in senders:
         signal.connect(receiver, sender=sender, weak=False)
 

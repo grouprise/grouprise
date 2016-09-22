@@ -1,9 +1,9 @@
 from . import models, notifications
+from core import signals
 from django import dispatch
-from django.db.models import signals
 
 
-@dispatch.receiver(signals.post_save, sender=models.Membership)
-def membership_post_save(sender, instance, created, **kwargs):
-    if created and instance.created_by != instance.member:
+@dispatch.receiver(signals.model_created, sender=models.Membership)
+def membership_created(sender, instance, **kwargs):
+    if instance.created_by != instance.member:
         notifications.MembershipCreated(membership=instance).send()
