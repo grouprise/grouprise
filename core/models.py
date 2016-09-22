@@ -1,5 +1,7 @@
 from django.contrib.contenttypes import models as contenttypes_models
+from django.core import exceptions
 from django.db import models
+from utils import text
 
 
 def validate_reservation(value):
