@@ -9,6 +9,7 @@ from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
 from entities import models as entities_models
+from features.groups import models as groups
 from rules.contrib import views as rules_views
 
 
@@ -44,7 +45,7 @@ class GroupMixin:
         for attr in ('object', 'related_object'):
             if hasattr(self, attr):
                 instance = getattr(self, attr)
-                if isinstance(instance, entities_models.Group):
+                if isinstance(instance, groups.Group):
                     return instance
                 if hasattr(instance, 'group'):
                     return instance.group
@@ -52,15 +53,15 @@ class GroupMixin:
                     return instance.groups.first()
         try:
             if 'group_pk' in self.kwargs:
-                return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
+                return groups.Group.objects.get(pk=self.kwargs['group_pk'])
             if 'group_slug' in self.kwargs:
-                return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
+                return groups.Group.objects.get(slug=self.kwargs['group_slug'])
             if 'group' in self.request.GET:
-                return entities_models.Group.objects.get(slug=self.request.GET['group'])
+                return groups.Group.objects.get(slug=self.request.GET['group'])
             if 'content_pk' in self.kwargs:
                 return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
         except (content_models.Content.DoesNotExist,
-                entities_models.Group.DoesNotExist):
+                groups.Group.DoesNotExist):
             pass
         return None
 

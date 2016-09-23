@@ -27,7 +27,7 @@ class AutoSlugField(models.SlugField):
     def pre_save(self, model_instance, add):
         if add:
             value = text.slugify(
-                    type(model_instance), self.attname, 
+                    type(model_instance), self.attname,
                     getattr(model_instance, self.populate_from),
                     validate_reservation)
             setattr(model_instance, self.attname, value)

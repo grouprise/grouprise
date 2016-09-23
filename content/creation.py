@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core import urlresolvers
 from django.views import generic
 from entities import models as entities_models
+from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
 
@@ -82,7 +83,7 @@ class AbuseMessage(GroupMessage):
         return initial
 
     def get_recipient(self):
-        return entities_models.Group.objects.get(id=settings.ABOUT_GROUP_ID)
+        return groups.Group.objects.get(id=settings.ABOUT_GROUP_ID)
 
 
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):

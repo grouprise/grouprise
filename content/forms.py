@@ -5,6 +5,7 @@ from django import forms
 from django.contrib import auth
 from django.core import urlresolvers
 from entities import models as entities_models
+from features.groups import models as groups
 from utils import forms as utils_forms
 
 
@@ -18,7 +19,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
         self.fields['group'] = forms.ModelChoiceField(label='Gruppe', queryset=self.get_group_queryset(), required=False)
 
     def get_group_queryset(self):
-        return entities_models.Group.objects.filter(memberships__member=self.initial['author'])
+        return groups.Group.objects.filter(memberships__member=self.initial['author'])
 
     def save(self):
         content = super().save()
@@ -117,7 +118,7 @@ class GestaltMessage(BaseMessage):
 
 class GroupMessage(BaseMessage):
     def get_recipient_queryset(self):
-        return entities_models.Group.objects.all()
+        return groups.Group.objects.all()
 
     def save(self):
         message = super().save()

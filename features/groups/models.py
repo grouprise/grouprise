@@ -1,4 +1,5 @@
 from core import colors, models
+from django.core import urlresolvers
 from django.db import models as django
 from entities import querysets
 

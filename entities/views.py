@@ -11,6 +11,7 @@ from django.db import models as django_models
 from django.utils import six
 from django.views import generic
 from django_filters import views as filters_views
+from features.groups import models as groups
 from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
@@ -89,7 +90,7 @@ class Group(utils_views.List):
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['conversations'] = conversations[:3]
         kwargs['has_more_conversations'] = len(conversations) > 3
-        kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
+        kwargs['sidebar_groups'] = groups.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
@@ -144,7 +145,7 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('avatar',)
     layout = ('avatar',)
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     permission = 'groups.change_group'
 
     def get_parent(self):
@@ -156,7 +157,7 @@ class GroupCreate(utils_views.ActionMixin, generic.CreateView):
     fields = ('name',)
     layout = 'name'
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     parent = 'group-index'
     permission = 'entities.create_group'
 
@@ -173,7 +174,7 @@ class GroupList(utils_views.PageMixin, filters_views.FilterView):
     title = 'Gruppen'
 
     def get_queryset(self):
-        return models.Group.objects.scored()
+        return groups.Group.objects.scored()
 
 
 class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
@@ -181,7 +182,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('logo',)
     layout = ('logo',)
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     permission = 'groups.change_group'
 
     def get_parent(self):
@@ -209,7 +210,7 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppe ändern'
     fields = ['address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url']
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     permission = 'groups.change_group'
 
     def get_layout(self):
