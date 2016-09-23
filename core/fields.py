@@ -3,6 +3,12 @@ from entities import models as entities_models
 import functools
 
 
+def fieldclass_factory(superclass, name, **kwargs):
+    classname = name.replace('_', '').capitalize() + superclass.__name__
+    kwargs['name'] = name
+    return type(classname, (superclass,), kwargs)
+
+
 class Field:
     def __init__(self, view):
         self.view = view
@@ -25,11 +31,7 @@ class Field:
     def get_name(self):
         return self.name
 
-
-def fieldclass_factory(superclass, name, **kwargs):
-    classname = name.replace('_', '').capitalize() + superclass.__name__
-    kwargs['name'] = name
-    return type(classname, (superclass,), kwargs)
+field = functools.partial(fieldclass_factory, Field)
 
 
 class Email(Field):

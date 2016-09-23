@@ -14,7 +14,6 @@ urlpatterns = [
     urls.url(r'^gestalt/(?P<pk>[0-9]+)/edit/background/$', views.GestaltBackgroundUpdate.as_view(), name='gestalt-background-update'),
     urls.url(r'^gestalt/(?P<gestalt_pk>[0-9]+)/contact/$', content_creation.GestaltMessage.as_view(), name='gestalt-message-create'),
     urls.url(r'^group/$', views.GroupList.as_view(), name='group-index'),
-    urls.url(r'^group/add/$', views.GroupCreate.as_view(), name='group-create'),
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/$', views.GroupUpdate.as_view(), name='group-update'),
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/avatar/$', views.GroupAvatarUpdate.as_view(), name='group-avatar-update'),
     urls.url(r'^group/(?P<pk>[0-9]+)/edit/logo/$', views.GroupLogoUpdate.as_view(), name='group-logo-update'),

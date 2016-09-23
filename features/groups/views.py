@@ -1,5 +1,6 @@
-from content import models as content_models
 from . import models
+from content import models as content_models
+from core import fields, views
 
 
 class Mixin:
@@ -34,3 +35,17 @@ class Mixin:
                 models.Group.DoesNotExist):
             pass
         return None
+
+
+class Create(views.Create):
+    permission = 'groups.create_group'
+
+    action = 'Gruppe anlegen'
+    menu = 'group'
+    parent = 'group-index'
+
+    model = models.Group
+
+    data_field_classes = (
+            fields.current_gestalt('gestalt_created'),
+            fields.field('name'))

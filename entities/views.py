@@ -152,19 +152,6 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
         return self.object
 
 
-class GroupCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Gruppe anlegen'
-    fields = ('name',)
-    layout = 'name'
-    menu = 'group'
-    model = groups.Group
-    parent = 'group-index'
-    permission = 'entities.create_group'
-
-    def get_initial(self):
-        if 'name' in self.request.GET:
-            return {'name': self.request.GET['name']}
-
 class GroupList(utils_views.PageMixin, filters_views.FilterView):
     filterset_class = filters.Group
     menu = 'group'

@@ -63,6 +63,7 @@ class Group(models.Model):
         return urlresolvers.reverse(
                 'group', args=[type(self).objects.get(pk=self.pk).slug])
 
+    # FIXME: move to template filter
     def get_initials(self):
         import re
         initials = ''

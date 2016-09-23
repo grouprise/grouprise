@@ -20,7 +20,7 @@
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{% url 'group-index' %}" class="btn btn-link">Alle Gruppen</a>
 
-            {% has_perm 'entities.create_group' user as can_create_group %}
+            {% has_perm 'groups.create_group' user as can_create_group %}
             {% if can_create_group %}
                 <a href="{% url 'group-create' %}" class="btn btn-link">Neue Gruppe</a>
             {% endif %}

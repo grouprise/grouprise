@@ -89,6 +89,6 @@ class View(PermissionMixin, StadtMixin, django.View):
         return self.related_object
 
     def get_view_object(self, key):
-        if key is None:
+        if key is None and hasattr(self, 'get_related_object'):
             return self.get_related_object()
         return None
