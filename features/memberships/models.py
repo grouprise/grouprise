@@ -5,7 +5,7 @@ class Membership(models.Model):
     created_by = models.ForeignKey(
             'entities.Gestalt', related_name='memberships_created')
     date_joined = models.DateField(auto_now_add=True)
-    group = models.ForeignKey('entities.Group', related_name='memberships')
+    group = models.ForeignKey('groups.Group', related_name='memberships')
     member = models.ForeignKey('entities.Gestalt', related_name='memberships')
 
     def __str__(self):
