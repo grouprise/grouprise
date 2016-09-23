@@ -8,7 +8,7 @@ from django.db import migrations
 def copy_groups(apps, schema_editor):
     Group1 = apps.get_model('entities.Group')
     Group2 = apps.get_model('groups.Group')
-    for g in Group1.objects.all():
+    for g in Group1.objects.order_by('id'):
         g2 = Group2.objects.create(
                 name=g.name,
                 slug=g.slug,
