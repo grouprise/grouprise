@@ -48,5 +48,5 @@ class Create(views.Create):
     model = models.Group
 
     data_field_classes = (
-            fields.current_gestalt('gestalt_created'),
+            fields.current_gestalt('gestalt_created', null=True),
             fields.model_field('name'))

@@ -59,8 +59,10 @@ email_gestalt = functools.partial(fieldclass_factory, EmailGestalt)
 
 
 class CurrentGestalt(Field):
+    null = False
+
     def clean(self, form):
-        if not self.view.request.user.is_authenticated():
+        if not self.view.request.user.is_authenticated() and not self.null:
             try:
                 gestalt = entities_models.Gestalt.objects.get(
                         user__email=form.cleaned_data.get(self.get_name()))
@@ -75,21 +77,23 @@ class CurrentGestalt(Field):
     def get_data(self, form_data):
         if self.view.request.user.is_authenticated():
             return self.view.request.user.gestalt
-        else:
+        elif not self.null:
             return entities_models.Gestalt.get_or_create(form_data)
+        else:
+            return None
 
     def get_form_field(self):
-        return self.if_not_authenticated(
-                forms.EmailField(label='E-Mail-Adresse'))
+        if not self.view.request.user.is_authenticated() and not self.null:
+            return forms.EmailField(label='E-Mail-Adresse')
+        return None
 
     def get_layout(self):
-        return self.if_not_authenticated(super().get_layout())
+        if not self.view.request.user.is_authenticated() and not self.null:
+            return super().get_layout()
+        return None
 
     def get_name(self):
         return '{}_email'.format(self.name)
-
-    def if_not_authenticated(self, v1, v2=None):
-        return v1 if not self.view.request.user.is_authenticated() else v2
 
 current_gestalt = functools.partial(fieldclass_factory, CurrentGestalt)
 
