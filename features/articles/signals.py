@@ -14,7 +14,7 @@ def is_article(association):
 
 
 connections = [
-    signals.connect(
+    signals.connect_notification(
         signals.model_created, notifications.Associated,
         instance='association',
         predicate=is_article,
