@@ -58,6 +58,12 @@ class ModelFormMixin(FormMixin, django_detail.SingleObjectMixin):
         fields = [f.get_model_form_field() for f in self.data_fields]
         return list(filter(None, fields))
 
+    def get_success_url(self):
+        try:
+            return self.object.get_absolute_url()
+        except AttributeError:
+            return super().get_success_url()
+
 
 class ProcessFormView(base.View):
     def get(self, request, *args, **kwargs):

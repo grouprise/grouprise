@@ -43,9 +43,10 @@ class Create(views.Create):
     action = 'Gruppe anlegen'
     menu = 'group'
     parent = 'group-index'
+    title = 'Neue Gruppe'
 
     model = models.Group
 
     data_field_classes = (
             fields.current_gestalt('gestalt_created'),
-            fields.field('name'))
+            fields.model_field('name'))

@@ -34,6 +34,13 @@ class Field:
 field = functools.partial(fieldclass_factory, Field)
 
 
+class ModelField(Field):
+    def get_model_form_field(self):
+        return self.name
+
+model_field = functools.partial(fieldclass_factory, ModelField)
+
+
 class Email(Field):
     def get_form_field(self):
         return forms.EmailField(label='E-Mail-Adresse')
