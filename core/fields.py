@@ -32,6 +32,13 @@ def fieldclass_factory(superclass, name, **kwargs):
     return type(classname, (superclass,), kwargs)
 
 
+class Constant(Field):
+    def get_data(self, form_data):
+        return self.value
+
+constant = functools.partial(fieldclass_factory, Constant)
+
+
 class Email(Field):
     def get_form_field(self):
         return forms.EmailField(label='E-Mail-Adresse')

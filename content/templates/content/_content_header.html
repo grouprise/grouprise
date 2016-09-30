@@ -1,4 +1,4 @@
-{% load rules utils %}
+{% load fragments rules %}
 {% has_perm 'content.change_content' user content as can_edit_content %}
 
 <div class="content-data">
@@ -10,7 +10,7 @@
                     Ändern
                 </a>
             {% endif %}
-            {% include_features '_content_actions.html' %}
+            {% include_fragments 'content-actions' %}
             {% if can_edit_content and not content.gallery %}
             <a href="{% url 'content-image-list' content.pk %}" class="btn btn-default">
                 Bilder

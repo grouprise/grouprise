@@ -6,17 +6,29 @@ import rules
 
 
 @rules.predicate
+def has_external_content_unsubscription_for(user, group):
+    return models.Subscription.objects.filter(
+            subscribed_to=group,
+            subscriber=user.gestalt,
+            unsubscribe=True,
+            ).exists()
+
+
+@rules.predicate
 def is_subscribed_to(user, instance):
     return models.Subscription.objects.filter(
             subscribed_to=instance,
-            subscriber=user.gestalt
+            subscriber=user.gestalt,
+            unsubscribe=False,
             ).exists()
 
 
 @rules.predicate
 def is_subscriber(user, subscription):
     if subscription:
-        return subscription.subscriber == user.gestalt
+        return (
+                not subscription.unsubscribe 
+                and subscription.subscriber == user.gestalt)
     return False
 
 
@@ -29,6 +41,12 @@ rules.add_perm(
            & ~content.is_recipient
            & ~associations.is_member_of_any_content_group
            & ~is_subscribed_to))
+
+rules.add_perm(
+        'subscriptions.create_external_content_unsubscription',
+        rules.is_authenticated
+        & memberships.is_member_of
+        & ~has_external_content_unsubscription_for)
 
 rules.add_perm(
         'subscriptions.create_group_subscription',

@@ -74,3 +74,22 @@ class GroupUnsubscribe(Unsubscribe):
 
     def get_related_object(self):
         return self.get_group()
+
+
+class ExternalContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
+    permission = 'subscriptions.create_external_content_unsubscription'
+
+    action = 'Abbestellen'
+    description = (
+            'Keine Benachrichtigungen mehr für Gespräche der Gruppe '
+            '<em>{{ group }}</em> erhalten, deren Autor nicht Gruppenmitglied '
+            'ist')
+    message = 'Du erhältst nun keine Benachrichtigungen mehr.'
+    
+    data_field_classes = (
+            fields.related_object('subscribed_to'),
+            fields.current_gestalt('subscriber'),
+            fields.constant('unsubscribe', value=True))
+
+    def get_related_object(self):
+        return self.get_group()
