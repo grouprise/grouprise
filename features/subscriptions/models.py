@@ -10,6 +10,7 @@ class Subscription(models.Model):
     object_id = models.PositiveIntegerField()
     subscribed_to = contenttypes_fields.GenericForeignKey()
     subscriber = models.ForeignKey('entities.Gestalt')
+    unsubscribe = models.BooleanField(default=False)
 
     objects = models.Manager.from_queryset(querysets.Subscription)()
 
@@ -17,11 +18,14 @@ class Subscription(models.Model):
         unique_together = ('content_type', 'object_id', 'subscriber')
 
     def update_gestalten(self, gestalten, association):
+        """
+        Given a list of gestalten add or remove the subscriber from this list
+        if the filters of this subscription match the association
+        """
         for f in self.filters:
-            if not f.apply(association):
-                return gestalten
+            if not f.match(association):
+                return
         if self.unsubscribe:
             gestalten.discard(self.subscriber)
         else:
             gestalten.add(self.subscriber)
-        return gestalten
