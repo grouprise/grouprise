@@ -15,3 +15,13 @@ class Subscription(models.Model):
 
     class Meta:
         unique_together = ('content_type', 'object_id', 'subscriber')
+
+    def update_gestalten(self, gestalten, association):
+        for f in self.filters:
+            if not f.apply(association):
+                return gestalten
+        if self.unsubscribe:
+            gestalten.discard(self.subscriber)
+        else:
+            gestalten.add(self.subscriber)
+        return gestalten

@@ -4,9 +4,18 @@ from features.associations import notifications as associations
 import itertools
 
 
+def update_recipients(recipients, associations):
+    for association in associations:
+        subscriptions = models.Subscription.objects.filter(subscribed_to=association.group)
+        for subscription in subscriptions:
+            subscription.update_gestalten(recipients, association)
+    return recipients
+
+
 class Commented(associations.Commented):
     def get_recipients(self):
         recipients = super().get_recipients()
+        update_recipients(recipients, self.comment.content.groupcontent_set.all())
         if self.comment.content.public:
             subscriptions = models.Subscription.objects.filter(
                     subscribed_to=self.comment.content)
@@ -19,6 +28,8 @@ class Commented(associations.Commented):
 class ContentAssociated(associations.ContentAssociated):
     def get_recipients(self):
         recipients = super().get_recipients()
+        if type(self.association) == entities.GroupContent:
+            update_recipients(recipients, [self.association])
         if (type(self.association) == entities.GroupContent
                 and self.content.public):
             subscriptions = models.Subscription.objects.filter(
