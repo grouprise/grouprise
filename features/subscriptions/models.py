@@ -30,10 +30,15 @@ class Subscription(models.Model):
         Given a list of gestalten add or remove the subscriber from this list
         if the filters of this subscription match the association
         """
-        for f in self.filters:
-            if not f.match(association):
-                return
-        if self.unsubscribe:
-            gestalten.discard(self.subscriber)
-        else:
-            gestalten.add(self.subscriber)
+        filters = self.filters.all()
+        # only try updating on new-style subscriptions with at least one filter
+        if filters:
+            # exit if one of the filters doesn't match
+            for f in filters:
+                if not f.match(association):
+                    return
+            # update based on unsubscribe flag
+            if self.unsubscribe:
+                gestalten.discard(self.subscriber)
+            else:
+                gestalten.add(self.subscriber)
