@@ -1,0 +1,20 @@
+@import (less) "../../../node_modules/photoswipe/dist/photoswipe.css";
+@import (less) "../../../node_modules/photoswipe/dist/default-skin/default-skin.css";
+
+.pswp__button {
+    background: none !important;
+    font-size: 1.25rem !important;
+    color: white !important;
+    font-weight: normal !important;
+    opacity: 1 !important;
+
+    &:before {
+        background: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.75);
+    }
+}
