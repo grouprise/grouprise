@@ -25,12 +25,12 @@ export function create(opts = {}) {
         file = Object.assign({}, opts, file);
 
         const data = new FormData();
-        data.set("file", file.content);
-        data.set("weight", file.weight || 0);
-        data.set("csrfmiddlewaretoken", cookie.get("csrftoken"));
+        data.append("file", file.content);
+        data.append("weight", file.weight || 0);
+        data.append("csrfmiddlewaretoken", cookie.get("csrftoken"));
 
         if(file.content_id) {
-            data.set("content", file.content_id);
+            data.append("content", file.content_id);
         }
 
         return qwest.post(endpoint, data)
