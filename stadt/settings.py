@@ -64,12 +64,10 @@ INSTALLED_APPS = [
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
     'utils',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
