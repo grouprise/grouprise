@@ -5,7 +5,7 @@ GRUNT_BIN = node_modules/.bin/grunt
 VIRTUALENV_NAME ?= stadtgestalten
 DJANGO_SETTINGS ?= stadt.prod_settings
 VIRTUALENV_BASE ?= /srv/virtualenvs
-BUILD_PATH = $(shell pwd)/build
+BUILD_PATH ?= build
 SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
 PYTHON_DIRS = content entities stadt features core utils
 
@@ -14,10 +14,10 @@ HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
 HELPER_PATH_ENV = PATH=$(HELPER_BIN_PATH):$$PATH
 NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
 
-ASSET_VERSION_PATH = $(shell pwd)/stadt/ASSET_VERSION
+ASSET_VERSION_PATH = stadt/ASSET_VERSION
 
 
-.PHONY: default clean deploy deploy-git reload static update-virtualenv test
+.PHONY: asset_version default clean deploy deploy-git reload static update-virtualenv test
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
@@ -46,7 +46,6 @@ update-virtualenv:
 	$(SOURCE_VIRTUALENV) && python manage.py migrate --settings "$(DJANGO_SETTINGS)"
 
 deploy:
-	# TODO: Probleme beheben und dann Abbruch bei Testfehlschlag aktivieren
 	$(MAKE) asset_version
 	$(MAKE) test
 	$(MAKE) default
@@ -62,4 +61,7 @@ test:
 	$(SOURCE_VIRTUALENV) && python -m flake8 $(PYTHON_DIRS) && python manage.py test
 
 clean:
-	$(RM) -r node_modules bower_components static
+	$(RM) -r node_modules
+	$(RM) -r bower_components
+	$(RM) -r static
+	$(RM) -r $(BUILD_PATH)
