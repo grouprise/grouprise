@@ -5,6 +5,13 @@ from django.contrib.sites import models as sites_models
 register = template.Library()
 
 
+@register.simple_tag()
+def ref(entity):
+    try:
+        return "%s-%d" % (type(entity).__name__.lower(), entity.id)
+    except AttributeError:
+        return ""
+
 @register.filter
 def full_url(path):
     return '{proto}://{domain}{path}'.format(
