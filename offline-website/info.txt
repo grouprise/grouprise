@@ -1,0 +1,10 @@
+Dieses Verzeichnis sollte auf dem Web-Server zur Auslieferung der offline-Wartungsseite konfiguriert sein.
+Die nginx-Konfiguration könnte etwa folgendermaßen aussehen:
+
+server {
+    server_name offline.stadtgestalten.org;
+    root /srv/stadtgestalten/offline-website;
+    index index.html;
+    location /stadt/static/ { alias /srv/stadtgestalten/static/; }
+    location /stadt/media/ { alias /srv/stadtgestalten/media/; }
+}
