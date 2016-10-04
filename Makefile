@@ -8,6 +8,11 @@ VIRTUALENV_BASE ?= /srv/virtualenvs
 BUILD_PATH ?= build
 SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
 PYTHON_DIRS = content entities stadt features core utils
+# uwsgi beobachtet diese Datei und schaltet bei ihrer Existenz in den Offline-Modus:
+#   if-exists = _OFFLINE_MARKER_UWSGI
+#   route = .* redirect:https://offline.stadtgestalten.org/
+#   endif =
+OFFLINE_MARKER_FILE = _OFFLINE_MARKER_UWSGI
 
 # symlink magic for badly packaged dependencies using "node" explicitely
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
@@ -48,10 +53,12 @@ update-virtualenv:
 deploy:
 	$(MAKE) asset_version
 	$(MAKE) test
+	touch $(OFFLINE_MARKER_FILE)
 	$(MAKE) default
 	$(MAKE) update-virtualenv
 	$(MAKE) static
 	$(MAKE) reload
+	$(RM) $(OFFLINE_MARKER_FILE)
 
 deploy-git:
 	git pull
@@ -65,3 +72,4 @@ clean:
 	$(RM) -r bower_components
 	$(RM) -r static
 	$(RM) -r $(BUILD_PATH)
+	$(RM) $(OFFLINE_MARKER_FILE)
