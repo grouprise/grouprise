@@ -18,6 +18,7 @@ def set_groupcontent_group(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('groups', '0002_auto_20160922_1108'),
         ('entities', '0044_auto_20160922_1118'),
     ]
 
