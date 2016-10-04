@@ -2,7 +2,6 @@ from . import forms, models
 from django.conf import settings
 from django.core import urlresolvers
 from django.views import generic
-from entities import models as entities_models
 from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 

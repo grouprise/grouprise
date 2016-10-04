@@ -1,4 +1,3 @@
-from entities import models as entities_models
 from features.groups import models as groups
 import markdown
 from markdown import inlinepatterns

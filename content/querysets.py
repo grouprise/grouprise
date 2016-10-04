@@ -1,7 +1,6 @@
 import datetime
 from django.db import models
 from django.utils import timezone
-from entities import models as entities_models
 from features.groups import models as groups
 
 

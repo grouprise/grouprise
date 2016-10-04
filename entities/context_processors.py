@@ -15,6 +15,6 @@ def groups(request):
 def statistics(request):
     return {
             'gestalt_count': models.Gestalt.objects.exclude(
-                user__password__startswith=hashers.UNUSABLE_PASSWORD_PREFIX).count, 
+                user__password__startswith=hashers.UNUSABLE_PASSWORD_PREFIX).count,
             'group_count': groups_models.Group.objects.count
             }

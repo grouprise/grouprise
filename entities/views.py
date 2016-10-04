@@ -8,7 +8,6 @@ from django.utils import six
 from django.views import generic
 from django_filters import views as filters_views
 from features.groups import models as groups
-from rules.contrib import views as rules_views
 from utils import forms as utils_forms, views as utils_views
 
 

@@ -1,4 +1,4 @@
-from . import forms, models
+from . import forms
 import django_filters as filters
 from features.groups import models as groups
 

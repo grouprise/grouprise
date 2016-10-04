@@ -12,6 +12,7 @@ def ref(entity):
     except AttributeError:
         return ""
 
+
 @register.filter
 def full_url(path):
     return '{proto}://{domain}{path}'.format(

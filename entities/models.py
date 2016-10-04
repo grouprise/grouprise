@@ -1,4 +1,3 @@
-from . import querysets
 from allauth.account import adapter as allauth_adapter
 import core.models
 from django.conf import settings
@@ -119,9 +118,11 @@ class Group(core.models.Model):
     logo = models.ImageField(blank=True)
     name = models.CharField('Name', max_length=255)
     slug = AutoSlugField(
-            'Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
+            'Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'],
+            unique=True)
     url = models.URLField('Adresse im Web', blank=True)
     description = models.TextField('Kurzbeschreibung', blank=True, default='', max_length=200)
+
     class Meta:
         ordering = ('name',)
 
