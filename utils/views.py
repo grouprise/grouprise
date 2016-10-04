@@ -29,11 +29,16 @@ class GestaltMixin:
         return super().get_context_data(**kwargs)
 
     def get_gestalt(self):
-        if 'gestalt_pk' in self.kwargs:
-            return entities_models.Gestalt.objects.get(pk=self.kwargs['gestalt_pk'])
-        if 'gestalt_slug' in self.kwargs:
-            return entities_models.Gestalt.objects.get(user__username=self.kwargs['gestalt_slug'])
+        try:
+            if 'gestalt_pk' in self.kwargs:
+                return entities_models.Gestalt.objects.get(pk=self.kwargs['gestalt_pk'])
+            if 'gestalt_slug' in self.kwargs:
+                return entities_models.Gestalt.objects.get(user__username=self.kwargs['gestalt_slug'])
+        except entities_models.Gestalt.DoesNotExist:
+            pass
+
         return None
+
 
 class GroupMixin:
     def get_context_data(self, **kwargs):
