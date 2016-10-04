@@ -1,3 +1,4 @@
 [flake8]
-exclude = account,api,content,entities,migrations,node_modules,utils
+max-line-length = 99
+exclude = entities/migrations
 ignore = E121,E123,E126,E226,E24,E704,W503

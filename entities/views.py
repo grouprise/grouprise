@@ -214,7 +214,8 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
                 layout.Field('address', rows=4),
                 'url',
                 layout.Field('date_founded', data_component='date'),
-                bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
+                bootstrap.PrependedText('slug', '{0}/'.format(
+                    sites_models.Site.objects.get_current().domain)),
                 'closed',
                 ) + super().get_layout()
 
