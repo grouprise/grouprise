@@ -1,0 +1,24 @@
+{% load content thumbnail %}
+
+<meta name="description" content="{{ group.description }}">
+
+<meta property="og:url" content="{{ http_origin }}{{ group.get_absolute_url }}">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="{{ group.name }}">
+<meta property="og:description" content="{{ group.description }}">
+<meta property="og:locale" content="de_DE">
+<meta property="og:profile:username" content="{{ group.slug }}">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:url" content="{{ http_origin }}{{ group.get_absolute_url }}">
+<meta name="twitter:title" content="{{ group.name}}">
+<meta name="twitter:description" content="{{ group.description }}">
+
+{% if group.avatar %}
+    {% thumbnail group.avatar '256x256' format='PNG' padding=True as avatar %}
+        <meta property="og:image" content="{{ http_origin }}{{ avatar.url }}">
+        <meta name="twitter:image" content="{{ http_origin }}{{ avatar.url }}">
+    {% endthumbnail %}
+{% endif %}
+
+
