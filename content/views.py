@@ -1,16 +1,17 @@
 from . import creation, forms, models
-from django import http, shortcuts
-from django.forms import models as model_forms
+from django import shortcuts
 from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
 from django.db.models import Q
 from entities import models as entities_models
-from utils import forms as utils_forms, views as utils_views
+from utils import views as utils_views
+
 
 class BaseContentList(utils_views.List):
     context_object_name = 'content_list'
     permission = 'content.view_content_list'
+
 
 class ArticleList(BaseContentList):
     menu = 'article'
@@ -19,6 +20,7 @@ class ArticleList(BaseContentList):
     def get_queryset(self):
         return models.Article.objects.permitted(self.request.user)
 
+
 class EventList(BaseContentList):
     menu = 'event'
     sidebar = ('groups',)
@@ -26,6 +28,7 @@ class EventList(BaseContentList):
 
     def get_queryset(self):
         return models.Event.objects.permitted(self.request.user).upcoming()
+
 
 class GalleryList(BaseContentList):
     menu = 'gallery'
@@ -42,7 +45,7 @@ class Content(utils_views.PageMixin, generic.DetailView):
 
     def get_inline_view_kwargs(self):
         return {'content_pk': self.object.pk}
-    
+
     def get_menu(self):
         return self.object.get_type_name()
 
@@ -55,7 +58,9 @@ class Content(utils_views.PageMixin, generic.DetailView):
 
 class ContentList(BaseContentList):
     def get_queryset(self):
-        return models.Content.objects.permitted(self.request.user).filter(~Q(article__isnull=False, public=False))
+        return models.Content.objects.permitted(self.request.user).filter(
+                ~Q(article__isnull=False, public=False))
+
 
 class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Beitrag ändern'
@@ -66,7 +71,8 @@ class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         try:
-            kwargs['groupcontent'] = entities_models.GroupContent.objects.get(content=self.object, group=self.get_group())
+            kwargs['groupcontent'] = entities_models.GroupContent.objects.get(
+                    content=self.object, group=self.get_group())
         finally:
             return kwargs
 
@@ -75,6 +81,7 @@ class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
 
     def get_parent(self):
         return self.object
+
 
 class EventDay(utils_views.PageMixin, generic.DayArchiveView):
     allow_future = True
@@ -114,7 +121,8 @@ class EventUpdate(utils_views.ActionMixin, generic.UpdateView):
         if group:
             return {
                     'group': group.pk,
-                    'pinned': entities_models.GroupContent.objects.get(group=group, content=self.object).pinned
+                    'pinned': entities_models.GroupContent.objects.get(
+                        group=group, content=self.object).pinned
                     }
         else:
             return {}
@@ -130,7 +138,8 @@ class ImageList(utils_views.List):
         return self.get_content()
 
     def get_content(self):
-        return shortcuts.get_object_or_404(models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
+        return shortcuts.get_object_or_404(
+                models.Content, pk=self.request.resolver_match.kwargs['content_pk'])
 
     def get_context_data(self, **kwargs):
         kwargs['content'] = self.get_content()

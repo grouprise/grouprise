@@ -4,10 +4,8 @@ from django import dispatch
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
-from django.core import mail, urlresolvers
+from django.core import urlresolvers
 from django.db.models import signals
-from django.utils import module_loading
-from utils import text
 
 
 @dispatch.receiver(signals.post_save, sender=auth.get_user_model())

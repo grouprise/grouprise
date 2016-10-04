@@ -5,4 +5,5 @@ class EntitiesConfig(apps.AppConfig):
     name = 'entities'
 
     def ready(self):
-        from . import signals
+        # side effect: registration of signals
+        from . import signals    # noqa: F401

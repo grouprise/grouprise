@@ -1,12 +1,8 @@
 from . import filters, forms, models
 from content import creation as content_creation, models as content_models
 from crispy_forms import bootstrap, layout
-from django import http, shortcuts
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import mixins as auth_mixins
+from django import http
 from django.contrib.sites import models as sites_models
-from django.core import urlresolvers
 from django.db import models as django_models
 from django.utils import six
 from django.views import generic
@@ -31,7 +27,9 @@ class Gestalt(utils_views.List):
         return self.get_gestalt()
 
     def get_queryset(self):
-        return content_models.Content.objects.permitted(self.request.user).filter(django_models.Q(gestaltcontent__gestalt=self.get_gestalt()) | django_models.Q(author=self.get_gestalt()))
+        return content_models.Content.objects.permitted(self.request.user).filter(
+                django_models.Q(gestaltcontent__gestalt=self.get_gestalt())
+                | django_models.Q(author=self.get_gestalt()))
 
     def get_title(self):
         return str(self.get_gestalt())
@@ -97,12 +95,14 @@ class Group(utils_views.List):
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['conversations'] = conversations[:3]
         kwargs['has_more_conversations'] = len(conversations) > 3
-        kwargs['sidebar_groups'] = groups.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
+        kwargs['sidebar_groups'] = groups.Group.objects.exclude(
+                pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
     def get_events(self):
-        return content_models.Event.objects.permitted(self.request.user).filter(groups=self.get_group())
+        return content_models.Event.objects.permitted(self.request.user).filter(
+                groups=self.get_group())
 
     def get_group_content(self):
         return self.get_group().content.permitted(self.request.user)
@@ -119,7 +119,8 @@ class Group(utils_views.List):
                 if type(item) == utils_forms.Submit:
                     form.helper.layout.pop(i)
                     break
-            form.helper.layout.append(utils_forms.Submit('<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
+            form.helper.layout.append(utils_forms.Submit(
+                '<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
             form.initial['pinned'] = True
             form.initial['public'] = True
             form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
@@ -128,7 +129,8 @@ class Group(utils_views.List):
         return None
 
     def get_intro_content(self):
-        pinned_content = self.get_group_content().filter(groupcontent__pinned=True).order_by('date_created')
+        pinned_content = self.get_group_content().filter(
+                groupcontent__pinned=True).order_by('date_created')
         try:
             return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
         except AttributeError:
@@ -138,7 +140,8 @@ class Group(utils_views.List):
         return self.get_group().get_conversations(self.request.user)
 
     def get_queryset(self):
-        return self.get_group_content().filter(groupcontent__pinned=False).exclude(article__isnull=False, public=False)
+        return self.get_group_content().filter(groupcontent__pinned=False).exclude(
+                article__isnull=False, public=False)
 
     def get_related_object(self):
         return self.get_group()

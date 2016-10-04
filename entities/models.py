@@ -3,12 +3,11 @@ from allauth.account import adapter as allauth_adapter
 import core.models
 from django.conf import settings
 from django.contrib import auth
-from django.contrib.contenttypes import fields as contenttypes_fields, models as contenttype_models
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.core import exceptions, urlresolvers, validators
+from django.core import exceptions, urlresolvers
 from django.db import models
 import randomcolor
 from utils import text
+
 
 def get_random_color():
     return randomcolor.RandomColor().generate(luminosity='dark')[0]
@@ -16,7 +15,8 @@ def get_random_color():
 
 class Gestalt(models.Model):
     about = models.TextField('Selbstauskunft', blank=True)
-    addressed_content = models.ManyToManyField('content.Content', related_name='gestalten', through='GestaltContent')
+    addressed_content = models.ManyToManyField(
+            'content.Content', related_name='gestalten', through='GestaltContent')
     avatar = models.ImageField(blank=True)
     avatar_color = models.CharField(max_length=7, default=get_random_color)
     background = models.ImageField('Hintergrundbild', blank=True)
@@ -36,7 +36,7 @@ class Gestalt(models.Model):
             user.set_unusable_password()
             user.save()
         return user.gestalt
-    
+
     def __str__(self):
         name = ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
         return name if name else self.user.username
@@ -54,7 +54,8 @@ class Gestalt(models.Model):
         return urlresolvers.reverse('gestalt-message-create', args=(self.pk,))
 
     def get_profile_url(self):
-        return urlresolvers.reverse('gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
+        return urlresolvers.reverse(
+                'gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
 
     # FIXME: move to template filter
     def get_initials(self):
@@ -74,7 +75,9 @@ class GestaltContent(models.Model):
 # FIXME: can be deleted after sqashing migrations
 def validate_reservation(value):
     if value in ['gestalt', 'stadt']:
-        raise exceptions.ValidationError('Die Adresse \'%(value)s\' darf nicht verwendet werden.', params={'value': value}, code='reserved')
+        raise exceptions.ValidationError(
+                "Die Adresse \'%(value)s\' darf nicht verwendet werden.", params={'value': value},
+                code='reserved')
 
 
 # FIXME: can be deleted after sqashing migrations
@@ -93,7 +96,9 @@ class AutoSlugField(models.SlugField):
 
     def pre_save(self, model_instance, add):
         if add:
-            value = text.slugify(type(model_instance), self.attname, getattr(model_instance, self.populate_from), validate_reservation)
+            value = text.slugify(
+                type(model_instance), self.attname, getattr(model_instance, self.populate_from),
+                validate_reservation)
             setattr(model_instance, self.attname, value)
             return value
         else:
@@ -113,12 +118,13 @@ class Group(core.models.Model):
     date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
     logo = models.ImageField(blank=True)
     name = models.CharField('Name', max_length=255)
-    slug = AutoSlugField('Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
+    slug = AutoSlugField(
+            'Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'], unique=True)
     url = models.URLField('Adresse im Web', blank=True)
     description = models.TextField('Kurzbeschreibung', blank=True, default='', max_length=200)
     class Meta:
         ordering = ('name',)
-    
+
 
 class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')

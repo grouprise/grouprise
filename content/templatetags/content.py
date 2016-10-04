@@ -1,17 +1,15 @@
 import bleach as python_bleach
 from django import template
-from django.utils import formats, html, safestring, text, timezone
+from django.utils import formats, html, safestring, timezone
+from django.template.base import FilterExpression
 from django.template.defaultfilters import truncatewords_html, truncatewords
+from django.template.loader import get_template
 import markdown as python_markdown
 from markdown.extensions import nl2br, toc, sane_lists, fenced_code
 from pymdownx import magiclink
 import utils.markdown
 
 register = template.Library()
-
-from django import template
-from django.template.base import FilterExpression
-from django.template.loader import get_template
 
 markdown_extensions = (
     magiclink.MagiclinkExtension(),
@@ -44,21 +42,28 @@ content_allowed_attributes = {
 
 @register.filter
 def bleach(text, disable_tags=tuple()):
-    allowed_tags = set(content_allowed_tags) - set(disable_tags) if not disable_tags == "all" else tuple()
-    bleached = python_bleach.clean(text, strip=True, tags=allowed_tags, attributes=content_allowed_attributes)
+    if disable_tags == "all":
+        allowed_tags = tuple()
+    else:
+        allowed_tags = set(content_allowed_tags) - set(disable_tags)
+    bleached = python_bleach.clean(
+            text, strip=True, tags=allowed_tags, attributes=content_allowed_attributes)
     if isinstance(text, safestring.SafeString):
         return safestring.mark_safe(bleached)
-    return bleached
+    else:
+        return bleached
 
 
 @register.filter(needs_autoescape=True)
 def markdown(text, autoescape=True):
-    esc = html.conditional_escape if autoescape else lambda x: x
-    return safestring.mark_safe(python_markdown.markdown(esc(text), extensions=markdown_extensions))
+    return safestring.mark_safe(python_markdown.markdown(
+        html.conditional_escape(text) if autoescape else text, extensions=markdown_extensions))
 
 
 @register.simple_tag(name="markdown")
-def markdown_tag(text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="", plain_preview=False):
+def markdown_tag(
+        text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
+        plain_preview=False):
     extensions = markdown_extensions + (toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
     if filter_tags:
@@ -81,7 +86,9 @@ def permitted(content, user):
 
 @register.filter
 def preview(events):
-    return ', '.join(map(lambda e: '{} {}'.format(formats.time_format(timezone.localtime(e.time)), e.title), events))
+    return ', '.join([
+        '{} {}'.format(formats.time_format(timezone.localtime(e.time)), e.title)
+        for e in events])
 
 
 def _setup_macros_dict(parser):
@@ -118,7 +125,7 @@ class DefineMacroNode(template.Node):
 def do_macro(parser, token):
     try:
         args = token.split_contents()
-        tag_name, macro_name, args = args[0], args[1], args[2:]
+        macro_name, args = args[1], args[2:]
     except IndexError:
         m = ("'%s' tag requires at least one argument (macro name)"
              % token.contents.split()[0])
@@ -171,14 +178,12 @@ class UseMacroNode(template.Node):
         self.fe_kwargs = fe_kwargs
 
     def render(self, context):
-
         for i, arg in enumerate(self.macro.args):
             try:
                 fe = self.fe_args[i]
                 context[arg] = fe.resolve(context)
             except IndexError:
                 context[arg] = ""
-
         for name, default in iter(self.macro.kwargs.items()):
             if name in self.fe_kwargs:
                 context[name] = self.fe_kwargs[name].resolve(context)
@@ -186,7 +191,6 @@ class UseMacroNode(template.Node):
                 context[name] = FilterExpression(default,
                                                  self.macro.parser
                                                  ).resolve(context)
-
         return self.macro.nodelist.render(context)
 
 
@@ -194,7 +198,7 @@ class UseMacroNode(template.Node):
 def do_usemacro(parser, token):
     try:
         args = token.split_contents()
-        tag_name, macro_name, values = args[0], args[1], args[2:]
+        macro_name, values = args[1], args[2:]
     except IndexError:
         m = ("'%s' tag requires at least one argument (macro name)"
              % token.contents.split()[0])

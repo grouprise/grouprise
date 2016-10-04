@@ -1,6 +1,6 @@
 from . import forms
 from content import models as content_models
-from crispy_forms import helper, layout
+from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.auth import views as auth_views
 from django.contrib.messages import views as messages_views
@@ -64,7 +64,8 @@ class GroupMixin:
             if 'group' in self.request.GET:
                 return groups.Group.objects.get(slug=self.request.GET['group'])
             if 'content_pk' in self.kwargs:
-                return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
+                return content_models.Content.objects.get(
+                        pk=self.kwargs['content_pk']).groups.first()
         except (content_models.Content.DoesNotExist,
                 groups.Group.DoesNotExist):
             pass
@@ -133,6 +134,7 @@ class MessageMixin(messages_views.SuccessMessageMixin):
         if hasattr(self, 'message'):
             return self.message
         return None
+
 
 class NavigationMixin:
     def get_breadcrumb(self):
@@ -203,7 +205,9 @@ class PermissionMixin(rules_views.PermissionRequiredMixin):
         if self.request.user.is_authenticated():
             raise exceptions.PermissionDenied(self.get_permission_denied_message())
         else:
-            return auth_views.redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
+            return auth_views.redirect_to_login(
+                    self.request.get_full_path(), self.get_login_url(),
+                    self.get_redirect_field_name())
 
     def has_permission(self, permission=None):
         permissions = self.get_permissions()
@@ -214,12 +218,14 @@ class PermissionMixin(rules_views.PermissionRequiredMixin):
                 return True
         return False
 
+
 class SidebarMixin:
     sidebar = ('calendar', 'groups')
 
     def get_context_data(self, **kwargs):
         kwargs['sidebar'] = self.sidebar
         return super().get_context_data(**kwargs)
+
 
 class TemplateMixin:
     ignore_base_templates = False

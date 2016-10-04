@@ -2,7 +2,6 @@ from django.contrib.sites import shortcuts
 from django.conf import settings
 
 
-
 def site(request):
     return {
         'http_origin': request.build_absolute_uri("/").rstrip("/"),

@@ -1,5 +1,5 @@
 from crispy_forms import helper, layout, bootstrap
-from django import forms
+
 
 class LayoutMixin:
     def get_helper(self):
@@ -15,13 +15,15 @@ class LayoutMixin:
         if not isinstance(layout, (tuple, list)):
             layout = (layout,)
         return layout
-        
+
+
 class FormMixin(LayoutMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = self.get_helper()
         if hasattr(self, 'method'):
             self.helper.form_method = self.method
+
 
 class ExtraFormMixin(FormMixin):
     def __init__(self, *args, **kwargs):

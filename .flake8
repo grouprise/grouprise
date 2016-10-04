@@ -1,4 +1,5 @@
 [flake8]
 max-line-length = 99
-exclude = entities/migrations
+exclude = entities/migrations, content/migrations, features/memberships/migrations,
+    features/subscriptions/migrations, node_modules/bootstrap-datepicker/docs
 ignore = E121,E123,E126,E226,E24,E704,W503
