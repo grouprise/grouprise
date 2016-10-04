@@ -1,16 +1,16 @@
-{% load content crispy_forms_tags rules utils %}
+{% load content crispy_forms_tags rules utils core %}
 
 <h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
 
 <ol class="medias">
     {% for comment in content.comments.all %}
         <li>
-            <div class="media media-comment" id="comment-{{ comment.id }}">
+            <div class="media media-comment" id="{% ref comment %}">
                 <div class="media-image">
                     {% include 'entities/_gestalt_avatar.html' with gestalt=comment.author link=True %}
                 </div>
                 <div class="media-content">
-                    <div class="media-body" data-component="user-content" data-author="{{ comment.author }}" data-permalink="{{ content.get_absolute_url }}#comment-{{ comment.id }}">
+                    <div class="media-body" data-component="user-content" data-author="{{ comment.author }}" data-permalink="{{ content.get_absolute_url }}#{% ref comment %}">
                         {% markdown comment.text heading_baselevel=3 %}
                     </div>
                     <footer class="media-footer">
