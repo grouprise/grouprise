@@ -1,11 +1,15 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block heading_title %}
-<h1 class="content-classification">Nicht gefunden</h1>
+    <h1 class="content-classification">Hups!</h1>
 {% endblock %}
 
 {% block content %}
-<h2>Die gewünschte Seite gibt es nicht!</h2>
-<p>{{ exception }}.</p>
-<p>Wenn Du glaubst, dass dies ein Fehler ist, <a href="{% url 'message-create' about_group.pk %}">schreib uns bitte eine Nachricht</a>.</p>
+    <h2>Die gewünschte Seite gibt es nicht!</h2>
+    <p>Das tut uns leid.</p>
+    <div class="game-container">
+        <p>Wie wäre es mit einer Runde Snake?</p>
+        <canvas data-component="snake" class="game game-snake"></canvas>
+    </div>
+    <p>Wenn Du glaubst, dass dies ein Fehler ist, <a href="{% url 'message-create' about_group.pk %}">schreib uns bitte eine Nachricht</a>.</p>
 {% endblock %}
