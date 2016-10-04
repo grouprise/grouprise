@@ -22,6 +22,11 @@ class Gestalt(utils_views.List):
     sidebar = ('calendar',)
     template_name = 'entities/gestalt_detail.html'
 
+    def get(self, request, *args, **kwargs):
+        if not self.get_gestalt():
+            raise http.Http404('Gestalt nicht gefunden')
+        return super().get(request, *args, **kwargs)
+
     def get_permission_object(self):
         return self.get_gestalt()
 
@@ -31,11 +36,13 @@ class Gestalt(utils_views.List):
     def get_title(self):
         return str(self.get_gestalt())
 
+
 class GestaltList(utils_views.List):
     menu = 'gestalt'
     permission = 'content.view_content_list'
     queryset = models.Gestalt.objects.filter(public=True)
     title = 'Gestalten'
+
 
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Dein Profil'

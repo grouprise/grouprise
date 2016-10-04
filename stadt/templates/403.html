@@ -1,13 +1,14 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block heading_title %}
-<h1 class="content-classification">Zugriff verweigert</h1>
+    <h1 class="content-classification">Hups!</h1>
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<p>Du bist angemeldet, darfst die gewünschte Seite aber dennoch nicht ansehen. Falls Du mehrere Benutzernamen besitzt, kannst Du Dich <a href="{% url 'account_logout' %}">abmelden</a> und anschließend mit einem anderen Benutzernamen anmelden.</p>
-{% else %}
-<p>Du darfst die gewünschte Seite nicht ansehen. Möchtest Du Dich <a href="{% url 'account_login' %}">anmelden</a>?</p>
-{% endif %}
+    <h2>Du hast keinen Zugriff!</h2>
+    {% if user.is_authenticated %}
+        <p>Du bist angemeldet, darfst die gewünschte Seite aber dennoch nicht ansehen. Falls Du mehrere Benutzernamen besitzt, kannst Du Dich <a href="{% url 'account_logout' %}">abmelden</a> und anschließend mit einem anderen Benutzernamen anmelden.</p>
+    {% else %}
+        <p>Du darfst die gewünschte Seite nicht ansehen. Möchtest Du Dich <a href="{% url 'account_login' %}">anmelden</a>?</p>
+    {% endif %}
 {% endblock %}
