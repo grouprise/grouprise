@@ -48,7 +48,7 @@ update-virtualenv:
 deploy:
 	# TODO: Probleme beheben und dann Abbruch bei Testfehlschlag aktivieren
 	$(MAKE) asset_version
-	$(MAKE) test || true
+	$(MAKE) test
 	$(MAKE) default
 	$(MAKE) update-virtualenv
 	$(MAKE) static
