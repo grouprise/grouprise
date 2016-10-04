@@ -21,8 +21,14 @@ NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
 
 ASSET_VERSION_PATH = stadt/ASSET_VERSION
 
+# in dieser Datei wird die Zeichenkette 'VERSION = "X.Y.Z"' erwartet
+VERSION_FILE = stadt/__init__.py
+# Auslesen der aktuellen Version und Hochzaehlen des gewaehlten Index (je nach Release-Stufe)
+NEXT_RELEASE = $(shell (cat $(VERSION_FILE); echo "tokens = [int(v) for v in VERSION.split('.')]; tokens[$(RELEASE_INCREMENT_INDEX)] += 1; print('%d.%d.%d' % tuple(tokens))") | python)
+GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
-.PHONY: asset_version default clean deploy deploy-git reload static update-virtualenv test
+
+.PHONY: asset_version default clean deploy deploy-git release-breaking release-feature release-patch reload static update-virtualenv test
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
@@ -63,6 +69,23 @@ deploy:
 deploy-git:
 	git pull
 	$(MAKE) deploy
+
+# Position der zu veraendernden Zahl in der Release-Nummer (X.Y.Z)
+release-breaking: RELEASE_INCREMENT_INDEX=0
+release-feature: RELEASE_INCREMENT_INDEX=1
+release-patch: RELEASE_INCREMENT_INDEX=2
+
+release-breaking release-feature release-patch:
+	@if [ -n "$$(git status -s)" ]; then \
+		printf >&2 "\n%s\n\n" "*** ERROR: The working directory needs to be clean for a release. ***"; \
+		false; fi
+	@if [ -n "$$(git tag -l | while read v; do [ "$$v" != "$(GIT_RELEASE_TAG)" ] || echo FOUND; done)" ]; then \
+		printf >&2 "\n%s\n\n" "*** ERROR: There is already a git tag of the next version: $(NEXT_RELEASE). Use 'git tag -d $(GIT_RELEASE_TAG)' if know what you are doing."; \
+		false; fi
+	sed -i 's/^VERSION = .*/VERSION = "$(NEXT_RELEASE)"/' "$(VERSION_FILE)"
+	git add "$(VERSION_FILE)"
+	git commit -m "Release $(NEXT_RELEASE)"
+	git tag -a "$(GIT_RELEASE_TAG)"
 
 test:
 	$(SOURCE_VIRTUALENV) && python -m flake8 $(PYTHON_DIRS) && python manage.py test
