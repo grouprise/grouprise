@@ -28,7 +28,7 @@ NEXT_RELEASE = $(shell (cat $(VERSION_FILE); echo "tokens = [int(v) for v in VER
 GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
 
-.PHONY: asset_version default clean deploy deploy-git release-breaking release-feature release-patch reload static update-virtualenv test
+.PHONY: asset_version default clean deploy deploy-git release-breaking release-feature release-patch reload static update-virtualenv test website-offline website-online
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
@@ -52,6 +52,12 @@ reload:
 	@# trigger UWSGI-Reload
 	touch stadt/prod_settings.py
 
+website-offline:
+	touch $(OFFLINE_MARKER_FILE)
+
+website-online:
+	$(RM) $(OFFLINE_MARKER_FILE)
+
 update-virtualenv:
 	$(SOURCE_VIRTUALENV) && pip install -r requirements.txt
 	$(SOURCE_VIRTUALENV) && python manage.py migrate --settings "$(DJANGO_SETTINGS)"
@@ -59,12 +65,12 @@ update-virtualenv:
 deploy:
 	$(MAKE) asset_version
 	$(MAKE) test
-	touch $(OFFLINE_MARKER_FILE)
+	$(MAKE) website-offline
 	$(MAKE) default
 	$(MAKE) update-virtualenv
 	$(MAKE) static
-	$(MAKE) reload
-	$(RM) $(OFFLINE_MARKER_FILE)
+	# in "website-online" ist ein "reload" enthalten
+	$(MAKE) website-online
 
 deploy-git:
 	git pull
