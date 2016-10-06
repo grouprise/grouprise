@@ -2,7 +2,12 @@
 
 {% has_perm 'subscriptions.create_content_subscription' user content as can_subscribe %}
 {% has_perm 'subscriptions.delete_subscription' user user.gestalt|subscription:content as can_unsubscribe %}
-{% has_perm 'subscriptions.create_external_content_unsubscription' user content.groupcontent.group as can_unsubscribe_from_external_content %}
+{% if content.groupcontent %}
+    {% has_perm 
+    'subscriptions.create_external_content_unsubscription'
+    user content.groupcontent.group 
+    as can_unsubscribe_from_external_content %}
+{% endif %}
 
 {% if can_unsubscribe or can_unsubscribe_from_external_content %}
 <a href="{% if can_unsubscribe %}{% url 'content-unsubscribe' content.pk %}{% else %}{% url 'external-content-unsubscribe' content.groupcontent.group.pk %}{% endif %}" class="btn btn-default" title="Du erhältst Benachrichtungen für diesen Beitrag">
