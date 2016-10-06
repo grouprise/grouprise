@@ -1,4 +1,7 @@
 import allauth.account
+import allauth.account.forms
+import allauth.account.adapter
+import allauth.account.utils
 from crispy_forms import layout
 from django import forms
 from django.contrib import auth
