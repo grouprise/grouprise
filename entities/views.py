@@ -1,17 +1,13 @@
 from . import filters, forms, models
 from content import creation as content_creation, models as content_models
 from crispy_forms import bootstrap, layout
-from django import http, shortcuts
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import mixins as auth_mixins
+from django import http
 from django.contrib.sites import models as sites_models
-from django.core import urlresolvers
 from django.db import models as django_models
 from django.utils import six
 from django.views import generic
 from django_filters import views as filters_views
-from rules.contrib import views as rules_views
+from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
 
@@ -21,20 +17,29 @@ class Gestalt(utils_views.List):
     sidebar = ('calendar',)
     template_name = 'entities/gestalt_detail.html'
 
+    def get(self, request, *args, **kwargs):
+        if not self.get_gestalt():
+            raise http.Http404('Gestalt nicht gefunden')
+        return super().get(request, *args, **kwargs)
+
     def get_permission_object(self):
         return self.get_gestalt()
 
     def get_queryset(self):
-        return content_models.Content.objects.permitted(self.request.user).filter(django_models.Q(gestaltcontent__gestalt=self.get_gestalt()) | django_models.Q(author=self.get_gestalt()))
+        return content_models.Content.objects.permitted(self.request.user).filter(
+                django_models.Q(gestaltcontent__gestalt=self.get_gestalt())
+                | django_models.Q(author=self.get_gestalt()))
 
     def get_title(self):
         return str(self.get_gestalt())
+
 
 class GestaltList(utils_views.List):
     menu = 'gestalt'
     permission = 'content.view_content_list'
     queryset = models.Gestalt.objects.filter(public=True)
     title = 'Gestalten'
+
 
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Dein Profil'
@@ -89,12 +94,14 @@ class Group(utils_views.List):
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['conversations'] = conversations[:3]
         kwargs['has_more_conversations'] = len(conversations) > 3
-        kwargs['sidebar_groups'] = models.Group.objects.exclude(pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
+        kwargs['sidebar_groups'] = groups.Group.objects.exclude(
+                pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
     def get_events(self):
-        return content_models.Event.objects.permitted(self.request.user).filter(groups=self.get_group())
+        return content_models.Event.objects.permitted(self.request.user).filter(
+                groups=self.get_group())
 
     def get_group_content(self):
         return self.get_group().content.permitted(self.request.user)
@@ -111,7 +118,8 @@ class Group(utils_views.List):
                 if type(item) == utils_forms.Submit:
                     form.helper.layout.pop(i)
                     break
-            form.helper.layout.append(utils_forms.Submit('<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
+            form.helper.layout.append(utils_forms.Submit(
+                '<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
             form.initial['pinned'] = True
             form.initial['public'] = True
             form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
@@ -120,7 +128,8 @@ class Group(utils_views.List):
         return None
 
     def get_intro_content(self):
-        pinned_content = self.get_group_content().filter(groupcontent__pinned=True).order_by('date_created')
+        pinned_content = self.get_group_content().filter(
+                groupcontent__pinned=True).order_by('date_created')
         try:
             return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
         except AttributeError:
@@ -130,7 +139,8 @@ class Group(utils_views.List):
         return self.get_group().get_conversations(self.request.user)
 
     def get_queryset(self):
-        return self.get_group_content().filter(groupcontent__pinned=False).exclude(article__isnull=False, public=False)
+        return self.get_group_content().filter(groupcontent__pinned=False).exclude(
+                article__isnull=False, public=False)
 
     def get_related_object(self):
         return self.get_group()
@@ -144,25 +154,12 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('avatar',)
     layout = ('avatar',)
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     permission = 'groups.change_group'
 
     def get_parent(self):
         return self.object
 
-
-class GroupCreate(utils_views.ActionMixin, generic.CreateView):
-    action = 'Gruppe anlegen'
-    fields = ('name',)
-    layout = 'name'
-    menu = 'group'
-    model = models.Group
-    parent = 'group-index'
-    permission = 'entities.create_group'
-
-    def get_initial(self):
-        if 'name' in self.request.GET:
-            return {'name': self.request.GET['name']}
 
 class GroupList(utils_views.PageMixin, filters_views.FilterView):
     filterset_class = filters.Group
@@ -173,7 +170,7 @@ class GroupList(utils_views.PageMixin, filters_views.FilterView):
     title = 'Gruppen'
 
     def get_queryset(self):
-        return models.Group.objects.scored()
+        return groups.Group.objects.scored()
 
 
 class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
@@ -181,7 +178,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('logo',)
     layout = ('logo',)
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     permission = 'groups.change_group'
 
     def get_parent(self):
@@ -209,7 +206,7 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Gruppe ändern'
     fields = ['address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url']
     menu = 'group'
-    model = models.Group
+    model = groups.Group
     permission = 'groups.change_group'
 
     def get_layout(self):
@@ -219,7 +216,8 @@ class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
                 layout.Field('address', rows=4),
                 'url',
                 layout.Field('date_founded', data_component='date'),
-                bootstrap.PrependedText('slug', '%(domain)s/' % {'domain': sites_models.Site.objects.get_current().domain}),
+                bootstrap.PrependedText('slug', '{0}/'.format(
+                    sites_models.Site.objects.get_current().domain)),
                 'closed',
                 ) + super().get_layout()
 

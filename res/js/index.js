@@ -12,6 +12,7 @@ import group_header from "./transforms/group-header";
 import gallery from "./transforms/gallery";
 import transform_icon from "./transforms/transformicons";
 import input from "./transforms/input";
+import snake from "./transforms/snake";
 
 
 function init(search_in = document) {
@@ -22,6 +23,7 @@ function init(search_in = document) {
     component("user-content", user_content, search_in);
     component("group-header", group_header, search_in);
     component("gallery", gallery, search_in);
+    component("snake", snake, search_in);
 
     // initialize components not based on component interface
     transform_icon($(".tcon-wrap"));

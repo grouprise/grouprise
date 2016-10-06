@@ -9,3 +9,5 @@ static
 whoosh_index
 res/img/backdrops
 stadt/ASSET_VERSION
+*.swp
+*.pyc

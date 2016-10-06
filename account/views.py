@@ -6,10 +6,13 @@ from django.views import generic
 from django.views.generic import edit as edit_views
 from utils import views as utils_views
 
+
 class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
     action = 'E-Mail-Adresse bestätigen'
     ignore_base_templates = True
-    layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
+    layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">'
+                         '{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des '
+                         'Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
     permission = 'account.confirm'
 
     def get_context_data(self, **kwargs):
@@ -40,6 +43,7 @@ class Login(utils_views.ActionMixin, views.LoginView):
     def get_success_url(self):
         return views.LoginView.get_success_url(self)
 
+
 class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     action = 'Abmelden'
     ignore_base_templates = True
@@ -55,7 +59,7 @@ class PasswordChange(utils_views.ActionMixin, views.PasswordChangeView):
     form_class = forms.PasswordChange
     ignore_base_templates = True
     permission = 'account.change_password'
-    
+
     def get_parent(self):
         return self.request.user.gestalt
 

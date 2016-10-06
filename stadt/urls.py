@@ -1,23 +1,15 @@
 from content import views as content_views
 from django.conf import settings, urls
-from django.conf.urls import static, url, include
+from django.conf.urls import static
 from django.contrib import admin
 from entities import views as entities_views
 
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
-else:
-    urlpatterns = []
-
-urlpatterns = urlpatterns + [
+urlpatterns = [
     urls.url(r'^stadt/', urls.include('account.urls')),
     urls.url(r'^stadt/', urls.include('content.urls')),
     urls.url(r'^stadt/', urls.include('entities.urls')),
     urls.url(r'^stadt/', urls.include('features.associations.urls')),
+    urls.url(r'^stadt/', urls.include('features.groups.urls')),
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
     urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),

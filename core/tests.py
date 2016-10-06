@@ -12,14 +12,16 @@ HTTP_OK = 'ok'
 
 
 class Test(test.TestCase):
-    def assertContainsLink(self, response, url, key):
+    def assertContainsLink(self, response, url, key=None):
         self.assertContains(response, self.get_link(url, key))
 
     def assertNotContainsLink(self, response, url, key):
         self.assertNotContains(response, self.get_link(url, key))
 
     def assertExists(self, model, **kwargs):
-        self.assertTrue(model.objects.filter(**kwargs))
+        qs = model.objects.filter(**kwargs)
+        self.assertEqual(qs.count(), 1)
+        return qs.first()
 
     def assertNotExists(self, model, **kwargs):
         self.assertFalse(model.objects.filter(**kwargs))
@@ -46,13 +48,13 @@ class Test(test.TestCase):
     def assertNotificationSent(self):
         self.assertEqual(len(mail.outbox), 1)
 
-    def assertRequest(self, **kwargs):
-        for method in kwargs['methods']:
+    def assertRequest(self, methods=[HTTP_GET], **kwargs):
+        for method in methods:
             response = self.request(method, **kwargs)
             tests = kwargs['response']
             if HTTP_FORBIDDEN_OR_LOGIN in tests:
-                self.assertForbiddenOrLogin(
-                        response, self.get_url(kwargs['url'], kwargs['key']))
+                self.assertForbiddenOrLogin(response, self.get_url(
+                    kwargs['url'], kwargs.get('key')))
             if HTTP_REDIRECTS in tests:
                 url = tests[HTTP_REDIRECTS]
                 if isinstance(url, tuple):
@@ -77,5 +79,5 @@ class Test(test.TestCase):
                 '{}'.format(url), args=args)
 
     def request(self, method, **kwargs):
-        url = self.get_url(kwargs['url'], kwargs['key'])
+        url = self.get_url(kwargs['url'], kwargs.get('key'))
         return self.get_response(method, url)

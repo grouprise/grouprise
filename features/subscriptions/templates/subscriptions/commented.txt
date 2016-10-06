@@ -2,4 +2,4 @@
 
 -- 
 Beitrag mit Kommentaren im Browser ansehen:
-{{ comment.content.get_absolute_url|full_url }}
+{{ comment.content.get_absolute_url|full_url }}#{% ref comment %}

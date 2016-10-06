@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from django.utils import timezone
-from entities import models as entities_models
+from features.groups import models as groups
 
 
 class ContentQuerySet(models.QuerySet):
@@ -10,7 +10,8 @@ class ContentQuerySet(models.QuerySet):
             return self.filter(
                     models.Q(public=True) |
                     models.Q(author=user.gestalt) |
-                    models.Q(groupcontent__group__in=entities_models.Group.objects.filter(memberships__member=user.gestalt)) |
+                    models.Q(groupcontent__group__in=groups.Group.objects.filter(
+                        memberships__member=user.gestalt)) |
                     models.Q(gestaltcontent__gestalt=user.gestalt)
                     )
         else:

@@ -1,4 +1,4 @@
-from entities import models as entities_models
+from features.groups import models as groups
 import markdown
 from markdown import inlinepatterns
 
@@ -9,8 +9,8 @@ class GroupReferencePattern(inlinepatterns.ReferencePattern):
     def handleMatch(self, m):
         slug = m.group(2)
         try:
-            group = entities_models.Group.objects.get(slug=slug)
-        except entities_models.Group.DoesNotExist:
+            group = groups.Group.objects.get(slug=slug)
+        except groups.Group.DoesNotExist:
             return None
         return self.makeTag(group.get_absolute_url(), None, str(group))
 

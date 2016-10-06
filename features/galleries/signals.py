@@ -12,7 +12,7 @@ def is_gallery(association):
 
 
 connections = [
-    signals.connect(
+    signals.connect_notification(
         signals.model_created, notifications.Associated,
         instance='association',
         predicate=is_gallery,

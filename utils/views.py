@@ -1,6 +1,6 @@
 from . import forms
 from content import models as content_models
-from crispy_forms import helper, layout
+from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.auth import views as auth_views
 from django.contrib.messages import views as messages_views
@@ -9,6 +9,7 @@ from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
 from entities import models as entities_models
+from features.groups import models as groups
 from rules.contrib import views as rules_views
 
 
@@ -29,11 +30,17 @@ class GestaltMixin:
         return super().get_context_data(**kwargs)
 
     def get_gestalt(self):
-        if 'gestalt_pk' in self.kwargs:
-            return entities_models.Gestalt.objects.get(pk=self.kwargs['gestalt_pk'])
-        if 'gestalt_slug' in self.kwargs:
-            return entities_models.Gestalt.objects.get(user__username=self.kwargs['gestalt_slug'])
+        try:
+            if 'gestalt_pk' in self.kwargs:
+                return entities_models.Gestalt.objects.get(pk=self.kwargs['gestalt_pk'])
+            if 'gestalt_slug' in self.kwargs:
+                return entities_models.Gestalt.objects.get(
+                        user__username=self.kwargs['gestalt_slug'])
+        except entities_models.Gestalt.DoesNotExist:
+            pass
+
         return None
+
 
 class GroupMixin:
     def get_context_data(self, **kwargs):
@@ -44,7 +51,7 @@ class GroupMixin:
         for attr in ('object', 'related_object'):
             if hasattr(self, attr):
                 instance = getattr(self, attr)
-                if isinstance(instance, entities_models.Group):
+                if isinstance(instance, groups.Group):
                     return instance
                 if hasattr(instance, 'group'):
                     return instance.group
@@ -52,15 +59,16 @@ class GroupMixin:
                     return instance.groups.first()
         try:
             if 'group_pk' in self.kwargs:
-                return entities_models.Group.objects.get(pk=self.kwargs['group_pk'])
+                return groups.Group.objects.get(pk=self.kwargs['group_pk'])
             if 'group_slug' in self.kwargs:
-                return entities_models.Group.objects.get(slug=self.kwargs['group_slug'])
+                return groups.Group.objects.get(slug=self.kwargs['group_slug'])
             if 'group' in self.request.GET:
-                return entities_models.Group.objects.get(slug=self.request.GET['group'])
+                return groups.Group.objects.get(slug=self.request.GET['group'])
             if 'content_pk' in self.kwargs:
-                return content_models.Content.objects.get(pk=self.kwargs['content_pk']).groups.first()
+                return content_models.Content.objects.get(
+                        pk=self.kwargs['content_pk']).groups.first()
         except (content_models.Content.DoesNotExist,
-                entities_models.Group.DoesNotExist):
+                groups.Group.DoesNotExist):
             pass
         return None
 
@@ -127,6 +135,7 @@ class MessageMixin(messages_views.SuccessMessageMixin):
         if hasattr(self, 'message'):
             return self.message
         return None
+
 
 class NavigationMixin:
     def get_breadcrumb(self):
@@ -197,7 +206,9 @@ class PermissionMixin(rules_views.PermissionRequiredMixin):
         if self.request.user.is_authenticated():
             raise exceptions.PermissionDenied(self.get_permission_denied_message())
         else:
-            return auth_views.redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
+            return auth_views.redirect_to_login(
+                    self.request.get_full_path(), self.get_login_url(),
+                    self.get_redirect_field_name())
 
     def has_permission(self, permission=None):
         permissions = self.get_permissions()
@@ -208,12 +219,14 @@ class PermissionMixin(rules_views.PermissionRequiredMixin):
                 return True
         return False
 
+
 class SidebarMixin:
     sidebar = ('calendar', 'groups')
 
     def get_context_data(self, **kwargs):
         kwargs['sidebar'] = self.sidebar
         return super().get_context_data(**kwargs)
+
 
 class TemplateMixin:
     ignore_base_templates = False

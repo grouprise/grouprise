@@ -64,19 +64,17 @@ INSTALLED_APPS = [
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
     'utils',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'stadt.urls'
@@ -230,7 +228,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
-ACCOUNT_USER_DISPLAY = lambda u: u.gestalt  # NOQA
+ACCOUNT_USER_DISPLAY = lambda u: u.gestalt    # noqa: E731
 
 ACCOUNT_USERNAME_REQUIRED = False
 

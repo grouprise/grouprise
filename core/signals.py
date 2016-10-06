@@ -7,12 +7,20 @@ def always(instance):
     return True
 
 
-def connect(
-        signal, notification_class, instance=None, predicate=None, senders=[]):
+def connect_action(signal, action, predicate=always, senders=[]):
     def receiver(sender, **kwargs):
-        if predicate:
-            if predicate(kwargs['instance']):
-                notification_class(**{instance: kwargs['instance']}).send()
+        if predicate(kwargs['instance']):
+            action(kwargs['instance'])
+    for sender in senders:
+        signal.connect(receiver, sender=sender, weak=False)
+
+
+def connect_notification(
+        signal, notification_class, instance=None, predicate=always,
+        senders=[]):
+    def receiver(sender, **kwargs):
+        if predicate(kwargs['instance']):
+            notification_class(**{instance: kwargs['instance']}).send()
     for sender in senders:
         signal.connect(receiver, sender=sender, weak=False)
 

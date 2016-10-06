@@ -80,15 +80,18 @@ class View(PermissionMixin, StadtMixin, django.View):
         return super().dispatch(*args, **kwargs)
 
     def get_menu(self):
-        return type(self.related_object).__name__
+        if self.related_object:
+            return type(self.related_object).__name__
+        else:
+            return super().get_menu()
 
     def get_parent(self):
-        return self.related_object
+        return self.related_object or super().get_parent()
 
     def get_permission_object(self):
         return self.related_object
 
     def get_view_object(self, key):
-        if key is None:
+        if key is None and hasattr(self, 'get_related_object'):
             return self.get_related_object()
         return None

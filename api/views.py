@@ -15,7 +15,8 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
             gestalt = user.gestalt
         except AttributeError:
             gestalt = None
-        return content_models.Image.objects.filter(Q(content__in=content) | Q(creator=gestalt)).order_by('-weight')
+        return content_models.Image.objects.filter(
+            Q(content__in=content) | Q(creator=gestalt)).order_by('-weight')
 
     def has_permission(self):
         if self.action == 'create':

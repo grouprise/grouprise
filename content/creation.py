@@ -2,7 +2,7 @@ from . import forms, models
 from django.conf import settings
 from django.core import urlresolvers
 from django.views import generic
-from entities import models as entities_models
+from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
 
@@ -10,7 +10,11 @@ class BaseContent(utils_views.ActionMixin, generic.CreateView):
     permission = 'content.create_content'
 
     def get_initial(self):
-        return {'author': self.request.user.gestalt.pk, 'group': self.get_group(), 'pinned': self.request.GET.get('pinned'), 'public': self.request.GET.get('public')}
+        return {
+                'author': self.request.user.gestalt.pk,
+                'group': self.get_group(),
+                'pinned': self.request.GET.get('pinned'),
+                'public': self.request.GET.get('public')}
 
     def get_permission_object(self):
         return None
@@ -77,16 +81,18 @@ class AbuseMessage(GroupMessage):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial['text'] = '{}\n\nIch bin der Ansicht, dass der Inhalt dieser Seite gegen Regeln verstößt.'.format(self.request.build_absolute_uri(self.kwargs['path']))
+        initial['text'] = ('{}\n\nIch bin der Ansicht, dass der Inhalt dieser Seite gegen '
+                           'Regeln verstößt.'.format(
+                               self.request.build_absolute_uri(self.kwargs['path'])))
         initial['title'] = 'Missbrauch melden'
         return initial
 
     def get_recipient(self):
-        return entities_models.Group.objects.get(id=settings.ABOUT_GROUP_ID)
+        return groups.Group.objects.get(id=settings.ABOUT_GROUP_ID)
 
 
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):
-    #action = 'Kommentieren'
+    # FIXME: action = 'Kommentieren'
     fields = ('text',)
     layout = utils_forms.EditorField('text')
     model = models.Comment

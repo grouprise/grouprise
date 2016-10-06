@@ -65,7 +65,7 @@ module.exports = function (grunt) {
         },
         exec: {
             webpack_dev: "node_modules/.bin/webpack",
-            webpack_dist: "node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe"
+            webpack_dist: "node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe --devtool source-map"
         },
         copy: {
             fonts: {

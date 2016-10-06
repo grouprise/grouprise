@@ -1,11 +1,14 @@
-from allauth.account import adapter as allauth_adapter, forms as allauth_forms, utils as allauth_utils
+import allauth.account
+import allauth.account.forms
+import allauth.account.adapter
+import allauth.account.utils
 from crispy_forms import layout
 from django import forms
 from django.contrib import auth
 from utils import forms as util_forms
 
 
-class Email(util_forms.FormMixin, allauth_forms.AddEmailForm):
+class Email(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
     layout = (
             layout.Field('email', placeholder=''),
             util_forms.Submit('E-Mail-Adresse hinzufügen', 'action_add'))
@@ -15,7 +18,7 @@ class Email(util_forms.FormMixin, allauth_forms.AddEmailForm):
         self.fields['email'].label = 'E-Mail-Adresse'
 
 
-class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
+class LoginForm(util_forms.FormMixin, allauth.account.forms.LoginForm):
     layout = (
         layout.Div(
             'login',
@@ -26,9 +29,10 @@ class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
         layout.Div(
             layout.HTML(
                 '<a class="btn btn-link" href="{{ signup_url }}">Konto anlegen</a>'
-                '<a class="btn btn-link" href="{% url \'account_reset_password\' %}">Passwort vergessen</a>'
+                '<a class="btn btn-link" '
+                'href="{% url \'account_reset_password\' %}">Passwort vergessen</a>'
             ),
-            css_class="account-actions"
+            css_class="account-actions",
         )
     )
     password = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
@@ -40,7 +44,7 @@ class LoginForm(util_forms.FormMixin, allauth_forms.LoginForm):
         self.helper.form_class += " form-login form-modern"
 
 
-class PasswordChange(util_forms.FormMixin, allauth_forms.ChangePasswordForm):
+class PasswordChange(util_forms.FormMixin, allauth.account.forms.ChangePasswordForm):
     layout = (
             layout.Field('oldpassword', placeholder=''),
             layout.Field('password1', placeholder=''),
@@ -55,9 +59,11 @@ class PasswordChange(util_forms.FormMixin, allauth_forms.ChangePasswordForm):
         self.fields['password2'].label = 'Neues Kennwort (Wiederholung)'
 
 
-class PasswordReset(util_forms.FormMixin, allauth_forms.ResetPasswordForm):
+class PasswordReset(util_forms.FormMixin, allauth.account.forms.ResetPasswordForm):
     layout = (
-            layout.HTML('<p>Wenn Du Dein Kennwort vergessen hast, gib bitte Deine E-Mail-Adresse ein. Du erhälst dann eine Nachricht mit einem Verweis zum Zurücksetzen des Kennworts an diese Adresse.</p>'),
+            layout.HTML('<p>Wenn Du Dein Kennwort vergessen hast, gib bitte Deine '
+                        'E-Mail-Adresse ein. Du erhältst dann eine Nachricht mit einem '
+                        'Verweis zum Zurücksetzen des Kennworts an diese Adresse.</p>'),
             layout.Field('email', placeholder=''),
             util_forms.Submit('Kennwort zurücksetzen')
             )
@@ -67,7 +73,7 @@ class PasswordReset(util_forms.FormMixin, allauth_forms.ResetPasswordForm):
         self.fields['email'].label = 'E-Mail-Adresse'
 
 
-class PasswordResetFromKey(util_forms.FormMixin, allauth_forms.ResetPasswordKeyForm):
+class PasswordResetFromKey(util_forms.FormMixin, allauth.account.forms.ResetPasswordKeyForm):
     layout = (
             layout.Field('password1', placeholder=''),
             layout.Field('password2', placeholder=''),
@@ -80,12 +86,13 @@ class PasswordResetFromKey(util_forms.FormMixin, allauth_forms.ResetPasswordKeyF
         self.fields['password2'].label = 'Kennwort (Wiederholung)'
 
 
-class SignupForm(util_forms.FormMixin, allauth_forms.SignupForm):
+class SignupForm(util_forms.FormMixin, allauth.account.forms.SignupForm):
     layout = (
-            layout.HTML('<p>Benutzerkonto schon vorhanden? '
-                '<a href="{{ login_url }}">Melde Dich an.</a></p>'),
+            layout.HTML(
+                '<p>Benutzerkonto schon vorhanden? <a href="{{ login_url }}">'
+                'Melde Dich an.</a></p>'),
             'email',
-            'password1', 
+            'password1',
             'password2',
             util_forms.Submit('Registrieren'),
             )
@@ -110,10 +117,10 @@ class SignupForm(util_forms.FormMixin, allauth_forms.SignupForm):
 
     def save(self, request):
         try:
-            adapter = allauth_adapter.get_adapter(request)
+            adapter = allauth.account.adapter.get_adapter(request)
             user = auth.get_user_model().objects.get(email=self.cleaned_data['email'])
             adapter.set_password(user, self.cleaned_data["password1"])
-            allauth_utils.setup_user_email(request, user, [])
+            allauth.account.utils.setup_user_email(request, user, [])
             return user
         except auth.get_user_model().DoesNotExist:
             return super().save(request)

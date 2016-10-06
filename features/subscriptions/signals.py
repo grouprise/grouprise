@@ -4,10 +4,9 @@ from content import models
 
 
 connections = [
-    signals.connect(
+    signals.connect_notification(
         signals.model_created, notifications.Commented,
         instance='comment',
-        predicate=signals.always,
         senders=[models.Comment],
         ),
 ]
