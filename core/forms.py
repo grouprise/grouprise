@@ -39,8 +39,7 @@ class Form(StadtMixin, django.Form):
 class ModelForm(StadtMixin, django.ModelForm):
     def save(self, commit=True):
         for field in self.data_fields:
-            setattr(self.instance, field.name, field.get_data(
-                self.cleaned_data.get(field.get_name())))
+            field.save_data(self)
         return super().save()
 
 

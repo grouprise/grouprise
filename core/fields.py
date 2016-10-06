@@ -10,6 +10,8 @@ def fieldclass_factory(superclass, name, **kwargs):
 
 
 class Field:
+    has_data = False
+
     def __init__(self, view):
         self.view = view
 
@@ -31,6 +33,11 @@ class Field:
     def get_name(self):
         return self.name
 
+    def save_data(self, form):
+        if self.has_data:
+            setattr(form.instance, self.name, self.get_data(
+                form.cleaned_data.get(self.get_name())))
+
 field = functools.partial(fieldclass_factory, Field)
 
 
@@ -42,6 +49,8 @@ model_field = functools.partial(fieldclass_factory, ModelField)
 
 
 class Constant(Field):
+    has_data = True
+
     def get_data(self, form_data):
         return self.value
 
@@ -59,6 +68,8 @@ email = functools.partial(fieldclass_factory, Email)
 
 
 class EmailGestalt(Email):
+    has_data = True
+
     def get_data(self, form_data):
         return entities_models.Gestalt.get_or_create(form_data)
 
@@ -66,6 +77,7 @@ email_gestalt = functools.partial(fieldclass_factory, EmailGestalt)
 
 
 class CurrentGestalt(Field):
+    has_data = True
     null = False
 
     def clean(self, form):
@@ -106,6 +118,8 @@ current_gestalt = functools.partial(fieldclass_factory, CurrentGestalt)
 
 
 class ViewObject(Field):
+    has_data = True
+
     def get_data(self, form_data):
         return self.view.get_view_object(self.key)
 
@@ -116,7 +130,17 @@ view_object = functools.partial(fieldclass_factory, ViewObject)
 
 
 class RelatedObject(ViewObject):
+    has_data = True
+
     def get_data(self, form_data):
         return self.view.related_object
 
 related_object = functools.partial(fieldclass_factory, RelatedObject)
+
+
+class CreateReference(Field):
+    def save_data(self, form):
+        ref = getattr(form.instance, self.name)
+        ref.objects.create(**self.kwargs)
+
+create_reference = functools.partial(fieldclass_factory, CreateReference)

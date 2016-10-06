@@ -1,4 +1,4 @@
-from . import models
+from . import filters, models
 from core import fields, views
 from django import db, http
 from django.contrib import messages
@@ -89,7 +89,10 @@ class ExternalContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
     data_field_classes = (
             fields.related_object('subscribed_to'),
             fields.current_gestalt('subscriber'),
-            fields.constant('unsubscribe', value=True))
+            fields.constant('unsubscribe', value=True),
+            fields.create_reference(
+                'filters', kwargs={'filter_id': filters.initial_author_no_member.filter_id}),
+            )
 
     def get_related_object(self):
         return self.get_group()
