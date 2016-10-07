@@ -27,7 +27,7 @@ def is_subscribed_to(user, instance):
 def is_subscriber(user, subscription):
     if subscription:
         return (
-                not subscription.unsubscribe 
+                not subscription.unsubscribe
                 and subscription.subscriber == user.gestalt)
     return False
 

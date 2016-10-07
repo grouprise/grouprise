@@ -85,7 +85,7 @@ class ExternalContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
             '<em>{{ group }}</em> erhalten, deren Autor nicht Gruppenmitglied '
             'ist')
     message = 'Du erhältst nun keine Benachrichtigungen mehr.'
-    
+
     data_field_classes = (
             fields.related_object('subscribed_to'),
             fields.current_gestalt('subscriber'),
