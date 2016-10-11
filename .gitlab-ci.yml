@@ -1,9 +1,9 @@
 before_script:
-        - virtualenv -p python3 $CI_PROJECT_DIR/.venv/stadtgestalten
-        - source $CI_PROJECT_DIR/.venv/stadtgestalten/bin/activate
+        - virtualenv -p python3 "$CI_PROJECT_DIR/.venv/stadtgestalten"
+        - source "$CI_PROJECT_DIR/.venv/stadtgestalten/bin/activate"
         - pip install --upgrade pip
         - pip install -r requirements.txt
 
 build:
         script:
-            - VIRTUALENV_BASE=$CI_PROJECT_DIR/.venv make test
+            - VIRTUALENV_BASE="$CI_PROJECT_DIR/.venv" make test
