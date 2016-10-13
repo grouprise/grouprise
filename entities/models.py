@@ -105,29 +105,6 @@ class AutoSlugField(models.SlugField):
             return super().pre_save(model_instance, add)
 
 
-# FIXME: can be deleted after sqashing migrations
-class Group(core.models.Model):
-    address = models.TextField('Anschrift', blank=True)
-    avatar = models.ImageField(blank=True)
-    avatar_color = models.CharField(max_length=7, default=get_random_color)
-    closed = models.BooleanField(
-            'Geschlossene Gruppe',
-            default=False,
-            help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
-    date_created = models.DateField(auto_now_add=True)
-    date_founded = models.DateField('Gruppe gegründet', null=True, blank=True)
-    logo = models.ImageField(blank=True)
-    name = models.CharField('Name', max_length=255)
-    slug = AutoSlugField(
-            'Adresse der Gruppenseite', populate_from='name', reserve=['gestalt', 'stadt'],
-            unique=True)
-    url = models.URLField('Adresse im Web', blank=True)
-    description = models.TextField('Kurzbeschreibung', blank=True, default='', max_length=200)
-
-    class Meta:
-        ordering = ('name',)
-
-
 class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')
     group = models.ForeignKey('groups.Group')
