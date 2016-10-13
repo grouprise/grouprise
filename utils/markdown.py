@@ -2,7 +2,7 @@ from features.groups import models as groups
 import markdown
 from markdown import inlinepatterns
 
-RE_GROUP_REF = r'@(\S+)'
+RE_GROUP_REF = r'@([a-zA-Z_-]+)'
 
 
 class GroupReferencePattern(inlinepatterns.ReferencePattern):
