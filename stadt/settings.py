@@ -96,6 +96,7 @@ TEMPLATES = [
                 'content.context_processors.statistics',
                 'entities.context_processors.groups',
                 'entities.context_processors.statistics',
+                'features.memberships.context_processors.my_memberships',
                 'stadt.context_processors.site',
                 'stadt.context_processors.assets',
             ],
