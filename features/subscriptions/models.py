@@ -20,14 +20,14 @@ class Subscription(models.Model):
     subscriber = models.ForeignKey('entities.Gestalt')
     unsubscribe = models.BooleanField(default=False)
 
-    objects = models.Manager.from_queryset(querysets.Subscription)()
+    objects = querysets.SubscriptionManager.from_queryset(querysets.Subscription)()
 
     class Meta:
         unique_together = ('content_type', 'object_id', 'subscriber')
 
     def update_gestalten(self, gestalten, association):
         """
-        Given a list of gestalten add or remove the subscriber from this list
+        Given a set of gestalten add or remove the subscriber from this set
         if the filters of this subscription match the association
         """
         filters = self.filters.all()
@@ -42,3 +42,10 @@ class Subscription(models.Model):
                 gestalten.discard(self.subscriber)
             else:
                 gestalten.add(self.subscriber)
+
+
+class Unsubscription(Subscription):
+    objects = querysets.UnsubscriptionManager.from_queryset(querysets.Subscription)()
+
+    class Meta:
+        proxy = True

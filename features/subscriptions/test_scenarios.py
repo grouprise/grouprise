@@ -5,6 +5,7 @@ from . import (
 from core import tests
 from features.comments import tests as comments
 from features.content import tests as content
+from features.conversations import tests as conversations
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
@@ -48,6 +49,41 @@ class OtherContentSubscriber(
     """
     If an author creates a comment
     * a notification to content subscribers should be sent.
+    """
+
+
+class Conversation(
+        content_subscriptions.NoLink,
+        conversations.ConversationMixin, tests.Test):
+    """
+    If a group member views a conversation
+    * the conversation page has no links to (un-)subscribe.
+    """
+
+
+class ExternalConversation(
+        content_subscriptions.ExternalUnsubscribeLink,
+        content_subscriptions.ExternalUnsubscribeAllowed,
+        # content_subscriptions.DeleteExternalUnsubscriptionForbidden,
+        conversations.ExternalConversationMixin, tests.Test):
+    """
+    If a group member views an external conversation
+    * the conversation page has a link to unsubscribe from all external conversations
+    * external unsubscription is allowed
+    """
+
+
+class ExternalConversationUnsubscribed(
+        # content_subscriptions.DeleteExternalUnsubscriptionLink,
+        content_subscriptions.ExternalUnsubscribeForbidden,
+        # content_subscriptions.DeleteExternalUnsubscriptionAllowed,
+        # comments.NoNotification,
+        conversations.NoNotificationOnExternalConversation,
+        mixins.ExternalUnsubscribedMixin, gestalten.OtherGestaltMixin, tests.Test):
+    """
+    If a group member is unsubscribed from external conversations
+    * external unsubscription is forbidden
+    * gestalt receives no notifications on external conversations
     """
 
 

@@ -13,3 +13,13 @@ class Subscription(models.QuerySet):
                     object_id=instance.id,
                     **kwargs)
         return super().filter(**kwargs)
+
+
+class SubscriptionManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(unsubscribe=False)
+
+
+class UnsubscriptionManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(unsubscribe=True)

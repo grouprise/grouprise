@@ -13,6 +13,13 @@ class OtherCommentedMixin(content.ContentMixin, gestalten.OtherGestaltMixin):
                 text='Other Text')
 
 
+class NoNotification:
+    def test_comment(self):
+        models.Comment.objects.create(
+                author=self.other_gestalt, content=self.content, text='Test')
+        self.assertNoNotificationSent()
+
+
 class NotificationToOtherGestalt:
     def test_comment(self):
         models.Comment.objects.create(

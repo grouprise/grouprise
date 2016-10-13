@@ -7,10 +7,9 @@ import rules
 
 @rules.predicate
 def has_external_content_unsubscription_for(user, group):
-    return models.Subscription.objects.filter(
+    return models.Unsubscription.objects.filter(
             subscribed_to=group,
             subscriber=user.gestalt,
-            unsubscribe=True,
             ).exists()
 
 

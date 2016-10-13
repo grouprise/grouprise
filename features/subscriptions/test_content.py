@@ -9,6 +9,9 @@ class NoLink:
                 response, 'content-subscribe', self.content.pk)
         self.assertNotContainsLink(
                 response, 'content-unsubscribe', self.content.pk)
+        if hasattr(self, 'group'):
+            self.assertNotContainsLink(response, 'external-content-unsubscribe', self.group.pk)
+        
 
 
 class OnlySubscribeLink:
@@ -26,6 +29,13 @@ class OnlyUnsubscribeLink:
                 response, 'content-subscribe', self.content.pk)
         self.assertContainsLink(
                 response, 'content-unsubscribe', self.content.pk)
+
+
+class ExternalUnsubscribeLink:
+    def test_content(self):
+        response = self.client.get(self.content.get_absolute_url())
+        self.assertContainsLink(
+                response, 'external-content-unsubscribe', self.group.pk)
 
 
 class SubscribeAllowed:
@@ -88,4 +98,28 @@ class UnsubscribeForbidden:
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
                 url='content-unsubscribe', key=self.content.pk,
+                response={tests.HTTP_FORBIDDEN_OR_LOGIN})
+
+
+class ExternalUnsubscribeAllowed:
+    def test_external_unsubscribe(self):
+        self.assertRequest(
+                methods=[tests.HTTP_GET],
+                url='external-content-unsubscribe', key=self.group.pk,
+                response={tests.HTTP_OK})
+        self.assertRequest(
+                methods=[tests.HTTP_POST],
+                url='external-content-unsubscribe', key=self.group.pk,
+                response={
+                    tests.HTTP_REDIRECTS: self.content.get_absolute_url()})
+        self.assertNotExists(
+                models.Unsubscription,
+                subscribed_to=self.group, subscriber=self.gestalt)
+
+
+class ExternalUnsubscribeForbidden:
+    def test_external_unsubscribe(self):
+        self.assertRequest(
+                methods=[tests.HTTP_GET, tests.HTTP_POST],
+                url='external-content-unsubscribe', key=self.group.pk,
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
