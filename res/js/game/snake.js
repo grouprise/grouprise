@@ -160,6 +160,7 @@ function Game(canvas, opts = {}) {
         ctx.textAlign = "center";
         ctx.font = `700 ${opts.font_size * 3}px/1 sans-serif`;
         ctx.fillText("Game Over", canvas.clientWidth / 2, canvas.clientHeight / 2);
+        opts.on_finish && opts.on_finish();
         unbind();
     }
 
