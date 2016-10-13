@@ -42,7 +42,9 @@ class Notification:
             site = sites_models.Site.objects.get_current()
             context = self.kwargs.copy()
             context.update({'site': site})
-            body = loader.render_to_string(self.get_template_name(), context)
+            template = loader.get_template(self.get_template_name())
+            template.backend.engine.autoescape = False
+            body = template.render(context)
             sender = self.get_sender()
             name = '{} via '.format(sender) if sender and with_name else ''
             from_email = '{name}{site} <{email}>'.format(
