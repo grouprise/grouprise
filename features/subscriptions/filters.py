@@ -1,6 +1,3 @@
-from features.memberships import models as memberships
-
-
 filters = {}
 
 

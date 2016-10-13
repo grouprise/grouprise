@@ -11,7 +11,6 @@ class NoLink:
                 response, 'content-unsubscribe', self.content.pk)
         if hasattr(self, 'group'):
             self.assertNotContainsLink(response, 'external-content-unsubscribe', self.group.pk)
-        
 
 
 class OnlySubscribeLink:
