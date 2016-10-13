@@ -40,7 +40,10 @@ class ModelForm(StadtMixin, django.ModelForm):
     def save(self, commit=True):
         for field in self.data_fields:
             field.save_data(self)
-        return super().save()
+        obj = super().save()
+        for field in self.data_fields:
+            field.save_references(obj)
+        return obj
 
 
 class Submit(bootstrap.StrictButton):

@@ -111,8 +111,8 @@ class ExternalUnsubscribeAllowed:
                 methods=[tests.HTTP_POST],
                 url='external-content-unsubscribe', key=self.group.pk,
                 response={
-                    tests.HTTP_REDIRECTS: self.content.get_absolute_url()})
-        self.assertNotExists(
+                    tests.HTTP_REDIRECTS: self.group.get_absolute_url()})
+        self.assertExists(
                 models.Unsubscription,
                 subscribed_to=self.group, subscriber=self.gestalt)
 

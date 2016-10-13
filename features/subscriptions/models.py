@@ -10,7 +10,7 @@ class Filter(models.Model):
     subscription = models.ForeignKey('Subscription', related_name='filters')
 
     def match(self, association):
-        return filters.filters[self.filter_id]()
+        return filters.filters[self.filter_id](association)
 
 
 class Subscription(models.Model):
@@ -46,6 +46,13 @@ class Subscription(models.Model):
 
 class Unsubscription(Subscription):
     objects = querysets.UnsubscriptionManager.from_queryset(querysets.Subscription)()
+
+    class Meta:
+        proxy = True
+
+
+class SubOrUnsubscription(Subscription):
+    objects = models.Manager.from_queryset(querysets.Subscription)()
 
     class Meta:
         proxy = True

@@ -9,10 +9,7 @@ def register(filter_function):
 
 
 def initial_author_no_member(association):
-    return memberships.Membership.objects.filter(
-            group=association.group,
-            member=association.content.author
-            ).exists()
+    return association.is_external()
 
 initial_author_no_member.filter_id = 1
 register(initial_author_no_member)

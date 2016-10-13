@@ -38,6 +38,9 @@ class Field:
             setattr(form.instance, self.name, self.get_data(
                 form.cleaned_data.get(self.get_name())))
 
+    def save_references(self, instance):
+        pass
+
 field = functools.partial(fieldclass_factory, Field)
 
 
@@ -53,6 +56,9 @@ class Constant(Field):
 
     def get_data(self, form_data):
         return self.value
+
+    def get_layout(self):
+        return None
 
 constant = functools.partial(fieldclass_factory, Constant)
 
@@ -139,8 +145,11 @@ related_object = functools.partial(fieldclass_factory, RelatedObject)
 
 
 class CreateReference(Field):
-    def save_data(self, form):
-        ref = getattr(form.instance, self.name)
-        ref.objects.create(**self.kwargs)
+    def get_layout(self):
+        return None
+
+    def save_references(self, instance):
+        ref = getattr(instance, self.name)
+        ref.create(**self.kwargs)
 
 create_reference = functools.partial(fieldclass_factory, CreateReference)

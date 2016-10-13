@@ -6,7 +6,7 @@ import itertools
 
 def update_recipients(recipients, associations):
     for association in associations:
-        subscriptions = models.Subscription.objects.filter(
+        subscriptions = models.SubOrUnsubscription.objects.filter(
                 subscribed_to=association.group)
         for subscription in subscriptions:
             subscription.update_gestalten(recipients, association)

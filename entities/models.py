@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import auth
 from django.core import exceptions, urlresolvers
 from django.db import models
+from features.memberships import models as memberships
 import randomcolor
 from utils import text
 
@@ -131,3 +132,8 @@ class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')
     group = models.ForeignKey('groups.Group')
     pinned = models.BooleanField(default=False)
+
+    def is_external(self):
+        return not memberships.Membership.objects.filter(
+                group=self.group, member=self.content.author
+                ).exists()
