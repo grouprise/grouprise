@@ -1,8 +1,20 @@
 from features.groups import models as groups
 import markdown
-from markdown import inlinepatterns
+from markdown import blockprocessors, inlinepatterns
 
 RE_GROUP_REF = r'@([a-zA-Z_-]+)'
+
+
+class CuddledListProcessor(blockprocessors.BlockProcessor):
+    def test(self, parent, block):
+        print(block)
+        return False
+
+
+class CuddledListExtension(markdown.Extension):
+    def extendMarkdown(self, md, md_globals):
+        md.parser.blockprocessors.add(
+                'cuddledlist', CuddledListProcessor(md.parser), '<paragraph')
 
 
 class GroupReferencePattern(inlinepatterns.ReferencePattern):

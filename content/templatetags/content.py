@@ -16,7 +16,8 @@ markdown_extensions = (
     nl2br.Nl2BrExtension(),
     utils.markdown.GroupReferenceExtension(),
     sane_lists.SaneListExtension(),
-    fenced_code.FencedCodeExtension()
+    fenced_code.FencedCodeExtension(),
+    utils.markdown.CuddledListExtension(),
 )
 
 content_allowed_tags = (
