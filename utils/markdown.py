@@ -1,14 +1,23 @@
 from features.groups import models as groups
-import markdown
+import markdown, re
 from markdown import blockprocessors, inlinepatterns
 
 RE_GROUP_REF = r'@([a-zA-Z_-]+)'
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):
+    RE = re.compile(r'(\n)\*[ ](.*)')
+
     def test(self, parent, block):
-        print(block)
-        return False
+        return bool(self.RE.search(block))
+
+    def run(self, parent, blocks):
+        block = blocks.pop(0)
+        m = self.RE.search(block)
+        before = block[:m.start()]
+        self.parser.parseBlocks(parent, [before])
+        after = block[m.start():]
+        self.parser.parseBlocks(parent, [after])
 
 
 class CuddledListExtension(markdown.Extension):
