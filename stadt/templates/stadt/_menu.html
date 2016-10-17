@@ -41,6 +41,26 @@
                         </header>
                         <div class="dock-content">
                             <div class="dock-content-inner">
+                                <div class="dock-fit dock-header-extension hidden-lg">
+                                    <ul class="nav-slide">
+                                        <li>
+                                            <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' %}nav-slide-current{% endif %}">Gruppen</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-slide-current{% endif %}">Gestalten</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'gallery-index' %}" class="{% if menu|lower == 'gallery' %}nav-slide-current{% endif %}">Galerien</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 <ol class="tabbls">
                                     {% if group %}
                                         <li data-order="high">

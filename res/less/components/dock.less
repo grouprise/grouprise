@@ -4,6 +4,12 @@
     padding: 2rem;
     border-radius: 2px;
     font-size: 1rem;
+    overflow: hidden;
+}
+
+.dock-fit {
+    margin-left: -2rem;
+    margin-right: -2rem;
 }
 
 .dock[data-dropdown] {
@@ -80,14 +86,11 @@
 }
 
 .dock-header {
-    width: 400px;
     max-width: 100vw;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1rem 2rem;
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
-    margin-bottom: 1rem;
+    padding: 1rem 0 2rem;
     margin-left: auto;
 
     h2 {
@@ -97,8 +100,18 @@
     .on-handhelds({
         padding-left: 2rem;
         padding-right: 2rem;
-        width: 100%;
     });
+
+    .on-desktops({
+        border-bottom: 1px solid rgba(0, 0, 0, .1);
+        margin-bottom: 1rem;
+    });
+}
+
+.dock-header-extension {
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-width: 1px 0 1px 0;
 }
 
 .dock-content {

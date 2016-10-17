@@ -27,8 +27,12 @@
 }
 
 .tabbl {
-    min-width: 300px;
-    max-width: 100vw;
+    width: 300px;
+    max-width: 100%;
+
+    .on-small-devices({
+        width: 100%;
+    });
 }
 
 .tabbl-header {
