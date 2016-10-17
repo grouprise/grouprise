@@ -55,6 +55,15 @@
     &:focus {
         border-color: @brand-primary;
         color: @brand-primary;
+
+        &.btn-addon-ok:after {
+            background-color: @brand-primary;
+        }
+    }
+
+    &.btn-addon-ok:after {
+        background-color: @color-text-default;
+        color: white;
     }
 }
 
@@ -80,6 +89,11 @@
     border-color: @brand-primary;
     background-color: @brand-primary;
     color: white;
+
+    &.btn-addon-ok:after {
+        background-color: rgba(0, 0, 0, .2);
+        color: white;
+    }
 }
 
 .btn-toolbar {
@@ -169,15 +183,6 @@
         align-items: center;
         justify-content: center;
         text-indent: 2px;
-    }
-
-    &.btn-default:after {
-        background-color: @color-text-default;
-        color: white;
-    }
-
-    &.btn-primary:after {
-        background-color: rgba(0, 0, 0, .2);
-        color: white;
+        transition: background-color .2s, color .1s;
     }
 }
