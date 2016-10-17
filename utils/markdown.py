@@ -1,5 +1,6 @@
+import re
+import markdown
 from features.groups import models as groups
-import markdown, re
 from markdown import blockprocessors, inlinepatterns
 
 RE_GROUP_REF = r'@([a-zA-Z_-]+)'

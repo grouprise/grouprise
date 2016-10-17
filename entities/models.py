@@ -1,5 +1,4 @@
 from allauth.account import adapter as allauth_adapter
-import core.models
 from django.conf import settings
 from django.contrib import auth
 from django.core import exceptions, urlresolvers
