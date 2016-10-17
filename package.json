@@ -22,11 +22,12 @@
     "grunt-svgmin": "^3.3.0",
     "json-loader": "^0.5.4",
     "postcss-banner": ">=1",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "webpack-bundle-size-analyzer": "^2.2.0"
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
-    "bel": "latest",
+    "bel": "^4.5.0",
     "bootstrap": "^3.3.6",
     "closest": "0.0.1",
     "cookie_js": "^1.2.0",
