@@ -25,6 +25,10 @@ function attach_nav(el, opts) {
 }
 
 function attach_index(el, opts, num_slides) {
+    if(num_slides <= 1) {
+        return;
+    }
+
     el.insertAdjacentHTML("beforeend", `
         <ol class="${opts.css_index}">
             ${range(1, Math.min(num_slides + 1, 5)).map(idx => `
