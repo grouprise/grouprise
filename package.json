@@ -40,6 +40,7 @@
     "eventemitter3": "^1.2.0",
     "flatpickr": "^1.8.9",
     "font-awesome": "^4.5.0",
+    "lodash": "^4.16.4",
     "moment": "^2.13.0",
     "photoswipe": "^4.1.1",
     "qwest": "^4.4.4",
