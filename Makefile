@@ -6,6 +6,7 @@ VIRTUALENV_NAME ?= stadtgestalten
 DJANGO_SETTINGS ?= stadt.prod_settings
 VIRTUALENV_BASE ?= /srv/virtualenvs
 BUILD_PATH ?= build
+BACKUP_PATH ?= backup
 SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
 PYTHON_DIRS = content entities stadt features core utils
 # uwsgi beobachtet diese Datei und schaltet bei ihrer Existenz in den Offline-Modus:
@@ -13,6 +14,11 @@ PYTHON_DIRS = content entities stadt features core utils
 #   route = .* redirect:https://offline.stadtgestalten.org/
 #   endif =
 OFFLINE_MARKER_FILE = _OFFLINE_MARKER_UWSGI
+
+DJANGO_SETTINGS_MODULE ?= stadt.prod_settings
+DB_CONNECTION_BACKUP ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .backup $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'pg_dump \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" >$(DB_BACKUP_FILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
+DB_CONNECTION_RESTORE ?= $(shell (echo "from stadt.prod_settings import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .restore $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'psql \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" <$(DB_RESTORE_DATAFILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
+DB_BACKUP_FILE ?= $(BACKUP_PATH)/data-$(shell date +%Y%m%d%H%M).db
 
 # symlink magic for badly packaged dependencies using "node" explicitely
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
@@ -28,11 +34,22 @@ NEXT_RELEASE = $(shell (cat $(VERSION_FILE); echo "tokens = [int(v) for v in VER
 GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
 
-.PHONY: asset_version default clean deploy deploy-git release-breaking release-feature release-patch reload static update-virtualenv test website-offline website-online
+.PHONY: asset_version clean database-backup database-restore default deploy \
+	deploy-git release-breaking release-feature release-patch reload \
+	static update-virtualenv test website-offline website-online
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
 
+database-backup:
+	@mkdir -p "$(BACKUP_PATH)"
+	$(DB_CONNECTION_BACKUP)
+
+database-restore:
+	@if [ -z "$$DB_RESTORE_DATAFILE" ]; then \
+		echo >&2 "ERROR: You need to specify the source data file location (DB_RESTORE_DATAFILE=???)"; \
+		exit 1; fi
+	$(DB_CONNECTION_RESTORE)
 
 default: $(GRUNT_BIN)
 	($(HELPER_PATH_ENV); export PATH; $(NODEJS_BIN) $(GRUNT_BIN))
@@ -66,6 +83,7 @@ deploy:
 	$(MAKE) asset_version
 	$(MAKE) test
 	$(MAKE) website-offline
+	$(MAKE) database-backup
 	$(MAKE) default
 	$(MAKE) update-virtualenv
 	$(MAKE) static
