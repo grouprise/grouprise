@@ -103,10 +103,10 @@
             {% if can_create_content %}
                 <div class="dropdown-container">
                     <input class="dropdown-state" id="content-new" type="checkbox" />
-                    <label class="btn btn-default" for="content-new">
+                    <label class="btn btn-default" for="content-new" data-component="openable" data-openable-target="#content-new-dropdown">
                         Neuer Beitrag <span class="caret"></span>
                     </label>
-                    <ul class="dropdown" data-dropdown>
+                    <ul class="dropdown" id="content-new-dropdown" data-dropdown>
                         <li><a href="{% url 'article-create' %}">Artikel</a></li>
                         <li><a href="{% url 'event-create' %}">Ereignis</a></li>
                         <li><a href="{% url 'gallery-create' %}">Galerie</a></li>

@@ -9,7 +9,7 @@
             </li>
             <li>
                 <input class="dropdown-state" id="menu-user" type="checkbox" />
-                <label for="menu-user" class="dock-trigger tcon-wrap nav-state-toggle" aria-label="Zeige Menü">
+                <label for="menu-user" class="dock-trigger tcon-wrap nav-state-toggle" aria-label="Zeige Menü" data-component="openable" data-openable-target="#user-menu-dropdown">
                     <span class="tcon tcon-menu--xbutterfly">
                         <span class="tcon-menu__lines" aria-hidden="true"></span>
                     </span>
@@ -21,7 +21,7 @@
                         <i class="caret"></i>
                     </span>
                 </label>
-                <div class="dock dock-light" data-dropdown>
+                <div class="dock dock-light" id="user-menu-dropdown" data-dropdown>
                     <div class="dock-inner">
                         <span class="dock-decoration"></span>
                         <header class="dock-header">
