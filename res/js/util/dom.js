@@ -67,11 +67,20 @@ function has_attr(el, name) {
 
 function component(name, init, opts = {}) {
     function parse_conf(el) {
+        const conf_matcher = new RegExp(`data-(?:component|${name})-([^-]+)`, "i");
         const default_conf = {};
+
+        to_array(el.attributes).forEach((attr) => {
+            const match = conf_matcher.exec(attr.name);
+
+            if(conf_matcher.test(attr.name)) {
+                default_conf[match[1]] = attr.value;
+            }
+        });
 
         try {
             const conf = JSON.parse(el.getAttribute("data-component-conf"));
-            return conf || default_conf;
+            return Object.assign(default_conf, conf);
         } catch(e) {
             return default_conf;
         }
