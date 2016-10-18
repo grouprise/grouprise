@@ -15,6 +15,11 @@
       "from": "bootstrap@3.3.7",
       "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz"
     },
+    "bowser": {
+      "version": "1.4.6",
+      "from": "bowser@latest",
+      "resolved": "https://registry.npmjs.org/bowser/-/bowser-1.4.6.tgz"
+    },
     "clipboard": {
       "version": "1.5.13",
       "from": "clipboard@latest",

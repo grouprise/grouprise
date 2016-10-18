@@ -15,6 +15,7 @@ import input from "./transforms/input";
 import snake from "./transforms/snake";
 import openable from "./transforms/openable";
 import clipboard from "./transforms/clipboard";
+import browser_warning from "./transforms/browser-warning";
 
 
 function init(search_in = document) {
@@ -28,6 +29,7 @@ function init(search_in = document) {
     component("snake", snake, search_in);
     component("openable", openable, search_in);
     component("clipboard", clipboard, search_in);
+    component("browser-warning", browser_warning, search_in);
 
     // initialize components not based on component interface
     transform_icon($(".tcon-wrap"));
