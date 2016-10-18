@@ -2,6 +2,12 @@ import browser from "bowser";
 import bel from "bel";
 import delegate from "delegate";
 
+const is_unsupported = browser.isUnsupportedBrowser({
+    msie: "11",
+    firefox: "45",
+    chrome: "49"
+}, window.navigator.userAgent);
+
 const dismissal = {
     key: "browser-version-dismissed",
     is_dismissed: function() {
@@ -13,12 +19,6 @@ const dismissal = {
 };
 
 export default (el) => {
-    const is_unsupported = browser.isUnsupportedBrowser({
-        msie: "11",
-        firefox: "45",
-        chrome: "49"
-    }, window.navigator.userAgent);
-
     if(!dismissal.is_dismissed() && is_unsupported) {
         const disclaimer = bel`
             <div class="disclaimer disclaimer-info">
