@@ -56,9 +56,9 @@
       "resolved": "https://registry.npmjs.org/component-query/-/component-query-0.0.3.tgz"
     },
     "cookie_js": {
-      "version": "1.2.1",
-      "from": "cookie_js@1.2.1",
-      "resolved": "https://registry.npmjs.org/cookie_js/-/cookie_js-1.2.1.tgz"
+      "version": "1.2.0",
+      "from": "cookie_js@1.2.0",
+      "resolved": "https://registry.npmjs.org/cookie_js/-/cookie_js-1.2.0.tgz"
     },
     "core-js": {
       "version": "2.4.0",
