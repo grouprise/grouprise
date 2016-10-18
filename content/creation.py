@@ -2,6 +2,7 @@ from . import forms, models
 from django.conf import settings
 from django.core import urlresolvers
 from django.views import generic
+from django.http import Http404
 from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
@@ -46,10 +47,15 @@ class BaseMessage(utils_views.ActionMixin, generic.CreateView):
     message = 'Die Nachricht wurde versendet.'
 
     def get_initial(self):
+        recipient = self.get_recipient()
+
+        if not recipient:
+            raise Http404("recipient not found")
+
         if self.request.user.is_authenticated():
-            return {'recipient': self.get_recipient().pk, 'sender': self.request.user.email}
+            return {'recipient': recipient.pk, 'sender': self.request.user.email}
         else:
-            return {'recipient': self.get_recipient().pk}
+            return {'recipient': recipient.pk}
 
     def get_parent(self):
         return self.get_recipient()
