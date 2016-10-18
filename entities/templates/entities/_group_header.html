@@ -8,16 +8,18 @@
 <div class="group-header" data-component="group-header">
     <div class="group-gallery">
         {% if group.get_head_gallery and can_view_head_gallery and group.get_head_gallery.images.all %}
-            <div class="carousel">
-                <ol class="carousel-slides">
-                    {% for image in group.get_head_gallery.images.all %}
-                        <li>
-                            {% thumbnail image.file 'x500' crop='center' as thumb %}
-                                <img src="{{ thumb.url }}" alt="{{ group.name }}">
-                            {% endthumbnail %}
-                        </li>
-                    {% endfor %}
-                </ol>
+            <div class="carousel-container" data-component="carousel">
+                <div class="carousel">
+                    <ol class="carousel-slides">
+                        {% for image in group.get_head_gallery.images.all %}
+                            <li>
+                                {% thumbnail image.file 'x500' crop='center' as thumb %}
+                                    <img src="{{ thumb.url }}" alt="{{ group.name }}">
+                                {% endthumbnail %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </div>
             </div>
         {% else %}
             <div class="disclaimer">
