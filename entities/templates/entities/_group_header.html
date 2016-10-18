@@ -86,8 +86,13 @@
                     <i class="sg sg-link"></i>
                     <span class="sr-only">URL auf Stadtgestalten</span>
                 </dt>
-                <dd>
-                    {{ site.domain }}/ {{ group.slug }}
+                <dd class="selectable">
+                    {{ site.domain }}/<span class="selectable-token">{{ group.slug }}</span>
+                    <button type="button" class="btn-text hide-no-js" data-component="clipboard"
+                            data-clipboard-text="{{ site.domain }}/{{ group.slug }}"
+                            title="URL zu dieser Gruppe kopieren">
+                        <i class="fa fa-clipboard"></i>
+                    </button>
                 </dd>
             </dl>
         </div>

@@ -30,6 +30,7 @@
     "babel-runtime": "^6.9.2",
     "bel": "^4.5.0",
     "bootstrap": "^3.3.6",
+    "clipboard": "^1.5.13",
     "closest": "0.0.1",
     "cookie_js": "^1.2.0",
     "delegate": "^3.0.1",

@@ -15,6 +15,11 @@
       "from": "bootstrap@3.3.7",
       "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz"
     },
+    "clipboard": {
+      "version": "1.5.13",
+      "from": "clipboard@latest",
+      "resolved": "https://registry.npmjs.org/clipboard/-/clipboard-1.5.13.tgz"
+    },
     "closest": {
       "version": "0.0.1",
       "from": "closest@0.0.1",
@@ -67,12 +72,12 @@
     },
     "emoji-regex": {
       "version": "6.0.0",
-      "from": "emoji-regex@>=6.0.0 <7.0.0",
+      "from": "emoji-regex@latest",
       "resolved": "https://registry.npmjs.org/emoji-regex/-/emoji-regex-6.0.0.tgz"
     },
     "eventemitter3": {
       "version": "1.2.0",
-      "from": "eventemitter3@>=1.2.0 <2.0.0",
+      "from": "eventemitter3@latest",
       "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-1.2.0.tgz"
     },
     "flatpickr": {
@@ -107,6 +112,11 @@
       "from": "global@>=4.3.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/global/-/global-4.3.1.tgz"
     },
+    "good-listener": {
+      "version": "1.1.8",
+      "from": "good-listener@>=1.1.6 <2.0.0",
+      "resolved": "https://registry.npmjs.org/good-listener/-/good-listener-1.1.8.tgz"
+    },
     "growl": {
       "version": "1.8.1",
       "from": "growl@1.8.1",
@@ -124,7 +134,7 @@
     },
     "inherits": {
       "version": "2.0.1",
-      "from": "inherits@>=2.0.1 <2.1.0",
+      "from": "inherits@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
     },
     "jade": {
@@ -176,7 +186,7 @@
     },
     "minimatch": {
       "version": "0.2.14",
-      "from": "minimatch@>=0.2.11 <0.3.0",
+      "from": "minimatch@>=0.2.12 <0.3.0",
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-0.2.14.tgz"
     },
     "mocha": {
@@ -233,7 +243,7 @@
     },
     "photoswipe": {
       "version": "4.1.1",
-      "from": "photoswipe@>=4.1.1 <5.0.0",
+      "from": "photoswipe@latest",
       "resolved": "https://registry.npmjs.org/photoswipe/-/photoswipe-4.1.1.tgz"
     },
     "pinkyswear": {
@@ -273,6 +283,11 @@
       "from": "samsam@1.1.2",
       "resolved": "https://registry.npmjs.org/samsam/-/samsam-1.1.2.tgz"
     },
+    "select": {
+      "version": "1.1.0",
+      "from": "select@>=1.0.6 <2.0.0",
+      "resolved": "https://registry.npmjs.org/select/-/select-1.1.0.tgz"
+    },
     "sigmund": {
       "version": "1.0.1",
       "from": "sigmund@>=1.0.0 <1.1.0",
@@ -280,7 +295,7 @@
     },
     "simplemde": {
       "version": "1.11.2",
-      "from": "simplemde@>=1.11.2 <2.0.0",
+      "from": "simplemde@*",
       "resolved": "https://registry.npmjs.org/simplemde/-/simplemde-1.11.2.tgz"
     },
     "sinon": {
@@ -295,13 +310,18 @@
     },
     "tether-drop": {
       "version": "1.4.2",
-      "from": "tether-drop@>=1.4.2 <2.0.0",
+      "from": "tether-drop@latest",
       "resolved": "https://registry.npmjs.org/tether-drop/-/tether-drop-1.4.2.tgz"
     },
     "tether-tooltip": {
       "version": "1.2.0",
-      "from": "tether-tooltip@>=1.2.0 <2.0.0",
+      "from": "tether-tooltip@latest",
       "resolved": "https://registry.npmjs.org/tether-tooltip/-/tether-tooltip-1.2.0.tgz"
+    },
+    "tiny-emitter": {
+      "version": "1.1.0",
+      "from": "tiny-emitter@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/tiny-emitter/-/tiny-emitter-1.1.0.tgz"
     },
     "typo-js": {
       "version": "1.0.1",

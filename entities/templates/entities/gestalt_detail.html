@@ -71,8 +71,13 @@
                             <i class="sg sg-link"></i>
                             <span class="sr-only">URL auf Stadtgestalten</span>
                         </dt>
-                        <dd>
-                            {{ site.domain }}/gestalt/ {{ gestalt.user.username }}
+                        <dd class="selectable">
+                            {{ site.domain }}/gestalt/<span class="selectable-token">{{ gestalt.user.username }}</span>
+                            <button type="button" class="btn-text hide-no-js" data-component="clipboard"
+                                    data-clipboard-text="{{ site.domain }}/gestalt/{{ gestalt.user.username }}"
+                                    title="URL zu dieser Gestalt kopieren">
+                                <i class="fa fa-clipboard"></i>
+                            </button>
                         </dd>
                     </dl>
                 </div>
