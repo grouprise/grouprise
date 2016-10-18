@@ -7,6 +7,7 @@ const raw_banner = grunt.file.read("res/templates/banner.txt");
 const banner = grunt.template.process(raw_banner, { data: { package: pkg } });
 
 module.exports = {
+    root: "res/js",
     entry: "./res/js/index.js",
     output: {
         filename: "./stadt/static/js/app.js"
@@ -33,7 +34,9 @@ module.exports = {
                 loader: "babel",
                 query: {
                     presets: ["es2015"],
-                    plugins: ["transform-runtime"]
+                    plugins: ["transform-runtime", ["babel-root-slash-import", {
+                        "rootPathSuffix": "res/js"
+                    }]]
                 }
             }
         ]
