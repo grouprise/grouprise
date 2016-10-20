@@ -10,6 +10,7 @@ def copy_groups(apps, schema_editor):
     Group2 = apps.get_model('groups.Group')
     for g in Group1.objects.order_by('id'):
         g2 = Group2.objects.create(
+                id=g.id,
                 name=g.name,
                 slug=g.slug,
                 address=g.address,

@@ -9,6 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('groups', '0001_initial'),
         ('memberships', '0007_auto_20160830_1911'),
     ]
 

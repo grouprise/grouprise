@@ -18,6 +18,7 @@ def fix_group_references(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('groups', '0002_auto_20160922_1108'),
         ('memberships', '0008_auto_20160923_0851'),
     ]
 
