@@ -90,13 +90,13 @@ class SignupForm(util_forms.FormMixin, allauth.account.forms.SignupForm):
     layout = (
             layout.HTML(
                 '<p>'
-                    'Benutzerkonto schon vorhanden? <a href="{{ login_url }}">Melde Dich an.</a>'
+                'Benutzerkonto schon vorhanden? <a href="{{ login_url }}">Melde Dich an.</a>'
                 '</p>'
                 '<div class="disclaimer content-block">'
-                    '<p>'
-                        'Deine E-Mail Adresse wird nicht weitergegeben und auch nicht auf der Seite angezeigt.'
-                        'Sie wird dazu genutzt Dir Benachrichtungen zu schicken.'
-                    '</p>'
+                '<p>'
+                'Deine E-Mail Adresse wird nicht weitergegeben und auch nicht auf der Seite '
+                'angezeigt. Sie wird dazu genutzt Dir Benachrichtungen zu schicken.'
+                '</p>'
                 '</div>'
             ),
             'email',

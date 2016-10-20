@@ -64,6 +64,13 @@ class MemberListCreateLink:
         self.assertContainsLink(response, 'member-create', self.group.pk)
 
 
+class MemberListNoCreateLink:
+    def test_members(self):
+        response = self.request(
+                tests.HTTP_GET, url='members', key=self.group.pk)
+        self.assertNotContainsLink(response, 'member-create', self.group.pk)
+
+
 class MemberListForbidden:
     def test_members(self):
         self.assertRequest(

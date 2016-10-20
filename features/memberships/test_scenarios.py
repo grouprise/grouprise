@@ -52,7 +52,7 @@ class GroupMember(
         memberships.OnlyResignLink,
         memberships.JoinForbidden,
         memberships.ResignAllowed,
-        memberships.MemberListCreateLink,
+        memberships.MemberListNoCreateLink,
         memberships.MemberCreateForbidden,
         mixins.MemberMixin, gestalten.OtherGestaltMixin, tests.Test):
     pass
