@@ -212,6 +212,10 @@ SITE_ID = 1
 
 ABOUT_GROUP_ID = 1
 
+SCORE_PROCESSORS = [
+        'features.memberships.scores.group',
+        ]
+
 ROOT_SIGNALCONF = 'stadt.signals'
 
 
