@@ -1,4 +1,6 @@
-{% load fragments rules thumbnail utils crispy_forms_tags  %}
+{% load cache fragments rules thumbnail utils crispy_forms_tags  %}
+
+{% cache cache_timeout group-header user group %}
 
 {% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'groups.change_group' user group as can_edit %}
@@ -123,3 +125,5 @@
         </div>
     </div>
 </div>
+
+{% endcache %}

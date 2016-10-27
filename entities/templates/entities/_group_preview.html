@@ -1,4 +1,6 @@
-{% load thumbnail utils content %}
+{% load cache thumbnail utils content %}
+
+{% cache cache_timeout group-preview user group %}
 
 {% kwacro preview_body %}
     <header class="group-preview-header">
@@ -33,3 +35,5 @@
         {%  usekwacro preview_body %}
     </div>
 {% endif %}
+
+{% endcache %}

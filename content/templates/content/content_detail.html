@@ -1,5 +1,5 @@
 {% extends 'stadt/stadt.html' %}
-{% load content rules %}
+{% load cache content rules %}
 
 {% block heading %}{% endblock %}
 
@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block content %}
+    {% cache cache_timeout content-detail user content %}
     <article class="content">
         {% include 'content/_content_header.html' %}
 
@@ -43,6 +44,7 @@
             {% endif %}
         </footer>
     </article>
+    {% endcache %}
 {% endblock %}
 
 
