@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import entities.models
+import core.models
 
 
 class Migration(migrations.Migration):
@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='slug',
-            field=entities.models.AutoSlugField(populate_from='name', reserve=['gestalt', 'stadt'], unique=True, validators=[entities.models.validate_reservation], verbose_name='Adresse der Gruppenseite'),
+            field=core.models.AutoSlugField(populate_from='name', reserve=['gestalt', 'stadt'], unique=True, validators=[core.models.validate_reservation], verbose_name='Adresse der Gruppenseite'),
         ),
     ]
