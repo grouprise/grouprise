@@ -1,7 +1,5 @@
 from entities import models
-from django.conf import settings
 from django.contrib.auth import hashers
-from features.groups import models as groups_models
 
 
 def gestalten(request):

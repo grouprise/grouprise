@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Group:
     THRESHOLD = timezone.now() - datetime.timedelta(days=settings.SCORE_CONTENT_AGE)
-    
+
     @classmethod
     def get_num_gestalten(cls, group):
         return group.memberships.count()
