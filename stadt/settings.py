@@ -95,6 +95,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'content.context_processors.events',
                 'content.context_processors.statistics',
+                'features.caching.context_processors.cache_timeout',
                 'features.gestalten.context_processors.gestalten',
                 'features.groups.context_processors.groups',
                 'features.memberships.context_processors.my_memberships',
