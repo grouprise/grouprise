@@ -12,7 +12,7 @@ class Group(models.QuerySet):
         for m in maxima:
             maxima[m] = 1.0 if maxima[m] == 0.0 else maxima[m]
         scored = counted.annotate(content_score=models.F('num_content') / maxima['content'])
-        return scored.annotate(score=models.F('content_score') * Group.CONTENT_WEIGHT)
+        return scored.annotate(old_score=models.F('content_score') * Group.CONTENT_WEIGHT)
 
     def similar(self, group):
         return self

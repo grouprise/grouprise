@@ -14,6 +14,7 @@ class Group(models.Model):
     name = django.CharField(
             'Name',
             max_length=255)
+    score = django.IntegerField(default=0)
     slug = models.AutoSlugField(
             'Adresse der Gruppenseite',
             populate_from='name',
