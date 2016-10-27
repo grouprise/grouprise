@@ -94,8 +94,8 @@ class Group(utils_views.List):
         kwargs['intro_content'] = self.get_intro_content()
         kwargs['conversations'] = conversations[:3]
         kwargs['has_more_conversations'] = len(conversations) > 3
-        kwargs['sidebar_groups'] = groups.Group.objects.exclude(
-                pk=self.get_group().pk).scored().similar(self.get_group()).order_by('-score')
+        kwargs['group_active_groups'] = groups.Group.objects.exclude(
+                pk=self.get_group().pk).order_by('-score')[:8]
         kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
@@ -159,18 +159,6 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
 
     def get_parent(self):
         return self.object
-
-
-class GroupList(utils_views.PageMixin, filters_views.FilterView):
-    filterset_class = filters.Group
-    menu = 'group'
-    ordering = '-score'
-    permission = 'content.view_content_list'
-    sidebar = ('calendar',)
-    title = 'Gruppen'
-
-    def get_queryset(self):
-        return groups.Group.objects.scored()
 
 
 class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):

@@ -1,6 +1,9 @@
 from . import models
 from content import models as content_models
 from core import fields, views
+from django_filters import views as filters_views
+from entities import filters
+import utils.views
 
 
 class Mixin:
@@ -50,3 +53,16 @@ class Create(views.Create):
     data_field_classes = (
             fields.current_gestalt('gestalt_created', null=True),
             fields.model_field('name'))
+
+
+class List(utils.views.PageMixin, filters_views.FilterView):
+    permission = 'groups.view_list'
+
+    menu = 'group'
+    sidebar = ('calendar',)
+    title = 'Gruppen'
+
+    filterset_class = filters.Group
+
+    def get_queryset(self):
+        return models.Group.objects.order_by('-score')

@@ -1,7 +1,6 @@
 from core import colors, models
 from django.core import urlresolvers
 from django.db import models as django
-from entities import querysets
 
 
 class Group(models.Model):
@@ -48,14 +47,6 @@ class Group(models.Model):
             'Geschlossene Gruppe',
             default=False,
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
-
-    objects = django.Manager.from_queryset(querysets.Group)()
-
-    class Meta:
-        # FIXME: we should use case-insensitive ordering here
-        # https://code.djangoproject.com/ticket/24747
-        # https://code.djangoproject.com/ticket/26257
-        ordering = ('name',)
 
     def __str__(self):
         return self.name

@@ -13,3 +13,7 @@ rules.add_perm(
 rules.add_perm(
         'entities.view_group',
         rules.always_allow)
+
+rules.add_perm(
+        'groups.view_list',
+        rules.always_allow)
