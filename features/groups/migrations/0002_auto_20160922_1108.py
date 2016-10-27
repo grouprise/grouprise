@@ -25,6 +25,8 @@ def copy_groups(apps, schema_editor):
         g2.slug = g.slug
         g2.save()
 
+    # FIXME: check auto-id sequence by adding groups while ignoring IntegrityError
+
 
 class Migration(migrations.Migration):
 
