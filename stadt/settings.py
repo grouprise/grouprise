@@ -212,8 +212,11 @@ SITE_ID = 1
 
 ABOUT_GROUP_ID = 1
 
+SCORE_CONTENT_AGE = 100
+
 SCORE_PROCESSORS = [
-        'features.memberships.scores.group',
+        'features.memberships.scores.Group',
+        'features.subscriptions.scores.Group',
         ]
 
 ROOT_SIGNALCONF = 'stadt.signals'
