@@ -40,7 +40,7 @@ class Members(MembershipMixin, entities_views.GestaltList):
 
     def get_queryset(self):
         return entities_models.Gestalt.objects.filter(
-                memberships__group=self.related_object)
+                memberships__group=self.related_object).order_by('id')
 
 
 class MemberAdd(MembershipMixin, views.Create):
