@@ -1,6 +1,6 @@
 {% load cache rules utils %}
 
-{% cache cache_timeout site-menu user group %}
+{% cache cache_timeout site-menu user.username group.slug %}
 <nav class="nav">
     <div class="container">
         <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>

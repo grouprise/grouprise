@@ -30,10 +30,13 @@ def include(module_name):
 
 
 model_created = dispatch.Signal()
+model_changed = dispatch.Signal()
 
 
 def model_saved(sender, **kwargs):
     if kwargs['created']:
         model_created.send(sender, instance=kwargs['instance'])
+    else:
+        model_changed.send(sender, instance=kwargs['instance'])
 
 signals.post_save.connect(model_saved)

@@ -1,6 +1,5 @@
 {% load cache %}
 
-{% cache cache_timeout site-header request.path %}
 <div class="page-prefix">
     <div class="breadcrumb">{% spaceless %}
         {% for text, url in breadcrumb %}
@@ -18,4 +17,3 @@
         {{ num_groups }} Gruppen / {{ num_gestalten }} Gestalten / {{ content_count }} Beiträge
     </div>
 </div>
-{% endcache %}
