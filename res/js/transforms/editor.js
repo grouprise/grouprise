@@ -130,8 +130,15 @@ export default (el, opts) => {
     const drop = new Drop({
         target: editor.toolbarElements["image"],
         content: image_dialog,
-        position: "bottom left",
-        openOn: "click"
+        openOn: "click",
+        position: "bottom right",
+        tetherOptions: {
+            constraints: [{
+                to: "window",
+                pin: true
+            }]
+        },
+
     });
 
     image_editor.emitter.on("files:select", (files) => {
