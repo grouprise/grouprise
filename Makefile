@@ -2,12 +2,9 @@ RM ?= rm -f
 NPM_BIN ?= npm
 NODEJS_BIN ?= $(shell which node nodejs | head -1)
 GRUNT_BIN = node_modules/.bin/grunt
-VIRTUALENV_NAME ?= stadtgestalten
 DJANGO_SETTINGS ?= stadt.prod_settings
-VIRTUALENV_BASE ?= /srv/virtualenvs
 BUILD_PATH ?= build
 BACKUP_PATH ?= backup
-SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
 PYTHON_DIRS = content entities stadt features core utils
 # uwsgi beobachtet diese Datei und schaltet bei ihrer Existenz in den Offline-Modus:
 #   if-exists = _OFFLINE_MARKER_UWSGI
@@ -34,9 +31,10 @@ NEXT_RELEASE = $(shell (cat $(VERSION_FILE); echo "tokens = [int(v) for v in VER
 GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
 
-.PHONY: asset_version clean database-backup database-restore default deploy \
-	deploy-git release-breaking release-feature release-patch reload \
-	static update-virtualenv test website-offline website-online
+.PHONY: asset_version check-virtualenv clean database-backup database-restore \
+	default deploy deploy-git release-breaking release-feature \
+	release-patch reload static update-virtualenv test website-offline \
+	website-online
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
@@ -62,8 +60,8 @@ $(NODEJS_SYMLINK):
 	@[ -n "$(NODEJS_BIN)" ] || { echo >&2 "Requirement 'nodejs' is missing for build"; exit 1; }
 	ln -s "$(NODEJS_BIN)" "$(NODEJS_SYMLINK)"
 
-static:
-	$(SOURCE_VIRTUALENV) && python manage.py collectstatic --no-input --settings "$(DJANGO_SETTINGS)"
+static: check-virtualenv
+	python manage.py collectstatic --no-input --settings "$(DJANGO_SETTINGS)"
 
 reload:
 	@# trigger UWSGI-Reload
@@ -75,9 +73,13 @@ website-offline:
 website-online:
 	$(RM) $(OFFLINE_MARKER_FILE)
 
-update-virtualenv:
-	$(SOURCE_VIRTUALENV) && pip install -r requirements.txt
-	$(SOURCE_VIRTUALENV) && python manage.py migrate --settings "$(DJANGO_SETTINGS)"
+check-virtualenv:
+	@# this should fail if dependencies are missing or no virtualenv is active
+	python manage.py check
+
+update-virtualenv: check-virtualenv
+	pip install -r requirements.txt
+	python manage.py migrate --settings "$(DJANGO_SETTINGS)"
 
 deploy:
 	$(MAKE) asset_version
@@ -111,8 +113,8 @@ release-breaking release-feature release-patch:
 	git commit -m "Release $(NEXT_RELEASE)"
 	git tag -a "$(GIT_RELEASE_TAG)"
 
-test:
-	$(SOURCE_VIRTUALENV) && python -m flake8 $(PYTHON_DIRS) && python manage.py test
+test: check-virtualenv
+	python -m flake8 $(PYTHON_DIRS) && python manage.py test
 
 clean:
 	$(RM) -r node_modules
