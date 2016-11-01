@@ -3,9 +3,12 @@ import Drop from "tether-drop";
 import bel from "bel";
 import closest from "closest";
 import delegate from "delegate";
+import CodeMirror from "codemirror";
 
 import editor_images from "../components/editor-image";
 import { $, get_attr } from "../util/dom";
+
+CodeMirror.defaults.inputStyle = "textarea";
 
 const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
