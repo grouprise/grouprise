@@ -19,14 +19,17 @@ DUMP_FILE_IMAGES = os.path.join(DUMP_FILES_BASE_DIR, "image.txt")
 DUMP_FILE_FILES = os.path.join(DUMP_FILES_BASE_DIR, "files.txt")
 DUMP_FILE_PLACES = os.path.join(DUMP_FILES_BASE_DIR, "content_type_ort.txt")
 
-NODE_FIELDNAMES = ("nid", "vid", "type", "language", "title", "uid", "status",
+NODE_FIELDNAMES = (
+        "nid", "vid", "type", "language", "title", "uid", "status",
         "created", "changed", "comment", "promote", "moderate", "sticky",
         "tnid", "translate")
-NODE_REVISION_FIELDNAMES = ("nid", "vid", "uid", "title", "body", "teaser",
+NODE_REVISION_FIELDNAMES = (
+        "nid", "vid", "uid", "title", "body", "teaser",
         "log", "timestamp", "format")
 USER_FIELDNAMES = ("uid", "name", "pass", "mail")
 IMAGE_FIELDNAMES = ("nid", "fid", "image_size")
-FILE_FIELDNAMES = ("fid", "uid", "filename", "filepath", "filemime", "filesize", "status", "timestamp")
+FILE_FIELDNAMES = (
+        "fid", "uid", "filename", "filepath", "filemime", "filesize", "status", "timestamp")
 PLACE_FIELDNAMES = ("vid", "nid", "longitude", "latitude", "url", "title", "attributes")
 
 
