@@ -2,12 +2,8 @@ RM ?= rm -f
 NPM_BIN ?= npm
 NODEJS_BIN ?= $(shell which node nodejs | head -1)
 GRUNT_BIN = node_modules/.bin/grunt
-VIRTUALENV_NAME ?= stadtgestalten
-DJANGO_SETTINGS ?= stadt.prod_settings
-VIRTUALENV_BASE ?= /srv/virtualenvs
 BUILD_PATH ?= build
 BACKUP_PATH ?= backup
-SOURCE_VIRTUALENV = . "$(VIRTUALENV_BASE)/$(VIRTUALENV_NAME)/bin/activate"
 PYTHON_DIRS = content entities stadt features core utils
 # uwsgi beobachtet diese Datei und schaltet bei ihrer Existenz in den Offline-Modus:
 #   if-exists = _OFFLINE_MARKER_UWSGI
@@ -15,12 +11,13 @@ PYTHON_DIRS = content entities stadt features core utils
 #   endif =
 OFFLINE_MARKER_FILE = _OFFLINE_MARKER_UWSGI
 
-DJANGO_SETTINGS_MODULE ?= stadt.prod_settings
+DJANGO_SETTINGS_MODULE ?= stadt.settings
+
 DB_CONNECTION_BACKUP ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .backup $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'pg_dump \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" >$(DB_BACKUP_FILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
-DB_CONNECTION_RESTORE ?= $(shell (echo "from stadt.prod_settings import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .restore $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'psql \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" <$(DB_RESTORE_DATAFILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
+DB_CONNECTION_RESTORE ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .restore $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'psql \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" <$(DB_RESTORE_DATAFILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
 DB_BACKUP_FILE ?= $(BACKUP_PATH)/data-$(shell date +%Y%m%d%H%M).db
 
-# symlink magic for badly packaged dependencies using "node" explicitely
+# symlink magic for badly packaged dependencies using "node" explicitly
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
 HELPER_PATH_ENV = PATH=$(HELPER_BIN_PATH):$$PATH
 NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
@@ -34,9 +31,10 @@ NEXT_RELEASE = $(shell (cat $(VERSION_FILE); echo "tokens = [int(v) for v in VER
 GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
 
-.PHONY: asset_version clean database-backup database-restore default deploy \
-	deploy-git release-breaking release-feature release-patch reload \
-	static update-virtualenv test website-offline website-online
+.PHONY: asset_version check-virtualenv clean database-backup database-restore \
+	default deploy deploy-git release-breaking release-feature \
+	release-patch reload static update-virtualenv test website-offline \
+	website-online
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
@@ -62,12 +60,12 @@ $(NODEJS_SYMLINK):
 	@[ -n "$(NODEJS_BIN)" ] || { echo >&2 "Requirement 'nodejs' is missing for build"; exit 1; }
 	ln -s "$(NODEJS_BIN)" "$(NODEJS_SYMLINK)"
 
-static:
-	$(SOURCE_VIRTUALENV) && python manage.py collectstatic --no-input --settings "$(DJANGO_SETTINGS)"
+static: check-virtualenv
+	python manage.py collectstatic --no-input
 
 reload:
 	@# trigger UWSGI-Reload
-	touch stadt/prod_settings.py
+	touch "$$(echo "$(DJANGO_SETTINGS_MODULE)" | tr '.' '/').py"
 
 website-offline:
 	touch $(OFFLINE_MARKER_FILE)
@@ -75,9 +73,13 @@ website-offline:
 website-online:
 	$(RM) $(OFFLINE_MARKER_FILE)
 
-update-virtualenv:
-	$(SOURCE_VIRTUALENV) && pip install -r requirements.txt
-	$(SOURCE_VIRTUALENV) && python manage.py migrate --settings "$(DJANGO_SETTINGS)"
+check-virtualenv:
+	@# this should fail if dependencies are missing or no virtualenv is active
+	python manage.py check
+
+update-virtualenv: check-virtualenv
+	pip install -r requirements.txt
+	python manage.py migrate
 
 deploy:
 	$(MAKE) asset_version
@@ -111,8 +113,8 @@ release-breaking release-feature release-patch:
 	git commit -m "Release $(NEXT_RELEASE)"
 	git tag -a "$(GIT_RELEASE_TAG)"
 
-test:
-	$(SOURCE_VIRTUALENV) && python -m flake8 $(PYTHON_DIRS) && python manage.py test
+test: check-virtualenv
+	python -m flake8 $(PYTHON_DIRS) && python manage.py test
 
 clean:
 	$(RM) -r node_modules

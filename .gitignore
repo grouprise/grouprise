@@ -4,7 +4,7 @@ build
 db.sqlite3*
 media
 node_modules
-prod_*.py
+local_settings.py
 static
 whoosh_index
 res/img/backdrops
