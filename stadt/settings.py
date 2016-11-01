@@ -281,3 +281,10 @@ try:
         BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()
 except IOError:
     ASSET_VERSION = "trunk"
+
+
+# load the magic local settings module if it exists
+try:
+    from local_settings import *   # noqa: F401, F403
+except ImportError:
+    pass
