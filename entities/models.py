@@ -1,11 +1,10 @@
 from allauth.account import adapter as allauth_adapter
 from django.conf import settings
 from django.contrib import auth
-from django.core import exceptions, urlresolvers
+from django.core import urlresolvers
 from django.db import models
 from features.memberships import models as memberships
 import randomcolor
-from utils import text
 
 
 def get_random_color():
