@@ -76,6 +76,27 @@ class GroupUnsubscribe(Unsubscribe):
         return self.get_group()
 
 
+class AllContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
+    permission = 'subscriptions.create_all_content_unsubscription'
+
+    action = 'Abbestellen'
+    description = (
+            'Keine Benachrichtigungen mehr für Beiträge und Gespräche der Gruppe '
+            '<em>{{ group }}</em> erhalten')
+    message = 'Du erhältst nun keine Benachrichtigungen mehr.'
+
+    data_field_classes = (
+            fields.related_object('subscribed_to'),
+            fields.current_gestalt('subscriber'),
+            fields.constant('unsubscribe', value=True),
+            fields.create_reference(
+                'filters', kwargs={'filter_id': filters.all_content.filter_id}),
+            )
+
+    def get_related_object(self):
+        return self.get_group()
+
+
 class ExternalContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
     permission = 'subscriptions.create_external_content_unsubscription'
 

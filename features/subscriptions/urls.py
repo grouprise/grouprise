@@ -13,6 +13,11 @@ urlpatterns = [
         name='content-unsubscribe'),
 
     urls.url(
+        r'^group/(?P<group_pk>[0-9]+)/all-content-unsubscribe/$',
+        views.AllContentUnsubscribe.as_view(),
+        name='all-content-unsubscribe'),
+
+    urls.url(
         r'^group/(?P<group_pk>[0-9]+)/external-content-unsubscribe/$',
         views.ExternalContentUnsubscribe.as_view(),
         name='external-content-unsubscribe'),
