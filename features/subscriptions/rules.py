@@ -1,6 +1,6 @@
 from . import filters, models
-from content import rules as content
-from features.associations import rules as associations
+from content import predicates as content
+from features.associations import predicates as associations
 from features.memberships import rules as memberships
 import rules
 
