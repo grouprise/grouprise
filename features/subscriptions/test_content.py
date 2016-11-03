@@ -32,6 +32,13 @@ class OnlyUnsubscribeLink:
                 response, 'content-unsubscribe', self.content.pk)
 
 
+class AllContentUnsubscribeLink:
+    def test_content(self):
+        response = self.client.get(self.content.get_absolute_url())
+        self.assertContainsLink(
+                response, 'all-content-unsubscribe', self.group.pk)
+
+
 class ExternalUnsubscribeLink:
     def test_content(self):
         response = self.client.get(self.content.get_absolute_url())
@@ -123,4 +130,12 @@ class ExternalUnsubscribeForbidden:
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
                 url='external-content-unsubscribe', key=self.group.pk,
+                response={tests.HTTP_FORBIDDEN_OR_LOGIN})
+
+
+class AllContentUnsubscribeForbidden:
+    def test_all_content_unsubscribe(self):
+        self.assertRequest(
+                methods=[tests.HTTP_GET, tests.HTTP_POST],
+                url='all-content-unsubscribe', key=self.group.pk,
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
