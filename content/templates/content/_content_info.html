@@ -22,13 +22,13 @@
         <div class="content-meta-author">
             {# todo detecting conversations is mad #167 #}
             {% if content.article and not content.public and can_view_author %}
-                <a href="{{ content.author|url_for:user }}">{{ content.author }}</a>
+                <a href="{{ content.author|url_for:user }}">{{ content.author }}</a>{% if content.additional_authors.all %} und andere{% endif %}
             {% else %}
                 {% with groups=content.groups %}
                     {% if groups.count == 1 %}
                         <a href="{{ groups.first.get_absolute_url }}">{{ groups.first }}</a>
                         {% if can_view_author %}
-                            (<a href="{{ content.author|url_for:user }}">{{ content.author }}</a>)
+                        ({{ content.author }}{% if content.additional_authors.all %} und andere{% endif %})
                         {% endif %}
                     {% else %}
                         {% if can_view_author %}

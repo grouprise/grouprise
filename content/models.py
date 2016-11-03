@@ -77,7 +77,10 @@ class Comment(Base):
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
-    comment_authors = models.ManyToManyField('entities.Gestalt', through='Comment')
+    additional_authors = models.ManyToManyField(
+            'entities.Gestalt', related_name='additional_authorship')
+    comment_authors = models.ManyToManyField(
+            'entities.Gestalt', through='Comment', related_name='comments')
     public = models.BooleanField(
             'Veröffentlichen',
             default=False,
@@ -91,6 +94,10 @@ class Content(Base):
 
     def __str__(self):
         return self.title
+
+    def add_to_additional_authors(self, gestalt):
+        if not self.additional_authors.filter(id=gestalt.id):
+            self.additional_authors.add(gestalt)
 
     def get_absolute_url(self):
         if not self.public:

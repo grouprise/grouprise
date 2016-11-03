@@ -4,6 +4,6 @@
 
 {% if can_edit_content %}
     <a href="{% if content.event %}{% url 'event-update' content.pk %}{% else %}{% url 'content-update' content.pk %}{% endif %}" class="btn btn-default">
-        Ändern
+        <i class="sg sg-edit"></i> Ändern
     </a>
 {% endif %}
