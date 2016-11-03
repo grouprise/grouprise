@@ -9,7 +9,9 @@ fragments.register(
 
 fragments.insert(
         'content-subscription-actions',
-        'content-actions')
+        'content-actions',
+        after=['content-actions-edit'],
+        )
 fragments.insert(
         'group-meta-subscriptions',
         'group-meta',

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'features.articles',
     'features.associations',
     'features.conversations',
+    'features.content',
     'features.events',
     'features.galleries',
     'features.gestalten',
