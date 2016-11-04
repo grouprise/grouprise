@@ -1,5 +1,5 @@
-from content import rules as content
-from features.associations import rules as associations
+from content import predicates as content
+from features.associations import predicates as associations
 import rules
 
 

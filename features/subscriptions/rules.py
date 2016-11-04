@@ -1,13 +1,23 @@
-from . import models
-from content import rules as content
-from features.associations import rules as associations
+from . import filters, models
+from content import predicates as content
+from features.associations import predicates as associations
 from features.memberships import rules as memberships
 import rules
 
 
 @rules.predicate
+def has_all_content_unsubscription_for(user, group):
+    return models.Unsubscription.objects.filter(
+            filters__filter_id=filters.all_content.filter_id,
+            subscribed_to=group,
+            subscriber=user.gestalt,
+            ).exists()
+
+
+@rules.predicate
 def has_external_content_unsubscription_for(user, group):
     return models.Unsubscription.objects.filter(
+            filters__filter_id=filters.initial_author_no_member.filter_id,
             subscribed_to=group,
             subscriber=user.gestalt,
             ).exists()
@@ -40,6 +50,12 @@ rules.add_perm(
            & ~content.is_recipient
            & ~associations.is_member_of_any_content_group
            & ~is_subscribed_to))
+
+rules.add_perm(
+        'subscriptions.create_all_content_unsubscription',
+        rules.is_authenticated
+        & memberships.is_member_of
+        & ~has_all_content_unsubscription_for)
 
 rules.add_perm(
         'subscriptions.create_external_content_unsubscription',

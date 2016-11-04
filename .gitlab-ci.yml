@@ -6,4 +6,4 @@ before_script:
 
 build:
         script:
-            - VIRTUALENV_BASE="$CI_PROJECT_DIR/.venv" make test
+            - make test

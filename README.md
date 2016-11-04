@@ -20,6 +20,13 @@ Visit http://localhost:8000/
 7. deploy the updated master branch on the target host: `make deploy-git`
 
 
+# Local settings
+
+Create a file `local_settings.py` and add all settings that you want to
+override based on `stadt/settings.py`. The latter file imports all settings
+from `local_settings.py` in case this file exists.
+
+
 # Database setup
 
 The preconfigured database is a local sqlite file.

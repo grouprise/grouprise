@@ -53,7 +53,7 @@ class OtherContentSubscriber(
 
 
 class Conversation(
-        content_subscriptions.NoLink,
+        content_subscriptions.AllContentUnsubscribeLink,
         conversations.ConversationMixin, tests.Test):
     """
     If a group member views a conversation
@@ -70,6 +70,17 @@ class ExternalConversation(
     If a group member views an external conversation
     * the conversation page has a link to unsubscribe from all external conversations
     * external unsubscription is allowed
+    """
+
+
+class AllContentUnsubscribed(
+        content_subscriptions.AllContentUnsubscribeForbidden,
+        content.NoNotification,
+        mixins.AllContentUnsubscribedMixin, gestalten.OtherGestaltMixin, tests.Test):
+    """
+    If a group member is unsubscribed from all content
+    * all content unsubscription is forbidden
+    * gestalt receives no notifications on content
     """
 
 

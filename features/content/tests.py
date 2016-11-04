@@ -1,4 +1,5 @@
 from content import models
+import entities
 from features.gestalten import tests as gestalten
 
 
@@ -19,3 +20,11 @@ class NoAuthorContentMixin(
         super().setUpTestData()
         cls.content.author = cls.other_gestalt
         cls.content.save()
+
+
+class NoNotification:
+    def test_content_creation(self):
+        content = models.Article.objects.create(
+                author=self.other_gestalt, title='Test Content')
+        entities.models.GroupContent.objects.create(content=content, group=self.group)
+        self.assertNoNotificationSent()

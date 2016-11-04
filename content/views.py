@@ -71,6 +71,7 @@ class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         try:
+            kwargs['author'] = self.request.user.gestalt
             kwargs['groupcontent'] = entities_models.GroupContent.objects.get(
                     content=self.object, group=self.get_group())
         finally:
@@ -115,6 +116,11 @@ class EventUpdate(utils_views.ActionMixin, generic.UpdateView):
     menu = 'event'
     model = models.Event
     permission = 'content.change_content'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['author'] = self.request.user.gestalt
+        return kwargs
 
     def get_initial(self):
         group = self.get_group()

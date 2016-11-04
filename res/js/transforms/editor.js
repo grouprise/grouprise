@@ -3,9 +3,12 @@ import Drop from "tether-drop";
 import bel from "bel";
 import closest from "closest";
 import delegate from "delegate";
+import CodeMirror from "codemirror";
 
 import editor_images from "../components/editor-image";
 import { $, get_attr } from "../util/dom";
+
+CodeMirror.defaults.inputStyle = "textarea";
 
 const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
@@ -127,8 +130,15 @@ export default (el, opts) => {
     const drop = new Drop({
         target: editor.toolbarElements["image"],
         content: image_dialog,
-        position: "bottom left",
-        openOn: "click"
+        openOn: "click",
+        position: "bottom right",
+        tetherOptions: {
+            constraints: [{
+                to: "window",
+                pin: true
+            }]
+        },
+
     });
 
     image_editor.emitter.on("files:select", (files) => {

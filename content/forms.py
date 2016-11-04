@@ -19,15 +19,21 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
             widget=forms.MultipleHiddenInput)
 
     def __init__(self, *args, **kwargs):
+        self.author = kwargs.pop('author', None)
         super().__init__(*args, **kwargs)
+        if self.author is None:
+            self.author = self.initial['author']
         self.fields['group'] = forms.ModelChoiceField(
                 label='Gruppe', queryset=self.get_group_queryset(), required=False)
 
     def get_group_queryset(self):
-        return groups.Group.objects.filter(memberships__member=self.initial['author'])
+        return groups.Group.objects.filter(memberships__member=self.author)
 
     def save(self):
         content = super().save()
+        if self.author != self.instance.author:
+            self.instance.add_to_additional_authors(self.author)
+            self.instance.save()
         for image in self.cleaned_data['images']:
             image.content = content
             image.save()
@@ -156,6 +162,7 @@ class ContentUpdate(utils_forms.FormMixin, forms.ModelForm):
         model = models.Content
 
     def __init__(self, *args, **kwargs):
+        self.author = kwargs.pop('author')
         self.groupcontent = kwargs.pop('groupcontent', None)
         super().__init__(*args, **kwargs)
         if self.groupcontent:
@@ -171,6 +178,8 @@ class ContentUpdate(utils_forms.FormMixin, forms.ModelForm):
         return fields
 
     def save(self):
+        if self.author != self.instance.author:
+            self.instance.add_to_additional_authors(self.author)
         if self.groupcontent:
             self.groupcontent.pinned = self.cleaned_data['pinned']
             self.groupcontent.save()

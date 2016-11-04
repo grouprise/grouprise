@@ -10,6 +10,8 @@ class NoLink:
         self.assertNotContainsLink(
                 response, 'content-unsubscribe', self.content.pk)
         if hasattr(self, 'group'):
+            self.assertNotContainsLink(response, 'all-content-unsubscribe', self.group.pk)
+        if hasattr(self, 'group'):
             self.assertNotContainsLink(response, 'external-content-unsubscribe', self.group.pk)
 
 
@@ -28,6 +30,13 @@ class OnlyUnsubscribeLink:
                 response, 'content-subscribe', self.content.pk)
         self.assertContainsLink(
                 response, 'content-unsubscribe', self.content.pk)
+
+
+class AllContentUnsubscribeLink:
+    def test_content(self):
+        response = self.client.get(self.content.get_absolute_url())
+        self.assertContainsLink(
+                response, 'all-content-unsubscribe', self.group.pk)
 
 
 class ExternalUnsubscribeLink:
@@ -121,4 +130,12 @@ class ExternalUnsubscribeForbidden:
         self.assertRequest(
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
                 url='external-content-unsubscribe', key=self.group.pk,
+                response={tests.HTTP_FORBIDDEN_OR_LOGIN})
+
+
+class AllContentUnsubscribeForbidden:
+    def test_all_content_unsubscribe(self):
+        self.assertRequest(
+                methods=[tests.HTTP_GET, tests.HTTP_POST],
+                url='all-content-unsubscribe', key=self.group.pk,
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
