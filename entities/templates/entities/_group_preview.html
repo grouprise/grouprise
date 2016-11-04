@@ -1,6 +1,6 @@
 {% load cache thumbnail utils content %}
 
-{% cache cache_timeout group-preview user group %}
+{% cache cache_timeout group-preview link user.gestalt.id group.id %}
 
 {% kwacro preview_body %}
     <header class="group-preview-header">

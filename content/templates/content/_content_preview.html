@@ -1,6 +1,5 @@
 {% load cache content thumbnail %}
 
-{% cache cache_timeout content-preview content %}
 <article class="content-preview">
     {% if not exclude_header %}
     <header class="content-preview-header">
@@ -9,6 +8,7 @@
     </header>
     {% endif %}
 
+    {% cache cache_timeout content-preview content.id %}
     <a href="{{ content.get_absolute_url }}" class="content-preview-body">
         <div class="content-preview-body-content">
             {% if content.event %}
@@ -36,5 +36,5 @@
     </a>
 
     <a href="{{ content.get_absolute_url }}" class="read-more">Zum Beitrag...</a>
+    {% endcache %}
 </article>
-{% endcache %}

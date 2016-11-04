@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    {% cache cache_timeout content-detail user content %}
+    {% cache cache_timeout content-detail user.gestalt.id content.id %}
     <article class="content">
         {% include 'content/_content_header.html' %}
 

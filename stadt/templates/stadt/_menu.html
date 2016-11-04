@@ -1,9 +1,10 @@
 {% load cache rules utils %}
 
-{% cache cache_timeout site-menu user.username group.slug %}
 <nav class="nav">
     <div class="container">
         <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
+        
+        {% cache cache_timeout site-menu user.gestalt.id group.id %}
         <ul class="nav-menu nav-menu-self">
             {# about link #}
             <li class="hidden-xs hidden-sm">
@@ -119,6 +120,8 @@
             </li>
         </ul>
         <div class="clearfix hidden-xs hidden-sm"></div>
+        {% endcache %}
+
         <ul class="nav-menu nav-menu-primary">
             <li>
                 <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' %}nav-menu-item-current{% endif %}">Gruppen</a>
@@ -139,4 +142,3 @@
         </ul>
     </div>
 </nav>
-{% endcache %}

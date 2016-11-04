@@ -1,6 +1,6 @@
 {% load cache %}
 
-{% cache cache_timeout conversation-preview thread %}
+{% cache cache_timeout conversation-preview thread.id %}
 <a href="{{ thread.get_absolute_url }}" class="thread-preview">
     <div class="thread-preview-image">
         {% include 'entities/_gestalt_avatar.html' with gestalt=thread.author link=False size=64 %}

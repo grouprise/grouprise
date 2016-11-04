@@ -29,14 +29,23 @@ def include(module_name):
     module_loading.import_string(module_name + '.connections')
 
 
-model_created = dispatch.Signal()
 model_changed = dispatch.Signal()
 
+model_created = dispatch.Signal()
 
-def model_saved(sender, **kwargs):
+model_deleted = dispatch.Signal()
+
+
+def model_post_delete(sender, **kwargs):
+    model_deleted.send(sender, instance=kwargs['instance'])
+
+signals.post_delete.connect(model_post_delete)
+
+
+def model_post_save(sender, **kwargs):
     if kwargs['created']:
         model_created.send(sender, instance=kwargs['instance'])
     else:
         model_changed.send(sender, instance=kwargs['instance'])
 
-signals.post_save.connect(model_saved)
+signals.post_save.connect(model_post_save)
