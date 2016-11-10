@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
     'features.subscriptions',
+    'features.texts',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
