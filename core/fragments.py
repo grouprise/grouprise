@@ -27,3 +27,9 @@ def insert(key, group_name, predicate=always, after=[], before=[]):
     if min_index <= max_index:
         group.insert(max_index, key)
         groups[group_name] = group
+
+
+def register2(fragment, group, **kwargs):
+    key = '{}-{}'.format(group, fragment)
+    register(key, fragment)
+    insert(key, group, **kwargs)

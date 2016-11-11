@@ -1,4 +1,5 @@
 from core import colors, models
+from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models as django
 
@@ -48,6 +49,12 @@ class Group(models.Model):
             default=False,
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
 
+    associations = contenttypes.GenericRelation(
+            'associations.Association',
+            content_type_field='entity_type',
+            object_id_field='entity_id',
+            related_query_name='group')
+
     def __str__(self):
         return self.name
 
@@ -74,14 +81,3 @@ class Group(models.Model):
     def get_head_gallery(self):
         return self.content.exclude(gallery=None).filter(
                 public=True, groupcontent__pinned=True).first()
-
-    # FIXME: to be removed
-    def get_conversations(self, user):
-        from django.db.models import Max
-        from django.db.models.functions import Coalesce
-        return self.content \
-            .permitted(user) \
-            .filter(article__isnull=False, public=False) \
-            .annotate(last_comment=Max('comments__date_created')) \
-            .annotate(last_activity=Coalesce("last_comment", "date_created")) \
-            .order_by("-last_activity")
