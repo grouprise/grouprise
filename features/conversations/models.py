@@ -9,3 +9,8 @@ class Conversation(models.Model):
             object_id_field='container_id',
             related_query_name='conversation')
     subject = models.CharField('Thema', max_length=255)
+    texts = contenttypes.GenericRelation(
+            'texts.Text',
+            content_type_field='container_type',
+            object_id_field='container_id',
+            related_query_name='conversation')

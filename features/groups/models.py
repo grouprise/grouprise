@@ -49,12 +49,6 @@ class Group(models.Model):
             default=False,
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
 
-    associations = contenttypes.GenericRelation(
-            'associations.Association',
-            content_type_field='entity_type',
-            object_id_field='entity_id',
-            related_query_name='group')
-
     def __str__(self):
         return self.name
 
