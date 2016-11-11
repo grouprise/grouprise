@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'content.apps.ContentConfig',
     'core.apps.CoreConfig',
-    'core.fragments.apps.AutodiscoverFragmentsConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,6 +89,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'stadt', 'templates'),
             ],
         'OPTIONS': {
+            'builtins': ['core.templatetags.core'],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

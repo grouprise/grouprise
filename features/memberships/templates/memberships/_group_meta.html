@@ -1,4 +1,4 @@
-{% load fragments memberships rules %}
+{% load memberships rules %}
 {% has_perm 'memberships.create_membership' user group as can_create %}
 {% has_perm 'memberships.list_memberships' user group as can_list %}
 
