@@ -8,22 +8,41 @@ import itertools
 
 def copy_conversations(apps, schema_editor):
     Article = apps.get_model('content.Article')
+    Association = apps.get_model('associations.Association')
     ContentType = apps.get_model('contenttypes', 'ContentType')
     Conversation = apps.get_model('conversations.Conversation')
+    GestaltContent = apps.get_model('entities.GestaltContent')
+    GroupContent = apps.get_model('entities.GroupContent')
     Text = apps.get_model('texts.Text')
 
     for a in Article.objects.filter(public=False):
         conv = Conversation.objects.create(subject=a.title)
+        
         for c in itertools.chain([a], a.comments.all()):
             Text.objects.create(
                     container_type=ContentType.objects.get_for_model(conv),
                     container_id=conv.id,
                     author=c.author, time_created=c.date_created, text=c.text)
+        
+        for gc in GestaltContent.objects.filter(content__article=a):
+            Association.objects.create(
+                    container_type=ContentType.objects.get_for_model(conv),
+                    container_id=conv.id,
+                    entity_type=ContentType.objects.get_for_model(gc.gestalt),
+                    entity_id=gc.gestalt.id)
+        
+        for gc in GroupContent.objects.filter(content__article=a):
+            Association.objects.create(
+                    container_type=ContentType.objects.get_for_model(conv),
+                    container_id=conv.id,
+                    entity_type=ContentType.objects.get_for_model(gc.group),
+                    entity_id=gc.group.id)
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('associations', '0001_initial'),
         ('conversations', '0001_initial'),
         ('texts', '0001_initial'),
     ]
