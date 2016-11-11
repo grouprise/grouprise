@@ -12,3 +12,6 @@ class Text(models.Model):
     author = models.ForeignKey('entities.Gestalt')
     time_created = models.DateTimeField(default=timezone.now)
     text = models.TextField()
+
+    class Meta:
+        ordering = ('time_created',)

@@ -1,10 +1,4 @@
 <ul class="thread-contributors">
-    {% if author and author not in contributors %}
-        <li>
-            {% include 'entities/_gestalt_avatar.html' with gestalt=thread.author link=False size=32 %}
-        </li>
-    {% endif %}
-
     <!-- todo external people probably should see individual group members answering -->
     {% for contributor in contributors %}
         {% if forloop.counter <= max_shown %}
@@ -13,7 +7,7 @@
             </li>
         {% elif forloop.counter == max_shown|add:1  %}
             <li>
-                <div class="avatar avatar-size-32-32 avatar-more" title="Und {{ forloop.revcounter }} weitere Personen"></div>
+                <div class="avatar avatar-size-32-32 avatar-more" title="und {{ forloop.revcounter }} weitere Gestalten"></div>
             </li>
         {% endif %}
     {% endfor %}

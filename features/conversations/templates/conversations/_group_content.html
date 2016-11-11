@@ -1,8 +1,8 @@
 {% load conversations %}
 
-{% conversation_associations group as conversations %}
+{% conversation_associations group as associations %}
 
-{% if conversations %}
+{% if associations %}
     <div class="content-block">
         {% include 'conversations/_shortlist.html' %}
     </div>
