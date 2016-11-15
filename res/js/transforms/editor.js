@@ -10,6 +10,8 @@ import editor_images from "../components/editor-image";
 
 CodeMirror.defaults.inputStyle = "textarea";
 
+CodeMirror.defaults.inputStyle = "textarea";
+
 const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
 
