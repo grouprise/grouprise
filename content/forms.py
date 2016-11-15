@@ -22,7 +22,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
         self.author = kwargs.pop('author', None)
         super().__init__(*args, **kwargs)
         if self.author is None:
-            self.author = self.initial['author']
+            self.author = entities_models.Gestalt.objects.get(pk=self.initial['author'])
         self.fields['group'] = forms.ModelChoiceField(
                 label='Gruppe', queryset=self.get_group_queryset(), required=False)
 
