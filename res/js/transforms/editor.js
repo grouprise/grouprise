@@ -1,3 +1,4 @@
+import { $, getAttr } from "luett";
 import SimpleMDE from "simplemde";
 import Drop from "tether-drop";
 import bel from "bel";
@@ -6,7 +7,6 @@ import delegate from "delegate";
 import CodeMirror from "codemirror";
 
 import editor_images from "../components/editor-image";
-import { $, get_attr } from "../util/dom";
 
 CodeMirror.defaults.inputStyle = "textarea";
 
@@ -159,8 +159,8 @@ export default (el, opts) => {
     delegate(document.body, "[data-component='cite']", "click", function(event) {
         event.preventDefault();
         const target = $(`${event.delegateTarget.getAttribute('href')} .media-body`);
-        const author = get_attr(target, "data-author");
-        const permalink = get_attr(target, "data-permalink");
+        const author = getAttr(target, "data-author");
+        const permalink = getAttr(target, "data-permalink");
         const text = target.innerText + (author ? `\n — [${author}](${permalink})` : "");
         editor.codemirror.doc.replaceSelection(quote(text));
     });

@@ -1,7 +1,6 @@
+import { $, $$, mapCall, getAttr, index } from "luett";
 import bel from "bel";
 import delegate from "delegate";
-
-import { $, $$, each, get_attr, index } from "../util/dom";
 
 import Photoswipe from "photoswipe";
 import theme from "photoswipe/dist/photoswipe-ui-default";
@@ -67,11 +66,11 @@ function calculate_bounding(images, index) {
 function create_lightbox(gallery) {
     const image_selector = "[href]";
     const image_els = $$(image_selector, gallery);
-    const images = each(image_els, (el) => {
-        const [ w, h ]= each(get_attr(el, "data-size").split("x"), parseInt);
+    const images = mapCall(image_els, (el) => {
+        const [ w, h ]= mapCall(getAttr(el, "data-size").split("x"), parseInt);
         return {
-            msrc: get_attr($("img", el), "src"),
-            src: get_attr(el, "href"),
+            msrc: getAttr($("img", el), "src"),
+            src: getAttr(el, "href"),
             w, h
         }
     });

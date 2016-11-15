@@ -1,7 +1,7 @@
+import { remove } from "luett";
 import Clipboard from "clipboard";
 import browser from "bowser";
 import { success, danger } from "../util/notify";
-import { remove } from "../util/dom";
 
 const is_unsupported = browser.isUnsupportedBrowser({
     msie: "9",

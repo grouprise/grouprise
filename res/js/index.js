@@ -1,8 +1,7 @@
 import "./setup";
 
+import { $$, component, mapCall } from "luett";
 import closest from "closest";
-
-import { $, $$, component, each } from "./util/dom";
 
 import date from "./transforms/date";
 import editor from "./transforms/editor";
@@ -31,10 +30,10 @@ function init(search_in = document) {
     component("clipboard", clipboard, search_in);
     component("browser-warning", browser_warning, search_in);
     component("carousel", carousel, search_in);
+    component("tcon", transform_icon, search_in);
 
     // initialize components not based on component interface
-    transform_icon($(".tcon-wrap"));
-    each($$("input, textarea"), (el) => input(el, { target: closest(el, ".form-group") }));
+    mapCall($$("input, textarea"), (el) => input(el, { target: closest(el, ".form-group") }));
 }
 
 init();

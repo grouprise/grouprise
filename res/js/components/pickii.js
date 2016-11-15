@@ -1,11 +1,10 @@
-import bel from "bel";
+import { replace, remove, getAttr } from "luett";
 import delegate from "delegate";
-import { replace, remove, get_attr } from "../util/dom";
+import bel from "bel";
 
 function dummy() {
     return bel`<div class="pickii-dummy">Keine Bilder verfügbar</div>`;
 }
-
 
 function picker() {
     return bel`<div class="pickii">${dummy()}</div>`;
@@ -34,7 +33,7 @@ export default (opts) => {
     const el = picker();
 
     const listener = delegate(el, ".pickii-image", "click", (e) => {
-        opts.emit("files:select", [JSON.parse(get_attr(e.delegateTarget, "data-image"))]);
+        opts.emit("files:select", [JSON.parse(getAttr(e.delegateTarget, "data-image"))]);
     });
 
     iface.refresh = function() {

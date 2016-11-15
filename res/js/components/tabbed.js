@@ -1,6 +1,6 @@
+import { $, $$, index, mapCall, remove, removeClass, addClass } from "luett";
 import bel from "bel";
 import delegate from "delegate";
-import { $, $$, index, each, remove, remove_class, add_class } from "../util/dom";
 
 function tab_content(tab) {
     return bel`<li>
@@ -26,12 +26,12 @@ export default (opts) => {
         const tab_content = $(`.tabbed-contents > li:nth-child(${tab_index}) .tabbed-content`, tabbed);
 
         // disable all tabs and tab contents
-        each($$(".tabbed-tab", tabbed), remove_class, "tabbed-tab-current");
-        each($$(".tabbed-content", tabbed), remove_class, "tabbed-content-current");
+        mapCall($$(".tabbed-tab", tabbed), removeClass, "tabbed-tab-current");
+        mapCall($$(".tabbed-content", tabbed), removeClass, "tabbed-content-current");
 
         // enable selected tab and content
-        add_class(tab, "tabbed-tab-current");
-        add_class(tab_content, "tabbed-content-current");
+        addClass(tab, "tabbed-tab-current");
+        addClass(tab_content, "tabbed-content-current");
     }
 
     const tab_select = delegate(tabbed, ".tabbed-tabs > li", "click", (e) => {

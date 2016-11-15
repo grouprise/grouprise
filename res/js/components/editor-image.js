@@ -1,13 +1,13 @@
+import { $, getAttr, remove } from "luett";
 import bel from "bel";
 import EventEmitter from "eventemitter3";
 
-import { $, get_attr, remove } from "../util/dom";
 import { get as get_images, create as create_image } from "../adapters/image";
 import pickii from "./pickii";
 import file_picker from "./file-picker";
 import tabbed from "./tabbed";
 
-const content_id = get_attr($("[name='content_id']"), "value", false);
+const content_id = getAttr($("[name='content_id']"), "value", false);
 
 function upload(files) {
     const uploader = create_image({ content_id });
