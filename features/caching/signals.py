@@ -85,7 +85,7 @@ connections = [
     signals.connect_action(
         signals.model_changed,
         content_changed,
-        senders=[content.Article, content.Event, content.Gallery]),
+        senders=[content.Article, content.Content, content.Event, content.Gallery]),
 
     # gestalten
     signals.connect_action(
