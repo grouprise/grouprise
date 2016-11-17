@@ -1,4 +1,4 @@
-import { $ } from "./util/dom";
+import { $ } from "luett";
 
 // load config
 window.app = {

@@ -41,12 +41,14 @@ class Field:
     def save_references(self, instance):
         pass
 
+
 field = functools.partial(fieldclass_factory, Field)
 
 
 class ModelField(Field):
     def get_model_form_field(self):
         return self.name
+
 
 model_field = functools.partial(fieldclass_factory, ModelField)
 
@@ -60,6 +62,7 @@ class Constant(Field):
     def get_layout(self):
         return None
 
+
 constant = functools.partial(fieldclass_factory, Constant)
 
 
@@ -70,6 +73,7 @@ class Email(Field):
     def get_name(self):
         return '{}_email'.format(self.name)
 
+
 email = functools.partial(fieldclass_factory, Email)
 
 
@@ -78,6 +82,7 @@ class EmailGestalt(Email):
 
     def get_data(self, form_data):
         return entities_models.Gestalt.get_or_create(form_data)
+
 
 email_gestalt = functools.partial(fieldclass_factory, EmailGestalt)
 
@@ -120,6 +125,7 @@ class CurrentGestalt(Field):
     def get_name(self):
         return '{}_email'.format(self.name)
 
+
 current_gestalt = functools.partial(fieldclass_factory, CurrentGestalt)
 
 
@@ -132,6 +138,7 @@ class ViewObject(Field):
     def get_layout(self):
         return None
 
+
 view_object = functools.partial(fieldclass_factory, ViewObject)
 
 
@@ -140,6 +147,7 @@ class RelatedObject(ViewObject):
 
     def get_data(self, form_data):
         return self.view.related_object
+
 
 related_object = functools.partial(fieldclass_factory, RelatedObject)
 
@@ -151,5 +159,6 @@ class CreateReference(Field):
     def save_references(self, instance):
         ref = getattr(instance, self.name)
         ref.create(**self.kwargs)
+
 
 create_reference = functools.partial(fieldclass_factory, CreateReference)

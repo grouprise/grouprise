@@ -1,6 +1,6 @@
+import { $, $$, getAttr } from "luett";
 import delegate from "delegate";
 import { range } from "lodash";
-import { $, $$, get_attr } from "../util/dom";
 import stroll from "../util/stroll";
 
 function create_scroller(el) {
@@ -125,7 +125,7 @@ function carousel(root, options) {
 
     delegate(root, `.${conf.css_index_btn}`, "click", function(event) {
         event.preventDefault();
-        const idx = parseInt(get_attr(event.delegateTarget, "data-carousel-index"), 10)
+        const idx = parseInt(getAttr(event.delegateTarget, "data-carousel-index"), 10)
         show_slide(idx);
     });
 

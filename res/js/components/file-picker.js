@@ -1,5 +1,5 @@
+import { remove } from "luett";
 import bel from "bel";
-import { remove } from "../util/dom";
 
 export default (opts) => {
     const iface = {};

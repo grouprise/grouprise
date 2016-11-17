@@ -1,4 +1,4 @@
-import { $ } from "../util/dom";
+import { $ } from "luett";
 
 function on(el, event, listener, capture = false) {
     el.addEventListener(event, listener, capture);

@@ -1,4 +1,4 @@
-import { $ } from "../util/dom";
+import { $ } from "luett";
 
 export default (el) => {
     const height = $(".group-info", el).clientHeight;

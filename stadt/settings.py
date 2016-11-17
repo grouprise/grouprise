@@ -259,12 +259,13 @@ THUMBNAIL_DEBUG = False
 
 # Caching
 # https://docs.djangoproject.com/en/1.10/topics/cache/
+# Always use DummyCache for testing as caching will break tests!
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 
 
 # Django Rest Framework
