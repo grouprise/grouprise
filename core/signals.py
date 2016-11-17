@@ -39,6 +39,7 @@ model_deleted = dispatch.Signal()
 def model_post_delete(sender, **kwargs):
     model_deleted.send(sender, instance=kwargs['instance'])
 
+
 signals.post_delete.connect(model_post_delete)
 
 
@@ -47,5 +48,6 @@ def model_post_save(sender, **kwargs):
         model_created.send(sender, instance=kwargs['instance'])
     else:
         model_changed.send(sender, instance=kwargs['instance'])
+
 
 signals.post_save.connect(model_post_save)
