@@ -49,7 +49,6 @@ def groups_count_changed(group):
 
 
 def memberships_count_changed(membership):
-    print('MEMBERSHIP', membership.group, membership.member)
     invalidate_cache('group-header', membership.member.id, membership.group.id)
     invalidate_cache('group-preview', membership.member.id, membership.group.id)
     for group_id in model_ids_including_none(groups.Group):
