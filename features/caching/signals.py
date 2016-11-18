@@ -11,7 +11,7 @@ import itertools
 
 
 def model_ids_including_none(model_class):
-    return itertools.chain([None], model_class._default_manager.values_list('id', flat=True))
+    return itertools.chain([''], model_class._default_manager.values_list('id', flat=True))
 
 
 def invalidate_cache(fragment, *args):
@@ -49,9 +49,11 @@ def groups_count_changed(group):
 
 
 def memberships_count_changed(membership):
+    print('MEMBERSHIP', membership.group, membership.member)
     invalidate_cache('group-header', membership.member.id, membership.group.id)
     invalidate_cache('group-preview', membership.member.id, membership.group.id)
-    invalidate_cache('site-menu', membership.member.id, membership.group.id)
+    for group_id in model_ids_including_none(groups.Group):
+        invalidate_cache('site-menu', membership.member.id, group_id)
 
 
 def subscriptions_count_changed(subscription):
