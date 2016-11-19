@@ -1,4 +1,5 @@
 from content import models as content_models
+from entities import models as entity_models
 from rest_framework import serializers
 
 
@@ -23,3 +24,10 @@ class Image(serializers.ModelSerializer):
     class Meta:
         model = content_models.Image
         fields = ('id', 'file', 'weight', 'content', 'title', 'creator', 'path')
+
+
+class GroupContent(serializers.ModelSerializer):
+
+    class Meta:
+        model = entity_models.GroupContent
+        fields = ('content', 'group', 'pinned')
