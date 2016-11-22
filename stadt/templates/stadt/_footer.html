@@ -5,9 +5,9 @@
         <ul class="nav-footer">
             <li>
                 <ul>
-                    <li><a href="{% url 'index' %}">Start</a></li>
                     <li><a href="{{ about_group.get_absolute_url }}">Über uns</a></li>
                     <li><a href="{% url 'imprint' %}">Impressum</a></li>
+		    <li><a href="{% url 'privacy' %}">Datenschutzhinweise</a></li>	
                     <li><a href="{% url 'abuse' request.path %}">Missbrauch melden</a></li>
                 </ul>
             </li>
