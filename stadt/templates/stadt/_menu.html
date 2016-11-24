@@ -4,7 +4,6 @@
     <div class="container">
         <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
         
-        {% cache cache_timeout site-menu user.gestalt.id group.id %}
         <ul class="nav-menu nav-menu-self">
             {# about link #}
             <li class="hidden-xs hidden-sm">
@@ -42,6 +41,7 @@
                                 </a>
                             {% endif %}
                         </header>
+                        {% cache cache_timeout site-menu user.gestalt.id group.id %}
                         <div class="dock-content">
                             <div class="dock-content-inner">
                                 <div class="dock-fit dock-header-extension hidden-lg">
@@ -115,12 +115,12 @@
                                 </ol>
                             </div>
                         </div>
+                        {% endcache %}
                     </div>
                 </div>
             </li>
         </ul>
         <div class="clearfix hidden-xs hidden-sm"></div>
-        {% endcache %}
 
         <ul class="nav-menu nav-menu-primary">
             <li>
