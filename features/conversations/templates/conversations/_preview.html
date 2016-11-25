@@ -3,7 +3,7 @@
 {#{% cache cache_timeout conversation-preview content.id %}#}
 
 {% with c=association.container %}
-    <a href="{{ association.get_absolute_url }}" class="thread-preview">
+    <a href="{% url 'conversation' association.pk %}" class="thread-preview">
         <div class="thread-preview-image">
             {% include 'entities/_gestalt_avatar.html' with gestalt=c.texts.first.author link=False size=64 %}
         </div>

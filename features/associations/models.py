@@ -1,4 +1,5 @@
 from django.contrib.contenttypes import fields as contenttypes
+from django.core import urlresolvers
 from django.db import models
 
 
