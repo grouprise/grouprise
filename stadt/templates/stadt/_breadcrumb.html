@@ -1,7 +1,5 @@
-{% load cache %}
-
-<div class="page-prefix">
-    <div class="breadcrumb">{% spaceless %}
+<div class="breadcrumb">{% spaceless %}
+    {% block breadcrumb %}
         {% for text, url in breadcrumb %}
             {% if url %}
                 <a href="{{ url }}">{{ text|truncatechars:25 }}</a>
@@ -12,8 +10,5 @@
                 <span class="breadcrumb-separator"></span>
             {% endif %}
         {% endfor %}
-    {% endspaceless %}</div>
-    <div class="page-meta">
-        {{ num_groups }} Gruppen / {{ num_gestalten }} Gestalten / {{ content_count }} Beiträge
-    </div>
-</div>
+    {% endblock %}
+{% endspaceless %}</div>

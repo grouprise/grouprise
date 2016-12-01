@@ -14,3 +14,6 @@ class Conversation(models.Model):
             content_type_field='container_type',
             object_id_field='container_id',
             related_query_name='conversation')
+
+    def __str__(self):
+        return self.subject

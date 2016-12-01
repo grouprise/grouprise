@@ -1,3 +1,4 @@
+from . import querysets
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models
@@ -13,3 +14,5 @@ class Association(models.Model):
     entity_id = models.PositiveIntegerField()
     entity_type = models.ForeignKey(
             'contenttypes.ContentType', related_name='entity_associations')
+
+    objects = models.Manager.from_queryset(querysets.Association)()

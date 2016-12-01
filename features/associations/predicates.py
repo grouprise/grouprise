@@ -1,3 +1,4 @@
+from . import models
 from features.groups import rules as groups
 from features.memberships import rules as memberships
 import rules

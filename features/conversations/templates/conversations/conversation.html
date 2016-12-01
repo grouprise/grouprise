@@ -1,2 +1,25 @@
 {% extends 'stadt/list.html' %}
 
+{% block title %}{{ association.container }} - {{ site.name }}{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb"><a href="{{ association.entity.get_absolute_url }}">{{ association.entity }}</a><span class="breadcrumb-separator"></span>{{ association.container }}</div>
+{% endblock %}
+
+{% block heading_title %}
+<h1 class="content-classification">Gespräch</h1>
+{% endblock %}
+
+{% block content %}
+    <article class="content">
+        <div class="content-body" data-component="user-content">
+            <h1 class="content-title">
+                {{ association.container.subject }}
+            </h1>
+        </div>
+    </article>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'entities/_sidebar_group.html' with group=association.entity %}
+{% endblock %}

@@ -75,7 +75,8 @@ class View(PermissionMixin, StadtMixin, django.View):
     Stadtgestalten base view
     """
     def dispatch(self, *args, **kwargs):
-        self.object = None
+        if not self.object:
+            self.object = None
         self.related_object = self.get_view_object(None)
         return super().dispatch(*args, **kwargs)
 
