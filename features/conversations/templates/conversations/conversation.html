@@ -1,10 +1,4 @@
-{% extends 'stadt/list.html' %}
-
-{% block title %}{{ association.container }} - {{ site.name }}{% endblock %}
-
-{% block breadcrumb %}
-<div class="breadcrumb"><a href="{{ association.entity.get_absolute_url }}">{{ association.entity }}</a><span class="breadcrumb-separator"></span>{{ association.container }}</div>
-{% endblock %}
+{% extends 'associations/association.html' %}
 
 {% block heading_title %}
 <h1 class="content-classification">Gespräch</h1>
@@ -17,6 +11,15 @@
                 {{ association.container.subject }}
             </h1>
         </div>
+        <footer class="content-footer">
+            <ol class="medias">
+                {% for message in association.container.texts.all %}
+                    <li>
+                        {% include 'texts/_text.html' with text=message %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </footer>
     </article>
 {% endblock %}
 

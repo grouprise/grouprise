@@ -1,0 +1,7 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}{{ association.container }} - {{ site.name }}{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb"><a href="{{ association.entity.get_absolute_url }}">{{ association.entity|truncatechars:25 }}</a><span class="breadcrumb-separator"></span>{{ association.container|truncatechars:50 }}</div>
+{% endblock %}
