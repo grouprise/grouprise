@@ -25,9 +25,9 @@ NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
 ASSET_VERSION_PATH = stadt/ASSET_VERSION
 
 # in dieser Datei wird die Zeichenkette 'VERSION = "X.Y.Z"' erwartet
-VERSION_FILE = stadt/__init__.py
+VERSION_FILE = package.json
 # Auslesen der aktuellen Version und Hochzaehlen des gewaehlten Index (je nach Release-Stufe)
-NEXT_RELEASE = $(shell (cat $(VERSION_FILE); echo "tokens = [int(v) for v in VERSION.split('.')]; tokens[$(RELEASE_INCREMENT_INDEX)] += 1; print('%d.%d.%d' % tuple(tokens))") | python)
+NEXT_RELEASE = $(shell PYTHONPATH=. python -c "import stadt.version; print(stadt.version.$(RELEASE_INCREMENT_FUNCTION)())")
 GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
 
@@ -97,9 +97,9 @@ deploy-git:
 	$(MAKE) deploy
 
 # Position der zu veraendernden Zahl in der Release-Nummer (X.Y.Z)
-release-breaking: RELEASE_INCREMENT_INDEX=0
-release-feature: RELEASE_INCREMENT_INDEX=1
-release-patch: RELEASE_INCREMENT_INDEX=2
+release-breaking: RELEASE_INCREMENT_FUNCTION=get_next_breaking_version
+release-feature: RELEASE_INCREMENT_FUNCTION=get_next_feature_version
+release-patch: RELEASE_INCREMENT_FUNCTION=get_next_patch_version
 
 release-breaking release-feature release-patch:
 	@if [ -n "$$(git status -s)" ]; then \
@@ -108,7 +108,8 @@ release-breaking release-feature release-patch:
 	@if [ -n "$$(git tag -l | while read v; do [ "$$v" != "$(GIT_RELEASE_TAG)" ] || echo FOUND; done)" ]; then \
 		printf >&2 "\n%s\n\n" "*** ERROR: There is already a git tag of the next version: $(NEXT_RELEASE). Use 'git tag -d $(GIT_RELEASE_TAG)' if know what you are doing."; \
 		false; fi
-	sed -i 's/^VERSION = .*/VERSION = "$(NEXT_RELEASE)"/' "$(VERSION_FILE)"
+	# we rely on the specific formatting of this line in 'package.json'
+	sed -i 's/"version": .*/"version": "$(NEXT_RELEASE)",/' "$(VERSION_FILE)"
 	git add "$(VERSION_FILE)"
 	git commit -m "Release $(NEXT_RELEASE)"
 	git tag -a "$(GIT_RELEASE_TAG)"
