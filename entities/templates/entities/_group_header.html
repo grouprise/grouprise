@@ -7,7 +7,7 @@
 {% has_perm 'entities.create_group_content' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
-<div class="group-header" data-component="group-header">
+<div class="group-header">
     <div class="group-gallery">
         {% if group.get_head_gallery and can_view_head_gallery and group.get_head_gallery.images.all %}
             <div class="carousel-container" data-component="carousel">
