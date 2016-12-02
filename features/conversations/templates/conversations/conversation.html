@@ -1,26 +1,24 @@
 {% extends 'associations/association.html' %}
+{% load crispy_forms_tags %}
 
 {% block heading_title %}
 <h1 class="content-classification">Gespräch</h1>
 {% endblock %}
 
 {% block content %}
-    <article class="content">
-        <div class="content-body" data-component="user-content">
-            <h1 class="content-title">
-                {{ association.container.subject }}
-            </h1>
-        </div>
-        <footer class="content-footer">
-            <ol class="medias">
-                {% for message in association.container.texts.all %}
-                    <li>
-                        {% include 'texts/_text.html' with text=message %}
-                    </li>
-                {% endfor %}
-            </ol>
-        </footer>
-    </article>
+    <h1 class="content-title">
+        {{ association.container.subject }}
+    </h1>
+    <ol class="medias">
+        {% for message in association.container.texts.all %}
+            <li>
+                {% include 'texts/_text.html' with text=message %}
+            </li>
+        {% endfor %}
+        <li>
+            {% crispy form %}
+        </li>
+    </ol>
 {% endblock %}
 
 {% block sidebar %}

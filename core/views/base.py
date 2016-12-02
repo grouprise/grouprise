@@ -11,6 +11,7 @@ class PermissionMixin(rules.PermissionRequiredMixin):
     Handle permissions
     """
     def get_permission_required(self):
+        return super().get_permission_required()
         return (self.permission,)
 
     def handle_no_permission(self):
