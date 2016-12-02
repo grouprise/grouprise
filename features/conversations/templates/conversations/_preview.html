@@ -28,7 +28,7 @@
                 </time>
             {% endwith %}
 
-            {% include 'conversations/_contributors.html' with contributors=c.texts.authors.distinct max_shown=10 %}
+            {% include 'conversations/_contributors.html' with contributors=c.get_authors max_shown=10 %}
         </div>
     </a>
 {% endwith %}
