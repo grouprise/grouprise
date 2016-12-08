@@ -14,14 +14,14 @@
 </div>
 
 <ol class="thread-preview-list">
-    {% for association in associations %}
+    {% for association in associations|slice:':3' %}
         <li>
             {% include 'conversations/_preview.html' %}
         </li>
     {% endfor %}
 </ol>
 
-{% if has_more_conversations %}
+{% if associations|length > 3 %}
     <div class="btn-toolbar btn-toolbar-centered">
         <a href="{% url 'group-messages' group.pk %}" class="btn btn-default">
             Weitere Gespräche

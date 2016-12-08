@@ -14,4 +14,4 @@ def conversation_associations(group):
             entity_id=group.id,
             container_type=contenttypes.ContentType.objects.get_for_model(models.Conversation))
     qs = qs.annotate(last_activity=Max('conversation__texts__time_created'))
-    return qs.order_by('-last_activity')
+    return qs.order_by('-last_activity')[:4]
