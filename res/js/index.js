@@ -7,7 +7,6 @@ import date from "./transforms/date";
 import editor from "./transforms/editor";
 import time from "./transforms/time";
 import user_content from "./transforms/user-content";
-import group_header from "./transforms/group-header";
 import gallery from "./transforms/gallery";
 import transform_icon from "./transforms/transformicons";
 import input from "./transforms/input";
@@ -23,7 +22,6 @@ function init(search_in = document) {
     component("editor", editor, search_in);
     component("time", time, search_in);
     component("user-content", user_content, search_in);
-    component("group-header", group_header, search_in);
     component("gallery", gallery, search_in);
     component("snake", snake, search_in);
     component("openable", openable, search_in);
