@@ -7,6 +7,11 @@ from django.utils import safestring
 register = template.Library()
 
 
+@register.inclusion_tag('core/_breadcrumb.html')
+def breadcrumb(parent, title):
+    return {'parent': parent, 'title': title}
+
+
 @register.simple_tag()
 def ref(entity):
     try:

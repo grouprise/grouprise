@@ -1,0 +1,22 @@
+{% load utils %}
+
+<li data-order="high">
+    <div class="tabbl">
+        <header class="tabbl-header">
+            <span class="tabbl-title">
+                {{ group }}
+            </span>
+        </header>
+        <div class="tabbl-content">
+            <a href="{{ group.get_absolute_url }}">
+                Zur Gruppenseite
+            </a>
+
+            {% include_features '_group_menu_actions.html' %}
+
+            <a href="{% url 'message-create' group.pk %}">
+                Nachricht schreiben
+            </a>
+        </div>
+    </div>
+</li>

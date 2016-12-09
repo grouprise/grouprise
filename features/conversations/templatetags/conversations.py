@@ -7,9 +7,9 @@ register = template.Library()
 
 
 @register.simple_tag
-def conversation_associations(group):
+def conversation_associations(user, group):
     from django.db.models import Max
-    qs = associations.Association.objects.filter(
+    qs = associations.Association.objects.can_view(user, container='conversation').filter(
             entity_type=contenttypes.ContentType.objects.get_for_model(group),
             entity_id=group.id,
             container_type=contenttypes.ContentType.objects.get_for_model(models.Conversation))

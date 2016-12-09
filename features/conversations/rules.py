@@ -9,5 +9,9 @@ def can_view(user, association):
 
 
 rules.add_perm(
+        'conversations.create',
+        rules.always_allow)
+
+rules.add_perm(
         'conversations.view',
         can_view)

@@ -1,6 +1,6 @@
 {% load rules %}
 
-{% has_perm 'entities.create_group_message' user group as can_create_message %}
+{% has_perm 'conversations.create' user group as can_create_message %}
 
 <header class="content-header">
     <h2 class="content-classification">Gespräche</h2>

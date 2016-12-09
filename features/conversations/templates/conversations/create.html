@@ -1,0 +1,11 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Gespräch - {{ site.name }}{% endblock %}
+
+{% block breadcrumb %}{% breadcrumb view.group 'Gespräch' %}{% endblock %}
+
+{% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
+
+{% block sidebar %}
+    {% include 'entities/_sidebar_group.html' with group=view.group %}
+{% endblock %}
