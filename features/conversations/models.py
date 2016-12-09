@@ -4,7 +4,7 @@ from entities import models as gestalten
 
 
 class Conversation(models.Model):
-    subject = models.CharField('Thema', max_length=255)
+    subject = models.CharField(max_length=255)
 
     associations = contenttypes.GenericRelation(
             'associations.Association',

@@ -49,3 +49,16 @@ class CreateConversation(base.PermissionMixin, generic.CreateView):
     def get(self, *args, **kwargs):
         self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
         return super().get(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = associations.Association(entity=self.group)
+        kwargs['text'] = texts.Text(author=self.request.user.gestalt)
+        return kwargs
+
+    def get_success_url(self):
+        return urlresolvers.reverse('conversation', args=[self.object.pk])
+
+    def post(self, *args, **kwargs):
+        self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
+        return super().post(*args, **kwargs)

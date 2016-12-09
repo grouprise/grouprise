@@ -1,5 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Gespräch - {{ site.name }}{% endblock %}
 
 {% block breadcrumb %}{% breadcrumb view.group 'Gespräch' %}{% endblock %}
@@ -8,4 +10,8 @@
 
 {% block sidebar %}
     {% include 'entities/_sidebar_group.html' with group=view.group %}
+{% endblock %}
+
+{% block content %}
+    {% crispy form %}
 {% endblock %}
