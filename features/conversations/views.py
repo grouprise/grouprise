@@ -1,6 +1,7 @@
 from . import forms
 from core.views import base
 from django import http, shortcuts
+from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
 from django.views.generic import edit
@@ -39,7 +40,8 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
             return self.form_invalid(form)
 
 
-class CreateConversation(base.PermissionMixin, generic.CreateView):
+class CreateConversation(
+        base.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
     model = associations.Association
     permission_required = 'conversations.create'
     template_name = 'conversations/create.html'
@@ -52,12 +54,24 @@ class CreateConversation(base.PermissionMixin, generic.CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['has_author'] = self.request.user.is_authenticated()
         kwargs['instance'] = associations.Association(entity=self.group)
-        kwargs['text'] = texts.Text(author=self.request.user.gestalt)
+        kwargs['text'] = texts.Text()
+        if kwargs['has_author']:
+            kwargs['text'].author = self.request.user.gestalt
         return kwargs
 
+    def get_success_message(self, cleaned_data):
+        if self.request.user.is_authenticated():
+            return None
+        else:
+            return 'Die Nachricht wurde versendet.'
+
     def get_success_url(self):
-        return urlresolvers.reverse('conversation', args=[self.object.pk])
+        if self.request.user.is_authenticated():
+            return urlresolvers.reverse('conversation', args=[self.object.pk])
+        else:
+            return self.group.get_absolute_url()
 
     def post(self, *args, **kwargs):
         self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
