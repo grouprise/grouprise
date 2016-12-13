@@ -43,4 +43,5 @@ urlpatterns = [
         views.GroupMessages.as_view(),
         name='group-messages'),
     urls.url(r'^imprint/$', views.Imprint.as_view(), name='imprint'),
+    urls.url(r'^privacy/$', views.Privacy.as_view(), name='privacy'),
 ]
