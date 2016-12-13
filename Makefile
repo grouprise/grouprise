@@ -115,7 +115,11 @@ release-breaking release-feature release-patch:
 	git tag -a "$(GIT_RELEASE_TAG)"
 
 test: check-virtualenv
-	python -m flake8 $(PYTHON_DIRS) && python manage.py test
+	python -m flake8 $(PYTHON_DIRS)
+	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
+	@# werden, um die Verwendung einer postgres/mysql-Datenbankverbindung ohne "create"-Rechte
+	@# zu verhindern. Mit sqlite klappen die Tests dann natuerlich.
+	STADTGESTALTEN_IN_TEST=1 python manage.py test
 
 clean:
 	$(RM) -r node_modules
