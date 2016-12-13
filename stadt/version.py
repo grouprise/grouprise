@@ -3,7 +3,8 @@ import os
 
 
 def get_version_tuple():
-    package_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.path.pardir, "package.json")
+    package_file = os.path.join(os.path.abspath(
+        os.path.dirname(__file__)), os.path.pardir, "package.json")
     version_string = json.load(open(package_file, "r"))["version"]
     return tuple([int(v) for v in version_string.split(".")])
 
