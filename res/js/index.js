@@ -15,6 +15,7 @@ import openable from "./transforms/openable";
 import clipboard from "./transforms/clipboard";
 import browser_warning from "./transforms/browser-warning";
 import carousel from "./transforms/carousel";
+import keysubmit from "./transforms/keysubmit";
 
 function init(search_in = document) {
     const opts = { root: search_in };
@@ -31,6 +32,7 @@ function init(search_in = document) {
     component("browser-warning", browser_warning, opts);
     component("carousel", carousel, opts);
     component("tcon", transform_icon, opts);
+    component("keysubmit", keysubmit, opts);
 
     // initialize components not based on component interface
     mapCall($$("input, textarea"), (el) => input(el, { target: closest(el, ".form-group") }));
