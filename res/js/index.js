@@ -15,6 +15,7 @@ import openable from "./transforms/openable";
 import clipboard from "./transforms/clipboard";
 import browser_warning from "./transforms/browser-warning";
 import carousel from "./transforms/carousel";
+import conversation from "./transforms/conversation";
 import keysubmit from "./transforms/keysubmit";
 
 function init(search_in = document) {
@@ -32,6 +33,7 @@ function init(search_in = document) {
     component("browser-warning", browser_warning, opts);
     component("carousel", carousel, opts);
     component("tcon", transform_icon, opts);
+    component("conversation", conversation, Object.assign({}, opts, { conf: { init } }));
     component("keysubmit", keysubmit, opts);
 
     // initialize components not based on component interface

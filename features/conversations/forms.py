@@ -4,6 +4,7 @@ from django import forms
 from entities import models as gestalten
 from features.associations import models as associations
 from features.texts import models as texts
+from utils import forms as utils_forms
 
 
 class Create(forms.ModelForm):
@@ -22,7 +23,7 @@ class Create(forms.ModelForm):
         self.helper = helper.FormHelper()
         self.helper.layout = layout.Layout(
                 'subject',
-                layout.Field('text', data_component='editor'),
+                layout.Field('text', rows=5),
                 layout.Submit('create', 'Nachricht senden'))
         if self.has_author:
             del self.fields['author']
@@ -64,5 +65,5 @@ class Reply(forms.ModelForm):
         self.helper = helper.FormHelper()
         self.helper.form_show_labels = False
         self.helper.layout = layout.Layout(
-                layout.Field('text', data_component='editor'),
-                layout.Submit('reply', 'Antworten'))
+                layout.Field('text', rows=3, **{'data-component': 'keysubmit'}),
+                utils_forms.Submit('Antworten'))
