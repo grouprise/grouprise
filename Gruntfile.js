@@ -65,8 +65,8 @@ module.exports = function (grunt) {
         },
         exec: {
             webpack_dev: "node_modules/.bin/webpack",
-            webpack_dist: "node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe --devtool source-map",
-            webpack_snake: "node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe --devtool source-map --entry ./res/js/snake.js --output-filename offline-website/snake.js"
+            webpack_dist: "node_modules/.bin/webpack --bail --optimize-minimize --optimize-occurence-order --optimize-dedupe --devtool source-map",
+            webpack_snake: "node_modules/.bin/webpack --bail --optimize-minimize --optimize-occurence-order --optimize-dedupe --devtool source-map --entry ./res/js/snake.js --output-filename offline-website/snake.js"
         },
         copy: {
             fonts: {

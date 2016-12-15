@@ -296,6 +296,8 @@ try:
 except IOError:
     ASSET_VERSION = "trunk"
 
+# diese Umgebungsvariable wird im Makefile beim Aufruf von "python manage.py test" gesetzt
+stadtgestalten_in_test = (os.getenv("STADTGESTALTEN_IN_TEST", "0") == "1")
 
 # load the magic local settings module if it exists
 try:

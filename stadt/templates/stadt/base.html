@@ -43,7 +43,8 @@
         </script>
     </head>
 
-    <body data-component="browser-warning">
+    <body data-component="browser-warning" class="month-{% now "m" %}">
+        {% comment %}
         <div class="disclaimer">
             <div class="container">
                 <p>
@@ -51,6 +52,7 @@
                 </p>
             </div>
         </div>
+        {% endcomment %}
         {% block body %}{% endblock %}
         <script src="{% static 'stadt/js/app.js' %}?v={{ asset_version }}" async defer></script>
     </body>

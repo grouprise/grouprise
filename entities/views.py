@@ -208,3 +208,9 @@ class Imprint(utils_views.PageMixin, generic.TemplateView):
     permission = 'entities.view_imprint'
     template_name = 'entities/imprint.html'
     title = 'Impressum'
+
+
+class Privacy(utils_views.PageMixin, generic.TemplateView):
+    permission = 'entities.view_imprint'
+    template_name = 'entities/privacy.html'
+    title = 'Datenschutz'
