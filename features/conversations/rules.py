@@ -15,3 +15,7 @@ rules.add_perm(
 rules.add_perm(
         'conversations.view',
         can_view)
+
+rules.add_perm(
+        'conversations.reply',
+        can_view)

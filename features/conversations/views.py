@@ -12,7 +12,6 @@ from features.texts import models as texts
 
 class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
     model = associations.Association
-    permission_required = 'conversations.view'
     pk_url_kwarg = 'association_pk'
     template_name = 'conversations/detail.html'
 
@@ -21,6 +20,10 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_form_kwargs(self):
         text = texts.Text(author=self.request.user.gestalt, container=self.object.container)
@@ -31,8 +34,16 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
     def get_success_url(self):
         return urlresolvers.reverse('conversation', args=[self.object.pk])
 
-    def post(self, request, *args, **kwargs):
+    def has_permission(self):
         self.object = self.get_object()
+        if self.request.method == 'GET':
+            return self.request.user.has_perms(('conversations.view',), self.object)
+        elif self.request.method == 'POST':
+            return self.request.user.has_perms(('conversations.reply',), self.object)
+        else:
+            return False
+
+    def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
