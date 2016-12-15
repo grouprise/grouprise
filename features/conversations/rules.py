@@ -13,9 +13,13 @@ rules.add_perm(
         rules.always_allow)
 
 rules.add_perm(
-        'conversations.view',
-        can_view)
+        'conversations.list',
+        rules.always_allow)
 
 rules.add_perm(
         'conversations.reply',
+        can_view)
+
+rules.add_perm(
+        'conversations.view',
         can_view)

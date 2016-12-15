@@ -8,6 +8,11 @@ urlpatterns = [
         name='conversation'),
 
     urls.url(
+        r'^groups/(?P<group_pk>[0-9]+)/conversations/$',
+        views.Conversations.as_view(),
+        name='conversations'),
+
+    urls.url(
         r'^groups/(?P<group_pk>[0-9]+)/conversations/add/$',
         views.CreateConversation.as_view(),
         name='message-create'),
