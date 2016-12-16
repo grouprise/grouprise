@@ -44,14 +44,21 @@ class Create(forms.ModelForm):
         return super().clean()
 
     def save(self, commit=True):
+        # create conversation
         conversation = models.Conversation.objects.create(subject=self.cleaned_data['subject'])
+
+        # create association
+        self.instance.container = conversation
+        association = super().save(commit)
+
+        # create initial text (after the association, notifications are sent on text creation)
         self.text.container = conversation
         self.text.text = self.cleaned_data['text']
         if 'author' in self.cleaned_data:
             self.text.author = gestalten.Gestalt.get_or_create(self.cleaned_data['author'])
         self.text.save()
-        self.instance.container = conversation
-        return super().save(commit)
+
+        return association
 
 
 class Reply(forms.ModelForm):

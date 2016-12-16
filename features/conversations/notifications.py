@@ -1,5 +1,5 @@
-from features.subscriptions import notifications as subscriptions
+from features.texts import notifications as texts
 
 
-class Associated(subscriptions.ContentAssociated):
+class MessageCreated(texts.Created):
     pass
