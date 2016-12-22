@@ -6,7 +6,6 @@ from features.associations import models as associations
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
-# from features.subscriptions import test_mixins as subscriptions
 
 
 class Conversation(gestalten.GestaltMixin, groups.GroupMixin):
@@ -117,13 +116,38 @@ class OtherGestaltCanNotViewConversation:
 
 class CanReplyToConversation:
     def test_reply(self):
+        conversation_url = self.get_url('conversation', key=self.association.pk)
         response = self.client.post(
-                self.get_url('conversation', key=self.group.pk),
+                conversation_url,
                 {
                     'text': 'Test Reply',
                 })
-        self.assertExists(self.association.conversation.texts, text='Test Reply')
-        self.assertRedirects(response, self.get_url('conversation', key=self.association.pk))
+        self.assertRedirects(response, conversation_url)
+        self.assertExists(models.Conversation, texts__text='Test Reply')
+
+
+class OtherGestaltIsNotifiedOnReply:
+    def test_reply(self):
+        conversation_url = self.get_url('conversation', key=self.association.pk)
+        self.client.post(
+                conversation_url,
+                {
+                    'text': 'Test Reply',
+                })
+        self.assertNotificationSent()
+        self.assertNotificationRecipient(self.other_gestalt)
+        self.assertNotificationSenderName(self.gestalt)
+
+
+class CanNotReplyToConversation:
+    def test_reply(self):
+        conversation_url = self.get_url('conversation', key=self.association.pk)
+        response = self.client.post(
+                conversation_url,
+                {
+                    'text': 'Test Reply',
+                })
+        self.assertForbiddenOrLogin(response, conversation_url)
 
 
 class Anonymous(
@@ -131,6 +155,7 @@ class Anonymous(
         CanCreateConversationWithEmail,
         GroupPageDoesNotHaveConversationLink,
         CanNotViewConversation,
+        CanNotReplyToConversation,
         Conversation, tests.Test):
     '''
     An anonymous visitor
@@ -165,35 +190,8 @@ class GroupMember(
     '''
 
 
-# class NoMemberAndMember(
-#         subscriptions.NotificationToOtherGestalt,
-#         subscriptions.SenderNameIsGestalt,
-#         MessageMixin, memberships.OtherMemberMixin, gestalten.GestaltMixin,
-#         groups.GroupMixin, tests.Test):
-#     """
-#     If a group member creates a message
-#     * a notification to other members should be sent.
-#     * the sender name should be mentioned.
-#     """
-
-
-# class MemberAndOtherMember(
-#         subscriptions.NotificationToOtherGestalt,
-#         subscriptions.SenderNameIsGestalt,
-#         MessageMixin, memberships.OtherMemberMixin, memberships.MemberMixin,
-#         tests.Test):
-#     """
-#     If a group member creates a message
-#     * a notification to other members should be sent.
-#     * the sender name should be mentioned.
-#     """
-
-
-# class MemberAndSubscriber(
-#         subscriptions.NoNotificationToOtherGestalt,
-#         MessageMixin, subscriptions.OtherGroupSubscriberMixin,
-#         memberships.MemberMixin, tests.Test):
-#     """
-#     If a group member creates a message
-#     * no notification to subscribers should be sent.
-#     """
+class TwoGroupMembers(
+        OtherGestaltIsNotifiedOnReply,
+        Conversation, memberships.OtherMemberMixin, memberships.MemberMixin, tests.Test):
+    '''
+    '''
