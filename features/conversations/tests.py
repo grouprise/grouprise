@@ -115,6 +115,17 @@ class OtherGestaltCanNotViewConversation:
         self.assertForbiddenOrLogin(response, conversation_url)
 
 
+class CanReplyToConversation:
+    def test_reply(self):
+        response = self.client.post(
+                self.get_url('conversation', key=self.group.pk),
+                {
+                    'text': 'Test Reply',
+                })
+        self.assertExists(self.association.conversation.texts, text='Test Reply')
+        self.assertRedirects(response, self.get_url('conversation', key=self.association.pk))
+
+
 class Anonymous(
         GroupPageHasCreateLink,
         CanCreateConversationWithEmail,
@@ -132,6 +143,7 @@ class Authenticated(
         CanCreateConversation,
         GroupPageHasConversationLink,
         CanViewConversation,
+        CanReplyToConversation,
         Conversation, gestalten.AuthenticatedMixin, tests.Test):
     '''
     An authenticated visitor
@@ -145,6 +157,7 @@ class GroupMember(
         GroupPageHasConversationLink,
         CanViewConversation,
         OtherGestaltCanNotViewConversation,
+        CanReplyToConversation,
         Conversation, memberships.MemberMixin, gestalten.OtherGestaltMixin, tests.Test):
     '''
     A group member
