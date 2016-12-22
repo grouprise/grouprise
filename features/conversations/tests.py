@@ -93,10 +93,33 @@ class GroupPageDoesNotHaveConversationLink:
         self.assertNotContainsLink(response, 'conversation', key=self.association.pk)
 
 
+class CanViewConversation:
+    def test_view_conversation(self):
+        response = self.client.get(self.get_url('conversation', key=self.association.pk))
+        self.assertEquals(response.status_code, 200)
+
+
+class CanNotViewConversation:
+    def test_view_conversation(self):
+        conversation_url = self.get_url('conversation', key=self.association.pk)
+        response = self.client.get(conversation_url)
+        self.assertForbiddenOrLogin(response, conversation_url)
+
+
+class OtherGestaltCanNotViewConversation:
+    def test_view_conversation_as_other(self):
+        self.client.logout()
+        self.client.force_login(self.other_gestalt.user)
+        conversation_url = self.get_url('conversation', key=self.association.pk)
+        response = self.client.get(conversation_url)
+        self.assertForbiddenOrLogin(response, conversation_url)
+
+
 class Anonymous(
         GroupPageHasCreateLink,
         CanCreateConversationWithEmail,
         GroupPageDoesNotHaveConversationLink,
+        CanNotViewConversation,
         Conversation, tests.Test):
     '''
     An anonymous visitor
@@ -108,6 +131,7 @@ class Authenticated(
         GroupPageHasCreateLink,
         CanCreateConversation,
         GroupPageHasConversationLink,
+        CanViewConversation,
         Conversation, gestalten.AuthenticatedMixin, tests.Test):
     '''
     An authenticated visitor
@@ -119,7 +143,9 @@ class GroupMember(
         GroupPageHasCreateLink,
         CanCreateConversation,
         GroupPageHasConversationLink,
-        Conversation, memberships.MemberMixin, tests.Test):
+        CanViewConversation,
+        OtherGestaltCanNotViewConversation,
+        Conversation, memberships.MemberMixin, gestalten.OtherGestaltMixin, tests.Test):
     '''
     A group member
     * should see a message creation link on the group page
