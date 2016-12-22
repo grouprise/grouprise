@@ -1,5 +1,4 @@
 from core import colors, models
-from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models as django
 
@@ -75,6 +74,3 @@ class Group(models.Model):
     def get_head_gallery(self):
         return self.content.exclude(gallery=None).filter(
                 public=True, groupcontent__pinned=True).first()
-
-
-GROUP_TYPE = contenttypes.ContentType.objects.get_for_model(Group)
