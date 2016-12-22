@@ -1,16 +1,10 @@
 import { $, getAttr } from "luett";
-import SimpleMDE from "simplemde";
 import Drop from "tether-drop";
 import bel from "bel";
 import closest from "closest";
 import delegate from "delegate";
-import CodeMirror from "codemirror";
 
 import editor_images from "../components/editor-image";
-
-CodeMirror.defaults.inputStyle = "textarea";
-
-CodeMirror.defaults.inputStyle = "textarea";
 
 const image_editor = editor_images();
 const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
@@ -21,7 +15,9 @@ function quote(text) {
         .join("\n");
 }
 
-export default (el, opts) => {
+function editor(CodeMirror, SimpleMDE, el, opts) {
+    CodeMirror.defaults.inputStyle = "textarea";
+
     const form = closest(el, "form");
     const editor =  new SimpleMDE({
         autoDownloadFontAwesome: false,
@@ -168,4 +164,14 @@ export default (el, opts) => {
     });
 
     return editor;
+}
+
+export default (el, opts) => {
+    return Promise.all([
+        System.import("codemirror"),
+        System.import("simplemde")
+    ]).then(deps => {
+        const [CodeMirror, SimpleMDE] = deps;
+        return Promise.resolve(editor(CodeMirror, SimpleMDE, el, opts));
+    });
 }
