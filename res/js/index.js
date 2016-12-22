@@ -1,37 +1,37 @@
-import "./setup";
+import './setup'
 
-import { $$, component, mapCall } from "luett";
-import closest from "closest";
+import { $$, component, mapCall } from 'luett'
+import closest from 'closest'
 
-import date from "./transforms/date";
-import editor from "./transforms/editor";
-import time from "./transforms/time";
-import user_content from "./transforms/user-content";
-import gallery from "./transforms/gallery";
-import transform_icon from "./transforms/transformicons";
-import input from "./transforms/input";
-import snake from "./transforms/snake";
-import openable from "./transforms/openable";
-import clipboard from "./transforms/clipboard";
-import browser_warning from "./transforms/browser-warning";
-import carousel from "./transforms/carousel";
+import date from './transforms/date'
+import editor from './transforms/editor'
+import time from './transforms/time'
+import userContent from './transforms/user-content'
+import gallery from './transforms/gallery'
+import transformIcon from './transforms/transformicons'
+import input from './transforms/input'
+import snake from './transforms/snake'
+import openable from './transforms/openable'
+import clipboard from './transforms/clipboard'
+import browserWarning from './transforms/browser-warning'
+import carousel from './transforms/carousel'
 
-function init(search_in = document) {
+function init (searchIn = document) {
     // initialize components on load
-    component("date", date, search_in);
-    component("editor", editor, search_in);
-    component("time", time, search_in);
-    component("user-content", user_content, search_in);
-    component("gallery", gallery, search_in);
-    component("snake", snake, search_in);
-    component("openable", openable, search_in);
-    component("clipboard", clipboard, search_in);
-    component("browser-warning", browser_warning, search_in);
-    component("carousel", carousel, search_in);
-    component("tcon", transform_icon, search_in);
+  component('date', date, searchIn)
+  component('editor', editor, searchIn)
+  component('time', time, searchIn)
+  component('user-content', userContent, searchIn)
+  component('gallery', gallery, searchIn)
+  component('snake', snake, searchIn)
+  component('openable', openable, searchIn)
+  component('clipboard', clipboard, searchIn)
+  component('browser-warning', browserWarning, searchIn)
+  component('carousel', carousel, searchIn)
+  component('tcon', transformIcon, searchIn)
 
     // initialize components not based on component interface
-    mapCall($$("input, textarea"), (el) => input(el, { target: closest(el, ".form-group") }));
+  mapCall($$('input, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
 }
 
-init();
+init()

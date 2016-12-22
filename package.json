@@ -3,6 +3,9 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "scripts": {
+    "test": "standard res/**/*.js"
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
     "babel-core": "^6.21.0",
@@ -23,6 +26,7 @@
     "grunt-postcss": ">=0.3",
     "grunt-svgmin": "^3.3.0",
     "postcss-banner": ">=1",
+    "standard": "^8.6.0",
     "webpack": "^2.2.0-rc.1",
     "webpack-bundle-size-analyzer": "^2.2.0"
   },
@@ -40,7 +44,7 @@
     "flatpickr": "^1.8.9",
     "font-awesome": "^4.5.0",
     "lodash": "^4.16.4",
-    "luett": "^0.2.2",
+    "luett": "^1.0.0",
     "moment": "^2.13.0",
     "photoswipe": "^4.1.1",
     "qwest": "^4.4.4",

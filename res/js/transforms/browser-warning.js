@@ -1,26 +1,26 @@
-import browser from "bowser";
-import bel from "bel";
-import delegate from "delegate";
+import browser from 'bowser'
+import bel from 'bel'
+import delegate from 'delegate'
 
-const is_unsupported = browser.isUnsupportedBrowser({
-    msie: "11",
-    firefox: "45",
-    chrome: "49"
-}, window.navigator.userAgent);
+const isUnsupported = browser.isUnsupportedBrowser({
+  msie: '11',
+  firefox: '45',
+  chrome: '49'
+}, window.navigator.userAgent)
 
 const dismissal = {
-    key: "browser-version-dismissed",
-    is_dismissed: function() {
-        return localStorage.getItem(dismissal.key) === "OK";
-    },
-    set_dismissed: function() {
-        localStorage.setItem(dismissal.key, "OK")
-    }
-};
+  key: 'browser-version-dismissed',
+  isDismissed: function () {
+    return window.localStorage.getItem(dismissal.key) === 'OK'
+  },
+  setDismissed: function () {
+    window.localStorage.setItem(dismissal.key, 'OK')
+  }
+}
 
 export default (el) => {
-    if(!dismissal.is_dismissed() && is_unsupported) {
-        const disclaimer = bel`
+  if (!dismissal.isDismissed() && isUnsupported) {
+    const disclaimer = bel`
             <div class="disclaimer disclaimer-info">
                         
                 <button class="btn-text btn-text-light pull-right">
@@ -36,13 +36,13 @@ export default (el) => {
                     </p>
                 </div>
             </div>
-        `;
+        `
 
-        delegate(disclaimer, "button", "click", () => {
-            dismissal.set_dismissed();
-            el.removeChild(disclaimer);
-        });
+    delegate(disclaimer, 'button', 'click', () => {
+      dismissal.setDismissed()
+      el.removeChild(disclaimer)
+    })
 
-        el.insertBefore(disclaimer, el.firstChild);
-    }
+    el.insertBefore(disclaimer, el.firstChild)
+  }
 }

@@ -1,67 +1,67 @@
-import { $, replace } from "luett";
-import Drop from "tether-drop";
-import delegate from "delegate";
-import qwest from "qwest";
-import bel from "bel";
+import { $, replace } from 'luett'
+import Drop from 'tether-drop'
+import delegate from 'delegate'
+import qwest from 'qwest'
+import bel from 'bel'
 
-import { evented_function } from "../util/events";
-import editor_images from "../components/editor-image";
-import lightbox from "./lightbox";
+import { eventedFunction } from '../util/events'
+import ImageEditor from '../components/editor-image'
+import Lightbox from './lightbox'
 
 // create evented functions
-const _replace = evented_function(replace);
+const eventedReplace = eventedFunction(replace)
 
-function reload() {
-    return qwest.get(location.href, null, { responseType: "document" })
+function reload () {
+  return qwest.get(window.location.href, null, { responseType: 'document' })
         .then((xhr, doc) => {
-            return Promise.resolve($(".gallery", doc));
-        });
+          return Promise.resolve($('.gallery', doc))
+        })
 }
 
-function create_editor(trigger) {
-    const image_editor = editor_images({ tabs: { user: false, content: false }});
-    const image_dialog = bel`<div class="editor-dialog">${image_editor.el}</div>`;
+function createEditor (trigger) {
+  const imageEditor = ImageEditor({ tabs: { user: false, content: false } })
+  const imageDialog = bel`<div class="editor-dialog">${imageEditor.el}</div>`
 
-    const drop = new Drop({
-        target: trigger,
-        content: image_dialog,
-        position: "bottom right",
-    });
+  const drop = new Drop({
+    target: trigger,
+    content: imageDialog,
+    position: 'bottom right'
+  })
 
-    const listener = delegate(trigger, "click", function(e) {
-        e.preventDefault();
-        drop.toggle();
-    });
+  const listener = delegate(trigger, 'click', function (e) {
+    e.preventDefault()
+    drop.toggle()
+  })
 
-    image_editor.emitter.on("files:select", () => {
-        drop.close();
-    });
+  imageEditor.emitter.on('files:select', () => {
+    drop.close()
+  })
 
-    return {
-        emitter: image_editor.emitter,
-        remove: function() {
-            image_editor.remove();
-            listener.destroy();
-        }
+  return {
+    emitter: imageEditor.emitter,
+    remove: function () {
+      imageEditor.remove()
+      listener.destroy()
     }
+  }
 }
 
 export default (el) => {
-    const editor_add = $("[data-purpose='gallery-add']", el);
-    let _lightbox = lightbox(el);
+  const editorAdd = $("[data-purpose='gallery-add']", el)
+  let lightbox = Lightbox(el)
 
-    if(editor_add) {
-        const editor = create_editor(editor_add);
-        editor.emitter.on("files:select", () => {
-            reload().then((gallery) => {
-                const old_gallery = $(".gallery", el);
-                _replace(old_gallery, gallery);
-            }).then(() => {
-                _lightbox.remove();
-                _lightbox = lightbox(el);
-            });
-        });
-    }
+  if (editorAdd) {
+    const editor = createEditor(editorAdd)
+    editor.emitter.on('files:select', () => {
+      reload().then((gallery) => {
+        const oldGallery = $('.gallery', el)
+        eventedReplace(oldGallery, gallery)
+      }).then(() => {
+        lightbox.remove()
+        lightbox = Lightbox(el)
+      })
+    })
+  }
 
-    return el;
+  return el
 }

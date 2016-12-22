@@ -1,61 +1,61 @@
-import moment from "moment";
+import moment from 'moment'
 
 // load locale files
-import de from "moment/locale/de";
+import 'moment/locale/de'
 
 // initialize locale
-moment.locale("de");
+moment.locale('de')
 
-const transforms = [];
+const transforms = []
 
-function transform_now(index = null) {
-    if(index) {
-        transforms[index]();
-    } else {
-        transforms.forEach((transform) => transform());
-    }
+function transformNow (index = null) {
+  if (index) {
+    transforms[index]()
+  } else {
+    transforms.forEach((transform) => transform())
+  }
 }
 
-function add_transform(transform) {
-    const index = transforms.push(transform) - 1;
-    transform_now(index);
-    return transform;
+function addTransform (transform) {
+  const index = transforms.push(transform) - 1
+  transformNow(index)
+  return transform
 }
 
-function transform_from(el, opts) {
-    return () => {
-        el.innerHTML = moment(el.getAttribute("datetime")).from(opts.conf.ref || new Date());
-    };
+function transformFrom (el, opts) {
+  return () => {
+    el.innerHTML = moment(el.getAttribute('datetime')).from(opts.conf.ref || new Date())
+  }
 }
 
-function transform_to(el, opts) {
-    return () => {
-        el.innerHTML = moment(opts.conf.ref || new Date()).to(el.getAttribute("datetime"));
-    };
+function transformTo (el, opts) {
+  return () => {
+    el.innerHTML = moment(opts.conf.ref || new Date()).to(el.getAttribute('datetime'))
+  }
 }
 
-function transform_days_until(el, opts) {
-    return () => {
-        const days = moment(el.getAttribute("datetime")).diff(opts.conf.ref || new Date(), "days");
-        el.setAttribute("data-days", days);
-        el.innerHTML = moment(el.getAttribute("datetime")).diff(opts.conf.ref || new Date(), "days");
-    };
+function transformDaysUntil (el, opts) {
+  return () => {
+    const days = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
+    el.setAttribute('data-days', days)
+    el.innerHTML = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
+  }
 }
 
-function create_transform(el, opts) {
-    if(opts.is_type("from")) {
-        return add_transform(transform_from(el, opts));
-    }
+function createTransform (el, opts) {
+  if (opts.isType('from')) {
+    return addTransform(transformFrom(el, opts))
+  }
 
-    if(opts.is_type("to")) {
-        return add_transform(transform_to(el, opts));
-    }
+  if (opts.isType('to')) {
+    return addTransform(transformTo(el, opts))
+  }
 
-    if(opts.is_type("days-until")) {
-        return add_transform((transform_days_until(el, opts)));
-    }
+  if (opts.isType('days-until')) {
+    return addTransform((transformDaysUntil(el, opts)))
+  }
 }
 
-setInterval(transform_now, 60 * 1000);
+setInterval(transformNow, 60 * 1000)
 
-export default create_transform;
+export default createTransform
