@@ -11,7 +11,7 @@ const is_debug = (_.has(process.env, "NODE_ENV") ? "development" : "production")
 
 module.exports = {
     context: __dirname + "/res/js",
-    devtool: is_debug ? "source-map" : "cheap-eval-source-map",
+    devtool: is_debug ? "source-map" : "eval",
     entry: {
         app: "./index.js",
         snake: "./snake.js"
