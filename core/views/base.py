@@ -11,8 +11,10 @@ class PermissionMixin(rules.PermissionRequiredMixin):
     Handle permissions
     """
     def get_permission_required(self):
-        return super().get_permission_required()
-        return (self.permission,)
+        if not hasattr(self, 'permission'):
+            return super().get_permission_required()
+        else:
+            return (self.permission,)
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated():
@@ -76,8 +78,7 @@ class View(PermissionMixin, StadtMixin, django.View):
     Stadtgestalten base view
     """
     def dispatch(self, *args, **kwargs):
-        if not self.object:
-            self.object = None
+        self.object = getattr(self, 'object', None)
         self.related_object = self.get_view_object(None)
         return super().dispatch(*args, **kwargs)
 

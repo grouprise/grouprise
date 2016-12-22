@@ -1,6 +1,6 @@
 from . import forms
 from core.views import base
-from django import http, shortcuts
+from django import shortcuts
 from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic

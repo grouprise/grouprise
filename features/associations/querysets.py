@@ -22,6 +22,7 @@ class Association(models.QuerySet):
         qs = self.can_view(user, container='conversation').filter(
             entity_type=contenttypes.ContentType.objects.get_for_model(group),
             entity_id=group.id,
-            container_type=contenttypes.ContentType.objects.get_for_model(conversations.Conversation))
+            container_type=contenttypes.ContentType.objects.get_for_model(
+                conversations.Conversation))
         qs = qs.annotate(last_activity=Max('conversation__texts__time_created'))
         return qs.order_by('-last_activity')

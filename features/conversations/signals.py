@@ -1,8 +1,6 @@
 from . import models, notifications
 from core import signals
-from content import models as content
 from django.contrib.contenttypes import models as contenttypes
-from entities import models as entities
 from features.texts import models as texts
 
 
