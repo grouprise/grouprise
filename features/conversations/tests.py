@@ -1,8 +1,6 @@
 from . import models
 from content import models as content
 from core import tests
-from django import test
-from django.core import urlresolvers
 import entities.models
 from features.associations import models as associations
 from features.gestalten import tests as gestalten
