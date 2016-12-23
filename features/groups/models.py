@@ -4,6 +4,8 @@ from django.db import models as django
 
 
 class Group(models.Model):
+    is_group = True
+
     date_created = django.DateField(
             auto_now_add=True)
     gestalt_created = django.ForeignKey(

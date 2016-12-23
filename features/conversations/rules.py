@@ -1,3 +1,4 @@
+from entities import rules as gestalten
 from features.associations import models as associations
 import rules
 
@@ -9,7 +10,13 @@ def can_view(user, association):
 
 
 rules.add_perm(
-        'conversations.create',
+        'conversations.create_gestalt_conversation',
+        rules.is_authenticated
+        | gestalten.is_public
+        )
+
+rules.add_perm(
+        'conversations.create_group_conversation',
         rules.always_allow)
 
 rules.add_perm(

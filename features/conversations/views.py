@@ -5,6 +5,7 @@ from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
 from django.views.generic import edit
+from entities import models as gestalten
 from features.associations import models as associations
 from features.groups import models as groups
 from features.texts import models as texts
@@ -51,7 +52,7 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
             return self.form_invalid(form)
 
 
-class Conversations(base.PermissionMixin, generic.ListView):
+class GroupConversations(base.PermissionMixin, generic.ListView):
     model = associations.Association
     permission_required = 'conversations.list'
     template_name = 'conversations/list.html'
@@ -66,51 +67,52 @@ class Conversations(base.PermissionMixin, generic.ListView):
                 self.request.user, self.group)
 
 
-class GroupConversations(Conversations):
-    pass
-
-
 class CreateConversation(
         base.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
     model = associations.Association
-    permission_required = 'conversations.create'
     template_name = 'conversations/create.html'
 
     form_class = forms.Create
 
-    def get(self, *args, **kwargs):
-        self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
-        return super().get(*args, **kwargs)
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['has_author'] = self.request.user.is_authenticated()
-        kwargs['instance'] = associations.Association(entity=self.group)
+        kwargs['instance'] = associations.Association(entity=self.entity)
         kwargs['text'] = texts.Text()
         if kwargs['has_author']:
             kwargs['text'].author = self.request.user.gestalt
         return kwargs
 
     def get_success_message(self, cleaned_data):
-        if self.request.user.is_authenticated():
-            return None
-        else:
+        if not self.request.user.is_authenticated():
             return 'Die Nachricht wurde versendet.'
 
     def get_success_url(self):
         if self.request.user.is_authenticated():
             return urlresolvers.reverse('conversation', args=[self.object.pk])
         else:
-            return self.group.get_absolute_url()
-
-    def post(self, *args, **kwargs):
-        self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
-        return super().post(*args, **kwargs)
+            return self.entity.get_absolute_url()
 
 
 class CreateGestaltConversation(CreateConversation):
-    pass
+    permission_required = 'conversations.create_gestalt_conversation'
+
+    def get(self, *args, **kwargs):
+        self.entity = shortcuts.get_object_or_404(gestalten.Gestalt, pk=kwargs['gestalt_pk'])
+        return super().get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        self.entity = shortcuts.get_object_or_404(gestalten.Gestalt, pk=kwargs['gestalt_pk'])
+        return super().post(*args, **kwargs)
 
 
 class CreateGroupConversation(CreateConversation):
-    pass
+    permission_required = 'conversations.create_group_conversation'
+
+    def get(self, *args, **kwargs):
+        self.entity = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
+        return super().get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        self.entity = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
+        return super().post(*args, **kwargs)
