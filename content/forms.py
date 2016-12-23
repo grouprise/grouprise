@@ -46,16 +46,12 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
 class Article(BaseContent):
     layout = (
-            'author', 'group', 'title', utils_forms.EditorField('text'), 'pinned',
+            'author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', 'public',
             utils_forms.Submit('Artikel erstellen'), 'images')
 
     class Meta:
-        fields = ('author', 'text', 'title')
+        fields = ('author', 'public', 'text', 'title')
         model = models.Article
-
-    def __init__(self, *args, **kwargs):
-        kwargs['instance'] = models.Article(public=True)
-        super().__init__(*args, **kwargs)
 
 
 class Event(BaseContent):
