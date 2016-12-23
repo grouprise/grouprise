@@ -1,12 +1,12 @@
-import { $, $$, mapCall, getAttr, index } from "luett";
-import bel from "bel";
-import delegate from "delegate";
+import { $, $$, mapCall, getAttr, index } from 'luett'
+import bel from 'bel'
+import delegate from 'delegate'
 
-import Photoswipe from "photoswipe";
-import theme from "photoswipe/dist/photoswipe-ui-default";
+import Photoswipe from 'photoswipe'
+import theme from 'photoswipe/dist/photoswipe-ui-default'
 
-function attach_template() {
-    const template = bel`
+function attachTemplate () {
+  const template = bel`
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="pswp__bg"></div>
     <div class="pswp__scroll-wrap">
@@ -45,68 +45,66 @@ function attach_template() {
             </div>
         </div>
     </div>
-</div>`;
+</div>`
 
-    document.body.appendChild(template);
-    return template
+  document.body.appendChild(template)
+  return template
 }
 
-function calculate_bounding(images, index) {
-    const image = images[index];
-    const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
-    const rect = image.getBoundingClientRect();
+function calculateBounding (images, index) {
+  const image = images[index]
+  const pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+  const rect = image.getBoundingClientRect()
 
-    return {
-        x: rect.left,
-        y: rect.top + pageYScroll,
-        w: rect.width
-    };
+  return {
+    x: rect.left,
+    y: rect.top + pageYScroll,
+    w: rect.width
+  }
 }
 
-function create_lightbox(gallery) {
-    const image_selector = "[href]";
-    const image_els = $$(image_selector, gallery);
-    const images = mapCall(image_els, (el) => {
-        const [ w, h ]= mapCall(getAttr(el, "data-size").split("x"), parseInt);
-        return {
-            msrc: getAttr($("img", el), "src"),
-            src: getAttr(el, "href"),
-            w, h
-        }
-    });
-
-    function show(start_with_index = 0) {
-        const template = attach_template();
-        const lightbox = new Photoswipe(template, theme, images, {
-            index: start_with_index,
-            getThumbBoundsFn: calculate_bounding.bind(null, image_els),
-            // getDoubleTapZoom: () => 1,
-            // maxSpreadZoom: 1,
-            // zoomEl: false,
-            shareEl: false
-        });
-
-        lightbox.listen("destroy", function() {
-            document.body.removeChild(template);
-        });
-
-        lightbox.init();
-    }
-
-    const cleanup_click_listener = delegate(gallery, image_selector, "click", function(e) {
-        e.preventDefault();
-        const target_index = index(e.delegateTarget.parentNode);
-        show(target_index)
-    });
-
+function createLightbox (gallery) {
+  const imageSelector = '[href]'
+  const imageElements = $$(imageSelector, gallery)
+  const images = mapCall(imageElements, (el) => {
+    const [ w, h ] = mapCall(getAttr(el, 'data-size').split('x'), parseInt)
     return {
-        show: show,
-        remove: () => {
-            cleanup_click_listener();
-        }
+      msrc: getAttr($('img', el), 'src'),
+      src: getAttr(el, 'href'),
+      w,
+      h
     }
+  })
+
+  function show (startWithIndex = 0) {
+    const template = attachTemplate()
+    const lightbox = new Photoswipe(template, theme, images, {
+      index: startWithIndex,
+      getThumbBoundsFn: calculateBounding.bind(null, imageElements),
+      shareEl: false
+    })
+
+    lightbox.listen('destroy', function () {
+      document.body.removeChild(template)
+    })
+
+    lightbox.init()
+  }
+
+  const destroyClickListener = delegate(gallery, imageSelector, 'click', function (e) {
+    e.preventDefault()
+    const targetIndex = index(e.delegateTarget.parentNode)
+    show(targetIndex)
+  })
+
+  return {
+    show: show,
+    remove: () => {
+      destroyClickListener()
+    }
+  }
 }
 
 export default (el) => {
-    return create_lightbox($(".gallery", el));
+  return createLightbox($('.gallery', el))
 }
