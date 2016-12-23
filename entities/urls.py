@@ -4,11 +4,6 @@ from django.conf import urls
 
 
 urlpatterns = [
-    urls.url(
-        r'^abuse/path=(?P<path>.*)',
-        content_creation.AbuseMessage.as_view(),
-        name='abuse'),
-
     # gestalten
     urls.url(r'^gestalt/$', views.GestaltList.as_view(), name='gestalt-index'),
     urls.url(

@@ -1,6 +1,7 @@
 from . import forms
 from core.views import base
 from django import shortcuts
+from django.conf import settings
 from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
@@ -115,4 +116,21 @@ class CreateGroupConversation(CreateConversation):
 
     def post(self, *args, **kwargs):
         self.entity = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
+        return super().post(*args, **kwargs)
+
+
+class CreateAbuseConversation(CreateGroupConversation):
+    def get(self, *args, **kwargs):
+        kwargs['group_pk'] = settings.ABOUT_GROUP_ID
+        return super().get(*args, **kwargs)
+
+    def get_initial(self):
+        return {
+                'subject': 'Missbrauch melden',
+                'text': '{}\n\nIch bin der Ansicht, dass der Inhalt dieser Seite gegen '
+                        'Regeln verstößt.'.format(
+                            self.request.build_absolute_uri(self.kwargs['path']))}
+
+    def post(self, *args, **kwargs):
+        kwargs['group_pk'] = settings.ABOUT_GROUP_ID
         return super().post(*args, **kwargs)
