@@ -8,6 +8,8 @@ urlpatterns = [
         r'^abuse/path=(?P<path>.*)',
         content_creation.AbuseMessage.as_view(),
         name='abuse'),
+
+    # gestalten
     urls.url(r'^gestalt/$', views.GestaltList.as_view(), name='gestalt-index'),
     urls.url(
         r'^gestalt/(?P<pk>[0-9]+)/edit/$',
@@ -21,11 +23,12 @@ urlpatterns = [
         r'^gestalt/(?P<pk>[0-9]+)/edit/background/$',
         views.GestaltBackgroundUpdate.as_view(),
         name='gestalt-background-update'),
+
+    # groups
     urls.url(
-        r'^gestalt/(?P<gestalt_pk>[0-9]+)/contact/$',
-        content_creation.GestaltMessage.as_view(),
-        name='gestalt-message-create'),
-    urls.url(r'^group/(?P<pk>[0-9]+)/edit/$', views.GroupUpdate.as_view(), name='group-update'),
+        r'^group/(?P<pk>[0-9]+)/edit/$',
+        views.GroupUpdate.as_view(),
+        name='group-update'),
     urls.url(
         r'^group/(?P<pk>[0-9]+)/edit/avatar/$',
         views.GroupAvatarUpdate.as_view(),
@@ -34,6 +37,8 @@ urlpatterns = [
         r'^group/(?P<pk>[0-9]+)/edit/logo/$',
         views.GroupLogoUpdate.as_view(),
         name='group-logo-update'),
+
+
     urls.url(r'^imprint/$', views.Imprint.as_view(), name='imprint'),
     urls.url(r'^privacy/$', views.Privacy.as_view(), name='privacy'),
 ]

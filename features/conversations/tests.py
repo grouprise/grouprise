@@ -46,15 +46,15 @@ class NoNotificationOnExternalConversation:
 class GroupPageHasCreateLink:
     def test_group_page_creation(self):
         response = self.client.get(self.group.get_absolute_url())
-        self.assertContainsLink(response, 'message-create', key=self.group.pk)
+        self.assertContainsLink(response, 'create-group-conversation', key=self.group.pk)
 
 
 class CanCreateConversationWithEmail:
     def test_create_conversation(self):
-        response = self.client.get(self.get_url('message-create', key=self.group.pk))
+        response = self.client.get(self.get_url('create-group-conversation', key=self.group.pk))
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
-                self.get_url('message-create', key=self.group.pk),
+                self.get_url('create-group-conversation', key=self.group.pk),
                 {
                     'author': 'anonymous@example.org',
                     'subject': 'Temp Test Thema',
@@ -66,10 +66,10 @@ class CanCreateConversationWithEmail:
 
 class CanCreateConversation:
     def test_create_conversation(self):
-        response = self.client.get(self.get_url('message-create', key=self.group.pk))
+        response = self.client.get(self.get_url('create-group-conversation', key=self.group.pk))
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
-                self.get_url('message-create', key=self.group.pk),
+                self.get_url('create-group-conversation', key=self.group.pk),
                 {
                     'subject': 'Temp Test Thema',
                     'text': 'Test Text',

@@ -5,7 +5,7 @@
 <header class="content-header">
     <h2 class="content-classification">Gespräche</h2>
     {% if can_create_message %}
-        <a href="{% url 'message-create' group.pk %}" class="btn btn-default">Neues Gespräch</a>
+        <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default">Neues Gespräch</a>
     {% endif %}
 </header>
 

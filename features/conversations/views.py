@@ -66,6 +66,10 @@ class Conversations(base.PermissionMixin, generic.ListView):
                 self.request.user, self.group)
 
 
+class GroupConversations(Conversations):
+    pass
+
+
 class CreateConversation(
         base.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
     model = associations.Association
@@ -102,3 +106,11 @@ class CreateConversation(
     def post(self, *args, **kwargs):
         self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
         return super().post(*args, **kwargs)
+
+
+class CreateGestaltConversation(CreateConversation):
+    pass
+
+
+class CreateGroupConversation(CreateConversation):
+    pass
