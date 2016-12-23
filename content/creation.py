@@ -1,9 +1,6 @@
 from . import forms, models
-from django.conf import settings
 from django.core import urlresolvers
 from django.views import generic
-from django.http import Http404
-from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
 
@@ -40,61 +37,6 @@ class Gallery(BaseContent):
     form_class = forms.Gallery
     menu = 'gallery'
     parent = 'gallery-index'
-
-
-class BaseMessage(utils_views.ActionMixin, generic.CreateView):
-    action = 'Nachricht senden'
-    message = 'Die Nachricht wurde versendet.'
-
-    def get_initial(self):
-        recipient = self.get_recipient()
-
-        if not recipient:
-            raise Http404("recipient not found")
-
-        if self.request.user.is_authenticated():
-            return {'recipient': recipient.pk, 'sender': self.request.user.email}
-        else:
-            return {'recipient': recipient.pk}
-
-    def get_parent(self):
-        return self.get_recipient()
-
-    def get_permission_object(self):
-        return self.get_recipient()
-
-
-class GestaltMessage(BaseMessage):
-    form_class = forms.GestaltMessage
-    menu = 'gestalt'
-    permission = 'entities.create_gestalt_message'
-
-    def get_recipient(self):
-        return self.get_gestalt()
-
-
-class GroupMessage(BaseMessage):
-    form_class = forms.GroupMessage
-    menu = 'group'
-    permission = 'entities.create_group_message'
-
-    def get_recipient(self):
-        return self.get_group()
-
-
-class AbuseMessage(GroupMessage):
-    action = 'Missbrauch melden'
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['text'] = ('{}\n\nIch bin der Ansicht, dass der Inhalt dieser Seite gegen '
-                           'Regeln verstößt.'.format(
-                               self.request.build_absolute_uri(self.kwargs['path'])))
-        initial['title'] = 'Missbrauch melden'
-        return initial
-
-    def get_recipient(self):
-        return groups.Group.objects.get(id=settings.ABOUT_GROUP_ID)
 
 
 class CommentCreate(utils_views.ActionMixin, generic.CreateView):

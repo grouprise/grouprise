@@ -1,8 +1,6 @@
 from . import models
-from allauth.account import adapter as allauth_adapter
 from crispy_forms import layout
 from django import forms
-from django.contrib import auth
 from django.core import urlresolvers
 from entities import models as entities_models
 from features.groups import models as groups
@@ -88,72 +86,6 @@ class Gallery(BaseContent):
         helper = super().get_helper()
         helper.form_action = urlresolvers.reverse('gallery-create')
         return helper
-
-
-class BaseMessage(utils_forms.FormMixin, forms.ModelForm):
-    layout = (
-            'recipient', 'sender', 'title', utils_forms.EditorField('text'),
-            utils_forms.Submit('Nachricht senden'))
-    sender = forms.EmailField(label='E-Mail-Adresse')
-
-    class Meta:
-        fields = ('text', 'title')
-        labels = {'text': 'Nachricht', 'title': 'Betreff'}
-        model = models.Article
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['recipient'] = forms.ModelChoiceField(
-                disabled=True, label='Empfängerin', queryset=self.get_recipient_queryset(),
-                widget=forms.HiddenInput)
-        if self.initial.get('sender'):
-            self.fields['sender'].disabled = True
-            self.helper['sender'].wrap(layout.Field, type='hidden')
-
-    def clean(self):
-        if not self.fields['sender'].disabled and 'sender' in self.cleaned_data:
-            try:
-                user = auth.get_user_model().objects.get(email=self.cleaned_data['sender'])
-                if user.has_usable_password():
-                    self.add_error('sender', forms.ValidationError(
-                        'Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde '
-                        'Dich mit E-Mail-Adresse und Kennwort an.', code='existing'))
-            except auth.get_user_model().DoesNotExist:
-                pass
-        return super().clean()
-
-    def save(self):
-        message = super().save(commit=False)
-        user, created = auth.get_user_model().objects.get_or_create(
-                email=self.cleaned_data['sender'])
-        if created:
-            allauth_adapter.get_adapter().populate_username(None, user)
-            user.set_unusable_password()
-            user.save()
-        message.author = entities_models.Gestalt.objects.get(
-                user__email=self.cleaned_data['sender'])
-        message.save()
-        return message
-
-
-class GestaltMessage(BaseMessage):
-    def get_recipient_queryset(self):
-        return entities_models.Gestalt.objects.all()
-
-    def save(self):
-        message = super().save()
-        entities_models.GestaltContent.objects.create(
-                content=message, gestalt=self.cleaned_data['recipient'])
-
-
-class GroupMessage(BaseMessage):
-    def get_recipient_queryset(self):
-        return groups.Group.objects.all()
-
-    def save(self):
-        message = super().save()
-        entities_models.GroupContent.objects.create(
-                content=message, group=self.cleaned_data['recipient'])
 
 
 class ContentUpdate(utils_forms.FormMixin, forms.ModelForm):
