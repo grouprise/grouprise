@@ -10,6 +10,7 @@ const base = {
   time_24hr: true,
   dateFormat: 'd.m.Y',
   minuteIncrement: 15,
+  weekNumbers: true,
   locale: locale,
   parseDate: (date) => moment(date, 'DD.MM.YYYY', 'de', true).toDate()
 }
