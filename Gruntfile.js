@@ -1,16 +1,14 @@
-require("es6-promise").polyfill();
-
 module.exports = function (grunt) {
-    var pkg = grunt.file.readJSON("package.json");
+    const pkg = grunt.file.readJSON("package.json");
 
     // static files
-    var raw_banner = grunt.file.read("res/templates/banner.txt");
-    var banner = grunt.template.process(raw_banner, { data: { package: pkg } });
+    const raw_banner = grunt.file.read("res/templates/banner.txt");
+    const banner = grunt.template.process(raw_banner, {data: {package: pkg}});
 
     // postcss config
-    var postcss_autoprefixer = require("autoprefixer")({browsers: ["last 5 versions", "ie 11"]});
-    var postcss_banner = require("postcss-banner")({ banner: banner });
-    var postcss_wring = require("csswring");
+    const postcss_autoprefixer = require("autoprefixer")({browsers: ["last 5 versions", "ie 11"]});
+    const postcss_banner = require("postcss-banner")({banner: banner});
+    const postcss_wring = require("csswring");
 
     // Project configuration.
     grunt.initConfig({
