@@ -32,8 +32,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 include: [
-                    path.resolve(__dirname, "res/js"),
-                    path.resolve(__dirname, "node_modules/flatpickr")
+                    path.resolve(__dirname, "res/js")
                 ],
                 loader: "babel-loader",
                 options: {
