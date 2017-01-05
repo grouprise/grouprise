@@ -37,15 +37,15 @@ def gestalt_changed(gestalt):
 
 
 def group_changed(group):
-    invalidate_cache('sidebar-groups')
-    for gestalt_id in model_ids_including_none(gestalten.Gestalt):
-        invalidate_cache('group-header', gestalt_id, group.id)
-        invalidate_cache('group-preview', gestalt_id, group.id)
-        invalidate_cache('site-menu', gestalt_id, group.id)
+    for link in [False, True]:
+        for gestalt_id in model_ids_including_none(gestalten.Gestalt):
+            invalidate_cache('group-header', gestalt_id, group.id)
+            invalidate_cache('group-preview', link, gestalt_id, group.id)
+            invalidate_cache('site-menu', gestalt_id, group.id)
 
 
 def groups_count_changed(group):
-    invalidate_cache('sidebar-groups')
+    pass
 
 
 def memberships_count_changed(membership):
