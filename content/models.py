@@ -104,6 +104,8 @@ class Article(Content):
 class Event(Content):
     place = models.CharField('Ort / Anschrift', max_length=255)
     time = models.DateTimeField('Datum / Uhrzeit')
+    all_day = models.BooleanField('ganztägig', default=False)
+    until_time = models.DateTimeField('Datum / Uhrzeit Ende', blank=True, null=True)
 
     objects = models.Manager.from_queryset(querysets.EventQuerySet)()
 

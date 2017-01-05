@@ -59,11 +59,12 @@ class Event(BaseContent):
     layout = (
             'author', 'group', 'pinned', 'title',
             layout.Field('time', data_component='date date-datetime'),
-            'place', utils_forms.EditorField('text'), 'public',
+            layout.Field('until_time', data_component='date date-datetime'),
+            'all_day', 'place', utils_forms.EditorField('text'), 'public',
             utils_forms.Submit('Ereignis erstellen'), 'images')
 
     class Meta:
-        fields = ('author', 'place', 'public', 'text', 'time', 'title')
+        fields = ('all_day', 'author', 'place', 'public', 'text', 'time', 'title', 'until_time')
         labels = {'text': 'Beschreibung'}
         model = models.Event
 
