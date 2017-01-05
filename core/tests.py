@@ -1,7 +1,7 @@
 from django import test
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
-from django.core import mail, urlresolvers
+from django.core import cache, mail, urlresolvers
 
 HTTP_GET = 'get'
 HTTP_POST = 'post'
@@ -12,6 +12,19 @@ HTTP_OK = 'ok'
 
 
 class Test(test.TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.disable_caching()
+
+    @classmethod
+    def disable_caching(cls):
+        cache.cache.cache = cache.caches['proxy']
+
+    @classmethod
+    def enable_caching(cls):
+        cache.cache.cache = cache.caches['test']
+
     def assertContainsLink(self, response, url, key=None):
         self.assertContains(response, self.get_link(url, key))
 

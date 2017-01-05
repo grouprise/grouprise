@@ -263,6 +263,9 @@ CACHES = {
     'default': {
         'BACKEND': 'features.caching.backends.ProxyCache',
     },
+    'proxy': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
     'test': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     },
