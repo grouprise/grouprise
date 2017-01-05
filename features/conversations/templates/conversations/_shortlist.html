@@ -1,7 +1,11 @@
+{% load rules %}
+
+{% has_perm 'conversations.create' user group as can_create_message %}
+
 <header class="content-header">
     <h2 class="content-classification">Gespräche</h2>
     {% if can_create_message %}
-        <a href="{% url 'message-create' group.pk %}" class="btn btn-default">Neues Gespräch</a>
+        <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default">Neues Gespräch</a>
     {% endif %}
 </header>
 
@@ -10,16 +14,16 @@
 </div>
 
 <ol class="thread-preview-list">
-    {% for thread in conversations %}
+    {% for association in associations|slice:':3' %}
         <li>
-            {% include 'content/_thread_preview.html' %}
+            {% include 'conversations/_preview.html' %}
         </li>
     {% endfor %}
 </ol>
 
-{% if has_more_conversations %}
+{% if associations|length > 3 %}
     <div class="btn-toolbar btn-toolbar-centered">
-        <a href="{% url 'group-messages' group.pk %}" class="btn btn-default">
+        <a href="{% url 'group-conversations' group.pk %}" class="btn btn-default">
             Weitere Gespräche
         </a>
     </div>

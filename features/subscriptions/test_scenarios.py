@@ -53,8 +53,8 @@ class OtherContentSubscriber(
 
 
 class Conversation(
-        content_subscriptions.AllContentUnsubscribeLink,
-        conversations.ConversationMixin, tests.Test):
+        # content_subscriptions.AllContentUnsubscribeLink,
+        conversations.GroupConversation, tests.Test):
     """
     If a group member views a conversation
     * the conversation page has a link to unsubscribe from all group content.

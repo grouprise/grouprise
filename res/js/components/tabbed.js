@@ -1,52 +1,52 @@
-import { $, $$, index, mapCall, remove, removeClass, addClass } from "luett";
-import bel from "bel";
-import delegate from "delegate";
+import { $, $$, index, mapCall, remove, removeClass, addClass } from 'luett'
+import bel from 'bel'
+import delegate from 'delegate'
 
-function tab_content(tab) {
-    return bel`<li>
+function renderTabContent (tab) {
+  return bel`<li>
     <div class="tabbed-content">${tab.content}</div>
-</li>`;
+</li>`
 }
 
-function tab_label(tab) {
-    return bel`<li>
+function renderTabLabel (tab) {
+  return bel`<li>
     <a href="#" class="tabbed-tab">${tab.label}</a>
-</li>`;
+</li>`
 }
 
 export default (opts) => {
-    const iface = {};
-    const tabbed = bel`<div class="tabbed">
-    <ol class="tabbed-contents">${opts.tabs.map(tab_content)}</ol>
-    <ol class="tabbed-tabs">${opts.tabs.map(tab_label)}</ol>
-</div>`;
+  const iface = {}
+  const tabbed = bel`<div class="tabbed">
+    <ol class="tabbed-contents">${opts.tabs.map(renderTabContent)}</ol>
+    <ol class="tabbed-tabs">${opts.tabs.map(renderTabLabel)}</ol>
+</div>`
 
-    function select_tab(tab_index) {
-        const tab = $(`.tabbed-tabs > li:nth-child(${tab_index}) .tabbed-tab`, tabbed);
-        const tab_content = $(`.tabbed-contents > li:nth-child(${tab_index}) .tabbed-content`, tabbed);
+  function selectTab (tabIndex) {
+    const tab = $(`.tabbed-tabs > li:nth-child(${tabIndex}) .tabbed-tab`, tabbed)
+    const tabContent = $(`.tabbed-contents > li:nth-child(${tabIndex}) .tabbed-content`, tabbed)
 
         // disable all tabs and tab contents
-        mapCall($$(".tabbed-tab", tabbed), removeClass, "tabbed-tab-current");
-        mapCall($$(".tabbed-content", tabbed), removeClass, "tabbed-content-current");
+    mapCall($$('.tabbed-tab', tabbed), removeClass, 'tabbed-tab-current')
+    mapCall($$('.tabbed-content', tabbed), removeClass, 'tabbed-content-current')
 
         // enable selected tab and content
-        addClass(tab, "tabbed-tab-current");
-        addClass(tab_content, "tabbed-content-current");
-    }
+    addClass(tab, 'tabbed-tab-current')
+    addClass(tabContent, 'tabbed-content-current')
+  }
 
-    const tab_select = delegate(tabbed, ".tabbed-tabs > li", "click", (e) => {
-        e.preventDefault();
-        select_tab(index(e.delegateTarget) + 1);
-    });
+  const tabSelectListener = delegate(tabbed, '.tabbed-tabs > li', 'click', (e) => {
+    e.preventDefault()
+    selectTab(index(e.delegateTarget) + 1)
+  })
 
-    iface.remove = function() {
-        tab_select.destroy();
-        remove(tabbed);
-    };
+  iface.remove = function () {
+    tabSelectListener.destroy()
+    remove(tabbed)
+  }
 
-    opts.tabs.length && select_tab(1);
+  opts.tabs.length && selectTab(1)
 
-    iface.el = tabbed;
+  iface.el = tabbed
 
-    return iface;
-};
+  return iface
+}

@@ -1,0 +1,9 @@
+{% load conversations %}
+
+{% conversation_associations user group as associations %}
+
+{% if associations %}
+    <div class="content-block">
+        {% include 'conversations/_shortlist.html' %}
+    </div>
+{% endif %}

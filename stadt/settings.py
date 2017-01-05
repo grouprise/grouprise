@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'content.apps.ContentConfig',
     'core.apps.CoreConfig',
-    'core.fragments.apps.AutodiscoverFragmentsConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -62,6 +61,7 @@ INSTALLED_APPS = [
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
     'features.subscriptions',
+    'features.texts',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
@@ -90,6 +90,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'stadt', 'templates'),
             ],
         'OPTIONS': {
+            'builtins': ['core.templatetags.core'],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -301,6 +302,8 @@ try:
 except IOError:
     ASSET_VERSION = "trunk"
 
+# diese Umgebungsvariable wird im Makefile beim Aufruf von "python manage.py test" gesetzt
+stadtgestalten_in_test = (os.getenv("STADTGESTALTEN_IN_TEST", "0") == "1")
 
 # load the magic local settings module if it exists
 try:

@@ -4,6 +4,8 @@ from django.db import models as django
 
 
 class Group(models.Model):
+    is_group = True
+
     date_created = django.DateField(
             auto_now_add=True)
     gestalt_created = django.ForeignKey(
@@ -74,14 +76,3 @@ class Group(models.Model):
     def get_head_gallery(self):
         return self.content.exclude(gallery=None).filter(
                 public=True, groupcontent__pinned=True).first()
-
-    # FIXME: to be removed
-    def get_conversations(self, user):
-        from django.db.models import Max
-        from django.db.models.functions import Coalesce
-        return self.content \
-            .permitted(user) \
-            .filter(article__isnull=False, public=False) \
-            .annotate(last_comment=Max('comments__date_created')) \
-            .annotate(last_activity=Coalesce("last_comment", "date_created")) \
-            .order_by("-last_activity")

@@ -1,15 +1,15 @@
-function has(obj, key) {
-    return Object.prototype.hasOwnProperty.call(obj, key);
+function has (obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj, key)
 }
 
-function values(value, times) {
-    const result = [];
+function values (value, times) {
+  const result = []
 
-    for(let i = 0; i < times; i++) {
-        result.push(value);
-    }
+  for (let i = 0; i < times; i++) {
+    result.push(value)
+  }
 
-    return result;
+  return result
 }
 
-export { values, has };
+export { values, has }

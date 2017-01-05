@@ -2,7 +2,6 @@ from . import predicates
 from content import predicates as content
 import rules
 
-
 rules.add_perm(
         'associations.create_content_group_membership',
         rules.is_authenticated

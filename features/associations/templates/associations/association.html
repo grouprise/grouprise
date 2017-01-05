@@ -1,0 +1,7 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}{{ association.container }} - {{ site.name }}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb association.entity association.container %}
+{% endblock %}

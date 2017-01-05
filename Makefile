@@ -23,6 +23,7 @@ HELPER_PATH_ENV = PATH=$(HELPER_BIN_PATH):$$PATH
 NODEJS_SYMLINK = $(HELPER_BIN_PATH)/node
 
 ASSET_VERSION_PATH = stadt/ASSET_VERSION
+CACHE_VERSION_PATH = stadt/CACHE_VERSION
 
 # in dieser Datei wird die Zeichenkette 'VERSION = "X.Y.Z"' erwartet
 VERSION_FILE = package.json
@@ -31,13 +32,16 @@ NEXT_RELEASE = $(shell PYTHONPATH=. python -c "import stadt.version; print(stadt
 GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 
 
-.PHONY: asset_version check-virtualenv clean database-backup database-restore \
-	default deploy deploy-git release-breaking release-feature \
-	release-patch reload static update-virtualenv test website-offline \
-	website-online
+.PHONY: asset_version cache_version check-virtualenv clean database-backup \
+	database-restore default deploy deploy-git release-breaking \
+	release-feature release-patch reload static update-virtualenv test \
+	website-offline website-online
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
+
+cache_version:
+	git log --oneline --pretty=format:"%ct" | head -n 1 > $(CACHE_VERSION_PATH)
 
 database-backup:
 	@mkdir -p "$(BACKUP_PATH)"
@@ -83,6 +87,7 @@ update-virtualenv: check-virtualenv
 
 deploy:
 	$(MAKE) asset_version
+	$(MAKE) cache_version
 	$(MAKE) test
 	$(MAKE) website-offline
 	$(MAKE) database-backup
@@ -115,7 +120,11 @@ release-breaking release-feature release-patch:
 	git tag -a "$(GIT_RELEASE_TAG)"
 
 test: check-virtualenv
-	python -m flake8 $(PYTHON_DIRS) && python manage.py test
+	python -m flake8 $(PYTHON_DIRS)
+	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
+	@# werden, um die Verwendung einer postgres/mysql-Datenbankverbindung ohne "create"-Rechte
+	@# zu verhindern. Mit sqlite klappen die Tests dann natuerlich.
+	STADTGESTALTEN_IN_TEST=1 python manage.py test
 
 clean:
 	$(RM) -r node_modules

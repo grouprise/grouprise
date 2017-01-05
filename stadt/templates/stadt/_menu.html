@@ -18,6 +18,8 @@
                     <span class="dock-trigger-label">
                         {% if group %}
                             {{ group }} /
+                        {% elif view.group %}
+                            {{ view.group }} /
                         {% endif %}
                         {{ user.gestalt|default:"Du" }}
                         <i class="caret"></i>
@@ -47,7 +49,7 @@
                                 <div class="dock-fit dock-header-extension hidden-lg">
                                     <ul class="nav-slide">
                                         <li>
-                                            <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' %}nav-slide-current{% endif %}">Gruppen</a>
+                                            <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-slide-current{% endif %}">Gruppen</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-slide-current{% endif %}">Gestalten</a>
@@ -66,26 +68,9 @@
 
                                 <ol class="tabbls">
                                     {% if group %}
-                                        <li data-order="high">
-                                            <div class="tabbl">
-                                                <header class="tabbl-header">
-                                                    <span class="tabbl-title">
-                                                        {{ group }}
-                                                    </span>
-                                                </header>
-                                                <div class="tabbl-content">
-                                                    <a href="{{ group.get_absolute_url }}">
-                                                        Zur Gruppenseite
-                                                    </a>
-
-                                                    {% include_features '_group_menu_actions.html' %}
-
-                                                    <a href="{% url 'message-create' group.pk %}">
-                                                        Nachricht schreiben
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </li>
+                                        {% include 'stadt/_menu_group.html' with group=group %}
+                                    {% elif view.group %}
+                                        {% include 'stadt/_menu_group.html' with group=view.group %}
                                     {% endif %}
                                     <li data-order="low">
                                         <div class="tabbl">
@@ -124,7 +109,7 @@
 
         <ul class="nav-menu nav-menu-primary">
             <li>
-                <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' %}nav-menu-item-current{% endif %}">Gruppen</a>
+                <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-menu-item-current{% endif %}">Gruppen</a>
             </li>
             <li>
                 <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-menu-item-current{% endif %}">Gestalten</a>

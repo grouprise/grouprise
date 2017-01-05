@@ -1,0 +1,9 @@
+{% extends "texts/_text.html" %}
+{% load crispy_forms_tags %}
+
+{% block media_body %}
+    {% crispy form %}
+{% endblock %}
+
+{% block media_footer %}{% endblock %}
+{% block media_content_attrs %}{% endblock %}

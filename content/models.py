@@ -1,11 +1,8 @@
 from . import querysets
 import core.models
-from django.conf import settings
-from django.contrib.sites import models as sites_models
-from django.core import mail, urlresolvers
+from django.core import urlresolvers
 from django.db import models
 from django.utils import timezone
-from email import utils as email_utils
 
 
 class Image(models.Model):
@@ -29,37 +26,6 @@ class Base(core.models.Model):
         abstract = True
         ordering = ('-date_created',)
 
-    def is_reply(self):
-        return False
-
-    def notify(self, gestalten):
-        groups = self.get_content().groups.all()
-        for recipient in gestalten:
-            if recipient.user.email:
-                to = '{} <{}>'.format(recipient, recipient.user.email)
-                body = ('{text}\n\n-- \nAntworten und weitere Möglichkeiten:\n'
-                        '{protocol}://{domain}{path}'.format(
-                            domain=sites_models.Site.objects.get_current().domain,
-                            path=self.get_content().get_absolute_url(),
-                            protocol=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
-                            text=self.text))
-                slugs = [g.slug for g in groups]
-                subject = '{reply}{groups}{title}'.format(
-                        reply='Re: ' if self.is_reply() else '',
-                        groups='[{}] '.format(','.join(slugs)) if groups else '',
-                        title=self.get_content().title
-                        )
-                from_email = '{gestalt} via {site} <{email}>'.format(
-                        gestalt=self.author,
-                        site=sites_models.Site.objects.get_current().name,
-                        email=settings.DEFAULT_FROM_EMAIL
-                        )
-                date = email_utils.formatdate(localtime=True)
-                message = mail.EmailMessage(
-                        body=body, from_email=from_email, subject=subject, to=[to],
-                        headers={'Date': date})
-                message.send()
-
 
 class Comment(Base):
     content = models.ForeignKey('Content', related_name='comments')
@@ -69,9 +35,6 @@ class Comment(Base):
 
     def get_content(self):
         return self.content
-
-    def is_reply(self):
-        return True
 
 
 class Content(Base):
@@ -135,7 +98,7 @@ class Article(Content):
     objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
 
     def get_display_type_name(self):
-        return 'Artikel' if self.public else 'Gespräch'
+        return 'Artikel' if self.public else 'Interner Artikel'
 
 
 class Event(Content):

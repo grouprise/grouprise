@@ -7,7 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %}</title>
 
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-brh3Rq/4PNvWgeYlcjq0mqrdgPQAgetDw6jhQloENf4='; style-src 'self' 'unsafe-inline'">
+        {% if not debug %}
+            <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-brh3Rq/4PNvWgeYlcjq0mqrdgPQAgetDw6jhQloENf4='; style-src 'self' 'unsafe-inline'">
+        {% endif %}
 
         <meta name="application-name" content="Stadtgestalten">
 
@@ -43,7 +45,7 @@
         </script>
     </head>
 
-    <body data-component="browser-warning">
+    <body data-component="browser-warning" class="month-{% now "m" %}">
         {% comment %}
         <div class="disclaimer">
             <div class="container">

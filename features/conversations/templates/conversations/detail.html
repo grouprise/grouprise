@@ -1,0 +1,45 @@
+{% extends 'associations/association.html' %}
+
+{% load rules %}
+
+{% block heading_title %}
+<h1 class="content-classification">Gespräch</h1>
+{% endblock %}
+
+{% block content %}
+    {% has_perm 'conversations.reply' user association as can_reply %}
+    
+    <div class="conversation" data-component="conversation" id="{% ref association.container %}">
+        <header class="conversation-header">
+            <h1 class="content-title">
+                {{ association.container.subject }}
+            </h1>
+        </header>
+
+        <div class="conversation-body">
+            <ol class="medias">
+                {% for message in association.container.texts.all %}
+                    <li>
+                        {% include 'texts/_text.html' with text=message only %}
+                    </li>
+                {% endfor %}
+                {% if can_reply %}
+                <li>
+                    {% include "conversations/_reply.html" with form=form author=user.gestalt %}
+                </li>
+                {% endif %}
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    {% if association.entity.is_group %}
+        {% include 'entities/_sidebar_group.html' with group=association.entity %}
+    {% else %}
+        {% if association.entity.public %}
+            {% include 'entities/_sidebar_author.html' with gestalt=association.entity %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+

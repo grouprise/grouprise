@@ -1,8 +1,15 @@
+from core import fragments
 from django import template
 from django.conf import settings
 from django.contrib.sites import models as sites_models
+from django.utils import safestring
 
 register = template.Library()
+
+
+@register.inclusion_tag('core/_breadcrumb.html')
+def breadcrumb(parent, title):
+    return {'parent': parent, 'title': title}
 
 
 @register.simple_tag()
@@ -19,6 +26,16 @@ def full_url(path):
             proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
             domain=sites_models.Site.objects.get_current().domain,
             path=path)
+
+
+@register.simple_tag(takes_context=True)
+def include_fragments(context, fragment_group):
+    result = ''
+    group = fragments.groups.get(fragment_group, [])
+    for key in group:
+        t = context.template.engine.get_template(fragments.fragments[key])
+        result += t.render(context)
+    return safestring.mark_safe(result)
 
 
 @register.tag

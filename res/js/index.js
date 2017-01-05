@@ -1,7 +1,7 @@
-import "./setup";
+import './setup'
 
-import { $$, component, mapCall } from "luett";
-import closest from "closest";
+import { $$, component, mapCall } from 'luett'
+import closest from 'closest'
 
 import date from "./transforms/date";
 import editor from "./transforms/editor";
@@ -15,23 +15,29 @@ import openable from "./transforms/openable";
 import clipboard from "./transforms/clipboard";
 import browser_warning from "./transforms/browser-warning";
 import carousel from "./transforms/carousel";
+import conversation from "./transforms/conversation";
+import keysubmit from "./transforms/keysubmit";
 
 function init(search_in = document) {
-    // initialize components on load
-    component("date", date, search_in);
-    component("editor", editor, search_in);
-    component("time", time, search_in);
-    component("user-content", user_content, search_in);
-    component("gallery", gallery, search_in);
-    component("snake", snake, search_in);
-    component("openable", openable, search_in);
-    component("clipboard", clipboard, search_in);
-    component("browser-warning", browser_warning, search_in);
-    component("carousel", carousel, search_in);
-    component("tcon", transform_icon, search_in);
+  const opts = { root: search_in };
 
-    // initialize components not based on component interface
-    mapCall($$("input, textarea"), (el) => input(el, { target: closest(el, ".form-group") }));
+  // initialize components on load
+  component("date", date, opts);
+  component("editor", editor, opts);
+  component("time", time, opts);
+  component("user-content", user_content, opts);
+  component("gallery", gallery, opts);
+  component("snake", snake, opts);
+  component("openable", openable, opts);
+  component("clipboard", clipboard, opts);
+  component("browser-warning", browser_warning, opts);
+  component("carousel", carousel, opts);
+  component("tcon", transform_icon, opts);
+  component("conversation", conversation, Object.assign({}, opts, { conf: { init } }));
+  component("keysubmit", keysubmit, opts);
+
+  // initialize components not based on component interface
+  mapCall($$('input, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
 }
 
-init();
+init()

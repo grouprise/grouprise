@@ -1,157 +1,157 @@
-import { $, $$, getAttr } from "luett";
-import delegate from "delegate";
-import { range } from "lodash";
-import stroll from "../util/stroll";
+import { $, $$, getAttr } from 'luett'
+import delegate from 'delegate'
+import { range } from 'lodash'
+import stroll from "stroll.js";
 
-function create_scroller(el) {
-    return stroll.factory(el);
+function createScroller (el) {
+  return stroll.factory(el)
 }
 
-function attach_nav(el, opts) {
-    el.insertAdjacentHTML("beforeend", `
-        <div class="${opts.css_nav}">
+function attachNav (el, opts) {
+  el.insertAdjacentHTML('beforeend', `
+        <div class="${opts.cssNav}">
             <div>
-                <button type="button" class="${opts.css_nav_btn} ${opts.css_nav_btn_prev}">
-                    <i class="${opts.css_nav_btn_icon}"></i>
+                <button type="button" class="${opts.cssNavBtn} ${opts.cssNavBtnPrev}">
+                    <i class="${opts.cssNavBtnIcon}"></i>
                 </button>            
             </div>
             <div>
-                <button type="button" class="${opts.css_nav_btn} ${opts.css_nav_btn_next}">
-                    <i class="${opts.css_nav_btn_icon}"></i>
+                <button type="button" class="${opts.cssNavBtn} ${opts.cssNavBtnNext}">
+                    <i class="${opts.cssNavBtnIcon}"></i>
                 </button>
             </div>
         </div>
-    `);
+    `)
 }
 
-function attach_index(el, opts, num_slides) {
-    if(num_slides <= 1) {
-        return;
-    }
+function attachIndex (el, opts, numberOfSlides) {
+  if (numberOfSlides <= 1) {
+    return
+  }
 
-    el.insertAdjacentHTML("beforeend", `
-        <ol class="${opts.css_index}">
-            ${range(1, Math.min(num_slides + 1, 5)).map(idx => `
+  el.insertAdjacentHTML('beforeend', `
+        <ol class="${opts.cssIndex}">
+            ${range(1, Math.min(numberOfSlides + 1, 5)).map(idx => `
                 <li>
-                    <button type="button" class="${opts.css_index_btn}" data-carousel-index="${idx}"></button>
+                    <button type="button" class="${opts.cssIndexBtn}" data-carousel-index="${idx}"></button>
                 </li>
-            `).join("\n")}
+            `).join('\n')}
         </ol>
-    `);
+    `)
 }
 
-function carousel(root, options) {
-    const conf = Object.assign({}, carousel.DEFAULTS, options.conf);
-    const iface = Object.create(null);
-    const crsl = $(`.${conf.css_carousel}`, root);
+function carousel (root, options) {
+  const conf = Object.assign({}, carousel.DEFAULTS, options.conf)
+  const iface = Object.create(null)
+  const crsl = $(`.${conf.cssCarousel}`, root)
 
     // create a default scroller
-    let scroller = create_scroller(crsl);
+  let scroller = createScroller(crsl)
     // configure noop emitter
-    let emit = () => {};
+  let emit = () => {}
 
     // set state
-    let current_slide = 1;
+  let currentSlide = 1
 
-    function unset_current() {
-        $$(`.${conf.css_slides} > .${conf.css_current}`, root)
-            .forEach((item) => item.classList.remove(conf.css_current));
+  function unsetCurrent () {
+    $$(`.${conf.cssSlides} > .${conf.cssCurrent}`, root)
+            .forEach((item) => item.classList.remove(conf.cssCurrent))
+  }
+
+  function setCurrent (el) {
+    el.classList.add(conf.cssCurrent)
+    return scroller({ x: el.offsetLeft, y: el.offsetTop })
+  }
+
+  function showSlide (idx) {
+    const slide = $(`.${conf.cssSlides} > :nth-child(${idx})`, root)
+
+    if (!slide) return iface
+
+    root.classList.toggle(conf.cssSlidesFirst, idx === 1)
+    root.classList.toggle(conf.cssSlidesLast, idx === getNumberOfSlides())
+
+    const eventData = { index: idx, carousel: crsl, slide }
+
+    emit('slide:start', eventData)
+    unsetCurrent()
+    setCurrent(slide)
+            .then(function () {
+              emit('slide:end', eventData)
+            })
+
+    currentSlide = idx
+
+    return iface
+  }
+
+  function getNumberOfSlides () {
+    return $(`.${conf.cssSlides}`).children.length
+  }
+
+  iface.setEmitter = (emitter) => {
+    emit = emitter
+    return iface
+  }
+
+  iface.setScroller = (factory) => {
+    scroller = factory(crsl)
+    return iface
+  }
+
+  iface.showSlide = (idx) => {
+    return showSlide(idx)
+  }
+
+  iface.nextSlide = () => {
+    return showSlide(currentSlide + 1)
+  }
+
+  iface.prevSlide = () => {
+    return showSlide(currentSlide - 1)
+  }
+
+  delegate(root, `.${conf.cssNavBtn}`, 'click', function (event) {
+    event.preventDefault()
+
+    if (event.delegateTarget.classList.contains(conf.cssNavBtnPrev)) {
+      iface.prevSlide()
     }
 
-    function set_current(el) {
-        el.classList.add(conf.css_current);
-        return scroller({ x: el.offsetLeft, y: el.offsetTop });
+    if (event.delegateTarget.classList.contains(conf.cssNavBtnNext)) {
+      iface.nextSlide()
     }
+  })
 
-    function show_slide(idx) {
-        const slide = $(`.${conf.css_slides} > :nth-child(${idx})`, root);
-
-        if(!slide) return iface;
-
-        root.classList.toggle(conf.css_slides_first, idx === 1);
-        root.classList.toggle(conf.css_slides_last, idx === num_slides());
-
-        const event_data = { index: idx, carousel: crsl, slide };
-
-        emit("slide:start", event_data);
-        unset_current();
-        set_current(slide)
-            .then(function() {
-                emit("slide:end", event_data);
-            });
-
-        current_slide = idx;
-
-        return iface;
-    }
-
-    function num_slides() {
-        return $(`.${conf.css_slides}`).children.length;
-    }
-
-    iface.set_emitter = (emitter) => {
-        emit = emitter;
-        return iface;
-    };
-
-    iface.set_scroller = (factory) => {
-        scroller = factory(crsl);
-        return iface;
-    };
-
-    iface.show_slide = (idx) => {
-        return show_slide(idx);
-    };
-
-    iface.next_slide = () => {
-        return show_slide(current_slide + 1);
-    };
-
-    iface.prev_slide = () => {
-        return show_slide(current_slide - 1);
-    };
-
-    delegate(root, `.${conf.css_nav_btn}`, "click", function(event) {
-        event.preventDefault();
-
-        if(event.delegateTarget.classList.contains(conf.css_nav_btn_prev)) {
-            iface.prev_slide();
-        }
-
-        if(event.delegateTarget.classList.contains(conf.css_nav_btn_next)) {
-            iface.next_slide();
-        }
-    });
-
-    delegate(root, `.${conf.css_index_btn}`, "click", function(event) {
-        event.preventDefault();
-        const idx = parseInt(getAttr(event.delegateTarget, "data-carousel-index"), 10)
-        show_slide(idx);
-    });
+  delegate(root, `.${conf.cssIndexBtn}`, 'click', function (event) {
+    event.preventDefault()
+    const idx = parseInt(getAttr(event.delegateTarget, 'data-carousel-index'), 10)
+    showSlide(idx)
+  })
 
     // add nav
-    attach_nav(root, conf);
-    attach_index(root, conf, num_slides());
+  attachNav(root, conf)
+  attachIndex(root, conf, getNumberOfSlides())
 
     // set first slide as current but wait for carousel to return
-    setTimeout(() => iface.show_slide(current_slide), 0);
+  setTimeout(() => iface.showSlide(currentSlide), 0)
 
-    return iface;
+  return iface
 }
 
 carousel.DEFAULTS = {
-    css_current: "carousel-current",
-    css_slides: "carousel-slides",
-    css_slides_first: "carousel-first",
-    css_slides_last: "carousel-last",
-    css_nav: "carousel-nav",
-    css_nav_btn: "carousel-btn",
-    css_nav_btn_icon: "carousel-btn-icon",
-    css_nav_btn_prev: "carousel-btn-prev",
-    css_nav_btn_next: "carousel-btn-next",
-    css_carousel: "carousel",
-    css_index: "carousel-index",
-    css_index_btn: "carousel-btn-index"
-};
+  cssCurrent: 'carousel-current',
+  cssSlides: 'carousel-slides',
+  cssSlidesFirst: 'carousel-first',
+  cssSlidesLast: 'carousel-last',
+  cssNav: 'carousel-nav',
+  cssNavBtn: 'carousel-btn',
+  cssNavBtnIcon: 'carousel-btn-icon',
+  cssNavBtnPrev: 'carousel-btn-prev',
+  cssNavBtnNext: 'carousel-btn-next',
+  cssCarousel: 'carousel',
+  cssIndex: 'carousel-index',
+  cssIndexBtn: 'carousel-btn-index'
+}
 
-export default carousel;
+export default carousel

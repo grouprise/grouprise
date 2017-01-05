@@ -1,0 +1,25 @@
+{% extends 'stadt/list.html' %}
+
+{% block title %}Gespräche - {{ site.name }}{% endblock %}
+
+{% block heading_title %}
+<h1 class="content-classification">Gespräche</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb view.group 'Gespräche' %}
+{% endblock %}
+
+{% block list %}
+    <ol class="thread-preview-list">
+        {% for association in association_list %}
+            <li>
+                {% include 'conversations/_preview.html' %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'entities/_sidebar_group.html' with group=view.group %}
+{% endblock %}

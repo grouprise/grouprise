@@ -1,0 +1,23 @@
+{% extends 'stadt/stadt.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Gespräch - {{ site.name }}{% endblock %}
+
+{% block breadcrumb %}{% breadcrumb view.entity 'Gespräch' %}{% endblock %}
+
+{% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
+
+{% block sidebar %}
+    {% if view.entity.is_group %}
+        {% include 'entities/_sidebar_group.html' with group=view.entity %}
+    {% else %}
+        {% if view.entity.public %}
+            {% include 'entities/_sidebar_author.html' with gestalt=view.entity %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% crispy form %}
+{% endblock %}

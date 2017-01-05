@@ -49,7 +49,7 @@ class Gestalt(models.Model):
             return self.get_contact_url()
 
     def get_contact_url(self):
-        return urlresolvers.reverse('gestalt-message-create', args=(self.pk,))
+        return urlresolvers.reverse('create-gestalt-conversation', args=(self.pk,))
 
     def get_profile_url(self):
         return urlresolvers.reverse(

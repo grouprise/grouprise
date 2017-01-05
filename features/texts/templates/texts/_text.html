@@ -1,0 +1,35 @@
+{% load content %}
+
+<div class="media media-comment" id="{% ref text %}">
+    <div class="media-image">
+        {% if author %}
+            {% include 'entities/_gestalt_avatar.html' with gestalt=author link=True only %}
+        {% else %}
+            {% include 'entities/_gestalt_avatar.html' with gestalt=text.author link=True only %}
+        {% endif %}
+    </div>
+    <div class="media-content">
+        {% block media_content %}
+            <div class="media-body"
+                 {% block media_content_attrs %}
+                    data-component="user-content" data-author="{{ text.author }}" data-permalink="{{ request.path }}#{% ref text %}"
+                 {% endblock %}>
+                {% block media_body %}
+                    {% markdown text.text heading_baselevel=3 %}
+                {% endblock %}
+            </div>
+            <footer class="media-footer">
+                {% block media_footer %}
+                    <time data-component="time time-from" datetime="{{ text.time_created|date:"c" }}" title="{{ text.time_created|date:'d. F Y H:i' }}">
+                        {{ text.time_created|date:'d. F Y H:i' }}
+                    </time> ·
+                    <a href="{{ text.author.get_absolute_url }}">{{ text.author }}</a>
+                    <div class="pull-right">
+                        <a class="link-plain" href="{{ request.path }}#{% ref text %}">Permalink</a> ·
+                        <a class="js" data-component="cite" href="#{% ref text %}">Zitieren</a>
+                    </div>
+                {% endblock %}
+            </footer>
+        {% endblock %}
+    </div>
+</div>

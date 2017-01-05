@@ -1,6 +1,6 @@
-import { $ } from "luett";
+import { $ } from 'luett'
 
 // load config
 window.app = {
-    conf: JSON.parse($("#app-configuration").textContent)
-};
+  conf: JSON.parse($('#app-configuration').textContent)
+}

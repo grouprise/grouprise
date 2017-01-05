@@ -1,0 +1,36 @@
+{% load cache %}
+
+{#{% cache cache_timeout conversation-preview content.id %}#}
+
+{% with c=association.container %}
+    <a href="{% url 'conversation' association.pk %}" class="thread-preview">
+        <div class="thread-preview-image">
+            {% include 'entities/_gestalt_avatar.html' with gestalt=c.texts.first.author link=False size=64 %}
+        </div>
+        <div class="thread-preview-body">
+            <div class="thread-preview-title">
+                {{ c.subject }}
+            </div>
+            <span class="thread-preview-stat">
+                {% with num_replies=c.texts.count|add:'-1' %}
+                    {% if num_replies == 0 %}
+                        <strong>noch keine Antwort</strong>
+                    {% else %}
+                        {{ num_replies }} Antwort{{ num_replies|pluralize:'en' }}
+                    {% endif %}
+                {% endwith %}
+            </span>
+        </div>
+        <div class="thread-preview-meta">
+            {% with time_created=c.texts.first.time_created %}
+                <time data-component="time time-from" datetime="{{ time_created|date:'Y-m-d' }}T{{ time_created|date:'H:i:s' }}.000000+02:00" title="{{ time_created|date:'d. m. Y H:i' }}">
+                    {{ time_created|date:'d. m. Y H:i' }}
+                </time>
+            {% endwith %}
+
+            {% include 'conversations/_contributors.html' with contributors=c.get_authors max_shown=10 %}
+        </div>
+    </a>
+{% endwith %}
+
+{#{% endcache %}#}
