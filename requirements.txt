@@ -5,6 +5,7 @@ django-crispy-forms
 django-filter
 djangorestframework
 flake8
+icalendar
 markdown
 pillow
 pymdown-extensions
