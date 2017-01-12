@@ -1,4 +1,5 @@
 from core import colors, models
+from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models as django
 
@@ -49,6 +50,12 @@ class Group(models.Model):
             'Geschlossene Gruppe',
             default=False,
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
+
+    tags = contenttypes.GenericRelation(
+            'tags.Tag',
+            content_type_field='tagged_type',
+            object_id_field='tagged_id',
+            related_query_name='group')
 
     def __str__(self):
         return self.name

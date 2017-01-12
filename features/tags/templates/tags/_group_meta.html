@@ -1,0 +1,9 @@
+{% if group.tags.exists %}
+    <dt>
+        <i class="fa fa-tags"></i>
+        <span class="sr-only">Schlagworte</span>
+    </dt>
+    <dd>
+        {{ group.tags.all|join:', ' }}
+    </dd>
+{% endif %}

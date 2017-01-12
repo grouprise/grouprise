@@ -29,7 +29,10 @@ def insert(key, group_name, predicate=always, after=[], before=[]):
         groups[group_name] = group
 
 
-def register2(fragment, group, **kwargs):
+def register2(fragment, group, before=[]):
     key = '{}-{}'.format(group, fragment)
     register(key, fragment)
-    insert(key, group, **kwargs)
+    b = []
+    for k in before:
+        b.append('{}-{}'.format(group, k))
+    insert(key, group, before=b)

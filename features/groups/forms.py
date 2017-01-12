@@ -17,11 +17,7 @@ class Update(forms.ModelForm):
                 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.tags = tags.Tag.objects.filter(
-                tagged_id=self.instance.id,
-                tagged_type=contenttypes.ContentType.objects.get_for_model(self.instance))
-        self.initial['tags'] = ', '.join(
-                self.tags.order_by('name').values_list('name', flat=True))
+        self.initial['tags'] = ', '.join(self.instance.tags.values_list('name', flat=True))
         self.helper = helper.FormHelper()
         self.helper.layout = layout.Layout(
                 'name',
@@ -36,7 +32,7 @@ class Update(forms.ModelForm):
                 layout.Submit('update', 'Angaben speichern'))
 
     def save(self, commit=True):
-        tag_set = set(self.tags)
+        tag_set = set(self.instance.tags.all())
         for tag in self.cleaned_data['tags'].split(','):
             tag = tag.strip()
             if tag:

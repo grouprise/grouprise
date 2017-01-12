@@ -9,5 +9,8 @@ class Tag(models.Model):
     tagged_id = models.PositiveIntegerField()
     tagged_type = models.ForeignKey('contenttypes.ContentType')
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return self.name
