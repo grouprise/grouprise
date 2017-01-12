@@ -2,7 +2,7 @@ from . import models
 from crispy_forms import layout
 from django import forms
 from django.core import urlresolvers
-from entities import models as entities_models
+from features.gestalten import models as entities_models
 from features.groups import models as groups
 from utils import forms as utils_forms
 

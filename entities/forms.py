@@ -1,4 +1,4 @@
-from . import models
+from features.gestalten import models
 from crispy_forms import bootstrap, layout
 from django import forms
 from django.contrib.auth import models as auth_models

@@ -1,4 +1,4 @@
-from . import models
+from features.gestalten import models
 from django import dispatch
 from django.contrib import auth
 from django.db.models import signals

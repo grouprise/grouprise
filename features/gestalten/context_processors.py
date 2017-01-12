@@ -1,4 +1,4 @@
-from entities import models
+from . import models
 from django.contrib.auth import hashers
 
 

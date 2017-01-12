@@ -9,7 +9,7 @@ class Group(models.Model):
     date_created = django.DateField(
             auto_now_add=True)
     gestalt_created = django.ForeignKey(
-            'entities.Gestalt',
+            'gestalten.Gestalt',
             null=True,
             blank=True)
     name = django.CharField(

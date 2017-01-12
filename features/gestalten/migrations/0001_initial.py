@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('avatar_color', models.CharField(default=core.colors.get_random_color, max_length=7)),
                 ('background', models.ImageField(blank=True, upload_to='', verbose_name='Hintergrundbild')),
                 ('public', models.BooleanField(default=False, help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.', verbose_name='Benutzerseite veröffentlichen')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('user', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, related_name='new_gestalt')),
             ],
         ),
     ]
