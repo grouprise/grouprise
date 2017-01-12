@@ -1,5 +1,6 @@
 from core import notifications
 from entities import models
+from features.gestalten import models as gestalten
 from features.comments import notifications as comments
 
 
@@ -9,7 +10,7 @@ class Commented(comments.Commented):
         recipients.update(self.comment.content.gestalten.all())
         for group in self.comment.content.groups.all():
             recipients.update(
-                models.Gestalt.objects.filter(memberships__group=group))
+                gestalten.Gestalt.objects.filter(memberships__group=group))
         recipients.discard(self.comment.author)
         return recipients
 
@@ -25,7 +26,7 @@ class ContentAssociated(notifications.Notification):
         if type(self.association) == models.GestaltContent:
             recipients.add(self.association.gestalt)
         if type(self.association) == models.GroupContent:
-            recipients.update(models.Gestalt.objects.filter(
+            recipients.update(gestalten.Gestalt.objects.filter(
                 memberships__group=self.association.group))
         recipients.discard(self.content.author)
         return recipients

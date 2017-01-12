@@ -1,7 +1,7 @@
 from . import models
 from crispy_forms import helper, layout
 from django import forms
-from entities import models as gestalten
+from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.texts import models as texts
 from utils import forms as utils_forms

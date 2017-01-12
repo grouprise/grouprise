@@ -3,7 +3,8 @@ from core import fields, views
 from django import db, http
 from django.contrib import messages
 from django.core import urlresolvers
-from entities import models as entities_models, views as entities_views
+from entities import views as entities_views
+from features.gestalten import models as entities_models
 from features.groups import views as groups
 from utils import views as utils_views
 

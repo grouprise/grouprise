@@ -6,7 +6,7 @@ from django.contrib.sites import models as sites_models
 from django.db import models as django_models
 from django.utils import six
 from django.views import generic
-from features.gestalten import models
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
@@ -37,7 +37,8 @@ class Gestalt(utils_views.List):
 class GestaltList(utils_views.List):
     menu = 'gestalt'
     permission = 'content.view_content_list'
-    queryset = models.Gestalt.objects.filter(public=True)
+    queryset = gestalten.Gestalt.objects.filter(public=True)
+    template_name = 'entities/gestalt_list.html'
     title = 'Gestalten'
 
 
@@ -46,7 +47,7 @@ class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     form_class = forms.Gestalt
     menu = 'gestalt'
     message = 'Die Einstellungen wurden geändert.'
-    model = models.Gestalt
+    model = gestalten.Gestalt
     permission = 'entities.change_gestalt'
 
     def get_parent(self):
@@ -58,7 +59,7 @@ class GestaltAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('avatar',)
     layout = ('avatar',)
     menu = 'gestalt'
-    model = models.Gestalt
+    model = gestalten.Gestalt
     permission = 'entities.change_gestalt'
 
     def get_parent(self):
@@ -70,7 +71,7 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('background',)
     layout = ('background',)
     menu = 'gestalt'
-    model = models.Gestalt
+    model = gestalten.Gestalt
     permission = 'entities.change_gestalt'
 
     def get_parent(self):

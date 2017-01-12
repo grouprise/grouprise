@@ -8,7 +8,7 @@ from django.core import exceptions, urlresolvers
 from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
-from entities import models as entities_models
+from features.gestalten import models as entities_models
 from features.groups import models as groups
 from rules.contrib import views as rules_views
 

@@ -1,5 +1,7 @@
+from allauth.account import adapter as allauth_adapter
 from core import colors
 from django.conf import settings
+from django.contrib import auth
 from django.core import urlresolvers
 from django.db import models
 

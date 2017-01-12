@@ -1,5 +1,6 @@
 from . import models
 from entities import models as entities
+from features.gestalten import models as gestalten
 from features.associations import notifications as associations
 import itertools
 
@@ -23,7 +24,7 @@ class Commented(associations.Commented):
         if self.comment.content.public:
             subscriptions = models.Subscription.objects.filter(
                     subscribed_to=self.comment.content)
-            recipients.update(entities.Gestalt.objects.filter(
+            recipients.update(gestalten.Gestalt.objects.filter(
                     subscription__in=subscriptions))
         recipients.discard(self.comment.author)
         return recipients
@@ -38,7 +39,7 @@ class ContentAssociated(associations.ContentAssociated):
                 and self.content.public):
             subscriptions = models.Subscription.objects.filter(
                     subscribed_to=self.association.group)
-            subscription_recipients = entities.Gestalt.objects.filter(
+            subscription_recipients = gestalten.Gestalt.objects.filter(
                     subscription__in=subscriptions)
             recipients = dict(zip(recipients, itertools.repeat(True)))
             recipients.update(

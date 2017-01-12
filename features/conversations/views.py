@@ -6,7 +6,7 @@ from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
 from django.views.generic import edit
-from entities import models as gestalten
+from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.groups import models as groups
 from features.texts import models as texts

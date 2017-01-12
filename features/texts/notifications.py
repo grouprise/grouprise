@@ -1,5 +1,5 @@
 from core import notifications
-from entities import models as gestalten
+from features.gestalten import models as gestalten
 
 
 class Created(notifications.Notification):
