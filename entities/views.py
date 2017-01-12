@@ -37,7 +37,7 @@ class Gestalt(utils_views.List):
 class GestaltList(utils_views.List):
     menu = 'gestalt'
     permission = 'content.view_content_list'
-    queryset = gestalten.Gestalt.objects.filter(public=True)
+    queryset = gestalten.Gestalt.objects.filter(public=True).order_by('score')
     template_name = 'entities/gestalt_list.html'
     title = 'Gestalten'
 

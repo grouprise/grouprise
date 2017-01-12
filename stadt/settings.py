@@ -221,6 +221,7 @@ SCORE_CONTENT_AGE = 100
 SCORE_PROCESSORS = [
         'features.memberships.scores.Group',
         'features.subscriptions.scores.Group',
+        'features.texts.scores.Gestalt',
         ]
 
 ROOT_SIGNALCONF = 'stadt.signals'

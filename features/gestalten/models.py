@@ -18,6 +18,7 @@ class Gestalt(models.Model):
             default=False,
             help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.'
             )
+    score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
 
     @staticmethod
