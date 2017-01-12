@@ -23,7 +23,7 @@ class Gestalt(models.Model):
             default=False,
             help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.'
             )
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='old_gestalt')
 
     @staticmethod
     def get_or_create(email):
