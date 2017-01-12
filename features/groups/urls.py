@@ -11,4 +11,9 @@ urlpatterns = [
         r'^groups/add/$',
         views.Create.as_view(),
         name='group-create'),
+
+    urls.url(
+        r'^groups/(?P<pk>[0-9]+)/edit$',
+        views.Update.as_view(),
+        name='group-update'),
 ]

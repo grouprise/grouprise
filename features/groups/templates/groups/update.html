@@ -1,0 +1,16 @@
+{% extends 'stadt/stadt.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Gruppe bearbeiten - {{ site.name }}{% endblock %}
+{% block menu %}{% with menu='group' %}{{ block.super}}{% endwith %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb group 'Gruppe bearbeiten' %}{% endblock %}
+{% block heading_title %}<h1 class="content-classification">Gruppe</h1>{% endblock %}
+
+{% block sidebar %}
+    {% include 'entities/_sidebar_group.html' with group=group %}
+{% endblock %}
+
+{% block content %}
+    {% crispy form %}
+{% endblock %}

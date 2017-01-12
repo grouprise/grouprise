@@ -183,29 +183,6 @@ class GroupMessages(utils_views.List):
         return self.get_group()
 
 
-class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
-    action = 'Gruppe ändern'
-    fields = ['address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url']
-    menu = 'group'
-    model = groups.Group
-    permission = 'groups.change_group'
-
-    def get_layout(self):
-        return (
-                'name',
-                layout.Field('description', rows=4),
-                layout.Field('address', rows=4),
-                'url',
-                layout.Field('date_founded', data_component='date'),
-                bootstrap.PrependedText('slug', '{0}/'.format(
-                    sites_models.Site.objects.get_current().domain)),
-                'closed',
-                ) + super().get_layout()
-
-    def get_parent(self):
-        return self.object
-
-
 class Imprint(utils_views.PageMixin, generic.TemplateView):
     permission = 'entities.view_imprint'
     template_name = 'entities/imprint.html'

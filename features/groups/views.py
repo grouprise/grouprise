@@ -1,6 +1,8 @@
-from . import models
+from . import forms, models
 from content import models as content_models
 from core import fields, views
+from core.views import base
+from django.views import generic
 from django_filters import views as filters_views
 from entities import filters
 import utils.views
@@ -66,3 +68,11 @@ class List(utils.views.PageMixin, filters_views.FilterView):
 
     def get_queryset(self):
         return models.Group.objects.order_by('-score')
+
+
+class Update(base.PermissionMixin, generic.UpdateView):
+    permission_required = 'groups.change_group'
+    model = models.Group
+    template_name = 'groups/update.html'
+
+    form_class = forms.Update

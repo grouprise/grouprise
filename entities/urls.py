@@ -20,10 +20,6 @@ urlpatterns = [
 
     # groups
     urls.url(
-        r'^group/(?P<pk>[0-9]+)/edit/$',
-        views.GroupUpdate.as_view(),
-        name='group-update'),
-    urls.url(
         r'^group/(?P<pk>[0-9]+)/edit/avatar/$',
         views.GroupAvatarUpdate.as_view(),
         name='group-avatar-update'),
