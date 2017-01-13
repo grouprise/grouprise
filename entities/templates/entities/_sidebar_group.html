@@ -7,7 +7,7 @@
             </h2>
         </header>
         <div class="box-content">
-            {% include "entities/_group_preview.html" with group=group link=False %}
+            {% include "groups/_preview.html" with group=group link=False %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{{ group.get_absolute_url }}" class="btn btn-link">Zur Gruppenseite</a>
