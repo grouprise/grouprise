@@ -2,14 +2,15 @@ from . import models
 from crispy_forms import layout
 from django import forms
 from django.core import urlresolvers
-from features.gestalten import models as entities_models
+from entities import models as entities
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 from utils import forms as utils_forms
 
 
 class BaseContent(utils_forms.FormMixin, forms.ModelForm):
     author = forms.ModelChoiceField(
-            disabled=True, queryset=entities_models.Gestalt.objects.all(),
+            disabled=True, queryset=gestalten.Gestalt.objects.all(),
             widget=forms.HiddenInput)
     pinned = forms.BooleanField(label='Im Intro der Gruppe anheften', required=False)
     images = forms.ModelMultipleChoiceField(
@@ -20,7 +21,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
         self.author = kwargs.pop('author', None)
         super().__init__(*args, **kwargs)
         if self.author is None:
-            self.author = entities_models.Gestalt.objects.get(pk=self.initial['author'])
+            self.author = gestalten.Gestalt.objects.get(pk=self.initial['author'])
         self.fields['group'] = forms.ModelChoiceField(
                 label='Gruppe', queryset=self.get_group_queryset(), required=False)
 
@@ -36,11 +37,11 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
             image.content = content
             image.save()
         if self.cleaned_data['group']:
-            entities_models.GroupContent.objects.update_or_create(
+            entities.GroupContent.objects.update_or_create(
                     content=content, group=self.cleaned_data['group'],
                     defaults={'pinned': self.cleaned_data['pinned']})
         else:
-            entities_models.GroupContent.objects.filter(content=content).delete()
+            entities.GroupContent.objects.filter(content=content).delete()
         return content
 
 
