@@ -1,8 +1,7 @@
 from . import forms
 from content import creation as content_creation, models as content_models
-from crispy_forms import bootstrap, layout
+from crispy_forms import layout
 from django import http
-from django.contrib.sites import models as sites_models
 from django.db import models as django_models
 from django.utils import six
 from django.views import generic

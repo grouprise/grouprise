@@ -20,10 +20,6 @@ class Tag(base.PermissionMixin, generic.DetailView):
         return content.Content.objects.filter(groupcontent__group__in=group_ids)
 
     def get_content_page(self):
-        group_ids = models.Tag.objects.filter(
-                name=self.object.name,
-                tagged_type=contenttypes.ContentType.objects.get_for_model(groups.Group)
-                ).values_list('tagged_id', flat=True)
         pagin = paginator.Paginator(self.get_content(), 10)
         try:
             return pagin.page(self.request.GET.get('page'))

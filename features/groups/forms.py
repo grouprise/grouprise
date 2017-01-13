@@ -14,7 +14,7 @@ class Update(forms.ModelForm):
     class Meta:
         fields = ('address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url')
         model = models.Group
-                
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['tags'] = ', '.join(self.instance.tags.values_list('name', flat=True))
