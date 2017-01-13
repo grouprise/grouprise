@@ -13,11 +13,14 @@ class Tag(base.PermissionMixin, generic.DetailView):
     template_name = 'tags/tag.html'
 
     def get_events(self):
-        return self.get_content().exclude(event=None)
+        group_ids = self.get_group_tags().values_list('tagged_id', flat=True)
+        return content.Event.objects.permitted(self.request.user).filter(
+                groupcontent__group__in=group_ids)
 
     def get_content(self):
         group_ids = self.get_group_tags().values_list('tagged_id', flat=True)
-        return content.Content.objects.filter(groupcontent__group__in=group_ids)
+        return content.Content.objects.permitted(self.request.user).filter(
+                groupcontent__group__in=group_ids)
 
     def get_content_page(self):
         pagin = paginator.Paginator(self.get_content(), 10)

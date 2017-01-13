@@ -7,7 +7,7 @@
 
 {% block sidebar %}
     {% include 'tags/_sidebar.html' with tag=tag %}
-    {% include 'events/_sidebar.html' %}
+    {% include 'events/_sidebar2.html' with events=view.get_events hide_buttons=True %}
 {% endblock %}
 
 {% block content %}
