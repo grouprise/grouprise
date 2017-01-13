@@ -1,0 +1,20 @@
+{% extends 'stadt/list.html' %}
+
+{% block title %}{{ tag }} - {{ site.name }}{% endblock %}
+{% block menu %}{% with menu='group' %}{{ block.super}}{% endwith %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb 'Schlagworte' tag %}{% endblock %}
+{% block heading_title %}<h2 class="content-classification">Gruppen</h2>{% endblock %}
+
+{% block sidebar %}
+    {% include 'tags/_sidebar.html' with tag=tag %}
+{% endblock %}
+
+{% block list_header %}
+    <ol class="groups">
+        {% for tag in view.get_group_tags %}
+            <li>
+                {% include 'groups/_preview.html' with group=tag.tagged link=True %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

@@ -1,9 +1,11 @@
 {% if group.tags.exists %}
-    <dt>
+    <dt title="Schlagworte">
         <i class="fa fa-tags"></i>
         <span class="sr-only">Schlagworte</span>
     </dt>
     <dd>
-        {{ group.tags.all|join:', ' }}
+        {% for tag in group.tags.all %}
+            <a href="{% url 'tag' tag.pk %}">{{ tag }}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
     </dd>
 {% endif %}
