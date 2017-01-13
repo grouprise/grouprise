@@ -39,9 +39,9 @@
                 {% endif %}
             {% endif %}
             {% if content.gallery %}
-                <i class="sg sg-images"></i> {{ content.images.count }} &nbsp;
+                <i class="sg sg-images" title="Bilder"></i> {{ content.images.count }} &nbsp;
             {% endif %}
-            <i class="sg sg-comments"></i> {{ content.comments.count }}
+            <i class="sg sg-comments" title="Kommentare"></i> {{ content.comments.count }}
             {% include_features '_content_meta_stats.html' %}
         </div>
     </div>
