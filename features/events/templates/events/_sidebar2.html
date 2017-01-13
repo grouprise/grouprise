@@ -18,7 +18,9 @@
                             {% for event in upcoming_events %}
                                 <li>
                                     <div class="event-preview">
-                                        {{ event.time }}
+                                        <time data-component="time time-from" datetime="{{ event.time|date:'Y-m-d' }}T{{ event.time|date:'H:i:s' }}.000000+02:00" title="{{ event.time }}">
+                                            {{ event.time }}
+                                        </time>:
                                         <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
                                         {% if not group and event.groupcontent %}
                                             &middot;
