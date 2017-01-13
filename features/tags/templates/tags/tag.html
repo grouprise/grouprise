@@ -9,7 +9,8 @@
     {% include 'tags/_sidebar.html' with tag=tag %}
 {% endblock %}
 
-{% block list_header %}
+{% block content %}
+    {# groups #}
     <ol class="groups">
         {% for tag in view.get_group_tags %}
             <li>
@@ -17,4 +18,19 @@
             </li>
         {% endfor %}
     </ol>
+    
+    {# content #}
+    <div class="content-header">
+        <h2 class="content-classification">Beiträge</h2>
+    </div>
+    {% with page_obj=view.get_content_page %}
+        <div class="content-list">
+            <ol class="content-preview-list">
+                {% for content in page_obj.object_list %}
+                    <li>{% include 'content/_content_preview.html' %}</li>
+                {% endfor %}
+            </ol>
+            {% include 'stadt/_pagination.html' %}
+        </div>
+    {% endwith %}
 {% endblock %}
