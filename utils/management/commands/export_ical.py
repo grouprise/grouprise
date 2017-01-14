@@ -2,6 +2,7 @@ import icalendar
 
 from django.contrib import auth
 from django.core.management.base import BaseCommand
+import django.contrib.sites.models
 
 from content.models import Event
 from entities.models import Gestalt
@@ -21,9 +22,11 @@ class Command(BaseCommand):
         else:
             events = Event.objects.public()
         calendar = icalendar.Calendar()
+        uid_format = "{}@" + django.contrib.sites.models.Site.objects.get_current().domain
         for event in events:
             cal_event = icalendar.Event()
-            cal_event.add("uid", event.id)
+            # jede UID sollte global eindeutig sein - also inkl. Domain
+            cal_event.add("uid", uid_format.format(event.id))
             cal_event.add("dtstart", event.time)
             cal_event.add("summary", event.title)
             cal_event.add("description", event.text)
