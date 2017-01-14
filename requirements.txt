@@ -3,9 +3,9 @@ django
 django-allauth
 django-crispy-forms
 django-filter
+django-ical
 djangorestframework
 flake8
-icalendar
 markdown
 pillow
 pymdown-extensions
