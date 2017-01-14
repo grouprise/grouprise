@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 import django.contrib.sites.models
 
 from content.models import Event
-from entities.models import Gestalt
 
 
 class Command(BaseCommand):
