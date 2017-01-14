@@ -4,7 +4,11 @@ from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
 from django.db.models import Q
+from django_ical.views import ICalFeed
+
+import content.models
 from entities import models as entities_models
+from features.groups import models as groups
 from utils import views as utils_views
 
 
@@ -169,3 +173,36 @@ class Markdown(utils_views.PageMixin, generic.TemplateView):
     sidebar = tuple()
     template_name = 'content/markdown.html'
     title = 'Textauszeichnung'
+
+
+class BaseCalendarFeed(ICalFeed):
+
+    def get_queryset(self):
+        return content.models.Event.objects.permitted(self.request.user)
+
+    def __call__(self, request, *args, **kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        return super().__call__(request, *args, **kwargs)
+
+    def items(self):
+        return self.get_queryset().order_by('-time')
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.text
+
+    def item_location(self, item):
+        return item.place
+
+    def item_start_datetime(self, item):
+        return item.time
+
+
+class GroupCalendarFeed(BaseCalendarFeed):
+
+    def items(self):
+        group = groups.Group.objects.get(pk=int(self.kwargs['pk']))
+        return super().items().filter(groups=group)
