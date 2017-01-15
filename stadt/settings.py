@@ -105,6 +105,7 @@ TEMPLATES = [
                 'stadt.context_processors.site',
                 'stadt.context_processors.assets',
             ],
+            # eventuell wird dieser Wert durch die lokalen Settings ueberschrieben
             'debug': True,
         },
     },
@@ -252,12 +253,6 @@ ACCOUNT_USERNAME_REQUIRED = False
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
-# Sorl Thumbnail image processing
-# http://sorl-thumbnail.readthedocs.org/
-
-THUMBNAIL_DEBUG = False
-
-
 # Caching
 # https://docs.djangoproject.com/en/1.10/topics/cache/
 
@@ -310,3 +305,9 @@ try:
     from local_settings import *   # noqa: F401, F403
 except ImportError:
     pass
+
+# _nach_ dem Laden der lokalen Einstellungen: Debug-Flags final setzen
+TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG
+# Sorl Thumbnail image processing
+# http://sorl-thumbnail.readthedocs.org/
+THUMBNAIL_DEBUG = DEBUG
