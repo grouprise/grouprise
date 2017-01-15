@@ -5,7 +5,7 @@
     python manage.py runserver
     
     npm install && node_modules/.bin/grunt
-    
+
 Visit http://localhost:8000/
 
 
@@ -40,3 +40,28 @@ The following statement creates a suitable database including proper collation s
     CREATE DATABASE stadtgestalten WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER stadtgestalten;
 
 The above command requires the locale 'de_DE.UTF8' in the system of the database server.
+
+
+# Production deployment
+## UWSGI
+The following uwsgi configuration is sufficient for running the software:
+
+    [uwsgi]
+    plugins = python3
+    chdir = /srv/stadtgestalten/stadt
+    file = wsgi.py
+    touch-reload = /srv/stadtgestalten/local_settings.py
+    touch-reload = settings.py
+    virtualenv = /srv/virtualenvs/stadtgestalten
+    pythonpath = /srv/stadtgestalten
+    socket = /var/run/uwsgi/app/stadtgestalten/socket
+    # anschalten fuer profiling
+    #env = PROFILING_DIRECTORY=/tmp/profiling-stadtgestalten/
+    # Switch to maintenance mode
+    plugins = router_redirect
+    # "touch-reload" for the offline-marker file is necessary, since "if-exists" is only processed
+    # during startup (or reload).
+    touch-reload = /srv/stadtgestalten/_OFFLINE_MARKER_UWSGI
+    if-exists = /srv/stadtgestalten/_OFFLINE_MARKER_UWSGI
+    route = .* redirect:https://offline.stadtgestalten.org/
+    endif =
