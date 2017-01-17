@@ -3,14 +3,14 @@
 from __future__ import unicode_literals
 
 from django import db
-from django.db import migrations
+from django.db import migrations, transaction
 
 
 def copy_gestalten(apps, schema_editor):
     Gestalt1 = apps.get_model('entities.Gestalt')
     Gestalt2 = apps.get_model('gestalten.Gestalt')
     for g in Gestalt1.objects.order_by('id'):
-        g2 = Gestalt2.objects.create(
+        Gestalt2.objects.create(
                 id=g.id,
                 about=g.about,
                 avatar=g.avatar,
@@ -23,9 +23,10 @@ def copy_gestalten(apps, schema_editor):
         id = Gestalt1.objects.first().id
         while id <= max_id:
             try:
-                g = Gestalt2.objects.create()
-                id = g.id
-                g.delete()
+                with transaction.atomic():
+                    g = Gestalt2.objects.create()
+                    id = g.id
+                    g.delete()
             except db.IntegrityError:
                 pass
 
