@@ -85,7 +85,6 @@ ROOT_URLCONF = 'stadt.urls'
 
 TEMPLATES = [
     {
-        'APP_DIRS': True,
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'stadt', 'templates'),
@@ -106,6 +105,15 @@ TEMPLATES = [
                 'stadt.context_processors.site',
                 'stadt.context_processors.assets',
             ],
+            # TODO: nach Django 1.10 wird der cached.Loader im nicht-Debug-Modus automatisch
+            #       aktiviert. Dann koennen wir diese 'loaders'-Definition entfernen und oben
+            #       wieder "APP_DIRS=True" einfuegen.
+            'loaders': [(
+                'django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                ],
+            )],
             # eventuell wird dieser Wert durch die lokalen Settings ueberschrieben
             'debug': True,
         },
