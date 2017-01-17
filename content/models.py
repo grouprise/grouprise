@@ -9,7 +9,7 @@ class Image(models.Model):
     content = models.ForeignKey('Content', blank=True, null=True, related_name='images')
     file = models.ImageField('Datei')
     weight = models.PositiveSmallIntegerField(default=0)
-    creator = models.ForeignKey('entities.Gestalt', related_name='+', null=True, blank=True)
+    creator = models.ForeignKey('gestalten.Gestalt', related_name='+', null=True, blank=True)
 
     class Meta:
         ordering = ('weight',)
@@ -17,7 +17,7 @@ class Image(models.Model):
 
 class Base(core.models.Model):
     author = models.ForeignKey(
-            'entities.Gestalt',
+            'gestalten.Gestalt',
             related_name='authored_%(class)s')
     date_created = models.DateTimeField(default=timezone.now)
     text = models.TextField('Text')
@@ -41,9 +41,9 @@ class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
 
     additional_authors = models.ManyToManyField(
-            'entities.Gestalt', related_name='additional_authorship')
+            'gestalten.Gestalt', related_name='additional_authorship')
     comment_authors = models.ManyToManyField(
-            'entities.Gestalt', through='Comment', related_name='comments')
+            'gestalten.Gestalt', through='Comment', related_name='comments')
     public = models.BooleanField(
             'Veröffentlichen',
             default=False,

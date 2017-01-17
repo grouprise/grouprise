@@ -60,3 +60,8 @@ def calendar(context, events, size='preview'):
             'month': c.formatmonthname(c.today.year, c.today.month),
             'weeks': c.formatmonthweeks(c.today.year, c.today.month),
             }
+
+
+@register.filter
+def upcoming_events(events, preview_length):
+    return events.upcoming(preview_length)

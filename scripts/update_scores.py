@@ -14,5 +14,7 @@ if __name__ == '__main__':
     django.setup()
 
     import core.scores
+    import features.gestalten.models
     import features.groups.models
+    core.scores.update(features.gestalten.models.Gestalt)
     core.scores.update(features.groups.models.Group)

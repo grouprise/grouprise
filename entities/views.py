@@ -1,11 +1,11 @@
-from . import forms, models
+from . import forms
 from content import creation as content_creation, models as content_models
-from crispy_forms import bootstrap, layout
+from crispy_forms import layout
 from django import http
-from django.contrib.sites import models as sites_models
 from django.db import models as django_models
 from django.utils import six
 from django.views import generic
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 from utils import forms as utils_forms, views as utils_views
 
@@ -36,7 +36,8 @@ class Gestalt(utils_views.List):
 class GestaltList(utils_views.List):
     menu = 'gestalt'
     permission = 'content.view_content_list'
-    queryset = models.Gestalt.objects.filter(public=True)
+    queryset = gestalten.Gestalt.objects.filter(public=True).order_by('-score')
+    template_name = 'entities/gestalt_list.html'
     title = 'Gestalten'
 
 
@@ -45,7 +46,7 @@ class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     form_class = forms.Gestalt
     menu = 'gestalt'
     message = 'Die Einstellungen wurden geändert.'
-    model = models.Gestalt
+    model = gestalten.Gestalt
     permission = 'entities.change_gestalt'
 
     def get_parent(self):
@@ -57,7 +58,7 @@ class GestaltAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('avatar',)
     layout = ('avatar',)
     menu = 'gestalt'
-    model = models.Gestalt
+    model = gestalten.Gestalt
     permission = 'entities.change_gestalt'
 
     def get_parent(self):
@@ -69,7 +70,7 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
     fields = ('background',)
     layout = ('background',)
     menu = 'gestalt'
-    model = models.Gestalt
+    model = gestalten.Gestalt
     permission = 'entities.change_gestalt'
 
     def get_parent(self):
@@ -179,29 +180,6 @@ class GroupMessages(utils_views.List):
 
     def get_related_object(self):
         return self.get_group()
-
-
-class GroupUpdate(utils_views.ActionMixin, generic.UpdateView):
-    action = 'Gruppe ändern'
-    fields = ['address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url']
-    menu = 'group'
-    model = groups.Group
-    permission = 'groups.change_group'
-
-    def get_layout(self):
-        return (
-                'name',
-                layout.Field('description', rows=4),
-                layout.Field('address', rows=4),
-                'url',
-                layout.Field('date_founded', data_component='date'),
-                bootstrap.PrependedText('slug', '{0}/'.format(
-                    sites_models.Site.objects.get_current().domain)),
-                'closed',
-                ) + super().get_layout()
-
-    def get_parent(self):
-        return self.object
 
 
 class Imprint(utils_views.PageMixin, generic.TemplateView):

@@ -3,7 +3,8 @@ from core import fields, views
 from django import db, http
 from django.contrib import messages
 from django.core import urlresolvers
-from entities import models as entities_models, views as entities_views
+from entities import views as entities_views
+from features.gestalten import models as entities_models
 from features.groups import views as groups
 from utils import views as utils_views
 
@@ -40,7 +41,7 @@ class Members(MembershipMixin, entities_views.GestaltList):
 
     def get_queryset(self):
         return entities_models.Gestalt.objects.filter(
-                memberships__group=self.related_object).order_by('id')
+                memberships__group=self.related_object).order_by('-score')
 
 
 class MemberAdd(MembershipMixin, views.Create):

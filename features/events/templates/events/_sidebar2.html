@@ -1,0 +1,47 @@
+{% load events %}
+
+<div class="box box-striped">
+    <div class="box-inner">
+        <header class="box-header">
+            <h2 class="box-title">
+                <i class="sg sg-calendar"></i>
+                Kalender
+            </h2>
+        </header>
+        <div class="box-content">
+            {% calendar events.around %}
+
+            {% with preview_length=preview_length|default:3 %}
+                {% with upcoming_events=events|upcoming_events:preview_length %}
+                    {% if upcoming_events %}
+                        <ul class="events">
+                            {% for event in upcoming_events %}
+                                <li>
+                                    <div class="event-preview">
+                                        <time data-component="time time-from" datetime="{{ event.time|date:'Y-m-d' }}T{{ event.time|date:'H:i:s' }}.000000+02:00" title="{{ event.time }}">
+                                            {{ event.time }}
+                                        </time>:
+                                        <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
+                                        {% if not group and event.groupcontent %}
+                                            &middot;
+                                            <a href="{{ event.groupcontent.group.get_absolute_url }}">{{ event.groupcontent.group }}</a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
+        </div>
+
+        {% if not hide_buttons %}
+            <div class="btn-toolbar btn-toolbar-right">
+                <a href="{% url 'event-index' %}" class="btn btn-link">Alle Ereignisse</a>
+                <a href="{% url 'event-create' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-link">
+                    Neues Ereignis
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>

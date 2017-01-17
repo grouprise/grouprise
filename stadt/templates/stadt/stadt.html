@@ -3,7 +3,9 @@
 {% block title %}{% if title %}{{ title }} - {% endif %}{{ site.name }}{% endblock %}
 
 {% block body %}
-    {% include 'stadt/_menu.html' %}
+    {% block menu %}
+        {% include 'stadt/_menu.html' %}
+    {% endblock %}
     <div class="page">
         <div class="container">
             {% include 'stadt/_messages.html' %}

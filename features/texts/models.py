@@ -9,7 +9,7 @@ class Text(models.Model):
     container_id = models.PositiveIntegerField()
     container_type = models.ForeignKey(contenttypes_models.ContentType)
 
-    author = models.ForeignKey('entities.Gestalt', related_name='texts')
+    author = models.ForeignKey('gestalten.Gestalt', related_name='texts')
     time_created = models.DateTimeField(default=timezone.now)
     text = models.TextField()
 

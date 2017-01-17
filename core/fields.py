@@ -1,5 +1,5 @@
 from django import forms
-from entities import models as entities_models
+from features.gestalten import models as entities_models
 import functools
 
 

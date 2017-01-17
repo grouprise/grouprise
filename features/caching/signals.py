@@ -3,7 +3,7 @@ from core import signals
 from django.contrib import auth
 from django.core import cache
 from django.core.cache import utils
-from entities import models as gestalten
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 from features.memberships import models as memberships
 from features.subscriptions import models as subscriptions

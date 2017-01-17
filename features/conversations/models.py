@@ -1,6 +1,6 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
-from entities import models as gestalten
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 
 

@@ -9,7 +9,11 @@ register = template.Library()
 
 @register.inclusion_tag('core/_breadcrumb.html')
 def breadcrumb(parent, title):
-    return {'parent': parent, 'title': title}
+    if isinstance(parent, str):
+        parent_url = None
+    else:
+        parent_url = parent.get_absolute_url()
+    return {'parent_name': str(parent), 'parent_url': parent_url, 'title_name': str(title)}
 
 
 @register.simple_tag()
