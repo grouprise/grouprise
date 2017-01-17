@@ -1,5 +1,5 @@
 {% extends 'stadt/list.html' %}
-{% load calendar rules %}
+{% load events rules %}
 
 {% block heading_toolbar %}
     {% has_perm 'content.create_content' user as can_create_content %}
