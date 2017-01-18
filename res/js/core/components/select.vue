@@ -78,7 +78,7 @@
             renderer: Object,
             defaultValue: [String, Number],
             defaultChoice: Object,
-            initialValue: {
+            value: {
                 type: [Number, String],
                 default: null
             },
@@ -97,7 +97,7 @@
         },
         data() {
             return {
-                value: null,
+                currentValue: null,
                 showFinder: false,
                 currentSearch: "",
                 typedSearch: "",
@@ -122,10 +122,10 @@
                 }
             },
             currentChoice() {
-                return find(this.choices, {value: this.value}) || this.defaultChoice
+                return find(this.choices, {value: this.currentValue}) || this.defaultChoice
             },
             currentChoiceIndex() {
-                return findIndex(this.choices, {value: this.value})
+                return findIndex(this.choices, {value: this.currentValue})
             },
             isDismissable() {
                 return this.currentChoice && this.defaultValue !== null && this.currentChoice !== this.defaultChoice
@@ -160,7 +160,7 @@
             },
             maybeSelect() {
                 if (this.availableChoices.length === 1) {
-                    this.value = this.availableChoices[0].value
+                    this.currentValue = this.availableChoices[0].value
                     this.closeFinder()
                 }
             },
@@ -188,13 +188,13 @@
                     case 38: // up
                         event.preventDefault();
                         if (cidx > 0) {
-                            this.value = this.choices[cidx - 1].value
+                            this.currentValue = this.choices[cidx - 1].value
                         }
                         return
                     case 40: // down
                         event.preventDefault();
                         if (cidx < this.choices.length - 1) {
-                            this.value = this.choices[cidx + 1].value
+                            this.currentValue = this.choices[cidx + 1].value
                         }
                         return
                 }
@@ -214,13 +214,13 @@
                     const choice = this.choices.filter(typeFilter.bind(null, term))[0]
 
                     if (choice) {
-                        this.value = choice.value
+                        this.currentValue = choice.value
                     }
                 }
             },
             select(choice) {
                 if (choice) {
-                    this.value = choice.value
+                    this.currentValue = choice.value
                 }
 
                 this.closeFinder()
@@ -235,7 +235,7 @@
                 (event.target.previousElementSibling || event.target.parentNode.lastChild).focus()
             },
             dismissChoice() {
-                this.value = this.defaultValue
+                this.currentValue = this.defaultValue
             },
             dismissSelect() {
                 this.closeFinder(false)
@@ -245,15 +245,16 @@
             }
         },
         watch: {
-            value: function (value) {
+            currentValue(value) {
                 setTimeout(() => {
-                    this.$emit("input", this.currentChoice || value)
+                    this.$emit("input", value)
+                    this.$emit("choice", this.currentChoice)
                     this.updateSize()
                 }, 0)
             }
         },
         created() {
-            this.value = this.initialValue || null
+            this.currentValue = this.value || null
             this.resizeListener = throttle(this.updateSize, 250)
         },
         mounted() {
