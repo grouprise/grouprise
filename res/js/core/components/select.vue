@@ -20,9 +20,9 @@
             <div class="select-finder" v-show="showFinder">
                 <div class="select-search" v-if="filter && choices.length > searchThreshold">
                     <label :for="componentId.search" class="sr-only">{{ texts.searchLabel }}</label>
-                    <input type="search" class="select-search-input" @keydown.down.prevent="focusChoices"
-                           v-model="currentSearch" :id="componentId.search" :placeholder="texts.searchPlaceholder"
-                           ref="search">
+                    <input type="search" class="select-search-input" v-model="currentSearch" ref="search"
+                           :id="componentId.search" :placeholder="texts.searchPlaceholder"
+                           @keydown.down.prevent="focusChoices" @keydown.enter.prevent>
                     <span class="select-search-count">{{ availableChoices.length }}</span>
                 </div>
 
