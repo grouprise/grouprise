@@ -1,0 +1,154 @@
+.select {
+    position: relative;
+    user-select: none;
+
+    .content-meta {
+        align-items: center;
+    }
+}
+
+.select-current {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid @gray-light;
+    border-radius: 2px;
+    padding: .5rem 1rem;
+    transition: border-color .2s;
+    cursor: pointer;
+
+    > :first-child {
+        flex: 1;
+    }
+
+    .select-open &,
+    &:focus {
+        outline: none;
+        border-color: @brand-primary;
+    }
+}
+
+.select-decorator {
+    border-left: 2px solid @color-text-ultralight;
+    min-width: 4rem;
+    color: @color-text-extralight;
+    padding: .5rem 1rem .5rem 1.5rem;
+    text-align: center;
+    margin-right: -.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+        transition: transform .2s, color .2s;
+        display: flex;
+        align-items: center;
+        line-height: 1;
+        font-style: normal;
+        font-size: 1.75rem;
+        min-height: 1.75rem;
+    }
+}
+
+.select-dismiss:hover i,
+.select-current:hover .select-caret i {
+    color: @brand-primary;
+}
+
+.select-caret {
+    i {
+        transform: rotate(360deg) scaleY(.6);
+        font-size: 1.25rem;
+    }
+
+    .select-open & i {
+        transform: scaleY(.6) rotate(180deg);
+    }
+}
+
+.select-default {
+    text-transform: uppercase;
+    font-size: 90%;
+    font-weight: bold;
+}
+
+.select-finder {
+    max-width: 400px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 10px;
+    background-color: white;
+    z-index: 20;
+    border-radius: 2px;
+    .material-shadow(3);
+}
+
+.select-search {
+    padding: 1rem;
+    background-color: whitesmoke;
+    display: flex;
+    align-items: center;
+}
+
+.select-search-input {
+    display: block;
+    border: none;
+    border-bottom: 2px solid @color-text-extralight;
+    width: 100%;
+    background-color: transparent;
+    padding: .625rem .5rem;
+    transition: border-color .2s;
+    flex: 1;
+
+    &:focus {
+        outline: none;
+        border-color: @brand-primary;
+    }
+}
+
+.select-search-count {
+    display: flex;
+    min-width: 40px;
+    line-height: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: @brand-primary;
+    text-align: center;
+    padding: .4rem .5rem;
+    margin-left: 1rem;
+    border-radius: 50px;
+    color: white;
+}
+
+.select-no-results {
+    margin: 1rem 0 0 0;
+    padding: 0 1rem 1rem;
+}
+
+.select-choices {
+    margin: 1rem 0 0 0;
+    padding: 0 1rem 1rem;
+    max-height: 400px;
+    overflow: hidden;
+
+    > li {
+        display: block;
+        cursor: pointer;
+        margin-bottom: .25rem;
+
+        &:focus,
+        &:hover,
+        &:active {
+            outline: none;
+            background-color: whitesmoke;
+            border-radius: 2px;
+        }
+    }
+
+    .content-meta {
+        padding: .5rem;
+    }
+}
