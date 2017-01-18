@@ -22,7 +22,7 @@
                     <label :for="componentId.search" class="sr-only">{{ texts.searchLabel }}</label>
                     <input type="search" class="select-search-input" v-model="currentSearch" ref="search"
                            :id="componentId.search" :placeholder="texts.searchPlaceholder"
-                           @keydown.down.prevent="focusChoices" @keydown.enter.prevent>
+                           @keydown.down.prevent="focusChoices" @keydown.enter.prevent="maybeSelect">
                     <span class="select-search-count">{{ availableChoices.length }}</span>
                 </div>
 
@@ -157,6 +157,12 @@
             },
             closeFinder(focus) {
                 this.toggleFinder(isBoolean(focus) ? focus : true, false)
+            },
+            maybeSelect() {
+                if (this.availableChoices.length === 1) {
+                    this.value = this.availableChoices[0].value
+                    this.closeFinder()
+                }
             },
             typeSelect(event) {
                 if (this.showFinder) return;
