@@ -1,5 +1,5 @@
 <template>
-    <div class="select" :id="componentId.wrapper" :class="{'select-open': showFinder}" v-on-clickaway="dismissSelect" @keydown.esc="closeFinder">
+    <div class="select" :id="componentId.wrapper" :class="{'select-open': showFinder}" @keydown.esc="closeFinder" v-on-clickaway="dismissSelect">
         <div class="select-current" @click.prevent="toggleFinder()" @keydown="typeSelect" tabindex="0" ref="current">
             <slot name="current-choice">
                 <component :is="renderer" :choice="currentChoice" v-if="currentChoice"></component>
