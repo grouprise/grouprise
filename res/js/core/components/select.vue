@@ -251,7 +251,7 @@
         watch: {
             value: function (value) {
                 setTimeout(() => {
-                    this.$emit("select", this.currentChoice || value)
+                    this.$emit("input", this.currentChoice || value)
                     this.updateSize()
                 }, 0)
             }
