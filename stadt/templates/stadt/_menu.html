@@ -1,129 +1,127 @@
 {% load cache rules utils %}
 
 <nav class="nav">
-    <div class="container">
-        <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
-        
-        <ul class="nav-menu nav-menu-self">
-            {# about link #}
-            <li class="hidden-xs hidden-sm">
-                <a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a>
-            </li>
-            <li>
-                <input class="dropdown-state" id="menu-user" type="checkbox" />
-                <label for="menu-user" class="dock-trigger tcon-wrap nav-state-toggle" aria-label="Zeige Menü" data-component="openable tcon" data-openable-target="#user-menu-dropdown">
-                    <span class="tcon tcon-menu--xbutterfly">
-                        <span class="tcon-menu__lines" aria-hidden="true"></span>
-                    </span>
-                    <span class="dock-trigger-label">
-                        {% if group %}
-                            {{ group }} /
-                        {% elif view.group %}
-                            {{ view.group }} /
-                        {% endif %}
-                        {{ user.gestalt|default:"Du" }}
-                        <i class="caret"></i>
-                    </span>
-                </label>
-                <div class="dock dock-light" id="user-menu-dropdown" data-dropdown>
-                    <div class="dock-inner">
-                        <span class="dock-decoration"></span>
-                        <header class="dock-header">
-                            {% if user.is_authenticated %}
-                                {% include 'entities/_gestalt_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
-                                <a href="{% url 'account_logout' %}?next={{ request.path }}" class="dock-session">
-                                    <i class="sg sg-logout"></i>
-                                    <span>Abmelden</span>
-                                </a>
-                            {% else %}
-                                <h2>Willkommen!</h2>
-                                <a href="{% url 'account_login' %}?next={{ request.path }}" class="dock-session">
-                                    <i class="sg sg-login"></i>
-                                    <span>Anmelden</span>
-                                </a>
-                            {% endif %}
-                        </header>
-                        {% cache cache_timeout site-menu user.gestalt.id group.id %}
-                        <div class="dock-content">
-                            <div class="dock-content-inner">
-                                <div class="dock-fit dock-header-extension hidden-lg">
-                                    <ul class="nav-slide">
-                                        <li>
-                                            <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-slide-current{% endif %}">Gruppen</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-slide-current{% endif %}">Gestalten</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'gallery-index' %}" class="{% if menu|lower == 'gallery' %}nav-slide-current{% endif %}">Galerien</a>
-                                        </li>
-                                    </ul>
-                                </div>
+    <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
 
-                                <ol class="tabbls">
-                                    {% if group %}
-                                        {% include 'stadt/_menu_group.html' with group=group %}
-                                    {% elif view.group %}
-                                        {% include 'stadt/_menu_group.html' with group=view.group %}
-                                    {% endif %}
-                                    <li data-order="low">
+    <ul class="nav-menu nav-menu-self">
+        {# about link #}
+        <li class="hidden-xs hidden-sm">
+            <a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a>
+        </li>
+        <li>
+            <input class="dropdown-state" id="menu-user" type="checkbox" />
+            <label for="menu-user" class="dock-trigger tcon-wrap nav-state-toggle" aria-label="Zeige Menü" data-component="openable tcon" data-openable-target="#user-menu-dropdown">
+                <span class="tcon tcon-menu--xbutterfly">
+                    <span class="tcon-menu__lines" aria-hidden="true"></span>
+                </span>
+                <span class="dock-trigger-label">
+                    {% if group %}
+                        {{ group }} /
+                    {% elif view.group %}
+                        {{ view.group }} /
+                    {% endif %}
+                    {{ user.gestalt|default:"Du" }}
+                    <i class="caret"></i>
+                </span>
+            </label>
+            <div class="dock dock-light" id="user-menu-dropdown" data-dropdown>
+                <div class="dock-inner">
+                    <span class="dock-decoration"></span>
+                    <header class="dock-header">
+                        {% if user.is_authenticated %}
+                            {% include 'entities/_gestalt_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
+                            <a href="{% url 'account_logout' %}?next={{ request.path }}" class="dock-session">
+                                <i class="sg sg-logout"></i>
+                                <span>Abmelden</span>
+                            </a>
+                        {% else %}
+                            <h2>Willkommen!</h2>
+                            <a href="{% url 'account_login' %}?next={{ request.path }}" class="dock-session">
+                                <i class="sg sg-login"></i>
+                                <span>Anmelden</span>
+                            </a>
+                        {% endif %}
+                    </header>
+                    {% cache cache_timeout site-menu user.gestalt.id group.id %}
+                    <div class="dock-content">
+                        <div class="dock-content-inner">
+                            <div class="dock-fit dock-header-extension hidden-lg">
+                                <ul class="nav-slide">
+                                    <li>
+                                        <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-slide-current{% endif %}">Gruppen</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-slide-current{% endif %}">Gestalten</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'gallery-index' %}" class="{% if menu|lower == 'gallery' %}nav-slide-current{% endif %}">Galerien</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <ol class="tabbls">
+                                {% if group %}
+                                    {% include 'stadt/_menu_group.html' with group=group %}
+                                {% elif view.group %}
+                                    {% include 'stadt/_menu_group.html' with group=view.group %}
+                                {% endif %}
+                                <li data-order="low">
+                                    <div class="tabbl">
+                                        <header class="tabbl-header">
+                                            <span class="tabbl-title">Meine Gruppen</span>
+                                        </header>
+                                        <div class="tabbl-content">
+                                            {% include_features '_group_menu_groups.html' %}
+                                        </div>
+                                    </div>
+                                </li>
+                                {% if user.is_authenticated %}
+                                    <li data-order="high">
                                         <div class="tabbl">
                                             <header class="tabbl-header">
-                                                <span class="tabbl-title">Meine Gruppen</span>
+                                                <span class="tabbl-title">Profil</span>
                                             </header>
                                             <div class="tabbl-content">
-                                                {% include_features '_group_menu_groups.html' %}
+                                                <a href="{{ user.gestalt|url_for:user }}">Meine Seite</a>
+                                                <a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a>
+                                                <a href="{% url 'account_change_password' %}">Kennwort ändern</a>
+                                                <a href="{% url 'account_email' %}">E-Mail-Adressen</a>
                                             </div>
                                         </div>
                                     </li>
-                                    {% if user.is_authenticated %}
-                                        <li data-order="high">
-                                            <div class="tabbl">
-                                                <header class="tabbl-header">
-                                                    <span class="tabbl-title">Profil</span>
-                                                </header>
-                                                <div class="tabbl-content">
-                                                    <a href="{{ user.gestalt|url_for:user }}">Meine Seite</a>
-                                                    <a href="{% url 'gestalt-update' user.gestalt.pk %}">Profil ändern</a>
-                                                    <a href="{% url 'account_change_password' %}">Kennwort ändern</a>
-                                                    <a href="{% url 'account_email' %}">E-Mail-Adressen</a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    {% endif %}
-                                </ol>
-                            </div>
+                                {% endif %}
+                            </ol>
                         </div>
-                        {% endcache %}
                     </div>
+                    {% endcache %}
                 </div>
-            </li>
-        </ul>
-        <div class="clearfix hidden-xs hidden-sm"></div>
+            </div>
+        </li>
+    </ul>
+    <div class="clearfix hidden-xs hidden-sm"></div>
 
-        <ul class="nav-menu nav-menu-primary">
-            <li>
-                <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-menu-item-current{% endif %}">Gruppen</a>
-            </li>
-            <li>
-                <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-menu-item-current{% endif %}">Gestalten</a>
-            </li>
-            <li class="nav-separator" role="presentation"></li>
-            <li>
-                <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
-            </li>
-            <li>
-                <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
-            </li>
-            <li>
-                <a href="{% url 'gallery-index' %}" class="{% if menu|lower == 'gallery' %}nav-menu-item-current{% endif %}">Galerien</a>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav-menu nav-menu-primary">
+        <li>
+            <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-menu-item-current{% endif %}">Gruppen</a>
+        </li>
+        <li>
+            <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-menu-item-current{% endif %}">Gestalten</a>
+        </li>
+        <li class="nav-separator" role="presentation"></li>
+        <li>
+            <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
+        </li>
+        <li>
+            <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
+        </li>
+        <li>
+            <a href="{% url 'gallery-index' %}" class="{% if menu|lower == 'gallery' %}nav-menu-item-current{% endif %}">Galerien</a>
+        </li>
+    </ul>
 </nav>
