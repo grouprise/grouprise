@@ -24,11 +24,19 @@ module.exports = {
   resolve: {
     alias: {
       app: path.resolve(__dirname, 'res/js'),
+      'vue$': 'vue/dist/vue'
     }
   },
   module: {
     noParse: /node_modules\/json-schema\/lib\/validate\.js/,
     rules: [
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          // vue-loader options go here
+        }
+      },
       {
         test: /\.jsx?$/,
         include: [
@@ -60,4 +68,14 @@ module.exports = {
       debug: isDebug
     })
   ]
+}
+
+if (!isDebug) {
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    })
+  ])
 }
