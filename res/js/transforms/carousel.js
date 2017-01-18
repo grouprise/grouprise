@@ -1,7 +1,7 @@
 import { $, $$, getAttr } from 'luett'
 import delegate from 'delegate'
 import { range } from 'lodash'
-import stroll from "stroll.js";
+import stroll from 'stroll.js'
 
 function createScroller (el) {
   return stroll.factory(el)

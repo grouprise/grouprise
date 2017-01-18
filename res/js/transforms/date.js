@@ -2,9 +2,9 @@ import Flatpickr from 'flatpickr'
 import locales from 'flatpickr/dist/l10n/de'
 import moment from 'moment'
 
-const locale = locales.de;
-locale.firstDayOfWeek = 1;
-locale.weekAbbreviation = "KW"
+const locale = locales.de
+locale.firstDayOfWeek = 1
+locale.weekAbbreviation = 'KW'
 
 const base = {
   time_24hr: true,

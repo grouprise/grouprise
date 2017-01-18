@@ -1,29 +1,29 @@
-const path = require("path");
-const webpack = require("webpack");
-const grunt = require("grunt");
-const _ = require("lodash");
+const path = require('path')
+const webpack = require('webpack')
+const grunt = require('grunt')
+const _ = require('lodash')
 
-const pkg = grunt.file.readJSON("package.json");
-const raw_banner = grunt.file.read("res/templates/banner.txt");
-const banner = grunt.template.process(raw_banner, {data: {package: pkg}});
+const pkg = grunt.file.readJSON('package.json')
+const rawBanner = grunt.file.read('res/templates/banner.txt')
+const banner = grunt.template.process(rawBanner, {data: {package: pkg}})
 
-const is_debug = (_.has(process.env, "NODE_ENV") ? "development" : "production") === "development";
+const isDebug = (_.has(process.env, 'NODE_ENV') ? 'development' : 'production') === 'development'
 
 module.exports = {
-  context: __dirname + "/res/js",
-  devtool: is_debug ? "source-map" : "eval",
+  context: path.join(__dirname, 'res/js'),
+  devtool: isDebug ? '#source-map' : '#eval-source-map',
   entry: {
-    app: "./index.js",
-    snake: "./snake.js"
+    app: './index.js',
+    snake: './snake.js'
   },
   output: {
-    publicPath: "/stadt/static/stadt/js/",
-    path: __dirname + "/stadt/static/js/",
-    filename: "[name].js"
+    publicPath: '/stadt/static/stadt/js/',
+    path: path.join(__dirname, 'stadt/static/js/'),
+    filename: '[name].js'
   },
   resolve: {
     alias: {
-      app: path.resolve(__dirname, "res/js")
+      app: path.resolve(__dirname, 'res/js'),
     }
   },
   module: {
@@ -32,15 +32,15 @@ module.exports = {
       {
         test: /\.jsx?$/,
         include: [
-          path.resolve(__dirname, "res/js")
+          path.resolve(__dirname, 'res/js')
         ],
-        loader: "babel-loader",
+        loader: 'babel-loader',
         options: {
           presets: [
-            ["es2015", {"modules": false}]
+            ['es2015', {'modules': false}]
           ],
-          plugins: ["transform-runtime", ["babel-root-slash-import", {
-            "rootPathSuffix": "res/js"
+          plugins: ['transform-runtime', ['babel-root-slash-import', {
+            'rootPathSuffix': 'res/js'
           }]]
         }
       }
@@ -48,18 +48,16 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin(banner),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de/),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /de/),
     new webpack.optimize.UglifyJsPlugin({
-      sourceMap: !is_debug
+      sourceMap: !isDebug,
+      compress: {
+        warnings: !isDebug
+      }
     }),
     new webpack.LoaderOptionsPlugin({
-      minimize: !is_debug,
-      debug: is_debug
+      minimize: !isDebug,
+      debug: isDebug
     })
-  ],
-  node: {
-    fs: "empty",
-    net: "empty",
-    tls: "empty"
-  }
-};
+  ]
+}
