@@ -28,8 +28,8 @@
 
                 <ol class="select-choices" @keydown.up.prevent="prevChoice" @keydown.down.prevent="nextChoice"
                     ref="choices" v-if="availableChoices.length > 0">
-                    <li v-for="(choice, index) in availableChoices" :data-value="choice.value" @click="select"
-                        @keydown.enter="select" tabindex="0">
+                    <li v-for="(choice, index) in availableChoices" :data-value="choice.value" @click="select(choice)"
+                        @keydown.enter="select(choice)" tabindex="0">
                         <slot name="choice">
                             <component :is="renderer" :choice="choice" :index="index"></component>
                         </slot>
@@ -218,11 +218,7 @@
                     }
                 }
             },
-            select(event) {
-                const target = event.currentTarget || event.target
-                const value = target.getAttribute("data-value")
-                const choice = find(this.choices, {value})
-
+            select(choice) {
                 if (choice) {
                     this.value = choice.value
                 }
