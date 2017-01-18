@@ -159,7 +159,7 @@
                 this.toggleFinder(isBoolean(focus) ? focus : true, false)
             },
             typeSelect(event) {
-                if(this.showFinder) return;
+                if (this.showFinder) return;
 
                 const cidx = this.currentChoiceIndex
 
