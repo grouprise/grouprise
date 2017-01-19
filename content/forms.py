@@ -46,9 +46,30 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
 
 
 class Article(BaseContent):
-    layout = (
-            'author', 'group', 'title', utils_forms.EditorField('text'), 'pinned', 'public',
-            utils_forms.Submit('Artikel erstellen'), 'images')
+    layout = layout.Div(
+        'author', 'images',
+        layout.Div(
+            'title',
+            utils_forms.EditorField('text')
+        ),
+        layout.Div(
+            layout.HTML("<h2>Beitragseinstellungen</h2>"),
+            layout.Div(
+                layout.Div(
+                    layout.Field('group', data_component='select', data_select_type='author'),
+                    'pinned',
+                    css_class="col-md-7"
+                ),
+                layout.Div(
+                    utils_forms.Submit('Artikel erstellen', field_classes="btn btn-primary btn-block"),
+                    'public',
+                    css_class="col-md-5"
+                ),
+                css_class="row"
+            ),
+            css_class="section section-publish section-event"
+        )
+    )
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
@@ -56,12 +77,54 @@ class Article(BaseContent):
 
 
 class Event(BaseContent):
-    layout = (
-            'author', 'group', 'pinned', 'title',
-            layout.Field('time', data_component='date date-datetime'),
-            layout.Field('until_time', data_component='date date-datetime'),
-            'all_day', 'place', utils_forms.EditorField('text'), 'public',
-            utils_forms.Submit('Ereignis erstellen'), 'images')
+    layout = layout.Div(
+        'author', 'images',
+        layout.Div(
+            'title',
+            utils_forms.EditorField('text')
+        ),
+        layout.Div(
+            layout.HTML("<h2>Ort und Zeit</h2>"),
+            layout.Div(
+                layout.Div(
+                    layout.Field('time', data_component='date date-datetime'),
+                    css_class="col-md-6"
+                ),
+                layout.Div(
+                    layout.Field('until_time', data_component='date date-datetime'),
+                    css_class="col-md-6"
+                ),
+                layout.Div(
+                    'place',
+                    css_class="col-md-6"
+                ),
+                layout.Div(
+                    'all_day',
+                    css_class="col-md-6"
+                ),
+                css_class="row"
+            ),
+            css_class="section section-event section-event-time"
+        ),
+        layout.Div(
+            layout.HTML("<h2>Beitragseinstellungen</h2>"),
+            layout.Div(
+                layout.Div(
+                    layout.Field('group', data_component='select', data_select_type='author'),
+                    'pinned',
+                    css_class="col-md-7"
+                ),
+                layout.Div(
+                    utils_forms.Submit('Ereignis erstellen', field_classes="btn btn-primary btn-block"),
+                    'public',
+                    css_class="col-md-5"
+                ),
+                css_class="row"
+            ),
+            css_class="section section-publish section-event"
+        ),
+        css_class="page-event-edit"
+    )
 
     class Meta:
         fields = ('all_day', 'author', 'place', 'public', 'text', 'time', 'title', 'until_time')
