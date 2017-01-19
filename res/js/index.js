@@ -39,7 +39,7 @@ function init (searchIn = document) {
   component('select', select, opts)
 
   // initialize components not based on component interface
-  mapCall($$('input, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
+  mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
 }
 
 init()
