@@ -36,7 +36,7 @@ export default (opts) => {
 
   const tabSelectListener = delegate(tabbed, '.tabbed-tabs > li', 'click', (e) => {
     e.preventDefault()
-    selectTab(index(e.delegateTarget) + 1)
+    selectTab(index(e.delegateTarget))
   })
 
   iface.remove = function () {
