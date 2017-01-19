@@ -14,6 +14,7 @@
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-root-slash-import": "^1.1.0",
+    "css-loader": "^0.26.1",
     "csswring": ">=3.0",
     "es6-promise": "^3.1.2",
     "grunt": "~0.4.5",
@@ -27,10 +28,13 @@
     "grunt-svgmin": "^3.3.0",
     "postcss-banner": ">=1",
     "standard": "^8.6.0",
+    "vue-loader": "^10.0.2",
+    "vue-template-compiler": "^2.1.9",
     "webpack": "^2.2.0-rc.1",
     "webpack-bundle-size-analyzer": "^2.2.0"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "babel-runtime": "^6.20.0",
     "bel": "^4.5.0",
     "bootstrap": "^3.3.6",
@@ -43,7 +47,7 @@
     "eventemitter3": "^1.2.0",
     "flatpickr": "^2.2.8",
     "font-awesome": "^4.5.0",
-    "lodash": "^4.16.4",
+    "lodash": "^4.17.4",
     "luett": "^1.0.0",
     "moment": "^2.13.0",
     "photoswipe": "^4.1.1",
@@ -52,6 +56,9 @@
     "stroll.js": "^3.0.0",
     "tether": "^1.3.4",
     "tether-drop": "^1.4.2",
-    "tether-tooltip": "^1.2.0"
+    "tether-tooltip": "^1.2.0",
+    "uuid": "^3.0.1",
+    "vue": "^2.1.9",
+    "vue-clickaway": "^2.1.0"
   }
 }
