@@ -23,7 +23,7 @@ class BaseContent(utils_forms.FormMixin, forms.ModelForm):
         if self.author is None:
             self.author = gestalten.Gestalt.objects.get(pk=self.initial['author'])
         self.fields['group'] = forms.ModelChoiceField(
-                label='Gruppe', queryset=self.get_group_queryset(), required=False)
+                label='Veröffentlichen als', queryset=self.get_group_queryset(), required=False)
 
     def get_group_queryset(self):
         return groups.Group.objects.filter(memberships__member=self.author)
