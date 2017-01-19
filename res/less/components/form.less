@@ -18,6 +18,10 @@ label {
     user-select: none;
 }
 
+.help-block {
+    font-size: 0.9rem;
+}
+
 .form-login {
     width: 400px;
     margin: 4rem auto 0;
@@ -57,6 +61,13 @@ label {
         margin-top: 0;
     }
 
+    .help-block {
+        background-color: @brand-danger;
+        color: white;
+        padding: .3em .5em;
+        border-radius: 0 0 2px 2px;
+    }
+
     .account-actions {
         display: flex;
         justify-content: space-around;
@@ -71,7 +82,7 @@ label {
 }
 
 .form-modern {
-    .form-group,
+    .form-group:not(.input-type-radio):not(.input-type-checkbox),
     .form-control {
         font-size: 1rem;
         background-color: white;
@@ -103,15 +114,10 @@ label {
 
     .help-block {
         position: absolute;
-        font-size: 0.9rem;
         z-index: 5;
-        background-color: @brand-danger;
-        color: white;
         top: 100%;
-        padding: .3em .5em;
         right: 0;
         margin: 0;
-        border-radius: 0 0 2px 2px;
 
         .js & {
             margin: 0 -2px 0 0;
@@ -162,7 +168,7 @@ label {
 }
 
 .form-control.flatpickr-input[readonly] {
-    background: transparent;
+    background: white;
 }
 
 .js .form-modern .input-empty.input-type-textarea .control-label {
