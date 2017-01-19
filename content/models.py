@@ -45,10 +45,10 @@ class Content(Base):
     comment_authors = models.ManyToManyField(
             'gestalten.Gestalt', through='Comment', related_name='comments')
     public = models.BooleanField(
-            'Veröffentlichen',
+            'Öffentlich',
             default=False,
-            help_text='Veröffentlichte Beiträge sind auch für Besucherinnen '
-            'sichtbar, die nicht Mitglied der Gruppe sind.'
+            help_text='Öffentliche Beiträge sind auch für Besucher_innen '
+            'sichtbar, die nicht Mitglied der Gruppe sind'
             )
     slug = models.SlugField(default=None, null=True, unique=True)
     title = models.CharField('Titel', max_length=255)
@@ -103,10 +103,10 @@ class Article(Content):
 
 class Event(Content):
     place = models.CharField('Ort / Anschrift', max_length=255)
-    time = models.DateTimeField('Datum / Uhrzeit')
-    all_day = models.BooleanField('ganztägig', default=False)
-    until_time = models.DateTimeField('Datum / Uhrzeit Ende', blank=True, null=True)
-
+    time = models.DateTimeField('Beginn')
+    until_time = models.DateTimeField('Ende', blank=True, null=True)
+    all_day = models.BooleanField('ganztägig', default=False,
+                                  help_text='Das Ereignis wird den gesamten Tag dauern')
     objects = models.Manager.from_queryset(querysets.EventQuerySet)()
 
     class Meta:
