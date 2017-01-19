@@ -1,11 +1,14 @@
-from . import serializers
-from content import models as content_models
 from rest_framework import viewsets, mixins
 from django.db.models import Q
 
+from . import serializers, filters
+from content import models as content_models
+import features.groups.models
+import features.gestalten.models
+
 
 class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.Image
+    serializer_class = serializers.ImageSerializer
     filter_fields = ('content', 'creator', )
 
     def get_queryset(self):
@@ -34,3 +37,19 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
             image = self.get_object()
             return self.request.user.has_perm('content.update_image', image)
         return False
+
+
+class GroupSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.GroupSerializer
+    filter_fields = ('id', 'name', )
+    filter_class = filters.GroupFilter
+    queryset = features.groups.models.Group.objects.all()
+
+
+class UserSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.UserSerializer
+    queryset = features.gestalten.models.Gestalt.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return features.gestalten.models.Gestalt.objects.filter(pk=user.gestalt.pk)
