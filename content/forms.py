@@ -61,7 +61,8 @@ class Article(BaseContent):
                     css_class="col-md-7"
                 ),
                 layout.Div(
-                    utils_forms.Submit('Artikel erstellen', field_classes="btn btn-primary btn-block"),
+                    utils_forms.Submit('Artikel erstellen',
+                                       field_classes="btn btn-primary btn-block"),
                     'public',
                     css_class="col-md-5"
                 ),
@@ -115,7 +116,8 @@ class Event(BaseContent):
                     css_class="col-md-7"
                 ),
                 layout.Div(
-                    utils_forms.Submit('Ereignis erstellen', field_classes="btn btn-primary btn-block"),
+                    utils_forms.Submit('Ereignis erstellen',
+                                       field_classes="btn btn-primary btn-block"),
                     'public',
                     css_class="col-md-5"
                 ),
