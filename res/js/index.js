@@ -17,6 +17,7 @@ import browserWarning from './transforms/browser-warning'
 import carousel from './transforms/carousel'
 import conversation from './transforms/conversation'
 import keysubmit from './transforms/keysubmit'
+import select from './transforms/select'
 
 function init (searchIn = document) {
   const opts = { root: searchIn }
@@ -35,6 +36,7 @@ function init (searchIn = document) {
   component('tcon', transformIcon, opts)
   component('conversation', conversation, Object.assign({}, opts, { conf: { init } }))
   component('keysubmit', keysubmit, opts)
+  component('select', select, opts)
 
   // initialize components not based on component interface
   mapCall($$('input, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
