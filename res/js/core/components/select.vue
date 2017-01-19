@@ -139,7 +139,7 @@
                 const currentState = this.showFinder
                 const newState = forcedState === null ? !this.showFinder : forcedState
 
-                if (currentState === newState) return;
+                if (currentState === newState) return
 
                 this.showFinder = newState
                 this.currentSearch = ""
@@ -165,7 +165,7 @@
                 }
             },
             typeSelect(event) {
-                if (this.showFinder) return;
+                if (this.showFinder) return
 
                 const cidx = this.currentChoiceIndex
 
@@ -186,13 +186,13 @@
                         this.dismissChoice()
                         return
                     case 38: // up
-                        event.preventDefault();
+                        event.preventDefault()
                         if (cidx > 0) {
                             this.currentValue = this.choices[cidx - 1].value
                         }
                         return
                     case 40: // down
-                        event.preventDefault();
+                        event.preventDefault()
                         if (cidx < this.choices.length - 1) {
                             this.currentValue = this.choices[cidx + 1].value
                         }
