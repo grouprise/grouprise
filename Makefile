@@ -121,6 +121,7 @@ release-breaking release-feature release-patch:
 
 test: check-virtualenv
 	python -m flake8 $(PYTHON_DIRS)
+	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
 	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
 	@# werden, um die Verwendung einer postgres/mysql-Datenbankverbindung ohne "create"-Rechte
 	@# zu verhindern. Mit sqlite klappen die Tests dann natuerlich.
