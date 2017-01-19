@@ -16,6 +16,7 @@
     padding: .5rem 1rem;
     transition: border-color .2s;
     cursor: pointer;
+    background-color: white;
 
     > :first-child {
         flex: 1;
@@ -65,6 +66,14 @@
     .select-open & i {
         transform: scaleY(.6) rotate(180deg);
     }
+
+    .select-top & i {
+        transform: rotate(180deg) scaleY(.6);
+    }
+
+    .select-top.select-open & i {
+        transform: rotate(360deg) scaleY(.6);
+    }
 }
 
 .select-default {
@@ -74,23 +83,37 @@
 }
 
 .select-finder {
-    max-width: 400px;
+    max-width: 450px;
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%;
-    margin-top: 10px;
     background-color: white;
     z-index: 20;
     border-radius: 2px;
+    display: flex;
+    flex-direction: column;
     .material-shadow(3);
+
+    .select-bottom {
+        top: 100%;
+        margin-top: 1rem;
+    }
+
+    .select-top & {
+        bottom: 100%;
+        margin-bottom: 1rem;
+    }
 }
 
 .select-search {
     padding: 1rem;
-    background-color: whitesmoke;
+    background-color: @gray-lighter;
     display: flex;
     align-items: center;
+
+    .select-finder-top & {
+        order: 1;
+    }
 }
 
 .select-search-input {
@@ -143,7 +166,7 @@
         &:hover,
         &:active {
             outline: none;
-            background-color: whitesmoke;
+            background-color: @gray-lighter;
             border-radius: 2px;
         }
     }
