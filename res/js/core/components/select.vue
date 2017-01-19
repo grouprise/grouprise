@@ -1,5 +1,5 @@
 <template>
-    <div class="select" :id="componentId.wrapper" :class="{'select-open': showFinder}" @keydown.esc="closeFinder" v-on-clickaway="dismissSelect">
+    <div class="select" :id="componentId.wrapper" :class="selectClasses" @keydown.esc="closeFinder" v-on-clickaway="dismissSelect">
         <div class="select-current" @click.prevent="toggleFinder()" @keydown="typeSelect" tabindex="0" ref="current">
             <slot name="current-choice">
                 <component :is="renderer" :choice="currentChoice" v-if="currentChoice"></component>
@@ -17,7 +17,7 @@
             </div>
         </div>
         <transition name="fade">
-            <div class="select-finder" v-show="showFinder">
+            <div class="select-finder" v-show="showFinder" ref="finder">
                 <div class="select-search" v-if="filter && choices.length > searchThreshold">
                     <label :for="componentId.search" class="sr-only">{{ texts.searchLabel }}</label>
                     <input type="search" class="select-search-input" v-model="currentSearch" ref="search"
@@ -103,10 +103,20 @@
                 typedSearch: "",
                 typedTimer: null,
                 size: 0,
-                resizeListener: null
+                finderSize: 0,
+                resizeListener: null,
+                scrollListener: null,
+                finderBelow: true
             }
         },
         computed: {
+            selectClasses() {
+                return {
+                    'select-open': this.showFinder,
+                    'select-bottom': this.finderBelow,
+                    'select-top': !this.finderBelow
+                }
+            },
             availableChoices() {
                 const term = this.currentSearch.toLowerCase()
                 const filter = this.filter === false || isFunction(this.filter) ? this.filter : defaultFilter
@@ -242,6 +252,21 @@
             },
             updateSize() {
                 this.size = this.$refs.current.clientHeight
+            },
+            updateFinderPosition() {
+                const {current, finder} = this.$refs
+
+                if (!finder || !current) return
+
+                if (finder.offsetHeight > 0) {
+                    this.finderSize = finder.offsetHeight
+                }
+
+                const calendarHeight = this.finderSize || 500
+                const inputBounds = current.getBoundingClientRect()
+                const inputHeight = current.offsetHeight
+                const distanceFromBottom = window.innerHeight - inputBounds.bottom + inputHeight
+                this.finderBelow = distanceFromBottom > calendarHeight + 30
             }
         },
         watch: {
@@ -256,13 +281,17 @@
         created() {
             this.currentValue = this.value || null
             this.resizeListener = throttle(this.updateSize, 250)
+            this.scrollListener = throttle(this.updateFinderPosition, 250)
         },
         mounted() {
             this.updateSize()
+            this.updateFinderPosition()
             window.addEventListener('resize', this.resizeListener)
+            window.addEventListener('scroll', this.scrollListener)
         },
         beforeDestroy() {
             window.removeEventListener('resize', this.resizeListener)
+            window.removeEventListener('scroll', this.scrollListener)
         }
     }
 </script>
