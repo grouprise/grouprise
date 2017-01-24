@@ -2,7 +2,7 @@ import { $, getAttr, remove } from 'luett'
 import bel from 'bel'
 import EventEmitter from 'eventemitter3'
 
-import { get as getImages, create as createImage } from '../adapters/image'
+import { image as adapter } from '../adapters/api'
 import pickii from './pickii'
 import filePicker from './file-picker'
 import tabbed from './tabbed'
@@ -10,13 +10,7 @@ import tabbed from './tabbed'
 const contentId = getAttr($("[name='content_id']"), 'value', false)
 
 function upload (files) {
-  const uploader = createImage({ contentId })
-  const uploads = files.map((file) => {
-    return uploader({
-      content: file
-    })
-  })
-
+  const uploads = files.map(file => adapter.create({file, contentId}))
   return Promise.all(uploads)
 }
 
@@ -44,18 +38,15 @@ function createFilePicker (emitter) {
 function createContentImageView (emitter) {
   return pickii({
     emit: emitter.emit.bind(emitter),
-    adapter: contentId ? getImages({
-      filters: { content: contentId }
-    }) : dummyAdapter
+    adapter: contentId ? () => adapter.get({content: contentId}) : dummyAdapter
   })
 }
 
 function createUserImageView (emitter) {
+  const creator = window.app.conf.gestalt.id
   return pickii({
     emit: emitter.emit.bind(emitter),
-    adapter: window.app.conf.gestalt.id ? getImages({
-      filters: { creator: window.app.conf.gestalt.id }
-    }) : dummyAdapter
+    adapter: creator ? () => adapter.get({creator}) : dummyAdapter
   })
 }
 
