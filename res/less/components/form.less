@@ -81,6 +81,15 @@ label {
     }
 }
 
+.form-group {
+    transition: opacity .2s, transform .2s;
+}
+
+.form-group-unused {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .form-modern {
     .form-group:not(.input-type-radio):not(.input-type-checkbox),
     .form-control {
