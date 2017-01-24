@@ -68,7 +68,7 @@ class Article(BaseContent):
                 ),
                 css_class="row"
             ),
-            css_class="section section-publish section-event"
+            css_class="section section-publish section-article"
         )
     )
 
