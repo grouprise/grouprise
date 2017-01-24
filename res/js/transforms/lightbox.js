@@ -94,7 +94,7 @@ function createLightbox (gallery) {
   const destroyClickListener = delegate(gallery, imageSelector, 'click', function (e) {
     e.preventDefault()
     const targetIndex = index(e.delegateTarget.parentNode)
-    show(targetIndex)
+    show(targetIndex - 1)
   })
 
   return {
