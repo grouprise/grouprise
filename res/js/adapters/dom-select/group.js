@@ -1,5 +1,5 @@
 import { find, includes } from 'lodash'
-import ContentMeta from '../../content/components/content-meta.vue';
+import ContentMeta from '../../content/components/content-meta.vue'
 
 export default api => {
   const get = choices => {
@@ -10,7 +10,7 @@ export default api => {
       .then(data => Promise.resolve(choices.map(choice => {
         return Object.assign({}, choice, find(data, entity => entity.id === parseInt(choice.value, 10)))
       })))
-      .then(choices => Promise.resolve({ choices, defaultChoice: null }))
+      .then(choices => Promise.resolve({choices, defaultChoice: null}))
   }
 
   const filter = (term, choice, defaultFilter) => {

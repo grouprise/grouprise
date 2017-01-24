@@ -38,9 +38,9 @@ export default (opts) => {
 
   iface.refresh = function () {
     opts.adapter()
-            .then((images) => {
-              replace(el.children[0], pickerImages(images, opts.emit))
-            })
+      .then((images) => {
+        replace(el.children[0], pickerImages(images, opts.emit))
+      })
   }
 
   iface.remove = function () {

@@ -1,5 +1,5 @@
 import { $$, remove, getAttr, hasAttr } from 'luett'
-import { includes, get } from 'lodash'
+import { get } from 'lodash'
 import Vue from 'vue'
 
 import Adapters from '../adapters/dom-select'
@@ -31,7 +31,7 @@ export default (el, opts) => {
   const adapter = Adapters[opts.conf.type]
   let vue
   let container
-  let data = $$('option', el).map(generateChoices.bind(null, opts.conf.defaultValue || ""))
+  let data = $$('option', el).map(generateChoices.bind(null, opts.conf.defaultValue || ''))
   const defaultValue = data.reduce((result, option) => option.isDefault ? option.value : result, null)
   const value = data.reduce((result, option) => option.isCurrent ? option.value : result, null)
 
@@ -58,7 +58,7 @@ export default (el, opts) => {
           adapter
         },
         watch: {
-          value(value) {
+          value (value) {
             el.value = value
           }
         }

@@ -30,10 +30,10 @@ function createFilePicker (emitter) {
     multiple: true,
     callback: (files) => {
       upload(files)
-                .then((files) => {
-                  emitter.emit('files:select', files)
-                  emitter.emit('files:add', files)
-                })
+        .then((files) => {
+          emitter.emit('files:select', files)
+          emitter.emit('files:add', files)
+        })
     },
     trigger: bel`<button type="button" class="btn btn-link btn-sm">
     <i class="sg sg-add"></i> Hinzufügen
@@ -60,7 +60,7 @@ function createUserImageView (emitter) {
 }
 
 function createTabbed (emitter, tabConfig = {}) {
-  const opts = Object.assign({}, { user: true, content: true }, tabConfig)
+  const opts = Object.assign({}, {user: true, content: true}, tabConfig)
   const tabs = []
 
   if (opts.content) {
@@ -81,7 +81,7 @@ function createTabbed (emitter, tabConfig = {}) {
     })
   }
 
-  return tabbed({ tabs })
+  return tabbed({tabs})
 }
 
 export default (opts = {}) => {

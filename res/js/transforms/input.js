@@ -20,9 +20,9 @@ export default (el, conf = {}) => {
   }
 
   function setType () {
-    const tagName = el.tagName.toLowerCase();
-    const type = el.getAttribute("type");
-    target.classList.toggle(`input-type-${tagName !== "input" ? tagName : type}`, true)
+    const tagName = el.tagName.toLowerCase()
+    const type = el.getAttribute('type')
+    target.classList.toggle(`input-type-${tagName !== 'input' ? tagName : type}`, true)
   }
 
   attachAndRun(el, 'input change', setChangedStates)
