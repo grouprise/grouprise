@@ -1,7 +1,7 @@
 import { $, replace } from 'luett'
 import Drop from 'tether-drop'
 import delegate from 'delegate'
-import qwest from 'qwest'
+import axios from 'axios'
 import bel from 'bel'
 
 import { eventedFunction } from '../util/events'
@@ -12,10 +12,8 @@ import Lightbox from './lightbox'
 const eventedReplace = eventedFunction(replace)
 
 function reload () {
-  return qwest.get(window.location.href, null, { responseType: 'document' })
-        .then((xhr, doc) => {
-          return Promise.resolve($('.gallery', doc))
-        })
+  return axios.get(window.location.href, { responseType: 'document' })
+        .then(res => Promise.resolve($('.gallery', res.data)))
 }
 
 function createEditor (trigger) {
