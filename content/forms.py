@@ -136,9 +136,32 @@ class Event(BaseContent):
 
 class Gallery(BaseContent):
     image_creation_redirect = forms.BooleanField(required=False, widget=forms.HiddenInput)
-    layout = (
-            'image_creation_redirect', 'author', 'group', 'title', utils_forms.EditorField('text'),
-            'public', 'pinned', utils_forms.Submit('Galerie erstellen'), 'images')
+
+    layout = layout.Div(
+        'author', 'images', 'image_creation_redirect',
+        layout.Div(
+            'title',
+            utils_forms.EditorField('text')
+        ),
+        layout.Div(
+            layout.HTML("<h2>Beitragseinstellungen</h2>"),
+            layout.Div(
+                layout.Div(
+                    layout.Field('group', data_component='select', data_select_type='author'),
+                    'pinned',
+                    css_class="col-md-7"
+                ),
+                layout.Div(
+                    utils_forms.Submit('Galerie erstellen',
+                                       field_classes="btn btn-primary btn-block"),
+                    'public',
+                    css_class="col-md-5"
+                ),
+                css_class="row"
+            ),
+            css_class="section section-publish section-gallery"
+        )
+    )
 
     class Meta:
         fields = ('author', 'public', 'text', 'title')
