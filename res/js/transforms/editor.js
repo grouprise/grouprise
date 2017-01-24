@@ -1,4 +1,4 @@
-import { $, getAttr } from 'luett'
+import { $, setAttr, getAttr, hasAttr } from 'luett'
 import Drop from 'tether-drop'
 import bel from 'bel'
 import closest from 'closest'
@@ -18,6 +18,7 @@ function quote (text) {
 function editor (CodeMirror, SimpleMDE, el, opts) {
   CodeMirror.defaults.inputStyle = 'textarea'
 
+  const isRequired = hasAttr(el, 'required')
   const form = closest(el, 'form')
   const editor = new SimpleMDE({
     autoDownloadFontAwesome: false,
@@ -154,7 +155,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     })
   })
 
-  delegate(document.body, "[data-component='cite']", 'click', function (event) {
+  const clickListener = delegate(document.body, "[data-component='cite']", 'click', function (event) {
     event.preventDefault()
     const target = $(`${event.delegateTarget.getAttribute('href')} .media-body`)
     const author = getAttr(target, 'data-author')
@@ -163,7 +164,22 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     editor.codemirror.doc.replaceSelection(quote(text))
   })
 
-  return editor
+  if (isRequired) {
+    el.removeAttribute('required')
+    setTimeout(() => {
+      const textarea = editor.codemirror.display.wrapper.querySelector('textarea')
+      setAttr(textarea, 'required', 'required')
+    }, 500)
+  }
+
+  return {
+    editor,
+    remove: () => {
+      if (isRequired) setAttr(el, 'required', 'required')
+      editor.toTextArea()
+      clickListener.destroy()
+    }
+  }
 }
 
 export default (el, opts) => {
