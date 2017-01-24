@@ -68,7 +68,7 @@ class Article(BaseContent):
                 ),
                 css_class="row"
             ),
-            css_class="section section-publish section-article"
+            css_class="section section-publish section-article", data_component="publish"
         )
     )
 
@@ -123,7 +123,7 @@ class Event(BaseContent):
                 ),
                 css_class="row"
             ),
-            css_class="section section-publish section-event"
+            css_class="section section-publish section-event", data_component="publish"
         ),
         css_class="page-event-edit"
     )
@@ -159,7 +159,7 @@ class Gallery(BaseContent):
                 ),
                 css_class="row"
             ),
-            css_class="section section-publish section-gallery"
+            css_class="section section-publish section-gallery", data_component="publish"
         )
     )
 

@@ -18,6 +18,7 @@ import carousel from './transforms/carousel'
 import conversation from './transforms/conversation'
 import keysubmit from './transforms/keysubmit'
 import select from './transforms/select'
+import publish from './transforms/publish'
 
 function init (searchIn = document) {
   const opts = { root: searchIn }
@@ -37,6 +38,7 @@ function init (searchIn = document) {
   component('conversation', conversation, Object.assign({}, opts, { conf: { init } }))
   component('keysubmit', keysubmit, opts)
   component('select', select, opts)
+  component('publish', publish, opts)
 
   // initialize components not based on component interface
   mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
