@@ -60,7 +60,7 @@ export default (el, opts) => {
         watch: {
           value (value) {
             el.value = value
-            el.dispatchEvent(new Event('change'))
+            el.dispatchEvent(new window.Event('change'))
           }
         }
       })
