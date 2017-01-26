@@ -12,7 +12,18 @@
     <a href="{{ content.get_absolute_url }}" class="content-preview-body">
         <div class="content-preview-body-content">
             {% if content.event %}
-                {% include "macros/calendar_sheet.html" with time=content.event.date %}
+                <div>
+                    {% include "macros/calendar_sheet.html" with time=content.event.date %}
+                    <dl class="def def-icons def-preview">
+                        <dt>
+                            <i class="sg sg-fw sg-marker"></i>
+                            <span class="sr-only">Ort</span>
+                        </dt>
+                        <dd>
+                            {{ content.event.place }}
+                        </dd>
+                    </dl>
+                </div>
             {% elif content.images.first %}
                 {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
                     <div class="content-image">
@@ -25,10 +36,6 @@
                 <h3 class="content-title">
                     {{ content.title }}
                 </h3>
-
-                {% if content.event %}
-                    {% include "macros/event_meta.html" with event=content.event %}
-                {% endif %}
 
                 {% markdown content.text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
             </div>
