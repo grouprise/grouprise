@@ -53,11 +53,8 @@ database-restore:
 		exit 1; fi
 	$(DB_CONNECTION_RESTORE)
 
-default: $(GRUNT_BIN)
+grunt: check-js-deps
 	($(HELPER_PATH_ENV); export PATH; $(NODEJS_BIN) $(GRUNT_BIN))
-
-$(GRUNT_BIN): $(NODEJS_SYMLINK)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) install)
 
 $(NODEJS_SYMLINK):
 	mkdir -p "$(HELPER_BIN_PATH)"
@@ -81,6 +78,9 @@ check-virtualenv:
 	@# this should fail if dependencies are missing or no virtualenv is active
 	python manage.py check
 
+check-js-deps: $(NODEJS_SYMLINK)
+	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) install)
+
 update-virtualenv: check-virtualenv
 	pip install -r requirements.txt
 	python manage.py migrate
@@ -91,7 +91,7 @@ deploy:
 	$(MAKE) test
 	$(MAKE) website-offline
 	$(MAKE) database-backup
-	$(MAKE) default
+	$(MAKE) grunt
 	$(MAKE) update-virtualenv
 	$(MAKE) static
 	# in "website-online" ist ein "reload" enthalten
@@ -119,7 +119,7 @@ release-breaking release-feature release-patch:
 	git commit -m "Release $(NEXT_RELEASE)"
 	git tag -a "$(GIT_RELEASE_TAG)"
 
-test: check-virtualenv
+test: check-virtualenv check-js-deps
 	python -m flake8 $(PYTHON_DIRS)
 	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
 	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
