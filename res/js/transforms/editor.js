@@ -45,6 +45,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     },
     spellChecker: false,
     status: false,
+    tabSize: 4,
     toolbar: [
       {
         name: 'undo',
