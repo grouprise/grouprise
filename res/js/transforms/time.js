@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { includes } from 'lodash'
 
 // load locale files
 import 'moment/locale/de'
@@ -43,15 +44,15 @@ function transformDaysUntil (el, opts) {
 }
 
 function createTransform (el, opts) {
-  if (opts.isType('from')) {
+  if (includes(opts.types, 'from')) {
     return addTransform(transformFrom(el, opts))
   }
 
-  if (opts.isType('to')) {
+  if (includes(opts.types, 'to')) {
     return addTransform(transformTo(el, opts))
   }
 
-  if (opts.isType('days-until')) {
+  if (includes(opts.types, 'days-until')) {
     return addTransform((transformDaysUntil(el, opts)))
   }
 }

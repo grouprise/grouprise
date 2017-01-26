@@ -1,6 +1,7 @@
 import Flatpickr from 'flatpickr'
 import locales from 'flatpickr/dist/l10n/de'
 import moment from 'moment'
+import { includes } from 'lodash'
 
 const locale = locales.de
 locale.firstDayOfWeek = 1
@@ -18,7 +19,7 @@ const base = {
 export default (el, opts) => {
   const config = Object.assign({}, base, opts, opts.conf)
 
-  if (opts.isType('datetime')) {
+  if (includes(opts.types, 'datetime')) {
     config.enableTime = true
     config.dateFormat = `${config.dateFormat} H:i:00`
     config.parseDate = (date) => moment(date, 'DD.MM.YYYY HH:mm:ss', 'de', true).toDate()
