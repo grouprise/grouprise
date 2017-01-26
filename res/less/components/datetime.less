@@ -1,0 +1,60 @@
+.datetime {
+    display: flex;
+    position: relative;
+
+    input[type=time] {
+        line-height: normal;
+    }
+}
+
+.datetime-calendar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 5px;
+}
+
+.datetime-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+
+    > *:not(:last-child) {
+        margin-right: .5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    label {
+        white-space: nowrap;
+    }
+
+    .on-handhelds({
+        flex-wrap: wrap;
+    });
+}
+
+.datetime-date {
+    flex: 1;
+
+    input {
+        width: 10rem;
+    }
+}
+
+.datetime-time {
+    &:extend(.visible);
+    margin-left: .5rem;
+
+    input {
+        width: 8rem;
+    }
+}
+
+.datetime-time-hidden {
+    &:extend(.visible-hide);
+}
+
+
