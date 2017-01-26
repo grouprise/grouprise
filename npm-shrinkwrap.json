@@ -1699,9 +1699,9 @@
       }
     },
     "flatpickr": {
-      "version": "2.3.4",
-      "from": "flatpickr@>=2.3.4 <3.0.0",
-      "resolved": "https://registry.npmjs.org/flatpickr/-/flatpickr-2.3.4.tgz"
+      "version": "2.3.5",
+      "from": "flatpickr@2.3.5",
+      "resolved": "https://registry.npmjs.org/flatpickr/-/flatpickr-2.3.5.tgz"
     },
     "flatten": {
       "version": "1.0.2",
