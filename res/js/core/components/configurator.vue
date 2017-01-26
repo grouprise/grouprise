@@ -48,8 +48,7 @@
         this.isCurrentElement = event.type === 'mouseenter'
       },
       dismiss() {
-        // todo blocker
-        if(!this.isCurrentElement && false) {
+        if(!this.isCurrentElement) {
           this.abort()
         }
       },
