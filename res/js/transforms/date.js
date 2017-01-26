@@ -14,7 +14,7 @@ const base = {
   parseDate: (date) => moment(date, 'DD.MM.YYYY', 'de', true).toDate()
 }
 
-export default (el, opts) => {
+export default (el, opts = {}) => {
   const config = Object.assign({}, base, opts, opts.conf)
 
   if (includes(opts.types, 'datetime')) {
@@ -23,5 +23,11 @@ export default (el, opts) => {
     config.parseDate = (date) => moment(date, 'DD.MM.YYYY HH:mm:ss', 'de', true).toDate()
   }
 
-  return new Flatpickr(el, config)
+  const pickr = new Flatpickr(el, config)
+  return {
+    pickr,
+    remove: () => {
+      pickr.destroy()
+    }
+  }
 }
