@@ -3,16 +3,14 @@ import locales from 'flatpickr/dist/l10n/de'
 import moment from 'moment'
 import { includes } from 'lodash'
 
-const locale = locales.de
-locale.firstDayOfWeek = 1
-locale.weekAbbreviation = 'KW'
+const { de } = locales
 
 const base = {
   time_24hr: true,
   dateFormat: 'd.m.Y',
   minuteIncrement: 15,
   weekNumbers: true,
-  locale: locale,
+  locale: de,
   parseDate: (date) => moment(date, 'DD.MM.YYYY', 'de', true).toDate()
 }
 

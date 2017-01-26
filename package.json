@@ -45,7 +45,7 @@
     "delegate": "^3.0.1",
     "emoji-regex": "^6.0.0",
     "eventemitter3": "^1.2.0",
-    "flatpickr": "^2.2.8",
+    "flatpickr": "^2.3.4",
     "font-awesome": "^4.5.0",
     "lodash": "^4.17.4",
     "luett": "^2.0.0",
