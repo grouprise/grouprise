@@ -88,19 +88,18 @@ class Event(BaseContent):
             layout.HTML("<h2>Ort und Zeit</h2>"),
             layout.Div(
                 layout.Div(
-                    layout.Field('time', data_component='date date-datetime'),
-                    css_class="col-md-6"
-                ),
-                layout.Div(
-                    layout.Field('until_time', data_component='date date-datetime'),
-                    css_class="col-md-6"
-                ),
-                layout.Div(
                     'place',
                     css_class="col-md-6"
                 ),
                 layout.Div(
-                    'all_day',
+                    layout.Div(
+                        # a javascript plugin relies on the generated ids
+                        # if you change them you have to adapt the event-time script
+                        'time',
+                        'until_time',
+                        'all_day',
+                        data_component="event-time"
+                    ),
                     css_class="col-md-6"
                 ),
                 css_class="row"

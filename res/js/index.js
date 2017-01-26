@@ -19,6 +19,7 @@ import conversation from './transforms/conversation'
 import keysubmit from './transforms/keysubmit'
 import select from './transforms/select'
 import publish from './transforms/publish'
+import eventTime from './transforms/event-time'
 
 function init (searchIn = document) {
   const opts = { root: searchIn }
@@ -39,6 +40,7 @@ function init (searchIn = document) {
   component('keysubmit', keysubmit, opts)
   component('select', select, opts)
   component('publish', publish, opts)
+  component('event-time', eventTime, opts)
 
   // initialize components not based on component interface
   mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
