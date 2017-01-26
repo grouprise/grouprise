@@ -33,7 +33,6 @@ function addPublishListener (el) {
   const form = closest(el, 'form')
   const submitButton = $('[type="submit"]', el)
   const submitListener = on(form, 'submit', event => {
-    event.preventDefault()
     toggleClass(submitButton, 'btn-progress', true)
     setAttr(submitButton, 'disabled', 'disabled')
   })
