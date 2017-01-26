@@ -1,16 +1,42 @@
-<dl class="def def-icons">
-    <dt>
-        <i class="sg sg-fw sg-calendar"></i>
-        <span class="sr-only">Datum & Zeit</span>
-    </dt>
-    <dd>
-        Am {{ event.time|date:'d. F Y' }} um {{ event.time|date:'H:i' }} Uhr
-    </dd>
-    <dt>
-        <i class="sg sg-fw sg-marker"></i>
-        <span class="sr-only">Ort</span>
-    </dt>
-    <dd>
-        {{ event.place }}
-    </dd>
-</dl>
+<div class="meta meta-float meta-merge">
+    <div class="meta-box">
+        <h4 class="meta-box-title">
+            <i class="sg sg-time"></i>
+            <span>Datum & Zeit</span>
+        </h4>
+        <div class="meta-box-body">
+            {% with start=event.time end=event.until_time all_day=event.all_day %}
+                {% if not end %}
+                    {% if all_day %}
+                        Am {{ start|date:'d. F Y' }}, ganztägig
+                    {% else %}
+                        Am {{ start|date:'d. F Y' }} um {{ start|date:'H:i' }} Uhr
+                    {% endif %}
+                {% else %}
+                    {% if start.date == end.date %}
+                        {% if all_day %}
+                            Am {{ start|date:'d. F Y' }}, ganztägig
+                        {% else %}
+                            Am {{ start|date:'d. F Y' }} von {{ start|date:'H:i' }} Uhr bis {{ end|date:'H:i' }} Uhr
+                        {% endif %}
+                    {% else %}
+                        {% if all_day %}
+                            Vom {{ start|date:'d. F Y' }} bis {{ start|date:'d. F Y' }}
+                        {% else %}
+                            Vom {{ start|date:'d. F Y' }} um {{ start|date:'H:i' }} Uhr bis {{ end|date:'d. F Y' }} um {{ end|date:'H:i' }} Uhr
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="meta-box">
+        <h4 class="meta-box-title">
+            <i class="sg sg-marker"></i>
+            <span>Ort</span>
+        </h4>
+        <div class="meta-box-body">
+            {{ event.place }}
+        </div>
+    </div>
+</div>
