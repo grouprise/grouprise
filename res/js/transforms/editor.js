@@ -166,10 +166,6 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
 
   if (isRequired) {
     el.removeAttribute('required')
-    setTimeout(() => {
-      const textarea = editor.codemirror.display.wrapper.querySelector('textarea')
-      setAttr(textarea, 'required', 'required')
-    }, 500)
   }
 
   return {
