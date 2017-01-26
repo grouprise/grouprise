@@ -67,11 +67,19 @@ class Group(models.Model):
     # FIXME: move to template filter
     def get_initials(self):
         import re
+        # we prefer initials for all non-trivial terms - but we collect the other initials, as well
         initials = ''
+        initials_without_short_terms = ''
         for w in self.name.split():
             m = re.search('[a-zA-Z0-9]', w)
-            initials += m.group(0) if m else ''
-        return initials
+            if not m:
+                continue
+            initials += m.group(0)
+            if w.lower() not in ("der", "die", "das", "des", "dem",
+                                 "den", "an", "am", "um", "im", "in"):
+                initials_without_short_terms += m.group(0)
+        # prefer the non-trivial one - otherwise pick the full one (and hope it is not empty)
+        return initials_without_short_terms if initials_without_short_terms else initials
 
     # FIXME: to be removed
     content = django.ManyToManyField(
