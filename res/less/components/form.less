@@ -3,6 +3,11 @@
     box-shadow: none !important;
     border-color: @gray-light;
     height: auto;
+
+    &:invalid:focus,
+    .input-had-focus &:invalid{
+        border-color: @brand-danger;
+    }
 }
 
 .input-group-addon {

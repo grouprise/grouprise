@@ -15,6 +15,10 @@ export default (el, conf = {}) => {
   function setFocusStates () {
     const isFocused = document.activeElement === el
 
+    if (!isFocused && target.classList.contains('input-focused')) {
+      target.classList.add('input-had-focus')
+    }
+
     target.classList.toggle('input-focused', isFocused)
     target.classList.toggle('input-blurred', !isFocused)
   }
