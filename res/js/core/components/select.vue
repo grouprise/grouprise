@@ -16,7 +16,7 @@
                 <i>▼</i>
             </div>
         </div>
-        <transition name="fade">
+        <transition :name="finderBelow ? 'fade-down' : 'fade-up'">
             <div class="select-finder" v-show="showFinder" ref="finder">
                 <div class="select-search" v-if="filter && choices.length > searchThreshold">
                     <label :for="componentId.search" class="sr-only">{{ texts.searchLabel }}</label>
@@ -294,15 +294,3 @@
         }
     }
 </script>
-
-<style scoped>
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .2s, transform .2s;
-    }
-
-    .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
-    {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-</style>
