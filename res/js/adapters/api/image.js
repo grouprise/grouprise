@@ -1,4 +1,4 @@
-import { chain, each, has, pick } from 'lodash'
+import { each, has, pick, defaults, mapKeys, mapValues, pickBy } from 'lodash'
 import { cookie } from 'cookie_js'
 import decorator from './_decorator'
 
@@ -21,17 +21,19 @@ const filter = {
 }
 
 const imageDefaults = data => {
-  return chain(data)
-    .defaults({
-      weight: 0,
-      csrfmiddlewaretoken: cookie.get('csrftoken')
-    })
-    .mapKeys((value, key) => ({
-      contentId: 'content'
-    }[key] || key))
-    .mapValues((value, key) => has(normalizer, key) ? normalizer[key](value) : value)
-    .pickBy((value, key) => has(filter, key) ? filter[key](value) : true)
-    .value()
+  return pickBy(
+      mapValues(
+        mapKeys(
+          defaults(data, {
+            weight: 0,
+            csrfmiddlewaretoken: cookie.get('csrftoken')
+          }),
+          (value, key) => ({ contentId: 'content' }[key] || key)
+        ),
+        (value, key) => has(normalizer, key) ? normalizer[key](value) : value
+      ),
+      (value, key) => has(filter, key) ? filter[key](value) : true
+    )
 }
 
 const transform = file => ({

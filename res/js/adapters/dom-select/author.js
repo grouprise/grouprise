@@ -1,4 +1,4 @@
-import { find } from 'lodash'
+import { find, matches } from 'lodash'
 
 export default (gestaltApi, gestaltId, groupAdapter) => {
   const gestalten = gestaltApi.get()
@@ -9,7 +9,7 @@ export default (gestaltApi, gestaltId, groupAdapter) => {
       .then(data => {
         const [groups, gestalten] = data
         const result = {choices: groups.choices}
-        const gestalt = find(gestalten, {id: gestaltId})
+        const gestalt = find(gestalten, matches({id: gestaltId}))
 
         if (gestalt) {
           gestalt.value = ''

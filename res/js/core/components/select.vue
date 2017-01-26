@@ -43,7 +43,7 @@
 
 <script>
     import { mixin as clickaway } from 'vue-clickaway'
-    import { includes, find, findIndex, isFunction, isBoolean, throttle } from 'lodash'
+    import { includes, matches, find, findIndex, isFunction, isBoolean, throttle } from 'lodash'
     import randomId from 'random-id'
 
     const defaultFilter = (term, choice) => {
@@ -131,10 +131,10 @@
                 }
             },
             currentChoice() {
-                return find(this.choices, {value: this.currentValue}) || this.defaultChoice
+                return find(this.choices, matches({value: this.currentValue})) || this.defaultChoice
             },
             currentChoiceIndex() {
-                return findIndex(this.choices, {value: this.currentValue})
+                return findIndex(this.choices, matches({value: this.currentValue}))
             },
             isDismissable() {
                 return this.currentChoice && this.defaultValue !== null && this.currentChoice !== this.defaultChoice

@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const grunt = require('grunt')
 const _ = require('lodash')
 
@@ -48,14 +49,20 @@ module.exports = {
             ['es2015', {'modules': false}],
             'stage-2'
           ],
-          plugins: ['transform-runtime', ['babel-root-slash-import', {
-            'rootPathSuffix': 'res/js'
-          }]]
+          plugins: [
+            'transform-runtime',
+            'lodash',
+            ['babel-root-slash-import', {'rootPathSuffix': 'res/js'}]
+          ]
         }
       }
     ]
   },
   plugins: [
+    new LodashModuleReplacementPlugin({
+      'collections': true,
+      'paths': true
+    }),
     new webpack.BannerPlugin(banner),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /de/),
     new webpack.optimize.UglifyJsPlugin({

@@ -1,6 +1,10 @@
 {
   "presets": ["es2015", "stage-2"],
-  "plugins": ["transform-runtime"],
+  "plugins": [
+      "transform-runtime",
+      "lodash",
+      ["babel-root-slash-import", {"rootPathSuffix": "res/js"}]
+  ],
   "comments": false,
   "env": {
     "test": {
