@@ -1,0 +1,110 @@
+.switch-wrap {
+    display: flex;
+    font-size: .9rem;
+    font-weight: normal;
+    line-height: 1;
+    align-items: center;
+    margin: 0;
+}
+
+.switch {
+    background-color: @gray-light;
+    border-radius: 50px;
+    height: 4ex;
+    width: 5em;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0.75ex 1em;
+    color: white;
+    border: none;
+    transition: background-color .2s, box-shadow .2s;
+    position: relative;
+    overflow: hidden;
+    backface-visibility: hidden;
+}
+
+.switch-active {
+    background-color: @brand-primary;
+}
+
+.switch-label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.switch-label-on {
+    right: .8em;
+    color: white;
+}
+
+.switch-label-off {
+    left: .8em;
+    color: @color-text-default;
+}
+
+.switch-description {
+    margin-right: 1em;
+}
+
+.switch-trigger {
+    @size: 2.5ex;
+    @animation-time: .2s;
+    width: @size;
+    height: @size;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: (@size / -2);
+    margin-left: (@size / 2);
+    transition: margin-left @animation-time, background-color @animation-time;
+
+    .switch-transition & {
+        animation: switch-bubble @animation-time;
+    }
+
+    .switch-active & {
+        margin-left: ((@size / 2 + @size) * -1);
+    }
+
+    .switch:focus &,
+    .switch:hover & {
+        background-color: @color-text-default;
+    }
+}
+
+@keyframes switch-wait {
+    from, to {
+        transform: none;
+    }
+    15% {
+        transform: translate3d(-12.5%, 0, 0);
+    }
+    30% {
+        transform: translate3d(10%, 0, 0);
+    }
+    45% {
+        transform: translate3d(-7.5%, 0, 0);
+    }
+    60% {
+        transform: translate3d(5%, 0, 0);
+    }
+    75% {
+        transform: translate3d(-2.5%, 0, 0);
+    }
+}
+
+@keyframes switch-bubble {
+    0% {
+        transform: scaleX(1)
+    }
+    50% {
+        transform: scaleX(2)
+    }
+    100% {
+        transform: scaleX(1)
+    }
+}
