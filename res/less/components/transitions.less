@@ -1,0 +1,26 @@
+.fade-down-enter-active,
+.fade-down-leave-active,
+.fade-up-enter-active,
+.fade-up-leave-active {
+    transition: opacity .2s, transform .2s;
+}
+
+.fade-down-enter,
+.fade-down-leave-to {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+.fade-up-enter,
+.fade-up-leave-to {
+    opacity: 0;
+    transform: translateY(5px);
+}
+
+.fade-enter-active {
+    animation: fade-in .2s;
+}
+
+.fade-leave-active {
+    animation: fade-out .2s;
+}
