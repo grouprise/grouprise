@@ -125,10 +125,9 @@
                     : this.choices
             },
             componentId() {
-                const id = this.id || this._uid
                 return {
-                    wrapper: `${id}-wrapper`,
-                    search: `${id}-search`
+                    wrapper: `${this.id}-wrapper`,
+                    search: `${this.id}-search`
                 }
             },
             currentChoice() {
