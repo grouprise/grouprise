@@ -44,7 +44,7 @@
 <script>
     import { mixin as clickaway } from 'vue-clickaway'
     import { includes, find, findIndex, isFunction, isBoolean, throttle } from 'lodash'
-    import uuid from 'uuid'
+    import randomId from 'random-id'
 
     const defaultFilter = (term, choice) => {
         return !term || (
@@ -64,7 +64,7 @@
         props: {
             id: {
                 type: String,
-                default: () => uuid.v1()
+                default: () => randomId(20, "a")
             },
             texts: {
                 type: Object,
