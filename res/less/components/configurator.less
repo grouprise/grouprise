@@ -1,0 +1,71 @@
+.configurator {
+    position: relative;
+}
+
+.configurator-label {
+    background-color: white;
+    border-radius: 2px;
+    transition: border-color .2s;
+    border: 2px solid @gray-light;
+    padding: .5rem 1rem;
+    cursor: text;
+
+    &:focus {
+        border-color: @brand-primary;
+        outline: none;
+    }
+}
+
+.configurator-popup {
+    position: absolute;
+    background-color: white;
+    z-index: 20;
+    top: 100%;
+    left: 0;
+    margin-top: .5rem;
+    border-radius: 2px;
+    width: 560px;
+    .material-shadow(3);
+
+    .on-handhelds({
+        width: auto;
+        right: 0;
+    });
+}
+
+.configurator-header {
+    padding: 1.5rem 1rem;
+    background-color: @gray-lighter;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    white-space: nowrap;
+
+    i {
+        margin-right: 1rem;
+    }
+}
+
+.configurator-modifiers {
+    margin: 0 0 0 auto;
+}
+
+.configurator-body {
+    padding: 1rem;
+}
+
+.configurator-title {
+    font-size: 1.15rem;
+    margin: 0 2rem 0 0;
+    display: flex;
+    align-items: center;
+
+    .on-handhelds({
+        white-space: normal;
+    })
+}
+
+.configurator-footer {
+    padding: .5rem 1rem;
+    border-top: 2px solid @color-divider-light;
+}
