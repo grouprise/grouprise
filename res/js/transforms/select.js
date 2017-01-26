@@ -1,21 +1,9 @@
-import { $$, remove, getAttr, hasAttr } from 'luett'
+import { $$, remove, getAttr, hasAttr, insertElement } from 'luett'
 import { get } from 'lodash'
 import Vue from 'vue'
 
 import Adapters from '../adapters/dom-select'
 
-const insert = (position, node, newNode) => {
-  switch (position) {
-    case 'beforebegin':
-      node.parentNode.insertBefore(newNode, node)
-      break
-    case 'afterend':
-      node.parentNode.insertBefore(newNode, node.nextElementSibling)
-      break
-  }
-}
-
-const insertAfter = insert.bind(null, 'afterend')
 const generateChoices = (defaultValue, option) => {
   const value = getAttr(option, 'value')
   return {
@@ -43,7 +31,7 @@ export default (el, opts) => {
     .then(model => {
       container = document.createElement('div')
       container.id = `${el.id}-container`
-      insertAfter(el, container)
+      insertElement.after(el, container)
       el.style.display = 'none'
 
       vue = new Vue({
