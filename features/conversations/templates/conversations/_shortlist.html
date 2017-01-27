@@ -5,7 +5,11 @@
 <header class="content-header">
     <h2 class="content-classification">Gespräche</h2>
     {% if can_create_message %}
-        <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default">Neues Gespräch</a>
+        <div class="btn-toolbar">
+            <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-ch">
+                <span class="btn-label">Neues Gespräch</span>
+            </a>
+        </div>
     {% endif %}
 </header>
 

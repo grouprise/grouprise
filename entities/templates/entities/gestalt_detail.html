@@ -119,8 +119,10 @@
             {% if can_create_content %}
                 <div class="dropdown-container">
                     <input type="checkbox" class="dropdown-state" id="content-new" />
-                    <label class="btn btn-default" for="content-new" data-component="openable" data-openable-target="#content-new-dropdown">
-                        Neuer Beitrag <span class="caret"></span>
+                    <label class="btn btn-ch" for="content-new" data-component="openable" data-openable-target="#content-new-dropdown">
+                        <span class="btn-label">
+                            Neuer Beitrag <span class="caret"></span>
+                        </span>
                     </label>
                     <ul class="dropdown" id="content-new-dropdown" data-dropdown>
                         <li><a href="{% url 'article-create' %}">Artikel</a></li>
@@ -128,10 +130,6 @@
                         <li><a href="{% url 'gallery-create' %}">Galerie</a></li>
                     </ul>
                 </div>
-            {% elif can_create_message %}
-                <a href="{% url 'create-gestalt-conversation' gestalt.pk %}" class="btn btn-default">
-                    Neue Nachricht
-                </a>
             {% endif %}
         </div>
     </div>

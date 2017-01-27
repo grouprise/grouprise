@@ -4,7 +4,11 @@
 {% block heading_toolbar %}
     {% has_perm 'content.create_content' user as can_create_content %}
     {% if can_create_content %}
-        <a href="{% url 'event-create' %}" class="btn btn-default">Neues Ereignis</a>
+        <a href="{% url 'event-create' %}" class="btn btn-ch">
+            <span class="btn-label">
+                Neues Ereignis
+            </span>
+        </a>
     {% endif %}
 {% endblock %}
 

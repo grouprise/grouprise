@@ -23,17 +23,21 @@
                 <h2 class="content-classification">Intro</h2>
                 {% include "macros/decoration.html" with icon="sg-pin" %}
                 {% if can_create_content %}
-                <div class="dropdown-container">
-                    <input type="checkbox" class="dropdown-state" id="intro-content-new" />
-                    <label class="btn btn-default" for="intro-content-new" data-component="openable" data-openable-target="#intro-content-new-dropdown">
-                        Neuer Beitrag <span class="caret"></span>
-                    </label>
-                    <ul class="dropdown" id="intro-content-new-dropdown" data-dropdown>
-                        <li><a href="{% url 'article-create' %}?group={{ group.slug }}&pinned=1">Artikel</a></li>
-                        <li><a href="{% url 'event-create' %}?group={{ group.slug }}&pinned=1">Ereignis</a></li>
-                        <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1">Galerie</a></li>
-                    </ul>
-                </div>
+                    <div class="btn-toolbar">
+                        <div class="dropdown-container">
+                            <input type="checkbox" class="dropdown-state" id="intro-content-new" />
+                            <label class="btn btn-ch" for="intro-content-new" data-component="openable" data-openable-target="#intro-content-new-dropdown">
+                                <span class="btn-label">
+                                    Neuer Beitrag <span class="caret"></span>
+                                </span>
+                            </label>
+                            <ul class="dropdown" id="intro-content-new-dropdown" data-dropdown>
+                                <li><a href="{% url 'article-create' %}?group={{ group.slug }}&pinned=1">Artikel</a></li>
+                                <li><a href="{% url 'event-create' %}?group={{ group.slug }}&pinned=1">Ereignis</a></li>
+                                <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}&pinned=1">Galerie</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
 
@@ -55,8 +59,10 @@
             {% if can_create_content %}
                 <div class="dropdown-container">
                     <input type="checkbox" class="dropdown-state" id="content-new" />
-                    <label class="btn btn-default" for="content-new" data-component="openable" data-openable-target="#content-new-dropdown">
-                        Neuer Beitrag <span class="caret"></span>
+                    <label class="btn btn-ch" for="content-new" data-component="openable" data-openable-target="#content-new-dropdown">
+                        <span class="btn-label">
+                            Neuer Beitrag <span class="caret"></span>
+                        </span>
                     </label>
                     <ul class="dropdown" id="content-new-dropdown" data-dropdown>
                         <li><a href="{% url 'article-create' %}?group={{ group.slug }}">Artikel</a></li>

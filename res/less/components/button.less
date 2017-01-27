@@ -248,3 +248,43 @@
         transform: translateY(-50%) rotate(359deg);
     }
 }
+
+.btn-ch {
+    @color: @brand-secondary;
+
+    width: calc(12rem + 1px);
+    height: 3.75rem;
+    border-radius: 0;
+    position: relative;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: none;
+    color: white;
+    background: @brand-primary;
+    right: -.4rem;
+
+    &:after {
+        content: " ";
+        position: absolute;
+        left: -60px;
+        top: 0;
+        bottom: 0;
+        width: 240px;
+        background: url(../img/button/triangle.svg) repeat 0 -120px transparent;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    .btn-label {
+        transform: translateX(-7.5px);
+    }
+}
+
+.btn-label {
+    position: relative;
+    z-index: 10;
+}
