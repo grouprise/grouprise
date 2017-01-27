@@ -1401,9 +1401,8 @@
     },
     "es6-promise": {
       "version": "3.3.1",
-      "from": "es6-promise@>=3.1.2 <4.0.0",
-      "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-3.3.1.tgz",
-      "dev": true
+      "from": "https://registry.npmjs.org/es6-promise/-/es6-promise-3.3.1.tgz",
+      "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-3.3.1.tgz"
     },
     "es6-set": {
       "version": "0.1.4",
@@ -2934,6 +2933,11 @@
       "from": "object-assign@>=4.0.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz",
       "dev": true
+    },
+    "object-assign-shim": {
+      "version": "1.0.0",
+      "from": "object-assign-shim@latest",
+      "resolved": "https://registry.npmjs.org/object-assign-shim/-/object-assign-shim-1.0.0.tgz"
     },
     "object.omit": {
       "version": "2.0.1",

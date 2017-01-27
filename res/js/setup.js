@@ -1,4 +1,9 @@
-import { $ } from 'luett'
+// polyfills
+import 'object-assign-shim'
+import Promise from 'es6-promise'
+Promise.polyfill()
+
+// component registration
 import Vue from 'vue'
 
 import Select from './core/components/select.vue'
@@ -15,7 +20,9 @@ Vue.component('sg-number-spinner', NumberSpinner)
 Vue.component('sg-switch', Switch)
 Vue.component('sg-configurator', Configurator)
 
-// load config
+// app configuration
+import { $ } from 'luett'
+
 window.app = {
   conf: JSON.parse($('#app-configuration').textContent)
 }

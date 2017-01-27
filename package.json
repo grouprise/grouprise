@@ -1,6 +1,6 @@
 {
   "version": "1.4.1",
-  "license" : "AGPL-3.0",
+  "license": "AGPL-3.0",
   "engines": {
     "node": ">=4.6.1"
   },
@@ -48,12 +48,14 @@
     "cookie_js": "^1.2.0",
     "delegate": "^3.0.1",
     "emoji-regex": "^6.0.0",
+    "es6-promise": "https://registry.npmjs.org/es6-promise/-/es6-promise-3.3.1.tgz",
     "eventemitter3": "^1.2.0",
     "flatpickr": "^2.3.4",
     "font-awesome": "^4.5.0",
     "lodash": "^4.17.4",
     "luett": "^2.0.0",
     "moment": "^2.13.0",
+    "object-assign-shim": "^1.0.0",
     "photoswipe": "^4.1.1",
     "random-id": "^0.0.2",
     "simplemde": "^1.11.2",
