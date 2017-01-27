@@ -6,10 +6,14 @@ function attachAndRun (target, event, listener) {
 export default (el, conf = {}) => {
   const target = conf.target || el
 
-  function setChangedStates () {
+  function setChangedStates (event) {
     const isFilled = el.value.trim() !== ''
     target.classList.toggle('input-filled', isFilled)
     target.classList.toggle('input-empty', !isFilled)
+
+    if(event) {
+      target.classList.toggle('input-changed', true)
+    }
   }
 
   function setFocusStates () {

@@ -4,8 +4,8 @@
     border-color: @gray-light;
     height: auto;
 
-    &:invalid:focus,
-    .input-had-focus &:invalid{
+    .no-js &:invalid:focus,
+    .input-changed &:invalid {
         border-color: @brand-danger;
     }
 }
