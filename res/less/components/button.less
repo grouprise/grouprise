@@ -252,7 +252,7 @@
 .btn-ch {
     @color: @brand-secondary;
 
-    width: calc(12rem + 1px);
+    width: 200px;
     height: 3.75rem;
     border-radius: 0;
     position: relative;
@@ -262,25 +262,15 @@
     justify-content: space-around;
     border: none;
     color: white;
-    background: @brand-primary;
-    right: -.4rem;
-
-    &:after {
-        content: " ";
-        position: absolute;
-        left: -60px;
-        top: 0;
-        bottom: 0;
-        width: 240px;
-        background: url(../img/button/triangle.svg) repeat 0 -120px transparent;
-    }
+    background: url(../img/button/triangle.svg) repeat 0 -120px transparent;
+    right: -.5rem;
 
     &:hover {
         text-decoration: underline;
     }
 
     .btn-label {
-        transform: translateX(-7.5px);
+        transform: translateX(22.5px);
     }
 }
 
