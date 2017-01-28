@@ -1,11 +1,15 @@
-::-webkit-scrollbar {
-    width: 8px;
-}
+@import "../definitions/mixins";
 
-::-webkit-scrollbar-track {
-    background-color: #f0f0f0;
-}
+.on-desktops({
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
 
-::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-}
+    ::-webkit-scrollbar-track {
+        background-color: #f0f0f0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #bbb;
+    }
+});
