@@ -11,7 +11,7 @@ export default (el, conf = {}) => {
     target.classList.toggle('input-filled', isFilled)
     target.classList.toggle('input-empty', !isFilled)
 
-    if(event) {
+    if (event) {
       target.classList.toggle('input-changed', true)
     }
   }
