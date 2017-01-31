@@ -13,6 +13,7 @@ from rest_framework.authentication import BasicAuthentication
 import content.models
 from entities import models as entities_models
 from features.groups import models as groups
+from features.memberships.rules import is_member_of
 from utils import views as utils_views
 
 
@@ -227,11 +228,14 @@ class GroupCalendarFeed(BaseCalendarFeed):
     def items(self):
         filter_dict = {}
         # pick only events of the specified group
-        filter_dict['groups'] = groups.Group.objects.get(pk=int(self.kwargs['pk']))
+        group = groups.Group.objects.get(pk=int(self.kwargs['pk']))
+        filter_dict['groups'] = group
         domain = self.kwargs['domain']
         if domain == 'public':
             filter_dict['public'] = True
         else:
             self.authenticate()
+            if not is_member_of(self.request.user, group):
+                raise PermissionDenied
             filter_dict['public'] = False
         return super().items().filter(**filter_dict)
