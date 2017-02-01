@@ -6,6 +6,9 @@ class Commented(notifications.Notification):
         super().__init__(**kwargs)
         self.comment = kwargs['comment']
 
+    def get_message_id(self):
+        return self.comment.get_unique_id()
+
     def get_recipients(self):
         recipients = {self.comment.content.author}
         recipients.update(set(self.comment.content.comment_authors.all()))

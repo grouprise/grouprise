@@ -39,3 +39,6 @@ class ContentAssociated(notifications.Notification):
         if type(self.association) == models.GroupContent:
             prefix = '[{}] '.format(self.association.group.slug)
         return prefix + self.content.title
+
+    def get_message_id(self):
+        return '{}.{}'.format(self.content.get_unique_id(), self.association.get_unique_id())

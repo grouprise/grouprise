@@ -7,6 +7,9 @@ class Created(notifications.Notification):
         super().__init__(**kwargs)
         self.text = kwargs['text']
 
+    def get_message_id(self):
+        return self.text.get_unique_id()
+
     def get_recipients(self):
         recipients = set(self.text.container.get_authors())
         for group in self.text.container.get_groups():

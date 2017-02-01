@@ -1,9 +1,12 @@
+import datetime
+from email import utils as email_utils
+import uuid
+
 from django.apps import apps
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core import mail
 from django.template import loader
-from email import utils as email_utils
 
 
 class Notification:
@@ -36,6 +39,18 @@ class Notification:
         return '{}/{}.txt'.format(
                 app_label, type(self).__name__.lower())
 
+    def get_message_id(self):
+        """ generate a unique message ID for this specific email message
+
+        Most notification subclasses should implement their own specific message ID generator.
+        Some notifications lack unique features, since they can be issued multiple times (e.g.
+        group recommendations or membership associations).
+        In these cases we pick a random ID. These subclasses do not need to overwrite this method.
+        """
+        now_string = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        uuid_string = uuid.uuid4().hex[:16]
+        return '{}.{}'.format(now_string, uuid_string)
+
     def send(self):
         for recipient, with_name in self.get_formatted_recipients():
             subject = self.get_subject()
@@ -51,8 +66,10 @@ class Notification:
                     name=name,
                     site=site.name,
                     email=self.get_sender_email())
-            date = email_utils.formatdate(localtime=True)
+            headers = {}
+            headers['Date'] = email_utils.formatdate(localtime=True)
+            headers['Message-ID'] = '<{}@{}>'.format(self.get_message_id(), site.name)
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
-                    to=[recipient], headers={'Date': date})
+                    to=[recipient], headers=headers)
             message.send()
