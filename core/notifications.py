@@ -39,17 +39,23 @@ class Notification:
         return '{}/{}.txt'.format(
                 app_label, type(self).__name__.lower())
 
-    def get_message_id(self):
-        """ generate a unique message ID for this specific email message
+    def get_message_ids(self):
+        """ generate a unique message ID for this specific email message and related IDs
 
         Most notification subclasses should implement their own specific message ID generator.
         Some notifications lack unique features, since they can be issued multiple times (e.g.
         group recommendations or membership associations).
         In these cases we pick a random ID. These subclasses do not need to overwrite this method.
+
+        The result is a tuple of three items:
+            * unique message ID
+            * parent message ID (if available)
+            * thread ID and other related messages (if available)
         """
         now_string = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         uuid_string = uuid.uuid4().hex[:16]
-        return '{}.{}'.format(now_string, uuid_string)
+        my_id = '{}.{}'.format(now_string, uuid_string)
+        return my_id, None, []
 
     def send(self):
         for recipient, with_name in self.get_formatted_recipients():
@@ -68,7 +74,15 @@ class Notification:
                     email=self.get_sender_email())
             headers = {}
             headers['Date'] = email_utils.formatdate(localtime=True)
-            headers['Message-ID'] = '<{}@{}>'.format(self.get_message_id(), site.name)
+            message_id, parent_id, reference_ids = self.get_message_ids()
+            headers['Message-ID'] = '<{}@{}>'.format(message_id, site.name)
+            if parent_id:
+                headers['In-Reply-To'] = '<{}@{}>'.format(parent_id, site.name)
+                if parent_id not in reference_ids:
+                    reference_ids.append(parent_id)
+            if reference_ids:
+                headers['References'] = ' '.join(['<{}@{}>'.format(ref_id, site.name)
+                                                  for ref_id in reference_ids])
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
                     to=[recipient], headers=headers)

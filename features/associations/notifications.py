@@ -40,5 +40,6 @@ class ContentAssociated(notifications.Notification):
             prefix = '[{}] '.format(self.association.group.slug)
         return prefix + self.content.title
 
-    def get_message_id(self):
-        return '{}.{}'.format(self.content.get_unique_id(), self.association.get_unique_id())
+    def get_message_ids(self):
+        my_id = self.content.get_unique_id()
+        return my_id, None, []

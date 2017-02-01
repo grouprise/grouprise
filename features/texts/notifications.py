@@ -7,8 +7,18 @@ class Created(notifications.Notification):
         super().__init__(**kwargs)
         self.text = kwargs['text']
 
-    def get_message_id(self):
-        return self.text.get_unique_id()
+    def get_message_ids(self):
+        my_id = self.text.get_unique_id()
+        previous_texts = self.text.container.texts.exclude(id=self.text.id)
+        thread_obj = previous_texts.first()
+        parent_obj = previous_texts.last()
+        parent_id = parent_obj.get_unique_id() if parent_obj else None
+        ref_ids = []
+        if thread_obj:
+            thread_id = thread_obj.get_unique_id()
+            if thread_id != parent_id:
+                ref_ids.append(thread_id)
+        return my_id, parent_id, ref_ids
 
     def get_recipients(self):
         recipients = set(self.text.container.get_authors())

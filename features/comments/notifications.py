@@ -6,8 +6,19 @@ class Commented(notifications.Notification):
         super().__init__(**kwargs)
         self.comment = kwargs['comment']
 
-    def get_message_id(self):
-        return self.comment.get_unique_id()
+    def get_message_ids(self):
+        my_id = self.comment.get_unique_id()
+        last_comment = self.comment.content.comments.exclude(id=self.comment.id).last()
+        thread_id = self.comment.content.get_unique_id()
+        if last_comment:
+            # there was a previous comment
+            parent_id = last_comment.get_unique_id()
+            ref_ids = [thread_id]
+        else:
+            # we are the first comment
+            parent_id = thread_id
+            ref_ids = []
+        return my_id, parent_id, ref_ids
 
     def get_recipients(self):
         recipients = {self.comment.content.author}
