@@ -12,8 +12,6 @@
             </ol>
         {% endblock %}
 
-        {% if is_paginated %}
-            {% include 'stadt/_pagination.html' %}
-        {% endif %}
+        {% pagination 'Weitere Beiträge' %}
     </div>
 {% endblock %}

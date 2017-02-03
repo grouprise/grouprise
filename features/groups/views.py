@@ -57,14 +57,10 @@ class Create(views.Create):
             fields.model_field('name'))
 
 
-class List(utils.views.PageMixin, filters_views.FilterView):
-    permission = 'groups.view_list'
-
-    menu = 'group'
-    sidebar = ('calendar',)
-    title = 'Gruppen'
-
+class List(base.PermissionMixin, filters_views.FilterView):
+    permission_required = 'groups.view_list'
     filterset_class = filters.Group
+    paginate_by = 10
 
     def get_queryset(self):
         return models.Group.objects.order_by('-score')

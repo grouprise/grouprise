@@ -7,6 +7,12 @@ from django.utils import safestring
 register = template.Library()
 
 
+@register.inclusion_tag('core/_pagination.html', takes_context=True)
+def pagination(context, label):
+    context['pagination_label'] = label
+    return context
+
+
 @register.inclusion_tag('core/_breadcrumb.html')
 def breadcrumb(parent, title):
     if isinstance(parent, str):
