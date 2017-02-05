@@ -1,4 +1,4 @@
-import { $, $$, getAttr } from 'luett'
+import { $, $$, getAttr, mapCall, toggleClass } from 'luett'
 import delegate from 'delegate'
 import { range } from 'lodash'
 import stroll from 'stroll.js'
@@ -70,6 +70,9 @@ function carousel (root, options) {
 
     root.classList.toggle(conf.cssSlidesFirst, idx === 1)
     root.classList.toggle(conf.cssSlidesLast, idx === getNumberOfSlides())
+
+    mapCall($$(`.${conf.cssIndexBtn}`, root), toggleClass, conf.cssIndexBtnCurrent, false)
+    mapCall($$(`.${conf.cssIndex} > :nth-child(${idx}) .${conf.cssIndexBtn}`), toggleClass, conf.cssIndexBtnCurrent, true)
 
     const eventData = { index: idx, carousel: crsl, slide }
 
@@ -153,7 +156,8 @@ carousel.DEFAULTS = {
   cssNavBtnNext: 'carousel-btn-next',
   cssCarousel: 'carousel',
   cssIndex: 'carousel-index',
-  cssIndexBtn: 'carousel-btn-index'
+  cssIndexBtn: 'carousel-btn-index',
+  cssIndexBtnCurrent: 'carousel-btn-index-current'
 }
 
 export default carousel
