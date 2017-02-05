@@ -64,6 +64,6 @@
     "tether-drop": "^1.4.2",
     "tether-tooltip": "^1.2.0",
     "vue": "^2.1.9",
-    "vue-clickaway": "^2.1.0"
+    "vue-on-click-outside": "^1.0.1"
   }
 }

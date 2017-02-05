@@ -2513,7 +2513,8 @@
     "js-tokens": {
       "version": "3.0.0",
       "from": "js-tokens@>=3.0.0 <4.0.0",
-      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.0.tgz",
+      "dev": true
     },
     "js-yaml": {
       "version": "3.6.1",
@@ -2709,7 +2710,8 @@
     "loose-envify": {
       "version": "1.3.1",
       "from": "loose-envify@>=1.2.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.3.1.tgz",
+      "dev": true
     },
     "lru-cache": {
       "version": "2.7.3",
@@ -4275,11 +4277,6 @@
       "from": "vue@>=2.1.9 <3.0.0",
       "resolved": "https://registry.npmjs.org/vue/-/vue-2.1.10.tgz"
     },
-    "vue-clickaway": {
-      "version": "2.1.0",
-      "from": "vue-clickaway@>=2.1.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/vue-clickaway/-/vue-clickaway-2.1.0.tgz"
-    },
     "vue-hot-reload-api": {
       "version": "2.0.8",
       "from": "vue-hot-reload-api@>=2.0.1 <3.0.0",
@@ -4299,6 +4296,11 @@
           "dev": true
         }
       }
+    },
+    "vue-on-click-outside": {
+      "version": "1.0.1",
+      "from": "vue-on-click-outside@1.0.1",
+      "resolved": "https://registry.npmjs.org/vue-on-click-outside/-/vue-on-click-outside-1.0.1.tgz"
     },
     "vue-style-loader": {
       "version": "1.0.0",
