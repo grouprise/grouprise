@@ -31,7 +31,7 @@ function attachIndex (el, opts, numberOfSlides) {
 
   el.insertAdjacentHTML('beforeend', `
         <ol class="${opts.cssIndex}">
-            ${range(1, Math.min(numberOfSlides + 1, 5)).map(idx => `
+            ${range(1, Math.min(numberOfSlides + 1, 11)).map(idx => `
                 <li>
                     <button type="button" class="${opts.cssIndexBtn}" data-carousel-index="${idx}"></button>
                 </li>
