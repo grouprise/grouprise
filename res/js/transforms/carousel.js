@@ -135,11 +135,13 @@ function carousel (root, options) {
 
     // set first slide as current but wait for carousel to return
   setTimeout(() => iface.showSlide(currentSlide), 0)
+  setTimeout(() => root.classList.add(conf.cssReady), 10)
 
   return iface
 }
 
 carousel.DEFAULTS = {
+  cssReady: 'carousel-ready',
   cssCurrent: 'carousel-current',
   cssSlides: 'carousel-slides',
   cssSlidesFirst: 'carousel-first',
