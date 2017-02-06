@@ -1,14 +1,34 @@
-from rest_framework import viewsets, mixins
-from django.db.models import Q
-
-from . import serializers, filters
+from rest_framework import viewsets, mixins, serializers
 from content import models as content_models
-import features.groups.models
-import features.gestalten.models
+from django.db.models import Q
+from features.rest_api import api
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(source='file.name', read_only=True)
+    path = serializers.CharField(source='file.url', read_only=True)
+
+    def _get_gestalt(self):
+        try:
+            return self.context['request'].user.gestalt
+        except AttributeError:
+            return None
+
+    def create(self, validated_data):
+        validated_data.update({"creator": self._get_gestalt()})
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.update({"creator": self._get_gestalt()})
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = content_models.Image
+        fields = ('id', 'file', 'weight', 'content', 'title', 'creator', 'path')
 
 
 class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.ImageSerializer
+    serializer_class = ImageSerializer
     filter_fields = ('content', 'creator', )
 
     def get_queryset(self):
@@ -39,17 +59,6 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
         return False
 
 
-class GroupSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.GroupSerializer
-    filter_fields = ('id', 'name', )
-    filter_class = filters.GroupFilter
-    queryset = features.groups.models.Group.objects.all()
-
-
-class UserSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.UserSerializer
-    queryset = features.gestalten.models.Gestalt.objects.all()
-
-    def get_queryset(self):
-        user = self.request.user
-        return features.gestalten.models.Gestalt.objects.filter(pk=user.gestalt.pk)
+@api.register
+def load(router):
+    router.register(r'images', ImageSet, 'image')
