@@ -190,6 +190,11 @@
       "resolved": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-6.7.0.tgz",
       "dev": true
     },
+    "autosize": {
+      "version": "3.0.20",
+      "from": "autosize@latest",
+      "resolved": "https://registry.npmjs.org/autosize/-/autosize-3.0.20.tgz"
+    },
     "aws-sign2": {
       "version": "0.6.0",
       "from": "aws-sign2@>=0.6.0 <0.7.0",
