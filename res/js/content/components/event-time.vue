@@ -46,7 +46,7 @@
   }
 
   const label = (start, end, allDay) => {
-    if(!start && !end) return "Zeit auswählen"
+    if(!start && !end) return '\u00A0'
 
     if(!end) {
       if(allDay) return `Am ${moment(start).format('LL')}, ganztägig`
