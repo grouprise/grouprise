@@ -129,6 +129,7 @@ class Event(BaseContent):
 
     class Meta:
         fields = ('all_day', 'author', 'place', 'public', 'text', 'time', 'title', 'until_time')
+        widgets = {'place': forms.Textarea(attrs={'rows': 3, 'data-component': 'autosize'})}
         labels = {'text': 'Beschreibung'}
         model = models.Event
 
