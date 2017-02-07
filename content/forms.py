@@ -85,7 +85,6 @@ class Event(BaseContent):
             utils_forms.EditorField('text')
         ),
         layout.Div(
-            layout.HTML("<h2>Ort und Zeit</h2>"),
             layout.Div(
                 layout.Div(
                     'place',

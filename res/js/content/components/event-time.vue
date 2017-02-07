@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label class="control-label" for="event-time">Zeit</label>
+    <label class="control-label" for="event-time">Datum & Uhrzeit</label>
     <div class="controls">
       <sg-configurator id="event-time" @save="propagate" @show="configure">
         <span slot="label">{{ label }}</span>
