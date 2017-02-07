@@ -43,12 +43,12 @@ export default (el, opts) => {
       .then(() => $('form textarea', el).focus())
   }
 
-  const destroySubmitListener = delegate(el, 'form', 'submit', handleSubmit)
+  const submitListener = delegate(el, 'form', 'submit', handleSubmit)
 
   return {
     el,
     remove: () => {
-      destroySubmitListener()
+      submitListener.destroy()
     }
   }
 }
