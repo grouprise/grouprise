@@ -1,8 +1,11 @@
 import autosize from 'autosize'
 import { setAttr } from 'luett'
 
-export default el => {
-  setAttr(el, 'rows', 1)
+export default (el, opts) => {
+  if (opts.conf.rows) {
+    setAttr(el, 'rows', opts.conf.rows)
+  }
+
   autosize(el)
 
   return {
