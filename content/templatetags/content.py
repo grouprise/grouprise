@@ -7,6 +7,7 @@ from django.template.loader import get_template
 import markdown as python_markdown
 from markdown.extensions import nl2br, toc, sane_lists, fenced_code
 from pymdownx import magiclink
+from mdx_unimoji import UnimojiExtension
 import utils.markdown
 
 register = template.Library()
@@ -18,6 +19,7 @@ markdown_extensions = (
     sane_lists.SaneListExtension(),
     fenced_code.FencedCodeExtension(),
     utils.markdown.CuddledListExtension(),
+    UnimojiExtension()
 )
 
 content_allowed_tags = (
