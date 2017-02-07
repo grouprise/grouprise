@@ -41,7 +41,10 @@ def do_dismissible(parser, token):
     except IndexError:
         raise template.TemplateSyntaxError('please provide a name for the dismissible')
 
-    return DismissibleNode(name[1:-1], nodelist)
+    if name[0] in ['\'', '"']:
+        name = name[1:-1]
+
+    return DismissibleNode(name, nodelist)
 
 
 class DismissibleNode(template.Node):
