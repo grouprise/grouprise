@@ -62,7 +62,7 @@ class Gestalt(models.Model):
 
 
 class GestaltSetting(models.Model):
-    gestalt = models.ForeignKey(to=Gestalt, on_delete=models.CASCADE)
+    gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE)
     category = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
     value = models.TextField()
