@@ -62,7 +62,7 @@ class Test(test.TestCase):
         self.assertEqual(len(mail.outbox), 0)
 
     def assertNotificationSent(self):
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertTrue(len(mail.outbox) > 0)
 
     def assertRequest(self, methods=[HTTP_GET], **kwargs):
         for method in methods:
