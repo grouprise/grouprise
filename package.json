@@ -5,7 +5,8 @@
     "node": ">=4.6.1"
   },
   "scripts": {
-    "test": "standard res/**/*.js"
+    "test": "npm run lint",
+    "lint": "standard res/**/*.js"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
