@@ -59,3 +59,10 @@ class Gestalt(models.Model):
             m = re.search('[a-zA-Z0-9]', w)
             initials += m.group(0) if m else ''
         return initials
+
+
+class GestaltSetting(models.Model):
+    gestalt = models.ForeignKey(to=Gestalt, on_delete=models.CASCADE)
+    category = models.CharField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=255)
+    value = models.TextField()
