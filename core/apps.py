@@ -10,3 +10,4 @@ class CoreConfig(AppConfig):
         module_loading.import_string(
                 settings.ROOT_SIGNALCONF + '.connections')
         module_loading.autodiscover_modules('fragments')
+        module_loading.autodiscover_modules('rest_api')

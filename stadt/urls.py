@@ -15,8 +15,8 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
     urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),
     urls.url(r'^stadt/', urls.include('features.tags.urls')),
+    urls.url(r'^stadt/api/', urls.include('core.api_urls')),
     urls.url(r'^stadt/admin/', admin.site.urls),
-    urls.url(r'^stadt/api/', urls.include('api.urls')),
     urls.url(r'^$', content_views.ContentList.as_view(), name='index'),
 
     urls.url(
