@@ -1,19 +1,14 @@
 import closest from 'closest'
-import { keyPressed } from 'luett'
+import { keyPressed, on } from 'luett'
 
 const usage = `<span class='pull-right media-instruction'>
     <kbd>Shift</kbd> + <kbd>Enter</kbd> sendet das Formular ab
 </span>`
 
-function on (el, event, listener) {
-  el.addEventListener(event, listener, false)
-  return () => el.removeEventListener(event, listener, false)
-}
-
 export default el => {
   el.insertAdjacentHTML('afterend', usage)
 
-  const destroyInputListener = on(el, 'keydown', keyPressed(13, { shiftKey: true }, event => {
+  const keyDownListener = on(el, 'keydown', keyPressed(13, { shiftKey: true }, event => {
     event.preventDefault()
     closest(el, 'form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }))
   }))
@@ -21,7 +16,7 @@ export default el => {
   return {
     el,
     remove: () => {
-      destroyInputListener()
+      keyDownListener.destroy()
     }
   }
 }
