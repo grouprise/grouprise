@@ -1,11 +1,13 @@
 {% extends 'stadt/list.html' %}
-{% load rules %}
+{% load rules dismissible %}
 
 {% block heading %}{% endblock %}
 
 {% block list_header %}
+    {% dismissible 'stadtgestalten-intro' %}
     <header class="content-header">
         <span class="content-classification">Stadtgestalten</span>
+        {% dismiss 'stadtgestalten-intro' %}
     </header>
     <ul class="actions">
         <li>
@@ -94,6 +96,7 @@
             <p><a href="{% url 'create-group-conversation' about_group.pk %}">Schreib uns</a>!</p>
         </div>
     </div>
+    {% enddismissible %}
 
     <header class="content-header">
         <span class="content-classification">Beiträge</span>
