@@ -2725,9 +2725,9 @@
       "dev": true
     },
     "luett": {
-      "version": "2.0.0",
-      "from": "luett@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/luett/-/luett-2.0.0.tgz"
+      "version": "2.1.0",
+      "from": "luett@*",
+      "resolved": "https://registry.npmjs.org/luett/-/luett-2.1.0.tgz"
     },
     "macaddress": {
       "version": "0.2.8",
