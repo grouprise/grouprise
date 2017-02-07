@@ -46,17 +46,17 @@ class Test(test.TestCase):
             self.assertRedirects(response, self.get_login_url(next_url))
 
     def assertNotificationRecipient(self, gestalt):
-        self.assertTrue(mail.outbox[-1].to[0].find(gestalt.user.email))
+        self.assertTrue(self.get_latest_notification().to[0].find(gestalt.user.email))
 
     def assertNotificationSenderAnonymous(self):
-        self.assertTrue(mail.outbox[-1].from_email.startswith(
+        self.assertTrue(self.get_latest_notification().from_email.startswith(
             sites_models.Site.objects.get_current().name))
 
     def assertNotificationSenderName(self, gestalt):
-        self.assertTrue(mail.outbox[-1].from_email.startswith(str(gestalt)))
+        self.assertTrue(self.get_latest_notification().from_email.startswith(str(gestalt)))
 
     def assertNotificationHeaderContent(self, header, content):
-        self.assertTrue(content in mail.outbox[-1].extra_headers[header])
+        self.assertTrue(content in self.get_latest_notification().extra_headers[header])
 
     def assertNoNotificationSent(self):
         self.assertEqual(len(mail.outbox), 0)
@@ -88,6 +88,9 @@ class Test(test.TestCase):
 
     def get_response(self, method, url):
         return getattr(self.client, method)(url)
+
+    def get_latest_notification(self):
+        return mail.outbox[-1]
 
     def get_url(self, url, key=None):
         args = [key] if key else []
