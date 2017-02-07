@@ -1,6 +1,6 @@
 import { gestaltSettings } from '../adapters/api'
 import closest from 'closest'
-import { remove, addClass } from 'luett'
+import { remove, addClass, setAttr } from 'luett'
 
 function on(el, event, callback) {
   el.addEventListener(event, callback, false)
@@ -16,6 +16,7 @@ export default el => {
   const listener = on(el, 'click', () => {
     const dismissible = closest(el, '.dismissible')
     addClass(dismissible, 'dismissible-pending')
+    setAttr(el, 'disabled', 'disabled')
     gestaltSettings.create(payload)
       .then(() => remove(dismissible))
   })
