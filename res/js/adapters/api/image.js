@@ -50,11 +50,16 @@ export default decorator((req, opts) => {
       .then(res => Promise.resolve(res.data.map(transform)))
   }
 
-  const create = (data = {}) => {
+  const create = (data = {}, conf = {}) => {
     const formData = new window.FormData()
+    const requestConf = {}
     each(imageDefaults(data), (value, key) => formData.append(key, value))
 
-    return req.post(endpoint, formData)
+    if (conf.onProgress) {
+      requestConf.onUploadProgress = conf.onProgress
+    }
+
+    return req.post(endpoint, formData, requestConf)
       .then(res => Promise.resolve(transform(res.data)))
   }
 
