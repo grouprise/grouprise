@@ -1,5 +1,5 @@
 from rest_framework import viewsets, serializers
-from features.rest_api import api
+from core import api
 from . import models
 
 

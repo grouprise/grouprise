@@ -63,7 +63,6 @@ INSTALLED_APPS = [
     'features.subscriptions',
     'features.tags',
     'features.texts',
-    'features.rest_api',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
@@ -279,7 +278,7 @@ CACHES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'features.rest_api.permissions.RulesPermissions',
+        'core.permissions.RulesPermissions',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',

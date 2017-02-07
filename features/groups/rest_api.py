@@ -5,7 +5,7 @@ import django_filters.widgets
 from . import models
 # todo howto resolve module without including tags here
 from features.tags.rest_api import TagSerializer
-from features.rest_api import api
+from core import api
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):

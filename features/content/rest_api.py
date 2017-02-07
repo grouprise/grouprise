@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins, serializers
 from content import models as content_models
 from django.db.models import Q
-from features.rest_api import api
+from core import api
 
 
 class ImageSerializer(serializers.ModelSerializer):
