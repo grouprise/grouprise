@@ -16,7 +16,7 @@
     {% if not group %}
         {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
         <div class="disclaimer disclaimer-standalone">
-            Von den {{ gestalt_count }} <em>Gestalten</em> wirst du hier nicht alle finden. Jede <em>Gestalt</em> entscheidet
+            Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> entscheidet
         für sich, ob sie ein öffentliches Profil haben möchte. Du kannst diese Einstellung in
             {% if can_edit %}
                 <a href="{% url 'gestalt-update' request.user.gestalt.pk %}">
