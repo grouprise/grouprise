@@ -20,6 +20,7 @@ import keysubmit from './transforms/keysubmit'
 import select from './transforms/select'
 import publish from './transforms/publish'
 import eventTime from './transforms/event-time'
+import dismissible from './transforms/dismissible'
 import autosize from './transforms/autosize'
 
 function init (searchIn = document) {
@@ -42,6 +43,7 @@ function init (searchIn = document) {
   component('select', select, opts)
   component('publish', publish, opts)
   component('event-time', eventTime, opts)
+  component('dismissible', dismissible, opts)
   component('autosize', autosize, opts)
 
   // initialize components not based on component interface

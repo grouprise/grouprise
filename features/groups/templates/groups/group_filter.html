@@ -1,5 +1,5 @@
 {% extends 'stadt/list.html' %}
-{% load crispy_forms_tags rules %}
+{% load crispy_forms_tags rules dismissible %}
 
 {% block heading_toolbar %}
     {% has_perm 'groups.create_group' user as can_create_group %}
@@ -21,8 +21,12 @@
 {% endblock %}
 
 {% block list_header %}
-    <div class="disclaimer content-block">
-        <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
-    </div>
+    {% dismissible 'group-list-order' %}
+        <div class="disclaimer content-block">
+            {% dismiss 'group-list-order' %}
+            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
+        </div>
+    {% enddismissible %}
+
     {% crispy filter.form %}
 {% endblock %}
