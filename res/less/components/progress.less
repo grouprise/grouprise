@@ -1,0 +1,29 @@
+.progress-container {
+    padding: .5rem 1rem;
+    background-color: @gray-lighter;
+    margin: 0 2rem;
+    text-align: center;
+    border-radius: 2px;
+
+    .editor-images & {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 501;
+        left: 0; right: 0;
+    }
+}
+
+.progress-track {
+    height: 5px;
+    width: 100%;
+    background-color: @brand-primary;
+    transition: transform .2s ease-out;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+}
+
+.progress-description {
+    margin-bottom: .5rem;
+    color: @color-text-light
+}
