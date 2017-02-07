@@ -55,6 +55,9 @@ class Test(test.TestCase):
     def assertNotificationSenderName(self, gestalt):
         self.assertTrue(mail.outbox[0].from_email.startswith(str(gestalt)))
 
+    def assertNotificationHeaderContent(self, header, content):
+        self.assertTrue(content in mail.outbox[0].extra_headers[header])
+
     def assertNoNotificationSent(self):
         self.assertEqual(len(mail.outbox), 0)
 

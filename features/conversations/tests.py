@@ -53,6 +53,14 @@ class NoNotificationOnExternalConversation:
         self.assertNoNotificationSent()
 
 
+class NotificationContainsConversationMessageID:
+    def test_conversation_message_id(self):
+        conversation_url = self.get_url('conversation', key=self.association.pk)
+        self.client.post(conversation_url, {'text': 'Test Reply'})
+        self.assertNotificationSent()
+        self.assertNotificationHeaderContent('Message-ID', '<conversation.')
+
+
 class GroupPageHasCreateLink:
     def test_group_page_creation(self):
         response = self.client.get(self.group.get_absolute_url())
@@ -271,6 +279,7 @@ class GroupMember(
 class TwoGroupMembers(
         OtherGestaltIsNotifiedOnReply,
         OtherGestaltIsNotifiedOnGestaltConversation,
+        NotificationContainsConversationMessageID,
 
         GroupConversation, memberships.OtherMemberMixin, memberships.MemberMixin, tests.Test):
     '''
