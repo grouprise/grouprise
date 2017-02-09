@@ -1,5 +1,13 @@
-{% extends 'stadt/list.html' %}
+{% extends 'stadt/stadt.html' %}
 {% load crispy_forms_tags rules dismissible %}
+
+{% block title %}Gruppen - {{ site.name }}{% endblock %}
+{% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block heading_title %}<h1 class="content-classification">Gruppen</h1>{% endblock %}
+
+{% block sidebar %}
+    {% include 'events/_sidebar2.html' with events=all_events %}
+{% endblock %}
 
 {% block heading_toolbar %}
     {% has_perm 'groups.create_group' user as can_create_group %}
@@ -10,7 +18,14 @@
     {% endif %}
 {% endblock %}
 
-{% block list %}
+{% block content %}
+    {% dismissible 'group-list-order' %}
+        <div class="disclaimer content-block">
+            {% dismiss 'group-list-order' %}
+            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
+        </div>
+    {% enddismissible %}
+    {% crispy filter.form %}
     <ol class="groups">
         {% for group in object_list %}
             <li>
@@ -18,15 +33,5 @@
             </li>
         {% endfor %}
     </ol>
-{% endblock %}
-
-{% block list_header %}
-    {% dismissible 'group-list-order' %}
-        <div class="disclaimer content-block">
-            {% dismiss 'group-list-order' %}
-            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
-        </div>
-    {% enddismissible %}
-
-    {% crispy filter.form %}
+    {% pagination 'Weitere Gruppen' %}
 {% endblock %}

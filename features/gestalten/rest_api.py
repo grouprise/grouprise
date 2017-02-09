@@ -40,7 +40,10 @@ class GestaltSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return models.Gestalt.objects.filter(pk=user.gestalt.pk)
+        try:
+            return models.Gestalt.objects.filter(pk=user.gestalt.pk)
+        except AttributeError:
+            return models.Gestalt.objects.none()
 
 
 class GestaltSettingSet(viewsets.ModelViewSet):

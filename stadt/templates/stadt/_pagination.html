@@ -1,7 +1,0 @@
-<div class="btn-toolbar btn-toolbar-centered">
-    {% if page_obj.has_next %}
-        <a href="?{% if params %}{{ params.urlencode }}&amp;{% endif %}page={{ page_obj.next_page_number }}" class="btn btn-default">
-            Weitere Beiträge
-        </a>
-    {% endif %}
-</div>
