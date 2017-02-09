@@ -2,7 +2,7 @@ import { find, matches } from 'lodash'
 
 export default (gestaltApi, gestaltId, groupAdapter) => {
   const gestalten = gestaltApi.get()
-    .then(response => Promise.resolve(response.data))
+    .then(response => Promise.resolve(response.data), () => null)
 
   const get = choices => {
     return Promise.all([groupAdapter.get(choices), gestalten])
