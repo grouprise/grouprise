@@ -9,7 +9,7 @@ from features.groups import models as groups
 
 class Tag(base.PermissionMixin, generic.DetailView):
     permission_required = 'tags.view'
-    model = models.Tag
+    model = models.Tagged
     template_name = 'tags/tag.html'
 
     def get_events(self):

@@ -52,7 +52,7 @@ class Group(models.Model):
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
 
     tags = contenttypes.GenericRelation(
-            'tags.Tag',
+            'tags.Tagged',
             content_type_field='tagged_type',
             object_id_field='tagged_id',
             related_query_name='group')

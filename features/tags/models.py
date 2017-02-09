@@ -2,7 +2,7 @@ from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
 
-class Tag(models.Model):
+class Tagged(models.Model):
     name = models.CharField(max_length=255)
 
     tagged = contenttypes.GenericForeignKey('tagged_type', 'tagged_id')
