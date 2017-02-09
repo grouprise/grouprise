@@ -5,7 +5,6 @@ from core.views import base
 from django.views import generic
 from django_filters import views as filters_views
 from entities import filters
-import utils.views
 
 
 class Mixin:
