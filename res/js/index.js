@@ -3,6 +3,8 @@ import './setup'
 import { $$, component, mapCall } from 'luett'
 import closest from 'closest'
 
+import PubSub from './util/pubsub'
+
 import date from './transforms/date'
 import editor from './transforms/editor'
 import time from './transforms/time'
@@ -24,7 +26,8 @@ import dismissible from './transforms/dismissible'
 import autosize from './transforms/autosize'
 
 function init (searchIn = document) {
-  const opts = { root: searchIn }
+  const bus = PubSub()
+  const opts = { root: searchIn, conf: { bus } }
 
   // initialize components on load
   component('date', date, opts)
