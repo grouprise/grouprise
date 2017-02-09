@@ -3803,8 +3803,8 @@
     },
     "simplemde": {
       "version": "1.11.2",
-      "from": "simplemde@>=1.11.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/simplemde/-/simplemde-1.11.2.tgz"
+      "from": "git://github.com/stadtgestalten/simplemde-markdown-editor.git#translatable-prompt-texts",
+      "resolved": "git://github.com/stadtgestalten/simplemde-markdown-editor.git#125200fb354ac0c127ed3c301a9d9c2a62684ed9"
     },
     "slash": {
       "version": "1.0.0",
