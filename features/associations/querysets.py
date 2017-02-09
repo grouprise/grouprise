@@ -24,6 +24,14 @@ class Association(models.QuerySet):
             return self.none()
 
     # TODO: replace 'conversation' by generic container
+    def ordered_conversations(self, user):
+        qs = self.can_view(user, container='conversation').filter(
+            container_type=contenttypes.ContentType.objects.get_for_model(
+                conversations.Conversation))
+        qs = qs.annotate(last_activity=Max('conversation__texts__time_created'))
+        return qs.order_by('-last_activity')
+
+    # TODO: replace 'conversation' by generic container
     def ordered_group_conversations(self, user, group):
         qs = self.can_view(user, container='conversation').filter(
             entity_type=contenttypes.ContentType.objects.get_for_model(group),

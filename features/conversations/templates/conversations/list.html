@@ -21,5 +21,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include 'entities/_sidebar_group.html' with group=view.group %}
+    {% if view.group %}
+        {% include 'entities/_sidebar_group.html' with group=view.group %}
+    {% endif %}
 {% endblock %}

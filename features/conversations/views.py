@@ -53,6 +53,16 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
             return self.form_invalid(form)
 
 
+class Conversations(base.PermissionMixin, generic.ListView):
+    model = associations.Association
+    permission_required = 'conversations.list'
+    template_name = 'conversations/list.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return super().get_queryset().ordered_conversations(self.request.user)
+
+
 class GroupConversations(base.PermissionMixin, generic.ListView):
     model = associations.Association
     permission_required = 'conversations.list'

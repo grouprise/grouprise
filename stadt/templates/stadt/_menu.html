@@ -115,13 +115,18 @@
         </li>
         <li class="nav-separator" role="presentation"></li>
         <li>
+            <a href="{% url 'conversations' %}" class="{% if menu|lower == 'conversation' %}nav-menu-item-current{% endif %}">Gespräche</a>
+        </li>
+        <li>
             <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
         </li>
         <li>
             <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
         </li>
+        {% comment %}
         <li>
             <a href="{% url 'gallery-index' %}" class="{% if menu|lower == 'gallery' %}nav-menu-item-current{% endif %}">Galerien</a>
         </li>
+        {% endcomment %}
     </ul>
 </nav>

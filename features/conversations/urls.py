@@ -3,9 +3,14 @@ from django.conf import urls
 
 urlpatterns = [
     urls.url(
-        r'^abuse/path=(?P<path>.*)',
+        r'^abuse/path=(?P<path>.*)$',
         views.CreateAbuseConversation.as_view(),
         name='abuse'),
+
+    urls.url(
+        r'^conversations/$',
+        views.Conversations.as_view(),
+        name='conversations'),
 
     urls.url(
         r'^conversations/(?P<association_pk>[0-9]+)/$',
