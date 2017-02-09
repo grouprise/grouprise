@@ -12,6 +12,7 @@ randomcolor
 rules
 sorl-thumbnail==12.4a1
 translitcodec
+mdx_unimoji
 
 # html5lib funktioniert seit v0.99999999 (8x9) nicht mehr mit bleach
 # siehe auch https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=844943

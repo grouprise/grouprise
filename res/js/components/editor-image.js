@@ -1,4 +1,5 @@
-import { $, getAttr, remove } from 'luett'
+import { $, getAttr, remove, toggleClass } from 'luett'
+import { sum } from 'lodash'
 import bel from 'bel'
 import EventEmitter from 'eventemitter3'
 
@@ -6,11 +7,43 @@ import { image as adapter } from '../adapters/api'
 import pickii from './pickii'
 import filePicker from './file-picker'
 import tabbed from './tabbed'
+import progress from './progress'
 
 const contentId = getAttr($("[name='content_id']"), 'value', false)
 
-function upload (files) {
-  const uploads = files.map(file => adapter.create({file, contentId}))
+let processIds = 0
+
+function progressAdapterFactory(callback) {
+  const iface = {}
+  const handlers = []
+
+  function propagateProgress() {
+    const progress = sum(handlers) / handlers.length
+    callback({
+      complete: Math.max(0, Math.min(100, progress)),
+      jobCount: handlers.length
+    })
+  }
+
+  iface.createHandler = () => {
+    const id = handlers.length
+    handlers[id] = 0
+    return progress => {
+      if(progress.lengthComputable) {
+        handlers[id] = progress.loaded / progress.total * 100
+        propagateProgress()
+      }
+    }
+  }
+
+  return iface
+}
+
+function upload (files, onProgress) {
+  const progressAdapter = progressAdapterFactory(onProgress)
+  const uploads = files.map(file => {
+    return adapter.create({file, contentId}, {onProgress: progressAdapter.createHandler()})
+  })
   return Promise.all(uploads)
 }
 
@@ -23,10 +56,13 @@ function createFilePicker (emitter) {
     accept: ['image/png', 'image/gif', 'image/jpeg', 'capture=camera'],
     multiple: true,
     callback: (files) => {
-      upload(files)
+      const processId = processIds++
+      emitter.emit('files:upload', { files, processId })
+      upload(files, progress => emitter.emit('files:progress', { progress, processId }))
         .then((files) => {
           emitter.emit('files:select', files)
           emitter.emit('files:add', files)
+          emitter.emit('files:done', { files, processId })
         })
     },
     trigger: bel`<button type="button" class="btn btn-link btn-sm">
@@ -78,6 +114,7 @@ function createTabbed (emitter, tabConfig = {}) {
 export default (opts = {}) => {
   const iface = {}
   const emitter = new EventEmitter()
+  let progressBar
 
   const imageEditor = bel`<div class="editor-images">
     <div class="btn-toolbar btn-toolbar-spread">
@@ -89,10 +126,31 @@ export default (opts = {}) => {
 
   iface.remove = function () {
     remove(imageEditor)
+    if (progressBar) {
+      progressBar.destroy()
+    }
   }
 
   iface.emitter = emitter
   iface.el = imageEditor
+
+  emitter.on('files:upload', event => {
+    toggleClass(imageEditor, 'editor-images-upload', true)
+    progressBar = progress({
+      description: `${event.files.length} ${event.files.length == 1 ? 'Bild' : 'Bilder'} werden hochgeladen`
+    })
+    imageEditor.appendChild(progressBar.el)
+  })
+
+  emitter.on('files:progress', event => {
+    progressBar.setProgress(event.progress.complete)
+  })
+
+  emitter.on('files:done', () => {
+    progressBar.remove()
+    remove(progressBar.el)
+    toggleClass(imageEditor, 'editor-images-upload', false)
+  })
 
   return iface
 }

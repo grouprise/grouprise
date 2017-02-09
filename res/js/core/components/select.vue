@@ -1,5 +1,5 @@
 <template>
-    <div class="select" :id="componentId.wrapper" :class="selectClasses" @keydown.esc="closeFinder" v-on-clickaway="dismissSelect">
+    <div class="select" :id="componentId.wrapper" :class="selectClasses" @keydown.esc="closeFinder" v-on-click-outside="dismissSelect">
         <div class="select-current" @click.prevent="toggleFinder()" @keydown="typeSelect" tabindex="0" ref="current">
             <slot name="current-choice">
                 <component :is="renderer" :choice="currentChoice" v-if="currentChoice"></component>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import { mixin as clickaway } from 'vue-clickaway'
+    import { mixin as onClickOutside } from 'vue-on-click-outside'
     import { includes, matches, find, findIndex, isFunction, isBoolean, throttle } from 'lodash'
     import randomId from 'random-id'
 
@@ -60,7 +60,7 @@
 
     export default {
         name: 'select',
-        mixins: [clickaway],
+        mixins: [onClickOutside],
         props: {
             id: {
                 type: String,

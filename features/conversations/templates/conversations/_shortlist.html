@@ -1,4 +1,4 @@
-{% load rules %}
+{% load rules dismissible %}
 
 {% has_perm 'conversations.create_group_conversation' user group as can_create_message %}
 
@@ -13,9 +13,12 @@
     {% endif %}
 </header>
 
+{% dismissible 'group-conversation-visibility' %}
 <div class="disclaimer content-block">
+    {% dismiss 'group-conversation-visibility' %}
     <p>Gespräche sind nur für Gruppenmitglieder zugänglich.</p>
 </div>
+{% enddismissible %}
 
 <ol class="thread-preview-list">
     {% for association in associations|slice:':3' %}

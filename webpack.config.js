@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const grunt = require('grunt')
 const _ = require('lodash')
 

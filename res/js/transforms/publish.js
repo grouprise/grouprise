@@ -1,12 +1,5 @@
-import { $, toggleClass, setAttr } from 'luett'
+import { $, toggleClass, setAttr, on } from 'luett'
 import closest from 'closest'
-
-function on (el, event, callback, useCapture = false) {
-  el.addEventListener(event, callback, useCapture)
-  return {
-    destroy: () => el.removeEventListener(event, callback, useCapture)
-  }
-}
 
 function addAuthorPinnedListener (el) {
   const authorSelect = $('[data-select-type="author"]', el)

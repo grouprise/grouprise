@@ -102,7 +102,7 @@ class Article(Content):
 
 
 class Event(Content):
-    place = models.CharField('Ort / Anschrift', max_length=255)
+    place = models.CharField('Veranstaltungsort / Anschrift', max_length=255)
     time = models.DateTimeField('Beginn')
     until_time = models.DateTimeField('Ende', blank=True, null=True)
     all_day = models.BooleanField('ganztägig', default=False,

@@ -1,5 +1,5 @@
 {% extends 'stadt/stadt.html' %}
-{% load crispy_forms_tags rules %}
+{% load crispy_forms_tags rules dismissible %}
 
 {% block title %}Gruppen - {{ site.name }}{% endblock %}
 {% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
@@ -19,9 +19,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="disclaimer content-block">
-        <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
-    </div>
+    {% dismissible 'group-list-order' %}
+        <div class="disclaimer content-block">
+            {% dismiss 'group-list-order' %}
+            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
+        </div>
+    {% enddismissible %}
     {% crispy filter.form %}
     <ol class="groups">
         {% for group in object_list %}

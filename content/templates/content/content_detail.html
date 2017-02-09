@@ -18,9 +18,6 @@
 
         <div class="content-body" data-component="user-content">
             <h1 class="content-title">
-                {% if content.event %}
-                    {{ content.event.time|date:'l, j.n.Y:'}}
-                {% endif %}
                 {{ content.title }}
             </h1>
 
@@ -36,6 +33,8 @@
 
             {% include 'content/_content_license.html' %}
         </div>
+
+        <div class="clearfix"></div>
 
         <footer class="content-footer">
             {% has_perm 'content.create_comment' user content as can_create_comment %}

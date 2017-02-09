@@ -4,7 +4,7 @@
       <slot name="label"></slot>
     </div>
     <transition name="fade-down">
-      <div class="configurator-popup" v-if="opened" v-on-clickaway="dismiss" @mouseenter="setCurrentElement" @mouseleave="setCurrentElement">
+      <div class="configurator-popup" v-if="opened" v-on-click-outside="dismiss">
         <header class="configurator-header">
           <slot name="icon"></slot>
           <h3 class="configurator-title">
@@ -33,24 +33,18 @@
 </template>
 
 <script>
-  import { mixin as clickaway } from 'vue-clickaway'
+  import { mixin as onClickOutside } from 'vue-on-click-outside'
 
   export default {
-    mixins: [clickaway],
+    mixins: [onClickOutside],
     data() {
       return {
-        opened: false,
-        isCurrentElement: false
+        opened: false
       }
     },
     methods: {
-      setCurrentElement(event) {
-        this.isCurrentElement = event.type === 'mouseenter'
-      },
       dismiss() {
-        if(!this.isCurrentElement) {
-          this.abort()
-        }
+        this.abort()
       },
       abort() {
         this.$emit("abort")

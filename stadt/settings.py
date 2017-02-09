@@ -83,8 +83,11 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'stadt.urls'
 
+# Teile dieser Werte werden abhängig vom Inhalt von DEBUG nach dem Laden der lokalen Settings
+# überschrieben.
 TEMPLATES = [
     {
+        'APP_DIRS': True,
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'stadt', 'templates'),
@@ -105,20 +108,11 @@ TEMPLATES = [
                 'stadt.context_processors.site',
                 'stadt.context_processors.assets',
             ],
-            # TODO: nach Django 1.10 wird der cached.Loader im nicht-Debug-Modus automatisch
-            #       aktiviert. Dann koennen wir diese 'loaders'-Definition entfernen und oben
-            #       wieder "APP_DIRS=True" einfuegen.
-            'loaders': [(
-                'django.template.loaders.cached.Loader', [
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                ],
-            )],
-            # eventuell wird dieser Wert durch die lokalen Settings ueberschrieben
-            'debug': True,
+            'debug': DEBUG,
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'stadt.wsgi.application'
 
@@ -284,7 +278,7 @@ CACHES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'api.permissions.RulesPermissions',
+        'core.permissions.RulesPermissions',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -316,8 +310,19 @@ try:
 except ImportError:
     pass
 
-# _nach_ dem Laden der lokalen Einstellungen: Debug-Flags final setzen
-TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG
 # Sorl Thumbnail image processing
 # http://sorl-thumbnail.readthedocs.org/
 THUMBNAIL_DEBUG = DEBUG
+
+# _nach_ dem Laden der lokalen Einstellungen: Debug-Flags final setzen
+TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG
+if not DEBUG:
+    # TODO: nach Django 1.10 wird der cached.Loader im nicht-Debug-Modus automatisch aktiviert.
+    #       Dann koennen wir diese 'loaders'-Definition und die APP_DIRS-Korrektur entfernen.
+    del TEMPLATES[0]["APP_DIRS"]
+    TEMPLATES[0]["OPTIONS"]['loaders'] = [(
+        'django.template.loaders.cached.Loader', [
+            'django.template.loaders.filesystem.Loader',
+            'django.template.loaders.app_directories.Loader',
+        ],
+    )]

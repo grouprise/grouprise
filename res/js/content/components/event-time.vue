@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label class="control-label" for="event-time">Zeit</label>
+    <label class="control-label" for="event-time">Datum & Uhrzeit</label>
     <div class="controls">
       <sg-configurator id="event-time" @save="propagate" @show="configure">
         <span slot="label">{{ label }}</span>
@@ -46,7 +46,7 @@
   }
 
   const label = (start, end, allDay) => {
-    if(!start && !end) return "Zeit auswählen"
+    if(!start && !end) return '\u00A0'
 
     if(!end) {
       if(allDay) return `Am ${moment(start).format('LL')}, ganztägig`

@@ -1,11 +1,12 @@
 {
-  "version": "1.4.1",
+  "version": "1.4.4",
   "license": "AGPL-3.0",
   "engines": {
     "node": ">=4.6.1"
   },
   "scripts": {
-    "test": "standard res/**/*.js"
+    "test": "npm run lint",
+    "lint": "standard res/**/*.js"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
@@ -38,6 +39,7 @@
     "webpack-bundle-size-analyzer": "^2.5.0"
   },
   "dependencies": {
+    "autosize": "^3.0.20",
     "axios": "^0.15.3",
     "babel-runtime": "^6.20.0",
     "bel": "^4.5.0",
@@ -53,7 +55,7 @@
     "flatpickr": "^2.3.4",
     "font-awesome": "^4.5.0",
     "lodash": "^4.17.4",
-    "luett": "^2.0.0",
+    "luett": "^2.1.0",
     "moment": "^2.13.0",
     "object-assign-shim": "^1.0.0",
     "photoswipe": "^4.1.1",
@@ -64,6 +66,6 @@
     "tether-drop": "^1.4.2",
     "tether-tooltip": "^1.2.0",
     "vue": "^2.1.9",
-    "vue-clickaway": "^2.1.0"
+    "vue-on-click-outside": "^1.0.1"
   }
 }

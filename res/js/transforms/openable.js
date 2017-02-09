@@ -1,9 +1,4 @@
-import { $ } from 'luett'
-
-function on (el, event, listener, capture = false) {
-  el.addEventListener(event, listener, capture)
-  return () => el.removeListener(event, listener, capture)
-}
+import { $, on } from 'luett'
 
 function createListener (el, state) {
   const set = (value) => function () { state.isCurrent = value }
@@ -12,8 +7,8 @@ function createListener (el, state) {
   const setInactive = on(el, 'mouseleave', set(false))
 
   return () => {
-    setActive()
-    setInactive()
+    setActive.destroy()
+    setInactive.destroy()
   }
 }
 

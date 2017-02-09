@@ -2,6 +2,7 @@ RM ?= rm -f
 NPM_BIN ?= npm
 NODEJS_BIN ?= $(shell which node nodejs | head -1)
 GRUNT_BIN = node_modules/.bin/grunt
+STANDARD_BIN = node_modules/.bin/standard
 BUILD_PATH ?= build
 BACKUP_PATH ?= backup
 PYTHON_DIRS = content entities stadt features core utils
@@ -119,8 +120,15 @@ release-breaking release-feature release-patch:
 	git commit -m "Release $(NEXT_RELEASE)"
 	git tag -a "$(GIT_RELEASE_TAG)"
 
-test: check-virtualenv check-js-deps
+
+$(STANDARD_BIN):
+	$(MAKE) check-js-deps
+
+lint: check-virtualenv $(STANDARD_BIN)
 	python -m flake8 $(PYTHON_DIRS)
+	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run lint)
+
+test: check-virtualenv $(STANDARD_BIN)
 	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
 	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
 	@# werden, um die Verwendung einer postgres/mysql-Datenbankverbindung ohne "create"-Rechte

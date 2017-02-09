@@ -46,15 +46,6 @@
     </head>
 
     <body data-component="browser-warning" class="month-{% now "m" %}">
-        {% comment %}
-        <div class="disclaimer">
-            <div class="container">
-                <p>
-                    Stadtgestalten ist noch <strong>ganz neu</strong>. Bei Fragen oder Verbesserungsvorschlägen <a href="{{ about_group.get_absolute_url }}">schreib uns</a>!
-                </p>
-            </div>
-        </div>
-        {% endcomment %}
         {% block body %}{% endblock %}
         <script src="{% static 'stadt/js/app.js' %}?v={{ asset_version }}" async defer></script>
     </body>

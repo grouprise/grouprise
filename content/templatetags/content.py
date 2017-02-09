@@ -7,7 +7,9 @@ from django.template.loader import get_template
 import markdown as python_markdown
 from markdown.extensions import nl2br, toc, sane_lists, fenced_code
 from pymdownx import magiclink
+from mdx_unimoji import UnimojiExtension
 import utils.markdown
+
 
 register = template.Library()
 
@@ -18,6 +20,7 @@ markdown_extensions = (
     sane_lists.SaneListExtension(),
     fenced_code.FencedCodeExtension(),
     utils.markdown.CuddledListExtension(),
+    UnimojiExtension()
 )
 
 content_allowed_tags = (
@@ -92,6 +95,19 @@ def preview(events):
         for e in events])
 
 
+def parse_token_args(args, filterval=lambda value: value):
+    result_kwargs = {}
+    result_args = []
+
+    for arg in args:
+        if '=' in arg:
+            name, value = arg.split('=')
+            result_kwargs[name] = filterval(value)
+        else:
+            result_args.append(filterval(arg))
+    return result_args, result_kwargs
+
+
 def _setup_macros_dict(parser):
     # Metadata of each macro are stored in a new attribute
     # of 'parser' class. That way we can access it later
@@ -108,14 +124,7 @@ class DefineMacroNode(template.Node):
 
         self.name = name
         self.nodelist = nodelist
-        self.args = []
-        self.kwargs = {}
-        for a in args:
-            if "=" not in a:
-                self.args.append(a)
-            else:
-                name, value = a.split("=")
-                self.kwargs[name] = value
+        self.args, self.kwargs = parse_token_args(args)
 
     def render(self, context):
         # empty string - {% macro %} tag does no output
@@ -210,17 +219,6 @@ def do_usemacro(parser, token):
         m = "Macro '%s' is not defined" % macro_name
         raise template.TemplateSyntaxError(m)
 
-    fe_kwargs = {}
-    fe_args = []
-
-    for val in values:
-        if "=" in val:
-            # kwarg
-            name, value = val.split("=")
-            fe_kwargs[name] = FilterExpression(value, parser)
-        else:  # arg
-            # no validation, go for it ...
-            fe_args.append(FilterExpression(val, parser))
-
+    fe_args, fe_kwargs = parse_token_args(values, lambda value: FilterExpression(value, parser))
     macro.parser = parser
     return UseMacroNode(macro, fe_args, fe_kwargs)

@@ -1,4 +1,4 @@
-import { $, $$, getAttr } from 'luett'
+import { $, $$, getAttr, mapCall, toggleClass } from 'luett'
 import delegate from 'delegate'
 import { range } from 'lodash'
 import stroll from 'stroll.js'
@@ -31,7 +31,7 @@ function attachIndex (el, opts, numberOfSlides) {
 
   el.insertAdjacentHTML('beforeend', `
         <ol class="${opts.cssIndex}">
-            ${range(1, Math.min(numberOfSlides + 1, 5)).map(idx => `
+            ${range(1, Math.min(numberOfSlides + 1, 11)).map(idx => `
                 <li>
                     <button type="button" class="${opts.cssIndexBtn}" data-carousel-index="${idx}"></button>
                 </li>
@@ -70,6 +70,9 @@ function carousel (root, options) {
 
     root.classList.toggle(conf.cssSlidesFirst, idx === 1)
     root.classList.toggle(conf.cssSlidesLast, idx === getNumberOfSlides())
+
+    mapCall($$(`.${conf.cssIndexBtn}`, root), toggleClass, conf.cssIndexBtnCurrent, false)
+    mapCall($$(`.${conf.cssIndex} > :nth-child(${idx}) .${conf.cssIndexBtn}`), toggleClass, conf.cssIndexBtnCurrent, true)
 
     const eventData = { index: idx, carousel: crsl, slide }
 
@@ -135,11 +138,13 @@ function carousel (root, options) {
 
     // set first slide as current but wait for carousel to return
   setTimeout(() => iface.showSlide(currentSlide), 0)
+  setTimeout(() => root.classList.add(conf.cssReady), 10)
 
   return iface
 }
 
 carousel.DEFAULTS = {
+  cssReady: 'carousel-ready',
   cssCurrent: 'carousel-current',
   cssSlides: 'carousel-slides',
   cssSlidesFirst: 'carousel-first',
@@ -151,7 +156,8 @@ carousel.DEFAULTS = {
   cssNavBtnNext: 'carousel-btn-next',
   cssCarousel: 'carousel',
   cssIndex: 'carousel-index',
-  cssIndexBtn: 'carousel-btn-index'
+  cssIndexBtn: 'carousel-btn-index',
+  cssIndexBtnCurrent: 'carousel-btn-index-current'
 }
 
 export default carousel

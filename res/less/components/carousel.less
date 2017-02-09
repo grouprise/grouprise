@@ -44,46 +44,50 @@
 }
 
 .carousel-btn {
-    background-color: rgba(0, 0, 0, .65);
-    color: white;
+    background-color: white;
     border-radius: 50%;
-    border: 2px solid rgba(0, 0, 0, .65);
+    border: 2px solid rgba(21, 21, 21, 0.25);
+    color: rgba(21, 21, 21, 0.5);
     width: 3rem;
     height: 3rem;
     padding: 0;
     margin: 0;
     position: relative;
-    display: block;
     transition: border-color .2s, opacity .2s;
+    justify-content: center;
+    align-items: center;
+    display: none;
 
     &:hover,
     &:focus,
     &:active {
         outline: none;
         border-color: @brand-primary;
+    }
 
+    .carousel-ready & {
+        display: flex;
     }
 }
 
 .carousel-btn-icon {
     .fa();
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
     font-size: 1.3rem;
+    line-height: 1;
 
     &:before {
         position: relative;
+        top: 1px;
     }
 
     .carousel-btn-prev > &:before {
-        content: @fa-var-chevron-left;
         left: -2px;
+        content: @fa-var-chevron-left;
     }
 
     .carousel-btn-next > &:before {
-        content: @fa-var-chevron-right;
         left: 2px;
+        content: @fa-var-chevron-right;
     }
 }
 
@@ -120,7 +124,8 @@
 
     &:hover,
     &:focus,
-    &:active {
+    &:active,
+    &.carousel-btn-index-current {
         outline: none;
         background-color: @color-text-ultralight;
     }

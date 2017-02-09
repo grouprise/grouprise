@@ -1,5 +1,5 @@
 {% extends 'stadt/list.html' %}
-{% load rules %}
+{% load rules dismissible %}
 
 {% block heading_toolbar %}
     {% has_perm 'account.signup' user as can_signup %}
@@ -15,8 +15,10 @@
 {% block list_header %}
     {% if not group %}
         {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
+        {% dismissible 'gestalt-profile-visibility' %}
         <div class="disclaimer disclaimer-standalone">
-            Von den {{ gestalt_count }} <em>Gestalten</em> wirst du hier nicht alle finden. Jede <em>Gestalt</em> entscheidet
+            {% dismiss 'gestalt-profile-visibility' %}
+            Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> entscheidet
         für sich, ob sie ein öffentliches Profil haben möchte. Du kannst diese Einstellung in
             {% if can_edit %}
                 <a href="{% url 'gestalt-update' request.user.gestalt.pk %}">
@@ -26,6 +28,7 @@
                 deinem Profil ändern.
             {% endif %}
         </div>
+        {% enddismissible %}
     {% endif %}
 {% endblock %}
 
