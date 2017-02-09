@@ -36,13 +36,7 @@
         <link rel="icon" href="{% static "stadt/img/logos/logo_192.png" %}?v={{ asset_version }}" sizes="192x192" type="image/png">
 
         <script>document.documentElement.setAttribute("class", "js");</script>
-        <script type="application/json" id="app-configuration">
-            {
-                "gestalt": {
-                    "id": {{ user.gestalt.pk|default:"null" }}
-                }
-            }
-        </script>
+        <script type="application/json" id="app-configuration">{% app_config %}</script>
     </head>
 
     <body data-component="browser-warning" class="month-{% now "m" %}">

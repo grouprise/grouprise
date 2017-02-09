@@ -1,8 +1,9 @@
-from core import fragments
 from django import template
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.utils import safestring
+from core import fragments
+from core.views import app_config
 
 register = template.Library()
 
@@ -36,6 +37,11 @@ def full_url(path):
             proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
             domain=sites_models.Site.objects.get_current().domain,
             path=path)
+
+
+@register.simple_tag(name='app_config')
+def render_app_config():
+    return safestring.mark_safe(app_config.serialize())
 
 
 @register.simple_tag(takes_context=True)
