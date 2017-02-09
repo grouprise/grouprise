@@ -14,7 +14,10 @@ def validate_reservation(value):
 class AutoSlugField(models.SlugField):
     def __init__(self, *args, **kwargs):
         self.populate_from = kwargs.pop('populate_from')
-        self.reserve = kwargs.pop('reserve')
+        try:
+            self.reserve = kwargs.pop('reserve')
+        except KeyError:
+            self.reserve = []
         kwargs['validators'] = [validate_reservation]
         super().__init__(*args, **kwargs)
 

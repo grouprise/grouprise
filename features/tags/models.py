@@ -1,16 +1,20 @@
+from core import models
 from django.contrib.contenttypes import fields as contenttypes
-from django.db import models
+from django.db import models as django
 
 
-class Tagged(models.Model):
-    name = models.CharField(max_length=255)
-
-    tagged = contenttypes.GenericForeignKey('tagged_type', 'tagged_id')
-    tagged_id = models.PositiveIntegerField()
-    tagged_type = models.ForeignKey('contenttypes.ContentType')
-
-    class Meta:
-        ordering = ('name',)
+class Tag(django.Model):
+    name = django.CharField(max_length=255)
+    slug = models.AutoSlugField(populate_from='name', unique=True)
 
     def __str__(self):
         return self.name
+
+
+class Tagged(django.Model):
+    name = django.CharField(max_length=255)
+    #tag = django.ForeignKey('Tag')
+
+    tagged = contenttypes.GenericForeignKey('tagged_type', 'tagged_id')
+    tagged_id = django.PositiveIntegerField()
+    tagged_type = django.ForeignKey('contenttypes.ContentType')
