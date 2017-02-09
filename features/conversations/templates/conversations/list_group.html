@@ -1,0 +1,7 @@
+{% extends 'conversations/list.html' %}
+
+{% block breadcrumb %}{% breadcrumb view.group 'Gespräche' %}{% endblock %}
+
+{% block sidebar %}
+    {% include 'entities/_sidebar_group.html' with group=view.group %}
+{% endblock %}

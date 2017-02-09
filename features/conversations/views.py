@@ -2,6 +2,7 @@ from . import forms
 from core.views import base
 from django import shortcuts
 from django.conf import settings
+from django.contrib.contenttypes import models as contenttypes
 from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
@@ -64,6 +65,8 @@ class Conversations(base.PermissionMixin, generic.ListView):
 
 
 class GroupConversations(Conversations):
+    template_name = 'conversations/list_group.html'
+
     def get(self, *args, **kwargs):
         self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
         return super().get(*args, **kwargs)

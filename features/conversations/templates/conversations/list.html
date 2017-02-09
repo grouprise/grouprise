@@ -1,13 +1,11 @@
 {% extends 'stadt/list.html' %}
 
 {% block title %}Gespräche - {{ site.name }}{% endblock %}
+{% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block heading_title %}<h1 class="content-classification">Gespräche</h1>{% endblock %}
 
-{% block heading_title %}
-<h1 class="content-classification">Gespräche</h1>
-{% endblock %}
-
-{% block breadcrumb %}
-    {% breadcrumb view.group 'Gespräche' %}
+{% block sidebar %}
+{#{% include 'events/_sidebar2.html' with events=all_events %}#}
 {% endblock %}
 
 {% block list %}
@@ -18,10 +16,4 @@
             </li>
         {% endfor %}
     </ol>
-{% endblock %}
-
-{% block sidebar %}
-    {% if view.group %}
-        {% include 'entities/_sidebar_group.html' with group=view.group %}
-    {% endif %}
 {% endblock %}
