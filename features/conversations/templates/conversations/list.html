@@ -1,4 +1,5 @@
-{% extends 'stadt/list.html' %}
+{% extends 'stadt/stadt.html' %}
+{% load dismissible %}
 
 {% block title %}Gespräche - {{ site.name }}{% endblock %}
 {% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
@@ -9,7 +10,20 @@
     {% include 'groups/_sidebar_list.html' %}
 {% endblock %}
 
-{% block list %}
+{% block content %}
+    {% dismissible 'conversation-list-create' %}
+        <div class="disclaimer content-block">
+            {% dismiss 'conversation-list-create' %}
+            {% if not user.is_authenticated %}
+                <p>Gespräche sind nicht öffentlich und daher nur für <a href="{% url 'account_login' %}">angemeldete Gestalten</a> sichtbar.</p>
+            {% endif %}
+            <p>Um ein neues Gespräch zu beginnen, wähle auf der Seite einer <a href="{% url 'group-index' %}">Gruppe</a> oder <a href="{% url 'gestalt-index' %}">Gestalt</a> die Schaltfläche <em>Nachricht schreiben</em> oder <em>Neues Gespräch</em>.</p>
+            {% if user.is_authenticated %}
+                <p>Außerdem kannst Du bei vielen Gestalten auf ihr <em>Symbol (Avatar)</em> klicken, um ein persönliches Gespräch mit ihnen zu beginnen.</p>
+            {% endif %}
+        </div>
+    {% enddismissible %}
+    
     <ol class="thread-preview-list">
         {% for association in association_list %}
             <li>
