@@ -11,8 +11,11 @@ class Tag(models.Model):
 
 
 class Tagged(models.Model):
-    tag = models.ForeignKey('Tag')
+    tag = models.ForeignKey('Tag', related_name='tagged')
 
     tagged = contenttypes.GenericForeignKey('tagged_type', 'tagged_id')
     tagged_id = models.PositiveIntegerField()
     tagged_type = models.ForeignKey('contenttypes.ContentType')
+
+    class Meta:
+        ordering = ('tag__name',)

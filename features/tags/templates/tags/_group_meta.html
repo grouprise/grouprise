@@ -5,7 +5,7 @@
     </dt>
     <dd>
         {% for tag in group.tags.all %}
-            <a href="{% url 'tag' tag.pk %}">{{ tag }}</a>{% if not forloop.last %},{% endif %}
+            <a href="{% url 'tag' tag.tag.pk %}">{{ tag.tag }}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
     </dd>
 {% endif %}
