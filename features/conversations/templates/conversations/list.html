@@ -5,7 +5,8 @@
 {% block heading_title %}<h1 class="content-classification">Gespräche</h1>{% endblock %}
 
 {% block sidebar %}
-{#{% include 'events/_sidebar2.html' with events=all_events %}#}
+    {% include 'events/_sidebar2.html' with events=all_events %}
+    {% include 'groups/_sidebar_list.html' %}
 {% endblock %}
 
 {% block list %}
