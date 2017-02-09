@@ -9,6 +9,7 @@ class Created(notifications.Notification):
 
     def get_recipients(self):
         recipients = set(self.text.container.get_authors())
+        recipients.update(set(self.text.container.get_gestalten()))
         for group in self.text.container.get_groups():
             recipients.update(set(gestalten.Gestalt.objects.filter(
                 memberships__group=group)))

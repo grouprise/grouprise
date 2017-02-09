@@ -131,8 +131,7 @@ class Group(utils_views.List):
             return pinned_content
 
     def get_queryset(self):
-        return self.get_group_content().filter(groupcontent__pinned=False).exclude(
-                article__isnull=False, public=False)
+        return self.get_group_content().filter(groupcontent__pinned=False)
 
     def get_related_object(self):
         return self.get_group()
