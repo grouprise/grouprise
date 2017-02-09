@@ -36,7 +36,7 @@ GIT_RELEASE_TAG = v$(NEXT_RELEASE)
 .PHONY: asset_version cache_version check-virtualenv clean database-backup \
 	database-restore default deploy deploy-git release-breaking \
 	release-feature release-patch reload static update-virtualenv test \
-	website-offline website-online
+	website-offline website-online lint
 
 asset_version:
 	git log --oneline res | head -n 1 | cut -f 1 -d " " > $(ASSET_VERSION_PATH)
@@ -128,7 +128,7 @@ lint: check-virtualenv $(STANDARD_BIN)
 	python -m flake8 $(PYTHON_DIRS)
 	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run lint)
 
-test: check-virtualenv $(STANDARD_BIN)
+test: lint check-virtualenv $(STANDARD_BIN)
 	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
 	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
 	@# werden, um die Verwendung einer postgres/mysql-Datenbankverbindung ohne "create"-Rechte
