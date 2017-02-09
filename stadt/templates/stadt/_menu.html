@@ -20,7 +20,11 @@
                     {% elif view.group %}
                         {{ view.group }} /
                     {% endif %}
-                    {{ user.gestalt|default:"Du" }}
+                    {% if user.is_authenticated %}
+                        {{ user.gestalt }}
+                    {% else %}
+                        Du
+                    {% endif %}
                     <i class="caret"></i>
                 </span>
             </label>
