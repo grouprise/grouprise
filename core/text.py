@@ -8,8 +8,10 @@ def no_validator(arg):
     pass
 
 
-def slugify(model, field, value, validator=no_validator):
+def slugify(model, field, value, validator=no_validator, dodging=True):
     orig_slug = slug = text.slugify(codecs.encode(value, 'translit/long'))[:45]
+    if not dodging:
+        return slug
     i = 0
     while True:
         try:

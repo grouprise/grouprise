@@ -1,7 +1,7 @@
+from core import text
 from django.contrib.contenttypes import models as contenttypes_models
 from django.core import exceptions
 from django.db import models
-from utils import text
 
 
 def validate_reservation(value):
@@ -13,11 +13,13 @@ def validate_reservation(value):
 
 class AutoSlugField(models.SlugField):
     def __init__(self, *args, **kwargs):
+        self.dodging = True
+        if 'dodging' in kwargs:
+            self.dodging = kwargs.pop('dodging')
         self.populate_from = kwargs.pop('populate_from')
-        try:
+        self.reserve = []
+        if 'reserve' in kwargs:
             self.reserve = kwargs.pop('reserve')
-        except KeyError:
-            self.reserve = []
         kwargs['validators'] = [validate_reservation]
         super().__init__(*args, **kwargs)
 
@@ -32,7 +34,7 @@ class AutoSlugField(models.SlugField):
             value = text.slugify(
                     type(model_instance), self.attname,
                     getattr(model_instance, self.populate_from),
-                    validate_reservation)
+                    validate_reservation, self.dodging)
             setattr(model_instance, self.attname, value)
             return value
         else:

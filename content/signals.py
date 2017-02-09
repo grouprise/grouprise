@@ -1,7 +1,7 @@
 from . import models
+from core import text
 from django import dispatch
 from django.db.models import signals
-from utils import text
 
 
 @dispatch.receiver(signals.pre_save, sender=models.Article)
