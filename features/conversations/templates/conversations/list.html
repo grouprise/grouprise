@@ -27,7 +27,7 @@
     <ol class="thread-preview-list">
         {% for association in association_list %}
             <li>
-                {% include 'conversations/_preview.html' %}
+                {% include 'conversations/_preview.html' with group_avatar=True %}
             </li>
         {% endfor %}
     </ol>

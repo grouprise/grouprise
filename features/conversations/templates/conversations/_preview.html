@@ -5,7 +5,11 @@
 {% with c=association.container %}
     <a href="{% url 'conversation' association.pk %}" class="thread-preview">
         <div class="thread-preview-image">
-            {% include 'entities/_gestalt_avatar.html' with gestalt=c.texts.first.author link=False size=64 %}
+            {% if group_avatar and association.entity.is_group %}
+                {% include 'entities/_group_avatar.html' with group=association.entity link=False size=64 %}
+            {% else %}
+                {% include 'entities/_gestalt_avatar.html' with gestalt=c.texts.first.author link=False size=64 %}
+            {% endif %}
         </div>
         <div class="thread-preview-body">
             <div class="thread-preview-title">
