@@ -72,5 +72,5 @@ class Reply(forms.ModelForm):
         self.helper = helper.FormHelper()
         self.helper.form_show_labels = False
         self.helper.layout = layout.Layout(
-                layout.Field('text', rows=3, **{'data-component': 'keysubmit autosize'}),
+                layout.Field('text', rows=3, **{'data-component': 'keysubmit autosize cite cite-sink'}),
                 utils_forms.Submit('Antworten'))

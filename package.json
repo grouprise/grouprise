@@ -54,6 +54,7 @@
     "eventemitter3": "^1.2.0",
     "flatpickr": "^2.3.4",
     "font-awesome": "^4.5.0",
+    "get-input-selection": "^1.1.4",
     "lodash": "^4.17.4",
     "luett": "^2.1.0",
     "moment": "^2.13.0",

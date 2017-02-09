@@ -2,8 +2,8 @@ import { $, setAttr, getAttr, hasAttr } from 'luett'
 import Drop from 'tether-drop'
 import bel from 'bel'
 import closest from 'closest'
-import delegate from 'delegate'
 
+import { EVENT_CITE } from './cite'
 import editorImages from '../components/editor-image'
 
 const imageEditor = editorImages()
@@ -18,6 +18,7 @@ function quote (text) {
 function editor (CodeMirror, SimpleMDE, el, opts) {
   CodeMirror.defaults.inputStyle = 'textarea'
 
+  const { bus } = opts.conf;
   const isRequired = hasAttr(el, 'required')
   const form = closest(el, 'form')
   const editor = new SimpleMDE({
@@ -156,13 +157,8 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     })
   })
 
-  const clickListener = delegate(document.body, "[data-component='cite']", 'click', function (event) {
-    event.preventDefault()
-    const target = $(`${event.delegateTarget.getAttribute('href')} .media-body`)
-    const author = getAttr(target, 'data-author')
-    const permalink = getAttr(target, 'data-permalink')
-    const text = target.innerText + (author ? `\n — [${author}](${permalink})` : '')
-    editor.codemirror.doc.replaceSelection(quote(text))
+  const citeListener = bus.on(EVENT_CITE, data => {
+    editor.codemirror.doc.replaceSelection(quote(data.formattedText))
   })
 
   if (isRequired) {
@@ -174,7 +170,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     remove: () => {
       if (isRequired) setAttr(el, 'required', 'required')
       editor.toTextArea()
-      clickListener.destroy()
+      citeListener.destroy()
     }
   }
 }

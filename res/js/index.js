@@ -24,6 +24,7 @@ import publish from './transforms/publish'
 import eventTime from './transforms/event-time'
 import dismissible from './transforms/dismissible'
 import autosize from './transforms/autosize'
+import cite from './transforms/cite'
 
 function init (searchIn = document) {
   const bus = PubSub()
@@ -48,6 +49,7 @@ function init (searchIn = document) {
   component('event-time', eventTime, opts)
   component('dismissible', dismissible, opts)
   component('autosize', autosize, opts)
+  component('cite', cite, opts)
 
   // initialize components not based on component interface
   mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
