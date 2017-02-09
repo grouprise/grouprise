@@ -63,19 +63,15 @@ class Conversations(base.PermissionMixin, generic.ListView):
         return super().get_queryset().ordered_conversations(self.request.user)
 
 
-class GroupConversations(base.PermissionMixin, generic.ListView):
-    model = associations.Association
-    permission_required = 'conversations.list'
-    template_name = 'conversations/list.html'
-    paginate_by = 10
-
+class GroupConversations(Conversations):
     def get(self, *args, **kwargs):
         self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
         return super().get(*args, **kwargs)
 
     def get_queryset(self):
-        return super().get_queryset().ordered_group_conversations(
-                self.request.user, self.group)
+        return super().get_queryset().filter(
+            entity_type=contenttypes.ContentType.objects.get_for_model(self.group),
+            entity_id=self.group.id)
 
 
 class CreateConversation(
