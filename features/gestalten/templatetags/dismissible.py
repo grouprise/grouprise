@@ -57,8 +57,7 @@ class DismissibleNode(template.Node):
             gestalt = context['user'].gestalt
             setting = GestaltSetting.objects.get(gestalt=gestalt, name=self.name)
             should_render = setting.value != 'dismissed'
-        except (AttributeError, KeyError, models.ObjectDoesNotExist) as e:
-            print(type(e), e)
+        except (AttributeError, KeyError, models.ObjectDoesNotExist):
             should_render = True
 
         if should_render:
