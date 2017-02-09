@@ -37,13 +37,11 @@ class GestaltSettingSerializer(serializers.ModelSerializer):
 
 class GestaltSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GestaltSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get_queryset(self):
         user = self.request.user
-        try:
-            return models.Gestalt.objects.filter(pk=user.gestalt.pk)
-        except AttributeError:
-            return models.Gestalt.objects.none()
+        return models.Gestalt.objects.filter(pk=user.gestalt.pk)
 
 
 class GestaltSettingSet(viewsets.ModelViewSet):
