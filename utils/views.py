@@ -220,14 +220,6 @@ class PermissionMixin(rules_views.PermissionRequiredMixin):
         return False
 
 
-class SidebarMixin:
-    sidebar = ('calendar', 'groups')
-
-    def get_context_data(self, **kwargs):
-        kwargs['sidebar'] = self.sidebar
-        return super().get_context_data(**kwargs)
-
-
 class TemplateMixin:
     ignore_base_templates = False
 
@@ -274,7 +266,6 @@ class ActionMixin(
         MessageMixin,
         NavigationMixin,
         PermissionMixin,
-        SidebarMixin,
         TemplateMixin,
         TitleMixin,
         ):
@@ -290,7 +281,6 @@ class PageMixin(
         NavigationMixin,
         PaginationMixin,
         PermissionMixin,
-        SidebarMixin,
         TemplateMixin,
         TitleMixin,
         ):
