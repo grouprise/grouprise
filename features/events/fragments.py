@@ -1,6 +1,6 @@
 from core import fragments
 
-fragments.register('sidebar-calendar', 'events/_sidebar.html')
+fragments.register('sidebar-calendar', 'events/_group_sidebar.html')
 
 fragments.insert(
         'sidebar-calendar',

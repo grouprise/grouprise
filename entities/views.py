@@ -81,13 +81,11 @@ class Group(utils_views.List):
         return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['calendar_events'] = self.get_events().around()
         kwargs['intro_content'] = self.get_intro_content()
-        kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
     def get_events(self):
-        return content_models.Event.objects.permitted(self.request.user).filter(
+        return content_models.Event.objects.can_view(self.request.user).filter(
                 groups=self.get_group())
 
     def get_group_content(self):

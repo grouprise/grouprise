@@ -68,11 +68,14 @@ def calendar(context, user, events=None, add_to_month=0, size='preview'):
             }
 
 
-@register.inclusion_tag('events/_sidebar2.html')
-def sidebar_calendar(user):
+@register.inclusion_tag('events/_sidebar_calendar.html')
+def sidebar_calendar(user=None, events=None, preview_length=5, show_group=True):
+    if not events:
+        events = content.Event.objects.can_view(user)
     return {
-            'events': content.Event.objects.can_view(user),
-            'preview_length': 5,
+            'events': events,
+            'preview_length': preview_length,
+            'show_group': show_group,
             }
 
 

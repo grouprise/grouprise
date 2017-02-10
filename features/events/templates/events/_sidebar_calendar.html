@@ -22,7 +22,7 @@
                                             {{ event.time }}
                                         </time>:
                                         <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
-                                        {% if not group and event.groupcontent %}
+                                        {% if show_group %}
                                             &middot;
                                             <a href="{{ event.groupcontent.group.get_absolute_url }}">{{ event.groupcontent.group }}</a>
                                         {% endif %}
