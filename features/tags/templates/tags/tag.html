@@ -6,32 +6,51 @@
 {% block heading_title %}<h2 class="content-classification">Gruppen</h2>{% endblock %}
 
 {% block sidebar %}
-    {% include 'tags/_sidebar.html' with tag=tag %}
     {% include 'events/_sidebar2.html' with events=view.get_events hide_buttons=True %}
 {% endblock %}
 
-{% block content %}
-    {# groups #}
-    <ol class="groups">
-        {% for tag in view.get_group_tags %}
-            <li>
-                {% include 'groups/_preview.html' with group=tag.tagged link=True %}
-            </li>
-        {% endfor %}
-    </ol>
-    
-    {# content #}
+{% block heading %}
     <div class="content-header">
-        <h2 class="content-classification">Beiträge</h2>
+        <h2 class="content-classification">#{{ tag.name }}</h2>
+        <span class="decoration-icon sg-tags" role="presentation"></span>
     </div>
-    {% with page_obj=view.get_content_page %}
-        <div class="content-list">
-            <ol class="content-preview-list">
-                {% for content in page_obj.object_list %}
-                    <li>{% include 'content/_content_preview.html' %}</li>
+{% endblock %}
+
+{% block content %}
+    {% if no_data %}
+        <p>Für dieses Schlagwort wurden noch keine Inhalte eingestellt</p>
+    {% else %}
+        {% with tagged_groups=view.get_group_tags tagged_content=view.get_content_page.object_list %}
+            <p>
+                Wir haben {% if tagged_groups|length == 1 %}eine Gruppe{% else %}{{ tagged_groups|length }} Gruppen{% endif %} und
+                {% if tagged_content|length == 1 %}einen Beitrag{% else %}{{ tagged_content|length }} Beiträge{% endif %} für
+                das Schlagwort „{{ tag.name }}“ auf Stadtgestalten.
+            </p>
+
+            {# groups #}
+            <div class="content-header">
+                <h2 class="content-classification">Gruppen</h2>
+            </div>
+            <ol class="groups">
+                {% for tag in tagged_groups %}
+                    <li>
+                        {% include 'groups/_preview.html' with group=tag.tagged link=True %}
+                    </li>
                 {% endfor %}
             </ol>
-            {% include 'core/_pagination.html' %}
-        </div>
-    {% endwith %}
+
+            {# content #}
+            <div class="content-header">
+                <h2 class="content-classification">Beiträge</h2>
+            </div>
+            <div class="content-list">
+                <ol class="content-preview-list">
+                    {% for content in tagged_content %}
+                        <li>{% include 'content/_content_preview.html' %}</li>
+                    {% endfor %}
+                </ol>
+                {% include 'core/_pagination.html' %}
+            </div>
+        {% endwith %}
+    {% endif %}
 {% endblock %}
