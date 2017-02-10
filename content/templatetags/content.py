@@ -17,6 +17,7 @@ markdown_extensions = (
     magiclink.MagiclinkExtension(),
     nl2br.Nl2BrExtension(),
     utils.markdown.GroupReferenceExtension(),
+    utils.markdown.GroupEnabledLinkExtension(),
     sane_lists.SaneListExtension(),
     fenced_code.FencedCodeExtension(),
     utils.markdown.CuddledListExtension(),
@@ -38,7 +39,7 @@ content_allowed_tags = (
 
 content_allowed_attributes = {
     '*': 'title',
-    'a': ['href'],
+    'a': ['href', 'title', 'data-component', 'data-grouplink-ref'],
     'code': ['class'],
     'img': ['src', 'alt']
 }
