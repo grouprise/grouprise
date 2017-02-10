@@ -1,5 +1,6 @@
 import calendar as python_calendar
 import datetime
+from content import models as content
 from django import template
 from django.core import urlresolvers
 import itertools
@@ -50,7 +51,7 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
         return [self.formatweekday(i) for i in self.iterweekdays()]
 
 
-@register.inclusion_tag('calendar/_calendar.html', takes_context=True)
+@register.inclusion_tag('events/_calendar.html', takes_context=True)
 def calendar(context, events, size='preview'):
     c = Calendar(events)
     return {
@@ -59,6 +60,14 @@ def calendar(context, events, size='preview'):
             'group': context.get('group'),
             'month': c.formatmonthname(c.today.year, c.today.month),
             'weeks': c.formatmonthweeks(c.today.year, c.today.month),
+            }
+
+
+@register.inclusion_tag('events/_sidebar2.html')
+def sidebar_calendar(user):
+    return {
+            'events': content.Event.objects.can_view(user),
+            'preview_length': 5,
             }
 
 

@@ -1,7 +1,12 @@
 {% extends 'stadt/list.html' %}
-{% load rules dismissible %}
+{% load events groups rules dismissible %}
 
 {% block heading %}{% endblock %}
+
+{% block sidebar %}
+    {% sidebar_calendar user %}
+    {% sidebar_groups user %}
+{% endblock %}
 
 {% block list_header %}
     {% dismissible 'stadtgestalten-intro' %}
