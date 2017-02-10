@@ -3,7 +3,7 @@ from django.conf import urls
 
 urlpatterns = [
     urls.url(
-        r'^tags/(?P<pk>[0-9]+)/$',
+        r'^tags/(?P<slug>[-\w]+)/$',
         views.Tag.as_view(),
         name='tag'),
 ]
