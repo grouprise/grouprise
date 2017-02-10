@@ -1,0 +1,50 @@
+{% extends 'stadt/stadt.html' %}
+{% load dismissible events groups rules %}
+
+{% block title %}Gestalten - {{ site.name }}{% endblock %}
+{% block menu %}{% with menu='gestalt' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block heading_title %}<h2 class="content-classification">Gestalten</h2>{% endblock %}
+
+{% block heading_toolbar %}
+    {% has_perm 'account.signup' user as can_signup %}
+    {% if can_signup %}
+        <a href="{% url 'account_signup' %}" class="btn btn-ch">
+            <span class="btn-label">
+                Registrieren
+            </span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% sidebar_calendar user %}
+    {% sidebar_groups user %}
+{% endblock %}
+
+{% block content %}
+    {% has_perm 'entities.change_gestalt' user user.gestalt as can_edit %}
+    {% dismissible 'gestalt-profile-visibility' %}
+    <div class="disclaimer disclaimer-standalone">
+        {% dismiss 'gestalt-profile-visibility' %}
+        Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> entscheidet
+    für sich, ob sie ein öffentliches Profil haben möchte. Du kannst diese Einstellung in
+        {% if can_edit %}
+            <a href="{% url 'gestalt-update' user.gestalt.pk %}">
+                deinem Profil ändern.
+            </a>
+        {% else %}
+            deinem Profil ändern.
+        {% endif %}
+    </div>
+    {% enddismissible %}
+
+    <ol class="profiles">
+        {% for gestalt in gestalt_list %}
+            <li>
+                {% include 'entities/_gestalt_preview.html' with gestalt=gestalt link=True %}
+            </li>
+        {% endfor %}
+    </ol>
+
+    {% pagination 'Weitere Gestalten' %}
+{% endblock %}
