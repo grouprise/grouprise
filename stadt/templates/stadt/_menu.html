@@ -61,7 +61,7 @@
                                         <a href="{% url 'conversations' %}" class="{% if menu|lower == 'conversation' %}nav-slide-current{% endif %}">Gespräche</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
+                                        <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
                                     </li>
                                     <li>
                                         <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
@@ -127,7 +127,7 @@
             <a href="{% url 'conversations' %}" class="{% if menu|lower == 'conversation' %}nav-menu-item-current{% endif %}">Gespräche</a>
         </li>
         <li>
-            <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
+            <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
         </li>
         <li>
             <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>

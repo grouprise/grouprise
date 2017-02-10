@@ -3,7 +3,7 @@
 
 {% block title %}Gestalten - {{ site.name }}{% endblock %}
 {% block menu %}{% with menu='gestalt' %}{{ block.super }}{% endwith %}{% endblock %}
-{% block heading_title %}<h2 class="content-classification">Gestalten</h2>{% endblock %}
+{% block heading_title %}<h1 class="content-classification">Gestalten</h1>{% endblock %}
 
 {% block heading_toolbar %}
     {% has_perm 'account.signup' user as can_signup %}

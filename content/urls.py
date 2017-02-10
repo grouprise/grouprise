@@ -3,7 +3,6 @@ from django.conf import urls
 
 
 urlpatterns = [
-    urls.url(r'^article/$', views.ArticleList.as_view(), name='article-index'),
     urls.url(r'^article/add/$', creation.Article.as_view(), name='article-create'),
     urls.url(
         r'^content/(?P<content_pk>[0-9]+)/comment/add/$',
