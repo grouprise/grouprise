@@ -21,7 +21,6 @@ urlpatterns = [
         views.ContentUpdate.as_view(),
         name='content-update'),
     urls.url(r'^content/(?P<pk>[0-9]+)/$', views.Content.as_view(), name='internal-content'),
-    urls.url(r'^event/$', views.EventList.as_view(), name='event-index'),
     urls.url(r'^event/add/$', creation.Event.as_view(), name='event-create'),
     urls.url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventUpdate.as_view(), name='event-update'),
     urls.url(

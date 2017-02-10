@@ -52,14 +52,19 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 
 
 @register.inclusion_tag('events/_calendar.html', takes_context=True)
-def calendar(context, events, size='preview'):
+def calendar(context, user, events=None, add_to_month=0, size='preview'):
+    around = datetime.date.today()
+    for i in range(add_to_month):
+        around = around.replace(day=1) + datetime.timedelta(days=32)
+    if not events:
+        events = content.Event.objects.can_view(user).around(around)
     c = Calendar(events)
     return {
             'size': size,
             'days': c.formatweekheader(),
             'group': context.get('group'),
-            'month': c.formatmonthname(c.today.year, c.today.month),
-            'weeks': c.formatmonthweeks(c.today.year, c.today.month),
+            'month': c.formatmonthname(around.year, around.month),
+            'weeks': c.formatmonthweeks(around.year, around.month),
             }
 
 

@@ -9,7 +9,7 @@
             </h2>
         </header>
         <div class="box-content">
-            {% calendar events.around %}
+            {% calendar user events.around %}
 
             {% with preview_length=preview_length|default:3 %}
                 {% with upcoming_events=events|upcoming_events:preview_length %}
@@ -37,7 +37,7 @@
 
         {% if not hide_buttons %}
             <div class="btn-toolbar btn-toolbar-right">
-                <a href="{% url 'event-index' %}" class="btn btn-link">Alle Ereignisse</a>
+                <a href="{% url 'events' %}" class="btn btn-link">Alle Ereignisse</a>
                 <a href="{% url 'event-create' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-link">
                     Neues Ereignis
                 </a>
