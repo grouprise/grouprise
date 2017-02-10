@@ -1,10 +1,13 @@
 import re
 import markdown
 from markdown import blockprocessors, inlinepatterns, util
+from django.utils.text import slugify
+from django.core import urlresolvers
 from features.groups import models as groups
 
 RE_GROUP_REF = r'@([a-zA-Z_-]+)'
 RE_GROUPLINK_REF = r'\[@([a-zA-Z_-]+)\](\(([^\)]+)\))?'
+RE_TAG_REF = r'#([a-zA-Z0-9_-]+)'
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):
@@ -105,3 +108,15 @@ class GroupEnabledLinkPattern(inlinepatterns.LinkPattern):
 class GroupEnabledLinkExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns['link'] = GroupEnabledLinkPattern(inlinepatterns.LINK_RE, md)
+
+
+class TagReferencePattern(inlinepatterns.ReferencePattern):
+    def handleMatch(self, m):
+        name = m.group(2)
+        slug = slugify(name)
+        return self.makeTag(urlresolvers.reverse('tag', args=[slug]), None, '#%s' % name)
+
+
+class TagReferenceExtension(markdown.Extension):
+    def extendMarkdown(self, md, md_globals):
+        md.inlinePatterns['tag_reference'] = TagReferencePattern(RE_TAG_REF, md)

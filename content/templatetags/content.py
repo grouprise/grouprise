@@ -17,6 +17,7 @@ markdown_extensions = (
     magiclink.MagiclinkExtension(),
     nl2br.Nl2BrExtension(),
     utils.markdown.GroupReferenceExtension(),
+    utils.markdown.TagReferenceExtension(),
     utils.markdown.GroupEnabledLinkExtension(),
     sane_lists.SaneListExtension(),
     fenced_code.FencedCodeExtension(),
