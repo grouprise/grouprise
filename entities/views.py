@@ -33,14 +33,6 @@ class Gestalt(utils_views.List):
         return str(self.get_gestalt())
 
 
-class GestaltList(utils_views.List):
-    menu = 'gestalt'
-    permission = 'content.view_content_list'
-    queryset = gestalten.Gestalt.objects.filter(public=True).order_by('-score')
-    template_name = 'entities/gestalt_list.html'
-    title = 'Gestalten'
-
-
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Dein Profil'
     form_class = forms.Gestalt

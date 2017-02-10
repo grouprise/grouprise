@@ -3,8 +3,7 @@ from core import fields, views
 from django import db, http
 from django.contrib import messages
 from django.core import urlresolvers
-from entities import views as entities_views
-from features.gestalten import models as entities_models
+from features.gestalten import models as entities_models, views as gestalten
 from features.groups import views as groups
 from utils import views as utils_views
 
@@ -29,7 +28,7 @@ class Join(MembershipMixin, views.Create):
     template_name = 'memberships/join.html'
 
 
-class Members(MembershipMixin, entities_views.GestaltList):
+class Members(MembershipMixin, gestalten.List):
     menu = 'group'
     permission = 'memberships.list_memberships'
     related_object_mandatory = True
