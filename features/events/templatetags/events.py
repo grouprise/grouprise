@@ -56,7 +56,7 @@ def calendar(context, user, events=None, add_to_month=0, size='preview'):
     around = datetime.date.today()
     for i in range(add_to_month):
         around = around.replace(day=1) + datetime.timedelta(days=32)
-    if not events:
+    if events is None:
         events = content.Event.objects.can_view(user).around(around)
     c = Calendar(events)
     return {
@@ -70,7 +70,7 @@ def calendar(context, user, events=None, add_to_month=0, size='preview'):
 
 @register.inclusion_tag('events/_sidebar_calendar.html')
 def sidebar_calendar(user=None, events=None, preview_length=5, show_group=True):
-    if not events:
+    if events is None:
         events = content.Event.objects.can_view(user)
     return {
             'events': events,

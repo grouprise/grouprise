@@ -1,0 +1,30 @@
+{% extends 'stadt/stadt.html' %}
+{% load rules %}
+
+{% block title %}Mitglieder - {{ block.super }}{% endblock %}
+{% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb view.group 'Mitglieder' %}{% endblock %}
+{% block heading_title %}{% with title='Mitglieder' %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block heading_toolbar %}
+    {% has_perm 'memberships.create_membership' user view.group as can_create %}
+    {% if can_create %}
+        <a href="{% url 'member-create' view.group.pk %}" class="btn btn-default">Neues Mitglied</a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'entities/_sidebar_group.html' with group=view.group %}
+{% endblock %}
+
+{% block content %}
+    <ol class="profiles">
+        {% for gestalt in gestalt_list %}
+            <li>
+                {% include 'entities/_gestalt_preview.html' with gestalt=gestalt link=True %}
+            </li>
+        {% endfor %}
+    </ol>
+
+    {% pagination 'Weitere Mitglieder' %}
+{% endblock %}

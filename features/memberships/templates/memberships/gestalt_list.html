@@ -1,9 +1,0 @@
-{% extends 'entities/gestalt_list.html' %}
-{% load rules %}
-
-{% block heading_toolbar %}
-    {% has_perm 'memberships.create_membership' user group as can_create %}
-    {% if can_create %}
-        <a href="{% url 'member-create' group.pk %}" class="btn btn-default">Neues Mitglied</a>
-    {% endif %}
-{% endblock %}

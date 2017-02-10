@@ -22,21 +22,23 @@
 {% endblock %}
 
 {% block content %}
-    {% has_perm 'entities.change_gestalt' user user.gestalt as can_edit %}
-    {% dismissible 'gestalt-profile-visibility' %}
-    <div class="disclaimer disclaimer-standalone">
-        {% dismiss 'gestalt-profile-visibility' %}
-        Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> entscheidet
-    für sich, ob sie ein öffentliches Profil haben möchte. Du kannst diese Einstellung in
-        {% if can_edit %}
-            <a href="{% url 'gestalt-update' user.gestalt.pk %}">
+    {% block content_header %}
+        {% has_perm 'entities.change_gestalt' user user.gestalt as can_edit %}
+        {% dismissible 'gestalt-profile-visibility' %}
+        <div class="disclaimer disclaimer-standalone">
+            {% dismiss 'gestalt-profile-visibility' %}
+            Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> entscheidet
+        für sich, ob sie ein öffentliches Profil haben möchte. Du kannst diese Einstellung in
+            {% if can_edit %}
+                <a href="{% url 'gestalt-update' user.gestalt.pk %}">
+                    deinem Profil ändern.
+                </a>
+            {% else %}
                 deinem Profil ändern.
-            </a>
-        {% else %}
-            deinem Profil ändern.
-        {% endif %}
-    </div>
-    {% enddismissible %}
+            {% endif %}
+        </div>
+        {% enddismissible %}
+    {% endblock %}
 
     <ol class="profiles">
         {% for gestalt in gestalt_list %}

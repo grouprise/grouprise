@@ -285,7 +285,6 @@ class PageMixin(
         TitleMixin,
         ):
     fallback_template_name = 'stadt/list.html'
-    sidebar = ('calendar', 'groups')
 
 
 class RelatedObjectMixin:

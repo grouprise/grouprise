@@ -1,6 +1,6 @@
 from core import fragments
 
-fragments.register('sidebar-groups', 'groups/_sidebar_list.html')
+fragments.register('sidebar-groups', 'groups/_sidebar_fragment.html')
 
 fragments.insert(
         'sidebar-groups',
