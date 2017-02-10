@@ -160,7 +160,8 @@ class Gallery(BaseContent):
                 css_class="row"
             ),
             css_class="section section-publish section-gallery", data_component="publish"
-        )
+        ),
+        css_class='section-container'
     )
 
     class Meta:
