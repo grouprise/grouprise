@@ -5,7 +5,9 @@
 {% block breadcrumb %}{% breadcrumb 'Schlagworte' tag %}{% endblock %}
 {% block heading_title %}<h2 class="content-classification">Gruppen</h2>{% endblock %}
 
-{% block sidebar %}{% endblock %}
+{% block sidebar %}
+    {% include 'events/_sidebar2.html' with events=events hide_buttons=True %}
+{% endblock %}
 
 {% block heading %}
     <div class="content-header">

@@ -1,5 +1,6 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
+from django.db.models import Q
 from core.text import slugify
 
 
@@ -23,11 +24,11 @@ class Tagged(models.Model):
     tagged_type = models.ForeignKey('contenttypes.ContentType')
 
     @classmethod
-    def get_tagged_models(cls, tag, model):
+    def get_tagged_query(cls, tag, model):
         content_type = contenttypes.ContentType.objects.get_for_model(model)
-        tagged_objects = cls.objects.filter(tagged_type=content_type, tag=tag)
+        tagged_objects = Tagged.objects.filter(tagged_type=content_type, tag=tag)
         model_ids = list(map(lambda tagged: tagged.tagged_id, tagged_objects))
-        return model.objects.filter(pk__in=model_ids)
+        return Q(pk__in=model_ids)
 
     class Meta:
         ordering = ('tag__name',)
