@@ -13,17 +13,15 @@ import utils.markdown
 
 register = template.Library()
 
-markdown_extensions = (
+markdown_extensions = [
     magiclink.MagiclinkExtension(),
     nl2br.Nl2BrExtension(),
-    utils.markdown.GroupReferenceExtension(),
-    utils.markdown.TagReferenceExtension(),
-    utils.markdown.GroupEnabledLinkExtension(),
+    utils.markdown.ExtendedLinkExtension(),
     sane_lists.SaneListExtension(),
     fenced_code.FencedCodeExtension(),
     utils.markdown.CuddledListExtension(),
     UnimojiExtension()
-)
+]
 
 content_allowed_tags = (
     # text
@@ -70,7 +68,7 @@ def markdown(text, autoescape=True):
 def markdown_tag(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
         plain_preview=False):
-    extensions = markdown_extensions + (toc.TocExtension(baselevel=heading_baselevel), )
+    extensions = tuple(markdown_extensions) + (toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
     if filter_tags:
         disabled_tags = tuple(disable_tags.split(","))
