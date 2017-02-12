@@ -1,5 +1,26 @@
+.selectable-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .selectable {
+        flex: 1;
+        margin-right: 1rem;
+    }
+}
+
+.selectable-mono {
+    white-space: pre-wrap;
+    background-color: @component-bg-default;
+    border-radius: 2px;
+    padding: .5rem 1rem;
+    display: block;
+    margin: 0;
+}
+
 .selectable {
     user-select: all;
+    overflow-x: auto;
 }
 
 .selectable-token {
