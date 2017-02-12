@@ -109,11 +109,15 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['public_export_url'] = self.request.build_absolute_uri(
-            reverse('group-events-feed', kwargs={'group_slug': self.get_object().slug, 'domain': 'public'})
+            reverse('group-events-feed', kwargs={
+                'group_slug': self.get_object().slug,
+                'domain': 'public'
+            })
         )
         context['private_export_url'] = self.request.build_absolute_uri(
-            reverse('group-events-feed', kwargs={'group_slug': self.get_object().slug, 'domain': 'private'})
+            reverse('group-events-feed', kwargs={
+                'group_slug': self.get_object().slug,
+                'domain': 'private'
+            })
         )
         return context
-
-

@@ -12,8 +12,6 @@ from rest_framework.authentication import BasicAuthentication
 
 import content.models
 from entities import models as entities_models
-from features.groups import models as groups
-from features.memberships.rules import is_member_of
 from utils import views as utils_views
 
 
