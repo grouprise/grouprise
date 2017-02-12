@@ -18,6 +18,7 @@ urlpatterns = [
     urls.url(r'^stadt/api/', urls.include('core.api_urls')),
     urls.url(r'^stadt/admin/', admin.site.urls),
     urls.url(r'^$', content_views.ContentList.as_view(), name='index'),
+    urls.url(r'^', urls.include('features.groups.root_urls')),
 
     urls.url(
         r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/$',

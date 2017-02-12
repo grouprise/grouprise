@@ -32,11 +32,4 @@ urlpatterns = [
     urls.url(r'^gallery/$', views.GalleryList.as_view(), name='gallery-index'),
     urls.url(r'^gallery/add/$', creation.Gallery.as_view(), name='gallery-create'),
     urls.url(r'^markdown/$', views.Markdown.as_view(), name='markdown'),
-    # calendars
-    urls.url(r'^group/(?P<pk>[0-9]+)/(?P<domain>public|private).ics$',
-             views.GroupCalendarFeed(), name='events-group'),
-    urls.url(r'^gestalten/(?P<pk>[0-9]+)/(?P<domain>public|private).ics$',
-             views.GroupCalendarFeed(), name='events-gestalt'),
-    urls.url(r'^tags/(?P<pk>[0-9]+)/(?P<domain>public|private).ics$',
-             views.GroupCalendarFeed(), name='events-tag'),
 ]

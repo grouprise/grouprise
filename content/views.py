@@ -181,7 +181,6 @@ class Markdown(utils_views.PageMixin, generic.TemplateView):
 
 
 class BaseCalendarFeed(ICalFeed):
-
     def authenticate(self):
         auth = BasicAuthentication()
         try:
@@ -221,21 +220,3 @@ class BaseCalendarFeed(ICalFeed):
 
     def item_start_datetime(self, item):
         return item.time
-
-
-class GroupCalendarFeed(BaseCalendarFeed):
-
-    def items(self):
-        filter_dict = {}
-        # pick only events of the specified group
-        group = groups.Group.objects.get(pk=int(self.kwargs['pk']))
-        filter_dict['groups'] = group
-        domain = self.kwargs['domain']
-        if domain == 'public':
-            filter_dict['public'] = True
-        else:
-            self.authenticate()
-            if not is_member_of(self.request.user, group):
-                raise PermissionDenied
-            filter_dict['public'] = False
-        return super().items().filter(**filter_dict)
