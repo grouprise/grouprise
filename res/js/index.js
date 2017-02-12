@@ -28,7 +28,7 @@ import cite from './transforms/cite'
 
 function init (searchIn = document) {
   const bus = PubSub()
-  const opts = { root: searchIn, conf: { bus } }
+  const opts = { root: searchIn, conf: { bus, init } }
 
   // initialize components on load
   component('date', date, opts)
@@ -42,7 +42,7 @@ function init (searchIn = document) {
   component('browser-warning', browserWarning, opts)
   component('carousel', carousel, opts)
   component('tcon', transformIcon, opts)
-  component('conversation', conversation, Object.assign({}, opts, { conf: { init } }))
+  component('conversation', conversation, opts)
   component('keysubmit', keysubmit, opts)
   component('select', select, opts)
   component('publish', publish, opts)
