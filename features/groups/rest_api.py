@@ -1,4 +1,5 @@
 from rest_framework import viewsets, serializers
+from sorl.thumbnail import get_thumbnail
 import django_filters
 import django_filters.widgets
 
@@ -21,6 +22,16 @@ class GroupFilter(django_filters.rest_framework.FilterSet):
 class GroupSerializer(serializers.ModelSerializer):
     tags = FlattenedTagSerializer(many=True)
     initials = serializers.CharField(source='get_initials', read_only=True)
+
+    def to_representation(self, instance: models.Group):
+        repr = super().to_representation(instance)
+        gallery = instance.get_head_gallery()
+        if gallery and gallery.images.first():
+            image = gallery.images.first().file
+            repr['cover'] = get_thumbnail(image, '360x120', crop='center').url
+        else:
+            repr['cover'] = None
+        return repr
 
     class Meta:
         model = models.Group
