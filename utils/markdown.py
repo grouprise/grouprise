@@ -1,9 +1,9 @@
 import re
 import markdown
 from markdown import blockprocessors, inlinepatterns, util
-from django.utils.text import slugify
 from django.core import urlresolvers
 from features.groups import models as groups
+from features.tags import models as tags
 
 RE_GROUP_REF = r'@([a-zA-Z_-]+)'
 RE_GROUPLINK_REF = r'\[@([a-zA-Z_-]+)\](\(([^\)]+)\))?'
@@ -113,7 +113,7 @@ class GroupEnabledLinkExtension(markdown.Extension):
 class TagReferencePattern(inlinepatterns.ReferencePattern):
     def handleMatch(self, m):
         name = m.group(2)
-        slug = slugify(name)
+        slug = tags.Tag.slugify(name)
         return self.makeTag(urlresolvers.reverse('tag', args=[slug]), None, '#%s' % name)
 
 

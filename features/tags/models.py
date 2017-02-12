@@ -1,5 +1,6 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
+from core.text import slugify
 
 
 class Tag(models.Model):
@@ -8,6 +9,10 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def slugify(cls, name):
+        return slugify(None, None, name, dodging=False)
 
 
 class Tagged(models.Model):

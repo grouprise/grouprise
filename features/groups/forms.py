@@ -1,5 +1,4 @@
 from . import models
-from core import text
 from crispy_forms import bootstrap, helper, layout
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
@@ -38,7 +37,7 @@ class Update(forms.ModelForm):
             input_tag = input_tag.strip()
             if input_tag:
                 tag = tags.Tag.objects.get_or_create(
-                        slug=text.slugify(None, None, input_tag, dodging=False),
+                        slug=tags.Tag.slugify(input_tag),
                         defaults={'name': input_tag})[0]
                 tagged = tags.Tagged.objects.get_or_create(
                         tag=tag, tagged_id=self.instance.id,
