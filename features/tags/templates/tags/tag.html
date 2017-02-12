@@ -5,9 +5,7 @@
 {% block breadcrumb %}{% breadcrumb 'Schlagworte' tag %}{% endblock %}
 {% block heading_title %}<h2 class="content-classification">Gruppen</h2>{% endblock %}
 
-{% block sidebar %}
-    {% include 'events/_sidebar2.html' with events=view.get_events hide_buttons=True %}
-{% endblock %}
+{% block sidebar %}{% endblock %}
 
 {% block heading %}
     <div class="content-header">
@@ -20,37 +18,41 @@
     {% if no_data %}
         <p>Für dieses Schlagwort wurden noch keine Inhalte eingestellt</p>
     {% else %}
-        {% with tagged_groups=view.get_group_tags tagged_content=view.get_content_page.object_list %}
-            <p>
-                Wir haben {% if tagged_groups|length == 1 %}eine Gruppe{% else %}{{ tagged_groups|length }} Gruppen{% endif %} und
-                {% if tagged_content|length == 1 %}einen Beitrag{% else %}{{ tagged_content|length }} Beiträge{% endif %} für
-                das Schlagwort „{{ tag.name }}“ auf Stadtgestalten.
-            </p>
+        <p>
+            Wir haben {% if tagged_groups|length == 1 %}eine Gruppe{% else %}{{ tagged_groups|length }} Gruppen{% endif %} und
+            {% if paginator.count == 1 %}einen Beitrag{% else %}{{ paginator.count }} Beiträge{% endif %} für
+            das Schlagwort „{{ tag.name }}“ auf Stadtgestalten.
+        </p>
 
-            {# groups #}
+        {# groups #}
+        {% if tagged_groups|length > 0 %}
             <div class="content-header">
                 <h2 class="content-classification">Gruppen</h2>
             </div>
             <ol class="groups">
-                {% for tag in tagged_groups %}
+                {% for group in tagged_groups %}
                     <li>
-                        {% include 'groups/_preview.html' with group=tag.tagged link=True %}
+                        {% include 'groups/_preview.html' with group=group link=True %}
                     </li>
                 {% endfor %}
             </ol>
+        {% endif %}
 
-            {# content #}
+        {# content #}
+        {% if paginator.count > 0 %}
             <div class="content-header">
                 <h2 class="content-classification">Beiträge</h2>
             </div>
             <div class="content-list">
-                <ol class="content-preview-list">
-                    {% for content in tagged_content %}
-                        <li>{% include 'content/_content_preview.html' %}</li>
-                    {% endfor %}
-                </ol>
-                {% include 'core/_pagination.html' %}
+                <div class="content-block">
+                    <ol class="content-preview-list">
+                        {% for content in content_page.object_list %}
+                            <li>{% include 'content/_content_preview.html' %}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                {% include 'core/_pagination.html' with is_paginated=True page_obj=content_page %}
             </div>
-        {% endwith %}
+        {% endif %}
     {% endif %}
 {% endblock %}
