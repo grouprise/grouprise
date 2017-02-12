@@ -3,11 +3,10 @@ import markdown
 from markdown import blockprocessors, inlinepatterns, util
 from django.core import urlresolvers
 from features.groups import models as groups
-from features.tags import models as tags
+from features.tags import models as tags, RE_TAG_REF
 
 RE_GROUP_REF = r'@([a-zA-Z_-]+)'
 RE_GROUPLINK_REF = r'\[@([a-zA-Z_-]+)\](\(([^\)]+)\))?'
-RE_TAG_REF = r'#([a-zA-Z0-9_-]+)'
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):
