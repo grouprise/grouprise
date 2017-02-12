@@ -98,7 +98,7 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
     model = models.Group
     slug_url_kwarg = 'group_slug'
     sidebar = tuple()
-    permission = 'groups.view_list'
+    permission = 'entities.view_group'
     title = 'Exportmöglichkeiten für Gruppenkalender'
     template_name = 'groups/events_export.html'
     parent = 'group'
