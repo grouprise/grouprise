@@ -59,7 +59,7 @@ export default (el, opts) => {
 
   addClass(el, 'group-link')
   container = document.createElement('div')
-  container.id = randomId()
+  container.id = `group-link-${randomId(6)}`
   el.appendChild(container)
 
   return {
