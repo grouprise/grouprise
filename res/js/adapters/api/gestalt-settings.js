@@ -8,7 +8,7 @@ export default decorator((req, opts) => {
   }
 
   const create = (data = {}) => {
-    return req.post(endpoint, data, { headers })
+    return req.post(endpoint, data)
       .then(res => Promise.resolve(res.data))
   }
 
