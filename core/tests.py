@@ -93,7 +93,12 @@ class Test(test.TestCase):
         return mail.outbox[-1]
 
     def get_url(self, url, key=None):
-        args = [key] if key else []
+        if key is None:
+            args = []
+        elif isinstance(key, (list, tuple)):
+            args = key
+        else:
+            args = [key]
         return urlresolvers.reverse(
                 '{}'.format(url), args=args)
 
