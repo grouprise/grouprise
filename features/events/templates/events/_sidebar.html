@@ -30,7 +30,25 @@
             {% endspaceless %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
-            <a href="{% url 'event-index' %}" class="btn btn-link">Alle Ereignisse</a>
+            <div class="dropdown-container">
+                <input class="dropdown-state" id="calendar-more" type="checkbox" />
+                <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
+                        <span class="btn-label">
+                            Mehr <span class="caret"></span>
+                        </span>
+                </label>
+                <ul class="dropdown" id="content-new-dropdown" data-dropdown>
+                    {% if group %}
+                        <li>
+                            <a href="{% url 'group-events-export' group_slug=group.slug %}">Exportieren</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'event-index' %}" >Alle Ereignisse</a>
+                    </li>
+                </ul>
+            </div>
+
             <a href="{% url 'event-create' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-link">
                 Neues Ereignis
             </a>
