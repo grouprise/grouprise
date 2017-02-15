@@ -1,11 +1,11 @@
 {% if group.tags.exists %}
     <dt title="Schlagworte">
-        <i class="fa fa-tags"></i>
+        <i class="sg sg-tags"></i>
         <span class="sr-only">Schlagworte</span>
     </dt>
     <dd>
         {% for tag in group.tags.all %}
-            <a href="{% url 'tag' tag.tag.pk %}">{{ tag.tag }}</a>{% if not forloop.last %},{% endif %}
+            <a href="{% url 'tag' tag.tag.slug %}">#{{ tag.tag }}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
     </dd>
 {% endif %}
