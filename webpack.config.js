@@ -7,8 +7,7 @@ const _ = require('lodash')
 const pkg = grunt.file.readJSON('package.json')
 const rawBanner = grunt.file.read('res/templates/banner.txt')
 const banner = grunt.template.process(rawBanner, {data: {package: pkg}})
-
-const isDebug = (_.has(process.env, 'NODE_ENV') ? 'development' : 'production') === 'development'
+const isDebug = (_.has(process.env, 'NODE_ENV') ? process.env.NODE_ENV : 'development') === 'development'
 
 module.exports = {
   context: path.join(__dirname, 'res/js'),
@@ -74,16 +73,11 @@ module.exports = {
     new webpack.LoaderOptionsPlugin({
       minimize: !isDebug,
       debug: isDebug
-    })
-  ]
-}
-
-if (!isDebug) {
-  module.exports.plugins = (module.exports.plugins || []).concat([
+    }),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: isDebug ? '"development"' : '"production"'
       }
     })
-  ])
+  ]
 }
