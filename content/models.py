@@ -36,6 +36,9 @@ class Comment(Base):
     def get_content(self):
         return self.content
 
+    def get_unique_id(self):
+        return '{}.comment.{}'.format(self.content.get_unique_id(), self.id)
+
 
 class Content(Base):
     subclass_names = ['Article', 'Event', 'Gallery']
@@ -92,6 +95,9 @@ class Content(Base):
 
     def get_type_name(self):
         return self.get_subclass_instance()._meta.model_name
+
+    def get_unique_id(self):
+        return '{}.{}'.format(self.get_type_name(), self.id)
 
 
 class Article(Content):

@@ -15,3 +15,6 @@ class Text(models.Model):
 
     class Meta:
         ordering = ('time_created',)
+
+    def get_unique_id(self):
+        return '{}.{}.text.{}'.format(self.container_type, self.container.id, self.id)

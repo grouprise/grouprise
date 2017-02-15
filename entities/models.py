@@ -6,6 +6,9 @@ class GestaltContent(models.Model):
     content = models.OneToOneField('content.Content')
     gestalt = models.ForeignKey('gestalten.Gestalt')
 
+    def get_unique_id(self):
+        return 'gestalt.{}'.format(self.gestalt.id)
+
 
 class GroupContent(models.Model):
     content = models.OneToOneField('content.Content')
@@ -16,3 +19,6 @@ class GroupContent(models.Model):
         return not memberships.Membership.objects.filter(
                 group=self.group, member=self.content.author
                 ).exists()
+
+    def get_unique_id(self):
+        return 'group.{}'.format(self.group.id)
