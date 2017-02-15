@@ -1,4 +1,5 @@
-from rest_framework import viewsets, serializers
+from rest_framework import viewsets, serializers, permissions
+from rest_framework.decorators import permission_classes
 from sorl.thumbnail import get_thumbnail
 import django_filters
 import django_filters.widgets
@@ -38,6 +39,7 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'initials', 'description', 'avatar', 'avatar_color', 'tags')
 
 
+@permission_classes((permissions.AllowAny, ))
 class GroupSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
     filter_fields = ('id', 'name', )

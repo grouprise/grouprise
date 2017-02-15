@@ -1,5 +1,4 @@
 from rest_framework import permissions
-from stadt.settings import DEBUG
 
 
 class RulesPermissions(permissions.BasePermission):
@@ -7,4 +6,4 @@ class RulesPermissions(permissions.BasePermission):
         try:
             return view.has_permission()
         except AttributeError:
-            return DEBUG
+            return False
