@@ -7,7 +7,8 @@ const _ = require('lodash')
 const pkg = grunt.file.readJSON('package.json')
 const rawBanner = grunt.file.read('res/templates/banner.txt')
 const banner = grunt.template.process(rawBanner, {data: {package: pkg}})
-const isDebug = (_.has(process.env, 'NODE_ENV') ? process.env.NODE_ENV : 'development') === 'development'
+const env = _.has(process.env, 'NODE_ENV') ? process.env.NODE_ENV : 'development'
+const isDebug = env !== 'production'
 
 module.exports = {
   context: path.join(__dirname, 'res/js'),
@@ -76,7 +77,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: isDebug ? '"development"' : '"production"'
+        NODE_ENV: JSON.stringify(env)
       }
     })
   ]
