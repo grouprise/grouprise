@@ -2,7 +2,13 @@
 
 {% load rules %}
 
-{% block menu %}{% with group=association.entity menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block menu %}
+    {% if association.entity.is_group %}
+        {% with group=association.entity menu='conversation' %}{{ block.super }}{% endwith %}
+    {% else %}
+        {% with menu='conversation' %}{{ block.super }}{% endwith %}
+    {% endif %}
+{% endblock %}
 {% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
 
 {% block content %}
