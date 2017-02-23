@@ -1,6 +1,8 @@
 from core import notifications
 from django.conf import settings
+from django.utils import crypto
 from features.gestalten import models as gestalten
+import itertools
 
 
 class Created(notifications.Notification):
@@ -28,10 +30,10 @@ class Created(notifications.Notification):
             recipients.update(set(gestalten.Gestalt.objects.filter(
                 memberships__group=group)))
         recipients.discard(self.text.author)
+        recipients = dict(zip(recipients, itertools.repeat({})))
+        for gestalt in recipients:
+            recipients[gestalt]['reply_key'] = crypto.get_random_string()
         return recipients
-
-    def get_reply_key(self):
-        return 'ABCDEFGHIJKL'
 
     def get_sender(self):
         return self.text.author

@@ -18,12 +18,22 @@ class Notification:
         return '{} <{}>'.format(gestalt, gestalt.user.email)
 
     def get_formatted_recipients(self):
+        """
+        Subclasses must define get_recipients() to return a set of recipients.
+        The set may as well be a dictionary with the values being dictionaries. Each
+        recipient may be assigned additional attributes:
+        * `reply_key`: a string to identify replies
+        * `with_name`: should senders identity be put in from header?
+
+        If defined, the `Reply-To` header is set to DEFAULT_REPLY_TO_EMAIL with `{reply_key}`
+        replaced by the reply key.
+        """
         recipients = self.get_recipients()
         if type(recipients) == dict:
-            return [(self.format_recipient(r), with_name)
-                    for r, with_name in recipients.items()]
+            return [(self.format_recipient(r), recipient_attrs)
+                    for r, recipient_attrs in recipients.items()]
         else:
-            return [(self.format_recipient(r), True) for r in recipients]
+            return [(self.format_recipient(r), {}) for r in recipients]
 
     def get_sender(self):
         return None
@@ -58,16 +68,10 @@ class Notification:
         return my_id, None, []
 
     def get_reply_key(self):
-        """
-        Subclasses may overwrite this method to return a string to identify replies.
-
-        If defined, the `Reply-To` header is set to DEFAULT_REPLY_TO_EMAIL with `{reply_key}`
-        replaced by the reply key.
-        """
         return None
 
     def send(self):
-        for recipient, with_name in self.get_formatted_recipients():
+        for recipient, recipient_attrs in self.get_formatted_recipients():
             subject = self.get_subject()
             site = sites_models.Site.objects.get_current()
             context = self.kwargs.copy()
@@ -76,7 +80,9 @@ class Notification:
             template.backend.engine.autoescape = False
             body = template.render(context)
             sender = self.get_sender()
-            name = '{} via '.format(sender) if sender and with_name else ''
+            name = ''
+            if sender and recipient_attrs.get('with_name', True):
+                name = '{} via '.format(sender)
             from_email = '{name}{site} <{email}>'.format(
                     name=name,
                     site=site.name,
@@ -92,7 +98,7 @@ class Notification:
             if reference_ids:
                 headers['References'] = ' '.join(['<{}@{}>'.format(ref_id, site.name)
                                                   for ref_id in reference_ids])
-            reply_key = self.get_reply_key()
+            reply_key = recipient_attrs.get('reply_key')
             if reply_key:
                 headers['Reply-To'] = '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
                     reply_key=reply_key))
