@@ -3,7 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block title %}Gespräch - {{ site.name }}{% endblock %}
-{% block menu %}{% with group=view.entity menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block menu %}
+    {% if view.entity.is_group %}
+        {% with group=view.entity menu='conversation' %}{{ block.super }}{% endwith %}
+    {% else %}
+        {% with menu='conversation' %}{{ block.super }}{% endwith %}
+    {% endif %}
+{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.entity 'Gespräch' %}{% endblock %}
 
 {% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
