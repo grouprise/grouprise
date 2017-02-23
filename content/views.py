@@ -1,9 +1,16 @@
 from . import creation, forms, models
 from django import shortcuts
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
 from django.utils import formats
 from django.views import generic
 from django.views.generic import dates
 from django.db.models import Q
+from django_ical.views import ICalFeed
+from rest_framework import exceptions
+from rest_framework.authentication import BasicAuthentication
+
+import content.models
 from entities import models as entities_models
 from utils import views as utils_views
 
@@ -152,3 +159,45 @@ class Markdown(utils_views.PageMixin, generic.TemplateView):
     sidebar = tuple()
     template_name = 'content/markdown.html'
     title = 'Textauszeichnung'
+
+
+class BaseCalendarFeed(ICalFeed):
+    def authenticate(self):
+        auth = BasicAuthentication()
+        try:
+            result = auth.authenticate(self.request)
+        except (exceptions.NotAuthenticated, exceptions.AuthenticationFailed) as exc:
+            raise PermissionDenied
+        if result is None:
+            raise PermissionDenied
+        else:
+            self.request.user = result[0]
+
+    def get_queryset(self):
+        return content.models.Event.objects.permitted(self.request.user)
+
+    def __call__(self, request, *args, **kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        try:
+            return super().__call__(request, *args, **kwargs)
+        except PermissionDenied:
+            response = HttpResponse()
+            response.status_code = 401
+            response['WWW-Authenticate'] = 'Basic realm="{}"'.format("stadtgestalten.org")
+            return response
+
+    def items(self):
+        return self.get_queryset().order_by('-time')
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.text
+
+    def item_location(self, item):
+        return item.place
+
+    def item_start_datetime(self, item):
+        return item.time

@@ -1,10 +1,12 @@
-from rest_framework import viewsets, serializers
+from rest_framework import viewsets, serializers, permissions
+from rest_framework.decorators import permission_classes
+from sorl.thumbnail import get_thumbnail
 import django_filters
 import django_filters.widgets
 
 from . import models
 # todo howto resolve module without including tags here
-from features.tags.rest_api import TagSerializer
+from features.tags.rest_api import FlattenedTagSerializer
 from core import api
 
 
@@ -19,14 +21,25 @@ class GroupFilter(django_filters.rest_framework.FilterSet):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
+    tags = FlattenedTagSerializer(many=True)
     initials = serializers.CharField(source='get_initials', read_only=True)
+
+    def to_representation(self, instance: models.Group):
+        repr = super().to_representation(instance)
+        gallery = instance.get_head_gallery()
+        if gallery and gallery.images.first():
+            image = gallery.images.first().file
+            repr['cover'] = get_thumbnail(image, '360x120', crop='center').url
+        else:
+            repr['cover'] = None
+        return repr
 
     class Meta:
         model = models.Group
         fields = ('id', 'name', 'initials', 'description', 'avatar', 'avatar_color', 'tags')
 
 
+@permission_classes((permissions.AllowAny, ))
 class GroupSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
     filter_fields = ('id', 'name', )

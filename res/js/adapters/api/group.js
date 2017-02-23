@@ -7,5 +7,10 @@ export default decorator((req, opts) => {
     return req.get(endpoint, {params})
   }
 
-  return {get}
+  const single = (id) => {
+    return req.get(`${endpoint}${id}/`)
+      .then(res => res.data)
+  }
+
+  return {get, single}
 })

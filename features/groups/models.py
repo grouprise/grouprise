@@ -65,6 +65,7 @@ class Group(models.Model):
                 'group', args=[type(self).objects.get(pk=self.pk).slug])
 
     # FIXME: move to template filter
+    # TODO: when removed check api
     def get_initials(self):
         import re
         # we prefer initials for all non-trivial terms - but we collect the other initials, as well
@@ -88,6 +89,7 @@ class Group(models.Model):
             through='entities.GroupContent')
 
     # FIXME: to be removed
+    # TODO: when removed check api
     def get_head_gallery(self):
         return self.content.exclude(gallery=None).filter(
                 public=True, groupcontent__pinned=True).first()

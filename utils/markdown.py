@@ -1,9 +1,6 @@
 import re
 import markdown
-from features.groups import models as groups
 from markdown import blockprocessors, inlinepatterns
-
-RE_GROUP_REF = r'@([a-zA-Z_-]+)'
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):
@@ -27,16 +24,34 @@ class CuddledListExtension(markdown.Extension):
                 'cuddledlist', CuddledListProcessor(md.parser), '<paragraph')
 
 
-class GroupReferencePattern(inlinepatterns.ReferencePattern):
+class ExtendedLinkPattern(inlinepatterns.LinkPattern):
+    _EXTENSIONS = []
+
+    def __init__(self, pattern, markdown_instance=None):
+        super().__init__(pattern, markdown_instance)
+
     def handleMatch(self, m):
-        slug = m.group(2)
-        try:
-            group = groups.Group.objects.get(slug=slug)
-        except groups.Group.DoesNotExist:
-            return None
-        return self.makeTag(group.get_absolute_url(), None, str(group))
+        el = super().handleMatch(m)
+        for extension in self._EXTENSIONS:
+            el = extension.process_link(el)
+        return el
+
+    # in order to avoid any tampering with the original implementation
+    # of LinkPattern we use sanitize_url to provide us with special
+    # group url that we use to pass around group information
+    def sanitize_url(self, url):
+        for extension in self._EXTENSIONS:
+            new_url = extension.process_url(url)
+            if new_url:
+                return new_url
+
+        return super().sanitize_url(url)
+
+    @classmethod
+    def register_extension(cls, extension):
+        cls._EXTENSIONS.append(extension)
 
 
-class GroupReferenceExtension(markdown.Extension):
+class ExtendedLinkExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns['group_reference'] = GroupReferencePattern(RE_GROUP_REF, md)
+        md.inlinePatterns['link'] = ExtendedLinkPattern(inlinepatterns.LINK_RE, md)

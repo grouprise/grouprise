@@ -25,10 +25,11 @@ import eventTime from './transforms/event-time'
 import dismissible from './transforms/dismissible'
 import autosize from './transforms/autosize'
 import cite from './transforms/cite'
+import grouplink from './transforms/grouplink'
 
 function init (searchIn = document) {
   const bus = PubSub()
-  const opts = { root: searchIn, conf: { bus } }
+  const opts = { root: searchIn, conf: { bus, init } }
 
   // initialize components on load
   component('date', date, opts)
@@ -42,7 +43,7 @@ function init (searchIn = document) {
   component('browser-warning', browserWarning, opts)
   component('carousel', carousel, opts)
   component('tcon', transformIcon, opts)
-  component('conversation', conversation, Object.assign({}, opts, { conf: { init } }))
+  component('conversation', conversation, opts)
   component('keysubmit', keysubmit, opts)
   component('select', select, opts)
   component('publish', publish, opts)
@@ -50,6 +51,7 @@ function init (searchIn = document) {
   component('dismissible', dismissible, opts)
   component('autosize', autosize, opts)
   component('cite', cite, opts)
+  component('grouplink', grouplink, opts)
 
   // initialize components not based on component interface
   mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))

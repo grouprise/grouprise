@@ -1,3 +1,5 @@
+@import "../definitions/mixins";
+
 .breadcrumb {
     background-color: @component-bg-default;
     padding: .6em .8em;
@@ -21,6 +23,18 @@
             color: @brand-primary;
         }
     }
+
+    .on-handhelds({
+        .page-prefix & {
+            border-radius: 0;
+            display: block;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            overflow: hidden;
+            max-width: 100vw;
+            text-overflow: ellipsis;
+        }
+    });
 }
 
 .breadcrumb-separator {

@@ -45,6 +45,10 @@
     })
 }
 
+.group-intro-add .section-container {
+    display: none;
+}
+
 .group-info {
     &:extend(.box all);
     &:extend(.box-striped all);
@@ -117,6 +121,19 @@
     text-decoration: none;
     border-radius: 2px;
     overflow: hidden;
+
+    .group-link & {
+        position: absolute;
+        margin-top: 5px;
+        width: 360px;
+        z-index: 20;
+        background: white;
+        .material-shadow(3);
+
+        .group-preview-body {
+            border-width: 2px 0 0 0;
+        }
+    }
 }
 
 .group-preview-body {
@@ -196,4 +213,9 @@
         top: 0; bottom: 0;
         background-color: rgba(255, 255, 255, .6);
     }
+}
+
+.group-link {
+    display: inline-block;
+    position: relative;
 }

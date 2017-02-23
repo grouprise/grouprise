@@ -1,34 +1,56 @@
-from . import models
-from content import models as content
-from core.views import base
-from django.contrib.contenttypes import models as contenttypes
-from django.core import paginator
+from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import Http404
 from django.views import generic
-from features.groups import models as groups
+from core.views import base
+from features.groups import models as group_models
+from content import models as content_models
+from .models import Tagged, Tag
 
 
-class Tag(base.PermissionMixin, generic.DetailView):
+def get_tag_context(tag, user, page_number):
+    groups = group_models.Group.objects.filter(
+        Tagged.get_tagged_query(tag, group_models.Group)
+    )
+    content = content_models.Content.objects.permitted(user).filter(
+        Tagged.get_tagged_query(tag, content_models.Content)
+    )
+    group_ids = groups.values_list('id')
+    events = content_models.Event.objects.permitted(user).filter(
+        Tagged.get_tagged_query(tag, content_models.Event) | Q(groupcontent__group__in=group_ids)
+    )
+    paginator = Paginator(content, 10)
+    try:
+        page = paginator.page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page = paginator.page(1)
+
+    return {'groups': groups, 'events': events, 'paginator': paginator, 'content_page': page}
+
+
+class TagPage(base.PermissionMixin, generic.DetailView):
     permission_required = 'tags.view'
-    model = models.Tag
+    model = Tag
     template_name = 'tags/tag.html'
+    sidebar = ()
 
-    def get_events(self):
-        group_ids = self.get_group_tags().values_list('tagged_id', flat=True)
-        return content.Event.objects.permitted(self.request.user).filter(
-                groupcontent__group__in=group_ids)
-
-    def get_content(self):
-        group_ids = self.get_group_tags().values_list('tagged_id', flat=True)
-        return content.Content.objects.permitted(self.request.user).filter(
-                groupcontent__group__in=group_ids)
-
-    def get_content_page(self):
-        pagin = paginator.Paginator(self.get_content(), 10)
+    def get_object(self, queryset=None):
         try:
-            return pagin.page(self.request.GET.get('page'))
-        except:
-            return pagin.page(1)
+            return super().get_object(queryset)
+        except Http404:
+            slug = self.kwargs.get(self.slug_url_kwarg)
+            tag = Tag()
+            tag.name = slug
+            return tag
 
-    def get_group_tags(self):
-        return self.object.tagged.filter(
-                tagged_type=contenttypes.ContentType.objects.get_for_model(groups.Group))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = self.request.GET.get('page', 1)
+        user = self.request.user
+
+        if context['object'].pk is not None:
+            context['no_data'] = False
+            context.update(get_tag_context(self.object, user, page))
+        else:
+            context['no_data'] = True
+        return context

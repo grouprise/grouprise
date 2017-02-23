@@ -295,6 +295,24 @@ REST_FRAMEWORK = {
 
 INTERNAL_IPS = ("127.0.0.1", )
 
+# string       : entity      : the entity as model string that is being watched
+# list[string] : props       : the props that are checked for tags
+# boolean      : tag_self    : if the entity itself should be tagged, when one of the props passed
+# list[lambda] : tag_related : list of related objects (via lambda) that should be tagged
+# lambda       : constraint  : return false to skip
+#
+# only entity and props are required
+TAGS_TAGGABLE = (
+    {'entity': 'content.Comment', 'props': ['text'], 'tag_related': [
+        lambda comment: comment.content
+    ]},
+    {'entity': 'content.Content', 'props': ['text', 'title']},
+    {'entity': 'texts.Text', 'props': ['text'],
+     'constraint': lambda text: text.conversation is not None, 'tag_related': [
+        lambda text: text.conversation
+    ]}
+)
+
 try:
     ASSET_VERSION = open(os.path.join(
         BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()

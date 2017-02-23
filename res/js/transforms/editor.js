@@ -3,6 +3,7 @@ import Drop from 'tether-drop'
 import bel from 'bel'
 import closest from 'closest'
 
+import { markdown } from '../adapters/api'
 import { EVENT_CITE } from './cite'
 import editorImages from '../components/editor-image'
 
@@ -47,6 +48,15 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     spellChecker: false,
     status: false,
     tabSize: 4,
+    previewRender: function(plainText, preview) {
+      markdown.parse(plainText)
+        .then(
+          content => { preview.innerHTML = `<div class="content-body">${content}</div>` },
+          () => { preview.innerHTML = `<p class="disclaimer">Fehler beim Laden der Vorschau</p>`}
+        )
+
+      return "Lade Vorschau...";
+    },
     toolbar: [
       {
         name: 'undo',
@@ -119,6 +129,12 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
         title: 'Bild'
       },
       '|',
+      {
+        name: 'preview',
+        action: SimpleMDE.togglePreview,
+        className: 'sg sg-preview no-disable',
+        title: 'Vorschau'
+      },
       {
         name: 'guide',
         action: '/stadt/markdown',
