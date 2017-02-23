@@ -4,7 +4,6 @@ from django import db
 from django.conf import settings
 from django.utils import crypto
 from features.gestalten import models as gestalten
-import itertools
 
 
 class Created(notifications.Notification):
@@ -38,7 +37,8 @@ class Created(notifications.Notification):
         for gestalt in recipients:
             while True:
                 try:
-                    key = crypto.get_random_string(length=15, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
+                    key = crypto.get_random_string(
+                            length=15, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
                     models.ReplyKey.objects.create(gestalt=gestalt, key=key, text=self.text)
                     result[gestalt] = {'reply_key': key}
                     break
