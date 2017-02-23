@@ -55,16 +55,16 @@
                                         <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-slide-current{% endif %}">Gruppen</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-slide-current{% endif %}">Gestalten</a>
+                                        <a href="{% url 'gestalten' %}" class="{% if menu|lower == 'gestalt' %}nav-slide-current{% endif %}">Gestalten</a>
                                     </li>
                                     <li>
                                         <a href="{% url 'conversations' %}" class="{% if menu|lower == 'conversation' %}nav-slide-current{% endif %}">Gespräche</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
+                                        <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
+                                        <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
                                     </li>
                                     {% comment %}
                                     <li>
@@ -120,17 +120,17 @@
             <a href="{% url 'group-index' %}" class="{% if menu|lower == 'group' or not menu and view.group %}nav-menu-item-current{% endif %}">Gruppen</a>
         </li>
         <li>
-            <a href="{% url 'gestalt-index' %}" class="{% if menu|lower == 'gestalt' %}nav-menu-item-current{% endif %}">Gestalten</a>
+            <a href="{% url 'gestalten' %}" class="{% if menu|lower == 'gestalt' %}nav-menu-item-current{% endif %}">Gestalten</a>
         </li>
         <li class="nav-separator" role="presentation"></li>
         <li>
             <a href="{% url 'conversations' %}" class="{% if menu|lower == 'conversation' %}nav-menu-item-current{% endif %}">Gespräche</a>
         </li>
         <li>
-            <a href="{% url 'article-index' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
+            <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
         </li>
         <li>
-            <a href="{% url 'event-index' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
+            <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
         </li>
         {% comment %}
         <li>

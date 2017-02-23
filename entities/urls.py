@@ -4,7 +4,6 @@ from django.conf import urls
 
 urlpatterns = [
     # gestalten
-    urls.url(r'^gestalt/$', views.GestaltList.as_view(), name='gestalt-index'),
     urls.url(
         r'^gestalt/(?P<pk>[0-9]+)/edit/$',
         views.GestaltUpdate.as_view(),

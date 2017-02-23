@@ -7,8 +7,8 @@ const _ = require('lodash')
 const pkg = grunt.file.readJSON('package.json')
 const rawBanner = grunt.file.read('res/templates/banner.txt')
 const banner = grunt.template.process(rawBanner, {data: {package: pkg}})
-
-const isDebug = (_.has(process.env, 'NODE_ENV') ? 'development' : 'production') === 'development'
+const env = _.has(process.env, 'NODE_ENV') ? process.env.NODE_ENV : 'development'
+const isDebug = env !== 'production'
 
 module.exports = {
   context: path.join(__dirname, 'res/js'),
@@ -25,7 +25,7 @@ module.exports = {
   resolve: {
     alias: {
       app: path.resolve(__dirname, 'res/js'),
-      'vue$': 'vue/dist/vue'
+      'vue$': 'vue/dist/vue.common.js'
     }
   },
   module: {
@@ -74,16 +74,11 @@ module.exports = {
     new webpack.LoaderOptionsPlugin({
       minimize: !isDebug,
       debug: isDebug
-    })
-  ]
-}
-
-if (!isDebug) {
-  module.exports.plugins = (module.exports.plugins || []).concat([
+    }),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: JSON.stringify(env)
       }
     })
-  ])
+  ]
 }

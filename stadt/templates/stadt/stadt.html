@@ -53,16 +53,7 @@
                         <div class="col-md-4">
                             <aside class="sidebar">
                                 <div class="content-spacer decoration-striped"></div>
-
-                                {% block sidebar %}
-                                    {% for block in sidebar %}
-                                        {% if block == 'calendar' %}
-                                            {% include 'events/_sidebar.html' %}
-                                        {% elif block == 'groups' %}
-                                            {% include 'groups/_sidebar_list.html' %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endblock %}
+                                {% block sidebar %}{% endblock %}
                             </aside>
                         </div>
                     </div>

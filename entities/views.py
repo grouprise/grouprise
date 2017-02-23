@@ -33,14 +33,6 @@ class Gestalt(utils_views.List):
         return str(self.get_gestalt())
 
 
-class GestaltList(utils_views.List):
-    menu = 'gestalt'
-    permission = 'content.view_content_list'
-    queryset = gestalten.Gestalt.objects.filter(public=True).order_by('-score')
-    template_name = 'entities/gestalt_list.html'
-    title = 'Gestalten'
-
-
 class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     action = 'Dein Profil'
     form_class = forms.Gestalt
@@ -89,13 +81,11 @@ class Group(utils_views.List):
         return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['calendar_events'] = self.get_events().around()
         kwargs['intro_content'] = self.get_intro_content()
-        kwargs['upcoming_events'] = self.get_events().upcoming(3)
         return super().get_context_data(**kwargs)
 
     def get_events(self):
-        return content_models.Event.objects.permitted(self.request.user).filter(
+        return content_models.Event.objects.can_view(self.request.user).filter(
                 groups=self.get_group())
 
     def get_group_content(self):

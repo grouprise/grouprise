@@ -10,7 +10,7 @@
         </header>
         <div class="box-content">
             <ul class="avatars">
-                {% for group in group_active_groups|override:active_groups %}
+                {% for group in groups %}
                     <li>
                         {% include 'entities/_group_avatar.html' with group=group link=True %}
                     </li>

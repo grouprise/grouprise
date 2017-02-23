@@ -40,7 +40,7 @@ rules.add_perm(
         & is_member)
 
 rules.add_perm(
-        'memberships.list_memberships',
+        'memberships.view_list',
         rules.is_authenticated
         & is_member_of)
 

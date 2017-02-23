@@ -20,23 +20,6 @@ class BaseContentList(utils_views.List):
     permission = 'content.view_content_list'
 
 
-class ArticleList(BaseContentList):
-    menu = 'article'
-    title = 'Artikel'
-
-    def get_queryset(self):
-        return models.Article.objects.permitted(self.request.user)
-
-
-class EventList(BaseContentList):
-    menu = 'event'
-    sidebar = ('groups',)
-    title = 'Ereignisse'
-
-    def get_queryset(self):
-        return models.Event.objects.permitted(self.request.user).upcoming()
-
-
 class GalleryList(BaseContentList):
     menu = 'gallery'
     title = 'Galerien'

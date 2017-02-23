@@ -1,0 +1,34 @@
+{% extends 'stadt/stadt.html' %}
+{% load events groups rules %}
+
+{% block title %}Artikel - {{ block.super }}{% endblock %}
+{% block menu %}{% with menu='article' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block heading_title %}{% with title='Artikel' %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block heading_toolbar %}
+    {% has_perm 'content.create_content' user as can_create_content %}
+    {% if can_create_content %}
+        <a href="{% url 'article-create' %}" class="btn btn-ch">
+            <span class="btn-label">
+                Neuer Artikel
+            </span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% sidebar_calendar user %}
+    {% sidebar_groups user %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-list">
+        <ol class="content-preview-list">
+            {% for content in article_list %}
+                <li>{% include 'content/_content_preview.html' %}</li>
+            {% endfor %}
+        </ol>
+
+        {% pagination 'Weitere Artikel' %}
+    </div>
+{% endblock %}

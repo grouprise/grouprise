@@ -5,7 +5,7 @@ from features.groups import models as groups
 
 
 class ContentQuerySet(models.QuerySet):
-    def permitted(self, user):
+    def can_view(self, user):
         if user.is_authenticated():
             return self.filter(
                     models.Q(public=True) |
@@ -16,6 +16,9 @@ class ContentQuerySet(models.QuerySet):
                     )
         else:
             return self.public()
+
+    def permitted(self, user):
+        return self.can_view(user)
 
     def public(self):
         return self.filter(public=True)

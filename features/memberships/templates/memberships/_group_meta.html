@@ -1,6 +1,6 @@
 {% load memberships rules %}
 {% has_perm 'memberships.create_membership' user group as can_create %}
-{% has_perm 'memberships.list_memberships' user group as can_list %}
+{% has_perm 'memberships.view_list' user group as can_list %}
 
 <dt>
     <i class="sg sg-members"></i>

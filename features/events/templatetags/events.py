@@ -1,5 +1,6 @@
 import calendar as python_calendar
 import datetime
+from content import models as content
 from django import template
 from django.core import urlresolvers
 import itertools
@@ -50,15 +51,32 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
         return [self.formatweekday(i) for i in self.iterweekdays()]
 
 
-@register.inclusion_tag('calendar/_calendar.html', takes_context=True)
-def calendar(context, events, size='preview'):
+@register.inclusion_tag('events/_calendar.html', takes_context=True)
+def calendar(context, user, events=None, add_to_month=0, size='preview'):
+    around = datetime.date.today()
+    for i in range(add_to_month):
+        around = around.replace(day=1) + datetime.timedelta(days=32)
+    if events is None:
+        events = content.Event.objects.can_view(user).around(around)
     c = Calendar(events)
     return {
             'size': size,
             'days': c.formatweekheader(),
             'group': context.get('group'),
-            'month': c.formatmonthname(c.today.year, c.today.month),
-            'weeks': c.formatmonthweeks(c.today.year, c.today.month),
+            'month': c.formatmonthname(around.year, around.month),
+            'weeks': c.formatmonthweeks(around.year, around.month),
+            }
+
+
+@register.inclusion_tag('events/_sidebar_calendar.html')
+def sidebar_calendar(user=None, events=None, preview_length=5, show_group=True, group=None):
+    if events is None:
+        events = content.Event.objects.can_view(user)
+    return {
+            'events': events,
+            'group': group,
+            'preview_length': preview_length,
+            'show_group': show_group,
             }
 
 

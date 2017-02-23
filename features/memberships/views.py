@@ -1,15 +1,14 @@
 from . import models
 from core import fields, views
-from django import db, http
+from django import db, http, shortcuts
 from django.contrib import messages
 from django.core import urlresolvers
-from entities import views as entities_views
-from features.gestalten import models as entities_models
-from features.groups import views as groups
+from features.gestalten import models as gestalten_models, views as gestalten_views
+from features.groups import models as groups_models, views as groups_views
 from utils import views as utils_views
 
 
-class MembershipMixin(groups.Mixin):
+class MembershipMixin(groups_views.Mixin):
     model = models.Membership
     title = 'Mitgliedschaft'
 
@@ -29,19 +28,18 @@ class Join(MembershipMixin, views.Create):
     template_name = 'memberships/join.html'
 
 
-class Members(MembershipMixin, entities_views.GestaltList):
-    menu = 'group'
-    permission = 'memberships.list_memberships'
-    related_object_mandatory = True
-    template_name = 'memberships/gestalt_list.html'
-    title = 'Mitglieder'
+class Members(gestalten_views.List):
+    permission_required = 'memberships.view_list'
+    template_name = 'memberships/list.html'
 
-    def get_parent(self):
-        return self.related_object
+    def get_permission_object(self):
+        self.group = shortcuts.get_object_or_404(
+                groups_models.Group, pk=self.kwargs['group_pk'])
+        return self.group
 
     def get_queryset(self):
-        return entities_models.Gestalt.objects.filter(
-                memberships__group=self.related_object).order_by('-score')
+        return gestalten_models.Gestalt.objects.filter(
+                memberships__group=self.group).order_by('-score')
 
 
 class MemberAdd(MembershipMixin, views.Create):
