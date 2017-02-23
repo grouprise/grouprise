@@ -1,4 +1,5 @@
 from core import notifications
+from django.conf import settings
 from features.gestalten import models as gestalten
 
 
@@ -29,8 +30,14 @@ class Created(notifications.Notification):
         recipients.discard(self.text.author)
         return recipients
 
+    def get_reply_key(self):
+        return 'ABCDEFGHIJKL'
+
     def get_sender(self):
         return self.text.author
+
+    def get_sender_email(self):
+        return settings.ANSWERABLE_FROM_EMAIL
 
     def get_subject(self):
         prefix = '' if self.text.container.texts.first() == self.text else 'Re: '

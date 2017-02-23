@@ -205,6 +205,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 DEFAULT_FROM_EMAIL = 'noreply@localhost'
+ANSWERABLE_FROM_EMAIL = 'stadtgestalten@localhost'
+DEFAULT_REPLY_TO_EMAIL = 'stadtgestalten+{reply_key}@localhost'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

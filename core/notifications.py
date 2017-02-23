@@ -57,6 +57,15 @@ class Notification:
         my_id = '{}.{}'.format(now_string, uuid_string)
         return my_id, None, []
 
+    def get_reply_key(self):
+        """
+        Subclasses may overwrite this method to return a string to identify replies.
+
+        If defined, the `Reply-To` header is set to DEFAULT_REPLY_TO_EMAIL with `{reply_key}`
+        replaced by the reply key.
+        """
+        return None
+
     def send(self):
         for recipient, with_name in self.get_formatted_recipients():
             subject = self.get_subject()
@@ -83,6 +92,10 @@ class Notification:
             if reference_ids:
                 headers['References'] = ' '.join(['<{}@{}>'.format(ref_id, site.name)
                                                   for ref_id in reference_ids])
+            reply_key = self.get_reply_key()
+            if reply_key:
+                headers['Reply-To'] = '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
+                    reply_key=reply_key))
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
                     to=[recipient], headers=headers)
