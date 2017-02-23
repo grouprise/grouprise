@@ -22,6 +22,9 @@
 {% endblock %}
 
 {% block content %}
+    {% calendar user size="large" %}
+
+    {% comment %}
     {# FIXME: markup, css-classes, ...? #}
     <ol class="profiles">
         <li>
@@ -31,6 +34,7 @@
             {% calendar user add_to_month=1 size="large" %}
         </li>
     </ol>
+    {% endcomment %}
     
     <div class="content-list">
         <ol class="content-preview-list">
