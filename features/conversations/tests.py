@@ -74,7 +74,7 @@ class GroupPageHasCreateLink:
 
 
 class CanCreateGestaltConversationWithEmail:
-    def test_create_gestalt_conversation(self):
+    def test_create_gestalt_conversation_with_email(self):
         response = self.client.get(
                 self.get_url('create-gestalt-conversation', key=self.other_gestalt.pk))
         self.assertEqual(response.status_code, 200)
@@ -107,7 +107,7 @@ class CanCreateGestaltConversation:
 
 
 class CanCreateGroupConversationWithEmail:
-    def test_create_group_conversation(self):
+    def test_create_group_conversation_with_email(self):
         response = self.client.get(self.get_url('create-group-conversation', key=self.group.pk))
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
@@ -144,7 +144,7 @@ class GroupPageHasConversationLink:
 
 
 class GroupPageDoesNotHaveConversationLink:
-    def test_group_page_conversation(self):
+    def test_group_page_not_conversation(self):
         response = self.client.get(self.group.get_absolute_url())
         self.assertNotContainsLink(response, 'conversation', key=self.association.pk)
 
@@ -156,7 +156,7 @@ class CanViewGestaltConversation:
 
 
 class CanNotViewGestaltConversation:
-    def test_view_gestalt_conversation(self):
+    def test_not_view_gestalt_conversation(self):
         conversation_url = self.get_url('conversation', key=self.association.pk)
         response = self.client.get(conversation_url)
         self.assertForbiddenOrLogin(response, conversation_url)
@@ -169,7 +169,7 @@ class CanViewGroupConversation:
 
 
 class CanNotViewGroupConversation:
-    def test_view_group_conversation(self):
+    def test_not_view_group_conversation(self):
         conversation_url = self.get_url('conversation', key=self.association.pk)
         response = self.client.get(conversation_url)
         self.assertForbiddenOrLogin(response, conversation_url)
@@ -185,7 +185,7 @@ class OtherGestaltCanNotViewGroupConversation:
 
 
 class CanReplyToConversation:
-    def test_reply(self):
+    def test_reply_to_conversation(self):
         conversation_url = self.get_url('conversation', key=self.association.pk)
         response = self.client.post(
                 conversation_url,
@@ -197,7 +197,7 @@ class CanReplyToConversation:
 
 
 class OtherGestaltIsNotifiedOnGestaltConversation:
-    def test_reply(self):
+    def test_gestalt_is_notified_on_gestalt_conversation(self):
         self.client.post(
                 self.get_url('create-gestalt-conversation', key=self.other_gestalt.pk),
                 {
@@ -210,7 +210,7 @@ class OtherGestaltIsNotifiedOnGestaltConversation:
 
 
 class OtherGestaltIsNotifiedOnReply:
-    def test_reply(self):
+    def test_is_notified_on_reply(self):
         conversation_url = self.get_url('conversation', key=self.association.pk)
         self.client.post(
                 conversation_url,
@@ -223,7 +223,7 @@ class OtherGestaltIsNotifiedOnReply:
 
 
 class CanNotReplyToConversation:
-    def test_reply(self):
+    def test_cannot_reply_to_conversation(self):
         conversation_url = self.get_url('conversation', key=self.association.pk)
         response = self.client.post(
                 conversation_url,

@@ -130,6 +130,19 @@ lint: check-virtualenv $(STANDARD_BIN)
 
 test: lint check-virtualenv $(STANDARD_BIN)
 	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
+	@# Auf doppelte Test-Methoden-Namen pruefen - diese koennen sich gegenseitig verdecken.
+	@# Dabei ignorieren wir das Verzeichnis ./.venv/ - es wird von der gitlab-Testumgebung
+	@# erzeugt und produziert Namenskollisionen mit Django-Tests.
+	@duplicate_function_names=$$(find -type f -name tests.py \
+			| grep -v "^\./\.venv/" \
+			| xargs grep -h "def test_" \
+			| sed 's/^ \+def //g' | cut -f 1 -d "(" \
+			| sort | uniq -d); \
+		if [ -n "$$duplicate_function_names" ]; then \
+			echo "[ERROR] non-unique test method names found:"; \
+			echo "$$duplicate_function_names" | sed 's/^/    /g'; \
+			exit 1; \
+		fi >&2
 	@# Die Umgebungsvariable "STADTGESTALTEN_IN_TEST" kann in "local_settings.py" geprueft
 	@# werden, um die Verwendung einer postgres/mysql-Datenbankverbindung ohne "create"-Rechte
 	@# zu verhindern. Mit sqlite klappen die Tests dann natuerlich.

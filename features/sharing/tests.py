@@ -4,7 +4,7 @@ from features.groups import tests as groups
 
 
 class GroupRecommend(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
-    def test_recommend(self):
+    def test_group_recommend(self):
         self.client.post(
                 self.get_url('group-recommend', self.group.pk),
                 {'recipient_email': self.gestalt.user.email})
@@ -13,7 +13,7 @@ class GroupRecommend(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
 
 
 class MemberInvite(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
-    def test_recommend(self):
+    def test_member_invite(self):
         self.client.post(
                 self.get_url('member-invite', self.group.pk),
                 {'recipient_email': self.gestalt.user.email})
