@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}Gespräch - {{ site.name }}{% endblock %}
-
+{% block menu %}{% with group=view.entity menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.entity 'Gespräch' %}{% endblock %}
 
 {% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}

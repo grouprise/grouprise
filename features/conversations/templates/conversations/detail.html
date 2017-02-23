@@ -2,9 +2,8 @@
 
 {% load rules %}
 
-{% block heading_title %}
-<h1 class="content-classification">Gespräch</h1>
-{% endblock %}
+{% block menu %}{% with group=association.entity menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
 
 {% block content %}
     {% has_perm 'conversations.reply' user association as can_reply %}
