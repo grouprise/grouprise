@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django_filters',
+    'django_mailbox',
     'entities.apps.EntitiesConfig',
     'features.articles',
     'features.associations',

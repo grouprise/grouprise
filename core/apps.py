@@ -12,3 +12,4 @@ class CoreConfig(AppConfig):
         module_loading.autodiscover_modules('fragments')
         module_loading.autodiscover_modules('rest_api')
         module_loading.autodiscover_modules('markdown')
+        module_loading.autodiscover_modules('signals')
