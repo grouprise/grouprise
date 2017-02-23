@@ -130,9 +130,12 @@ lint: check-virtualenv $(STANDARD_BIN)
 
 test: lint check-virtualenv $(STANDARD_BIN)
 	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
-	@# auf doppelte Test-Methoden-Namen pruefen - diese koennen sich gegenseitig verdecken
-	@duplicate_function_names=$$(find -type f -name tests.py -print0 \
-			| xargs -0 grep -h "def test_" \
+	@# Auf doppelte Test-Methoden-Namen pruefen - diese koennen sich gegenseitig verdecken.
+	@# Dabei ignorieren wir das Verzeichnis ./.venv/ - es wird von der gitlab-Testumgebung
+	@# erzeugt und produziert Namenskollisionen mit Django-Tests.
+	@duplicate_function_names=$$(find -type f -name tests.py \
+			| grep -v "^\./\.venv/" \
+			| xargs grep -h "def test_" \
 			| sed 's/^ \+def //g' | cut -f 1 -d "(" \
 			| sort | uniq -d); \
 		if [ -n "$$duplicate_function_names" ]; then \
