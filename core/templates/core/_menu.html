@@ -1,4 +1,4 @@
-{% load cache rules utils %}
+{% load rules utils %}
 
 <nav class="nav">
     <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
@@ -46,7 +46,6 @@
                             </a>
                         {% endif %}
                     </header>
-                    {% cache cache_timeout site-menu user.gestalt.id group.id %}
                     <div class="dock-content">
                         <div class="dock-content-inner">
                             <div class="dock-fit dock-header-extension hidden-lg">
@@ -108,7 +107,6 @@
                             </ol>
                         </div>
                     </div>
-                    {% endcache %}
                 </div>
             </div>
         </li>

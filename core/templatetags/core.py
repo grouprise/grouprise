@@ -23,6 +23,14 @@ def breadcrumb(parent, title):
     return {'parent_name': str(parent), 'parent_url': parent_url, 'title_name': str(title)}
 
 
+@register.inclusion_tag('core/_menu.html', takes_context=True)
+def menu(context, active, entity=None):
+    if entity.is_group:
+        context['group'] = entity
+    context['menu'] = active
+    return context
+
+
 @register.simple_tag()
 def ref(entity):
     try:

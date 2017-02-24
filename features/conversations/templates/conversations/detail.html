@@ -2,14 +2,8 @@
 
 {% load rules %}
 
-{% block menu %}
-    {% if association.entity.is_group %}
-        {% with group=association.entity menu='conversation' %}{{ block.super }}{% endwith %}
-    {% else %}
-        {% with menu='conversation' %}{{ block.super }}{% endwith %}
-    {% endif %}
-{% endblock %}
-{% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
+{% block menu %}{% menu 'conversation' association.entity %}{% endblock %}
+{% block heading_title %}{% with title='Gespräch' %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block content %}
     {% has_perm 'conversations.reply' user association as can_reply %}
@@ -37,14 +31,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block sidebar %}
-    {% if association.entity.is_group %}
-        {% include 'entities/_sidebar_group.html' with group=association.entity %}
-    {% else %}
-        {% if association.entity.public %}
-            {% include 'entities/_sidebar_author.html' with gestalt=association.entity %}
-        {% endif %}
-    {% endif %}
-{% endblock %}
-

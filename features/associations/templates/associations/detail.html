@@ -2,3 +2,13 @@
 
 {% block title %}{{ association.container }} - {{ block.super }}{% endblock %}
 {% block breadcrumb %}{% breadcrumb association.entity association.container %}{% endblock %}
+
+{% block sidebar %}
+    {% if association.entity.is_group %}
+        {% include 'entities/_sidebar_group.html' with group=association.entity %}
+    {% else %}
+        {% if association.entity.public %}
+            {% include 'entities/_sidebar_author.html' with gestalt=association.entity %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

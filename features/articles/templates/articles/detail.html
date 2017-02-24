@@ -1,1 +1,26 @@
 {% extends 'associations/detail.html' %}
+
+{% block meta %}
+    {% include 'articles/_meta.html' with content=association.container %}
+{% endblock %}
+
+{% block menu %}{% menu 'article' association.entity %}{% endblock %}
+
+{% block heading_title %}
+    {% with title="Beitrag" %}{{ block.super }}{% endwith %}
+    <div class="btn-toolbar">
+        {#{% include_fragments 'content-actions' %}#}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <article class="content">
+        <header class="content-teaser">
+            {#{% include 'content/_content_info.html' %}#}
+            <span class="content-type">
+                <i class="sg sg-content-type-article"></i>
+                <span>{% if not association.public %}Interner {% endif %}Artikel</span>
+            </span>
+        </header>
+    </article>
+{% endblock %}

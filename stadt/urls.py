@@ -10,7 +10,6 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('entities.urls')),
     urls.url(r'^stadt/', urls.include('features.articles.urls')),
     urls.url(r'^stadt/', urls.include('features.associations.urls')),
-    urls.url(r'^', urls.include('features.content.urls')),
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
     urls.url(r'^stadt/', urls.include('features.events.urls')),
     urls.url(r'^stadt/', urls.include('features.gestalten.urls')),
@@ -22,6 +21,7 @@ urlpatterns = [
     urls.url(r'^stadt/api/', urls.include('core.api_urls')),
     urls.url(r'^stadt/admin/', admin.site.urls),
     urls.url(r'^$', content_views.ContentList.as_view(), name='index'),
+    urls.url(r'^', urls.include('features.content.urls')),
     urls.url(r'^', urls.include('features.groups.root_urls')),
 
     urls.url(
