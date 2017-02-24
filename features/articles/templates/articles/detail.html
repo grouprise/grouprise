@@ -30,13 +30,22 @@
             {% markdown association.container.texts.first.text heading_baselevel=2 %}
         </div>
 
-        {% comment %}
         <footer class="content-footer">
-            {% has_perm 'content.create_comment' user content as can_create_comment %}
-            {% if can_create_comment or content.comments.exists %}
-                {% include 'content/_content_comments.html' %}
-            {% endif %}
+            <h2>Kommentare</h2>
+            <ol class="medias">
+                {% for comment in association.container.texts.all|slice:'1:' %}
+                    <li>
+                        {% include 'texts/_text.html' with text=comment only %}
+                    </li>
+                {% endfor %}
+                {% comment %}
+                {% if can_reply %}
+                <li>
+                    {% include "conversations/_reply.html" with form=form author=user.gestalt %}
+                </li>
+                {% endif %}
+                {% endcomment %}
+            </ol>
         </footer>
-        {% endcomment %}
     </article>
 {% endblock %}
