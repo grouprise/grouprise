@@ -1,0 +1,4 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}{{ association.container }} - {{ block.super }}{% endblock %}
+{% block breadcrumb %}{% breadcrumb association.entity association.container %}{% endblock %}

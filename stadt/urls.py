@@ -10,6 +10,7 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('entities.urls')),
     urls.url(r'^stadt/', urls.include('features.articles.urls')),
     urls.url(r'^stadt/', urls.include('features.associations.urls')),
+    urls.url(r'^', urls.include('features.content.urls')),
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
     urls.url(r'^stadt/', urls.include('features.events.urls')),
     urls.url(r'^stadt/', urls.include('features.gestalten.urls')),
@@ -39,8 +40,8 @@ urlpatterns = [
         name='group'),
 
     urls.url(
-        r'^(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$',
+        r'^c/(?P<group_slug>[\w-]+)/(?P<slug>[\w-]+)/$',
         content_views.Content.as_view(),
-        name='content'),
+        name='content1'),
 
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

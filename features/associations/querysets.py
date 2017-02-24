@@ -14,14 +14,15 @@ class Association(models.QuerySet):
             gestalt_groups = groups.Group.objects.filter(memberships__member=user.gestalt)
             author_query_string = '{}__texts__author'.format(kwargs['container'])
             return self.filter(
-                    models.Q(**{author_query_string: user.gestalt})
+                    models.Q(public=True)
+                    | models.Q(**{author_query_string: user.gestalt})
                     | (models.Q(entity_type=group_type)
                         & models.Q(entity_id__in=gestalt_groups))
                     | (models.Q(entity_type=gestalt_type)
                         & models.Q(entity_id=user.gestalt.id))
                     )
         else:
-            return self.none()
+            return self.filter(public=True)
 
     # TODO: replace 'conversation' by generic container
     def ordered_conversations(self, user):
