@@ -12,7 +12,7 @@ class Association(models.QuerySet):
             gestalt_type = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
             group_type = contenttypes.ContentType.objects.get_for_model(groups.Group)
             gestalt_groups = groups.Group.objects.filter(memberships__member=user.gestalt)
-            author_query_string = '{}__texts__author'.format(kwargs['container'])
+            author_query_string = '{}__texts__authors'.format(kwargs['container'])
             return self.filter(
                     models.Q(public=True)
                     | models.Q(**{author_query_string: user.gestalt})
@@ -29,5 +29,5 @@ class Association(models.QuerySet):
         qs = self.can_view(user, container='conversation').filter(
             container_type=contenttypes.ContentType.objects.get_for_model(
                 conversations.Conversation))
-        qs = qs.annotate(last_activity=Max('conversation__texts__time_created'))
+        qs = qs.annotate(last_activity=Max('conversation__texts__authorships__time_created'))
         return qs.order_by('-last_activity')

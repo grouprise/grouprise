@@ -29,8 +29,9 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
         return self.render_to_response(context)
 
     def get_form_kwargs(self):
-        text = texts.Text(author=self.request.user.gestalt, container=self.object.container)
+        text = texts.Text(container=self.object.container)
         kwargs = super().get_form_kwargs()
+        kwargs['author'] = self.request.user.gestalt
         kwargs['instance'] = text
         return kwargs
 

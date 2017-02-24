@@ -68,6 +68,7 @@ class Reply(forms.ModelForm):
         labels = {'text': 'Antwort'}
 
     def __init__(self, *args, **kwargs):
+        self.author = kwargs.pop('author')
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_show_labels = False
@@ -76,3 +77,8 @@ class Reply(forms.ModelForm):
                     'data-component': 'keysubmit autosize cite cite-sink'
                 }),
                 utils_forms.Submit('Antworten'))
+    
+    def save(self, commit=True):
+        text = super().save(commit)
+        text.authorships.create(author=self.author)
+        return text

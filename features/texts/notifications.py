@@ -26,11 +26,11 @@ class Created(notifications.Notification):
         for group in self.text.container.get_groups():
             recipients.update(set(gestalten.Gestalt.objects.filter(
                 memberships__group=group)))
-        recipients.discard(self.text.author)
+        recipients.discard(self.text.authors.first)
         return recipients
 
     def get_sender(self):
-        return self.text.author
+        return self.text.authors.first
 
     def get_subject(self):
         prefix = '' if self.text.container.texts.first() == self.text else 'Re: '
