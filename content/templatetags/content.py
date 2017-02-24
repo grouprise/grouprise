@@ -13,74 +13,11 @@ import utils.markdown
 
 register = template.Library()
 
-markdown_extensions = [
-    magiclink.MagiclinkExtension(),
-    nl2br.Nl2BrExtension(),
-    utils.markdown.ExtendedLinkExtension(),
-    sane_lists.SaneListExtension(),
-    fenced_code.FencedCodeExtension(),
-    utils.markdown.CuddledListExtension(),
-    UnimojiExtension()
-]
-
-content_allowed_tags = (
-    # text
-    'p', 'em', 'strong', 'br', 'a', 'img',
-    # citation
-    'blockquote', 'cite',
-    # headings
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    # lists
-    'ol', 'ul', 'li',
-    # code
-    'pre', 'code'
-)
-
-content_allowed_attributes = {
-    '*': 'title',
-    'a': ['href', 'title', 'data-component', 'data-grouplink-ref'],
-    'code': ['class'],
-    'img': ['src', 'alt']
-}
-
-
-@register.filter
-def bleach(text, disable_tags=tuple()):
-    if disable_tags == "all":
-        allowed_tags = tuple()
-    else:
-        allowed_tags = set(content_allowed_tags) - set(disable_tags)
-    bleached = python_bleach.clean(
-            text, strip=True, tags=allowed_tags, attributes=content_allowed_attributes)
-    if isinstance(text, safestring.SafeString):
-        return safestring.mark_safe(bleached)
-    else:
-        return bleached
-
 
 @register.filter(needs_autoescape=True)
 def markdown(text, autoescape=True):
     return safestring.mark_safe(python_markdown.markdown(
         html.conditional_escape(text) if autoescape else text, extensions=markdown_extensions))
-
-
-@register.simple_tag(name="markdown")
-def markdown_tag(
-        text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
-        plain_preview=False):
-    extensions = tuple(markdown_extensions) + (toc.TocExtension(baselevel=heading_baselevel), )
-    result = python_markdown.markdown(text, extensions=extensions)
-    if filter_tags:
-        disabled_tags = tuple(disable_tags.split(","))
-        result = bleach(result, disabled_tags)
-    if truncate:
-        result = truncatewords_html(result, truncate)
-    if plain_preview:
-        result = bleach(result, disable_tags="all")
-        result = truncatewords(result, plain_preview)
-        result = html.conditional_escape(result)
-
-    return safestring.mark_safe(result)
 
 
 @register.filter

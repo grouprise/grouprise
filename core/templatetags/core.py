@@ -1,9 +1,13 @@
+import bleach as python_bleach
+from core import fragments, markdown as core_markdown
+from core.views import app_config
 from django import template
 from django.conf import settings
 from django.contrib.sites import models as sites_models
-from django.utils import safestring
-from core import fragments
-from core.views import app_config
+from django.template import defaultfilters
+from django.utils import html, safestring
+import markdown as python_markdown
+from markdown.extensions import nl2br, toc, sane_lists, fenced_code
 
 register = template.Library()
 
@@ -69,6 +73,38 @@ def include_fragments(context, fragment_group):
     for key in group:
         t = context.template.engine.get_template(fragments.fragments[key])
         result += t.render(context)
+    return safestring.mark_safe(result)
+
+
+def bleach(text, disable_tags=tuple()):
+    if disable_tags == "all":
+        allowed_tags = tuple()
+    else:
+        allowed_tags = set(core_markdown.content_allowed_tags) - set(disable_tags)
+    bleached = python_bleach.clean(
+            text, strip=True, tags=allowed_tags, attributes=core_markdown.content_allowed_attributes)
+    if isinstance(text, safestring.SafeString):
+        return safestring.mark_safe(bleached)
+    else:
+        return bleached
+
+
+@register.simple_tag
+def markdown(
+        text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
+        plain_preview=False):
+    extensions = tuple(core_markdown.markdown_extensions) + (toc.TocExtension(baselevel=heading_baselevel), )
+    result = python_markdown.markdown(text, extensions=extensions)
+    if filter_tags:
+        disabled_tags = tuple(disable_tags.split(","))
+        result = bleach(result, disabled_tags)
+    if truncate:
+        result = defaultfilters.truncatewords_html(result, truncate)
+    if plain_preview:
+        result = bleach(result, disable_tags="all")
+        result = defaultfilters.truncatewords(result, plain_preview)
+        result = html.conditional_escape(result)
+
     return safestring.mark_safe(result)
 
 

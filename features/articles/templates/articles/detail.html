@@ -17,10 +17,26 @@
     <article class="content">
         <header class="content-teaser">
             {% include 'content/_info.html' %}
-            <span class="content-type">
+            <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
                 <i class="sg sg-content-type-article"></i>
                 <span>{% if not association.public %}Interner {% endif %}Artikel</span>
             </span>
         </header>
+        
+        <div class="content-body" data-component="user-content">
+            <h1 class="content-title">
+                {{ association.container.title }}
+            </h1>
+            {% markdown association.container.texts.first.text heading_baselevel=2 %}
+        </div>
+
+        {% comment %}
+        <footer class="content-footer">
+            {% has_perm 'content.create_comment' user content as can_create_comment %}
+            {% if can_create_comment or content.comments.exists %}
+                {% include 'content/_content_comments.html' %}
+            {% endif %}
+        </footer>
+        {% endcomment %}
     </article>
 {% endblock %}

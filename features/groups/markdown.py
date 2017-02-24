@@ -1,6 +1,6 @@
 import re
 from markdown import Extension, util, inlinepatterns
-from content.templatetags.content import markdown_extensions
+from core.markdown import markdown_extensions
 from utils.markdown import ExtendedLinkPattern
 from .models import Group
 from . import RE_GROUP_REF
