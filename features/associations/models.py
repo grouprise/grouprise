@@ -4,6 +4,9 @@ from django.db import models
 
 
 class Association(models.Model):
+    public = models.BooleanField(default=False)
+    slug = models.SlugField(default=None, null=True)
+
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
     container_id = models.PositiveIntegerField()
     container_type = models.ForeignKey(
@@ -15,3 +18,6 @@ class Association(models.Model):
             'contenttypes.ContentType', related_name='entity_associations')
 
     objects = models.Manager.from_queryset(querysets.Association)()
+
+    class Meta:
+        unique_together = ('entity_id', 'entity_type', 'slug')

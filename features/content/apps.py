@@ -2,5 +2,5 @@ from django import apps
 
 
 class ContentConfig(apps.AppConfig):
-    label = 'features_content'
+    label = 'content2'
     name = 'features.content'
