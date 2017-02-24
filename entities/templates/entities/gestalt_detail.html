@@ -25,7 +25,7 @@
         <div class="profile-header-data">
             <div class="profile-header-title">
                 <a href="{% url 'gestalt-avatar-update' gestalt.pk %}" class="avatar-edit-inline">
-                    {% include 'entities/_gestalt_avatar.html' with gestalt=gestalt link=False %}
+                    {% include 'gestalten/_avatar.html' with gestalt=gestalt link=False %}
                 </a>
                 <h1>{{ gestalt }}</h1>
                 <span class="clearfix"></span>

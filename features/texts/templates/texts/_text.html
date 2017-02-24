@@ -3,9 +3,9 @@
 <div class="media media-comment" id="{% ref text %}">
     <div class="media-image">
         {% if author %}
-            {% include 'entities/_gestalt_avatar.html' with gestalt=author link=True only %}
+            {% include 'gestalten/_avatar.html' with gestalt=author link=True only %}
         {% else %}
-            {% include 'entities/_gestalt_avatar.html' with gestalt=text.author link=True only %}
+            {% include 'gestalten/_avatar.html' with gestalt=text.author link=True only %}
         {% endif %}
     </div>
     <div class="media-content">

@@ -5,10 +5,10 @@
     <div class="content-meta-avatar">
         {% with groups=content.groups %}
             {% if groups.count == 1 %}
-                {% include 'entities/_group_avatar.html' with group=groups.first link=True size=48 %}
+                {% include 'groups/_avatar.html' with group=groups.first link=True size=48 %}
             {% else %}
                 {% if can_view_author %}
-                    {% include 'entities/_gestalt_avatar.html' with gestalt=content.author link=True size=48 %}
+                    {% include 'gestalten/_avatar.html' with gestalt=content.author link=True size=48 %}
                 {% endif %}
             {% endif %}
         {% endwith %}

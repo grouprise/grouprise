@@ -3,7 +3,7 @@
     {% for contributor in contributors %}
         {% if forloop.counter <= max_shown %}
             <li>
-                {% include 'entities/_gestalt_avatar.html' with gestalt=contributor link=False size=32 %}
+                {% include 'gestalten/_avatar.html' with gestalt=contributor link=False size=32 %}
             </li>
         {% elif forloop.counter == max_shown|add:1  %}
             <li>

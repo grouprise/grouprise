@@ -1,7 +1,5 @@
 {% load cache thumbnail utils content %}
 
-{% cache cache_timeout group-preview link user.gestalt.id group.id %}
-
 {% kwacro preview_body %}
     <header class="group-preview-header">
         {% if group.get_head_gallery and group.get_head_gallery.images.first %}
@@ -14,7 +12,7 @@
         {% else %}
             <div class="group-preview-image group-preview-image-placeholder"></div>
         {% endif %}
-        {% include "entities/_group_avatar.html" with group=group link=False %}
+        {% include "groups/_avatar.html" with group=group link=False %}
         {% if user.is_authenticated %}
             <div class="group-preview-stats">
                 {% include_features '_group_preview_stats.html' %}
@@ -36,5 +34,3 @@
         {%  usekwacro preview_body %}
     </div>
 {% endif %}
-
-{% endcache %}

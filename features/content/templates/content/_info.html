@@ -1,0 +1,28 @@
+{% load rules %}
+
+<div class="content-meta">
+    <div class="content-meta-avatar">
+        {% if association.entity.is_group %}
+            {% include 'groups/_avatar.html' with group=association.entity link=True size=48 %}
+        {% else %}
+            {% include 'gestalten/_avatar.html' with gestalt=association.entity link=True size=48 %}
+        {% endif %}
+    </div>
+    <div class="content-meta-info">
+        <div class="content-meta-author">
+            {% link association.entity %}
+
+            {% if association.entity.is_group %}
+                {% has_perm 'memberships.view_list' user association.entity as can_view_members %}
+                {% if can_view_members %}
+                    ({% link association.container.texts.first.author %})
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="content-meta-extra">
+            {% time association.container.texts.first.time_created %} ·
+            <i class="sg sg-comments" title="Kommentare"></i> {{ association.container.texts.count|add:'-1' }}
+            {#{% include_features '_content_meta_stats.html' %}#}
+        </div>
+    </div>
+</div>

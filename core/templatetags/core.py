@@ -8,6 +8,16 @@ from core.views import app_config
 register = template.Library()
 
 
+@register.simple_tag
+def link(model):
+    return safestring.mark_safe('<a href="{}">{}</a>'.format(model.get_absolute_url(), model))
+
+
+@register.inclusion_tag('core/_time.html')
+def time(time):
+    return {'time': time}
+
+
 @register.inclusion_tag('core/_pagination.html', takes_context=True)
 def pagination(context, label):
     context['pagination_label'] = label

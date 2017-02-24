@@ -47,7 +47,7 @@
     <div class="group-info">
         <div class="group-info-main">
             <a href="{% url 'group-avatar-update' group.pk %}" class="avatar-edit-inline">
-                {% include 'entities/_group_avatar.html' with group=group link=False %}
+                {% include 'groups/_avatar.html' with group=group link=False %}
             </a>
             <h1 class="group-title">
                 {{ group.name }}

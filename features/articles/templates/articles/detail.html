@@ -16,7 +16,7 @@
 {% block content %}
     <article class="content">
         <header class="content-teaser">
-            {#{% include 'content/_content_info.html' %}#}
+            {% include 'content/_info.html' %}
             <span class="content-type">
                 <i class="sg sg-content-type-article"></i>
                 <span>{% if not association.public %}Interner {% endif %}Artikel</span>
