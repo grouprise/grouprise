@@ -6,7 +6,9 @@
 {% block heading_title %}<h2 class="content-classification">Gruppen</h2>{% endblock %}
 
 {% block sidebar %}
-    {% include 'events/_sidebar_calendar.html' with events=events hide_buttons=True %}
+    {% if not no_data %}
+        {% include 'events/_sidebar_calendar.html' with events=events hide_buttons=True %}
+    {% endif %}
 {% endblock %}
 
 {% block heading %}
