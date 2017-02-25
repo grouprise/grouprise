@@ -10,16 +10,16 @@ function createScroller (el) {
 function attachNav (el, opts) {
   el.insertAdjacentHTML('beforeend', `
         <div class="${opts.cssNav}">
-            <div>
-                <button type="button" class="${opts.cssNavBtn} ${opts.cssNavBtnPrev}">
+            <button type="button" class="${opts.cssNavBtnWrap}" data-action="prev">
+                <span class="${opts.cssNavBtn} ${opts.cssNavBtnPrev}">
                     <i class="${opts.cssNavBtnIcon}"></i>
-                </button>            
-            </div>
-            <div>
-                <button type="button" class="${opts.cssNavBtn} ${opts.cssNavBtnNext}">
+                </span>            
+            </button>
+            <button type="button" class="${opts.cssNavBtnWrap}" data-action="next">
+                <span class="${opts.cssNavBtn} ${opts.cssNavBtnNext}">
                     <i class="${opts.cssNavBtnIcon}"></i>
-                </button>
-            </div>
+                </span>
+            </button>
         </div>
     `)
   return { remove() { remove($(`.${opts.cssNav}`), el) }}
@@ -71,6 +71,7 @@ function carousel (root, options) {
 
     root.classList.toggle(conf.cssSlidesFirst, idx === 1)
     root.classList.toggle(conf.cssSlidesLast, idx === getNumberOfSlides())
+    root.classList.add(conf.cssCarouselTransitioning)
 
     mapCall($$(`.${conf.cssIndexBtn}`, root), toggleClass, conf.cssIndexBtnCurrent, false)
     mapCall($$(`.${conf.cssIndex} > :nth-child(${idx}) .${conf.cssIndexBtn}`), toggleClass, conf.cssIndexBtnCurrent, true)
@@ -79,14 +80,14 @@ function carousel (root, options) {
 
     emit('slide:start', eventData)
     unsetCurrent()
-    setCurrent(slide)
-            .then(function () {
-              emit('slide:end', eventData)
-            })
-
     currentSlide = idx
+    const done = setCurrent(slide)
+    done.then(function () {
+        root.classList.remove(conf.cssCarouselTransitioning)
+        emit('slide:end', eventData)
+      })
 
-    return iface
+    return done
   }
 
   function getNumberOfSlides () {
@@ -122,14 +123,14 @@ function carousel (root, options) {
     index.remove()
   }
 
-  const navListener = delegate(root, `.${conf.cssNavBtn}`, 'click', function (event) {
+  const navListener = delegate(root, `.${conf.cssNavBtnWrap}`, 'click', function (event) {
     event.preventDefault()
 
-    if (event.delegateTarget.classList.contains(conf.cssNavBtnPrev)) {
+    if (event.delegateTarget.dataset.action === 'prev') {
       iface.prevSlide()
     }
 
-    if (event.delegateTarget.classList.contains(conf.cssNavBtnNext)) {
+    if (event.delegateTarget.dataset.action === 'next') {
       iface.nextSlide()
     }
   })
@@ -145,8 +146,10 @@ function carousel (root, options) {
   const index = attachIndex(root, conf, getNumberOfSlides())
 
   // set first slide as current but wait for carousel to return
-  setTimeout(() => iface.showSlide(currentSlide), 0)
-  setTimeout(() => root.classList.add(conf.cssReady), 10)
+  setTimeout(() => {
+    iface.showSlide(currentSlide)
+      .then(() => root.classList.add(conf.cssReady))
+  }, 0)
 
   return iface
 }
@@ -159,10 +162,12 @@ carousel.DEFAULTS = {
   cssSlidesLast: 'carousel-last',
   cssNav: 'carousel-nav',
   cssNavBtn: 'carousel-btn',
+  cssNavBtnWrap: 'carousel-btn-wrap',
   cssNavBtnIcon: 'carousel-btn-icon',
   cssNavBtnPrev: 'carousel-btn-prev',
   cssNavBtnNext: 'carousel-btn-next',
   cssCarousel: 'carousel',
+  cssCarouselTransitioning: 'carousel-transitioning',
   cssIndex: 'carousel-index',
   cssIndexBtn: 'carousel-btn-index',
   cssIndexBtnCurrent: 'carousel-btn-index-current'
