@@ -1,5 +1,4 @@
 import moment from 'moment'
-import { includes } from 'lodash'
 
 // load locale files
 import 'moment/locale/de'
@@ -7,56 +6,60 @@ import 'moment/locale/de'
 // initialize locale
 moment.locale('de')
 
-const transforms = []
+const timeInstances = []
 
-function transformNow (index = null) {
-  if (index) {
-    transforms[index]()
-  } else {
-    transforms.forEach((transform) => transform())
+const transforms = {
+  'from': {
+    apply(el, opts) {
+      el.innerHTML = moment(el.getAttribute('datetime')).from(opts.conf.ref || new Date())
+    }
+  },
+  'to': {
+    apply(el, opts) {
+      el.innerHTML = moment(opts.conf.ref || new Date()).to(el.getAttribute('datetime'))
+    }
+  },
+  'days-until': {
+    apply(el, opts) {
+      const days = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
+      el.setAttribute('data-days', days)
+      el.innerHTML = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
+    },
+    destroy(el) {
+      el.removeAttribute('data-days')
+    }
   }
 }
 
-function addTransform (transform) {
-  const index = transforms.push(transform) - 1
-  transformNow(index)
-  return transform
+function transformAll () {
+  timeInstances.forEach(time => time.transform())
 }
 
-function transformFrom (el, opts) {
-  return () => {
-    el.innerHTML = moment(el.getAttribute('datetime')).from(opts.conf.ref || new Date())
+function Time (el, opts) {
+  const origContent = el.innerHTML
+  const transform = transforms[opts.conf.transform]
+  const self = {
+    remove() {
+      if (transform.destroy) {
+        transform.destroy(el, opts)
+      }
+      el.innerHTML = origContent
+      const index = timeInstances.indexOf(self);
+      timeInstances.splice(index, 1);
+    },
+    transform() {
+      transform.apply(el, opts)
+    }
   }
+  timeInstances.push(self)
+  self.transform()
+  return self
 }
 
-function transformTo (el, opts) {
-  return () => {
-    el.innerHTML = moment(opts.conf.ref || new Date()).to(el.getAttribute('datetime'))
-  }
+Time.DEFAULTS = {
+  'transform': 'from'
 }
 
-function transformDaysUntil (el, opts) {
-  return () => {
-    const days = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
-    el.setAttribute('data-days', days)
-    el.innerHTML = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
-  }
-}
+setInterval(transformAll, 60 * 1000)
 
-function createTransform (el, opts) {
-  if (includes(opts.types, 'from')) {
-    return addTransform(transformFrom(el, opts))
-  }
-
-  if (includes(opts.types, 'to')) {
-    return addTransform(transformTo(el, opts))
-  }
-
-  if (includes(opts.types, 'days-until')) {
-    return addTransform((transformDaysUntil(el, opts)))
-  }
-}
-
-setInterval(transformNow, 60 * 1000)
-
-export default createTransform
+export default Time
