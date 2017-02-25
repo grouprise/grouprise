@@ -6,9 +6,11 @@ function createListener (el, state) {
   const setActive = on(el, 'mouseenter', set(true))
   const setInactive = on(el, 'mouseleave', set(false))
 
-  return () => {
-    setActive.destroy()
-    setInactive.destroy()
+  return {
+    destroy() {
+      setActive.destroy()
+      setInactive.destroy()
+    }
   }
 }
 
@@ -27,10 +29,10 @@ export default (el, opts) => {
 
   return {
     remove: () => {
-      sourceListener()
-      targetListener()
-      triggerListener()
-      documentListener()
+      sourceListener.destroy()
+      targetListener.destroy()
+      triggerListener.destroy()
+      documentListener.destroy()
     }
   }
 }

@@ -1,12 +1,17 @@
+import bel from 'bel'
 import closest from 'closest'
-import { keyPressed, on } from 'luett'
+import { insertElement, remove, keyPressed, on } from 'luett'
 
-const usage = `<span class='pull-right media-instruction'>
-    <kbd>Shift</kbd> + <kbd>Enter</kbd> sendet das Formular ab
-</span>`
+function usage() {
+  return (
+    bel`<span class='pull-right media-instruction'>
+        <kbd>Shift</kbd> + <kbd>Enter</kbd> sendet das Formular ab
+    </span>`
+  )
+}
 
 export default el => {
-  el.insertAdjacentHTML('afterend', usage)
+  const instructions = insertElement.after(el, usage())
 
   const keyDownListener = on(el, 'keydown', keyPressed(13, { shiftKey: true }, event => {
     event.preventDefault()
@@ -17,6 +22,7 @@ export default el => {
     el,
     remove: () => {
       keyDownListener.destroy()
+      remove(instructions)
     }
   }
 }
