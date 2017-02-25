@@ -19,6 +19,8 @@ const dismissal = {
 }
 
 export default (el) => {
+  const iface = {}
+
   if (!dismissal.isDismissed() && isUnsupported) {
     const disclaimer = bel`
             <div class="disclaimer disclaimer-info">
@@ -26,6 +28,7 @@ export default (el) => {
                 <button class="btn-text btn-text-light pull-right">
                     <i class="fa fa-times"></i>
                 </button>
+                
                 <div class="container">
                     <p>
                         Entschuldige! Da wir Stadtgestalten als Projekt in unserer Freizeit entwickeln, können 
@@ -38,11 +41,20 @@ export default (el) => {
             </div>
         `
 
-    delegate(disclaimer, 'button', 'click', () => {
+    const listener = delegate(disclaimer, 'button', 'click', () => {
       dismissal.setDismissed()
-      el.removeChild(disclaimer)
+      iface.remove()
     })
 
     el.insertBefore(disclaimer, el.firstChild)
+
+    iface.remove = function() {
+      el.removeChild(disclaimer)
+      listener.destroy()
+    }
+  } else {
+    iface.remove = () => {}
   }
+
+  return iface
 }
