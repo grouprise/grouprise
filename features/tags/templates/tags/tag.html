@@ -23,18 +23,18 @@
         <p>Für dieses Schlagwort wurden noch keine Inhalte eingestellt</p>
     {% else %}
         <p>
-            Wir haben {% if tagged_groups|length == 1 %}eine Gruppe{% else %}{{ tagged_groups|length }} Gruppen{% endif %} und
+            Wir haben {% if groups|length == 1 %}eine Gruppe{% else %}{{ groups|length }} Gruppen{% endif %} und
             {% if paginator.count == 1 %}einen Beitrag{% else %}{{ paginator.count }} Beiträge{% endif %} für
             das Schlagwort „{{ tag.name }}“ auf Stadtgestalten.
         </p>
 
         {# groups #}
-        {% if tagged_groups|length > 0 %}
+        {% if groups|length > 0 %}
             <div class="content-header">
                 <h2 class="content-classification">Gruppen</h2>
             </div>
             <ol class="groups">
-                {% for group in tagged_groups %}
+                {% for group in groups %}
                     <li>
                         {% include 'groups/_preview.html' with group=group link=True %}
                     </li>
