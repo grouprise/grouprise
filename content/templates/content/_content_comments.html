@@ -11,6 +11,7 @@
 </h2>
 
 
+{% if content.comments.exist %}
 <ol class="medias">
     {% for comment in content.comments.all %}
         <li>
@@ -37,12 +38,13 @@
         </li>
     {% endfor %}
 </ol>
+{% endif %}
 
 {% has_perm 'content.create_comment' user content as can_create_comment %}
 {% if can_create_comment %}
     {% crispy comment_form %}
 {% else %}
-    <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">Kommentieren</a>
+    <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">Anmelden um zu Kommentieren</a>
 {% endif %}
 
 {% include_features '_content_comment_actions.html' %}
