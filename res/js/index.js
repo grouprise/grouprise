@@ -10,7 +10,6 @@ import editor from './transforms/editor'
 import time from './transforms/time'
 import userContent from './transforms/user-content'
 import gallery from './transforms/gallery'
-import transformIcon from './transforms/transformicons'
 import input from './transforms/input'
 import snake from './transforms/snake'
 import openable from './transforms/openable'
@@ -42,7 +41,6 @@ function init (searchIn = document) {
   component('clipboard', clipboard, opts)
   component('browser-warning', browserWarning, opts)
   component('carousel', carousel, opts)
-  component('tcon', transformIcon, opts)
   component('conversation', conversation, opts)
   component('keysubmit', keysubmit, opts)
   component('select', select, opts)
