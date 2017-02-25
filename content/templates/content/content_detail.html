@@ -37,10 +37,7 @@
         <div class="clearfix"></div>
 
         <footer class="content-footer">
-            {% has_perm 'content.create_comment' user content as can_create_comment %}
-            {% if can_create_comment or content.comments.exists %}
-                {% include 'content/_content_comments.html' %}
-            {% endif %}
+            {% include 'content/_content_comments.html' %}
         </footer>
     </article>
     {% endcache %}
