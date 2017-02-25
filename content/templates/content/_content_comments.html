@@ -1,6 +1,15 @@
 {% load content crispy_forms_tags rules utils core %}
 
-<h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
+<h2 class="content-header">
+    <span class="content-classification">
+        {% if content.public %}Kommentare{% else %}Antworten{% endif %}
+    </span>
+    <span class="decoration-icon sg-comments" role="presentation"></span>
+    <div class="btn-toolbar">
+        {% include_fragments 'content-comments-actions' %}
+    </div>
+</h2>
+
 
 <ol class="medias">
     {% for comment in content.comments.all %}
