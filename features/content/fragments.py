@@ -7,5 +7,4 @@ fragments.register(
 fragments.insert(
         'content-actions-edit',
         'content-actions',
-        before=['content-subscription-actions'],
         )
