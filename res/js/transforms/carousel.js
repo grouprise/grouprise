@@ -1,4 +1,4 @@
-import { $, $$, getAttr, mapCall, toggleClass } from 'luett'
+import { $, $$, getAttr, mapCall, toggleClass, remove } from 'luett'
 import delegate from 'delegate'
 import { range } from 'lodash'
 import stroll from 'stroll.js'
@@ -22,6 +22,7 @@ function attachNav (el, opts) {
             </div>
         </div>
     `)
+  return { remove() { remove($(`.${opts.cssNav}`), el) }}
 }
 
 function attachIndex (el, opts, numberOfSlides) {
@@ -38,6 +39,7 @@ function attachIndex (el, opts, numberOfSlides) {
             `).join('\n')}
         </ol>
     `)
+  return { remove() { remove($(`.${opts.cssIndex}`), el) }}
 }
 
 function carousel (root, options) {
@@ -45,12 +47,11 @@ function carousel (root, options) {
   const iface = Object.create(null)
   const crsl = $(`.${conf.cssCarousel}`, root)
 
-    // create a default scroller
+  // create a default scroller
   let scroller = createScroller(crsl)
-    // configure noop emitter
+  // configure noop emitter
   let emit = () => {}
-
-    // set state
+  // set state
   let currentSlide = 1
 
   function unsetCurrent () {
@@ -114,7 +115,14 @@ function carousel (root, options) {
     return showSlide(currentSlide - 1)
   }
 
-  delegate(root, `.${conf.cssNavBtn}`, 'click', function (event) {
+  iface.remove = () => {
+    navListener.destroy()
+    nav.remove()
+    indexListener.destroy()
+    index.remove()
+  }
+
+  const navListener = delegate(root, `.${conf.cssNavBtn}`, 'click', function (event) {
     event.preventDefault()
 
     if (event.delegateTarget.classList.contains(conf.cssNavBtnPrev)) {
@@ -126,17 +134,17 @@ function carousel (root, options) {
     }
   })
 
-  delegate(root, `.${conf.cssIndexBtn}`, 'click', function (event) {
+  const indexListener = delegate(root, `.${conf.cssIndexBtn}`, 'click', function (event) {
     event.preventDefault()
     const idx = parseInt(getAttr(event.delegateTarget, 'data-carousel-index'), 10)
     showSlide(idx)
   })
 
-    // add nav
-  attachNav(root, conf)
-  attachIndex(root, conf, getNumberOfSlides())
+  // add nav
+  const nav = attachNav(root, conf)
+  const index = attachIndex(root, conf, getNumberOfSlides())
 
-    // set first slide as current but wait for carousel to return
+  // set first slide as current but wait for carousel to return
   setTimeout(() => iface.showSlide(currentSlide), 0)
   setTimeout(() => root.classList.add(conf.cssReady), 10)
 
