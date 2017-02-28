@@ -75,13 +75,13 @@ class Notification:
             headers = {}
             headers['Date'] = email_utils.formatdate(localtime=True)
             message_id, parent_id, reference_ids = self.get_message_ids()
-            headers['Message-ID'] = '<{}@{}>'.format(message_id, site.name)
+            headers['Message-ID'] = '<{}@{}>'.format(message_id, site.domain)
             if parent_id:
-                headers['In-Reply-To'] = '<{}@{}>'.format(parent_id, site.name)
+                headers['In-Reply-To'] = '<{}@{}>'.format(parent_id, site.domain)
                 if parent_id not in reference_ids:
                     reference_ids.append(parent_id)
             if reference_ids:
-                headers['References'] = ' '.join(['<{}@{}>'.format(ref_id, site.name)
+                headers['References'] = ' '.join(['<{}@{}>'.format(ref_id, site.domain)
                                                   for ref_id in reference_ids])
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
