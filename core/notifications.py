@@ -1,13 +1,16 @@
 import datetime
-from email import utils as email_utils
-import hashlib
-import uuid
-
 from django.apps import apps
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core import mail
 from django.template import loader
+from email import utils as email_utils
+import hashlib
+import logging
+import smtplib
+import uuid
+
+logger = logging.getLogger(__name__)
 
 
 class Notification:
@@ -113,4 +116,7 @@ class Notification:
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
                     to=[recipient], headers=headers)
-            message.send()
+            try:
+                message.send()
+            except smtplib.SMTPException:
+                logger.error('Error while trying to send notification')
