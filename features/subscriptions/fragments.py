@@ -9,8 +9,7 @@ fragments.register(
 
 fragments.insert(
         'content-subscription-actions',
-        'content-actions',
-        after=['content-actions-edit'],
+        'content-comments-actions',
         )
 fragments.insert(
         'group-meta-subscriptions',

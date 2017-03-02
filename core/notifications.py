@@ -1,5 +1,6 @@
 import datetime
 from email import utils as email_utils
+import hashlib
 import uuid
 
 from django.apps import apps
@@ -71,9 +72,16 @@ class Notification:
         return None
 
     def send(self):
+        site = sites_models.Site.objects.get_current()
+
+        def format_message_id(message_id, recipient):
+            # The reference towards the recipient is not a security measure, thus
+            # collisions (due the capping of 16 bytes) are acceptable.
+            recipient_token = hashlib.sha256(recipient.encode("utf-8")).hexdigest()[:16]
+            return '<{}-{}@{}>'.format(message_id, recipient_token, site.domain)
+
         for recipient, recipient_attrs in self.get_formatted_recipients():
             subject = self.get_subject()
-            site = sites_models.Site.objects.get_current()
             context = self.kwargs.copy()
             context.update({'site': site})
             template = loader.get_template(self.get_template_name())
@@ -90,13 +98,13 @@ class Notification:
             headers = {}
             headers['Date'] = email_utils.formatdate(localtime=True)
             message_id, parent_id, reference_ids = self.get_message_ids()
-            headers['Message-ID'] = '<{}@{}>'.format(message_id, site.name)
+            headers['Message-ID'] = format_message_id(message_id, recipient)
             if parent_id:
-                headers['In-Reply-To'] = '<{}@{}>'.format(parent_id, site.name)
+                headers['In-Reply-To'] = format_message_id(parent_id, recipient)
                 if parent_id not in reference_ids:
                     reference_ids.append(parent_id)
             if reference_ids:
-                headers['References'] = ' '.join(['<{}@{}>'.format(ref_id, site.name)
+                headers['References'] = ' '.join([format_message_id(ref_id, recipient)
                                                   for ref_id in reference_ids])
             reply_key = recipient_attrs.get('reply_key')
             if reply_key:

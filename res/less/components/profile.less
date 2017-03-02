@@ -182,7 +182,23 @@
 
     &-title-image {
         img {
+            @base-height: 456px;
             display: block;
+
+            &:before,
+            &:after {
+                content: " ";
+                display: block;
+                height: calc(@base-height - 2.15rem);
+                width: 100%;
+            }
+
+            &:before {
+                background-color: @brand-secondary;
+                height: @base-height;
+                position: absolute;
+                top: 0;
+            }
         }
 
         .on-handhelds({

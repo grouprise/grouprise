@@ -35,38 +35,94 @@
 
 .carousel-nav {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0; bottom: 0;
+    left: 0; right: 0;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    align-items: stretch;
+}
+
+.carousel-btn-wrap {
+    @backdrop: rgba(255, 255, 255, 0.3);
+    height: 100%;
+    background: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
     padding: 0 1rem;
+    position: relative;
+    transition: opacity .2s;
+    opacity: 0;
+
+    &:after {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        z-index: 1;
+        transition: opacity .5s ease-out;
+        opacity: 0;
+    }
+
+    &:first-child {
+        padding-right: 3rem;
+
+        &:after {
+            background-image: linear-gradient(to left, transparent 0, @backdrop 100%);
+        }
+    }
+
+    &:last-child {
+        padding-left: 3rem;
+
+        &:after {
+            background-image: linear-gradient(to left, @backdrop 0, transparent 100%);
+        }
+    }
+
+    &:focus,
+    &:hover,
+    &:active {
+        outline: none;
+
+        &:after {
+            opacity: 1;
+        }
+    }
+
+    .carousel-ready & {
+        opacity: 1;
+    }
 }
 
 .carousel-btn {
     background-color: white;
     border-radius: 50%;
-    border: 2px solid rgba(21, 21, 21, 0.25);
-    color: rgba(21, 21, 21, 0.5);
+    border: 2px solid white;
+    color: #333;
     width: 3rem;
     height: 3rem;
     padding: 0;
     margin: 0;
     position: relative;
-    transition: border-color .2s, opacity .2s;
+    transition: background-color .2s, opacity .2s;
     justify-content: center;
     align-items: center;
-    display: none;
+    visibility: hidden;
+    display: flex;
+    z-index: 2;
+    opacity: .75;
 
-    &:hover,
-    &:focus,
-    &:active {
+    .carousel-btn-wrap:hover &,
+    .carousel-btn-wrap:focus &,
+    .carousel-btn-wrap:active & {
         outline: none;
-        border-color: @brand-primary;
+        opacity: 1;
     }
 
     .carousel-ready & {
-        display: flex;
+        visibility: visible;
     }
 }
 
@@ -91,8 +147,8 @@
     }
 }
 
-.carousel-first .carousel-btn-prev,
-.carousel-last .carousel-btn-next {
+.carousel-first .carousel-btn-wrap:first-child,
+.carousel-last .carousel-btn-wrap:last-child {
     opacity: 0;
     pointer-events: none;
 }
@@ -104,11 +160,19 @@
     white-space: nowrap;
     padding: 0;
     margin: .75rem 0 0;
+    transition: opacity .2s;
+    visibility: hidden;
+    opacity: 0;
 
     > li {
         display: inline-block;
         vertical-align: middle;
         margin-right: .2em;
+    }
+
+    .carousel-ready & {
+        visibility: visible;
+        opacity: 1;
     }
 }
 

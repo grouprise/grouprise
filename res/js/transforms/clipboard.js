@@ -15,7 +15,9 @@ const isUnsupported = browser.isUnsupportedBrowser({
 export default (el, opts) => {
   if (isUnsupported) {
     remove(el)
-    return
+    return {
+      remove() {}
+    }
   }
 
   const clipboard = new Clipboard(el, {
@@ -29,4 +31,11 @@ export default (el, opts) => {
   clipboard.on('error', function () {
     danger('URL konnte nicht kopiert werden. Bitte markiere den Text und kopiere ihn per Hand.')
   })
+
+  return {
+    remove() {
+      clipboard.off()
+      clipboard.destroy()
+    }
+  }
 }

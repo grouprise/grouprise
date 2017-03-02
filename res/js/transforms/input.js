@@ -1,6 +1,18 @@
-function attachAndRun (target, event, listener) {
-  event.split(' ').forEach((event) => event && target.addEventListener(event, listener, false))
+function attachAndRun (target, event, listener, capture = false) {
+  const events = event.split(' ')
+  events.forEach((event) => event && target.addEventListener(event, listener, capture))
   listener.call(target)
+  return {
+    destroy() {
+      events.forEach((event) => event && target.removeEventListener(event, listener, capture))
+    }
+  }
+}
+
+function getType (el) {
+  const tagName = el.tagName.toLowerCase()
+  const type = el.getAttribute('type')
+  return `input-type-${tagName !== 'input' ? tagName : type}`
 }
 
 export default (el, conf = {}) => {
@@ -27,14 +39,25 @@ export default (el, conf = {}) => {
     target.classList.toggle('input-blurred', !isFocused)
   }
 
-  function setType () {
-    const tagName = el.tagName.toLowerCase()
-    const type = el.getAttribute('type')
-    target.classList.toggle(`input-type-${tagName !== 'input' ? tagName : type}`, true)
+  const inputListeners = attachAndRun(el, 'input change', setChangedStates)
+  const focusListeners = attachAndRun(el, 'focus blur', setFocusStates)
+
+  const typeClass = getType(el)
+  target.classList.toggle(typeClass, true)
+
+  return {
+    remove() {
+      inputListeners.destroy()
+      focusListeners.destroy()
+      target.classList.remove(
+        'input-filled',
+        'input-empty',
+        'input-changed',
+        'input-focused',
+        'input-had-focus',
+        'input-blurred',
+        typeClass
+      )
+    }
   }
-
-  attachAndRun(el, 'input change', setChangedStates)
-  attachAndRun(el, 'focus blur', setFocusStates)
-
-  setType()
 }

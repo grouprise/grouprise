@@ -11,6 +11,6 @@ export default (el, opts) => {
   el.innerHTML = filters.reduce((content, filter) => filter(content, opts), originalContent)
 
   return {
-    restore () { el.innerHTML = originalContent }
+    remove () { el.innerHTML = originalContent }
   }
 }
