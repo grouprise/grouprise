@@ -1,4 +1,8 @@
+from . import models
 from core import notifications
+from django import db
+from django.conf import settings
+from django.utils import crypto
 from features.gestalten import models as gestalten
 
 
@@ -21,16 +25,31 @@ class Created(notifications.Notification):
         return my_id, parent_id, ref_ids
 
     def get_recipients(self):
+        # find set of recipients
         recipients = set(self.text.container.get_authors())
         recipients.update(set(self.text.container.get_gestalten()))
         for group in self.text.container.get_groups():
             recipients.update(set(gestalten.Gestalt.objects.filter(
                 memberships__group=group)))
-        recipients.discard(self.text.authors.first)
-        return recipients
+        # assign a reply key to each recipient
+        result = {}
+        for gestalt in recipients:
+            while True:
+                try:
+                    key = crypto.get_random_string(
+                            length=15, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
+                    models.ReplyKey.objects.create(gestalt=gestalt, key=key, text=self.text)
+                    result[gestalt] = {'reply_key': key}
+                    break
+                except db.IntegrityError:
+                    pass
+        return result
 
     def get_sender(self):
         return self.text.authors.first
+
+    def get_sender_email(self):
+        return settings.ANSWERABLE_FROM_EMAIL
 
     def get_subject(self):
         prefix = '' if self.text.container.texts.first() == self.text else 'Re: '

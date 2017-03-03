@@ -23,7 +23,6 @@ class Commented(notifications.Notification):
     def get_recipients(self):
         recipients = {self.comment.content.author}
         recipients.update(set(self.comment.content.comment_authors.all()))
-        recipients.discard(self.comment.author)
         return recipients
 
     def get_sender(self):

@@ -11,7 +11,6 @@ class Commented(comments.Commented):
         for group in self.comment.content.groups.all():
             recipients.update(
                 gestalten.Gestalt.objects.filter(memberships__group=group))
-        recipients.discard(self.comment.author)
         return recipients
 
 
@@ -28,7 +27,6 @@ class ContentAssociated(notifications.Notification):
         if type(self.association) == models.GroupContent:
             recipients.update(gestalten.Gestalt.objects.filter(
                 memberships__group=self.association.group))
-        recipients.discard(self.content.author)
         return recipients
 
     def get_sender(self):

@@ -1,7 +1,17 @@
 {% load content crispy_forms_tags rules utils core %}
 
-<h2>{% if content.public %}Kommentare{% else %}Antworten{% endif %}</h2>
+<h2 class="content-header">
+    <span class="content-classification">
+        {% if content.public %}Kommentare{% else %}Antworten{% endif %}
+    </span>
+    <span class="decoration-icon sg-comments" role="presentation"></span>
+    <div class="btn-toolbar">
+        {% include_fragments 'content-comments-actions' %}
+    </div>
+</h2>
 
+
+{% if content.comments.exists %}
 <ol class="medias">
     {% for comment in content.comments.all %}
         <li>
@@ -14,7 +24,7 @@
                         {% markdown comment.text heading_baselevel=3 %}
                     </div>
                     <footer class="media-footer">
-                        <time data-component="time time-from" datetime="{{ comment.date_created|date:"c" }}" title="{{ comment.date_created|date:'d. F Y H:i' }}">
+                        <time data-component="time" datetime="{{ comment.date_created|date:"c" }}" title="{{ comment.date_created|date:'d. F Y H:i' }}">
                             {{ comment.date_created|date:'d. F Y H:i' }}
                         </time> ·
                         <a href="{{ comment.author.get_absolute_url }}">{{ comment.author }}</a>
@@ -28,12 +38,13 @@
         </li>
     {% endfor %}
 </ol>
+{% endif %}
 
 {% has_perm 'content.create_comment' user content as can_create_comment %}
 {% if can_create_comment %}
     {% crispy comment_form %}
 {% else %}
-    <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">Kommentieren</a>
+    <a href="{% url 'comment-create' content.pk %}" class="btn btn-default">Anmelden um zu Kommentieren</a>
 {% endif %}
 
 {% include_features '_content_comment_actions.html' %}

@@ -30,5 +30,8 @@ class Tagged(models.Model):
         model_ids = list(map(lambda tagged: tagged.tagged_id, tagged_objects))
         return Q(pk__in=model_ids)
 
+    def __repr__(self):
+        return "%s was tagged with '%s'" % (str(self.tagged), str(self.tag))
+
     class Meta:
         ordering = ('tag__name',)

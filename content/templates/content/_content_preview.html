@@ -14,15 +14,6 @@
             {% if content.event %}
                 <div>
                     {% include "macros/calendar_sheet.html" with time=content.event.date %}
-                    <dl class="def def-icons def-preview">
-                        <dt>
-                            <i class="sg sg-fw sg-marker"></i>
-                            <span class="sr-only">Ort</span>
-                        </dt>
-                        <dd>
-                            {{ content.event.place }}
-                        </dd>
-                    </dl>
                 </div>
             {% elif content.images.first %}
                 {% thumbnail content.images.first.file '200x200' crop="center top" as image %}

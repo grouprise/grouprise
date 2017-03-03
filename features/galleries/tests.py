@@ -32,7 +32,7 @@ class InternalGalleryInGroupWithOtherMember(
 
 
 class InternalGalleryInGroupWithOtherSubscriber(
-        subscriptions.NoNotificationToOtherGestalt,
+        subscriptions.NotificationToOtherGestalt,
         InternalGalleryMixin, subscriptions.OtherGroupSubscriberMixin,
         memberships.MemberMixin, tests.Test):
     """
