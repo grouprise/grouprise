@@ -14,11 +14,11 @@ class ReplyKey(models.Model):
 
 class TextManager(models.Manager):
     def get_by_message_id(self, mid):
-        m = re.match(r'.*\.[0-9]+\.text\.([0-9]+)', mid)
-        if m:
-            return self.get(id=m.group(1))
-        else:
-            raise self.model.DoesNotExist
+        if mid:
+            m = re.match(r'.*\.[0-9]+\.text\.([0-9]+)', mid)
+            if m:
+                return self.get(id=m.group(1))
+        raise self.model.DoesNotExist
 
 
 class Text(models.Model):
