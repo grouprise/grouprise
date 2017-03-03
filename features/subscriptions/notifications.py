@@ -26,7 +26,6 @@ class Commented(associations.Commented):
                     subscribed_to=self.comment.content)
             recipients.update(gestalten.Gestalt.objects.filter(
                     subscription__in=subscriptions))
-        recipients.discard(self.comment.author)
         return recipients
 
 
@@ -44,6 +43,4 @@ class ContentAssociated(associations.ContentAssociated):
             recipients = dict(zip(recipients, itertools.repeat({'with_name': True})))
             recipients.update(
                     zip(subscription_recipients, itertools.repeat({'with_name': False})))
-            if self.content.author in recipients:
-                del recipients[self.content.author]
         return recipients

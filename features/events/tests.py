@@ -34,7 +34,7 @@ class InternalEventInGroupWithOtherMember(
 
 
 class InternalEventInGroupWithOtherSubscriber(
-        subscriptions.NoNotificationToOtherGestalt,
+        subscriptions.NotificationToOtherGestalt,
         InternalEventMixin, subscriptions.OtherGroupSubscriberMixin,
         memberships.MemberMixin, tests.Test):
     """

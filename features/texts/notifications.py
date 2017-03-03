@@ -31,7 +31,6 @@ class Created(notifications.Notification):
         for group in self.text.container.get_groups():
             recipients.update(set(gestalten.Gestalt.objects.filter(
                 memberships__group=group)))
-        recipients.discard(self.text.author)
         # assign a reply key to each recipient
         result = {}
         for gestalt in recipients:
