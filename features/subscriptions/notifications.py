@@ -41,9 +41,9 @@ class ContentAssociated(associations.ContentAssociated):
                     subscribed_to=self.association.group)
             subscription_recipients = gestalten.Gestalt.objects.filter(
                     subscription__in=subscriptions)
-            recipients = dict(zip(recipients, itertools.repeat(True)))
+            recipients = dict(zip(recipients, itertools.repeat({'with_name': True})))
             recipients.update(
-                    zip(subscription_recipients, itertools.repeat(False)))
+                    zip(subscription_recipients, itertools.repeat({'with_name': False})))
             if self.content.author in recipients:
                 del recipients[self.content.author]
         return recipients

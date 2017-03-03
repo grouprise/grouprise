@@ -1,13 +1,16 @@
 import datetime
-from email import utils as email_utils
-import hashlib
-import uuid
-
 from django.apps import apps
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core import mail
 from django.template import loader
+from email import utils as email_utils
+import hashlib
+import logging
+import smtplib
+import uuid
+
+logger = logging.getLogger(__name__)
 
 
 class Notification:
@@ -19,12 +22,22 @@ class Notification:
         return '{} <{}>'.format(gestalt, gestalt.user.email)
 
     def get_formatted_recipients(self):
+        """
+        Subclasses must define get_recipients() to return a set of recipients.
+        The set may as well be a dictionary with the values being dictionaries. Each
+        recipient may be assigned additional attributes:
+        * `reply_key`: a string to identify replies
+        * `with_name`: should senders identity be put in from header?
+
+        If defined, the `Reply-To` header is set to DEFAULT_REPLY_TO_EMAIL with `{reply_key}`
+        replaced by the reply key.
+        """
         recipients = self.get_recipients()
         if type(recipients) == dict:
-            return [(self.format_recipient(r), with_name)
-                    for r, with_name in recipients.items()]
+            return [(self.format_recipient(r), recipient_attrs)
+                    for r, recipient_attrs in recipients.items()]
         else:
-            return [(self.format_recipient(r), True) for r in recipients]
+            return [(self.format_recipient(r), {}) for r in recipients]
 
     def get_sender(self):
         return None
@@ -58,6 +71,9 @@ class Notification:
         my_id = '{}.{}'.format(now_string, uuid_string)
         return my_id, None, []
 
+    def get_reply_key(self):
+        return None
+
     def send(self):
         site = sites_models.Site.objects.get_current()
 
@@ -67,7 +83,7 @@ class Notification:
             recipient_token = hashlib.sha256(recipient.encode("utf-8")).hexdigest()[:16]
             return '<{}-{}@{}>'.format(message_id, recipient_token, site.domain)
 
-        for recipient, with_name in self.get_formatted_recipients():
+        for recipient, recipient_attrs in self.get_formatted_recipients():
             subject = self.get_subject()
             context = self.kwargs.copy()
             context.update({'site': site})
@@ -75,7 +91,9 @@ class Notification:
             template.backend.engine.autoescape = False
             body = template.render(context)
             sender = self.get_sender()
-            name = '{} via '.format(sender) if sender and with_name else ''
+            name = ''
+            if sender and recipient_attrs.get('with_name', True):
+                name = '{} via '.format(sender)
             from_email = '{name}{site} <{email}>'.format(
                     name=name,
                     site=site.name,
@@ -91,7 +109,14 @@ class Notification:
             if reference_ids:
                 headers['References'] = ' '.join([format_message_id(ref_id, recipient)
                                                   for ref_id in reference_ids])
+            reply_key = recipient_attrs.get('reply_key')
+            if reply_key:
+                headers['Reply-To'] = '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
+                    reply_key=reply_key))
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
                     to=[recipient], headers=headers)
-            message.send()
+            try:
+                message.send()
+            except smtplib.SMTPException:
+                logger.error('Error while trying to send notification')

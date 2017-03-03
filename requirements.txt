@@ -4,6 +4,7 @@ django-allauth
 django-crispy-forms
 django-filter
 django-ical
+django-mailbox
 djangorestframework
 flake8
 markdown
