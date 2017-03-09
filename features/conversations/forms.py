@@ -77,7 +77,7 @@ class Reply(forms.ModelForm):
                     'data-component': 'keysubmit autosize cite cite-sink'
                 }),
                 utils_forms.Submit('Antworten'))
-    
+
     def save(self, commit=True):
         text = super().save(commit)
         text.authorships.create(author=self.author)

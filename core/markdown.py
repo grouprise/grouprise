@@ -1,4 +1,4 @@
-from markdown.extensions import nl2br, toc, sane_lists, fenced_code
+from markdown.extensions import nl2br, sane_lists, fenced_code
 from pymdownx import magiclink
 from mdx_unimoji import UnimojiExtension
 import utils.markdown

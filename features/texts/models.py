@@ -1,7 +1,6 @@
 from django.contrib.contenttypes import (
         fields as contenttypes_fields, models as contenttypes_models)
 from django.db import models
-from django.utils import timezone
 import re
 
 

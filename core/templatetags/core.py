@@ -7,7 +7,7 @@ from django.contrib.sites import models as sites_models
 from django.template import defaultfilters
 from django.utils import html, safestring
 import markdown as python_markdown
-from markdown.extensions import nl2br, toc, sane_lists, fenced_code
+from markdown.extensions import toc
 
 register = template.Library()
 
@@ -82,7 +82,8 @@ def bleach(text, disable_tags=tuple()):
     else:
         allowed_tags = set(core_markdown.content_allowed_tags) - set(disable_tags)
     bleached = python_bleach.clean(
-            text, strip=True, tags=allowed_tags, attributes=core_markdown.content_allowed_attributes)
+            text, strip=True, tags=allowed_tags,
+            attributes=core_markdown.content_allowed_attributes)
     if isinstance(text, safestring.SafeString):
         return safestring.mark_safe(bleached)
     else:
@@ -93,7 +94,8 @@ def bleach(text, disable_tags=tuple()):
 def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
         plain_preview=False):
-    extensions = tuple(core_markdown.markdown_extensions) + (toc.TocExtension(baselevel=heading_baselevel), )
+    extensions = tuple(core_markdown.markdown_extensions) + (
+            toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
     if filter_tags:
         disabled_tags = tuple(disable_tags.split(","))

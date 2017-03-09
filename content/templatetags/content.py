@@ -1,23 +1,10 @@
-import bleach as python_bleach
 from django import template
-from django.utils import formats, html, safestring, timezone
+from django.utils import formats, timezone
 from django.template.base import FilterExpression
-from django.template.defaultfilters import truncatewords_html, truncatewords
 from django.template.loader import get_template
-import markdown as python_markdown
-from markdown.extensions import nl2br, toc, sane_lists, fenced_code
-from pymdownx import magiclink
-from mdx_unimoji import UnimojiExtension
-import utils.markdown
 
 
 register = template.Library()
-
-
-@register.filter(needs_autoescape=True)
-def markdown(text, autoescape=True):
-    return safestring.mark_safe(python_markdown.markdown(
-        html.conditional_escape(text) if autoescape else text, extensions=markdown_extensions))
 
 
 @register.filter
