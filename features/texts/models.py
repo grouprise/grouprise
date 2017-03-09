@@ -6,7 +6,7 @@ import re
 
 
 class ReplyKey(models.Model):
-    gestalt = models.ForeignKey('gestalten.Gestalt')
+    gestalt = models.ForeignKey('gestalten.Gestalt', related_name='+')
     key = models.CharField(max_length=15, unique=True)
     text = models.ForeignKey('Text')
     time_created = models.DateTimeField(auto_now_add=True)

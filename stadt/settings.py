@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'entities.apps.EntitiesConfig',
     'features.articles',
     'features.associations',
+    'features.contributions',
     'features.conversations',
     'features.caching',
     'features.content',
