@@ -14,7 +14,7 @@ class Conversation(models.Model):
             related_query_name='conversation')
 
     texts = contenttypes.GenericRelation(
-            'texts.Text',
+            'contributions.Contribution',
             content_type_field='container_type',
             object_id_field='container_id',
             related_query_name='conversation')

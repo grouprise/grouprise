@@ -3,7 +3,7 @@ from crispy_forms import helper, layout
 from django import forms
 from features.gestalten import models as gestalten
 from features.associations import models as associations
-from features.texts import models as texts
+from features.contributions import models as contributions
 from utils import forms as utils_forms
 
 
@@ -63,9 +63,9 @@ class Create(forms.ModelForm):
 
 class Reply(forms.ModelForm):
     class Meta:
-        model = texts.Text
-        fields = ('text',)
-        labels = {'text': 'Antwort'}
+        model = contributions.Contribution
+        fields = []#('text',)
+        #labels = {'text': 'Antwort'}
 
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author')
