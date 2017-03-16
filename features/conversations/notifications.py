@@ -1,5 +1,5 @@
-from features.texts import notifications as texts
+from features.contributions import notifications as contributions
 
 
-class MessageCreated(texts.Created):
+class MessageCreated(contributions.Created):
     pass

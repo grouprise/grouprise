@@ -10,7 +10,7 @@ from django.views.generic import edit
 from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.groups import models as groups
-from features.texts import models as texts
+from features.contributions import models as contributions
 
 
 class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
@@ -29,10 +29,9 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
         return self.render_to_response(context)
 
     def get_form_kwargs(self):
-        text = texts.Text(container=self.object.container)
         kwargs = super().get_form_kwargs()
-        kwargs['author'] = self.request.user.gestalt
-        kwargs['instance'] = text
+        kwargs['instance'] = contributions.Contribution(
+                author=self.request.user.gestalt, container=self.object.container)
         return kwargs
 
     def get_success_url(self):

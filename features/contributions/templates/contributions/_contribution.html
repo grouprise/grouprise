@@ -5,23 +5,23 @@
         {% if author %}
             {% include 'gestalten/_avatar.html' with gestalt=author link=True only %}
         {% else %}
-            {% include 'gestalten/_avatar.html' with gestalt=text.authors.first link=True only %}
+            {% include 'gestalten/_avatar.html' with gestalt=text.author link=True only %}
         {% endif %}
     </div>
     <div class="media-content">
         {% block media_content %}
             <div class="media-body"
                  {% block media_content_attrs %}
-                    data-component="user-content" data-author="{{ text.authors.first }}" data-permalink="{{ request.path }}#{% ref text %}"
+                    data-component="user-content" data-author="{{ text.author }}" data-permalink="{{ request.path }}#{% ref text %}"
                  {% endblock %}>
                 {% block media_body %}
-                    {% markdown text.text heading_baselevel=3 %}
+                    {% markdown text.contribution.text heading_baselevel=3 %}
                 {% endblock %}
             </div>
             <footer class="media-footer">
                 {% block media_footer %}
-                    {% time text.authorships.first.time_created %} ·
-                    {% link text.authors.first %}
+                    {% time text.time_created %} ·
+                    {% link text.author %}
                     <div class="pull-right">
                         <a class="link-plain" href="{{ request.path }}#{% ref text %}">Permalink</a> ·
                         <a class="js" data-component="cite" href="#{% ref text %}">Zitieren</a>

@@ -17,9 +17,9 @@
 
         <div class="conversation-body">
             <ol class="medias">
-                {% for message in association.container.texts.all %}
+                {% for message in association.container.contributions.all %}
                     <li>
-                        {% include 'texts/_text.html' with text=message only %}
+                        {% include 'contributions/_contribution.html' with text=message only %}
                     </li>
                 {% endfor %}
                 {% if can_reply %}

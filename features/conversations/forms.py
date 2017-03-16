@@ -62,13 +62,13 @@ class Create(forms.ModelForm):
 
 
 class Reply(forms.ModelForm):
+    text = forms.CharField(widget=forms.Textarea)
+
     class Meta:
         model = contributions.Contribution
-        fields = []#('text',)
-        #labels = {'text': 'Antwort'}
+        fields = []
 
     def __init__(self, *args, **kwargs):
-        self.author = kwargs.pop('author')
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_show_labels = False
@@ -79,6 +79,9 @@ class Reply(forms.ModelForm):
                 utils_forms.Submit('Antworten'))
 
     def save(self, commit=True):
-        text = super().save(commit)
-        text.authorships.create(author=self.author)
-        return text
+        contribution = super().save(False)
+        contribution.contribution = contributions.Text.objects.create(
+                text=self.cleaned_data['text'])
+        if commit:
+            contribution.save()
+        return contribution
