@@ -21,7 +21,7 @@ class Contribution(models.Model):
     contribution_id = models.PositiveIntegerField()
     contribution_type = models.ForeignKey('contenttypes.ContentType', related_name='+')
 
-    author = models.ForeignKey('gestalten.Gestalt')
+    author = models.ForeignKey('gestalten.Gestalt', related_name='contributions')
     in_reply_to = models.ForeignKey('Contribution', null=True)
     time_created = models.DateTimeField(auto_now_add=True)
 

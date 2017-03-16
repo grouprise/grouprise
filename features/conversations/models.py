@@ -13,7 +13,7 @@ class Conversation(models.Model):
             object_id_field='container_id',
             related_query_name='conversation')
 
-    texts = contenttypes.GenericRelation(
+    contributions = contenttypes.GenericRelation(
             'contributions.Contribution',
             content_type_field='container_type',
             object_id_field='container_id',
@@ -23,7 +23,7 @@ class Conversation(models.Model):
         return self.subject
 
     def get_authors(self):
-        return gestalten.Gestalt.objects.filter(texts__conversation=self).distinct()
+        return gestalten.Gestalt.objects.filter(contributions__conversation=self).distinct()
 
     def get_gestalten(self):
         gestalt_associations = self.associations.filter(

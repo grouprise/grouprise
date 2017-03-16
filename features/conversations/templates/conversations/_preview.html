@@ -4,7 +4,7 @@
             {% if group_avatar and association.entity.is_group %}
                 {% include 'groups/_avatar.html' with group=association.entity link=False size=64 %}
             {% else %}
-                {% include 'gestalten/_avatar.html' with gestalt=c.texts.first.authors.first link=False size=64 %}
+                {% include 'gestalten/_avatar.html' with gestalt=c.contributions.first.author link=False size=64 %}
             {% endif %}
         </div>
         <div class="thread-preview-body">
@@ -12,7 +12,7 @@
                 {{ c.subject }}
             </div>
             <span class="thread-preview-stat">
-                {% with num_replies=c.texts.count|add:'-1' %}
+                {% with num_replies=c.contributions.count|add:'-1' %}
                     {% if num_replies == 0 %}
                         <strong>noch keine Antwort</strong>
                     {% else %}
@@ -22,7 +22,7 @@
             </span>
         </div>
         <div class="thread-preview-meta">
-            {% time c.texts.first.authorships.first.time_created %}
+            {% time c.contributions.first.time_created %}
             {% include 'conversations/_contributors.html' with contributors=c.get_authors max_shown=10 %}
         </div>
     </a>
