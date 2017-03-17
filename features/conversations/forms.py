@@ -3,7 +3,7 @@ from crispy_forms import helper, layout
 from django import forms
 from features.gestalten import models as gestalten
 from features.associations import models as associations
-from features.contributions import models as contributions
+from features.contributions import forms as contributions, models as contributions_models
 from utils import forms as utils_forms
 
 
@@ -54,7 +54,7 @@ class Create(forms.ModelForm):
         # create initial contribution (after the association, notifications are sent on
         # contribution creation)
         self.contribution.container = conversation
-        self.contribution.contribution = contributions.Text.objects.create(
+        self.contribution.contribution = contributions_models.Text.objects.create(
                 text=self.cleaned_data['text'])
         if 'author' in self.cleaned_data:
             self.contribution.author = gestalten.Gestalt.get_or_create(
@@ -64,27 +64,7 @@ class Create(forms.ModelForm):
         return association
 
 
-class Reply(forms.ModelForm):
-    text = forms.CharField(widget=forms.Textarea)
-
-    class Meta:
-        model = contributions.Contribution
-        fields = []
-
+class Reply(contributions.Text):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = helper.FormHelper()
-        self.helper.form_show_labels = False
-        self.helper.layout = layout.Layout(
-                layout.Field('text', rows=3, **{
-                    'data-component': 'keysubmit autosize cite cite-sink'
-                }),
-                utils_forms.Submit('Antworten'))
-
-    def save(self, commit=True):
-        contribution = super().save(False)
-        contribution.contribution = contributions.Text.objects.create(
-                text=self.cleaned_data['text'])
-        if commit:
-            contribution.save()
-        return contribution
+        self.helper.layout.append(utils_forms.Submit('Antworten'))

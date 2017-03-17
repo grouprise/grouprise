@@ -1,8 +1,10 @@
+from . import forms
 from content import models as content_models
 from core.views import base
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
+from django.views.generic import edit
 from features.associations import models as associations
 from features.groups import models as groups
 
@@ -28,17 +30,11 @@ class ContentMixin:
             return None
 
 
-class Content(base.PermissionMixin, generic.DetailView):
+class Content(base.PermissionMixin, edit.FormMixin, generic.DetailView):
     model = associations.Association
     template_name = 'articles/detail.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            response = super().dispatch(request, *args, **kwargs)
-        except self.model.DoesNotExist:
-            response = shortcuts.redirect(
-                    'content1', self.kwargs['entity_slug'], self.kwargs['association_slug'])
-        return response
+    form_class = forms.Comment
 
     def get_object(self, queryset=None):
         entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
