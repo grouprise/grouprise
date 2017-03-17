@@ -65,11 +65,12 @@ class Conversations(base.PermissionMixin, generic.ListView):
 
 
 class GroupConversations(Conversations):
+    permission_required = 'conversations.list_group'
     template_name = 'conversations/list_group.html'
 
-    def get(self, *args, **kwargs):
-        self.group = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
-        return super().get(*args, **kwargs)
+    def get_permission_object(self):
+        self.group = shortcuts.get_object_or_404(groups.Group, pk=self.kwargs['group_pk'])
+        return self.group
 
     def get_queryset(self):
         return super().get_queryset().filter(
