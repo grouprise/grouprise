@@ -1,5 +1,6 @@
 from entities import rules as gestalten
 from features.associations import models as associations
+from features.memberships import rules as memberships
 import rules
 
 
@@ -22,6 +23,10 @@ rules.add_perm(
 rules.add_perm(
         'conversations.list',
         rules.always_allow)
+
+rules.add_perm(
+        'conversations.list_group',
+        memberships.is_member_of)
 
 rules.add_perm(
         'conversations.reply',

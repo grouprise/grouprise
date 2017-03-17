@@ -15,10 +15,3 @@ rules
 sorl-thumbnail==12.4a1
 translitcodec
 mdx_unimoji
-
-# html5lib funktioniert seit v0.99999999 (8x9) nicht mehr mit bleach
-# siehe auch https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=844943
-# eigentlich ist diese Regel unnoetig, da bleach diese Version bereits
-# erfordert. Unter Debian hilft es jedoch, da dort jeweils die aktuellsten
-# Releases verteilt werden.
-html5lib==0.9999999
