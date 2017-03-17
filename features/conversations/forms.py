@@ -18,7 +18,7 @@ class Create(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.has_author = kwargs.pop('has_author')
-        self.text = kwargs.pop('text')
+        self.contribution = kwargs.pop('contribution')
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.layout = layout.Layout(
@@ -51,12 +51,15 @@ class Create(forms.ModelForm):
         self.instance.container = conversation
         association = super().save(commit)
 
-        # create initial text (after the association, notifications are sent on text creation)
-        self.text.container = conversation
-        self.text.text = self.cleaned_data['text']
+        # create initial contribution (after the association, notifications are sent on
+        # contribution creation)
+        self.contribution.container = conversation
+        self.contribution.contribution = contributions.Text.objects.create(
+                text=self.cleaned_data['text'])
         if 'author' in self.cleaned_data:
-            self.text.author = gestalten.Gestalt.get_or_create(self.cleaned_data['author'])
-        self.text.save()
+            self.contribution.author = gestalten.Gestalt.get_or_create(
+                    self.cleaned_data['author'])
+        self.contribution.save()
 
         return association
 

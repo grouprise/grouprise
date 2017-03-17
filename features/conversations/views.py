@@ -89,9 +89,9 @@ class CreateConversation(
         kwargs = super().get_form_kwargs()
         kwargs['has_author'] = self.request.user.is_authenticated()
         kwargs['instance'] = associations.Association(entity=self.entity)
-        kwargs['text'] = texts.Text()
+        kwargs['contribution'] = contributions.Contribution()
         if kwargs['has_author']:
-            kwargs['text'].author = self.request.user.gestalt
+            kwargs['contribution'].author = self.request.user.gestalt
         return kwargs
 
     def get_success_message(self, cleaned_data):

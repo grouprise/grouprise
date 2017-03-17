@@ -1,8 +1,10 @@
 from . import models
 from content import models as content
 from core import tests
+from django.contrib.contenttypes import models as contenttypes
 import entities.models
 from features.associations import models as associations
+from features.contributions import models as contributions
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
@@ -13,7 +15,9 @@ class GestaltConversation(gestalten.GestaltMixin, gestalten.OtherGestaltMixin):
     def setUpTestData(cls):
         super().setUpTestData()
         conversation = models.Conversation.objects.create(subject='Test Thema')
-        conversation.texts.create(author=cls.gestalt, text='Test Text')
+        conversation.contributions.create(
+                author=cls.gestalt, contribution=contributions.Text.objects.create(
+                    text='Test Text'))
         cls.association = associations.Association.objects.create(
                 container=conversation, entity=cls.group)
 
@@ -23,7 +27,9 @@ class GroupConversation(gestalten.GestaltMixin, groups.GroupMixin):
     def setUpTestData(cls):
         super().setUpTestData()
         conversation = models.Conversation.objects.create(subject='Test Thema')
-        conversation.texts.create(author=cls.gestalt, text='Test Text')
+        conversation.contributions.create(
+                author=cls.gestalt, contribution=contributions.Text.objects.create(
+                    text='Test Text'))
         cls.association = associations.Association.objects.create(
                 container=conversation, entity=cls.group)
 
@@ -193,7 +199,12 @@ class CanReplyToConversation:
                     'text': 'Test Reply',
                 })
         self.assertRedirects(response, conversation_url)
-        self.assertExists(models.Conversation, texts__text='Test Reply')
+        t = self.assertExists(contributions.Text, text='Test Reply')
+        self.assertExists(
+                models.Conversation,
+                contributions__contribution_id=t.id,
+                contributions__contribution_type=contenttypes.ContentType.objects.get_for_model(
+                    t))
 
 
 class OtherGestaltIsNotifiedOnGestaltConversation:

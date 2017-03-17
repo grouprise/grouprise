@@ -7,6 +7,8 @@ from django.db import models
 
 
 class Gestalt(models.Model):
+    is_group = False
+
     about = models.TextField('Selbstauskunft', blank=True)
     addressed_content = models.ManyToManyField(
             'content.Content', related_name='gestalten', through='entities.GestaltContent')
