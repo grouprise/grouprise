@@ -12,7 +12,4 @@ rules.add_perm('content.view_author', predicates.is_permitted & (
     ~predicates.is_group_content | ~predicates.is_public | (
         rules.is_authenticated & predicates.is_author)))
 rules.add_perm('content.create_content', rules.is_authenticated)
-rules.add_perm('content.change_content', rules.is_authenticated & (
-    predicates.is_author | associations.is_member_of_any_content_group))
 
-rules.add_perm('content.create_comment', rules.is_authenticated & predicates.is_permitted)

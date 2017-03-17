@@ -1,5 +1,6 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
+from features.gestalten import models as gestalten
 
 
 class Content(models.Model):
@@ -20,10 +21,13 @@ class Content(models.Model):
     def __str__(self):
         return self.title
 
+    def get_authors(self):
+        return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
+
 
 class Version(models.Model):
     content = models.ForeignKey('Content', related_name='versions')
 
-    author = models.ForeignKey('gestalten.Gestalt')
+    author = models.ForeignKey('gestalten.Gestalt', related_name='versions')
     text = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)

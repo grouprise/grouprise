@@ -15,13 +15,19 @@
             {% if association.entity.is_group %}
                 {% has_perm 'memberships.view_list' user association.entity as can_view_members %}
                 {% if can_view_members %}
-                    ({% link association.container.texts.first.authors.first %})
+                    {% with authors=association.container.get_authors %}
+                        {% if authors.count == 1 %}
+                            ({% link authors.first %})
+                        {% else %}
+                            ({{ authors.count }} Autorinnen)
+                        {% endif %}
+                    {% endwith %}
                 {% endif %}
             {% endif %}
         </div>
         <div class="content-meta-extra">
-            {% time association.container.texts.first.authorships.first.time_created %} ·
-            <i class="sg sg-comments" title="Kommentare"></i> {{ association.container.texts.count|add:'-1' }}
+            {% time association.container.versions.first.time_created %} ·
+            <i class="sg sg-comments" title="Kommentare"></i> {{ association.container.contributions.count }}
             {#{% include_features '_content_meta_stats.html' %}#}
         </div>
     </div>
