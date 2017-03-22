@@ -14,6 +14,11 @@ def pagination(context, label):
     return context
 
 
+@register.inclusion_tag('core/_time.html')
+def time(time):
+    return {'time': time}
+
+
 @register.inclusion_tag('core/_breadcrumb.html')
 def breadcrumb(parent, title):
     if isinstance(parent, str):

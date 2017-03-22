@@ -24,9 +24,7 @@
                         {% markdown comment.text heading_baselevel=3 %}
                     </div>
                     <footer class="media-footer">
-                        <time data-component="time" datetime="{{ comment.date_created|date:"c" }}" title="{{ comment.date_created|date:'d. F Y H:i' }}">
-                            {{ comment.date_created|date:'d. F Y H:i' }}
-                        </time> ·
+                        {% time comment.date_created %} ·
                         <a href="{{ comment.author.get_absolute_url }}">{{ comment.author }}</a>
                         <div class="pull-right">
                             <a class="link-plain" href="{{ content.get_absolute_url }}#comment-{{ comment.id }}">Permalink</a> ·

@@ -20,9 +20,7 @@
             </div>
             <footer class="media-footer">
                 {% block media_footer %}
-                    <time data-component="time" datetime="{{ text.time_created|date:"c" }}" title="{{ text.time_created|date:'d. F Y H:i' }}">
-                        {{ text.time_created|date:'d. F Y H:i' }}
-                    </time> ·
+                    {% time text.time_created %} ·
                     <a href="{{ text.author.get_absolute_url }}">{{ text.author }}</a>
                     <div class="pull-right">
                         <a class="link-plain" href="{{ request.path }}#{% ref text %}">Permalink</a> ·

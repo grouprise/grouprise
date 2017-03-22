@@ -29,9 +29,7 @@
             {% endwith %}
         </div>
         <div class="content-meta-extra">
-            <time data-component="time" datetime="{{ content.date_created|date:'Y-m-d' }}T{{ content.date_created|date:'H:i:s' }}.000000+02:00" title="{{ content.date_created|date:'d. m. Y H:i' }}">
-                {{ content.date_created|date:'d. m. Y H:i' }}
-            </time> ·
+            {% time content.date_created %} ·
             {% if user and group and content %}
                 {% has_perm 'associations.create_content_group_membership' user group|connect:content.author as can_create %}
                 {% if can_create %}

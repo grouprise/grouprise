@@ -27,9 +27,7 @@
         </div>
         <div class="thread-preview-meta">
             {% with time_created=c.texts.first.time_created %}
-                <time data-component="time" datetime="{{ time_created|date:'Y-m-d' }}T{{ time_created|date:'H:i:s' }}.000000+02:00" title="{{ time_created|date:'d. m. Y H:i' }}">
-                    {{ time_created|date:'d. m. Y H:i' }}
-                </time>
+                {% time time_created %}
             {% endwith %}
 
             {% include 'conversations/_contributors.html' with contributors=c.get_authors max_shown=10 %}
