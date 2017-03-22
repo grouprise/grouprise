@@ -1,10 +1,15 @@
+import logging
 import re
+
 from django.apps import apps
 from django.contrib.contenttypes import models as contenttypes
 from django.db.models import signals
 from stadt.settings import TAGS_TAGGABLE
 from . import RE_TAG_REF
 from .models import Tag, Tagged
+
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_CONF = {
     'tag_self': True,
@@ -68,7 +73,11 @@ def tag_entities(sender, instance, *args, **kwargs):
 
         for tag in final_tags:
             for model in tagged_models:
-                tagged_type = contenttypes.ContentType.objects.get_for_model(model)
+                try:
+                    tagged_type = contenttypes.ContentType.objects.get_for_model(model)
+                except AttributeError:
+                    logger.error("Failed to retrieve tagged type of model: %s", model)
+                    continue
                 Tagged.objects.get_or_create(
                     tag=tag, tagged_id=model.id,
                     tagged_type=tagged_type
