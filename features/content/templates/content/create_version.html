@@ -1,0 +1,28 @@
+{% extends 'stadt/stadt.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Beitrag bearbeiten - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'article' view.association.entity %}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb view.association.entity view.association 'Beitrag bearbeiten' %}
+{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Beitrag</span>
+{% endblock %}
+
+{% block sidebar %}
+    {% if view.association.entity.is_group %}
+        {% include 'entities/_sidebar_group.html' with group=view.association.entity %}
+    {% else %}
+        {% if view.association.entity.public %}
+            {% include 'entities/_sidebar_author.html' with gestalt=view.association.entity %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% crispy form %}
+{% endblock %}

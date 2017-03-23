@@ -4,7 +4,7 @@ from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
 from django.views.generic import edit
 
-from . import forms
+from . import forms, models
 from content import models as content_models
 from core.views import base
 from features.associations import models as associations
@@ -34,6 +34,7 @@ class ContentMixin:
 
 
 class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):
+    permission_required = 'content.view'
     model = associations.Association
     template_name = 'articles/detail.html'
 
@@ -41,11 +42,11 @@ class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic
 
     def get_object(self, queryset=None):
         entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
-        queryset = self.get_queryset().filter(
+        return shortcuts.get_object_or_404(
+                self.model,
                 entity_id=entity.id,
                 entity_type=contenttypes.ContentType.objects.get_for_model(entity),
                 slug=self.kwargs['association_slug'])
-        return queryset.get()
 
     def get_success_url(self):
         return django.core.urlresolvers.reverse(
@@ -54,8 +55,24 @@ class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic
     def has_permission(self):
         self.object = self.get_object()
         if self.request.method == 'GET':
-            return self.request.user.has_perms(('content.view',), self.object)
+            return self.request.user.has_perms((self.permission_required,), self.object)
         elif self.request.method == 'POST':
             return self.request.user.has_perms(('content.comment',), self.object)
         else:
             return False
+
+
+class CreateVersion(base.PermissionMixin, generic.CreateView):
+    permission_required = 'content.create_version'
+    model = models.Version
+    form_class = forms.CreateVersion
+    template_name = 'content/create_version.html'
+
+    def get_permission_object(self):
+        entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
+        self.association = shortcuts.get_object_or_404(
+                associations.Association,
+                entity_id=entity.id,
+                entity_type=contenttypes.ContentType.objects.get_for_model(entity),
+                slug=self.kwargs['association_slug'])
+        return self.association

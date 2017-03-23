@@ -34,12 +34,15 @@ def time(time):
 
 
 @register.inclusion_tag('core/_breadcrumb.html')
-def breadcrumb(parent, title):
-    if isinstance(parent, str):
-        parent_url = None
-    else:
-        parent_url = parent.get_absolute_url()
-    return {'parent_name': str(parent), 'parent_url': parent_url, 'title_name': str(title)}
+def breadcrumb(*args):
+    crumbs = []
+    for arg in args[:-1]:
+        if isinstance(arg, str):
+            crumbs.append((arg, None))
+        else:
+            crumbs.append((str(arg), arg.get_absolute_url()))
+    crumbs.append((str(args[-1]), None))
+    return {'crumbs': crumbs}
 
 
 @register.inclusion_tag('core/_menu.html', takes_context=True)

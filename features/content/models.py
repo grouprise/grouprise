@@ -1,3 +1,4 @@
+import django.core.urlresolvers
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from features.gestalten import models as gestalten
@@ -23,6 +24,10 @@ class Content(models.Model):
 
     def get_authors(self):
         return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
+
+    def get_url_for(self, association):
+        return django.core.urlresolvers.reverse('content',
+                args=[association.entity.slug, association.slug])
 
 
 class Version(models.Model):

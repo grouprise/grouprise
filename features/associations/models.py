@@ -21,3 +21,9 @@ class Association(models.Model):
 
     class Meta:
         unique_together = ('entity_id', 'entity_type', 'slug')
+
+    def __str__(self):
+        return str(self.container)
+
+    def get_absolute_url(self):
+        return self.container.get_url_for(self)
