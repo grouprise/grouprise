@@ -1,11 +1,14 @@
-from . import forms
-from content import models as content_models
-from core.views import base
+import django.core.urlresolvers
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
 from django.views.generic import edit
+
+from . import forms
+from content import models as content_models
+from core.views import base
 from features.associations import models as associations
+from features.contributions import views as contributions
 from features.groups import models as groups
 
 
@@ -30,7 +33,7 @@ class ContentMixin:
             return None
 
 
-class Content(base.PermissionMixin, edit.FormMixin, generic.DetailView):
+class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):
     model = associations.Association
     template_name = 'articles/detail.html'
 
@@ -44,11 +47,15 @@ class Content(base.PermissionMixin, edit.FormMixin, generic.DetailView):
                 slug=self.kwargs['association_slug'])
         return queryset.get()
 
+    def get_success_url(self):
+        return django.core.urlresolvers.reverse(
+                'content', args=[self.object.entity.slug, self.object.slug])
+
     def has_permission(self):
         self.object = self.get_object()
         if self.request.method == 'GET':
             return self.request.user.has_perms(('content.view',), self.object)
         elif self.request.method == 'POST':
-            return self.request.user.has_perms(('content.reply',), self.object)
+            return self.request.user.has_perms(('content.comment',), self.object)
         else:
             return False

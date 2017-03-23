@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block menu %}{% menu 'article' association.entity %}{% endblock %}
-{% block heading_title %}{% with title="Beitrag" %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Beitrag</span>
+    <span class="decoration-icon sg-pen" role="presentation"></span>
+{% endblock %}
 
 {% block heading_toolbar %}
     <div class="btn-toolbar">

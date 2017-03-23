@@ -16,5 +16,6 @@ rules.add_perm(
         'content.change',
         rules.is_authenticated & associations_rules.is_member)
 
-rules.add_perm('content.comment',
+rules.add_perm(
+        'content.comment',
         rules.is_authenticated & can_view)

@@ -1,5 +1,3 @@
-from . import forms
-from core.views import base
 from django import shortcuts
 from django.conf import settings
 from django.contrib.contenttypes import models as contenttypes
@@ -7,32 +5,30 @@ from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
 from django.views.generic import edit
+
+import features.contributions.models
+import features.contributions.views
+from . import forms
+from core.views import base
 from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.groups import models as groups
-from features.contributions import models as contributions
 
 
-class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
+class Conversation(
+        base.PermissionMixin,
+        features.contributions.views.ContributionFormMixin,
+        generic.DetailView):
+
     model = associations.Association
     pk_url_kwarg = 'association_pk'
     template_name = 'conversations/detail.html'
 
     form_class = forms.Reply
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = contributions.Contribution(
-                author=self.request.user.gestalt, container=self.object.container)
-        return kwargs
 
     def get_success_url(self):
         return urlresolvers.reverse('conversation', args=[self.object.pk])
@@ -45,13 +41,6 @@ class Conversation(base.PermissionMixin, edit.FormMixin, generic.DetailView):
             return self.request.user.has_perms(('conversations.reply',), self.object)
         else:
             return False
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
 
 class Conversations(base.PermissionMixin, generic.ListView):
