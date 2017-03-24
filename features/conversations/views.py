@@ -20,27 +20,13 @@ class Conversation(
         features.contributions.views.ContributionFormMixin,
         generic.DetailView):
 
+    permission_required = 'conversations.view'
+    permission_required_post = 'conversations.reply'
     model = associations.Association
     pk_url_kwarg = 'association_pk'
     template_name = 'conversations/detail.html'
 
     form_class = forms.Reply
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
-
-    def get_success_url(self):
-        return urlresolvers.reverse('conversation', args=[self.object.pk])
-
-    def has_permission(self):
-        self.object = self.get_object()
-        if self.request.method == 'GET':
-            return self.request.user.has_perms(('conversations.view',), self.object)
-        elif self.request.method == 'POST':
-            return self.request.user.has_perms(('conversations.reply',), self.object)
-        else:
-            return False
 
 
 class Conversations(base.PermissionMixin, generic.ListView):

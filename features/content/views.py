@@ -35,6 +35,7 @@ class ContentMixin:
 
 class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):
     permission_required = 'content.view'
+    permission_required_post = 'content.comment'
     model = associations.Association
     template_name = 'articles/detail.html'
 
@@ -48,25 +49,21 @@ class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic
                 entity_type=contenttypes.ContentType.objects.get_for_model(entity),
                 slug=self.kwargs['association_slug'])
 
-    def get_success_url(self):
-        return django.core.urlresolvers.reverse(
-                'content', args=[self.object.entity.slug, self.object.slug])
-
-    def has_permission(self):
-        self.object = self.get_object()
-        if self.request.method == 'GET':
-            return self.request.user.has_perms((self.permission_required,), self.object)
-        elif self.request.method == 'POST':
-            return self.request.user.has_perms(('content.comment',), self.object)
-        else:
-            return False
-
 
 class CreateVersion(base.PermissionMixin, generic.CreateView):
     permission_required = 'content.create_version'
     model = models.Version
     form_class = forms.CreateVersion
     template_name = 'content/create_version.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.model(
+                author=self.request.user.gestalt, content=self.association.container)
+        return kwargs
+
+    def get_initial(self):
+        return {'text': self.association.container.versions.last().text}
 
     def get_permission_object(self):
         entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
@@ -76,3 +73,6 @@ class CreateVersion(base.PermissionMixin, generic.CreateView):
                 entity_type=contenttypes.ContentType.objects.get_for_model(entity),
                 slug=self.kwargs['association_slug'])
         return self.association
+
+    def get_success_url(self):
+        return self.association.get_absolute_url()

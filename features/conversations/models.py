@@ -36,3 +36,6 @@ class Conversation(models.Model):
                 entity_type=contenttypes.ContentType.objects.get_for_model(groups.Group))
         return groups.Group.objects.filter(
                 pk__in=group_associations.values_list('entity_id', flat=True))
+
+    def get_url_for(self, association):
+        return django.core.urlresolvers.reverse('conversation', args=[association.pk])

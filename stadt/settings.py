@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.forms',
     'django_filters',
     'django_mailbox',
     'entities.apps.EntitiesConfig',
@@ -114,6 +115,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 
 WSGI_APPLICATION = 'stadt.wsgi.application'
