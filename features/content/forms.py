@@ -22,6 +22,8 @@ class Update(forms.ModelForm):
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
+        if self.instance.public or not self.instance.entity.is_group:
+            del self.fields['public']
 
     def save(self, commit=True):
         association = super().save(commit)

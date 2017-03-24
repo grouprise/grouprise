@@ -40,13 +40,15 @@
                 {% endcomment %}
                 <div class="col-md-5">
                     <button class="btn btn-primary btn-block">Beitrag ändern</button>
-                    <div class="checkbox">
-                        <label>
-                            {{ form.public }}
-                            {{ form.public.label }}
-                        </label>
-                        <span class="help-block">{{ form.public.help_text }}</span>
-                    </div>
+                    {% if form.public %}
+                        <div class="checkbox">
+                            <label>
+                                {{ form.public }}
+                                {{ form.public.label }}
+                            </label>
+                            <span class="help-block">{{ form.public.help_text }}</span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
