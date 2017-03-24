@@ -8,7 +8,10 @@ class Association(models.Model):
             'Öffentlich', default=False,
             help_text='Öffentliche Beiträge sind auch für Besucherinnen sichtbar, die nicht '
             'Mitglied der Gruppe sind')
-    slug = models.SlugField(default=None, null=True)
+    slug = models.SlugField(
+            'Kurzname', default=None, null=True,
+            help_text='Der Kurzname wird beispielsweise in der Webadresse des Beitrags '
+            'verwendet.')
 
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
     container_id = models.PositiveIntegerField()

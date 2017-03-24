@@ -14,7 +14,7 @@ class Comment(contributions.Text):
 class Update(forms.ModelForm):
     class Meta:
         model = associations.Association
-        fields = ('public',)
+        fields = ('public', 'slug')
 
     text = forms.CharField(widget=forms.Textarea())
     title = forms.CharField()

@@ -31,13 +31,22 @@
         <div class="section section-publish section-article" data-component="publish">
             <h2>Beitragseinstellungen</h2>
             <div class="row">
-                {% comment %}
-                layout.Div(
-                    layout.Field('group', data_component='select', data_select_type='author'),
-                    'pinned',
-                    css_class="col-md-7"
-                ),
-                {% endcomment %}
+                <div class="col-md-7">
+                    <div class="form-group{% if form.slug.errors %} has-error{% endif %}">
+                        <label for="{{ form.slug.id_for_label }}" class="control-label">
+                            {{ form.slug.label }}
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-addon">@{{ association.entity.slug }}/</span>
+                            {{ form.slug }}
+                        </div>
+                        <span class="help-block">{{ form.slug.help_text }}</span>
+                        {% for error in form.slug.errors %}
+                            <span class="help-block"><strong>{{ error }}</strong></span>
+                        {% endfor %}
+                    </div>
+                    {#'pinned',#}
+                </div>
                 <div class="col-md-5">
                     <button class="btn btn-primary btn-block">Beitrag ändern</button>
                     {% if form.public %}
