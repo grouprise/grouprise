@@ -16,7 +16,7 @@
     <div class="btn-toolbar">
         {% has_perm 'content.create_version' user association as can_edit %}
         {% if can_edit %}
-        <a href="{% url 'create-content-version' association.entity.slug association.slug %}" class="btn btn-ch">
+        <a href="{% url 'update-content' association.entity.slug association.slug %}" class="btn btn-ch">
                 <span class="btn-label">Bearbeiten</span>
             </a>
         {% endif %}

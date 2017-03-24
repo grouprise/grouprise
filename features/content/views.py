@@ -50,29 +50,27 @@ class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic
                 slug=self.kwargs['association_slug'])
 
 
-class CreateVersion(base.PermissionMixin, generic.CreateView):
+class Update(base.PermissionMixin, generic.UpdateView):
     permission_required = 'content.create_version'
-    model = models.Version
-    form_class = forms.CreateVersion
-    template_name = 'content/create_version.html'
+    model = associations.Association
+    form_class = forms.Update
+    template_name = 'content/update.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.model(
-                author=self.request.user.gestalt, content=self.association.container)
+        kwargs['author'] = self.request.user.gestalt
         return kwargs
 
     def get_initial(self):
-        return {'text': self.association.container.versions.last().text}
+        return {
+                'title': self.object.container.title,
+                'text': self.object.container.versions.last().text,
+                }
 
-    def get_permission_object(self):
+    def get_object(self):
         entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
-        self.association = shortcuts.get_object_or_404(
+        return shortcuts.get_object_or_404(
                 associations.Association,
                 entity_id=entity.id,
                 entity_type=contenttypes.ContentType.objects.get_for_model(entity),
                 slug=self.kwargs['association_slug'])
-        return self.association
-
-    def get_success_url(self):
-        return self.association.get_absolute_url()

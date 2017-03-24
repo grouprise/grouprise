@@ -1,17 +1,31 @@
-import django.forms
+from django import forms
 
-from . import models
-from core import forms
+import core.forms
+from features.associations import models as associations
 from features.contributions import forms as contributions
 
 
 class Comment(contributions.Text):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.layout.append(forms.Submit('Kommentieren'))
+        self.helper.layout.append(core.forms.Submit('Kommentieren'))
 
 
-class CreateVersion(django.forms.ModelForm):
+class Update(forms.ModelForm):
     class Meta:
-        fields = ('text',)
-        model = models.Version
+        model = associations.Association
+        fields = ('public',)
+
+    text = forms.CharField(widget=forms.Textarea())
+    title = forms.CharField()
+
+    def __init__(self, **kwargs):
+        self.author = kwargs.pop('author')
+        super().__init__(**kwargs)
+
+    def save(self, commit=True):
+        association = super().save(commit)
+        association.container.title = self.cleaned_data['title']
+        association.container.save()
+        association.container.versions.create(author=self.author, text=self.cleaned_data['text'])
+        return association

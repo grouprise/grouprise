@@ -4,7 +4,10 @@ from django.db import models
 
 
 class Association(models.Model):
-    public = models.BooleanField(default=False)
+    public = models.BooleanField(
+            'Öffentlich', default=False,
+            help_text='Öffentliche Beiträge sind auch für Besucherinnen sichtbar, die nicht '
+            'Mitglied der Gruppe sind')
     slug = models.SlugField(default=None, null=True)
 
     container = contenttypes.GenericForeignKey('container_type', 'container_id')

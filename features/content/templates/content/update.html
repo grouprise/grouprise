@@ -1,0 +1,54 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Beitrag bearbeiten - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'article' association.entity %}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb association.entity association 'Beitrag bearbeiten' %}
+{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Beitrag</span>
+{% endblock %}
+
+{% block sidebar %}
+    {% if association.entity.is_group %}
+        {% include 'entities/_sidebar_group.html' with group=association.entity %}
+    {% else %}
+        {% if association.entity.public %}
+            {% include 'entities/_sidebar_author.html' with gestalt=association.entity %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <div class="form-group">{{ form.title }}</div>
+            <div class="form-group">{{ form.text }}</div>
+        </div>
+        <div class="section section-publish section-article" data-component="publish">
+            <h2>Beitragseinstellungen</h2>
+            <div class="row">
+                {% comment %}
+                layout.Div(
+                    layout.Field('group', data_component='select', data_select_type='author'),
+                    'pinned',
+                    css_class="col-md-7"
+                ),
+                {% endcomment %}
+                <div class="col-md-5">
+                    <button class="btn btn-primary btn-block">Beitrag ändern</button>
+                    <div class="checkbox">
+                        <label>
+                            {{ form.public }}
+                            {{ form.public.label }}
+                        </label>
+                        <span class="help-block">{{ form.public.help_text }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
