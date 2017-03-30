@@ -50,6 +50,7 @@ def copy_articles(apps, schema_editor):
                     container_id=content.id,
                     entity_type=ContentType.objects.get_for_model(gc.group),
                     entity_id=gc.group.id,
+                    pinned=gc.pinned,
                     public=a.public,
                     slug=a.slug)
 
@@ -57,7 +58,7 @@ def copy_articles(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('associations', '0002_auto_20170224_0910'),
+        ('associations', '0003_auto_20170330_1041'),
         ('content', '0034_auto_20170209_1451'),
         ('content2', '0001_initial'),
         ('contenttypes', '0002_remove_content_type_name'),
