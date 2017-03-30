@@ -16,8 +16,8 @@ class Update(forms.ModelForm):
         model = associations.Association
         fields = ('pinned', 'public', 'slug')
 
-    text = forms.CharField(widget=forms.Textarea())
-    title = forms.CharField()
+    text = forms.CharField(label='Text', widget=forms.Textarea())
+    title = forms.CharField(label='Titel')
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')

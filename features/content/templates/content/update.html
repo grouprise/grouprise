@@ -25,47 +25,22 @@
     <form method="post">
         {% csrf_token %}
         <div>
-            <div class="form-group">{{ form.title }}</div>
-            <div class="form-group">{{ form.text }}</div>
+            {% include 'core/_field.html' with field=form.title %}
+            {% include 'core/_field.html' with field=form.text %}
         </div>
         <div class="section section-publish section-article" data-component="publish">
             <h2>Beitragseinstellungen</h2>
             <div class="row">
                 <div class="col-md-7">
-                    <div class="form-group{% if form.slug.errors %} has-error{% endif %}">
-                        <label for="{{ form.slug.id_for_label }}" class="control-label">
-                            {{ form.slug.label }}
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">@{{ association.entity.slug }}/</span>
-                            {{ form.slug }}
-                        </div>
-                        <span class="help-block">{{ form.slug.help_text }}</span>
-                        {% for error in form.slug.errors %}
-                            <span class="help-block"><strong>{{ error }}</strong></span>
-                        {% endfor %}
-                    </div>
-                    {#'pinned',#}
+                    {% include 'core/_field.html' with field=form.slug prefix='@'|add:association.entity.slug|add:'/' %}
                 </div>
                 <div class="col-md-5">
                     <button class="btn btn-primary btn-block">Beitrag ändern</button>
                     {% if form.pinned %}
-                        <div class="checkbox">
-                            <label>
-                                {{ form.pinned }}
-                                {{ form.pinned.label }}
-                            </label>
-                            <span class="help-block">{{ form.pinned.help_text }}</span>
-                        </div>
+                        {% include 'core/_checkbox_field.html' with field=form.pinned %}
                     {% endif %}
                     {% if form.public %}
-                        <div class="checkbox">
-                            <label>
-                                {{ form.public }}
-                                {{ form.public.label }}
-                            </label>
-                            <span class="help-block">{{ form.public.help_text }}</span>
-                        </div>
+                        {% include 'core/_checkbox_field.html' with field=form.public %}
                     {% endif %}
                 </div>
             </div>

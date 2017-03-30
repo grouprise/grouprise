@@ -1,0 +1,17 @@
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id_for_label }}" class="control-label">
+        {{ field.label }}
+    </label>
+    {% if prefix %}
+    <div class="input-group">
+        <span class="input-group-addon">{{ prefix }}</span>
+    {% endif %}
+        {{ field }}
+    {% if prefix %}
+    </div>
+    {% endif %}
+    <span class="help-block">{{ field.help_text }}</span>
+    {% for error in field.errors %}
+        <span class="help-block"><strong>{{ error }}</strong></span>
+    {% endfor %}
+</div>

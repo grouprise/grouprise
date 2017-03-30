@@ -1,0 +1,10 @@
+<div class="checkbox{% if field.errors %} has-error{% endif %}">
+    <label class="control-label">
+        {{ field }}
+        {{ field.label }}
+    </label>
+    <span class="help-block">{{ field.help_text }}</span>
+    {% for error in field.errors %}
+        <span class="help-block"><strong>{{ error }}</strong></span>
+    {% endfor %}
+</div>
