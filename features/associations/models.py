@@ -4,6 +4,11 @@ from django.db import models
 
 
 class Association(models.Model):
+    pinned = models.BooleanField(
+            'Im Intro der Gruppe anheften', default=False,
+            help_text='Angeheftete Beiträge werden auf der Gruppenseite zuerst angezeigt. Sie '
+            'können beispielsweise für allgemeine Einleitungs- und Beschreibungstexte '
+            'verwendet werden.')
     public = models.BooleanField(
             'Öffentlich', default=False,
             help_text='Öffentliche Beiträge sind auch für Besucherinnen sichtbar, die nicht '

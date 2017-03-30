@@ -49,6 +49,15 @@
                 </div>
                 <div class="col-md-5">
                     <button class="btn btn-primary btn-block">Beitrag ändern</button>
+                    {% if form.pinned %}
+                        <div class="checkbox">
+                            <label>
+                                {{ form.pinned }}
+                                {{ form.pinned.label }}
+                            </label>
+                            <span class="help-block">{{ form.pinned.help_text }}</span>
+                        </div>
+                    {% endif %}
                     {% if form.public %}
                         <div class="checkbox">
                             <label>

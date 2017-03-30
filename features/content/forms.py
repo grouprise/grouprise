@@ -14,7 +14,7 @@ class Comment(contributions.Text):
 class Update(forms.ModelForm):
     class Meta:
         model = associations.Association
-        fields = ('public', 'slug')
+        fields = ('pinned', 'public', 'slug')
 
     text = forms.CharField(widget=forms.Textarea())
     title = forms.CharField()
@@ -22,6 +22,8 @@ class Update(forms.ModelForm):
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
+        if not self.instance.entity.is_group:
+            del self.fields['pinned']
         if self.instance.public or not self.instance.entity.is_group:
             del self.fields['public']
 
