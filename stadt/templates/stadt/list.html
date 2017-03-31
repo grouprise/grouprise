@@ -6,8 +6,8 @@
 
         {% block list %}
             <ol class="content-preview-list">
-                {% for content in content_list %}
-                    <li>{% include 'content/_content_preview.html' %}</li>
+                {% for association in association_list %}
+                    <li>{% include 'content/_preview.html' %}</li>
                 {% endfor %}
             </ol>
         {% endblock %}

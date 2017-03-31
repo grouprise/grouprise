@@ -1,13 +1,17 @@
-from . import forms
-from content import creation as content_creation, models as content_models
-from crispy_forms import layout
 from django import http
+from django.contrib.contenttypes import models as contenttypes
 from django.db import models as django_models
 from django.utils import six
 from django.views import generic
+from crispy_forms import layout
+
+from utils import forms as utils_forms, views as utils_views
+from content import creation as content_creation, models as content_models
+from features.associations import models as associations
+from features.content import models as content2
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from utils import forms as utils_forms, views as utils_views
+from . import forms
 
 
 class Gestalt(utils_views.List):
@@ -89,7 +93,12 @@ class Group(utils_views.List):
                 groups=self.get_group())
 
     def get_group_content(self):
-        return self.get_group().content.permitted(self.request.user)
+        group = self.get_group()
+        return associations.Association.objects.filter(
+                container_type=contenttypes.ContentType.objects.get_for_model(content2.Content),
+                entity_type=contenttypes.ContentType.objects.get_for_model(groups.Group),
+                entity_id=group.id
+                ).can_view(self.request.user)
 
     def get_inline_view_form(self):
         # FIXME: hacky code follows
@@ -114,14 +123,14 @@ class Group(utils_views.List):
 
     def get_intro_content(self):
         pinned_content = self.get_group_content().filter(
-                groupcontent__pinned=True).order_by('date_created')
+                pinned=True).order_by('content__versions__time_created')
         try:
             return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
         except AttributeError:
             return pinned_content
 
     def get_queryset(self):
-        return self.get_group_content().filter(groupcontent__pinned=False)
+        return self.get_group_content().filter(pinned=False)
 
     def get_related_object(self):
         return self.get_group()
