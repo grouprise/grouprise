@@ -16,7 +16,7 @@ class Update(forms.ModelForm):
         model = associations.Association
         fields = ('pinned', 'public', 'slug')
 
-    text = forms.CharField(label='Text', widget=forms.Textarea())
+    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
     title = forms.CharField(label='Titel')
 
     def __init__(self, **kwargs):

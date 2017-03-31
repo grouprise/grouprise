@@ -2,6 +2,13 @@ from crispy_forms import bootstrap, helper, layout
 from django import forms as django
 
 
+class EditorTextarea(django.Textarea):
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context['widget']['editor'] = True
+        return context
+
+
 class StadtMixin:
     def __init__(self, **kwargs):
         action = kwargs.pop('action')
