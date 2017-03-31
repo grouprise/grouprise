@@ -27,6 +27,13 @@ class Update(forms.ModelForm):
         if self.instance.public or not self.instance.entity.is_group:
             del self.fields['public']
 
+    def clean_slug(self):
+        if associations.Association.objects.filter(
+                entity_type=self.instance.entity_type, entity_id=self.instance.entity_id,
+                slug=self.cleaned_data['slug']).exists():
+            raise forms.ValidationError('Der Kurzname ist bereits vergeben.', code='unique')
+        return self.cleaned_data['slug']
+
     def save(self, commit=True):
         association = super().save(commit)
         association.container.title = self.cleaned_data['title']
