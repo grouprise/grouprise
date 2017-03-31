@@ -7,22 +7,26 @@ from features.groups import models as groups
 
 
 class Association(models.QuerySet):
-    def can_view(self, user, **kwargs):
+    def can_view(self, user, container=None):
+        # public associations can be viewed
+        query = models.Q(public=True)
+        # authenticated users can view associations for entities they are members in
         if user.is_authenticated():
-            gestalt_type = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
-            group_type = contenttypes.ContentType.objects.get_for_model(groups.Group)
+            GESTALT_TYPE = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
+            GROUP_TYPE = contenttypes.ContentType.objects.get_for_model(groups.Group)
             gestalt_groups = groups.Group.objects.filter(memberships__member=user.gestalt)
-            author_query_string = '{}__contributions__author'.format(kwargs['container'])
-            return self.filter(
-                    models.Q(public=True)
-                    | models.Q(**{author_query_string: user.gestalt})
-                    | (models.Q(entity_type=group_type)
+            query |= (
+                    (models.Q(entity_type=GROUP_TYPE)
                         & models.Q(entity_id__in=gestalt_groups))
-                    | (models.Q(entity_type=gestalt_type)
+                    | (models.Q(entity_type=GESTALT_TYPE)
                         & models.Q(entity_id=user.gestalt.id))
                     )
-        else:
-            return self.filter(public=True)
+            # if given a container we can allow access to associations for which the user
+            # authored a contribution (e.g. for container='conversation')
+            if container:
+                author_query_string = '{}__contributions__author'.format(container)
+                query |= models.Q(**{author_query_string: user.gestalt})
+        return self.filter(query)
 
     # TODO: replace 'conversation' by generic container
     def ordered_conversations(self, user):

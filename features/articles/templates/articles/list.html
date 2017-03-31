@@ -24,8 +24,8 @@
 {% block content %}
     <div class="content-list">
         <ol class="content-preview-list">
-            {% for content in article_list %}
-                <li>{% include 'content/_content_preview.html' %}</li>
+            {% for association in association_list %}
+                <li>{% include 'content/_preview.html' %}</li>
             {% endfor %}
         </ol>
 
