@@ -1,5 +1,5 @@
 {
-  "version": "1.6.2",
+  "version": "1.6.3",
   "license": "AGPL-3.0",
   "engines": {
     "node": ">=4.6.1"
