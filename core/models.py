@@ -4,6 +4,10 @@ from django.core import exceptions
 from django.db import models
 
 
+def no_validator(arg):
+    pass
+
+
 def validate_reservation(value):
     if value in ['gestalt', 'stadt']:
         raise exceptions.ValidationError(
@@ -31,7 +35,7 @@ class AutoSlugField(models.SlugField):
 
     def pre_save(self, model_instance, add):
         if add:
-            value = text.slugify(
+            value = self.slugify(
                     type(model_instance), self.attname,
                     getattr(model_instance, self.populate_from),
                     validate_reservation, self.dodging)
@@ -39,6 +43,24 @@ class AutoSlugField(models.SlugField):
             return value
         else:
             return super().pre_save(model_instance, add)
+
+    def slugify(self, model, field, value, validator=no_validator, dodging=True):
+        orig_slug = slug = text.slugify(value)
+        if not dodging:
+            return slug
+        i = 0
+        while True:
+            try:
+                try:
+                    validator(slug)
+                except exceptions.ValidationError:
+                    pass
+                else:
+                    model.objects.get(**{field: slug})
+                i += 1
+                slug = orig_slug + '-' + str(i)
+            except model.DoesNotExist:
+                return slug
 
 
 class Model(models.Model):

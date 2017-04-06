@@ -1,49 +1,13 @@
-{% extends 'stadt/stadt.html' %}
+{% extends 'content/form.html' %}
 
 {% block title %}Beitrag bearbeiten - {{ block.super }}{% endblock %}
-{% block menu %}{% menu 'article' association.entity %}{% endblock %}
 
 {% block breadcrumb %}
     {% breadcrumb association.entity association 'Beitrag bearbeiten' %}
 {% endblock %}
 
-{% block heading_title %}
-    <span class="content-classification">Beitrag</span>
+{% block extra_settings %}
+    {% include 'core/_field.html' with field=form.slug prefix='@'|add:association.entity.slug|add:'/' %}
 {% endblock %}
 
-{% block sidebar %}
-    {% if association.entity.is_group %}
-        {% include 'entities/_sidebar_group.html' with group=association.entity %}
-    {% else %}
-        {% if association.entity.public %}
-            {% include 'entities/_sidebar_author.html' with gestalt=association.entity %}
-        {% endif %}
-    {% endif %}
-{% endblock %}
-
-{% block content %}
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            {% include 'core/_field.html' with field=form.title %}
-            {% include 'core/_field.html' with field=form.text %}
-        </div>
-        <div class="section section-publish section-article" data-component="publish">
-            <h2>Beitragseinstellungen</h2>
-            <div class="row">
-                <div class="col-md-7">
-                    {% include 'core/_field.html' with field=form.slug prefix='@'|add:association.entity.slug|add:'/' %}
-                </div>
-                <div class="col-md-5">
-                    <button class="btn btn-primary btn-block">Beitrag ändern</button>
-                    {% if form.pinned %}
-                        {% include 'core/_checkbox_field.html' with field=form.pinned %}
-                    {% endif %}
-                    {% if form.public %}
-                        {% include 'core/_checkbox_field.html' with field=form.public %}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </form>
-{% endblock %}
+{% block submit_label %}Beitrag ändern{% endblock %}

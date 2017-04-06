@@ -1,0 +1,9 @@
+{% extends 'content/form.html' %}
+
+{% block title %}Beitrag erstellen - {{ block.super }}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb view.entity 'Beitrag erstellen' %}
+{% endblock %}
+
+{% block submit_label %}Beitrag erstellen{% endblock %}

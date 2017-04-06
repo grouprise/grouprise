@@ -50,8 +50,28 @@ class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic
                 slug=self.kwargs['association_slug'])
 
 
+class Create(base.PermissionMixin, generic.CreateView):
+    permission_required = 'content.create'
+    model = associations.Association
+    form_class = forms.Create
+    template_name = 'content/create.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['author'] = self.request.user.gestalt
+        kwargs['instance'] = associations.Association(entity=self.entity)
+        return kwargs
+
+    def get_initial(self):
+        return {'public': True}
+
+    def get_permission_object(self):
+        self.entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
+        return associations.Association(entity=self.entity)
+
+
 class Update(base.PermissionMixin, generic.UpdateView):
-    permission_required = 'content.create_version'
+    permission_required = 'content.change'
     model = associations.Association
     form_class = forms.Update
     template_name = 'content/update.html'
@@ -68,9 +88,9 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 }
 
     def get_object(self):
-        entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
+        self.entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
         return shortcuts.get_object_or_404(
                 associations.Association,
-                entity_id=entity.id,
-                entity_type=contenttypes.ContentType.objects.get_for_model(entity),
+                entity_id=self.entity.id,
+                entity_type=contenttypes.ContentType.objects.get_for_model(self.entity),
                 slug=self.kwargs['association_slug'])

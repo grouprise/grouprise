@@ -17,5 +17,9 @@ rules.add_perm(
         rules.is_authenticated & can_view)
 
 rules.add_perm(
-        'content.create_version',
+        'content.create',
+        rules.is_authenticated & associations_rules.is_member)
+
+rules.add_perm(
+        'content.change',
         rules.is_authenticated & associations_rules.is_member)

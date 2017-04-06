@@ -1,0 +1,7 @@
+{% if entity.is_group %}
+    {% include 'entities/_sidebar_group.html' with group=entity %}
+{% else %}
+    {% if entity.public %}
+        {% include 'entities/_sidebar_author.html' with gestalt=entity %}
+    {% endif %}
+{% endif %}

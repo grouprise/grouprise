@@ -1,0 +1,40 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block menu %}{% menu 'article' view.entity %}{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Beitrag</span>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.entity %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {% include 'core/_field.html' with field=form.title %}
+            {% include 'core/_field.html' with field=form.text %}
+        </div>
+        <div class="section section-publish section-article" data-component="publish">
+            <h2>Beitragseinstellungen</h2>
+            <div class="row">
+                <div class="col-md-7">
+                    {% block extra_settings %}{% endblock %}
+                    {% if form.pinned %}
+                        {% include 'core/_checkbox_field.html' with field=form.pinned %}
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    <button class="btn btn-primary btn-block">
+                        {% block submit_label %}{% endblock %}
+                    </button>
+                    {% if form.public %}
+                        {% include 'core/_checkbox_field.html' with field=form.public %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
