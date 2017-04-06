@@ -23,6 +23,10 @@ class Gestalt(models.Model):
     score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
 
+    @property
+    def slug(self):
+        return self.user.username
+
     @staticmethod
     def get_or_create(email):
         user, created = auth.get_user_model().objects.get_or_create(
