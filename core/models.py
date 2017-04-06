@@ -1,7 +1,26 @@
+import itertools
+
 from core import text
 from django.contrib.contenttypes import models as contenttypes_models
 from django.core import exceptions
 from django.db import models
+
+
+def get_unique_slug(cls, fields):
+    def replace(d, key, repl):
+        result = d.copy()
+        result[key] = repl
+        return result
+
+    slug_field_name = 'slug'
+    l = cls._meta.get_field(slug_field_name).max_length
+    for i in itertools.count():
+        slug = fields[slug_field_name][:l]
+        if i:
+            suffix = '-{}'.format(i)
+            slug = slug[:-len(suffix)] + suffix
+        if not cls._default_manager.filter(**replace(fields, slug_field_name, slug)).exists():
+            return slug
 
 
 def no_validator(arg):
@@ -38,7 +57,7 @@ class AutoSlugField(models.SlugField):
             value = self.slugify(
                     type(model_instance), self.attname,
                     getattr(model_instance, self.populate_from),
-                    validate_reservation, self.dodging)
+                    validate_reservation, self.dodging)[:45]
             setattr(model_instance, self.attname, value)
             return value
         else:

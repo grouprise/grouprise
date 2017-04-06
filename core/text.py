@@ -5,4 +5,4 @@ import translitcodec   # noqa: F401, used indirectly via "translit/"
 
 
 def slugify(value):
-    return text.slugify(codecs.encode(value, 'translit/long'))[:45]
+    return text.slugify(codecs.encode(value, 'translit/long'))
