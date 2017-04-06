@@ -6,6 +6,7 @@ import re
 
 
 class ReplyKey(models.Model):
+    """ TODO: migrate to core.models.PermissionToken """
     gestalt = models.ForeignKey('gestalten.Gestalt')
     key = models.CharField(max_length=15, unique=True)
     text = models.ForeignKey('Text')
