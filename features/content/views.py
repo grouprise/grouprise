@@ -9,6 +9,7 @@ from content import models as content_models
 from core.views import base
 from features.associations import models as associations
 from features.contributions import views as contributions
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 
 
@@ -42,7 +43,11 @@ class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic
     form_class = forms.Comment
 
     def get_object(self, queryset=None):
-        entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
+        try:
+            entity = groups.Group.objects.get(slug=self.kwargs['entity_slug'])
+        except groups.Group.DoesNotExist:
+            entity = shortcuts.get_object_or_404(
+                    gestalten.Gestalt, user__username=self.kwargs['entity_slug'])
         return shortcuts.get_object_or_404(
                 self.model,
                 entity_id=entity.id,
@@ -92,7 +97,11 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 }
 
     def get_object(self):
-        self.entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
+        try:
+            self.entity = groups.Group.objects.get(slug=self.kwargs['entity_slug'])
+        except groups.Group.DoesNotExist:
+            self.entity = shortcuts.get_object_or_404(
+                    gestalten.Gestalt, user__username=self.kwargs['entity_slug'])
         return shortcuts.get_object_or_404(
                 associations.Association,
                 entity_id=self.entity.id,
