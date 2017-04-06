@@ -8,9 +8,14 @@ urlpatterns = [
         name='content'),
 
     urls.url(
-        r'^(?P<entity_slug>[\w-]+)/articles/add/$',
+        r'^stadt/articles/add/$',
         views.Create.as_view(),
         name='create-content'),
+
+    urls.url(
+        r'^(?P<entity_slug>[\w-]+)/articles/add/$',
+        views.Create.as_view(),
+        name='create-group-content'),
 
     urls.url(
         r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/edit/$',

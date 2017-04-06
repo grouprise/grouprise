@@ -4,6 +4,7 @@ import core.forms
 from . import models
 from features.associations import models as associations
 from features.contributions import forms as contributions
+from features.groups import models as groups
 
 
 class Comment(contributions.Text):
@@ -17,12 +18,20 @@ class Create(forms.ModelForm):
         model = associations.Association
         fields = ('pinned', 'public')
 
+    group = forms.ModelChoiceField(
+            label='Veröffentlichen als', queryset=groups.Group.objects.none(), required=False,
+            widget=core.forms.GroupSelect)
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
     title = forms.CharField(label='Titel')
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
+        if self.instance.entity.is_group:
+            del self.fields['group']
+        else:
+            self.fields['group'].queryset = groups.Group.objects.filter(
+                    memberships__member=self.author)
 
     def save(self, commit=True):
         self.instance.slug = core.text.slugify(self.cleaned_data['title'])

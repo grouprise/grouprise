@@ -14,9 +14,11 @@
     <div class="wrap wrap-prefix">
         <div class="container">
             <div class="page-prefix">
-                {% block breadcrumb %}
-                    {% include 'stadt/_breadcrumb.html' %}
-                {% endblock %}
+                <div class="breadcrumb">{% spaceless %}
+                    {% block breadcrumb %}
+                        {% include 'stadt/_breadcrumb.html' %}
+                    {% endblock %}
+                {% endspaceless %}</div>
                 <div class="page-meta">
                     {{ num_groups }} Gruppen / {{ num_gestalten }} Gestalten / {{ content_count }} Beiträge
                 </div>

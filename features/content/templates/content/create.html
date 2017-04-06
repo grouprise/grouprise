@@ -3,7 +3,19 @@
 {% block title %}Beitrag erstellen - {{ block.super }}{% endblock %}
 
 {% block breadcrumb %}
-    {% breadcrumb view.entity 'Beitrag erstellen' %}
+    {% if view.entity.is_group %}
+        {% breadcrumb view.entity 'Beitrag erstellen' %}
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    {% if view.entity.is_group %}{{ block.super }}{% endif %}
+{% endblock %}
+
+{% block extra_settings %}
+    {% if form.group %}
+        {% include 'core/_field.html' with field=form.group %}
+    {% endif %}
 {% endblock %}
 
 {% block submit_label %}Beitrag erstellen{% endblock %}

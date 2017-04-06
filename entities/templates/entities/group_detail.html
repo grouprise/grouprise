@@ -65,7 +65,7 @@
                         </span>
                     </label>
                     <ul class="dropdown" id="content-new-dropdown" data-dropdown>
-                        <li><a href="{% url 'create-content' group.slug %}">Artikel</a></li>
+                        <li><a href="{% url 'create-group-content' group.slug %}">Artikel</a></li>
                         <li><a href="{% url 'event-create' %}?group={{ group.slug }}">Ereignis</a></li>
                         <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}">Galerie</a></li>
                     </ul>

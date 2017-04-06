@@ -2,6 +2,10 @@ from crispy_forms import bootstrap, helper, layout
 from django import forms as django
 
 
+class GroupSelect(django.Select):
+    template_name = 'core/widgets/group_select.html'
+
+
 class EditorTextarea(django.Textarea):
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)

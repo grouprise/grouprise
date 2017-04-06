@@ -1,14 +1,10 @@
-<div class="breadcrumb">{% spaceless %}
-    {% block breadcrumb %}
-        {% for text, url in breadcrumb %}
-            {% if url %}
-                <a href="{{ url }}">{{ text|truncatechars:25 }}</a>
-            {% else %}
-                <span>{{ text|truncatechars:50 }}</span>
-            {% endif %}
-            {% if not forloop.last %}
-                <span class="breadcrumb-separator"></span>
-            {% endif %}
-        {% endfor %}
-    {% endblock %}
-{% endspaceless %}</div>
+{% for text, url in breadcrumb %}
+    {% if url %}
+        <a href="{{ url }}">{{ text|truncatechars:25 }}</a>
+    {% else %}
+        <span>{{ text|truncatechars:50 }}</span>
+    {% endif %}
+    {% if not forloop.last %}
+        <span class="breadcrumb-separator"></span>
+    {% endif %}
+{% endfor %}

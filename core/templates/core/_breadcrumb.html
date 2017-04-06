@@ -1,1 +1,1 @@
-<div class="breadcrumb">{% for name, url in crumbs %}{% if not forloop.last %}{% if url %}<a href="{{ url }}">{% endif %}{{ name|truncatechars:25 }}{% if url %}</a>{% endif %}<span class="breadcrumb-separator"></span>{% else %}{{ name|truncatechars:50 }}{% endif %}{% endfor %}</div>
+{% for name, url in crumbs %}{% if not forloop.last %}{% if url %}<a href="{{ url }}">{% endif %}{{ name|truncatechars:25 }}{% if url %}</a>{% endif %}<span class="breadcrumb-separator"></span>{% else %}{{ name|truncatechars:50 }}{% endif %}{% endfor %}

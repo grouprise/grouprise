@@ -66,7 +66,11 @@ class Create(base.PermissionMixin, generic.CreateView):
         return {'public': True}
 
     def get_permission_object(self):
-        self.entity = shortcuts.get_object_or_404(groups.Group, slug=self.kwargs['entity_slug'])
+        if 'entity_slug' in self.kwargs:
+            self.entity = shortcuts.get_object_or_404(
+                    groups.Group, slug=self.kwargs['entity_slug'])
+        else:
+            self.entity = self.request.user.gestalt
         return associations.Association(entity=self.entity)
 
 
