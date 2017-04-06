@@ -1,3 +1,4 @@
+import django.db.transaction
 from django import forms
 
 import core.forms
@@ -34,17 +35,18 @@ class Create(forms.ModelForm):
                     memberships__member=self.author)
 
     def save(self, commit=True):
-        if not self.instance.entity.is_group and self.cleaned_data['group']:
-            self.instance.entity = self.cleaned_data['group']
-        self.instance.slug = core.models.get_unique_slug(
-                associations.Association, {
-                    'entity_id': self.instance.entity_id,
-                    'entity_type': self.instance.entity_type,
-                    'slug': core.text.slugify(self.cleaned_data['title']),
-                    })
-        self.instance.container = models.Content.objects.create(title=self.cleaned_data['title'])
-        self.instance.container.versions.create(author=self.author, text=self.cleaned_data['text'])
-        return super().save(commit)
+        with django.db.transaction.atomic():
+            if not self.instance.entity.is_group and self.cleaned_data['group']:
+                self.instance.entity = self.cleaned_data['group']
+            self.instance.slug = core.models.get_unique_slug(
+                    associations.Association, {
+                        'entity_id': self.instance.entity_id,
+                        'entity_type': self.instance.entity_type,
+                        'slug': core.text.slugify(self.cleaned_data['title']),
+                        })
+            self.instance.container = models.Content.objects.create(title=self.cleaned_data['title'])
+            self.instance.container.versions.create(author=self.author, text=self.cleaned_data['text'])
+            return super().save(commit)
 
 
 class Update(forms.ModelForm):
