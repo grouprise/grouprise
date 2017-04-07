@@ -23,4 +23,5 @@ urlpatterns = [
     urls.url(r'^', urls.include('features.groups.urls')),
     urls.url(r'^', urls.include('features.gestalten.urls')),
     urls.url(r'^', urls.include('features.content.urls')),
+    urls.url(r'^', urls.include('features.stadt.urls')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

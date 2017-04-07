@@ -18,7 +18,13 @@ from . import forms, models
 class List(core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'content.list'
     model = associations.Association
+    paginate_by = 10
     template_name = 'content/list.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter( 
+                container_type=models.Content.get_content_type(),
+                ).can_view(self.request.user)
 
 
 class Detail(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):

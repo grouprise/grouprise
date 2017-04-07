@@ -38,21 +38,7 @@ def copy_articles(apps, schema_editor):
             contrib.time_created = c.date_created
             contrib.save()
         
-        for gc in GestaltContent.objects.filter(content__article=a):
-            slug = a.slug or core.models.get_unique_slug(
-                    associations.Association, {
-                        'entity_id': gc.gestalt.id,
-                        'entity_type': ContentType.objects.get_for_model(gc.gestalt),
-                        'slug': core.text.slugify(a.title),
-                        })
-            Association.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    entity_type=ContentType.objects.get_for_model(gc.gestalt),
-                    entity_id=gc.gestalt.id,
-                    public=a.public,
-                    slug=slug)
-        
+        gc = None
         for gc in GroupContent.objects.filter(content__article=a):
             slug = a.slug or core.models.get_unique_slug(
                     associations.Association, {
@@ -68,6 +54,21 @@ def copy_articles(apps, schema_editor):
                     pinned=gc.pinned,
                     public=a.public,
                     slug=a.slug)
+            
+        if gc is None:
+            slug = a.slug or core.models.get_unique_slug(
+                    associations.Association, {
+                        'entity_id': a.author.id,
+                        'entity_type': ContentType.objects.get_for_model(a.author),
+                        'slug': core.text.slugify(a.title),
+                        })
+            Association.objects.create(
+                    container_type=ContentType.objects.get_for_model(content),
+                    container_id=content.id,
+                    entity_type=ContentType.objects.get_for_model(a.author),
+                    entity_id=a.author.id,
+                    public=a.public,
+                    slug=slug)
 
 
 class Migration(migrations.Migration):

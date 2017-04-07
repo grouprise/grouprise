@@ -1,3 +1,4 @@
+import django.contrib.contenttypes.models
 import django.core.urlresolvers
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
@@ -18,6 +19,10 @@ class Content(models.Model):
             content_type_field='container_type',
             object_id_field='container_id',
             related_query_name='content')
+
+    @classmethod
+    def get_content_type(cls):
+        return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)
 
     def __str__(self):
         return self.title

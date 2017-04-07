@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'features.images',
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
+    'features.stadt',
     'features.subscriptions',
     'features.tags',
     'features.texts',
