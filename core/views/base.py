@@ -7,24 +7,9 @@ from rules.contrib import views as rules
 
 
 class PermissionMixin(rules.PermissionRequiredMixin):
-    """
-    Handle permissions
-    """
-    def get_permission_required(self):
-        if not hasattr(self, 'permission'):
-            return super().get_permission_required()
-        else:
-            return (self.permission,)
-
-    def handle_no_permission(self):
-        if self.request.user.is_authenticated():
-            raise exceptions.PermissionDenied(
-                    self.get_permission_denied_message())
-        else:
-            return auth.redirect_to_login(
-                    self.request.get_full_path(),
-                    self.get_login_url(),
-                    self.get_redirect_field_name())
+    @property
+    def raise_exception(self):
+        return self.request.user.is_authenticated()
 
 
 class StadtMixin(django_base.ContextMixin):
