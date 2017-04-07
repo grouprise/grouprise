@@ -316,10 +316,10 @@ TAGS_TAGGABLE = (
     ]},
     {'entity': 'content.Content', 'props': ['text', 'title']},
     # FIXME make this work for contributions
-    #{'entity': 'texts.Text', 'props': ['text'],
-    # 'constraint': lambda text: text.conversation is not None, 'tag_related': [
-    #    lambda text: text.conversation
-    #]}
+    # {'entity': 'texts.Text', 'props': ['text'],
+    #  'constraint': lambda text: text.conversation is not None, 'tag_related': [
+    #     lambda text: text.conversation
+    # ]}
 )
 
 try:

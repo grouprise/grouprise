@@ -4,7 +4,6 @@ from django.contrib.contenttypes import models as contenttypes
 from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
-from django.views.generic import edit
 
 import features.contributions.models
 import features.contributions.views
@@ -64,7 +63,7 @@ class CreateConversation(
         kwargs = super().get_form_kwargs()
         kwargs['has_author'] = self.request.user.is_authenticated()
         kwargs['instance'] = associations.Association(entity=self.entity)
-        kwargs['contribution'] = contributions.Contribution()
+        kwargs['contribution'] = features.contributions.models.Contribution()
         if kwargs['has_author']:
             kwargs['contribution'].author = self.request.user.gestalt
         return kwargs

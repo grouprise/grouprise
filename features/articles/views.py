@@ -1,9 +1,9 @@
-from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
 
 from core.views import base
 from features.associations import models as associations
 from features.content import models as content
+
 
 class List(base.PermissionMixin, generic.ListView):
     permission_required = 'articles.view_list'

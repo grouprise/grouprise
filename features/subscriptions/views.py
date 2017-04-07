@@ -2,7 +2,6 @@ from . import filters, models
 from core import fields, views
 from django import db, http
 from django.contrib import messages
-from features.content import views as content
 from features.groups import views as groups
 
 

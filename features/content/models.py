@@ -31,8 +31,8 @@ class Content(models.Model):
         return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
 
     def get_url_for(self, association):
-        return django.core.urlresolvers.reverse('content',
-                args=[association.entity.slug, association.slug])
+        return django.core.urlresolvers.reverse(
+                'content', args=[association.entity.slug, association.slug])
 
 
 class Version(models.Model):

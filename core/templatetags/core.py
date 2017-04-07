@@ -28,11 +28,6 @@ def pagination(context, label):
     return context
 
 
-@register.inclusion_tag('core/_time.html')
-def time(time):
-    return {'time': time}
-
-
 @register.inclusion_tag('core/_breadcrumb.html')
 def breadcrumb(*args):
     crumbs = []
@@ -132,6 +127,7 @@ def dropdown(parser, token):
     nodelist = parser.parse(('enddropdown',))
     parser.delete_first_token()
     return DropdownNode(name[1:-1], label[1:-1], nodelist)
+
 
 class DropdownNode(template.Node):
     def __init__(self, name, label, nodelist):

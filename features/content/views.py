@@ -3,10 +3,8 @@ import django.views.generic
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
-from django.views.generic import edit
 
 import core.views
-from content import models as content_models
 from core.views import base
 from features.associations import models as associations
 from features.contributions import views as contributions
@@ -22,7 +20,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'content/list.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter( 
+        return super().get_queryset().filter(
                 container_type=models.Content.get_content_type(),
                 ).can_view(self.request.user).order_by('-content__versions__time_created')
 

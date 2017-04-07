@@ -1,5 +1,4 @@
-from django.contrib.auth import views as auth
-from django.core import exceptions, urlresolvers
+from django.core import urlresolvers
 from django.utils import six
 from django.views import generic as django
 from django.views.generic import base as django_base

@@ -1,9 +1,12 @@
+from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.views import generic
 
 import utils.views
 from content import models, views as content_views
 from core.views import base
 from features.groups import models as groups
+from features.memberships.rules import is_member_of
 
 
 class List(base.PermissionMixin, generic.ListView):

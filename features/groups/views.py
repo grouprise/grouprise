@@ -1,11 +1,7 @@
-from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.views import generic
 from django_filters import views as filters_views
 from entities import filters
-from features.memberships.rules import is_member_of
-from content import models as content_models, views as content_views
-from utils import views as utils_views
+from content import models as content_models
 from core import fields, views
 from core.views import base
 from . import forms, models

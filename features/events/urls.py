@@ -6,7 +6,7 @@ urlpatterns = [
         r'^events/$',
         views.List.as_view(),
         name='events'),
-    
+
     urls.url(
         r'^(?P<group_slug>[\w-]+)/events/export$',
         views.CalendarExport.as_view(),

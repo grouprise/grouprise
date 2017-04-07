@@ -38,7 +38,8 @@ class Created(notifications.Notification):
                 try:
                     key = crypto.get_random_string(
                             length=15, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
-                    models.ReplyKey.objects.create(gestalt=gestalt, key=key, contribution=self.text)
+                    models.ReplyKey.objects.create(
+                            gestalt=gestalt, key=key, contribution=self.text)
                     result[gestalt] = {'reply_key': key}
                     break
                 except db.IntegrityError:

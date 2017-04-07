@@ -44,8 +44,10 @@ class Create(forms.ModelForm):
                         'entity_type': self.instance.entity_type,
                         'slug': core.text.slugify(self.cleaned_data['title']),
                         })
-            self.instance.container = models.Content.objects.create(title=self.cleaned_data['title'])
-            self.instance.container.versions.create(author=self.author, text=self.cleaned_data['text'])
+            self.instance.container = models.Content.objects.create(
+                    title=self.cleaned_data['title'])
+            self.instance.container.versions.create(
+                    author=self.author, text=self.cleaned_data['text'])
             return super().save(commit)
 
 

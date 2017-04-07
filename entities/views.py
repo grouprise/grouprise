@@ -1,6 +1,5 @@
 from django import http
 from django.contrib.contenttypes import models as contenttypes
-from django.db import models as django_models
 from django.utils import six
 from django.views import generic
 from crispy_forms import layout

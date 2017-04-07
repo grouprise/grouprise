@@ -4,5 +4,6 @@ exclude = entities/migrations, content/migrations, features/memberships/migratio
     features/subscriptions/migrations, features/groups/migrations,
     node_modules/bootstrap-datepicker/docs, features/associations/migrations,
     features/conversations/migrations, features/texts/migrations,
-    features/gestalten/migrations, features/tags/migrations, features/content/migrations
+    features/gestalten/migrations, features/tags/migrations, features/content/migrations,
+    features/contributions/migrations
 ignore = E121,E123,E126,E226,E24,E704,W503
