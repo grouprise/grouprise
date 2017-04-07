@@ -11,11 +11,13 @@ class ReplyByEmail(gestalten.AuthenticatedMixin, gestalten.OtherGestaltMixin, te
         self.client.post(
                 self.get_url('create-gestalt-conversation', self.other_gestalt.pk),
                 {'subject': 'Subject A', 'text': 'Text A'})
-        text_a = self.assertExists(models.Text, conversation__subject='Subject A')
+        text_a = self.assertExists(models.Contribution, conversation__subject='Subject A')
         self.assertNotificationSent()
         # generate reply message
         reply_to = mail.outbox[0].extra_headers['Reply-To']
         msg = mailbox_models.Message(to_header=reply_to, body='Text B')
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
-        self.assertExists(models.Text, conversation=text_a.conversation.get(), text='Text B')
+        self.assertExists(
+                models.Contribution, conversation=text_a.conversation.get(),
+                text__text='Text B')

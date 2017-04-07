@@ -36,6 +36,12 @@ class Contribution(models.Model):
 
 class Text(models.Model):
     text = models.TextField()
+    
+    contribution = contenttypes.GenericRelation(
+            'contributions.Contribution',
+            content_type_field='contribution_type',
+            object_id_field='contribution_id',
+            related_query_name='text')
 
 
 class ReplyKey(models.Model):

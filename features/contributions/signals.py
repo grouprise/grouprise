@@ -14,15 +14,16 @@ def process_message(sender, message, **args):
     token = message.to_addresses[0][token_beg:-token_end]
     try:
         try:
-            in_reply_to_text = models.Text.objects.get_by_message_id(
+            in_reply_to_text = models.Contribution.objects.get_by_message_id(
                     message.get_email_object().get('In-Reply-To'))
-        except models.Text.DoesNotExist:
+        except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = models.ReplyKey.objects.get(key=token)
-        models.Text.objects.create(
+        text = models.Text.objects.create(text=message.text)
+        models.Contribution.objects.create(
                 author=key.gestalt,
-                container=key.text.container,
+                container=key.contribution.container,
                 in_reply_to=in_reply_to_text,
-                text=message.text)
+                contribution=text)
     except models.ReplyKey.DoesNotExist:
         logger.error('Could not process message {}'.format(message.id))
