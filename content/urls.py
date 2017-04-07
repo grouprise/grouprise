@@ -4,10 +4,6 @@ from django.conf import urls
 
 urlpatterns = [
     urls.url(
-        r'^content/(?P<content_pk>[0-9]+)/comment/add/$',
-        creation.CommentCreate.as_view(),
-        name='comment-create'),
-    urls.url(
         r'^content/(?P<content_pk>[0-9]+)/image/$',
         views.ImageList.as_view(),
         name='content-image-list'),
@@ -15,11 +11,6 @@ urlpatterns = [
         r'^content/(?P<content_pk>[0-9]+)/image/add/$',
         creation.ImageCreate.as_view(),
         name='image-create'),
-    urls.url(
-        r'^content/(?P<pk>[0-9]+)/edit/$',
-        views.ContentUpdate.as_view(),
-        name='content-update'),
-    urls.url(r'^content/(?P<pk>[0-9]+)/$', views.Content.as_view(), name='internal-content'),
     urls.url(r'^event/add/$', creation.Event.as_view(), name='event-create'),
     urls.url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventUpdate.as_view(), name='event-update'),
     urls.url(

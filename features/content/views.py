@@ -1,16 +1,18 @@
 import django.core.urlresolvers
+import django.views.generic
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
 from django.views.generic import edit
 
-from . import forms, models
+import core.views
 from content import models as content_models
 from core.views import base
 from features.associations import models as associations
 from features.contributions import views as contributions
 from features.gestalten import models as gestalten
 from features.groups import models as groups
+from . import forms, models
 
 
 class ContentMixin:
@@ -32,6 +34,10 @@ class ContentMixin:
                 return parent.author
         else:
             return None
+
+
+class List(core.views.PermissionMixin, django.views.generic.ListView):
+    pass
 
 
 class Content(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):
