@@ -9,7 +9,7 @@ urlpatterns = [
 
     urls.url(
         r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/$',
-        views.Content.as_view(),
+        views.Detail.as_view(),
         name='content'),
 
     urls.url(

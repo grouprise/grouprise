@@ -1,0 +1,22 @@
+{% extends 'stadt/stadt.html' %}
+{% load events groups %}
+
+{% block heading_title %}
+    {% include 'core/_heading.html' with title='Beiträge' icon='sg-pen' %}
+{% endblock %}
+
+{% block sidebar %}
+    {% sidebar_calendar user %}
+    {% sidebar_groups user %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-list">
+        <ol class="content-preview-list">
+            {% for association in association_list %}
+                <li>{% include 'content/_preview.html' %}</li>
+            {% endfor %}
+        </ol>
+        {% pagination 'Weitere Beiträge' %}
+    </div>
+{% endblock %}

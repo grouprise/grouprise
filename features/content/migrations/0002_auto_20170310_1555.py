@@ -4,6 +4,9 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+import core.models
+import core.text
+
 
 def copy_articles(apps, schema_editor):
     Article = apps.get_model('content.Article')
@@ -36,15 +39,27 @@ def copy_articles(apps, schema_editor):
             contrib.save()
         
         for gc in GestaltContent.objects.filter(content__article=a):
+            slug = a.slug or core.models.get_unique_slug(
+                    associations.Association, {
+                        'entity_id': gc.gestalt.id,
+                        'entity_type': ContentType.objects.get_for_model(gc.gestalt),
+                        'slug': core.text.slugify(a.title),
+                        })
             Association.objects.create(
                     container_type=ContentType.objects.get_for_model(content),
                     container_id=content.id,
                     entity_type=ContentType.objects.get_for_model(gc.gestalt),
                     entity_id=gc.gestalt.id,
                     public=a.public,
-                    slug=a.slug)
+                    slug=slug)
         
         for gc in GroupContent.objects.filter(content__article=a):
+            slug = a.slug or core.models.get_unique_slug(
+                    associations.Association, {
+                        'entity_id': gc.gestalt.id,
+                        'entity_type': ContentType.objects.get_for_model(gc.gestalt),
+                        'slug': core.text.slugify(a.title),
+                        })
             Association.objects.create(
                     container_type=ContentType.objects.get_for_model(content),
                     container_id=content.id,

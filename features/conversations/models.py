@@ -1,5 +1,7 @@
+import django.core.urlresolvers
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
+
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 

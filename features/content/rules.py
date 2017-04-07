@@ -9,6 +9,10 @@ def can_view(user, association):
 
 
 rules.add_perm(
+        'content.list',
+        rules.always_allow)
+
+rules.add_perm(
         'content.view',
         can_view)
 

@@ -27,7 +27,7 @@ class Subscribe(SubscriptionMixin, views.Create):
             return http.HttpResponseRedirect(self.get_success_url())
 
 
-class ContentSubscribe(content.ContentMixin, Subscribe):
+class ContentSubscribe(Subscribe):
     description = (
             'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
             'neue Kommentare veröffentlicht werden')
