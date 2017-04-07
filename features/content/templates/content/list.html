@@ -1,8 +1,17 @@
 {% extends 'stadt/stadt.html' %}
-{% load events groups %}
+{% load events groups rules %}
 
 {% block heading_title %}
     {% include 'core/_heading.html' with title='Beiträge' icon='sg-pen' %}
+{% endblock %}
+
+{% block heading_toolbar %}
+    {% has_perm 'content.create' user as can_create %}
+    {% if can_create %}
+        {% dropdown 'content-new' 'Neuer Beitrag' %}
+            <li><a href="{% url 'create-content' %}">Artikel</a></li>
+        {% enddropdown %}
+    {% endif %}
 {% endblock %}
 
 {% block sidebar %}

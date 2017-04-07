@@ -66,9 +66,10 @@ class Update(forms.ModelForm):
             del self.fields['public']
 
     def clean_slug(self):
-        if associations.Association.objects.filter(
+        q = associations.Association.objects.filter(
                 entity_type=self.instance.entity_type, entity_id=self.instance.entity_id,
-                slug=self.cleaned_data['slug']).exists():
+                slug=self.cleaned_data['slug'])
+        if q.exists() and q.get() != self.instance:
             raise forms.ValidationError('Der Kurzname ist bereits vergeben.', code='unique')
         return self.cleaned_data['slug']
 

@@ -24,7 +24,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     def get_queryset(self):
         return super().get_queryset().filter( 
                 container_type=models.Content.get_content_type(),
-                ).can_view(self.request.user)
+                ).can_view(self.request.user).order_by('-content__versions__time_created')
 
 
 class Detail(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):

@@ -119,6 +119,34 @@ def markdown(
 
 
 @register.tag
+def dropdown(parser, token):
+    try:
+        tag_name, name, label = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError(
+                "%r tag requires two arguments" % token.contents.split()[0])
+    if not ((name[0] == name[-1] and name[0] in ('"', "'"))
+            and (label[0] == label[-1] and label[0] in ('"', "'"))):
+        raise template.TemplateSyntaxError(
+                "%r tag's arguments should be in quotes" % tag_name)
+    nodelist = parser.parse(('enddropdown',))
+    parser.delete_first_token()
+    return DropdownNode(name[1:-1], label[1:-1], nodelist)
+
+class DropdownNode(template.Node):
+    def __init__(self, name, label, nodelist):
+        self.name = name
+        self.label = label
+        self.nodelist = nodelist
+
+    def render(self, context):
+        context['dropdown_id'] = self.name
+        context['dropdown_label'] = self.label
+        context['dropdown_items'] = self.nodelist.render(context)
+        return context.template.engine.get_template('core/_dropdown.html').render(context)
+
+
+@register.tag
 def sidebarblock(parser, token):
     try:
         tag_name, title, icon = token.split_contents()

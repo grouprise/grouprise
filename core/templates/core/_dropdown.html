@@ -1,0 +1,11 @@
+<div class="dropdown-container">
+    <input class="dropdown-state" id="{{ dropdown_id }}" type="checkbox" />
+    <label class="btn btn-primary btn-ch" for="{{ dropdown_id }}" data-component="openable" data-openable-target="#{{ dropdown_id }}-dropdown">
+        <span class="btn-label">
+            {{ dropdown_label }} <span class="caret"></span>
+        </span>
+    </label>
+    <ul class="dropdown" id="{{ dropdown_id }}-dropdown" data-dropdown>
+        {{ dropdown_items }}
+    </ul>
+</div>

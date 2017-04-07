@@ -22,6 +22,10 @@ rules.add_perm(
 
 rules.add_perm(
         'content.create',
+        rules.is_authenticated)
+
+rules.add_perm(
+        'content.group_create',
         rules.is_authenticated & associations_rules.is_member)
 
 rules.add_perm(

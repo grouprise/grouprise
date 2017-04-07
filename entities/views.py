@@ -16,6 +16,7 @@ from . import forms
 
 class Gestalt(utils_views.List):
     menu = 'gestalt'
+    model = associations.Association
     permission = 'entities.view_gestalt'
     sidebar = ('calendar',)
     template_name = 'entities/gestalt_detail.html'
@@ -29,9 +30,11 @@ class Gestalt(utils_views.List):
         return self.get_gestalt()
 
     def get_queryset(self):
-        return content_models.Content.objects.permitted(self.request.user).filter(
-                django_models.Q(gestaltcontent__gestalt=self.get_gestalt())
-                | django_models.Q(author=self.get_gestalt()))
+        return super().get_queryset().filter(
+                container_type=content2.Content.get_content_type(),
+                entity_type=self.get_gestalt().get_content_type(),
+                entity_id=self.get_gestalt().id
+                ).can_view(self.request.user).order_by('-content__versions__time_created')
 
     def get_title(self):
         return str(self.get_gestalt())
