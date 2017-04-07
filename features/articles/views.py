@@ -13,5 +13,5 @@ class List(base.PermissionMixin, generic.ListView):
 
     def get_queryset(self):
         return super().get_queryset().filter(
-                container_type=contenttypes.ContentType.objects.get_for_model(content.Content)
-                ).can_view(self.request.user)
+                container_type=content.Content.get_content_type()
+                ).can_view(self.request.user).order_by('-content__versions__time_created')
