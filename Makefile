@@ -1,5 +1,5 @@
 RM ?= rm -f
-NPM_BIN ?= npm
+YARN_BIN ?= yarn
 NODEJS_BIN ?= $(shell which node nodejs | head -1)
 GRUNT_BIN = node_modules/.bin/grunt
 STANDARD_BIN = node_modules/.bin/standard
@@ -80,7 +80,7 @@ check-virtualenv:
 	python manage.py check
 
 check-js-deps: $(NODEJS_SYMLINK)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) install)
+	($(HELPER_PATH_ENV); export PATH; $(YARN_BIN) install)
 
 update-virtualenv: check-virtualenv
 	pip install -r requirements.txt
@@ -126,10 +126,10 @@ $(STANDARD_BIN):
 
 lint: check-virtualenv $(STANDARD_BIN)
 	python -m flake8 $(PYTHON_DIRS)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run lint)
+	($(HELPER_PATH_ENV); export PATH; $(YARN_BIN) run lint)
 
 test: lint check-virtualenv $(STANDARD_BIN)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
+	($(HELPER_PATH_ENV); export PATH; $(YARN_BIN) run test)
 	@# Auf doppelte Test-Methoden-Namen pruefen - diese koennen sich gegenseitig verdecken.
 	@# Dabei ignorieren wir das Verzeichnis ./.venv/ - es wird von der gitlab-Testumgebung
 	@# erzeugt und produziert Namenskollisionen mit Django-Tests.
