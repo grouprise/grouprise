@@ -5,7 +5,7 @@
     "node": ">=4.6.1"
   },
   "scripts": {
-    "test": "npm run lint",
+    "test": "yarn run lint",
     "lint": "standard res/**/*.js"
   },
   "devDependencies": {
