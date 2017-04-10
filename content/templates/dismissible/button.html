@@ -1,4 +1,6 @@
 {% comment %}mind the single quotes around for data-dismissible-payload as the payload will contain json with double quotes{% endcomment %}
-<button type="button" class="btn btn-close dismissible-trigger" data-component="dismissible" data-dismissible-payload='{{ payload }}'>
+<button type="button" class="btn btn-close dismissible-trigger"
+        data-component="dismissible" data-dismissible-payload='{{ payload }}'
+        title="Diesen Hinweis nicht mehr anzeigen">
     <i class="sg sg-close"></i>
 </button>
