@@ -16,7 +16,7 @@ DJANGO_SETTINGS_MODULE ?= stadt.settings
 
 DB_CONNECTION_BACKUP ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .backup $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'pg_dump \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" >$(DB_BACKUP_FILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
 DB_CONNECTION_RESTORE ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .restore $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'psql \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" <$(DB_RESTORE_DATAFILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
-DB_BACKUP_FILE ?= $(BACKUP_PATH)/data-$(shell date +%Y%m%d%H%M).db
+DB_BACKUP_FILE ?= $(BACKUP_PATH)/data-$(shell date +%Y%m%d%H%M).sql
 
 # symlink magic for badly packaged dependencies using "node" explicitly
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
