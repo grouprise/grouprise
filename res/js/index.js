@@ -1,6 +1,7 @@
 import './setup'
 
-import { $$, component, mapCall } from 'luett'
+import { $$, component } from 'luett'
+import { defaultsDeep } from 'lodash'
 import closest from 'closest'
 
 import PubSub from './util/pubsub'
@@ -52,7 +53,9 @@ function init (searchIn = document) {
   component('grouplink', grouplink, opts)
 
   // initialize components not based on component interface
-  mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
+  component($$('input, select, textarea'), input, defaultsDeep({
+    conf: { target: el => closest(el, '.form-group') }
+  }, opts))
 }
 
 init()
