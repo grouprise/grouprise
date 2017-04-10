@@ -26,6 +26,7 @@ import dismissible from './transforms/dismissible'
 import autosize from './transforms/autosize'
 import cite from './transforms/cite'
 import grouplink from './transforms/grouplink'
+import quote from './transforms/quote'
 
 function init (searchIn = document) {
   const bus = PubSub()
@@ -56,6 +57,7 @@ function init (searchIn = document) {
   component($$('input, select, textarea'), input, defaultsDeep({
     conf: { target: el => closest(el, '.form-group') }
   }, opts))
+  component($$('blockquote'), quote, opts)
 }
 
 init()
