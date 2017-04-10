@@ -15,8 +15,8 @@ function getType (el) {
   return `input-type-${tagName !== 'input' ? tagName : type}`
 }
 
-export default (el, conf = {}) => {
-  const target = conf.target || el
+function input (el, conf = {}) {
+  const target = conf.target ? conf.target(el) : el
 
   function setChangedStates (event) {
     const isFilled = el.value.trim() !== ''
@@ -61,3 +61,7 @@ export default (el, conf = {}) => {
     }
   }
 }
+
+input.NAME = 'input'
+
+export default input
