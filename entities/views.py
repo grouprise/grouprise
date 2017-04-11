@@ -16,7 +16,7 @@ from . import forms
 class Gestalt(utils_views.List):
     menu = 'gestalt'
     model = associations.Association
-    permission = 'entities.view_gestalt'
+    permission_required = 'entities.view_gestalt'
     sidebar = ('calendar',)
     template_name = 'entities/gestalt_detail.html'
 
@@ -45,7 +45,7 @@ class GestaltUpdate(utils_views.ActionMixin, generic.UpdateView):
     menu = 'gestalt'
     message = 'Die Einstellungen wurden geändert.'
     model = gestalten.Gestalt
-    permission = 'entities.change_gestalt'
+    permission_required = 'entities.change_gestalt'
 
     def get_parent(self):
         return self.object
@@ -57,7 +57,7 @@ class GestaltAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     layout = ('avatar',)
     menu = 'gestalt'
     model = gestalten.Gestalt
-    permission = 'entities.change_gestalt'
+    permission_required = 'entities.change_gestalt'
 
     def get_parent(self):
         return self.object
@@ -69,7 +69,7 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
     layout = ('background',)
     menu = 'gestalt'
     model = gestalten.Gestalt
-    permission = 'entities.change_gestalt'
+    permission_required = 'entities.change_gestalt'
 
     def get_parent(self):
         return self.object
@@ -78,7 +78,7 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
 class Group(utils_views.List):
     inline_view = (content_creation.Gallery, 'intro_gallery_form')
     menu = 'group'
-    permission = 'entities.view_group'
+    permission_required = 'entities.view_group'
     template_name = 'entities/group_detail.html'
 
     def get(self, *args, **kwargs):
@@ -147,7 +147,7 @@ class GroupAvatarUpdate(utils_views.ActionMixin, generic.UpdateView):
     layout = ('avatar',)
     menu = 'group'
     model = groups.Group
-    permission = 'groups.change_group'
+    permission_required = 'groups.change_group'
 
     def get_parent(self):
         return self.object
@@ -159,7 +159,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
     layout = ('logo',)
     menu = 'group'
     model = groups.Group
-    permission = 'groups.change_group'
+    permission_required = 'groups.change_group'
 
     def get_parent(self):
         return self.object
@@ -167,7 +167,7 @@ class GroupLogoUpdate(utils_views.ActionMixin, generic.UpdateView):
 
 class GroupMessages(utils_views.List):
     menu = 'group'
-    permission = 'content.view_content_list'
+    permission_required = 'content.view_content_list'
     sidebar = []
     template_name = 'content/_thread_list.html'
     title = 'Gespräche'
@@ -183,12 +183,12 @@ class GroupMessages(utils_views.List):
 
 
 class Imprint(utils_views.PageMixin, generic.TemplateView):
-    permission = 'entities.view_imprint'
+    permission_required = 'entities.view_imprint'
     template_name = 'entities/imprint.html'
     title = 'Impressum'
 
 
 class Privacy(utils_views.PageMixin, generic.TemplateView):
-    permission = 'entities.view_imprint'
+    permission_required = 'entities.view_imprint'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'

@@ -13,7 +13,7 @@ class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailV
     layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">'
                          '{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des '
                          'Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
-    permission = 'account.confirm'
+    permission_required = 'account.confirm'
 
     def get_context_data(self, **kwargs):
         # as FormMixin doesn't call get_context_data() on super() we have to call it explicitly
@@ -25,7 +25,7 @@ class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailV
 
 class Email(utils_views.ActionMixin, views.EmailView):
     form_class = forms.Email
-    permission = 'account.email'
+    permission_required = 'account.email'
     title = 'E-Mail-Adressen'
 
     def get_parent(self):
@@ -37,7 +37,7 @@ class Login(utils_views.ActionMixin, views.LoginView):
     form_class = forms.LoginForm
     ignore_base_templates = True
     parent = 'gestalt-index'
-    permission = 'account.login'
+    permission_required = 'account.login'
     fallback_template_name = 'account/login.html'
 
     def get_success_url(self):
@@ -48,7 +48,7 @@ class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     action = 'Abmelden'
     ignore_base_templates = True
     layout = layout.HTML('<p>Möchtest Du Dich abmelden?</p>')
-    permission = 'account.logout'
+    permission_required = 'account.logout'
 
     def get_parent(self):
         return self.request.user.gestalt
@@ -58,7 +58,7 @@ class PasswordChange(utils_views.ActionMixin, views.PasswordChangeView):
     action = 'Kennwort ändern'
     form_class = forms.PasswordChange
     ignore_base_templates = True
-    permission = 'account.change_password'
+    permission_required = 'account.change_password'
 
     def get_parent(self):
         return self.request.user.gestalt
@@ -68,7 +68,7 @@ class PasswordReset(utils_views.ActionMixin, views.PasswordResetView):
     action = 'Kennwort zurücksetzen'
     form_class = forms.PasswordReset
     ignore_base_templates = True
-    permission = 'account.reset_password'
+    permission_required = 'account.reset_password'
 
 
 class PasswordResetDone(generic.RedirectView):
@@ -82,7 +82,7 @@ class PasswordResetDone(generic.RedirectView):
 class PasswordResetFromKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
     action = 'Kennwort ändern'
     form_class = forms.PasswordResetFromKey
-    permission = 'account.reset_password'
+    permission_required = 'account.reset_password'
 
 
 class Signup(utils_views.ActionMixin, views.SignupView):
@@ -90,7 +90,7 @@ class Signup(utils_views.ActionMixin, views.SignupView):
     form_class = forms.SignupForm
     ignore_base_templates = True
     parent = 'gestalt-index'
-    permission = 'account.signup'
+    permission_required = 'account.signup'
 
     def get_success_url(self):
         return views.LoginView.get_success_url(self)
