@@ -43,13 +43,13 @@ class ContentSubscribed(
     pass
 
 
-class OtherContentSubscriber(
-        comments.NotificationToOtherGestalt,
-        mixins.OtherContentSubscriberMixin, tests.Test):
-    """
-    If an author creates a comment
-    * a notification to content subscribers should be sent.
-    """
+# class OtherContentSubscriber(
+#         comments.NotificationToOtherGestalt,
+#         mixins.OtherContentSubscriberMixin, tests.Test):
+#     """
+#     If an author creates a comment
+#     * a notification to content subscribers should be sent.
+#     """
 
 
 class Conversation(

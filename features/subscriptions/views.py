@@ -30,7 +30,7 @@ class ContentSubscribe(Subscribe):
     description = (
             'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
             'neue Kommentare veröffentlicht werden')
-    permission = 'subscriptions.create_content_subscription'
+    permission_required = 'subscriptions.create_content_subscription'
 
     def get_related_object(self):
         return self.get_content()
@@ -40,7 +40,7 @@ class GroupSubscribe(groups.Mixin, Subscribe):
     description = (
             'Benachrichtigt werden, wenn in der Gruppe <em>{{ group }}</em> '
             'neue Beiträge veröffentlicht werden')
-    permission = 'subscriptions.create_group_subscription'
+    permission_required = 'subscriptions.create_group_subscription'
 
     def get_related_object(self):
         return self.get_group()
@@ -48,7 +48,7 @@ class GroupSubscribe(groups.Mixin, Subscribe):
 
 class Unsubscribe(SubscriptionMixin, views.Delete):
     action = 'Abbestellen'
-    permission = 'subscriptions.delete_subscription'
+    permission_required = 'subscriptions.delete_subscription'
 
     def get_object(self):
         return models.Subscription.objects.filter(
@@ -76,7 +76,7 @@ class GroupUnsubscribe(Unsubscribe):
 
 
 class AllContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
-    permission = 'subscriptions.create_all_content_unsubscription'
+    permission_required = 'subscriptions.create_all_content_unsubscription'
 
     action = 'Abbestellen'
     description = (
@@ -97,7 +97,7 @@ class AllContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
 
 
 class ExternalContentUnsubscribe(SubscriptionMixin, groups.Mixin, views.Create):
-    permission = 'subscriptions.create_external_content_unsubscription'
+    permission_required = 'subscriptions.create_external_content_unsubscription'
 
     action = 'Abbestellen'
     description = (

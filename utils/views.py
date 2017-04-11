@@ -200,7 +200,7 @@ class PaginationMixin:
 
 class PermissionMixin(rules_views.PermissionRequiredMixin):
     def get_permissions(self):
-        return {self.permission: self.get_permission_object()}
+        return {self.permission_required: self.get_permission_object()}
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated():
