@@ -24,7 +24,7 @@ class Join(MembershipMixin, views.Create):
             fields.current_gestalt('member'))
     description = (
             'Der Gruppe <em>{{ group }}</em> auf {{ site.name }} beitreten *')
-    permission = 'memberships.join_group'
+    permission_required = 'memberships.join_group'
     template_name = 'memberships/join.html'
 
 
@@ -48,7 +48,7 @@ class MemberAdd(MembershipMixin, views.Create):
             fields.current_gestalt('created_by'),
             fields.related_object('group'),
             fields.email_gestalt('member'))
-    permission = 'memberships.create_membership'
+    permission_required = 'memberships.create_membership'
 
     def form_valid(self, form):
         try:
@@ -70,7 +70,7 @@ class GestaltMemberAdd(utils_views.GestaltMixin, MemberAdd):
     description = (
             '<em>{{ gestalt }}</em> als Mitglied der Gruppe '
             '<em>{{ group }}</em> aufnehmen')
-    permission = 'associations.create_content_group_membership'
+    permission_required = 'associations.create_content_group_membership'
 
     def get_permission_object(self):
         return self.related_object, self.get_gestalt()
@@ -84,7 +84,7 @@ class GestaltMemberAdd(utils_views.GestaltMixin, MemberAdd):
 class Resign(MembershipMixin, utils_views.Delete):
     action = 'Austreten'
     description = 'Aus der Gruppe <em>{{ group }}</em> austreten'
-    permission = 'memberships.delete_membership'
+    permission_required = 'memberships.delete_membership'
 
     def get_object(self):
         return models.Membership.objects.filter(
