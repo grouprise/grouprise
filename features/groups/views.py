@@ -42,7 +42,7 @@ class Mixin:
 
 
 class Create(views.Create):
-    permission = 'groups.create_group'
+    permission_required = 'groups.create_group'
 
     action = 'Gruppe anlegen'
     menu = 'group'

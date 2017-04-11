@@ -13,7 +13,7 @@ class ShareGroupMixin(groups.Mixin, views.Form):
 class GroupRecommend(ShareGroupMixin):
     action = 'Gruppe empfehlen'
     message = 'Die Empfehlung wurde versendet.'
-    permission = 'sharing.recommend_group'
+    permission_required = 'sharing.recommend_group'
     title = 'Empfehlung'
 
     def form_valid(self, form):
@@ -27,7 +27,7 @@ class GroupRecommend(ShareGroupMixin):
 class MemberInvite(ShareGroupMixin):
     action = 'Als Mitglied einladen'
     message = 'Die Einladung wurde versendet.'
-    permission = 'sharing.invite_member'
+    permission_required = 'sharing.invite_member'
     title = 'Einladung'
 
     def form_valid(self, form):
