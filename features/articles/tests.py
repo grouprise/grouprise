@@ -1,6 +1,7 @@
 import core.tests
 from content import models as content
 from core import tests
+from features.associations import models as associations
 from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
 from features.subscriptions import test_mixins as subscriptions
@@ -57,4 +58,6 @@ class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
 
     def test_gestalt_create_article(self):
         self.assertEqual(self.client.get(self.get_url('create-content')).status_code, 200)
-        self.assertRedirects(self.client.post(self.get_url('create-content')), '')
+        self.assertRedirects(self.client.post(self.get_url('create-content'), {
+            'title': 'Test', 'text': 'Test'}), '/test/test/')
+        self.assertExists(associations.Association, content__title='Test')
