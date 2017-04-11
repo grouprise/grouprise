@@ -12,7 +12,6 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('features.articles.urls')),
     urls.url(r'^stadt/', urls.include('features.associations.urls')),
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
-    urls.url(r'^stadt/', urls.include('features.events.urls')),
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
     urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),
@@ -21,5 +20,6 @@ urlpatterns = [
     urls.url(r'^', urls.include('features.groups.urls')),
     urls.url(r'^', urls.include('features.gestalten.urls')),
     urls.url(r'^', urls.include('features.content.urls')),
+    urls.url(r'^', urls.include('features.events.urls')),
     urls.url(r'^', urls.include('features.stadt.urls')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

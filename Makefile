@@ -1,5 +1,5 @@
 RM ?= rm -f
-NPM_BIN ?= npm
+YARN_BIN ?= yarn
 NODEJS_BIN ?= $(shell which node nodejs | head -1)
 GRUNT_BIN = node_modules/.bin/grunt
 STANDARD_BIN = node_modules/.bin/standard
@@ -14,9 +14,9 @@ OFFLINE_MARKER_FILE = _OFFLINE_MARKER_UWSGI
 
 DJANGO_SETTINGS_MODULE ?= stadt.settings
 
-DB_CONNECTION_BACKUP ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .backup $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'pg_dump \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" >$(DB_BACKUP_FILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
+DB_CONNECTION_BACKUP ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .backup $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'pg_dump --no-owner --no-privileges \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" >$(DB_BACKUP_FILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
 DB_CONNECTION_RESTORE ?= $(shell (echo "from $(DJANGO_SETTINGS_MODULE) import *; d=DATABASES['default']; format_string = {'sqlite3': 'echo .restore $(DB_BACKUP_FILE) | sqlite3 {NAME}', 'postgresql': 'psql \"postgresql://{USER}:{PASSWORD}@{HOST}/{NAME}\" <$(DB_RESTORE_DATAFILE)'}[d['ENGINE'].split('.')[-1]]; print(format_string.format(**DATABASES['default']))") | PYTHONPATH=. python)
-DB_BACKUP_FILE ?= $(BACKUP_PATH)/data-$(shell date +%Y%m%d%H%M).db
+DB_BACKUP_FILE ?= $(BACKUP_PATH)/data-$(shell date +%Y%m%d%H%M).sql
 
 # symlink magic for badly packaged dependencies using "node" explicitly
 HELPER_BIN_PATH = $(BUILD_PATH)/helper-bin
@@ -80,7 +80,7 @@ check-virtualenv:
 	python manage.py check
 
 check-js-deps: $(NODEJS_SYMLINK)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) install)
+	($(HELPER_PATH_ENV); export PATH; $(YARN_BIN) install)
 
 update-virtualenv: check-virtualenv
 	pip install -r requirements.txt
@@ -126,10 +126,10 @@ $(STANDARD_BIN):
 
 lint: check-virtualenv $(STANDARD_BIN)
 	python -m flake8 $(PYTHON_DIRS)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run lint)
+	($(HELPER_PATH_ENV); export PATH; $(YARN_BIN) run lint)
 
 test: lint check-virtualenv $(STANDARD_BIN)
-	($(HELPER_PATH_ENV); export PATH; $(NPM_BIN) run test)
+	($(HELPER_PATH_ENV); export PATH; $(YARN_BIN) run test)
 	@# Auf doppelte Test-Methoden-Namen pruefen - diese koennen sich gegenseitig verdecken.
 	@# Dabei ignorieren wir das Verzeichnis ./.venv/ - es wird von der gitlab-Testumgebung
 	@# erzeugt und produziert Namenskollisionen mit Django-Tests.

@@ -2,11 +2,11 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-import utils.views
-from content import models, views as content_views
 from core.views import base
+from utils import views as utils_views
 from features.groups import models as groups
 from features.memberships.rules import is_member_of
+from content import models, views as content_views
 
 
 class List(base.PermissionMixin, generic.ListView):
@@ -35,7 +35,7 @@ class CalendarFeed(content_views.BaseCalendarFeed):
         return super().items().filter(**filter_dict)
 
 
-class CalendarExport(utils.views.PageMixin, generic.DetailView):
+class CalendarExport(utils_views.PageMixin, generic.DetailView):
     model = groups.Group
     slug_url_kwarg = 'group_slug'
     sidebar = tuple()

@@ -1,6 +1,7 @@
 import './setup'
 
-import { $$, component, mapCall } from 'luett'
+import { $$, component } from 'luett'
+import { defaultsDeep } from 'lodash'
 import closest from 'closest'
 
 import PubSub from './util/pubsub'
@@ -25,6 +26,7 @@ import dismissible from './transforms/dismissible'
 import autosize from './transforms/autosize'
 import cite from './transforms/cite'
 import grouplink from './transforms/grouplink'
+import quote from './transforms/quote'
 
 function init (searchIn = document) {
   const bus = PubSub()
@@ -52,7 +54,10 @@ function init (searchIn = document) {
   component('grouplink', grouplink, opts)
 
   // initialize components not based on component interface
-  mapCall($$('input, select, textarea'), (el) => input(el, { target: closest(el, '.form-group') }))
+  component($$('input, select, textarea'), input, defaultsDeep({
+    conf: { target: el => closest(el, '.form-group') }
+  }, opts))
+  component($$('blockquote'), quote, opts)
 }
 
 init()

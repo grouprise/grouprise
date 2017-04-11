@@ -1,0 +1,22 @@
+.quote { }
+
+.quote-shortened {
+    overflow: hidden;
+    position: relative;
+
+    &:after {
+        content: " ";
+        display: block;
+        height: 80px;
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        background: linear-gradient(transparent 0, #F2F2F2 75%);
+    }
+}
+
+.quote-extend {
+    position: absolute;
+    bottom: 0; left: .75rem;
+    margin-bottom: 0 !important;
+}
+
