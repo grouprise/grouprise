@@ -132,7 +132,8 @@ class Group(utils_views.List):
             return pinned_content
 
     def get_queryset(self):
-        return self.get_group_content().filter(pinned=False)
+        return self.get_group_content().filter(pinned=False).order_by(
+                '-container__versions__time_created')
 
     def get_related_object(self):
         return self.get_group()
