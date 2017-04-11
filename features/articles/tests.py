@@ -39,9 +39,18 @@ class OtherSubscriber(
     """
 
 
-class Guest(core.tests.Test):
+class Guest(gestalten.GestaltMixin, core.tests.Test):
+    def create_article(self, **kwargs):
+        self.client.force_login(self.gestalt.user)
+        kwargs.update({'title': 'Test', 'text': 'Test'})
+        self.client.post(self.get_url('create-content'), kwargs)
+        self.client.logout()
+
+    def get_article_url(self):
+        return associations.Association.objects.get(content__title='Test').get_absolute_url()
+
     def test_guest_article_link(self):
-        self.assertNotContainsLink(self.client.get('/'), 'create-content')
+        self.assertNotContainsLink(self.client.get('/'), self.get_url('create-content'))
 
     def test_guest_create_article(self):
         self.assertForbiddenOrLogin(
@@ -51,13 +60,36 @@ class Guest(core.tests.Test):
                 self.client.post(self.get_url('create-content')),
                 self.get_url('create-content'))
 
+    def test_guest_list_public_article(self):
+        self.create_article(public=True)
+        self.assertContainsLink(self.client.get('/'), self.get_article_url())
+
+    def test_guest_list_internal_article(self):
+        self.create_article(public=False)
+        self.assertNotContainsLink(self.client.get('/'), self.get_article_url())
+
 
 class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
+    def create_article(self, **kwargs):
+        kwargs.update({'title': 'Test', 'text': 'Test'})
+        return self.client.post(self.get_url('create-content'), kwargs)
+
+    def get_article_url(self):
+        return associations.Association.objects.get(content__title='Test').get_absolute_url()
+
     def test_gestalt_article_link(self):
-        self.assertContainsLink(self.client.get('/'), 'create-content')
+        self.assertContainsLink(self.client.get('/'), self.get_url('create-content'))
 
     def test_gestalt_create_article(self):
         self.assertEqual(self.client.get(self.get_url('create-content')).status_code, 200)
-        self.assertRedirects(self.client.post(self.get_url('create-content'), {
-            'title': 'Test', 'text': 'Test'}), '/test/test/')
+        response = self.create_article()
+        self.assertRedirects(response, self.get_article_url())
         self.assertExists(associations.Association, content__title='Test')
+
+    def test_gestalt_list_public_article(self):
+        self.create_article(public=True)
+        self.assertContainsLink(self.client.get('/'), self.get_article_url())
+
+    def test_gestalt_list_internal_article(self):
+        self.create_article(public=False)
+        self.assertContainsLink(self.client.get('/'), self.get_article_url())

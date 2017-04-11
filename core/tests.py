@@ -80,7 +80,7 @@ class Test(test.TestCase):
                 self.assertEqual(response.status_code, 200)
 
     def get_link(self, url, key):
-        return 'href="{}"'.format(self.get_url(url, key))
+        return 'href="{}"'.format(url)
 
     def get_login_url(self, next_url):
         return '{}?next={}'.format(
