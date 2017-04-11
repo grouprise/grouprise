@@ -38,3 +38,6 @@ class ContributionFormMixin(django.views.generic.edit.FormMixin):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()

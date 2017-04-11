@@ -25,7 +25,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
                 ).can_view(self.request.user).order_by('-content__versions__time_created')
 
 
-class Detail(base.PermissionMixin, contributions.ContributionFormMixin, generic.DetailView):
+class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
     model = associations.Association

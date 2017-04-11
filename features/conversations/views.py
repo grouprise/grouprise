@@ -5,18 +5,18 @@ from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
 
+import core.views
 import features.contributions.models
 import features.contributions.views
 from . import forms
-from core.views import base
 from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.groups import models as groups
 
 
 class Conversation(
-        base.PermissionMixin,
         features.contributions.views.ContributionFormMixin,
+        core.views.PermissionMixin,
         generic.DetailView):
 
     permission_required = 'conversations.view'
@@ -28,7 +28,7 @@ class Conversation(
     form_class = forms.Reply
 
 
-class Conversations(base.PermissionMixin, generic.ListView):
+class Conversations(core.views.PermissionMixin, generic.ListView):
     model = associations.Association
     permission_required = 'conversations.list'
     template_name = 'conversations/list.html'
@@ -53,7 +53,7 @@ class GroupConversations(Conversations):
 
 
 class CreateConversation(
-        base.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
+        core.views.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
     model = associations.Association
     template_name = 'conversations/create.html'
 
