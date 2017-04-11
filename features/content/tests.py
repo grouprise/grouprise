@@ -1,10 +1,5 @@
 from content import models
-import entities
 from features.gestalten import tests as gestalten
-from content import models
-from core import tests
-from features.groups import tests as groups
-from features.memberships import test_mixins as memberships
 
 
 # class GroupAssociatedContentMixin(groups.GroupMixin):
@@ -51,11 +46,11 @@ class OtherCommentedMixin(ContentMixin, gestalten.OtherGestaltMixin):
                 text='Other Text')
 
 
-class NoNotification:
-    def test_comment_no_notification(self):
-        models.Comment.objects.create(
-                author=self.other_gestalt, content=self.content, text='Test')
-        self.assertNoNotificationSent()
+# class NoNotification:
+#     def test_comment_no_notification(self):
+#         models.Comment.objects.create(
+#                 author=self.other_gestalt, content=self.content, text='Test')
+#         self.assertNoNotificationSent()
 
 
 class NotificationToOtherGestalt:
@@ -66,12 +61,12 @@ class NotificationToOtherGestalt:
         self.assertNotificationRecipient(self.other_gestalt)
 
 
-class NoNotification:
-    def test_content_creation(self):
-        content = models.Article.objects.create(
-                author=self.other_gestalt, title='Test Content')
-        entities.models.GroupContent.objects.create(content=content, group=self.group)
-        self.assertNoNotificationSent()
+# class NoNotification:
+#     def test_content_creation(self):
+#         content = models.Article.objects.create(
+#                 author=self.other_gestalt, title='Test Content')
+#         entities.models.GroupContent.objects.create(content=content, group=self.group)
+#         self.assertNoNotificationSent()
 
 
 # class CommentContent(
