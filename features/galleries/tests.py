@@ -19,26 +19,26 @@ class PublicGalleryMixin:
                 author=cls.gestalt, public=True, title='Test Event')
 
 
-class InternalGalleryInGroupWithOtherMember(
-        subscriptions.NotificationToOtherGestalt,
-        subscriptions.SenderNameIsGestalt,
-        InternalGalleryMixin, memberships.OtherMemberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates an internal gallery
-    * a notification to other members should be sent.
-    * the sender name should be mentioned.
-    """
+# class InternalGalleryInGroupWithOtherMember(
+#         subscriptions.NotificationToOtherGestalt,
+#         subscriptions.SenderNameIsGestalt,
+#         InternalGalleryMixin, memberships.OtherMemberMixin,
+#         memberships.MemberMixin, tests.Test):
+#     """
+#     If a group member creates an internal gallery
+#     * a notification to other members should be sent.
+#     * the sender name should be mentioned.
+#     """
 
 
-class InternalGalleryInGroupWithOtherSubscriber(
-        subscriptions.NotificationToOtherGestalt,
-        InternalGalleryMixin, subscriptions.OtherGroupSubscriberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates an internal gallery
-    * no notification to subscribers should be sent.
-    """
+# class InternalGalleryInGroupWithOtherSubscriber(
+#         subscriptions.NoNotificationToOtherGestalt,
+#         InternalGalleryMixin, subscriptions.OtherGroupSubscriberMixin,
+#         memberships.MemberMixin, tests.Test):
+#     """
+#     If a group member creates an internal gallery
+#     * no notification to subscribers should be sent.
+#     """
 
 
 class PublicGalleryInGroupWithOtherMember(

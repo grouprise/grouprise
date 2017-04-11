@@ -21,26 +21,26 @@ class PublicEventMixin:
                 title='Test Event')
 
 
-class InternalEventInGroupWithOtherMember(
-        subscriptions.NotificationToOtherGestalt,
-        subscriptions.SenderNameIsGestalt,
-        InternalEventMixin, memberships.OtherMemberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates an internal event
-    * a notification to other members should be sent.
-    * the sender name should be mentioned.
-    """
+# class InternalEventInGroupWithOtherMember(
+#         subscriptions.NotificationToOtherGestalt,
+#         subscriptions.SenderNameIsGestalt,
+#         InternalEventMixin, memberships.OtherMemberMixin,
+#         memberships.MemberMixin, tests.Test):
+#     """
+#     If a group member creates an internal event
+#     * a notification to other members should be sent.
+#     * the sender name should be mentioned.
+#     """
 
 
-class InternalEventInGroupWithOtherSubscriber(
-        subscriptions.NotificationToOtherGestalt,
-        InternalEventMixin, subscriptions.OtherGroupSubscriberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates an internal event
-    * no notification to subscribers should be sent.
-    """
+# class InternalEventInGroupWithOtherSubscriber(
+#         subscriptions.NotificationToOtherGestalt,
+#         InternalEventMixin, subscriptions.OtherGroupSubscriberMixin,
+#         memberships.MemberMixin, tests.Test):
+#     """
+#     If a group member creates an internal event
+#     * no notification to subscribers should be sent.
+#     """
 
 
 class PublicEventInGroupWithOtherMember(
