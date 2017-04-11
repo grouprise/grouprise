@@ -3,7 +3,7 @@ from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 
 
-class MemberMixin(gestalten.AuthenticatedMixin, groups.GroupMixin):
+class MemberMixin(gestalten.GestaltMixin, groups.GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -19,3 +19,15 @@ class OtherMemberMixin(gestalten.OtherGestaltMixin, groups.GroupMixin):
                 created_by=cls.other_gestalt,
                 group=cls.group,
                 member=cls.other_gestalt)
+
+
+class AuthenticatedMemberMixin(MemberMixin):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.gestalt.user)
+
+
+class OtherAuthenticatedMemberMixin(OtherMemberMixin):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.other_gestalt.user)

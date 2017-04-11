@@ -21,9 +21,9 @@ class ClosedGroupMixin(GroupMixin):
 class HasSidebarAndGroupsLinks:
     def test_links(self):
         response = self.client.get(self.get_url('index'))
-        self.assertContainsLink(response, 'group-create')
+        self.assertContainsLink(response, self.get_url('group-create'))
         response = self.client.get(self.get_url('group-index'))
-        self.assertContainsLink(response, 'group-create')
+        self.assertContainsLink(response, self.get_url('group-create'))
 
 
 class CreateIsAllowed:

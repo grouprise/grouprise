@@ -54,7 +54,7 @@ class GroupMember(
         memberships.ResignAllowed,
         memberships.MemberListNoCreateLink,
         memberships.MemberCreateForbidden,
-        mixins.MemberMixin, gestalten.OtherGestaltMixin, tests.Test):
+        mixins.AuthenticatedMemberMixin, gestalten.OtherGestaltMixin, tests.Test):
     pass
 
 
@@ -65,7 +65,7 @@ class GroupClosedMember(
         memberships.MemberListCreateLink,
         memberships.MemberCreateAllowedWithEmail,
         memberships.MemberCreateSendsNotification,
-        mixins.MemberMixin, groups.ClosedGroupMixin,
+        mixins.AuthenticatedMemberMixin, groups.ClosedGroupMixin,
         gestalten.OtherGestaltMixin, tests.Test):
     pass
 

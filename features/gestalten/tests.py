@@ -7,6 +7,8 @@ class GestaltMixin:
         super().setUpTestData()
         cls.gestalt = auth.get_user_model().objects.create(
                 email='test@example.org', username='test').gestalt
+        cls.gestalt.public = True
+        cls.gestalt.save()
 
 
 class OtherGestaltMixin:

@@ -34,7 +34,7 @@ class GroupConversation(gestalten.GestaltMixin, groups.GroupMixin):
                 container=conversation, entity=cls.group)
 
 
-class ExternalConversationMixin(memberships.MemberMixin, gestalten.OtherGestaltMixin):
+class ExternalConversationMixin(memberships.AuthenticatedMemberMixin, gestalten.OtherGestaltMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -76,7 +76,7 @@ class NotificationContainsConversationMessageIDs:
 class GroupPageHasCreateLink:
     def test_group_page_creation(self):
         response = self.client.get(self.group.get_absolute_url())
-        self.assertContainsLink(response, 'create-group-conversation', key=self.group.pk)
+        self.assertContainsLink(response, self.get_url('create-group-conversation', key=self.group.pk))
 
 
 class CanCreateGestaltConversationWithEmail:
@@ -146,13 +146,13 @@ class CanCreateGroupConversation:
 class GroupPageHasConversationLink:
     def test_group_page_conversation(self):
         response = self.client.get(self.group.get_absolute_url())
-        self.assertContainsLink(response, 'conversation', key=self.association.pk)
+        self.assertContainsLink(response, self.get_url('conversation', key=self.association.pk))
 
 
 class GroupPageDoesNotHaveConversationLink:
     def test_group_page_not_conversation(self):
         response = self.client.get(self.group.get_absolute_url())
-        self.assertNotContainsLink(response, 'conversation', key=self.association.pk)
+        self.assertNotContainsLink(response, self.get_url('conversation', key=self.association.pk))
 
 
 class CanViewGestaltConversation:
@@ -286,7 +286,7 @@ class GroupMember(
         OtherGestaltCanNotViewGroupConversation,
         CanReplyToConversation,
 
-        GroupConversation, memberships.MemberMixin, gestalten.OtherGestaltMixin, tests.Test):
+        GroupConversation, memberships.AuthenticatedMemberMixin, gestalten.OtherGestaltMixin, tests.Test):
     '''
     A group member
     * should see a message creation link on the group page
@@ -298,6 +298,6 @@ class TwoGroupMembers(
         OtherGestaltIsNotifiedOnGestaltConversation,
         NotificationContainsConversationMessageIDs,
 
-        GroupConversation, memberships.OtherMemberMixin, memberships.MemberMixin, tests.Test):
+        GroupConversation, memberships.OtherAuthenticatedMemberMixin, memberships.AuthenticatedMemberMixin, tests.Test):
     '''
     '''

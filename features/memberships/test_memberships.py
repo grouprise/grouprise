@@ -61,14 +61,14 @@ class MemberListCreateLink:
     def test_members(self):
         response = self.request(
                 tests.HTTP_GET, url='members', key=self.group.pk)
-        self.assertContainsLink(response, 'member-create', self.group.pk)
+        self.assertContainsLink(response, self.get_url('member-create', self.group.pk))
 
 
 class MemberListNoCreateLink:
     def test_members(self):
         response = self.request(
                 tests.HTTP_GET, url='members', key=self.group.pk)
-        self.assertNotContainsLink(response, 'member-create', self.group.pk)
+        self.assertNotContainsLink(response, self.get_url('member-create', self.group.pk))
 
 
 class MemberListForbidden:
@@ -83,26 +83,26 @@ class NoLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
-        self.assertNotContainsLink(response, 'join', self.group.pk)
+        self.assertNotContainsLink(response, self.get_url('join', self.group.pk))
         self.assertNotContainsLink(
-                response, 'resign', self.group.pk)
+                response, self.get_url('resign', self.group.pk))
 
 
 class OnlyJoinLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
-        self.assertContainsLink(response, 'join', self.group.pk)
+        self.assertContainsLink(response, self.get_url('join', self.group.pk))
         self.assertNotContainsLink(
-                response, 'resign', self.group.pk)
+                response, self.get_url('resign', self.group.pk))
 
 
 class OnlyResignLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
-        self.assertNotContainsLink(response, 'join', self.group.pk)
-        self.assertContainsLink(response, 'resign', self.group.pk)
+        self.assertNotContainsLink(response, self.get_url('join', self.group.pk))
+        self.assertContainsLink(response, self.get_url('resign', self.group.pk))
 
 
 class ResignAllowed:

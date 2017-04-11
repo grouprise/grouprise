@@ -63,10 +63,18 @@ class Guest(gestalten.GestaltMixin, core.tests.Test):
     def test_guest_list_public_article(self):
         self.create_article(public=True)
         self.assertContainsLink(self.client.get('/'), self.get_article_url())
+        self.assertContainsLink(
+                self.client.get(self.get_url('articles')), self.get_article_url())
+        self.assertContainsLink(
+                self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
 
     def test_guest_list_internal_article(self):
         self.create_article(public=False)
         self.assertNotContainsLink(self.client.get('/'), self.get_article_url())
+        self.assertNotContainsLink(
+                self.client.get(self.get_url('articles')), self.get_article_url())
+        self.assertNotContainsLink(
+                self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
 
 
 class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
@@ -89,7 +97,15 @@ class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
     def test_gestalt_list_public_article(self):
         self.create_article(public=True)
         self.assertContainsLink(self.client.get('/'), self.get_article_url())
+        self.assertContainsLink(
+                self.client.get(self.get_url('articles')), self.get_article_url())
+        self.assertContainsLink(
+                self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
 
     def test_gestalt_list_internal_article(self):
         self.create_article(public=False)
         self.assertContainsLink(self.client.get('/'), self.get_article_url())
+        self.assertContainsLink(
+                self.client.get(self.get_url('articles')), self.get_article_url())
+        self.assertContainsLink(
+                self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())

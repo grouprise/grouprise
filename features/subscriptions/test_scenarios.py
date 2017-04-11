@@ -117,7 +117,7 @@ class GroupMember(
         group_subscriptions.NoLink,
         group_subscriptions.SubscribeForbidden,
         group_subscriptions.UnsubscribeForbidden,
-        memberships.MemberMixin, tests.Test):
+        memberships.AuthenticatedMemberMixin, tests.Test):
     pass
 
 

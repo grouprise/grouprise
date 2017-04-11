@@ -6,26 +6,26 @@ class NoLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
-        self.assertNotContainsLink(response, 'group-subscribe', self.group.pk)
+        self.assertNotContainsLink(response, self.get_url('group-subscribe', self.group.pk))
         self.assertNotContainsLink(
-                response, 'group-unsubscribe', self.group.pk)
+                response, self.get_url('group-unsubscribe', self.group.pk))
 
 
 class OnlySubscribeLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
-        self.assertContainsLink(response, 'group-subscribe', self.group.pk)
+        self.assertContainsLink(response, self.get_url('group-subscribe', self.group.pk))
         self.assertNotContainsLink(
-                response, 'group-unsubscribe', self.group.pk)
+                response, self.get_url('group-unsubscribe', self.group.pk))
 
 
 class OnlyUnsubscribeLink:
     def test_group(self):
         response = self.request(
                 tests.HTTP_GET, url='group', key=self.group.slug)
-        self.assertNotContainsLink(response, 'group-subscribe', self.group.pk)
-        self.assertContainsLink(response, 'group-unsubscribe', self.group.pk)
+        self.assertNotContainsLink(response, self.get_url('group-subscribe', self.group.pk))
+        self.assertContainsLink(response, self.get_url('group-unsubscribe', self.group.pk))
 
 
 class SubscribeAllowed:

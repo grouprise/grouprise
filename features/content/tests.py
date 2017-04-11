@@ -1,3 +1,4 @@
+import entities.models
 from content import models
 from features.gestalten import tests as gestalten
 
@@ -61,12 +62,12 @@ class NotificationToOtherGestalt:
         self.assertNotificationRecipient(self.other_gestalt)
 
 
-# class NoNotification:
-#     def test_content_creation(self):
-#         content = models.Article.objects.create(
-#                 author=self.other_gestalt, title='Test Content')
-#         entities.models.GroupContent.objects.create(content=content, group=self.group)
-#         self.assertNoNotificationSent()
+class NoNotification:
+    def test_content_creation(self):
+        content = models.Article.objects.create(
+                author=self.other_gestalt, title='Test Content')
+        entities.models.GroupContent.objects.create(content=content, group=self.group)
+        self.assertNoNotificationSent()
 
 
 # class CommentContent(
