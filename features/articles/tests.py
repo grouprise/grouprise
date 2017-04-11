@@ -46,6 +46,9 @@ class Guest(core.tests.Test):
         self.assertForbiddenOrLogin(
                 self.client.get(self.get_url('create-content')),
                 self.get_url('create-content'))
+        self.assertForbiddenOrLogin(
+                self.client.post(self.get_url('create-content')),
+                self.get_url('create-content'))
 
 
 class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
@@ -54,3 +57,4 @@ class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
 
     def test_gestalt_create_article(self):
         self.assertEqual(self.client.get(self.get_url('create-content')).status_code, 200)
+        self.assertRedirects(self.client.post(self.get_url('create-content')), '')
