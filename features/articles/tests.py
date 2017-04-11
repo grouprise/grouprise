@@ -1,5 +1,7 @@
+import core.tests
 from content import models as content
 from core import tests
+from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
 from features.subscriptions import test_mixins as subscriptions
 
@@ -34,3 +36,21 @@ class OtherSubscriber(
     * a notification to subscribers should be sent.
     * the sender name should not be mentioned.
     """
+
+
+class Guest(core.tests.Test):
+    def test_guest_article_link(self):
+        self.assertNotContainsLink(self.client.get('/'), 'create-content')
+
+    def test_guest_create_article(self):
+        self.assertForbiddenOrLogin(
+                self.client.get(self.get_url('create-content')),
+                self.get_url('create-content'))
+
+
+class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
+    def test_gestalt_article_link(self):
+        self.assertContainsLink(self.client.get('/'), 'create-content')
+
+    def test_gestalt_create_article(self):
+        self.assertEqual(self.client.get(self.get_url('create-content')).status_code, 200)

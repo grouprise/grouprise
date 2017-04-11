@@ -65,8 +65,10 @@ class Create(base.PermissionMixin, generic.CreateView):
         if 'entity_slug' in self.kwargs:
             self.entity = shortcuts.get_object_or_404(
                     groups.Group, slug=self.kwargs['entity_slug'])
-        else:
+        elif self.request.user.is_authenticated():
             self.entity = self.request.user.gestalt
+        else:
+            self.entity = None
         return associations.Association(entity=self.entity)
 
 

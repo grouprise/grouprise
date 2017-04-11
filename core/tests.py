@@ -28,7 +28,7 @@ class Test(test.TestCase):
     def assertContainsLink(self, response, url, key=None):
         self.assertContains(response, self.get_link(url, key))
 
-    def assertNotContainsLink(self, response, url, key):
+    def assertNotContainsLink(self, response, url, key=None):
         self.assertNotContains(response, self.get_link(url, key))
 
     def assertExists(self, model, **kwargs):
