@@ -35,30 +35,34 @@ class GroupCalendarFeed(content_views.BaseCalendarFeed):
         return super().items().filter(**filter_dict)
 
 
-class GroupCalendarExport(utils_views.PageMixin, generic.DetailView):
-    model = features.groups.models.Group
-    slug_url_kwarg = 'group_slug'
+class CalendarExport(utils_views.PageMixin, generic.DetailView):
     sidebar = tuple()
-    permission = 'entities.view_group'
-    title = 'Exportmöglichkeiten für Gruppenkalender'
-    template_name = 'groups/events_export.html'
-    parent = 'group'
-
-    def get_parent(self):
-        return self.get_group()
+    template_name = 'events/export.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['public_export_url'] = self.request.build_absolute_uri(
-            reverse('group-events-feed', kwargs={
-                'group_slug': self.get_object().slug,
+            reverse(self.feed_route, kwargs={
+                self.slug_url_kwarg: self.get_object().slug,
                 'domain': 'public'
             })
         )
         context['private_export_url'] = self.request.build_absolute_uri(
-            reverse('group-events-feed', kwargs={
-                'group_slug': self.get_object().slug,
+            reverse(self.feed_route, kwargs={
+                self.slug_url_kwarg: self.get_object().slug,
                 'domain': 'private'
             })
         )
         return context
+
+
+class GroupCalendarExport(CalendarExport):
+    model = features.groups.models.Group
+    slug_url_kwarg = 'group_slug'
+    permission = 'entities.view_group'
+    title = 'Exportmöglichkeiten für Gruppenkalender'
+    parent = 'group'
+    feed_route = 'group-events-feed'
+
+    def get_parent(self):
+        return self.get_group()

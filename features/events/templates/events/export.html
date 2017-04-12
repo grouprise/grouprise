@@ -5,7 +5,7 @@
 
 {% block heading %}
         <div class="content-header">
-            <h2 class="content-classification">Gruppenkalender</h2>
+            <h2 class="content-classification">Kalenderexport</h2>
             {% include "macros/decoration.html" with icon="sg-calendar" %}
         </div>
     {% endblock %}
@@ -35,7 +35,7 @@
         {% if user.gestalt|is_member:group %}
             <h3>Privater Kalender</h3>
             <p class="disclaimer">
-                Der private Kalender enthält alle nicht-öffentlichen Ereignisse der Gruppe. Wenn du die URL mit anderen
+                Der private Kalender enthält alle nicht-öffentlichen Ereignisse. Wenn du die URL mit anderen
                 Menschen teilst, werden diese in deinem Namen auch Zugriff auf den Kalender haben.
             </p>
             <div class="selectable-row">
