@@ -52,7 +52,7 @@
     "emoji-regex": "^6.0.0",
     "es6-promise": "^4.1.0",
     "eventemitter3": "^2.0.3",
-    "flatpickr": "^2.3.4",
+    "flatpickr": "^2.4.9",
     "font-awesome": "^4.5.0",
     "get-input-selection": "^1.1.4",
     "lodash": "^4.17.4",
