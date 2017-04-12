@@ -51,6 +51,10 @@ class Guest(gestalten.GestaltMixin, core.tests.Test):
 
     def test_guest_article_link(self):
         self.assertNotContainsLink(self.client.get('/'), self.get_url('create-content'))
+        self.assertNotContainsLink(
+                self.client.get(self.get_url('articles')), self.get_url('create-content'))
+        self.assertNotContainsLink(
+                self.client.get(self.gestalt.get_absolute_url()), self.get_url('create-content'))
 
     def test_guest_create_article(self):
         self.assertForbiddenOrLogin(
@@ -87,6 +91,10 @@ class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
 
     def test_gestalt_article_link(self):
         self.assertContainsLink(self.client.get('/'), self.get_url('create-content'))
+        self.assertContainsLink(
+                self.client.get(self.get_url('articles')), self.get_url('create-content'))
+        self.assertContainsLink(
+                self.client.get(self.gestalt.get_absolute_url()), self.get_url('create-content'))
 
     def test_gestalt_create_article(self):
         self.assertEqual(self.client.get(self.get_url('create-content')).status_code, 200)
