@@ -1,10 +1,10 @@
-from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.views import generic
 
 from core.views import base
 from utils import views as utils_views
 import features.groups.models
+import features.groups.views
 from features.memberships.rules import is_member_of
 from content import models, views as content_views
 
@@ -18,21 +18,19 @@ class List(base.PermissionMixin, generic.ListView):
         return models.Event.objects.can_view(self.request.user).upcoming()
 
 
-class GroupCalendarFeed(content_views.BaseCalendarFeed):
+class GroupCalendarFeed(content_views.BaseCalendarFeed, features.groups.views.Mixin):
+
     def items(self):
-        filter_dict = {}
-        # pick only events of the specified group
-        group = features.groups.models.Group.objects.get(slug=self.kwargs['group_slug'])
-        filter_dict['groups'] = group
-        domain = self.kwargs['domain']
-        if domain == 'public':
-            filter_dict['public'] = True
-        else:
-            self.authenticate()
-            if not is_member_of(self.request.user, group):
-                raise PermissionDenied
-            filter_dict['public'] = False
+        filter_dict = {'groups': self.get_group(),
+                       'public': (self.kwargs['domain'] == "public")}
         return super().items().filter(**filter_dict)
+
+    def get_calendar_owner(self):
+        return self.get_group()
+
+    def check_authorization(self, authenticated_gestalt):
+        return ((authenticated_gestalt is not None)
+                and is_member_of(authenticated_gestalt.user, self.get_group()))
 
 
 class CalendarExport(utils_views.PageMixin, generic.DetailView):

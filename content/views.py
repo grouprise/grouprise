@@ -7,10 +7,9 @@ from django.views import generic
 from django.views.generic import dates
 from django.db.models import Q
 from django_ical.views import ICalFeed
-from rest_framework import exceptions
-from rest_framework.authentication import BasicAuthentication
 
 import content.models
+from core.views.base import GestaltAuthenticationMixin
 from entities import models as entities_models
 from utils import views as utils_views
 
@@ -161,20 +160,7 @@ class Markdown(utils_views.PageMixin, generic.TemplateView):
     title = 'Textauszeichnung'
 
 
-class BaseCalendarFeed(ICalFeed):
-    def authenticate(self):
-        auth = BasicAuthentication()
-        try:
-            result = auth.authenticate(self.request)
-        except (exceptions.NotAuthenticated, exceptions.AuthenticationFailed) as exc:
-            raise PermissionDenied
-        if result is None:
-            raise PermissionDenied
-        else:
-            self.request.user = result[0]
-
-    def get_queryset(self):
-        return content.models.Event.objects.permitted(self.request.user)
+class BaseCalendarFeed(ICalFeed, GestaltAuthenticationMixin):
 
     def __call__(self, request, *args, **kwargs):
         self.request = request
@@ -186,6 +172,29 @@ class BaseCalendarFeed(ICalFeed):
             response.status_code = 401
             response['WWW-Authenticate'] = 'Basic realm="{}"'.format("stadtgestalten.org")
             return response
+
+    def get_queryset(self):
+        user = self.get_authorized_user()
+        filter_dict = {}
+        self.assemble_content_filter_dict(filter_dict)
+        if user is None:
+            if filter_dict['public']:
+                return content.models.Event.objects.filter(**filter_dict)
+            else:
+                # non-public items cannot be accessed without being authorized
+                raise PermissionDenied
+        else:
+            return content.models.Event.objects.permitted(user).filter(**filter_dict)
+
+    def assemble_content_filter_dict(self, filter_dict):
+        filter_dict['public'] = (self.kwargs['domain'] == 'public')
+
+    def get_authorized_user(self):
+        authenticated_gestalt = self.get_authenticated_gestalt(self.get_calendar_owner())
+        if authenticated_gestalt:
+            if self.check_authorization(authenticated_gestalt):
+                return authenticated_gestalt.user
+        return None
 
     def items(self):
         return self.get_queryset().order_by('-time')
