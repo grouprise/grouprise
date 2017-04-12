@@ -1,11 +1,14 @@
+import django.contrib
 from django.contrib.auth import views as auth
 from django.core import exceptions, urlresolvers
 from django.utils import six
-from django.views import generic as django
-from django.views.generic import base as django_base
+from django.views import generic as django_generic_views
+from django.views.generic import base as django_generic_views_base
 from rest_framework.authentication import BasicAuthentication
 
+from core.models import PermissionToken
 from rules.contrib import views as rules
+from utils.views import GestaltMixin
 
 
 class PermissionMixin(rules.PermissionRequiredMixin):
@@ -29,7 +32,7 @@ class PermissionMixin(rules.PermissionRequiredMixin):
                     self.get_redirect_field_name())
 
 
-class StadtMixin(django_base.ContextMixin):
+class StadtMixin(django_generic_views_base.ContextMixin):
     """
     Insert Stadtgestalten specific attributes into context
     """
@@ -75,7 +78,7 @@ class StadtMixin(django_base.ContextMixin):
         return getattr(self, 'title', None)
 
 
-class View(PermissionMixin, StadtMixin, django.View):
+class View(PermissionMixin, StadtMixin, django_generic_views.View):
     """
     Stadtgestalten base view
     """
@@ -102,6 +105,55 @@ class View(PermissionMixin, StadtMixin, django.View):
         return None
 
 
+class PermissionTokenMixin(GestaltMixin):
+    """ Verify if a gestalt may access a specific target object (e.g. a group, an event, ...) by
+    parsing a permission token (usually from GET arguments) and returning a gestalt that was
+    authenticated in the process.
+
+    Only authentication is performed - authorization checks need to be done separately.
+    """
+
+    # every feature/application that inherits PermissionTokenMixin needs to overwrite this key
+    permission_token_feature_key = None
+
+    def parse_permission_token_from_request(self):
+        """ retrieve a permission token (if it was supplied) from the query arguments
+        """
+        query_args = self.request.GET.copy()
+        try:
+            full_token = query_args['token']
+        except KeyError:
+            return None
+        try:
+            token_username, secret_key = full_token.split(":", 1)
+        except ValueError:
+            return None
+        user_model = django.contrib.auth.get_user_model()
+        try:
+            user = user_model.objects.get(username=token_username)
+        except user_model.DoesNotExist:
+            return None
+        if user.username == token_username:
+            try:
+                return PermissionToken.objects.get(
+                    secret_key=secret_key, gestalt=user.gestalt,
+                    feature_key=self.permission_token_feature_key)
+            except PermissionToken.DoesNotExist:
+                return None
+        return None
+
+    def get_permission_token_gestalt(self, target):
+        """ retrieve the identity ("gestalt") authenticated by the permission token
+
+        @param target: an instance (e.g. Group, Content, Event, ...)
+        """
+        token = self.parse_permission_token_from_request()
+        if (token is not None) and (token.target == target):
+            return token.gestalt
+        else:
+            return None
+
+
 class HTTPAuthMixin:
 
     def get_http_auth_gestalt(self):
@@ -122,11 +174,14 @@ class HTTPAuthMixin:
             return result[0].gestalt
 
 
-class GestaltAuthenticationMixin(HTTPAuthMixin):
+class GestaltAuthenticationMixin(HTTPAuthMixin, PermissionTokenMixin):
 
     def get_authenticated_gestalt(self, target):
         """ retrieve a gestalt that is authenticated via HTTP-Auth or via a permission token
 
         No authorization checks ("is the gestalt allowed to do something") is performed.
         """
-        return self.get_http_auth_gestalt()
+        gestalt = self.get_http_auth_gestalt()
+        if gestalt is None:
+            gestalt = self.get_permission_token_gestalt(target)
+        return gestalt
