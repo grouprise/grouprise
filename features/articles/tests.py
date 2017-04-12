@@ -39,7 +39,7 @@ class OtherSubscriber(
     """
 
 
-class Guest(gestalten.GestaltMixin, core.tests.Test):
+class Guest(memberships.MemberMixin, core.tests.Test):
     def create_article(self, **kwargs):
         self.client.force_login(self.gestalt.user)
         kwargs.update({'title': 'Test', 'text': 'Test'})
@@ -55,6 +55,8 @@ class Guest(gestalten.GestaltMixin, core.tests.Test):
                 self.client.get(self.get_url('articles')), self.get_url('create-content'))
         self.assertNotContainsLink(
                 self.client.get(self.gestalt.get_absolute_url()), self.get_url('create-content'))
+        self.assertNotContainsLink(
+                self.client.get(self.group.get_absolute_url()), self.get_url('create-content'))
 
     def test_guest_create_article(self):
         self.assertForbiddenOrLogin(
@@ -81,13 +83,21 @@ class Guest(gestalten.GestaltMixin, core.tests.Test):
                 self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
 
 
-class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
+class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Test', 'text': 'Test'})
         return self.client.post(self.get_url('create-content'), kwargs)
 
+    def create_group_article(self, **kwargs):
+        kwargs.update({'title': 'Group Article', 'text': 'Test'})
+        return self.client.post(self.get_url('create-group-content', self.group.slug), kwargs)
+
     def get_article_url(self):
         return associations.Association.objects.get(content__title='Test').get_absolute_url()
+
+    def get_group_article_url(self):
+        return associations.Association.objects.get(
+                content__title='Group Article').get_absolute_url()
 
     def test_gestalt_article_link(self):
         self.assertContainsLink(self.client.get('/'), self.get_url('create-content'))
@@ -95,12 +105,21 @@ class Gestalt(gestalten.AuthenticatedMixin, core.tests.Test):
                 self.client.get(self.get_url('articles')), self.get_url('create-content'))
         self.assertContainsLink(
                 self.client.get(self.gestalt.get_absolute_url()), self.get_url('create-content'))
+        self.assertContainsLink(self.client.get(self.group.get_absolute_url()), self.get_url(
+            'create-group-content', self.group.slug))
 
     def test_gestalt_create_article(self):
         self.assertEqual(self.client.get(self.get_url('create-content')).status_code, 200)
         response = self.create_article()
         self.assertRedirects(response, self.get_article_url())
         self.assertExists(associations.Association, content__title='Test')
+
+    def test_gestalt_create_group_article(self):
+        self.assertEqual(self.client.get(self.get_url(
+            'create-group-content', self.group.slug)).status_code, 200)
+        response = self.create_group_article()
+        self.assertRedirects(response, self.get_group_article_url())
+        self.assertExists(associations.Association, content__title='Group Article')
 
     def test_gestalt_list_public_article(self):
         self.create_article(public=True)
