@@ -3,6 +3,8 @@ from django.core import exceptions, urlresolvers
 from django.utils import six
 from django.views import generic as django
 from django.views.generic import base as django_base
+from rest_framework.authentication import BasicAuthentication
+
 from rules.contrib import views as rules
 
 
@@ -98,3 +100,33 @@ class View(PermissionMixin, StadtMixin, django.View):
         if key is None and hasattr(self, 'get_related_object'):
             return self.get_related_object()
         return None
+
+
+class HTTPAuthMixin:
+
+    def get_http_auth_gestalt(self):
+        """ retrieve a gestalt that was authenticated via HTTP authentication
+
+        Fail silently and return None if not authentication happened. An HTTP authentication can
+        be forced later by responding with a 401 HTTP status code. This relaxed approach allows to
+        combine this authentication method with other fallback methods.
+        """
+        auth = BasicAuthentication()
+        try:
+            result = auth.authenticate(self.request)
+        except (exceptions.NotAuthenticated, exceptions.AuthenticationFailed) as exc:
+            return None
+        if result is None:
+            return None
+        else:
+            return result[0].gestalt
+
+
+class GestaltAuthenticationMixin(HTTPAuthMixin):
+
+    def get_authenticated_gestalt(self, target):
+        """ retrieve a gestalt that is authenticated via HTTP-Auth or via a permission token
+
+        No authorization checks ("is the gestalt allowed to do something") is performed.
+        """
+        return self.get_http_auth_gestalt()
