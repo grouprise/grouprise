@@ -4,7 +4,7 @@ from django.views import generic
 
 from core.views import base
 from utils import views as utils_views
-from features.groups import models as groups
+import features.groups.models
 from features.memberships.rules import is_member_of
 from content import models, views as content_views
 
@@ -18,11 +18,11 @@ class List(base.PermissionMixin, generic.ListView):
         return models.Event.objects.can_view(self.request.user).upcoming()
 
 
-class CalendarFeed(content_views.BaseCalendarFeed):
+class GroupCalendarFeed(content_views.BaseCalendarFeed):
     def items(self):
         filter_dict = {}
         # pick only events of the specified group
-        group = models.Group.objects.get(slug=self.kwargs['group_slug'])
+        group = features.groups.models.Group.objects.get(slug=self.kwargs['group_slug'])
         filter_dict['groups'] = group
         domain = self.kwargs['domain']
         if domain == 'public':
@@ -35,8 +35,8 @@ class CalendarFeed(content_views.BaseCalendarFeed):
         return super().items().filter(**filter_dict)
 
 
-class CalendarExport(utils_views.PageMixin, generic.DetailView):
-    model = groups.Group
+class GroupCalendarExport(utils_views.PageMixin, generic.DetailView):
+    model = features.groups.models.Group
     slug_url_kwarg = 'group_slug'
     sidebar = tuple()
     permission = 'entities.view_group'
