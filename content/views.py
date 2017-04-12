@@ -162,6 +162,8 @@ class Markdown(utils_views.PageMixin, generic.TemplateView):
 
 class BaseCalendarFeed(ICalFeed, GestaltAuthenticationMixin):
 
+    permission_token_feature_key = "calendar"
+
     def __call__(self, request, *args, **kwargs):
         self.request = request
         self.kwargs = kwargs
