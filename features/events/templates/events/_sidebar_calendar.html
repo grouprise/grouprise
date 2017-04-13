@@ -54,7 +54,7 @@
                     </ul>
                 </div>
 
-                <a href="{% url 'create-event' %}{% if group %}?group={{ group.slug }}{% endif %}" class="btn btn-link">
+                <a href="{% if group %}{% url 'create-group-event' group.slug %}{% else %}{% url 'create-event' %}{% endif %}" class="btn btn-link">
                     Neues Ereignis
                 </a>
             </div>

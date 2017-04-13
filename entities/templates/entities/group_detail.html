@@ -40,19 +40,10 @@
         {% include "macros/decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
             {% if can_create_content %}
-                <div class="dropdown-container">
-                    <input type="checkbox" class="dropdown-state" id="content-new" />
-                    <label class="btn btn-ch" for="content-new" data-component="openable" data-openable-target="#content-new-dropdown">
-                        <span class="btn-label">
-                            Neuer Beitrag <span class="caret"></span>
-                        </span>
-                    </label>
-                    <ul class="dropdown" id="content-new-dropdown" data-dropdown>
-                        <li><a href="{% url 'create-group-content' group.slug %}">Artikel</a></li>
-                        <li><a href="{% url 'event-create' %}?group={{ group.slug }}">Ereignis</a></li>
-                        <li><a href="{% url 'gallery-create' %}?group={{ group.slug }}">Galerie</a></li>
-                    </ul>
-                </div>
+                {% dropdown 'content-new' 'Neuer Beitrag' %}
+                    <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
+                    <li><a href="{% url 'create-group-event' group.slug %}">Ereignis</a></li>
+                {% enddropdown %}
             {% endif %}
         </div>
     </div>
