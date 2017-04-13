@@ -93,6 +93,10 @@ class Update(base.PermissionMixin, generic.UpdateView):
         return {
                 'title': self.object.container.title,
                 'text': self.object.container.versions.last().text,
+                'place': self.object.container.place,
+                'time': self.object.container.time,
+                'until_time': self.object.container.until_time,
+                'all_day': self.object.container.all_day,
                 }
 
     def get_object(self):

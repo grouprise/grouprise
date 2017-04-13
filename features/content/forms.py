@@ -56,8 +56,14 @@ class Update(forms.ModelForm):
         model = associations.Association
         fields = ('pinned', 'public', 'slug')
 
-    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
     title = forms.CharField(label='Titel')
+    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
+
+    place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
+    time = forms.DateTimeField(label='Beginn')
+    until_time = forms.DateTimeField(label='Ende')
+    all_day = forms.BooleanField(
+            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.')
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
@@ -66,6 +72,11 @@ class Update(forms.ModelForm):
             del self.fields['pinned']
         if self.instance.public:
             del self.fields['public']
+        if not self.initial['time']:
+            del self.fields['place']
+            del self.fields['time']
+            del self.fields['until_time']
+            del self.fields['all_day']
 
     def clean_slug(self):
         q = associations.Association.objects.filter(

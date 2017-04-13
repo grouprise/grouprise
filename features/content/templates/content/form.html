@@ -17,6 +17,22 @@
             {% include 'core/_field.html' with field=form.title %}
             {% include 'core/_field.html' with field=form.text %}
         </div>
+        {% if form.time %}
+            <div class="section section-event section-event-time">
+                <div class="row">
+                    <div class="col-md-6">
+                        {% include 'core/_field.html' with field=form.place %}
+                    </div>
+                    <div class="col-md-6">
+                        <div data-component="event-time">
+                            {% include 'core/_field.html' with field=form.time %}
+                            {% include 'core/_field.html' with field=form.until_time %}
+                            {% include 'core/_field.html' with field=form.all_day %}
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        {% endif %}
         <div class="section section-publish section-article" data-component="publish">
             <h2>Beitragseinstellungen</h2>
             <div class="row">
