@@ -1,3 +1,4 @@
+import django.utils.timezone
 import django.views.generic
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -21,7 +22,8 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     def get_queryset(self):
         return super().get_queryset().filter(
                 container_type=content.Content.get_content_type(), content__time__isnull=False,
-                ).can_view(self.request.user).order_by('-content__versions__time_created')
+                content__until_time__gt=django.utils.timezone.now(),
+                ).can_view(self.request.user).order_by('content__time')
 
 
 class CalendarFeed(content_views.BaseCalendarFeed):
