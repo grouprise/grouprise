@@ -3,7 +3,6 @@ from content import models as content
 from core import tests
 from features.associations import models as associations
 from features.contributions import models as contributions
-from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
 from features.subscriptions import test_mixins as subscriptions
 
@@ -73,7 +72,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.assertLogin(url_name='create-content')
         self.assertLogin(url_name='create-content', method='post')
 
-    def test_gestalt_create_group_article(self):
+    def test_guest_create_group_article(self):
         self.assertLogin(url_name='create-group-content', url_args=[self.group.slug])
         self.assertLogin(
                 url_name='create-group-content', url_args=[self.group.slug], method='post')
@@ -96,13 +95,13 @@ class Guest(memberships.MemberMixin, core.tests.Test):
                 self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
         self.assertLogin(url=self.get_article_url())
 
-    def test_gestalt_public_group_article(self):
+    def test_guest_public_group_article(self):
         self.create_group_article(public=True)
         self.assertContainsLink(obj=self.group, link_url=self.get_group_article_url())
         self.assertOk(url=self.get_group_article_url())
         self.assertLogin(url=self.get_group_article_url(), method='post')
 
-    def test_gestalt_internal_group_article(self):
+    def test_guest_internal_group_article(self):
         self.create_group_article(public=False)
         self.assertNotContainsLink(obj=self.group, link_url=self.get_group_article_url())
         self.assertLogin(url=self.get_group_article_url())
