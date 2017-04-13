@@ -11,7 +11,7 @@
 {% block heading_toolbar %}
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
-        {% url 'create-content' as url %}
+        {% url 'create-article' as url %}
         {% include 'core/_toolbutton.html' with label='Neuer Artikel' url=url %}
     {% endif %}
 {% endblock %}

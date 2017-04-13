@@ -9,7 +9,8 @@
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% dropdown 'content-new' 'Neuer Beitrag' %}
-            <li><a href="{% url 'create-content' %}">Artikel</a></li>
+            <li><a href="{% url 'create-article' %}">Artikel</a></li>
+            <li><a href="{% url 'create-event' %}">Ereignis</a></li>
         {% enddropdown %}
     {% endif %}
 {% endblock %}

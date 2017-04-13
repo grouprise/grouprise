@@ -25,14 +25,26 @@ class Create(forms.ModelForm):
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
     title = forms.CharField(label='Titel')
 
+    place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
+    time = forms.DateTimeField(label='Beginn')
+    until_time = forms.DateTimeField(label='Ende')
+    all_day = forms.BooleanField(
+            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.')
+
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
+        with_time = kwargs.pop('with_time')
         super().__init__(**kwargs)
         if self.instance.entity.is_group:
             del self.fields['group']
         else:
             self.fields['group'].queryset = groups.Group.objects.filter(
                     memberships__member=self.author)
+        if not with_time:
+            del self.fields['place']
+            del self.fields['time']
+            del self.fields['until_time']
+            del self.fields['all_day']
 
     def save(self, commit=True):
         with django.db.transaction.atomic():
@@ -45,7 +57,11 @@ class Create(forms.ModelForm):
                         'slug': core.text.slugify(self.cleaned_data['title']),
                         })
             self.instance.container = models.Content.objects.create(
-                    title=self.cleaned_data['title'])
+                    title=self.cleaned_data['title'],
+                    place=self.cleaned_data.get('place'),
+                    time=self.cleaned_data.get('time'),
+                    until_time=self.cleaned_data.get('until_time'),
+                    all_day=self.cleaned_data.get('all_day'))
             self.instance.container.versions.create(
                     author=self.author, text=self.cleaned_data['text'])
             return super().save(commit)
@@ -89,6 +105,11 @@ class Update(forms.ModelForm):
     def save(self, commit=True):
         association = super().save(commit)
         association.container.title = self.cleaned_data['title']
+        if self.initial['time']:
+            association.container.place = self.cleaned_data['place']
+            association.container.time = self.cleaned_data['time']
+            association.container.until_time = self.cleaned_data['until_time']
+            association.container.all_day = self.cleaned_data['all_day']
         association.container.save()
         association.container.versions.create(author=self.author, text=self.cleaned_data['text'])
         return association

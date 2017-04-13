@@ -11,8 +11,6 @@ urlpatterns = [
         r'^content/(?P<content_pk>[0-9]+)/image/add/$',
         creation.ImageCreate.as_view(),
         name='image-create'),
-    urls.url(r'^event/add/$', creation.Event.as_view(), name='event-create'),
-    urls.url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventUpdate.as_view(), name='event-update'),
     urls.url(
         r'^event/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
         views.EventDay.as_view(),

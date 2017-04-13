@@ -57,11 +57,13 @@ class Create(base.PermissionMixin, generic.CreateView):
     model = associations.Association
     form_class = forms.Create
     template_name = 'content/create.html'
+    with_time = False
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['author'] = self.request.user.gestalt
         kwargs['instance'] = associations.Association(entity=self.entity)
+        kwargs['with_time'] = self.with_time
         return kwargs
 
     def get_initial(self):

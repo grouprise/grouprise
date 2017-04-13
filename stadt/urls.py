@@ -9,7 +9,6 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('account.urls')),
     urls.url(r'^stadt/', urls.include('content.urls')),
     urls.url(r'^stadt/', urls.include('entities.urls')),
-    urls.url(r'^stadt/', urls.include('features.articles.urls')),
     urls.url(r'^stadt/', urls.include('features.associations.urls')),
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
@@ -17,8 +16,9 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),
     urls.url(r'^stadt/', urls.include('features.tags.urls')),
 
-    urls.url(r'^', urls.include('features.stadt.urls')),
+    urls.url(r'^', urls.include('features.articles.urls')),
     urls.url(r'^', urls.include('features.events.urls')),
+    urls.url(r'^', urls.include('features.stadt.urls')),
 
     # matches /*/, should be included late, groups before gestalten
     urls.url(r'^', urls.include('features.groups.urls')),
