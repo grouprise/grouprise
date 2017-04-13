@@ -3,18 +3,12 @@
 
 {% block title %}Ereignisse - {{ block.super }}{% endblock %}
 {% block menu %}{% with menu='event' %}{{ block.super }}{% endwith %}{% endblock %}
-{% block heading_title %}{% with title='Ereignisse' %}{{ block.super }}{% endwith %}{% endblock %}
 
+{% block heading_title %}
+    {% include 'core/_heading.html' with title='Ereignisse' icon='sg-pen' %}
+{% endblock %}
 
 {% block heading_toolbar %}
-    {% has_perm 'content.create_content' user as can_create_content %}
-    {% if can_create_content %}
-        <a href="{% url 'event-create' %}" class="btn btn-ch">
-            <span class="btn-label">
-                Neues Ereignis
-            </span>
-        </a>
-    {% endif %}
 {% endblock %}
 
 {% block sidebar %}
@@ -23,23 +17,11 @@
 
 {% block content %}
     {% calendar user size="large" %}
-
-    {% comment %}
-    {# FIXME: markup, css-classes, ...? #}
-    <ol class="profiles">
-        <li>
-            {% calendar user size="large" %}
-        </li>
-        <li>
-            {% calendar user add_to_month=1 size="large" %}
-        </li>
-    </ol>
-    {% endcomment %}
     
     <div class="content-list">
         <ol class="content-preview-list">
-            {% for content in event_list %}
-                <li>{% include 'content/_content_preview.html' %}</li>
+            {% for association in association_list %}
+                <li>{% include 'content/_preview.html' %}</li>
             {% endfor %}
         </ol>
 

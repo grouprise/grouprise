@@ -1,21 +1,27 @@
+import django.views.generic
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from core.views import base
+import core.views
 from utils import views as utils_views
+from features.associations import models as associations
+from features.content import models as content
 from features.groups import models as groups
 from features.memberships.rules import is_member_of
 from content import models, views as content_views
 
 
-class List(base.PermissionMixin, generic.ListView):
+class List(core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'events.view_list'
+    model = associations.Association
     template_name = 'events/list.html'
     paginate_by = 10
 
     def get_queryset(self):
-        return models.Event.objects.can_view(self.request.user).upcoming()
+        return super().get_queryset().filter(
+                container_type=content.Content.get_content_type(), content__time__isnull=False,
+                ).can_view(self.request.user).order_by('-content__versions__time_created')
 
 
 class CalendarFeed(content_views.BaseCalendarFeed):
