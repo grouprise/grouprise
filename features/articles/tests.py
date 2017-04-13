@@ -49,6 +49,16 @@ class Guest(memberships.MemberMixin, core.tests.Test):
     def get_article_url(self):
         return associations.Association.objects.get(content__title='Test').get_absolute_url()
 
+    def create_group_article(self, **kwargs):
+        self.client.force_login(self.gestalt.user)
+        kwargs.update({'title': 'Group Article', 'text': 'Test'})
+        self.client.post(self.get_url('create-group-content', self.group.slug), kwargs)
+        self.client.logout()
+
+    def get_group_article_url(self):
+        return associations.Association.objects.get(
+                content__title='Group Article').get_absolute_url()
+
     def test_guest_article_link(self):
         self.assertNotContainsLink(self.client.get('/'), self.get_url('create-content'))
         self.assertNotContainsLink(
@@ -59,12 +69,13 @@ class Guest(memberships.MemberMixin, core.tests.Test):
                 self.client.get(self.group.get_absolute_url()), self.get_url('create-content'))
 
     def test_guest_create_article(self):
-        self.assertForbiddenOrLogin(
-                self.client.get(self.get_url('create-content')),
-                self.get_url('create-content'))
-        self.assertForbiddenOrLogin(
-                self.client.post(self.get_url('create-content')),
-                self.get_url('create-content'))
+        self.assertLogin(url_name='create-content')
+        self.assertLogin(url_name='create-content', method='post')
+
+    def test_gestalt_create_group_article(self):
+        self.assertLogin(url_name='create-group-content', url_args=[self.group.slug])
+        self.assertLogin(
+                url_name='create-group-content', url_args=[self.group.slug], method='post')
 
     def test_guest_list_public_article(self):
         self.create_article(public=True)
@@ -81,6 +92,14 @@ class Guest(memberships.MemberMixin, core.tests.Test):
                 self.client.get(self.get_url('articles')), self.get_article_url())
         self.assertNotContainsLink(
                 self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
+
+    def test_gestalt_list_public_group_article(self):
+        self.create_group_article(public=True)
+        self.assertContainsLink(obj=self.group, link_url=self.get_group_article_url())
+
+    def test_gestalt_list_internal_group_article(self):
+        self.create_group_article(public=False)
+        self.assertNotContainsLink(obj=self.group, link_url=self.get_group_article_url())
 
 
 class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
@@ -136,3 +155,11 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
                 self.client.get(self.get_url('articles')), self.get_article_url())
         self.assertContainsLink(
                 self.client.get(self.gestalt.get_absolute_url()), self.get_article_url())
+
+    def test_gestalt_list_public_group_article(self):
+        self.create_group_article(public=True)
+        self.assertContainsLink(obj=self.group, link_url=self.get_group_article_url())
+
+    def test_gestalt_list_internal_group_article(self):
+        self.create_group_article(public=False)
+        self.assertContainsLink(obj=self.group, link_url=self.get_group_article_url())

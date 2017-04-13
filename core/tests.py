@@ -1,3 +1,4 @@
+import django.core.urlresolvers
 from django import test
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
@@ -25,11 +26,15 @@ class Test(test.TestCase):
     def enable_caching(cls):
         cache.cache.cache = cache.caches['test']
 
-    def assertContainsLink(self, response, url, key=None):
-        self.assertContains(response, self.get_link(url, key))
+    def assertContainsLink(self, response=None, link_url=None, key=None, obj=None):
+        if response is None:
+            response = self.client.get(obj.get_absolute_url())
+        self.assertContains(response, self.get_link(link_url, key))
 
-    def assertNotContainsLink(self, response, url, key=None):
-        self.assertNotContains(response, self.get_link(url, key))
+    def assertNotContainsLink(self, response=None, link_url=None, key=None, obj=None):
+        if response is None:
+            response = self.client.get(obj.get_absolute_url())
+        self.assertNotContains(response, self.get_link(link_url, key))
 
     def assertExists(self, model, **kwargs):
         qs = model.objects.filter(**kwargs)
@@ -38,6 +43,11 @@ class Test(test.TestCase):
 
     def assertNotExists(self, model, **kwargs):
         self.assertFalse(model.objects.filter(**kwargs))
+
+    def assertLogin(self, url_name, url_args=[], method='get'):
+        url = django.core.urlresolvers.reverse(url_name, args=url_args)
+        response = getattr(self.client, method)(url)
+        self.assertRedirects(response, self.get_login_url(url))
 
     def assertForbiddenOrLogin(self, response, next_url):
         if auth.get_user(self.client).is_authenticated():
