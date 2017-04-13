@@ -1,0 +1,62 @@
+{% extends 'associations/detail.html' %}
+{% load rules %}
+
+{% block meta %}
+    {% include 'content/_meta.html' with content=association.container %}
+{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Beitrag</span>
+    <span class="decoration-icon sg-pen" role="presentation"></span>
+{% endblock %}
+
+{% block heading_toolbar %}
+    <div class="btn-toolbar">
+        {% has_perm 'content.change' user association as can_edit %}
+        {% if can_edit %}
+        <a href="{% url 'update-content' association.entity.slug association.slug %}" class="btn btn-ch">
+                <span class="btn-label">Bearbeiten</span>
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <article class="content">
+        <header class="content-teaser">
+            {% include 'content/_info.html' %}
+            <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
+                {% block content_type %}
+                    <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
+                {% endblock %}
+            </span>
+        </header>
+        
+        <div class="content-body" data-component="user-content">
+            <h1 class="content-title">
+                {{ association.container.title }}
+            </h1>
+            {% markdown association.container.versions.last.text heading_baselevel=2 %}
+        </div>
+
+        <footer class="content-footer">
+            <h2 class="content-header">
+                <span class="content-classification">Kommentare</span>
+                <span class="decoration-icon sg-comments" role="presentation"></span>
+            </h2>
+            <ol class="medias">
+                {% for comment in association.container.contributions.all %}
+                    <li>
+                        {% include 'contributions/_contribution.html' with text=comment only %}
+                    </li>
+                {% endfor %}
+                {% has_perm 'content.comment' user association as can_comment %}
+                {% if can_comment %}
+                <li>
+                    {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
+                </li>
+                {% endif %}
+            </ol>
+        </footer>
+    </article>
+{% endblock %}

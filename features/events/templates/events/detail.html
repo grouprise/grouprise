@@ -1,0 +1,8 @@
+{% extends 'content/detail.html' %}
+
+{% block menu %}{% menu 'event' association.entity %}{% endblock %}
+
+{% block content_type %}
+    <i class="sg sg-content-type-event"></i>
+    <span>{% if not association.public %}Internes {% endif %}Ereignis</span>
+{% endblock %}

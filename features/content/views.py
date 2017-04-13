@@ -29,7 +29,6 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
     model = associations.Association
-    template_name = 'articles/detail.html'
 
     form_class = forms.Comment
 
@@ -44,6 +43,13 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
                 entity_id=entity.id,
                 entity_type=contenttypes.ContentType.objects.get_for_model(entity),
                 slug=self.kwargs['association_slug'])
+
+    def get_template_names(self):
+        if self.object.container.time is None:
+            name = 'articles/detail.html'
+        else:
+            name = 'events/detail.html'
+        return [name]
 
 
 class Create(base.PermissionMixin, generic.CreateView):
