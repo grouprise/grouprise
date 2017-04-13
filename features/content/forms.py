@@ -29,7 +29,7 @@ class Create(forms.ModelForm):
     time = forms.DateTimeField(label='Beginn')
     until_time = forms.DateTimeField(label='Ende')
     all_day = forms.BooleanField(
-            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.')
+            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.', required=False)
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
@@ -58,10 +58,10 @@ class Create(forms.ModelForm):
                         })
             self.instance.container = models.Content.objects.create(
                     title=self.cleaned_data['title'],
-                    place=self.cleaned_data.get('place'),
+                    place=self.cleaned_data.get('place', ''),
                     time=self.cleaned_data.get('time'),
                     until_time=self.cleaned_data.get('until_time'),
-                    all_day=self.cleaned_data.get('all_day'))
+                    all_day=self.cleaned_data.get('all_day', False))
             self.instance.container.versions.create(
                     author=self.author, text=self.cleaned_data['text'])
             return super().save(commit)
@@ -79,7 +79,7 @@ class Update(forms.ModelForm):
     time = forms.DateTimeField(label='Beginn')
     until_time = forms.DateTimeField(label='Ende')
     all_day = forms.BooleanField(
-            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.')
+            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.', required=False)
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
