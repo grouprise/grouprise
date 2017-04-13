@@ -7,9 +7,9 @@ from features.gestalten import models as gestalten
 
 class Content(models.Model):
     title = models.CharField(max_length=255)
-    
+
     place = models.CharField('Veranstaltungsort / Anschrift', blank=True, max_length=255)
-    
+
     time = models.DateTimeField('Beginn', blank=True, null=True)
     until_time = models.DateTimeField('Ende', blank=True, null=True)
     all_day = models.BooleanField('ganztägig', default=False,
