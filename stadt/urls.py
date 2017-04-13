@@ -19,7 +19,11 @@ urlpatterns = [
 
     urls.url(r'^', urls.include('features.stadt.urls')),
     urls.url(r'^', urls.include('features.events.urls')),
-    urls.url(r'^', urls.include('features.content.urls')),
+
+    # matches /*/, should be included late, groups before gestalten
     urls.url(r'^', urls.include('features.groups.urls')),
     urls.url(r'^', urls.include('features.gestalten.urls')),
+
+    # matches /*/*/, should be included at last
+    urls.url(r'^', urls.include('features.content.urls')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
