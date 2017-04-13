@@ -1,4 +1,4 @@
-{% extends 'stadt/list.html' %}
+{% extends 'content/list.html' %}
 {% load rules %}
 
 {% block header %}
@@ -11,7 +11,7 @@
 
 {% block heading %}{% endblock %}
 
-{% block list_header %}
+{% block content_header %}
     {% include_fragments 'group-content' %}
 
     {% has_perm 'entities.create_group_content' user group as can_create_content %}
