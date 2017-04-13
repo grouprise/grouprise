@@ -55,6 +55,10 @@ class Test(test.TestCase):
         else:
             self.assertRedirects(response, self.get_login_url(next_url))
 
+    def assertOk(self, url):
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
     def assertNotificationRecipient(self, gestalt):
         self.assertTrue(self.get_latest_notification().to[0].find(gestalt.user.email))
 
