@@ -44,8 +44,9 @@ class Test(test.TestCase):
     def assertNotExists(self, model, **kwargs):
         self.assertFalse(model.objects.filter(**kwargs))
 
-    def assertLogin(self, url_name, url_args=[], method='get'):
-        url = django.core.urlresolvers.reverse(url_name, args=url_args)
+    def assertLogin(self, url=None, url_name=None, url_args=[], method='get'):
+        if url is None:
+            url = django.core.urlresolvers.reverse(url_name, args=url_args)
         response = getattr(self.client, method)(url)
         self.assertRedirects(response, self.get_login_url(url))
 
@@ -58,6 +59,10 @@ class Test(test.TestCase):
     def assertOk(self, url):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def assertRedirect(self, url, method, data):
+        response = getattr(self.client, method)(url, data)
+        self.assertRedirects(response, url)
 
     def assertNotificationRecipient(self, gestalt):
         self.assertTrue(self.get_latest_notification().to[0].find(gestalt.user.email))
