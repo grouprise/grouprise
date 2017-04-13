@@ -1,0 +1,12 @@
+{% extends 'content/_preview.html' %}
+
+{% block content_type %}
+    <i class="sg sg-content-type-event"></i>
+    <span>{% if not association.public %}Internes {% endif %}Ereignis</span>
+{% endblock %}
+
+{% block content_preview_image %}
+    <div>
+        {% include "macros/calendar_sheet.html" with time=association.container.time %}
+    </div>
+{% endblock %}

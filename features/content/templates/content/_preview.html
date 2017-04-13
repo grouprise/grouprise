@@ -1,31 +1,28 @@
-{% load cache content thumbnail %}
-
 <article class="content-preview">
     {% if not exclude_header %}
     <header class="content-preview-header">
         {% include 'content/_info.html' %}
         <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
-            <i class="sg sg-content-type-article"></i>
-            <span>{% if not association.public %}Interner {% endif %}Artikel</span>
+            {% block content_type %}
+                <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
+            {% endblock %}
         </span>
     </header>
     {% endif %}
 
     <a href="{{ association.get_absolute_url }}" class="content-preview-body">
         <div class="content-preview-body-content">
-            {% comment %}
-            {% if content.event %}
-                <div>
-                    {% include "macros/calendar_sheet.html" with time=content.event.date %}
-                </div>
-            {% elif content.images.first %}
-                {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
-                    <div class="content-image">
-                        <img src="{{ image.url }}">
-                    </div>
-                {% endthumbnail %}
-            {% endif %}
-            {% endcomment %}
+            {% block content_preview_image %}
+                {% comment %}
+                {% elif content.images.first %}
+                    {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
+                        <div class="content-image">
+                            <img src="{{ image.url }}">
+                        </div>
+                    {% endthumbnail %}
+                {% endif %}
+                {% endcomment %}
+            {% endblock %}
             <div class="content-preview-text" data-component="user-content">
                 <h3 class="content-title">
                     {{ association.container.title }}
