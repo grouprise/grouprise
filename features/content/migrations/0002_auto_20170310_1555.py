@@ -41,9 +41,9 @@ def copy_articles(apps, schema_editor):
         gc = None
         for gc in GroupContent.objects.filter(content__article=a):
             slug = a.slug or core.models.get_unique_slug(
-                    associations.Association, {
-                        'entity_id': gc.gestalt.id,
-                        'entity_type': ContentType.objects.get_for_model(gc.gestalt),
+                    Association, {
+                        'entity_id': gc.group.id,
+                        'entity_type': ContentType.objects.get_for_model(gc.group),
                         'slug': core.text.slugify(a.title),
                         })
             Association.objects.create(
@@ -53,11 +53,11 @@ def copy_articles(apps, schema_editor):
                     entity_id=gc.group.id,
                     pinned=gc.pinned,
                     public=a.public,
-                    slug=a.slug)
+                    slug=slug)
             
         if gc is None:
             slug = a.slug or core.models.get_unique_slug(
-                    associations.Association, {
+                    Association, {
                         'entity_id': a.author.id,
                         'entity_type': ContentType.objects.get_for_model(a.author),
                         'slug': core.text.slugify(a.title),
