@@ -19,9 +19,7 @@
                         {% include 'stadt/_breadcrumb.html' %}
                     {% endblock %}
                 {% endspaceless %}</div>
-                <div class="page-meta">
-                    {{ num_groups }} Gruppen / {{ num_gestalten }} Gestalten / {{ content_count }} Beiträge
-                </div>
+                {% include 'stadt/_page_meta.html' %}
             </div>
         </div>
     </div>
