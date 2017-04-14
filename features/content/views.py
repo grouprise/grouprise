@@ -20,9 +20,9 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'content/list.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter(
-                container_type=models.Content.get_content_type(),
-                ).can_view(self.request.user).order_by('-content__versions__time_created')
+        return super().get_queryset().filter(container_type=models.Content.get_content_type(
+            )).can_view(self.request.user).annotate(time_created=django.db.models.Min(
+                'content__versions__time_created')).order_by('-time_created')
 
 
 class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):

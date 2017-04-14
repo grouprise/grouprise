@@ -1,3 +1,4 @@
+import django.db.models
 from django import http
 from django.contrib.contenttypes import models as contenttypes
 from django.utils import six
@@ -33,7 +34,8 @@ class Gestalt(utils_views.List):
                 container_type=content2.Content.get_content_type(),
                 entity_type=self.get_gestalt().get_content_type(),
                 entity_id=self.get_gestalt().id
-                ).can_view(self.request.user).order_by('-content__versions__time_created')
+                ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
+                'content__versions__time_created')).order_by('-time_created')
 
     def get_title(self):
         return str(self.get_gestalt())
@@ -132,8 +134,9 @@ class Group(utils_views.List):
             return pinned_content
 
     def get_queryset(self):
-        return self.get_group_content().filter(pinned=False).order_by(
-                '-content__versions__time_created')
+        return self.get_group_content().filter(pinned=False).annotate(
+                time_created=django.db.models.Min(
+                    'content__versions__time_created')).order_by('-time_created')
 
     def get_related_object(self):
         return self.get_group()
