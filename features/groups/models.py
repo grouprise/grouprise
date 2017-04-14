@@ -1,52 +1,53 @@
-from core import colors, models
+from core import colors, models as core
+import django.contrib.contenttypes.models
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
-from django.db import models as django
+from django.db import models
 
 
 class Group(models.Model):
     is_group = True
 
-    date_created = django.DateField(
+    date_created = models.DateField(
             auto_now_add=True)
-    gestalt_created = django.ForeignKey(
+    gestalt_created = models.ForeignKey(
             'gestalten.Gestalt',
             null=True,
             blank=True)
-    name = django.CharField(
+    name = models.CharField(
             'Name',
             max_length=255)
-    score = django.IntegerField(default=0)
-    slug = models.AutoSlugField(
+    score = models.IntegerField(default=0)
+    slug = core.AutoSlugField(
             'Adresse der Gruppenseite',
             populate_from='name',
             reserve=['gestalt', 'stadt'],
             unique=True)
 
-    address = django.TextField(
+    address = models.TextField(
             'Anschrift',
             blank=True)
-    avatar = django.ImageField(
+    avatar = models.ImageField(
             blank=True)
-    avatar_color = django.CharField(
+    avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
-    date_founded = django.DateField(
+    date_founded = models.DateField(
             'Gruppe gegründet',
             null=True,
             blank=True)
-    description = django.TextField(
+    description = models.TextField(
             'Kurzbeschreibung',
             blank=True,
             default='',
             max_length=200)
-    logo = django.ImageField(
+    logo = models.ImageField(
             blank=True)
-    url = django.URLField(
+    url = models.URLField(
             'Adresse im Web',
             blank=True)
 
-    closed = django.BooleanField(
+    closed = models.BooleanField(
             'Geschlossene Gruppe',
             default=False,
             help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
@@ -56,6 +57,10 @@ class Group(models.Model):
             content_type_field='tagged_type',
             object_id_field='tagged_id',
             related_query_name='group')
+
+    @classmethod
+    def get_content_type(cls):
+        return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)
 
     def __str__(self):
         return self.name
@@ -83,7 +88,7 @@ class Group(models.Model):
         return initials_without_short_terms if initials_without_short_terms else initials
 
     # FIXME: to be removed
-    content = django.ManyToManyField(
+    content = models.ManyToManyField(
             'content.Content',
             related_name='groups',
             through='entities.GroupContent')

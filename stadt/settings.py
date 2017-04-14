@@ -230,9 +230,8 @@ ABOUT_GROUP_ID = 1
 SCORE_CONTENT_AGE = 100
 
 SCORE_PROCESSORS = [
-        'features.memberships.scores.Group',
-        'features.subscriptions.scores.Group',
-        'features.texts.scores.Gestalt',
+        'features.stadt.scores.Gestalt',
+        'features.stadt.scores.Group',
         ]
 
 ROOT_SIGNALCONF = 'stadt.signals'
