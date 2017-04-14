@@ -35,7 +35,7 @@ class Gestalt(utils_views.List):
                 entity_type=self.get_gestalt().get_content_type(),
                 entity_id=self.get_gestalt().id
                 ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
-                'content__versions__time_created')).order_by('-time_created')
+                    'content__versions__time_created')).order_by('-time_created')
 
     def get_title(self):
         return str(self.get_gestalt())
