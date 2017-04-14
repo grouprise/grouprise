@@ -84,7 +84,6 @@ class Update(base.PermissionMixin, generic.UpdateView):
     permission_required = 'content.change'
     model = associations.Association
     form_class = forms.Update
-    template_name = 'content/update.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -112,3 +111,10 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 entity_id=self.entity.id,
                 entity_type=contenttypes.ContentType.objects.get_for_model(self.entity),
                 slug=self.kwargs['association_slug'])
+
+    def get_template_names(self):
+        if self.object.container.time is None:
+            name = 'articles/update.html'
+        else:
+            name = 'events/update.html'
+        return [name]

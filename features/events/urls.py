@@ -1,6 +1,5 @@
 from django.conf.urls import url
 
-from features.content import views as content
 from . import views
 
 urlpatterns = [
@@ -11,12 +10,12 @@ urlpatterns = [
 
     url(
         r'^stadt/events/add/$',
-        content.Create.as_view(with_time=True),
+        views.Create.as_view(),
         name='create-event'),
 
     url(
         r'^(?P<entity_slug>[\w-]+)/events/add/$',
-        content.Create.as_view(with_time=True),
+        views.Create.as_view(),
         name='create-group-event'),
 
     url(

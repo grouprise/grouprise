@@ -1,6 +1,7 @@
 from django.views import generic
 
 from core.views import base
+import features.content.views
 from features.associations import models as associations
 from features.content import models as content
 
@@ -15,3 +16,12 @@ class List(base.PermissionMixin, generic.ListView):
         return super().get_queryset().filter(
                 container_type=content.Content.get_content_type(), content__time__isnull=True,
                 ).can_view(self.request.user).order_by('-content__versions__time_created')
+
+
+class Create(features.content.views.Create):
+    template_name = 'articles/create.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['with_time'] = False
+        return kwargs
