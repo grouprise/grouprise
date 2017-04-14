@@ -1,9 +1,12 @@
 import calendar as python_calendar
 import datetime
-from content import models as content
+import itertools
+
+import django.utils.timezone
 from django import template
 from django.core import urlresolvers
-import itertools
+
+from content import models as content
 
 register = template.Library()
 
@@ -53,7 +56,7 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 
 @register.inclusion_tag('events/_calendar.html', takes_context=True)
 def calendar(context, user, events=None, add_to_month=0, size='preview'):
-    around = datetime.date.today()
+    around = django.utils.timezone.now()
     for i in range(add_to_month):
         around = around.replace(day=1) + datetime.timedelta(days=32)
     if events is None:
