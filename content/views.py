@@ -1,5 +1,6 @@
 from . import creation, forms, models
 from django import shortcuts
+from django.contrib.sites import models as sites_models
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.utils import formats
@@ -172,7 +173,8 @@ class BaseCalendarFeed(ICalFeed, GestaltAuthenticationMixin):
         except PermissionDenied:
             response = HttpResponse()
             response.status_code = 401
-            response['WWW-Authenticate'] = 'Basic realm="{}"'.format("stadtgestalten.org")
+            domain = sites_models.Site.objects.get_current().domain
+            response['WWW-Authenticate'] = 'Basic realm="{}"'.format(domain)
             return response
 
     def get_queryset(self):
