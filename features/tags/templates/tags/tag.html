@@ -33,7 +33,7 @@
             <div class="content-header">
                 <h2 class="content-classification">Gruppen</h2>
             </div>
-            <ol class="groups">
+            <ol class="groups" data-component="masonry">
                 {% for group in groups %}
                     <li>
                         {% include 'groups/_preview.html' with group=group link=True %}

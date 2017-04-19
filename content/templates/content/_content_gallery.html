@@ -14,10 +14,10 @@
         {% endif %}
     </header>
 
-    <ul class="gallery">
+    <ul class="gallery" data-component="masonry">
         {% for image in content.images.all %}
             {% thumbnail image.file '250' format='PNG' as thumb %}
-                <li style="width: {{ thumb.width }}px; height: {{ thumb.height }}px">
+                <li>
                     <a href="{{ image.file.url }}" class="gallery-link" data-size="{{ image.file.width }}x{{ image.file.height }}">
                         <img src="{{ thumb.url }}" class="gallery-image-preview">
                     </a>

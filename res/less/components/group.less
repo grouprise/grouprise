@@ -97,22 +97,8 @@
 }
 
 .groups {
-    margin: 0;
-    padding: 0;
-
-    column-count: 2;
-    column-gap: 2rem;
-
-    .on-handhelds({
-        column-count: unset;
-    });
-
-    > li {
-        display: inline-block;
-        padding: 0 0 2rem;
-        page-break-inside: avoid;
-        width: 100%;
-    }
+    &:extend(.entity-list all);
+    &:extend(.entity-list-2 all);
 }
 
 .group-preview {
@@ -121,11 +107,12 @@
     text-decoration: none;
     border-radius: 2px;
     overflow: hidden;
+    width: 366px;
+    max-width: 100%;
 
     .group-link & {
         position: absolute;
         margin-top: 5px;
-        width: 360px;
         z-index: 20;
         background: white;
         .material-shadow(3);

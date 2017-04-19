@@ -40,7 +40,7 @@
         {% enddismissible %}
     {% endblock %}
 
-    <ol class="profiles">
+    <ol class="profiles" data-component="masonry">
         {% for gestalt in gestalt_list %}
             <li>
                 {% include 'entities/_gestalt_preview.html' with gestalt=gestalt link=True %}
