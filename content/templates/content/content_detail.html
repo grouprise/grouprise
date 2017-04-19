@@ -16,7 +16,7 @@
     <article class="content">
         {% include 'content/_content_header.html' %}
 
-        <div class="content-body" data-component="user-content">
+        <div class="content-body">
             <h1 class="content-title">
                 {{ content.title }}
             </h1>
@@ -28,7 +28,9 @@
             {% if content.gallery %}
                 {% include 'content/_content_gallery.html' %}
             {% else %}
-                {% markdown content.text heading_baselevel=2 %}
+                <div class="content-user" data-component="user-content">
+                    {% markdown content.text heading_baselevel=2 %}
+                </div>
             {% endif %}
 
             {% include 'content/_content_license.html' %}
