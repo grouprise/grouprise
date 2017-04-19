@@ -153,6 +153,18 @@ class PermissionTokenMixin(GestaltMixin):
         else:
             return None
 
+    @classmethod
+    def get_url_with_permission_token(cls, target, gestalt, url):
+        """ append the secret token to a private resource URL
+
+        A permission token is generated if it did not exist before.
+        """
+        permission_token = PermissionToken.get_permission_token(gestalt, target,
+                                                                cls.permission_token_feature_key,
+                                                                create_if_missing=True)
+        # we can safely asssume that usernames and permission tokens need no escaping
+        return "{}?token={}:{}".format(url, gestalt.user.username, permission_token.secret_key)
+
 
 class HTTPAuthMixin:
 

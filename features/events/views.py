@@ -45,12 +45,14 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
                 'domain': 'public'
             })
         )
-        context['private_export_url'] = self.request.build_absolute_uri(
-            reverse(self.feed_route, kwargs={
-                self.slug_url_kwarg: self.get_object().slug,
-                'domain': 'private'
-            })
-        )
+        if self.has_private_access():
+            context['private_export_url'] = "ksdjfhsl"
+            relative_url = reverse(self.feed_route,
+                                   kwargs={self.slug_url_kwarg: self.get_object().slug,
+                                           'domain': 'private'})
+            url_with_token = content_views.BaseCalendarFeed.get_url_with_permission_token(
+                self.get_object(), self.request.user.gestalt, relative_url)
+            context['private_export_url'] = self.request.build_absolute_uri(url_with_token)
         return context
 
 
@@ -64,3 +66,9 @@ class GroupCalendarExport(CalendarExport):
 
     def get_parent(self):
         return self.get_group()
+
+    def has_private_access(self):
+        if self.request.user and self.request.user.is_authenticated():
+            return is_member_of(self.request.user, self.get_group())
+        else:
+            return False
