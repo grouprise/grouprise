@@ -27,12 +27,14 @@ import autosize from './transforms/autosize'
 import cite from './transforms/cite'
 import grouplink from './transforms/grouplink'
 import quote from './transforms/quote'
+import masonry from './transforms/masonry'
 
 function init (searchIn = document) {
   const bus = PubSub()
   const opts = { root: searchIn, conf: { bus, init } }
 
   // initialize components on load
+  component('masonry', masonry, opts)
   component('date', date, opts)
   component('editor', editor, opts)
   component('time', time, opts)
