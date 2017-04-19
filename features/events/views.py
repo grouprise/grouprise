@@ -46,11 +46,11 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
             })
         )
         if self.has_private_access():
-            context['private_export_url'] = "ksdjfhsl"
             relative_url = reverse(self.feed_route,
                                    kwargs={self.slug_url_kwarg: self.get_object().slug,
                                            'domain': 'private'})
-            url_with_token = content_views.BaseCalendarFeed.get_url_with_permission_token(
+            user_resolver = content_views.BaseCalendarFeed.user_resolver
+            url_with_token = user_resolver.get_url_with_permission_token(
                 self.get_object(), self.request.user.gestalt, relative_url)
             context['private_export_url'] = self.request.build_absolute_uri(url_with_token)
         return context

@@ -10,9 +10,9 @@ from django.db.models import Q
 from django_ical.views import ICalFeed
 
 import content.models
-from core.views.base import GestaltAuthenticationMixin
 from entities import models as entities_models
 from utils import views as utils_views
+from utils.auth import get_user_resolver
 
 
 class BaseContentList(utils_views.List):
@@ -161,9 +161,9 @@ class Markdown(utils_views.PageMixin, generic.TemplateView):
     title = 'Textauszeichnung'
 
 
-class BaseCalendarFeed(ICalFeed, GestaltAuthenticationMixin):
+class BaseCalendarFeed(ICalFeed):
 
-    permission_token_feature_key = "calendar"
+    user_resolver = get_user_resolver("calendar")
 
     def __call__(self, request, *args, **kwargs):
         self.request = request
@@ -194,7 +194,8 @@ class BaseCalendarFeed(ICalFeed, GestaltAuthenticationMixin):
         filter_dict['public'] = (self.kwargs['domain'] == 'public')
 
     def get_authorized_user(self):
-        authenticated_gestalt = self.get_authenticated_gestalt(self.get_calendar_owner())
+        authenticated_gestalt = self.user_resolver.resolve_user(self.request,
+                                                                self.get_calendar_owner())
         if authenticated_gestalt:
             if self.check_authorization(authenticated_gestalt):
                 return authenticated_gestalt.user
