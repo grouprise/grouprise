@@ -21,9 +21,8 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return super().get_queryset().filter_events().filter(
-                content__until_time__gt=django.utils.timezone.now(),
-                ).can_view(self.request.user).order_by('content__time')
+        return super().get_queryset().filter_events().filter_upcoming().can_view(
+                self.request.user).order_by('content__time')
 
 
 class Create(features.content.views.Create):

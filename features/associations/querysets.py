@@ -1,6 +1,8 @@
+import django.utils.timezone
 from django.contrib.contenttypes import models as contenttypes
 from django.db import models
 from django.db.models import Max
+
 from features.gestalten import models as gestalten
 from features.conversations import models as conversations
 from features.groups import models as groups
@@ -30,6 +32,9 @@ class Association(models.QuerySet):
 
     def filter_events(self):
         return self.filter(content__time__isnull=False)
+
+    def filter_upcoming(self):
+        return self.filter(content__until_time__gt=django.utils.timezone.now())
 
     # TODO: replace 'conversation' by generic container
     def ordered_conversations(self, user):

@@ -11,28 +11,22 @@
         <div class="box-content">
             {% calendar associations size='preview' %}
 
-            {% comment %}
-            {% with preview_length=preview_length|default:3 %}
-                {% with upcoming_events=events|upcoming_events:preview_length %}
-                    {% if upcoming_events %}
-                        <ul class="events">
-                            {% for event in upcoming_events %}
-                                <li>
-                                    <div class="event-preview">
-                                        {% time event.time %}:
-                                        <a href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
-                                        {% if show_group %}
-                                            &middot;
-                                            <a href="{{ event.groupcontent.group.get_absolute_url }}">{{ event.groupcontent.group }}</a>
-                                        {% endif %}
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endwith %}
-            {% endwith %}
-            {% endcomment %}
+            {% if upcoming %}
+                <ul class="events">
+                    {% for association in upcoming %}
+                        <li>
+                            <div class="event-preview">
+                                {% time association.container.time %}:
+                                <a href="{{ association.get_absolute_url }}">{{ association.container.title }}</a>
+                                {% if show_group and association.entity.is_group %}
+                                    &middot;
+                                    {% link association.entity %}
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
 
         {% if not hide_buttons %}
