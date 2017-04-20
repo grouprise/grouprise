@@ -71,6 +71,7 @@ class List(base.PermissionMixin, filters_views.FilterView):
     def get_queryset(self):
         return groups.Group.objects.order_by('-score')
 
+
 class Update(base.PermissionMixin, generic.UpdateView):
     permission_required = 'groups.change_group'
     model = models.Group

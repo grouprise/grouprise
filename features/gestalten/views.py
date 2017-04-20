@@ -4,6 +4,7 @@ from core.views import base
 from features.associations import models as associations
 from . import models
 
+
 class List(base.PermissionMixin, generic.ListView):
     permission_required = 'gestalten.view_list'
     queryset = models.Gestalt.objects.filter(public=True)

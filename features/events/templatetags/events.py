@@ -7,8 +7,6 @@ import django.utils.timezone
 from django import template
 from django.core import urlresolvers
 
-from content import models as content
-
 register = template.Library()
 
 
@@ -63,7 +61,7 @@ def calendar(associations, size='preview'):
             content__time__gt=around-datetime.timedelta(weeks=6),
             content__time__lt=around+datetime.timedelta(weeks=6)
             ).order_by('content__time')
-    calendar_event_dict = {date:list(events) for date, events in itertools.groupby(
+    calendar_event_dict = {date: list(events) for date, events in itertools.groupby(
         calendar_associations, key=lambda a: a.container.time.date())}
     calendar = Calendar(calendar_event_dict)
     return {

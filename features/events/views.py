@@ -8,7 +8,6 @@ import core.views
 from utils import views as utils_views
 import features.content.views
 from features.associations import models as associations
-from features.content import models as content
 from features.groups import models as groups
 from features.memberships.rules import is_member_of
 from content import models, views as content_views
