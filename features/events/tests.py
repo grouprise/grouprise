@@ -98,7 +98,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.assertContainsLink(self.client.get('/'), self.get_url('create-event'))
         self.assertNotContainsLink(
                 self.client.get(self.get_url('events')), self.get_url('create-event'))
-        self.assertNotContainsLink(
+        self.assertContainsLink(
                 self.client.get(self.gestalt.get_absolute_url()), self.get_url('create-event'))
         self.assertNotContainsLink(
                 self.client.get(self.group.get_absolute_url()), self.get_url('create-event'))
