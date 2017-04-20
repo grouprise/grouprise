@@ -6,7 +6,7 @@
 {% block heading_title %}<h1 class="content-classification">Gespräche</h1>{% endblock %}
 
 {% block sidebar %}
-    {% sidebar_calendar user %}
+    {% sidebar_calendar view.get_content %}
     {% sidebar_groups user %}
 {% endblock %}
 

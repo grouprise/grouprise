@@ -1,5 +1,5 @@
 {% extends 'content/list.html' %}
-{% load rules thumbnail %}
+{% load events rules thumbnail %}
 
 {% block header %}
     {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
@@ -127,4 +127,5 @@
 {% endblock %}
 
 {% block sidebar %}
+    {% sidebar_calendar paginator.object_list preview_length=3 %}
 {% endblock %}

@@ -20,6 +20,9 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'events/list.html'
     paginate_by = 10
 
+    def get_content(self):
+        return associations.Association.objects.can_view(self.request.user)
+
     def get_queryset(self):
         return super().get_queryset().filter_events().filter_upcoming().can_view(
                 self.request.user).order_by('content__time')

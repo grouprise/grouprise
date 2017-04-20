@@ -34,6 +34,9 @@ class Conversations(core.views.PermissionMixin, generic.ListView):
     template_name = 'conversations/list.html'
     paginate_by = 10
 
+    def get_content(self):
+        return associations.Association.objects.can_view(self.request.user)
+
     def get_queryset(self):
         return super().get_queryset().ordered_conversations(self.request.user)
 

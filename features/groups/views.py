@@ -1,9 +1,12 @@
 from django.views import generic
 from django_filters import views as filters_views
+
 from entities import filters
 from content import models as content_models
 from core import fields, views
 from core.views import base
+from features.associations import models as associations
+from features.groups import models as groups
 from . import forms, models
 
 
@@ -61,9 +64,12 @@ class List(base.PermissionMixin, filters_views.FilterView):
     filterset_class = filters.Group
     paginate_by = 10
 
-    def get_queryset(self):
-        return models.Group.objects.order_by('-score')
+    def get_content(self):
+        return associations.Association.objects.filter(
+                entity_type=groups.Group.get_content_type()).can_view(self.request.user)
 
+    def get_queryset(self):
+        return groups.Group.objects.order_by('-score')
 
 class Update(base.PermissionMixin, generic.UpdateView):
     permission_required = 'groups.change_group'
