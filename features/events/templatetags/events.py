@@ -2,6 +2,7 @@ import calendar as python_calendar
 import datetime
 import itertools
 
+import django.utils.formats
 import django.utils.timezone
 from django import template
 from django.core import urlresolvers
@@ -12,12 +13,10 @@ register = template.Library()
 
 
 class Calendar(python_calendar.LocaleHTMLCalendar):
-    def __init__(self, events, firstweekday=0, locale=None):
+    def __init__(self, event_dict, firstweekday=0, locale=None):
         super().__init__(firstweekday, locale)
         self.today = datetime.date.today()
-        self.events = {}
-        for date, events in itertools.groupby(events, key=lambda e: e.date()):
-            self.events[date] = list(events)
+        self.events = event_dict
 
     def formatday(self, thedate, themonth):
         events = self.events.get(thedate, [])
@@ -54,29 +53,39 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
         return [self.formatweekday(i) for i in self.iterweekdays()]
 
 
-@register.inclusion_tag('events/_calendar.html', takes_context=True)
-def calendar(context, user, events=None, add_to_month=0, size='preview'):
+@register.inclusion_tag('events/_calendar.html')
+def calendar(associations, size='preview'):
     around = django.utils.timezone.now()
-    for i in range(add_to_month):
-        around = around.replace(day=1) + datetime.timedelta(days=32)
-    if events is None:
-        events = content.Event.objects.can_view(user).around(around)
-    c = Calendar(events)
+    # for i in range(add_to_month):
+    #     around = around.replace(day=1) + datetime.timedelta(days=32)
+    event_associations = associations.filter_events()
+    calendar_associations = event_associations.filter(
+            content__time__gt=around-datetime.timedelta(weeks=6),
+            content__time__lt=around+datetime.timedelta(weeks=6)
+            ).order_by('content__time')
+    calendar_event_dict = {date:list(events) for date, events in itertools.groupby(
+        calendar_associations, key=lambda a: a.container.time.date())}
+    calendar = Calendar(calendar_event_dict)
     return {
+            'days': calendar.formatweekheader(),
+            'month': calendar.formatmonthname(around.year, around.month),
+            'weeks': calendar.formatmonthweeks(around.year, around.month),
             'size': size,
-            'days': c.formatweekheader(),
-            'group': context.get('group'),
-            'month': c.formatmonthname(around.year, around.month),
-            'weeks': c.formatmonthweeks(around.year, around.month),
             }
 
 
+@register.filter
+def day_preview(associations):
+    return ', '.join([
+        '{} {}'.format(django.utils.formats.time_format(
+            django.utils.timezone.localtime(a.container.time)), a.container.title)
+        for a in associations])
+
+
 @register.inclusion_tag('events/_sidebar_calendar.html')
-def sidebar_calendar(user=None, events=None, preview_length=5, show_group=True, group=None):
-    if events is None:
-        events = content.Event.objects.can_view(user)
+def sidebar_calendar(associations, group=None, preview_length=5, show_group=True):
     return {
-            'events': events,
+            'associations': associations,
             'group': group,
             'preview_length': preview_length,
             'show_group': show_group,

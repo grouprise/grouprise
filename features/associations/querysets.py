@@ -28,6 +28,9 @@ class Association(models.QuerySet):
                 query |= models.Q(**{author_query_string: user.gestalt})
         return self.filter(query)
 
+    def filter_events(self):
+        return self.filter(content__time__isnull=False)
+
     # TODO: replace 'conversation' by generic container
     def ordered_conversations(self, user):
         qs = self.can_view(user, container='conversation').filter(

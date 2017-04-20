@@ -9,8 +9,9 @@
             </h2>
         </header>
         <div class="box-content">
-            {% calendar user events.around %}
+            {% calendar associations size='preview' %}
 
+            {% comment %}
             {% with preview_length=preview_length|default:3 %}
                 {% with upcoming_events=events|upcoming_events:preview_length %}
                     {% if upcoming_events %}
@@ -31,6 +32,7 @@
                     {% endif %}
                 {% endwith %}
             {% endwith %}
+            {% endcomment %}
         </div>
 
         {% if not hide_buttons %}

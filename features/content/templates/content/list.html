@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% sidebar_calendar user %}
+    {% sidebar_calendar paginator.object_list %}
     {% sidebar_groups user %}
 {% endblock %}
 

@@ -1,4 +1,4 @@
-{% load content %}
+{% load events %}
 <table class="calendar calendar-{{ size }}">
     <caption>{{ month }}</caption>
     <thead class="calendar-daynames">
@@ -15,7 +15,7 @@
                     <td class="{% if day.today %} calendar-day-today {% endif %} {% if not day.in_month %} calendar-day-exclude {% endif %} {% if day.url %} calendar-day-has-events {% endif %}">
                         {% if day.url %}
                             <a href="{{ day.url }}{% if not day.events|length_is:1 and group %}?group={{ group.slug }}{% endif %}"
-                               title="{{ day.events|preview|truncatechars:50 }}">
+                               title="{{ day.events|day_preview|truncatechars:50 }}">
                                 {{ day.day }}
                             </a>
                         {% else %}
