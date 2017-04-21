@@ -9,13 +9,13 @@
 
 <div class="group-header">
     <div class="group-gallery">
-        {% if group.get_head_gallery and can_view_head_gallery and group.get_head_gallery.images.all %}
+        {% if can_view_head_gallery and group.get_head_gallery.container.gallery_images.all %}
             <div class="carousel-container" data-component="carousel">
                 <div class="carousel">
                     <ol class="carousel-slides">
-                        {% for image in group.get_head_gallery.images.all %}
+                        {% for image in group.get_head_gallery.container.gallery_images.all %}
                             <li>
-                                {% thumbnail image.file 'x500' crop='center' as thumb %}
+                                {% thumbnail image.image.file 'x500' crop='center' as thumb %}
                                     <img src="{{ thumb.url }}" alt="{{ group.name }}">
                                 {% endthumbnail %}
                             </li>

@@ -96,5 +96,7 @@ class Group(models.Model):
     # FIXME: to be removed
     # TODO: when removed check api
     def get_head_gallery(self):
-        return self.content.exclude(gallery=None).filter(
-                public=True, groupcontent__pinned=True).first()
+        from features.associations import models as associations
+        return associations.Association.objects.filter(
+                entity_type=self.get_content_type(), entity_id=self.id,
+                content__gallery_images__isnull=False, public=True, pinned=True).first()
