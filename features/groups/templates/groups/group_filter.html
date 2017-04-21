@@ -26,7 +26,7 @@
         </div>
     {% enddismissible %}
     {% crispy filter.form %}
-    <ol class="groups">
+    <ol class="groups" data-component="masonry">
         {% for group in object_list %}
             <li>
                 {% include 'groups/_preview.html' with group=group link=True %}

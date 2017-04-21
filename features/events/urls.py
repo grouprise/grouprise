@@ -20,11 +20,11 @@ urlpatterns = [
 
     url(
         r'^(?P<group_slug>[\w-]+)/events/export$',
-        views.CalendarExport.as_view(),
+        views.GroupCalendarExport.as_view(),
         name='group-events-export'),
 
     url(
         r'^(?P<group_slug>[\w-]+)/events/(?P<domain>public|private).ics$',
-        views.CalendarFeed(),
+        views.GroupCalendarFeed(),
         name='group-events-feed'),
 ]

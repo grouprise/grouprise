@@ -13,4 +13,9 @@ urlpatterns = [
         r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/$',
         entities.views.Gestalt.as_view(),
         name='gestalt'),
+
+    urls.url(
+        r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/events/(?P<domain>public|private).ics$',
+        views.CalendarFeed(),
+        name='gestalt-events-feed'),
 ]

@@ -13,3 +13,4 @@ stadt/ASSET_VERSION
 stadt/CACHE_VERSION
 *.swp
 *.pyc
+*.log

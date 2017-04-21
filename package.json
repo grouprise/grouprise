@@ -1,5 +1,5 @@
 {
-  "version": "1.6.2",
+  "version": "1.7.3",
   "license": "AGPL-3.0",
   "engines": {
     "node": ">=4.6.1"
@@ -19,7 +19,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "babel-root-slash-import": "^1.1.0",
     "css-loader": "^0.28.0",
-    "csswring": ">=3.0",
+    "csswring": "v4.2.3",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-copy": "^1.0.0",
@@ -31,13 +31,14 @@
     "grunt-svgmin": "^4.0.0",
     "lodash-webpack-plugin": "^0.11.0",
     "postcss-banner": ">=1",
-    "standard": "^10.0.1",
+    "standard": "^10.0.2",
     "vue-loader": "^11.3.4",
     "vue-template-compiler": "^2.1.10",
-    "webpack": "^2.2.0",
+    "webpack": "^2.4.1",
     "webpack-bundle-size-analyzer": "^2.5.0"
   },
   "dependencies": {
+    "animejs": "^2.0.2",
     "autosize": "^3.0.20",
     "axios": "^0.16.1",
     "babel-runtime": "^6.20.0",
@@ -51,11 +52,13 @@
     "emoji-regex": "^6.0.0",
     "es6-promise": "^4.1.0",
     "eventemitter3": "^2.0.3",
-    "flatpickr": "^2.4.9",
+    "flatpickr": "^2.5.7",
     "font-awesome": "^4.5.0",
     "get-input-selection": "^1.1.4",
+    "imagesloaded": "^4.1.1",
     "lodash": "^4.17.4",
     "luett": "^2.2.0",
+    "masonry-layout": "^4.1.1",
     "moment": "^2.13.0",
     "object-assign-shim": "^1.0.0",
     "photoswipe": "^4.1.1",

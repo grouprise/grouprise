@@ -5,7 +5,7 @@
         {% if group.get_head_gallery and group.get_head_gallery.images.first %}
             <div class="group-preview-image">
                 {% comment %}WHEN CHANGING GROUP COVER IMAGE SIZE CHANGE IN API TOO{% endcomment %}
-                {% thumbnail group.get_head_gallery.images.first.file '360x120' crop='center' as thumb %}
+                {% thumbnail group.get_head_gallery.images.first.file '366x120' crop='center' as thumb %}
                     <img src="{{ thumb.url }}" />
                 {% endthumbnail %}
             </div>

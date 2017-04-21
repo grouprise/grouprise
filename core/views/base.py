@@ -1,7 +1,8 @@
 from django.core import urlresolvers
 from django.utils import six
-from django.views import generic as django
-from django.views.generic import base as django_base
+from django.views import generic as django_generic_views
+from django.views.generic import base as django_generic_views_base
+
 from rules.contrib import views as rules
 
 
@@ -11,7 +12,7 @@ class PermissionMixin(rules.PermissionRequiredMixin):
         return self.request.user.is_authenticated()
 
 
-class StadtMixin(django_base.ContextMixin):
+class StadtMixin(django_generic_views_base.ContextMixin):
     """
     Insert Stadtgestalten specific attributes into context
     """
@@ -57,7 +58,7 @@ class StadtMixin(django_base.ContextMixin):
         return getattr(self, 'title', None)
 
 
-class View(PermissionMixin, StadtMixin, django.View):
+class View(PermissionMixin, StadtMixin, django_generic_views.View):
     """
     Stadtgestalten base view
     """

@@ -3,7 +3,7 @@
 <div class="gallery-container" data-component="gallery">
     <input type="hidden" name="content_id" value="{{ content.id }}" />
     <header class="gallery-header">
-        <div class="gallery-header-description {% if content.text|length > 250 %}gallery-header-description-large{% endif %}">
+        <div class="content-user gallery-header-description {% if content.text|length > 250 %}gallery-header-description-large{% endif %}" data-component="user-content">
             {% markdown content.text heading_baselevel=2 %}
         </div>
         {% has_perm 'content.create_image' user content as can_create_image %}
@@ -14,10 +14,10 @@
         {% endif %}
     </header>
 
-    <ul class="gallery">
+    <ul class="gallery" data-component="masonry">
         {% for image in content.images.all %}
             {% thumbnail image.file '250' format='PNG' as thumb %}
-                <li style="width: {{ thumb.width }}px; height: {{ thumb.height }}px">
+                <li>
                     <a href="{{ image.file.url }}" class="gallery-link" data-size="{{ image.file.width }}x{{ image.file.height }}">
                         <img src="{{ thumb.url }}" class="gallery-image-preview">
                     </a>
