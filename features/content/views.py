@@ -45,7 +45,9 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.time is None:
+        if self.object.container.gallery_images:
+            name = 'galleries/detail.html'
+        elif self.object.container.time is None:
             name = 'articles/detail.html'
         else:
             name = 'events/detail.html'

@@ -28,7 +28,7 @@
         <div class="content-meta-extra">
             {% time association.container.versions.first.time_created %} ·
             <i class="sg sg-comments" title="Kommentare"></i> {{ association.container.contributions.count }}
-            {#{% include_features '_content_meta_stats.html' %}#}
+            {% block content_meta_extra %}{% endblock %}
         </div>
     </div>
 </div>

@@ -24,7 +24,7 @@
 {% block content %}
     <article class="content">
         <header class="content-teaser">
-            {% include 'content/_info.html' %}
+            {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
             <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
                 {% block content_type %}
                     <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
