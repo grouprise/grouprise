@@ -1,5 +1,7 @@
 {% extends 'content/detail.html' %}
 
+{% load rules thumbnail %}
+
 {% block menu %}{% menu 'gallery' association.entity %}{% endblock %}
 
 {% block content_type %}
@@ -8,3 +10,32 @@
 {% endblock %}
 
 {% block content_meta %}{% include 'galleries/_info.html' %}{% endblock %}
+
+{% block content_text %}
+    <div class="gallery-container" data-component="gallery">
+        {#<input type="hidden" name="content_id" value="{{ content.id }}" />#}
+        <header class="gallery-header">
+            <div class="content-user gallery-header-description {% if association.container.versions.last.text|length > 250 %}gallery-header-description-large{% endif %}" data-component="user-content">
+                {% markdown association.container.versions.last.text heading_baselevel=2 %}
+            </div>
+            {% has_perm 'content.change' user association as can_create_image %}
+            {% if can_create_image %}
+                <div class="btn-toolbar gallery-header-actions">
+                    <a href="{% url 'image-create' association.pk %}" class="btn btn-default btn-sm" data-purpose="gallery-add">Bild hinzufügen</a>
+                </div>
+            {% endif %}
+        </header>
+
+        <ul class="gallery" data-component="masonry">
+            {% for image in association.container.gallery_images.all %}
+                {% thumbnail image.image.file '250' format='PNG' as thumb %}
+                    <li>
+                        <a href="{{ image.image.file.url }}" class="gallery-link" data-size="{{ image.image.file.width }}x{{ image.image.file.height }}">
+                            <img src="{{ thumb.url }}" class="gallery-image-preview">
+                        </a>
+                    </li>
+                {% endthumbnail %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

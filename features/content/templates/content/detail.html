@@ -37,7 +37,9 @@
                 {{ association.container.title }}
             </h1>
             {% block user_content_header %}{% endblock %}
-            {% markdown association.container.versions.last.text heading_baselevel=2 %}
+            {% block content_text %}
+                {% markdown association.container.versions.last.text heading_baselevel=2 %}
+            {% endblock %}
         </div>
         
         <div class="clearfix"></div>
