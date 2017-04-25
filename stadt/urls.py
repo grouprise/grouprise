@@ -18,6 +18,7 @@ urlpatterns = [
 
     urls.url(r'^', urls.include('features.articles.urls')),
     urls.url(r'^', urls.include('features.events.urls')),
+    urls.url(r'^', urls.include('features.galleries.urls')),
     urls.url(r'^', urls.include('features.stadt.urls')),
 
     # matches /*/, should be included late, groups before gestalten

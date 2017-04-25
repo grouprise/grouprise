@@ -13,7 +13,9 @@
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
-            {% include 'core/_field.html' with field=form.text %}
+            {% block form_text %}
+                {% include 'core/_field.html' with field=form.text %}
+            {% endblock %}
         </div>
         {% if form.time %}
             <div class="section section-event section-event-time">

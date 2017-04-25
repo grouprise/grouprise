@@ -22,7 +22,7 @@ class Create(forms.ModelForm):
     group = forms.ModelChoiceField(
             label='Veröffentlichen als', queryset=groups.Group.objects.none(), required=False,
             widget=core.forms.GroupSelect)
-    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
+    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea)
     title = forms.CharField(label='Titel')
 
     place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
