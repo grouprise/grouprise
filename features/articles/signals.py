@@ -6,9 +6,7 @@ from entities import models as entities
 
 def is_article(association):
     try:
-        return (
-                association.content.article is not None
-                and association.content.public)
+        return association.content.article is not None
     except content.Article.DoesNotExist:
         return False
 
