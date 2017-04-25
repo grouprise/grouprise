@@ -77,7 +77,7 @@ class Create(base.PermissionMixin, generic.CreateView):
             self.entity = self.request.user.gestalt
         else:
             self.entity = None
-        return associations.Association(entity=self.entity)
+        return self.entity
 
 
 class Update(base.PermissionMixin, generic.UpdateView):

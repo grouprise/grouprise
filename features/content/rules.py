@@ -1,4 +1,5 @@
 from features.associations import models as associations_models, predicates as associations_rules
+from features.memberships import rules as memberships
 import rules
 
 
@@ -26,7 +27,7 @@ rules.add_perm(
 
 rules.add_perm(
         'content.group_create',
-        rules.is_authenticated & associations_rules.is_member)
+        rules.is_authenticated & memberships.is_member_of)
 
 rules.add_perm(
         'content.change',

@@ -2,37 +2,38 @@
 
 {% cache cache_timeout group-header user.gestalt.id group.id %}
 
-{% has_perm 'content.view_content' user group.get_head_gallery as can_view_head_gallery %}
 {% has_perm 'groups.change_group' user group as can_edit %}
-{% has_perm 'entities.create_group_content' user group as can_create_content %}
+{% has_perm 'content.group_create' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
 <div class="group-header">
     <div class="group-gallery">
-        {% if can_view_head_gallery and group.get_head_gallery.container.gallery_images.all %}
-            <div class="carousel-container" data-component="carousel">
-                <div class="carousel">
-                    <ol class="carousel-slides">
-                        {% for image in group.get_head_gallery.container.gallery_images.all %}
-                            <li>
-                                {% thumbnail image.image.file 'x500' crop='center' as thumb %}
-                                    <img src="{{ thumb.url }}" alt="{{ group.name }}">
-                                {% endthumbnail %}
-                            </li>
-                        {% endfor %}
-                    </ol>
+        {% with images=group.get_head_gallery.container.gallery_images.all %}
+            {% if images %}
+                <div class="carousel-container" data-component="carousel">
+                    <div class="carousel">
+                        <ol class="carousel-slides">
+                            {% for image in images %}
+                                <li>
+                                    {% thumbnail image.image.file 'x500' crop='center' as thumb %}
+                                        <img src="{{ thumb.url }}" alt="{{ group.name }}">
+                                    {% endthumbnail %}
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            <div class="disclaimer">
-                <i class="fa fa-5x fa-image"></i><br />
-                Diese Gruppe war zu faul eine Introgalerie anzulegen.
-            </div>
-        {% endif %}
+            {% else %}
+                <div class="disclaimer">
+                    <i class="fa fa-5x fa-image"></i><br />
+                    Diese Gruppe war zu faul eine Introgalerie anzulegen.
+                </div>
+            {% endif %}
+        {% endwith %}
 
         {% if can_create_content %}
             <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
-                {% if group.get_head_gallery and can_view_head_gallery %}
+                {% if group.get_head_gallery %}
                     <a class="btn btn-backdrop btn-ts" href="{{ group.get_head_gallery.get_absolute_url }}" title="Introgalerie anzeigen">
                         <i class="fa fa-2x fa-camera"></i>
                     </a>
