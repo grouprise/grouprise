@@ -23,15 +23,7 @@
                 <h2 class="content-classification">Intro</h2>
                 {% include "macros/decoration.html" with icon="sg-pin" %}
             </div>
-
-
-            <ol class="content-preview-list">
-                {% for content in intro_content %}
-                    <li>
-                        {% include 'content/_preview.html' with exclude_header=True %}
-                    </li>
-                {% endfor %}
-            </ol>
+            {% include 'content/_list.html' with associations=intro_content hide_meta=True %}
         </div>
     {% endif %}
 

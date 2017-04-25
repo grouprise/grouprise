@@ -126,8 +126,9 @@ class Group(utils_views.List):
         return None
 
     def get_intro_content(self):
-        pinned_content = self.get_group_content().filter(
-                pinned=True).order_by('content__versions__time_created')
+        pinned_content = self.get_group_content().filter(pinned=True).annotate(
+                time_created=django.db.models.Min('content__versions__time_created')
+                ).order_by('time_created')
         try:
             return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
         except AttributeError:

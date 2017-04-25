@@ -1,5 +1,5 @@
 <article class="content-preview">
-    {% if not exclude_header %}
+    {% if not hide_meta %}
     <header class="content-preview-header">
         {% include 'content/_info.html' %}
         <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">

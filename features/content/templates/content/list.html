@@ -22,17 +22,7 @@
 
 {% block content %}
     <div class="content-list">
-        <ol class="content-preview-list">
-            {% for association in association_list %}
-                <li>
-                    {% if association.container.time %}
-                        {% include 'events/_preview.html' %}
-                    {% else %}
-                        {% include 'articles/_preview.html' %}
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ol>
+        {% include 'content/_list.html' with associations=object_list %}
         {% pagination 'Weitere Beiträge' %}
     </div>
 {% endblock %}

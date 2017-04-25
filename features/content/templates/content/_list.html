@@ -1,0 +1,11 @@
+<ol class="content-preview-list">
+    {% for association in associations %}
+        <li>
+            {% if association.container.time %}
+                {% include 'events/_preview.html' %}
+            {% else %}
+                {% include 'articles/_preview.html' %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>
