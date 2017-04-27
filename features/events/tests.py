@@ -1,8 +1,11 @@
-import core.tests
+import re
+
 from content import models as content
+import core.tests
 from core import tests
 from features.associations import models as associations
 from features.contributions import models as contributions
+import features.gestalten.tests
 from features.memberships import test_mixins as memberships
 from features.subscriptions import test_mixins as subscriptions
 
@@ -218,3 +221,59 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         self.assertRedirect(
                 url=self.get_event_url(), method='post', data={'text': 'Comment'})
         self.assertExists(contributions.Contribution, text__text='Comment')
+
+
+class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
+                                features.gestalten.tests.OtherGestaltMixin,
+                                tests.Test):
+
+    def test_access_private_calendar(self):
+        """ test the (in)accessibility of a private calendar of a group for a logged in member """
+        data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
+        private_url_regex = re.compile(r'>(?P<url>[^<]+/private.ics[^<]+)<')
+        match = private_url_regex.search(data.content.decode('utf8'))
+        self.assertTrue(match)
+        private_url = match.groupdict()['url']
+        self.assertTrue("token" in private_url)
+        # verify access via the private URL
+        data = self.client.get(private_url)
+        self.assertTrue('BEGIN:VCALENDAR' in data.content.decode('utf8'))
+        # verify rejected access with a wrong private URL
+        data = self.client.get(private_url + 'foo')
+        self.assertEqual(data.status_code, 401)
+        # verify rejected access with missing query arguments
+        url_without_token = private_url.split("?")[0]
+        self.assertNotEqual(url_without_token, private_url)
+        data = self.client.get(url_without_token)
+        self.assertEqual(data.status_code, 401)
+        # verify rejected access with wrong username within token
+        # assemble a new URL by replacing the username within the token
+        wrong_user_url = '{}?{}:{}'.format(private_url.split('?')[0],
+                                           self.other_gestalt.user.username,
+                                           private_url.split(':')[-1])
+        self.assertNotEqual(wrong_user_url, private_url)
+        data = self.client.get(wrong_user_url)
+        self.assertEqual(data.status_code, 401)
+
+    def test_access_public_calendar(self):
+        """ test the accessibility of a public calendar of a group for a logged in member """
+        data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
+        public_url_regex = re.compile(r'>(?P<url>[^<]+/public.ics[^<]*)<')
+        match = public_url_regex.search(data.content.decode('utf8'))
+        self.assertTrue(match)
+        public_url = match.groupdict()['url']
+        data = self.client.get(public_url)
+        self.assertTrue('BEGIN:VCALENDAR' in data.content.decode('utf8'))
+
+
+class GroupCalendarExportNonMember(memberships.MemberMixin,
+                                   features.gestalten.tests.OtherAuthenticatedMixin,
+                                   tests.Test):
+
+    def test_rejected_access_private_calendar(self):
+        """ test the inaccessibility of a private calendar for a logged in non-member """
+        data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
+        private_url_regex = re.compile(r'>(?P<url>[^<]+/private.ics[^<]*)<')
+        match = private_url_regex.search(data.content.decode('utf8'))
+        # the private URL should not be displayed
+        self.assertIsNone(match)
