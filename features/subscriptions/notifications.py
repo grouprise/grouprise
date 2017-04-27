@@ -13,22 +13,6 @@ def update_recipients(recipients, associations):
             subscription.update_gestalten(recipients, association)
 
 
-class Commented(associations.Commented):
-    def get_recipients(self):
-        recipients = super().get_recipients()
-        try:
-            update_recipients(
-                    recipients, [self.comment.content.groupcontent])
-        except AttributeError:
-            pass
-        if self.comment.content.public:
-            subscriptions = models.Subscription.objects.filter(
-                    subscribed_to=self.comment.content)
-            recipients.update(gestalten.Gestalt.objects.filter(
-                    subscription__in=subscriptions))
-        return recipients
-
-
 class ContentAssociated(associations.ContentAssociated):
     def get_recipients(self):
         recipients = super().get_recipients()

@@ -4,6 +4,22 @@ from django import dispatch
 from django.conf import settings
 import logging
 
+
+# def is_conversation(contribution):
+#     return contribution.container_type == contenttypes.ContentType.objects.get_for_model(
+#             models.Conversation)
+
+
+# connections = [
+#     signals.connect_notification(
+#         signals.model_created,
+#         notifications.MessageCreated,
+#         instance='contribution',
+#         predicate=is_conversation,
+#         senders=[contributions.Contribution],
+#         ),
+# ]
+
 logger = logging.getLogger(__name__)
 
 
