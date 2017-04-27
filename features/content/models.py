@@ -40,6 +40,12 @@ class Content(models.Model):
         return django.core.urlresolvers.reverse(
                 'content', args=[association.entity.slug, association.slug])
 
+    def is_event(self):
+        return self.time is not None
+
+    def is_gallery(self):
+        return self.gallery_images.count() > 0
+
 
 class Version(models.Model):
     content = models.ForeignKey('Content', related_name='versions')

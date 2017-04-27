@@ -8,6 +8,7 @@ import core.views
 from core.views import base
 from features.associations import models as associations
 from features.contributions import views as contributions
+from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 from . import forms, models
@@ -45,12 +46,12 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.gallery_images:
+        if self.object.container.is_gallery():
             name = 'galleries/detail.html'
-        elif self.object.container.time is None:
-            name = 'articles/detail.html'
-        else:
+        elif self.object.container.is_event():
             name = 'events/detail.html'
+        else:
+            name = 'articles/detail.html'
         return [name]
 
 
@@ -87,6 +88,13 @@ class Update(base.PermissionMixin, generic.UpdateView):
     model = associations.Association
     form_class = forms.Update
 
+    def get_form_class(self):
+        if self.object.container.is_gallery():
+            form_class = galleries.Update
+        else:
+            form_class = self.form_class
+        return form_class
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['author'] = self.request.user.gestalt
@@ -115,8 +123,10 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.time is None:
-            name = 'articles/update.html'
-        else:
+        if self.object.container.is_gallery():
+            name = 'galleries/update.html'
+        elif self.object.container.is_event():
             name = 'events/update.html'
+        else:
+            name = 'articles/update.html'
         return [name]
