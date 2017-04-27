@@ -32,10 +32,11 @@ class Conversation(models.Model):
         return gestalten.Gestalt.objects.filter(contributions__conversation=self).distinct()
 
     def get_gestalten(self):
-        gestalt_associations = self.associations.filter(
-                entity_type=contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt))
-        return gestalten.Gestalt.objects.filter(
-                pk__in=gestalt_associations.values_list('entity_id', flat=True))
+        return gestalten.Gestalt.objects.filter(associations__conversation=self)
+        # gestalt_associations = self.associations.filter(
+        #         entity_type=contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt))
+        # return gestalten.Gestalt.objects.filter(
+        #         pk__in=gestalt_associations.values_list('entity_id', flat=True))
 
     def get_groups(self):
         group_associations = self.associations.filter(

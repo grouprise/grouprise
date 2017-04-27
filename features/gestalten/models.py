@@ -25,6 +25,10 @@ class Gestalt(models.Model):
     score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
 
+    associations = django.contrib.contenttypes.fields.GenericRelation(
+            'associations.Association', content_type_field='entity_type',
+            object_id_field='entity_id', related_query_name='gestalt')
+
     @property
     def slug(self):
         return self.user.username
