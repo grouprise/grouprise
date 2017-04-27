@@ -1,4 +1,4 @@
 Beitrag mit Kommentaren online lesen und kommentieren:
-{% url 'content' text.container.associations.first.entity.slug text.container.associations.first.slug as path %}{{ path|full_url }}#{% ref contribution %}
+{% url 'content' contribution.container.associations.first.entity.slug contribution.container.associations.first.slug as path %}{{ path|full_url }}#{% ref contribution %}
 
 {{ contribution.contribution.text }}
