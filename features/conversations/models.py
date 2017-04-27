@@ -21,6 +21,10 @@ class Conversation(models.Model):
             object_id_field='container_id',
             related_query_name='conversation')
 
+    @classmethod
+    def get_content_type(cls):
+        return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)
+
     def __str__(self):
         return self.subject
 

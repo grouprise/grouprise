@@ -3,6 +3,7 @@ import django.core.urlresolvers
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from features.gestalten import models as gestalten
+from features.groups import models as groups
 
 
 class Content(models.Model):
@@ -35,6 +36,12 @@ class Content(models.Model):
 
     def get_authors(self):
         return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
+
+    def get_gestalten(self):
+        return gestalten.Gestalt.objects.none()
+
+    def get_groups(self):
+        return groups.Group.objects.none()
 
     def get_url_for(self, association):
         return django.core.urlresolvers.reverse(
