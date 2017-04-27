@@ -38,9 +38,9 @@
                         <i class="fa fa-2x fa-camera"></i>
                     </a>
                 {% else %}
-                    <div class="group-intro-add" title="Introgalerie anlegen">
-                        {% crispy intro_gallery_form %}
-                    </div>
+                <a class="btn btn-backdrop btn-ts" href="{% url 'create-group-gallery' group.slug %}?pinned=1&amp;public=1&amp;text=Introgalerie%20der%20Gruppe%20%40{{ group.slug|urlencode }}&amp;title={{ group|urlencode }}" title="Introgalerie anlegen">
+                        <i class="fa fa-2x fa-camera"></i>
+                    </a>
                 {% endif %}
             </div>
         {% endif %}
