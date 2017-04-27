@@ -75,7 +75,7 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
 class GroupCalendarExport(CalendarExport):
     model = features.groups.models.Group
     slug_url_kwarg = 'group_slug'
-    permission = 'entities.view_group'
+    permission_required = 'entities.view_group'
     title = 'Exportmöglichkeiten für Gruppenkalender'
     parent = 'group'
     feed_route = 'group-events-feed'
