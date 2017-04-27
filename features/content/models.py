@@ -53,6 +53,10 @@ class Content(models.Model):
     def is_gallery(self):
         return self.gallery_images.count() > 0
 
+    @property
+    def subject(self):
+        return self.title
+
 
 class Version(models.Model):
     content = models.ForeignKey('Content', related_name='versions')

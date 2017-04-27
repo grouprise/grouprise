@@ -5,7 +5,6 @@ import django.db.models.signals
 import django_mailbox.signals
 from django.dispatch import receiver
 
-from features.conversations import models as conversations
 from . import models, notifications
 
 logger = logging.getLogger(__name__)
@@ -13,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 @receiver(django.db.models.signals.post_save, sender=models.Contribution)
 def send_contribution_notification(sender, instance, created, **kwargs):
-    if created and instance.container_type == conversations.Conversation.get_content_type():
-        notifications.Created(contribution=instance).send()
+    if created:
+        notifications.Created(instance).send()
 
 
 @receiver(django_mailbox.signals.message_received)
