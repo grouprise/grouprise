@@ -7,6 +7,8 @@ from features.groups import models as groups
 
 
 class Conversation(models.Model):
+    is_conversation = True
+
     subject = models.CharField(max_length=255)
 
     associations = contenttypes.GenericRelation(

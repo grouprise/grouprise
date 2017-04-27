@@ -1,4 +1,0 @@
-Du kannst diese Nachricht online lesen und beantworten:
-{% url 'conversation' text.container.associations.first.pk as path %}{{ path|full_url }}#{% ref text %}
-
-{{ text.text }}

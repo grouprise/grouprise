@@ -8,10 +8,10 @@ from features.gestalten import models as gestalten
 from . import models
 
 
-class Created(notifications.Notification):
-    def __init__(self, contribution):
-        super().__init__()
-        self.contribution = contribution
+class Contributed(notifications.Notification):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.contribution = kwargs['contribution']
 
     def get_message_ids(self):
         my_id = self.contribution.get_unique_id()
@@ -64,3 +64,10 @@ class Created(notifications.Notification):
                 'slug', flat=True)
         groups = '[{}] '.format(','.join(slugs)) if slugs else ''
         return prefix + groups + self.contribution.container.subject
+
+    def get_template_name(self):
+        if self.contribution.container.is_conversation:
+            name = 'conversations/contributed.txt'
+        else:
+            name = 'content/contributed.txt'
+        return name

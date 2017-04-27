@@ -9,6 +9,8 @@ from features.groups import models as groups
 
 
 class Content(models.Model):
+    is_conversation = False
+
     title = models.CharField(max_length=255)
 
     place = models.CharField(blank=True, max_length=255)
