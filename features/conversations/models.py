@@ -31,18 +31,11 @@ class Conversation(models.Model):
     def get_authors(self):
         return gestalten.Gestalt.objects.filter(contributions__conversation=self).distinct()
 
-    def get_gestalten(self):
+    def get_associated_gestalten(self):
         return gestalten.Gestalt.objects.filter(associations__conversation=self)
-        # gestalt_associations = self.associations.filter(
-        #         entity_type=contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt))
-        # return gestalten.Gestalt.objects.filter(
-        #         pk__in=gestalt_associations.values_list('entity_id', flat=True))
 
-    def get_groups(self):
-        group_associations = self.associations.filter(
-                entity_type=contenttypes.ContentType.objects.get_for_model(groups.Group))
-        return groups.Group.objects.filter(
-                pk__in=group_associations.values_list('entity_id', flat=True))
+    def get_associated_groups(self):
+        return groups.Group.objects.filter(associations__conversation=self)
 
     def get_url_for(self, association):
         return django.core.urlresolvers.reverse('conversation', args=[association.pk])

@@ -58,6 +58,10 @@ class Group(models.Model):
             object_id_field='tagged_id',
             related_query_name='group')
 
+    associations = django.contrib.contenttypes.fields.GenericRelation(
+            'associations.Association', content_type_field='entity_type',
+            object_id_field='entity_id', related_query_name='group')
+
     @classmethod
     def get_content_type(cls):
         return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)

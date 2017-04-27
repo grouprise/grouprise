@@ -28,8 +28,8 @@ class Created(notifications.Notification):
     def get_recipients(self):
         # find set of recipients
         recipients = set(self.contribution.container.get_authors())
-        recipients.update(set(self.contribution.container.get_gestalten()))
-        for group in self.contribution.container.get_groups():
+        recipients.update(set(self.contribution.container.get_associated_gestalten()))
+        for group in self.contribution.container.get_associated_groups():
             recipients.update(set(gestalten.Gestalt.objects.filter(
                 memberships__group=group)))
         # assign a reply key to each recipient
@@ -57,6 +57,7 @@ class Created(notifications.Notification):
         prefix = 'Re: '
         if self.contribution.container.contributions.first() == self.contribution:
             prefix = ''
-        slugs = self.contribution.container.get_groups().values_list('slug', flat=True)
+        slugs = self.contribution.container.get_associated_groups().values_list(
+                'slug', flat=True)
         groups = '[{}] '.format(','.join(slugs)) if slugs else ''
         return prefix + groups + self.contribution.container.subject
