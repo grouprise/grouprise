@@ -1,42 +1,29 @@
 import core.tests
-from content import models as content
-from core import tests
 from features.associations import models as associations
 from features.contributions import models as contributions
+from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
-from features.subscriptions import test_mixins as subscriptions
 
 
-class ArticleMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.content = content.Article.objects.create(
-                author=cls.gestalt, public=True, title='Test Article')
+class ArticleMixin(gestalten.AuthenticatedMixin):
+    def create_article(self, **kwargs):
+        kwargs.update({'title': 'Test', 'text': 'Test'})
+        self.client.post(self.get_url('create-article'), kwargs)
+        return associations.Association.objects.get(content__title='Test')
+
+    def get_content_url(self):
+        return self.get_url('content', (self.association.entity.slug, self.association.slug))
+
+    def setUp(self):
+        super().setUp()
+        self.association = self.create_article()
 
 
-class OtherMember(
-        subscriptions.NotificationToOtherGestalt,
-        subscriptions.SenderNameIsGestalt,
-        ArticleMixin, memberships.OtherMemberMixin, memberships.MemberMixin,
-        tests.Test):
-    """
-    If a group member creates an article
-    * a notification to other members should be sent.
-    * the sender name should be mentioned.
-    """
-
-
-class OtherSubscriber(
-        subscriptions.NotificationToOtherGestalt,
-        subscriptions.SenderIsAnonymous,
-        ArticleMixin, subscriptions.OtherGroupSubscriberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates an article
-    * a notification to subscribers should be sent.
-    * the sender name should not be mentioned.
-    """
+class GroupArticleMixin(ArticleMixin):
+    def create_article(self, **kwargs):
+        kwargs.update({'title': 'Group Article', 'text': 'Test'})
+        self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
+        return associations.Association.objects.get(content__title='Group Article')
 
 
 class Guest(memberships.MemberMixin, core.tests.Test):
@@ -179,3 +166,29 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         self.assertRedirect(
                 url=self.get_article_url(), method='post', data={'text': 'Comment'})
         self.assertExists(contributions.Contribution, text__text='Comment')
+
+
+class GestaltAndArticle(ArticleMixin, core.tests.Test):
+    def create_comment(self, **kwargs):
+        kwargs.update({'text': 'Comment'})
+        return self.client.post(self.get_content_url(), kwargs)
+
+    def test_comment_self_notified(self):
+        self.create_comment()
+        self.assertNotificationsSent(1)
+        self.assertNotificationRecipient(self.gestalt)
+        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains('Comment')
+
+
+class TwoGestaltenAndGroupArticle(
+        GroupArticleMixin, memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
+        core.tests.Test):
+    def create_comment(self, **kwargs):
+        kwargs.update({'text': 'Comment'})
+        return self.client.post(self.get_content_url(), kwargs)
+
+    def test_comment_both_notified(self):
+        self.create_comment()
+        self.assertNotificationsSent(2)
+        self.assertNotificationRecipient(self.other_gestalt)

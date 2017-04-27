@@ -65,7 +65,11 @@ class Test(test.TestCase):
         self.assertRedirects(response, url)
 
     def assertNotificationRecipient(self, gestalt):
-        self.assertTrue(self.get_latest_notification().to[0].find(gestalt.user.email))
+        found = False
+        for notification in mail.outbox:
+            if notification.to[0].find(gestalt.user.email):
+                found = True
+        self.assertTrue(found)
 
     def assertNotificationSenderAnonymous(self):
         self.assertTrue(self.get_latest_notification().from_email.startswith(
@@ -77,11 +81,17 @@ class Test(test.TestCase):
     def assertNotificationHeaderContent(self, header, content):
         self.assertTrue(content in self.get_latest_notification().extra_headers[header])
 
+    def assertNotificationContains(self, text):
+        self.assertTrue(self.get_latest_notification().body.find(text) >= 0)
+
     def assertNoNotificationSent(self):
         self.assertEqual(len(mail.outbox), 0)
 
     def assertNotificationSent(self):
         self.assertTrue(len(mail.outbox) > 0)
+
+    def assertNotificationsSent(self, num):
+        self.assertTrue(len(mail.outbox) == num)
 
     def assertRequest(self, methods=[HTTP_GET], **kwargs):
         for method in methods:
