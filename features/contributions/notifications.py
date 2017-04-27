@@ -55,7 +55,8 @@ class Created(notifications.Notification):
 
     def get_subject(self):
         prefix = 'Re: '
-        if self.contribution.container.contributions.first() == self.contribution:
+        if (self.contribution.container_type == conversations.Conversation.get_content_type()
+                and self.contribution.container.contributions.first() == self.contribution):
             prefix = ''
         slugs = self.contribution.container.get_associated_groups().values_list(
                 'slug', flat=True)
