@@ -1,9 +1,11 @@
-from . import models
-from core import notifications
 from django import db
 from django.conf import settings
 from django.utils import crypto
+
+from core import notifications
+from features.conversations import models as conversations
 from features.gestalten import models as gestalten
+from . import models
 
 
 class Created(notifications.Notification):
