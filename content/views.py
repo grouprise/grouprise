@@ -1,4 +1,4 @@
-from . import creation, forms, models
+from . import forms, models
 from django import shortcuts
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import PermissionDenied
@@ -29,7 +29,6 @@ class GalleryList(BaseContentList):
 
 
 class Content(utils_views.PageMixin, generic.DetailView):
-    inline_view = (creation.CommentCreate, 'comment_form')
     model = models.Content
     permission = 'content.view_content'
 

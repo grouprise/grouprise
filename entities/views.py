@@ -6,7 +6,7 @@ from django.views import generic
 from crispy_forms import layout
 
 from utils import forms as utils_forms, views as utils_views
-from content import creation as content_creation, models as content_models
+from content import models as content_models
 from features.associations import models as associations
 from features.content import models as content2
 from features.gestalten import models as gestalten
@@ -78,7 +78,6 @@ class GestaltBackgroundUpdate(utils_views.ActionMixin, generic.UpdateView):
 
 
 class Group(utils_views.List):
-    inline_view = (content_creation.Gallery, 'intro_gallery_form')
     menu = 'group'
     permission_required = 'entities.view_group'
     template_name = 'entities/group_detail.html'
