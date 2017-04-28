@@ -66,7 +66,7 @@ class List(base.PermissionMixin, filters_views.FilterView):
 
     def get_content(self):
         return associations.Association.objects.filter(
-                entity_type=groups.Group.get_content_type()).can_view(self.request.user)
+                entity_type=groups.Group.content_type).can_view(self.request.user)
 
     def get_queryset(self):
         return groups.Group.objects.order_by('-score')

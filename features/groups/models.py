@@ -1,11 +1,12 @@
-from core import colors, models as core
+import core.models
+from core import colors
 import django.contrib.contenttypes.models
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models
 
 
-class Group(models.Model):
+class Group(core.models.Model):
     is_group = True
 
     date_created = models.DateField(
@@ -19,7 +20,7 @@ class Group(models.Model):
             'Name',
             max_length=255)
     score = models.IntegerField(default=0)
-    slug = core.AutoSlugField(
+    slug = core.models.AutoSlugField(
             'Adresse der Gruppenseite',
             populate_from='name',
             reserve=['gestalt', 'stadt'],
@@ -67,10 +68,6 @@ class Group(models.Model):
             'gestalten.Gestalt', through='memberships.Membership',
             through_fields=('group', 'member'))
 
-    @classmethod
-    def get_content_type(cls):
-        return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)
-
     def __str__(self):
         return self.name
 
@@ -107,5 +104,5 @@ class Group(models.Model):
     def get_head_gallery(self):
         from features.associations import models as associations
         return associations.Association.objects.filter(
-                entity_type=self.get_content_type(), entity_id=self.id,
+                entity_type=self.content_type, entity_id=self.id,
                 content__gallery_images__isnull=False, public=True, pinned=True).first()

@@ -1,6 +1,5 @@
 from core import notifications
 from features.conversations import models as conversations
-from features.gestalten import models as gestalten
 
 
 class Contributed(notifications.Notification):
@@ -24,8 +23,10 @@ class Contributed(notifications.Notification):
         recipients = set(self.object.container.get_authors())
         recipients.update(set(self.object.container.get_associated_gestalten()))
         for group in self.object.container.get_associated_groups():
-            recipients.update(set(gestalten.Gestalt.objects.filter(
-                memberships__group=group)))
+            recipients.update(set(group.members.exclude(
+                subscriptions__content_type=group.content_type,
+                subscriptions__object_id=group.id,
+                subscriptions__unsubscribe=True)))
         return recipients
 
     def get_sender(self):
