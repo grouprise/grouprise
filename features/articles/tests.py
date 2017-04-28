@@ -171,6 +171,25 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         self.assertExists(contributions.Contribution, text__text='Comment')
 
 
+class TwoGestalten(
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+    def create_article(self, **kwargs):
+        kwargs.update({'title': 'Group Article', 'text': 'Test'})
+        self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
+        self.association = associations.Association.objects.get(content__title='Group Article')
+
+    def get_content_url(self):
+        return self.get_url('content', (self.association.entity.slug, self.association.slug))
+
+    def test_article_notified(self):
+        self.create_article()
+        self.assertNotificationsSent(2)
+        self.assertNotificationRecipient(self.gestalt)
+        self.assertNotificationRecipient(self.other_gestalt)
+        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains('Test')
+
+
 class GestaltAndArticle(ArticleMixin, core.tests.Test):
     def create_comment(self, **kwargs):
         kwargs.update({'text': 'Comment'})

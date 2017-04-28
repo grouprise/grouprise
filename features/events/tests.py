@@ -10,69 +10,6 @@ from features.memberships import test_mixins as memberships
 from features.subscriptions import test_mixins as subscriptions
 
 
-class InternalEventMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.content = content.Event.objects.create(
-                author=cls.gestalt, time='2000-01-01 12:00+00:00')
-
-
-class PublicEventMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.content = content.Event.objects.create(
-                author=cls.gestalt, public=True, time='2000-01-01 12:00+00:00',
-                title='Test Event')
-
-
-# class InternalEventInGroupWithOtherMember(
-#         subscriptions.NotificationToOtherGestalt,
-#         subscriptions.SenderNameIsGestalt,
-#         InternalEventMixin, memberships.OtherMemberMixin,
-#         memberships.MemberMixin, tests.Test):
-#     """
-#     If a group member creates an internal event
-#     * a notification to other members should be sent.
-#     * the sender name should be mentioned.
-#     """
-
-
-# class InternalEventInGroupWithOtherSubscriber(
-#         subscriptions.NotificationToOtherGestalt,
-#         InternalEventMixin, subscriptions.OtherGroupSubscriberMixin,
-#         memberships.MemberMixin, tests.Test):
-#     """
-#     If a group member creates an internal event
-#     * no notification to subscribers should be sent.
-#     """
-
-
-class PublicEventInGroupWithOtherMember(
-        subscriptions.NotificationToOtherGestalt,
-        subscriptions.SenderNameIsGestalt,
-        PublicEventMixin, memberships.OtherMemberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates a public event
-    * a notification to other members should be sent.
-    * the sender name should be mentioned.
-    """
-
-
-class PublicEventInGroupWithOtherSubscriber(
-        subscriptions.NotificationToOtherGestalt,
-        subscriptions.SenderIsAnonymous,
-        PublicEventMixin, subscriptions.OtherGroupSubscriberMixin,
-        memberships.MemberMixin, tests.Test):
-    """
-    If a group member creates a public event
-    * a notification to subscribers should be sent.
-    * the sender name should not be mentioned.
-    """
-
-
 class Guest(memberships.MemberMixin, core.tests.Test):
     def create_event(self, **kwargs):
         self.client.force_login(self.gestalt.user)
@@ -221,6 +158,28 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         self.assertRedirect(
                 url=self.get_event_url(), method='post', data={'text': 'Comment'})
         self.assertExists(contributions.Contribution, text__text='Comment')
+
+
+class TwoGestalten(
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+    def create_event(self, **kwargs):
+        kwargs.update({
+            'title': 'Group Event', 'text': 'Test Text', 'place': 'Test Place',
+            'time': '3000-01-01 00:00', 'until_time': '3000-01-01 00:00'})
+        self.client.post(self.get_url('create-group-event', self.group.slug), kwargs)
+        self.association = associations.Association.objects.get(content__title='Group Event')
+
+    def get_content_url(self):
+        return self.get_url('content', (self.association.entity.slug, self.association.slug))
+
+    def test_article_notified(self):
+        self.create_event()
+        self.assertNotificationsSent(2)
+        self.assertNotificationRecipient(self.gestalt)
+        self.assertNotificationRecipient(self.other_gestalt)
+        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains('Test Text')
+        self.assertNotificationContains('Test Place')
 
 
 class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
