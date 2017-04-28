@@ -1,4 +1,3 @@
-from . import querysets
 import core.models
 from django.core import urlresolvers
 from django.db import models
@@ -56,8 +55,6 @@ class Content(Base):
     slug = models.SlugField(default=None, null=True, unique=True)
     title = models.CharField('Titel', max_length=255)
 
-    objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
-
     def __str__(self):
         return self.title
 
@@ -101,8 +98,6 @@ class Content(Base):
 
 
 class Article(Content):
-    objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
-
     def get_display_type_name(self):
         return 'Artikel' if self.public else 'Interner Artikel'
 
@@ -113,7 +108,6 @@ class Event(Content):
     until_time = models.DateTimeField('Ende', blank=True, null=True)
     all_day = models.BooleanField('ganztägig', default=False,
                                   help_text='Das Ereignis wird den gesamten Tag dauern')
-    objects = models.Manager.from_queryset(querysets.EventQuerySet)()
 
     class Meta:
         ordering = ('time',)
@@ -126,7 +120,5 @@ class Event(Content):
 
 
 class Gallery(Content):
-    objects = models.Manager.from_queryset(querysets.ContentQuerySet)()
-
     def get_display_type_name(self):
         return 'Galerie' if self.public else 'Interne Galerie'

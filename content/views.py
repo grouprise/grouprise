@@ -9,7 +9,7 @@ from django.views.generic import dates
 from django.db.models import Q
 from django_ical.views import ICalFeed
 
-import content.models
+from features.associations import models as associations
 from utils import views as utils_views
 from utils.auth import get_user_resolver
 
@@ -132,12 +132,13 @@ class BaseCalendarFeed(ICalFeed):
         self.assemble_content_filter_dict(filter_dict)
         if user is None:
             if filter_dict['public']:
-                return content.models.Event.objects.filter(**filter_dict)
+                return associations.Association.objects.filter_events().filter(**filter_dict)
             else:
                 # non-public items cannot be accessed without being authorized
                 raise PermissionDenied
         else:
-            return content.models.Event.objects.permitted(user).filter(**filter_dict)
+            return associations.Association.objects.filter_events().can_view(user).filter(
+                    **filter_dict)
 
     def assemble_content_filter_dict(self, filter_dict):
         filter_dict['public'] = (self.kwargs['domain'] == 'public')
@@ -151,7 +152,7 @@ class BaseCalendarFeed(ICalFeed):
         return None
 
     def items(self):
-        return self.get_queryset().order_by('-time')
+        return self.get_queryset().order_by('-content__time')
 
     def item_title(self, item):
         return item.title

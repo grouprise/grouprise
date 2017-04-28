@@ -37,7 +37,7 @@ class Create(features.content.views.Create):
 class GroupCalendarFeed(content_views.BaseCalendarFeed, features.groups.views.Mixin):
 
     def items(self):
-        filter_dict = {'groups': self.get_group(),
+        filter_dict = {'group': self.get_group(),
                        'public': (self.kwargs['domain'] == "public")}
         return super().items().filter(**filter_dict)
 
