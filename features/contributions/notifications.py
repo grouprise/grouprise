@@ -1,5 +1,4 @@
 from django import db
-from django.conf import settings
 from django.utils import crypto
 
 from core import notifications
@@ -51,9 +50,6 @@ class Contributed(notifications.Notification):
 
     def get_sender(self):
         return self.contribution.author
-
-    def get_sender_email(self):
-        return settings.ANSWERABLE_FROM_EMAIL
 
     def get_subject(self):
         prefix = 'Re: '
