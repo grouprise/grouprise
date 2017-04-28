@@ -13,7 +13,8 @@ class Group(models.Model):
     gestalt_created = models.ForeignKey(
             'gestalten.Gestalt',
             null=True,
-            blank=True)
+            blank=True,
+            related_name='+')
     name = models.CharField(
             'Name',
             max_length=255)
@@ -61,6 +62,10 @@ class Group(models.Model):
     associations = django.contrib.contenttypes.fields.GenericRelation(
             'associations.Association', content_type_field='entity_type',
             object_id_field='entity_id', related_query_name='group')
+
+    members = models.ManyToManyField(
+            'gestalten.Gestalt', through='memberships.Membership',
+            through_fields=('group', 'member'))
 
     @classmethod
     def get_content_type(cls):

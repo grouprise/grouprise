@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @receiver(django.db.models.signals.post_save, sender=models.Contribution)
 def send_contribution_notification(sender, instance, created, **kwargs):
     if created:
-        notifications.Contributed(contribution=instance).send()
+        notifications.Contributed(instance=instance).send()
 
 
 @receiver(django_mailbox.signals.message_received)

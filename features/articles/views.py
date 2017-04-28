@@ -18,7 +18,7 @@ class List(base.PermissionMixin, generic.ListView):
 
     def get_queryset(self):
         return super().get_queryset().filter(
-                container_type=content.Content.get_content_type(), content__time__isnull=True,
+                container_type=content.Content.content_type, content__time__isnull=True,
                 ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
                     'content__versions__time_created')).order_by('-time_created')
 

@@ -31,7 +31,7 @@ class Gestalt(utils_views.List):
 
     def get_queryset(self):
         return super().get_queryset().filter(
-                container_type=content2.Content.get_content_type(),
+                container_type=content2.Content.content_type,
                 entity_type=self.get_gestalt().get_content_type(),
                 entity_id=self.get_gestalt().id
                 ).can_view(self.request.user).annotate(time_created=django.db.models.Min(

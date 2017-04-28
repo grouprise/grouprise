@@ -21,9 +21,10 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'content/list.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter(container_type=models.Content.get_content_type(
-            )).can_view(self.request.user).annotate(time_created=django.db.models.Min(
-                'content__versions__time_created')).order_by('-time_created')
+        return super().get_queryset().filter(
+                container_type=models.Content.content_type).can_view(
+                        self.request.user).annotate(time_created=django.db.models.Min(
+                            'content__versions__time_created')).order_by('-time_created')
 
 
 class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
@@ -46,9 +47,9 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.is_gallery():
+        if self.object.container.is_gallery:
             name = 'galleries/detail.html'
-        elif self.object.container.is_event():
+        elif self.object.container.is_event:
             name = 'events/detail.html'
         else:
             name = 'articles/detail.html'
@@ -89,7 +90,7 @@ class Update(base.PermissionMixin, generic.UpdateView):
     form_class = forms.Update
 
     def get_form_class(self):
-        if self.object.container.is_gallery():
+        if self.object.container.is_gallery:
             form_class = galleries.Update
         else:
             form_class = self.form_class
@@ -123,9 +124,9 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.is_gallery():
+        if self.object.container.is_gallery:
             name = 'galleries/update.html'
-        elif self.object.container.is_event():
+        elif self.object.container.is_event:
             name = 'events/update.html'
         else:
             name = 'articles/update.html'

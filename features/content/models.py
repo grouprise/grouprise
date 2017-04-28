@@ -4,11 +4,12 @@ from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from django.db.models import Q
 
+import core.models
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 
 
-class Content(models.Model):
+class Content(core.models.Model):
     is_conversation = False
 
     title = models.CharField(max_length=255)
@@ -30,10 +31,6 @@ class Content(models.Model):
             content_type_field='container_type',
             object_id_field='container_id',
             related_query_name='content')
-
-    @classmethod
-    def get_content_type(cls):
-        return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)
 
     def __str__(self):
         return self.title

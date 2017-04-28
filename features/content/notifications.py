@@ -8,7 +8,7 @@ class ContentAssociated(core.notifications.Notification):
         return self.object.container.get_unique_id(), None, []
 
     def get_recipients(self):
-        recipients = set(self.contribution.container.get_authors())
+        recipients = set(self.object.container.get_authors())
         if self.object.entity.is_group:
             recipients.update(set(self.object.entity.members.all()))
         else:
@@ -20,7 +20,7 @@ class ContentAssociated(core.notifications.Notification):
 
     def get_subject(self):
         group = '[{}] '.format(self.object.entity.slug) if self.object.entity.is_group else ''
-        return group + self.contribution.container.subject
+        return group + self.object.container.subject
 
     def get_template_name(self):
         if self.object.container.is_gallery:
