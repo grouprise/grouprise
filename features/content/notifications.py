@@ -10,10 +10,7 @@ class ContentAssociated(core.notifications.Notification):
     def get_recipients(self):
         recipients = set(self.object.container.get_authors())
         if self.object.entity.is_group:
-            recipients.update(set(self.object.entity.members.exclude(
-                subscriptions__content_type=self.object.entity_type,
-                subscriptions__object_id=self.object.entity_id,
-                subscriptions__unsubscribe=True)))
+            recipients.update(set(self.object.entity.members.all()))
         else:
             recipients.add(self.object.entity)
         return recipients

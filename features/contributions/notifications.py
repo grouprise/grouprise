@@ -23,10 +23,7 @@ class Contributed(notifications.Notification):
         recipients = set(self.object.container.get_authors())
         recipients.update(set(self.object.container.get_associated_gestalten()))
         for group in self.object.container.get_associated_groups():
-            recipients.update(set(group.members.exclude(
-                subscriptions__content_type=group.content_type,
-                subscriptions__object_id=group.id,
-                subscriptions__unsubscribe=True)))
+            recipients.update(set(group.members.all()))
         return recipients
 
     def get_sender(self):
