@@ -17,7 +17,7 @@ class Subscription(models.Model):
     content_type = models.ForeignKey(contenttypes_models.ContentType)
     object_id = models.PositiveIntegerField()
     subscribed_to = contenttypes_fields.GenericForeignKey()
-    subscriber = models.ForeignKey('gestalten.Gestalt')
+    subscriber = models.ForeignKey('gestalten.Gestalt', related_name='subscriptions')
     unsubscribe = models.BooleanField(default=False)
 
     objects = querysets.SubscriptionManager.from_queryset(querysets.Subscription)()

@@ -1,30 +1,13 @@
-from . import models
-from entities import models as entities
+from features.content import notifications as content
 from features.gestalten import models as gestalten
-from features.associations import notifications as associations
-import itertools
 
 
-def update_recipients(recipients, associations):
-    for association in associations:
-        subscriptions = models.SubOrUnsubscription.objects.filter(
-                subscribed_to=association.group)
-        for subscription in subscriptions:
-            subscription.update_gestalten(recipients, association)
-
-
-class ContentAssociated(associations.ContentAssociated):
+class ContentPublicallyAssociated(content.ContentAssociated):
     def get_recipients(self):
-        recipients = super().get_recipients()
-        if type(self.association) == entities.GroupContent:
-            update_recipients(recipients, [self.association])
-        if (type(self.association) == entities.GroupContent
-                and self.content.public):
-            subscriptions = models.Subscription.objects.filter(
-                    subscribed_to=self.association.group)
-            subscription_recipients = gestalten.Gestalt.objects.filter(
-                    subscription__in=subscriptions)
-            recipients = dict(zip(recipients, itertools.repeat({'with_name': True})))
-            recipients.update(
-                    zip(subscription_recipients, itertools.repeat({'with_name': False})))
-        return recipients
+        return gestalten.Gestalt.objects.filter(
+                subscriptions__content_type=self.object.entity_type,
+                subscriptions__object_id=self.object.entity_id,
+                subscriptions__unsubscribe=False)
+
+    def get_sender(self):
+        return None
