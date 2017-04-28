@@ -25,7 +25,7 @@ class Notification:
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-        self.object = kwargs['instance']
+        self.object = kwargs.get('instance')
 
     def get_formatted_recipients(self):
         """
@@ -58,7 +58,7 @@ class Notification:
                     feature_key='notification-reply', gestalt=gestalt,
                     target_type=self.object.content_type, target_id=self.object.id)
             recipient_props = result.get(gestalt, {})
-            recipient_props['reply_key'] = token
+            recipient_props['reply_key'] = token.secret_key
             result[gestalt] = recipient_props
         return result
 

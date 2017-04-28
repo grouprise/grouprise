@@ -1,6 +1,7 @@
-{% extends 'associations/contentassociated.txt' %}
+Ereignis online ansehen und kommentieren:
+{% url 'content' instance.entity.slug instance.slug as path %}{{ path|full_url }}
 
-{% block content %}Ereignis am {{ association.content.event.time|date:'DATE_FORMAT' }} um {{ association.content.event.time|date:'G:i' }} Uhr
-Ort: {{ association.content.event.place }}
+Ereignis am {{ instance.container.time|date:'DATE_FORMAT' }} um {{ instance.container.time|date:'G:i' }} Uhr
+Ort: {{ instance.container.place }}
 
-{{ block.super }}{% endblock %}
+{{ instance.container.versions.last.text }}

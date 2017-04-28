@@ -5,6 +5,7 @@ import django.db.models.signals
 import django_mailbox.signals
 from django.dispatch import receiver
 
+import core.models
 from . import models, notifications
 
 logger = logging.getLogger(__name__)
@@ -27,12 +28,12 @@ def process_incoming_message(sender, message, **args):
                     message.get_email_object().get('In-Reply-To'))
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
-        key = models.ReplyKey.objects.get(key=token)
+        key = core.models.PermissionToken.objects.get(secret_key=token)
         text = models.Text.objects.create(text=message.text)
         models.Contribution.objects.create(
                 author=key.gestalt,
-                container=key.contribution.container,
+                container=key.target.container,
                 in_reply_to=in_reply_to_text,
                 contribution=text)
-    except models.ReplyKey.DoesNotExist:
+    except core.models.PermissionToken.DoesNotExist:
         logger.error('Could not process message {}'.format(message.id))

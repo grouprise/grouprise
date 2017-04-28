@@ -1,3 +1,5 @@
+import django.core.mail
+
 import core.tests
 from features.associations import models as associations
 from features.contributions import models as contributions
@@ -17,6 +19,7 @@ class ArticleMixin(gestalten.AuthenticatedMixin):
     def setUp(self):
         super().setUp()
         self.association = self.create_article()
+        django.core.mail.outbox = []
 
 
 class GroupArticleMixin(ArticleMixin):
