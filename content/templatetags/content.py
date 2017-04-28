@@ -1,22 +1,9 @@
 from django import template
-from django.utils import formats, timezone
 from django.template.base import FilterExpression
 from django.template.loader import get_template
 
 
 register = template.Library()
-
-
-@register.filter
-def permitted(content, user):
-    return content.permitted(user)
-
-
-@register.filter
-def preview(events):
-    return ', '.join([
-        '{} {}'.format(formats.time_format(timezone.localtime(e.time)), e.title)
-        for e in events])
 
 
 def parse_token_args(args, filterval=lambda value: value):

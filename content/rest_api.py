@@ -1,6 +1,6 @@
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
-from .templatetags import content
+from core.templatetags import core
 from core import api
 
 _PRESETS = {
@@ -17,7 +17,7 @@ class MarkdownView(viewsets.ViewSet):
         preset = _PRESETS[request.data.get('preset', 'content')]
         text = request.data.get('content')
         return Response({
-            'content': str(content.markdown_tag(text, **preset))
+            'content': str(core.markdown(text, **preset))
         })
 
 
