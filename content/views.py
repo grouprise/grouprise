@@ -1,4 +1,4 @@
-from . import forms, models
+from . import models
 from django import shortcuts
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import PermissionDenied
@@ -10,7 +10,6 @@ from django.db.models import Q
 from django_ical.views import ICalFeed
 
 import content.models
-from entities import models as entities_models
 from utils import views as utils_views
 from utils.auth import get_user_resolver
 
@@ -51,28 +50,6 @@ class ContentList(BaseContentList):
                 ~Q(article__isnull=False, public=False))
 
 
-class ContentUpdate(utils_views.ActionMixin, generic.UpdateView):
-    action = 'Beitrag ändern'
-    form_class = forms.ContentUpdate
-    model = models.Content
-    permission = 'content.change_content'
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        try:
-            kwargs['author'] = self.request.user.gestalt
-            kwargs['groupcontent'] = entities_models.GroupContent.objects.get(
-                    content=self.object, group=self.get_group())
-        finally:
-            return kwargs
-
-    def get_menu(self):
-        return self.object.get_type_name()
-
-    def get_parent(self):
-        return self.object
-
-
 class EventDay(utils_views.PageMixin, generic.DayArchiveView):
     allow_future = True
     context_object_name = 'content_list'
@@ -97,33 +74,6 @@ class EventDay(utils_views.PageMixin, generic.DayArchiveView):
 
     def get_title(self):
         return formats.date_format(self.get_date())
-
-
-class EventUpdate(utils_views.ActionMixin, generic.UpdateView):
-    action = 'Ereignis ändern'
-    form_class = forms.Event
-    menu = 'event'
-    model = models.Event
-    permission = 'content.change_content'
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['author'] = self.request.user.gestalt
-        return kwargs
-
-    def get_initial(self):
-        group = self.get_group()
-        if group:
-            return {
-                    'group': group.pk,
-                    'pinned': entities_models.GroupContent.objects.get(
-                        group=group, content=self.object).pinned
-                    }
-        else:
-            return {}
-
-    def get_parent(self):
-        return self.object
 
 
 class ImageList(utils_views.List):
