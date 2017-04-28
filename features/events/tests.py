@@ -1,13 +1,11 @@
 import re
 
-from content import models as content
 import core.tests
 from core import tests
 from features.associations import models as associations
 from features.contributions import models as contributions
 import features.gestalten.tests
 from features.memberships import test_mixins as memberships
-from features.subscriptions import test_mixins as subscriptions
 
 
 class Guest(memberships.MemberMixin, core.tests.Test):
@@ -172,7 +170,7 @@ class TwoGestalten(
     def get_content_url(self):
         return self.get_url('content', (self.association.entity.slug, self.association.slug))
 
-    def test_article_notified(self):
+    def test_event_notified(self):
         self.create_event()
         self.assertNotificationsSent(2)
         self.assertNotificationRecipient(self.gestalt)
