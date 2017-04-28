@@ -48,13 +48,18 @@ class Content(models.Model):
     def get_associated_groups(self):
         return groups.Group.objects.filter(associations__content=self)
 
+    def get_unique_id(self):
+        return 'content.{}'.format(self.id)
+
     def get_url_for(self, association):
         return django.core.urlresolvers.reverse(
                 'content', args=[association.entity.slug, association.slug])
 
+    @property
     def is_event(self):
         return self.time is not None
 
+    @property
     def is_gallery(self):
         return self.gallery_images.count() > 0
 

@@ -1,25 +1,31 @@
 import datetime
-from django.apps import apps
-from django.conf import settings
-from django.contrib.sites import models as sites_models
-from django.core import mail
-from django.template import loader
 from email import utils as email_utils
 import hashlib
 import logging
 import smtplib
 import uuid
 
+from django.apps import apps
+from django.conf import settings
+from django.contrib.sites import models as sites_models
+from django.core import mail
+from django.template import loader
+
+from . import models
+
 logger = logging.getLogger(__name__)
 
 
 class Notification:
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
+    generate_reply_tokens = False
 
     @staticmethod
     def format_recipient(gestalt):
         return '{} <{}>'.format(gestalt, gestalt.user.email)
+
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+        self.object = kwargs['instance']
 
     def get_formatted_recipients(self):
         """
@@ -33,11 +39,28 @@ class Notification:
         replaced by the reply key.
         """
         recipients = self.get_recipients()
+        if self.generate_reply_tokens:
+            recipients = self.get_reply_tokens(recipients)
         if type(recipients) == dict:
             return [(self.format_recipient(r), recipient_attrs)
                     for r, recipient_attrs in recipients.items()]
         else:
             return [(self.format_recipient(r), {}) for r in recipients]
+
+    def get_reply_tokens(self, recipients):
+        if type(recipients) == dict:
+            result = recipients
+            recipients = recipients.keys()
+        else:
+            result = {}
+        for gestalt in recipients:
+            token = models.PermissionToken.objects.create(
+                    feature_key='notification-reply', gestalt=gestalt,
+                    target_type=self.object.content_type, target_id=self.object.id)
+            recipient_props = result.get(gestalt, {})
+            recipient_props['reply_key'] = token
+            result[gestalt] = recipient_props
+        return result
 
     def get_sender(self):
         return None

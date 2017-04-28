@@ -1,6 +1,8 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
+import core.models
+
 
 class ContributionManager(models.Manager):
     def get_by_message_id(self, mid):
@@ -12,7 +14,7 @@ class ContributionManager(models.Manager):
         raise self.model.DoesNotExist
 
 
-class Contribution(models.Model):
+class Contribution(core.models.Model):
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
     container_id = models.PositiveIntegerField()
     container_type = models.ForeignKey('contenttypes.ContentType', related_name='+')
@@ -42,11 +44,3 @@ class Text(models.Model):
             content_type_field='contribution_type',
             object_id_field='contribution_id',
             related_query_name='text')
-
-
-class ReplyKey(models.Model):
-    """ TODO: migrate to core.models.PermissionToken """
-    gestalt = models.ForeignKey('gestalten.Gestalt')
-    key = models.CharField(max_length=15, unique=True)
-    contribution = models.ForeignKey('Contribution')
-    time_created = models.DateTimeField(auto_now_add=True)

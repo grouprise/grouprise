@@ -118,6 +118,7 @@ class PermissionToken(models.Model):
     authenticated user is really allowed to access the given resource.
     """
     gestalt = models.ForeignKey('gestalten.Gestalt')
+    # FIXME: secret_key should be unique
     secret_key = models.CharField(max_length=PERMISSION_TOKEN_LENGTH, default=generate_token)
     time_created = models.DateTimeField(auto_now_add=True)
     # Every feature (e.g. the calendar) defines its own unique string describing its permission
