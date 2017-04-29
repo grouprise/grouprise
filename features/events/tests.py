@@ -234,3 +234,36 @@ class GroupCalendarExportNonMember(memberships.MemberMixin,
         match = private_url_regex.search(data.content.decode('utf8'))
         # the private URL should not be displayed
         self.assertIsNone(match)
+
+
+class GestaltCalendarExport(features.gestalten.tests.AuthenticatedMixin, tests.Test):
+
+    def test_access_private_calendar(self):
+        """ test the accessibility of a private calendar of a gestalt itself while being logged in
+        """
+        data = self.client.get(self.get_url('gestalt-events-export',
+                                            (self.gestalt.user.username, )))
+        private_url_regex = re.compile(r'>(?P<url>[^<]+/private.ics[^<]+)<')
+        match = private_url_regex.search(data.content.decode('utf8'))
+        self.assertTrue(match)
+        private_url = match.groupdict()['url']
+        self.assertTrue("token" in private_url)
+        # verify access via the private URL
+        data = self.client.get(private_url)
+        self.assertTrue('BEGIN:VCALENDAR' in data.content.decode('utf8'))
+        # verify rejected access with a wrong private URL
+        data = self.client.get(private_url + 'foo')
+        self.assertEqual(data.status_code, 401)
+        # verify rejected access with missing query arguments
+        url_without_token = private_url.split("?")[0]
+        self.assertNotEqual(url_without_token, private_url)
+        data = self.client.get(url_without_token)
+        self.assertEqual(data.status_code, 401)
+        # verify rejected access with wrong username within token
+        # assemble a new URL by replacing the username within the token
+        wrong_user_url = '{}?{}:{}'.format(private_url.split('?')[0],
+                                           self.gestalt.user.username + "foo",
+                                           private_url.split(':')[-1])
+        self.assertNotEqual(wrong_user_url, private_url)
+        data = self.client.get(wrong_user_url)
+        self.assertEqual(data.status_code, 401)
