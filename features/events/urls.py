@@ -19,8 +19,13 @@ urlpatterns = [
         name='create-group-event'),
 
     url(
+        r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/events/export$',
+        views.GestaltCalendarExport.as_view(),
+        name='gestalt-events-export'),
+
+    url(
         r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/events/(?P<domain>public|private).ics$',
-        views.Gestalt.CalendarFeed(),
+        views.GestaltCalendarFeed(),
         name='gestalt-events-feed'),
 
     url(

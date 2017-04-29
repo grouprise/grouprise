@@ -97,17 +97,18 @@ class BaseCalendarFeed(ICalFeed):
         return item.time
 
 
-class CalendarFeed(BaseCalendarFeed):
+class GestaltCalendarFeed(BaseCalendarFeed):
+
+    def items(self):
+        filter_dict = {'gestalt': self.get_gestalt(),
+                       'public': (self.kwargs['domain'] == "public")}
+        return super().items().filter(**filter_dict)
 
     def get_calendar_owner(self):
         return self.get_gestalt()
 
     def check_authorization(self, authenticated_gestalt):
         return authenticated_gestalt == self.get_calendar_owner()
-
-    def assemble_content_filter_dict(self, filter_dict):
-        filter_dict['gestalt'] = self.get_gestalt()
-        super().assemble_content_filter_dict(filter_dict)
 
 
 class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
@@ -128,6 +129,9 @@ class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
 class CalendarExport(utils_views.PageMixin, generic.DetailView):
     sidebar = tuple()
     template_name = 'events/export.html'
+
+    def get_parent(self):
+        return self.get_object()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -156,9 +160,6 @@ class GroupCalendarExport(CalendarExport):
     parent = 'group'
     feed_route = 'group-events-feed'
 
-    def get_parent(self):
-        return self.get_group()
-
     def has_private_access(self):
         if self.request.user and self.request.user.is_authenticated():
             return is_member_of(self.request.user, self.get_group())
@@ -173,9 +174,6 @@ class GestaltCalendarExport(CalendarExport):
     title = 'Exportmöglichkeiten für Gestaltenkalender'
     parent = 'gestalt-index'
     feed_route = 'gestalt-events-feed'
-
-    def get_parent(self):
-        return self.get_gestalt()
 
     def has_private_access(self):
         if self.request.user and self.request.user.is_authenticated():
