@@ -13,7 +13,7 @@ class Tag(models.Model):
 
     @classmethod
     def slugify(cls, name):
-        return slugify(None, None, name, dodging=False)
+        return slugify(name)
 
 
 class Tagged(models.Model):
