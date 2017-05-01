@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -eu
+
+EXEC_USER=stadtgestalten
+EXEC_BASE=/usr/share/stadtgestalten
+
+if [ "$(id -nu)" = "$EXEC_USER" ]; then
+    . "$EXEC_BASE/.virtualenv/bin/activate"
+    python3 "$EXEC_BASE/manage.py" "$@"
+elif [ "$(id -u)" = 0 ]; then
+    su -s "$0" "$EXEC_USER" -- "$@"
+else
+    echo "please run stadtctl as root or '$EXEC_USER'" >&2
+    exit 1
+fi

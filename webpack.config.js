@@ -1,12 +1,10 @@
 const path = require('path')
+const fs = require('fs')
 const webpack = require('webpack')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
-const grunt = require('grunt')
 const _ = require('lodash')
 
-const pkg = grunt.file.readJSON('package.json')
-const rawBanner = grunt.file.read('res/templates/banner.txt')
-const banner = grunt.template.process(rawBanner, {data: {package: pkg}})
+const banner = fs.readFileSync('res/templates/banner.txt', 'utf-8')
 const env = _.has(process.env, 'NODE_ENV') ? process.env.NODE_ENV : 'development'
 const isDebug = env !== 'production'
 
@@ -18,8 +16,8 @@ module.exports = {
     snake: './snake.js'
   },
   output: {
-    publicPath: '/stadt/static/stadt/js/',
-    path: path.join(__dirname, 'stadt/static/js/'),
+    publicPath: '/static/stadt/js/',
+    path: path.join(__dirname, 'build/static/js/'),
     filename: '[name].js'
   },
   resolve: {

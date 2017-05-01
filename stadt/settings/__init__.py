@@ -1,8 +1,8 @@
-from os import path, environ
+from os import environ
 
-if path.isfile(path.join(path.dirname(__file__), 'local.py')):
+try:
     from stadt.settings.local import *  # noqa: 401
-else:
+except ImportError:
     from stadt.settings.default import *  # noqa: 401
 
 try:
@@ -12,6 +12,8 @@ try:
         from stadt.settings.development import *  # noqa: 401
     elif preset == 'packaging':
         from stadt.settings.packaging import *  # noqa: 401
+    elif preset == 'test':
+        from stadt.settings.test import *  # noqa: 401
     else:
         raise ValueError('unknown preset "%s"' % preset)
 except KeyError:

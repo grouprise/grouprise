@@ -1,4 +1,5 @@
 [flake8]
 max-line-length = 99
-exclude = */migrations, node_modules
+exclude = */migrations, node_modules, stadt/settings/local.py,
+    build, .pybuild, debian/stadtgestalten, debian/tmp, debian/root
 ignore = E121,E123,E126,E226,E24,E704,W503

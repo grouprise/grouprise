@@ -302,6 +302,3 @@ try:
     CACHE_VERSION = int(open(os.path.join(BASE_DIR, "stadt", "CACHE_VERSION"), "r").read().strip())
 except IOError:
     CACHE_VERSION = 1
-
-# diese Umgebungsvariable wird im Makefile beim Aufruf von "python manage.py test" gesetzt
-stadtgestalten_in_test = (os.getenv("STADTGESTALTEN_IN_TEST", "0") == "1")

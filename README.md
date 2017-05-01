@@ -1,67 +1,56 @@
-# Quick Setup
+# Stadtgestalten
 
-    pip install -r requirements.txt
-    python manage.py migrate
-    python manage.py runserver
-    
-    npm install && node_modules/.bin/grunt
+Stadtgestalten is a platform destined to encourage and enable social action and solidarity in the context of your city. Bildet Banden!
 
-Visit http://localhost:8000/
+## Quick Setup
+
+1. You will need [yarn](https://yarnpkg.com/lang/en/), [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see the Dependencies Section
+2. Run `make app_setup` and wait until you see something like `Starting development server at http://127.0.0.1:8000/`
+3. Visit http://127.0.0.1:8000/
+
+## Dependencies
+
+Depending on your distribution (we assume you’ll be using something like Linux here) the build dependencies of this project will be available via your package manager.
+
+### Debian
+For `virtualenv`, `python3`, `flake8` and `pip` use apt:
+```sh
+apt install make virtualenv python3 python3-flake8 python3-pip
+```
+`node` is available as `nodejs` and `nodejs-legacy` (please install both), but you’ll have to have Debian Stretch to get a node version that is going to work. The nodejs people also offer pre-packaged up to date builds [here](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions).
+`yarn` is not yet available in Debian. Take a look at their [installation manual](https://yarnpkg.com/en/docs/install).
+
+### Arch Linux
+Fortunately all of the required packages are available via pacman.
+```sh
+pacman -Sy make nodejs yarn flake8 python python-virtualenv python-pip 
+```
 
 
-# Release workflow
+## Local Settings
 
-1. clean your workspace (the output of `git status` should be empty)
-2. checkout the master branch and update it
-3. run `make release-patch`, `make release-feature` or `make release-breaking`
-4. describe your changes in the `git tag` message
-5. in case of problems: discard your last commit and stop reading here
-6. push your updated master branch (`git push ???`) and push the tags (`git push --tags`)
-7. deploy the updated master branch on the target host: `make deploy-git`
+Your local Django settings will be located in `stadt/settings/local.py`. Use `make app_local_settings` to create a default configuration. 
 
 
-# Local settings
-
-Create a file `local_settings.py` and add all settings that you want to
-override based on `stadt/settings.py`. The latter file imports all settings
-from `local_settings.py` in case this file exists.
-
-
-# Database setup
+## Database Setup
 
 The preconfigured database is a local sqlite file.
 For production deployment you should use a database server.
 
-## PostgreSQL
+### PostgreSQL
 
 The following statement creates a suitable database including proper collation settings:
 
     CREATE USER stadtgestalten with password 'PUT RANDOM NOISE';
     CREATE DATABASE stadtgestalten WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER stadtgestalten;
 
-The above command requires the locale 'de_DE.UTF8' in the system of the database server.
+The command above requires the locale 'de_DE.UTF8' in the system of the database server.
 
 
-# Production deployment
-## UWSGI
-The following uwsgi configuration is sufficient for running the software:
+## Production deployment
 
-    [uwsgi]
-    plugins = python3
-    chdir = /srv/stadtgestalten/stadt
-    file = wsgi.py
-    touch-reload = /srv/stadtgestalten/local_settings.py
-    touch-reload = settings.py
-    virtualenv = /srv/virtualenvs/stadtgestalten
-    pythonpath = /srv/stadtgestalten
-    socket = /var/run/uwsgi/app/stadtgestalten/socket
-    # anschalten fuer profiling
-    #env = PROFILING_DIRECTORY=/tmp/profiling-stadtgestalten/
-    # Switch to maintenance mode
-    plugins = router_redirect
-    # "touch-reload" for the offline-marker file is necessary, since "if-exists" is only processed
-    # during startup (or reload).
-    touch-reload = /srv/stadtgestalten/_OFFLINE_MARKER_UWSGI
-    if-exists = /srv/stadtgestalten/_OFFLINE_MARKER_UWSGI
-    route = .* redirect:https://offline.stadtgestalten.org/
-    endif =
+We recommend to use the provided debian package. It already comes with a UWSGI config.
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
