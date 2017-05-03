@@ -1,10 +1,5 @@
 [flake8]
 max-line-length = 99
-exclude = entities/migrations, content/migrations, features/memberships/migrations,
-    features/subscriptions/migrations, features/groups/migrations,
-    node_modules/bootstrap-datepicker/docs, features/associations/migrations,
-    features/conversations/migrations, features/texts/migrations,
-    features/gestalten/migrations, features/tags/migrations, features/content/migrations,
-    features/contributions/migrations, core/migrations, features/images/migrations,
-    features/galleries/migrations
+exclude = */migrations, node_modules, stadt/settings/local.py,
+    build, .pybuild, debian/stadtgestalten, debian/tmp, debian/root
 ignore = E121,E123,E126,E226,E24,E704,W503

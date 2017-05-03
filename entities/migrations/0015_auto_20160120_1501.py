@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='gestalt',
             name='avatar',
-            field=models.ImageField(default='/stadt/static/avatar.png', upload_to=''),
+            field=models.ImageField(default='/static/avatar.png', upload_to=''),
         ),
     ]

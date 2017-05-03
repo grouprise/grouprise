@@ -1,17 +1,17 @@
-bleach
-django
-django-allauth
-django-crispy-forms
-django-filter
-django-ical
-django-mailbox
-djangorestframework
-flake8
-markdown
-pillow
-pymdown-extensions
-randomcolor
-rules
-sorl-thumbnail==12.4a1
-translitcodec
-mdx_unimoji
+bleach                      # debian: python3-bleach
+django                      # debian: python3-django
+django-allauth              # NOT IN DEBIAN
+django-crispy-forms         # debian: python3-django-crispy-forms
+django-filter               # debian: python3-django-filters
+django-ical                 # NOT IN DEBIAN
+django-mailbox              # NOT IN DEBIAN
+djangorestframework         # debian: python-djangorestframework
+flake8                      # debian: flake8
+markdown                    # debian: python3-markdown
+pillow                      # debian: python-pil
+pymdown-extensions          # NOT IN DEBIAN
+randomcolor                 # NOT IN DEBIAN
+rules                       # NOT IN DEBIAN
+sorl-thumbnail==12.4a1      # debian: python3-sorl-thumbnail
+translitcodec               # NOT IN DEBIAN
+mdx_unimoji                 # NOT IN DEBIAN

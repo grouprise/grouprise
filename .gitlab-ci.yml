@@ -1,6 +1,6 @@
 before_script:
-    - virtualenv -p python3 "$CI_PROJECT_DIR/.venv/stadtgestalten"
-    - source "$CI_PROJECT_DIR/.venv/stadtgestalten/bin/activate"
+    - virtualenv -p python3 "$CI_PROJECT_DIR/build/venv"
+    - source "$CI_PROJECT_DIR/build/venv/bin/activate"
     - pip install --upgrade pip
     - pip install -r requirements.txt
 

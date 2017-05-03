@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+export DH_VIRTUALENV_INSTALL_ROOT=/usr/share/stadtgestalten
+
+%:
+	dh $@ --with python-virtualenv --upgrade-pip --python /usr/bin/python3 --use-system-packages \
+		--skip-install --install-suffix .virtualenv
+
+override_dh_install:
+	@# dh-virtualenv disabled dh_auto_install by default, because it normally executes
+	@# `setup.py install` and considers that a full installation (which may likely be fine).
+	@# As we skip dh-virtualenvs install step in order to prepare the package for installation in
+	@# `/usr/share/stadtgestalten` we sill want to run auto_install to call `make install`
+	dh_auto_install
+	dh_install
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 640 debian/stadtgestalten/etc/stadtgestalten/settings.py
