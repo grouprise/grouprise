@@ -179,6 +179,10 @@ class GestaltCalendarExport(CalendarExport):
     parent = 'gestalt-index'
     feed_route = 'gestalt-events-feed'
 
+    def get_object(self):
+        """ override the url->object resolver ('gestalt' lacks a real 'slug' field) """
+        return self.get_gestalt()
+
     def has_private_access(self):
         if self.request.user and self.request.user.is_authenticated():
             return self.request.user == self.get_gestalt().user
