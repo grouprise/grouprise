@@ -18,7 +18,7 @@ $(CONFIG_APP_SETUP):
 	echo "$$APP_SETUP_CONFIG" > "$(CONFIG_APP_SETUP)"
 
 .PHONY: app_setup_config
-app_setup_config: $(CONFIG_DJANGO_SETTINGS)
+app_setup_config: $(CONFIG_APP_SETUP)
 
 .PHONY: app_migrate
 app_migrate: virtualenv_check
@@ -33,7 +33,7 @@ app_collect_static: virtualenv_check assets
 	STADTGESTALTEN_PRESET=packaging python manage.py collectstatic --no-input
 
 .PHONY: app_local_settings
-app_local_settings: $(CONFIG_DJANGO_SETTINGS)
+app_local_settings: $(CONFIG_APP_SETUP)
 
 .PHONY: app_setup
 app_setup: $(CONFIG_APP_SETUP) $(BIN_ACTIVATE)
