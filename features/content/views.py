@@ -12,7 +12,8 @@ from features.files import forms as files
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from . import forms
+from features.polls import forms as polls
+from . import forms, models
 
 
 class List(core.views.PermissionMixin, django.views.generic.ListView):
@@ -106,7 +107,9 @@ class Update(base.PermissionMixin, generic.UpdateView):
     form_class = forms.Update
 
     def get_form_class(self):
-        if self.object.container.is_gallery:
+        if self.object.container.is_poll:
+            form_class = polls.Update
+        elif self.object.container.is_gallery:
             form_class = galleries.Update
         elif self.object.container.is_file:
             form_class = files.Update
@@ -143,7 +146,9 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.is_gallery:
+        if self.object.container.is_poll:
+            name = 'polls/update.html'
+        elif self.object.container.is_gallery:
             name = 'galleries/update.html'
         elif self.object.container.is_file:
             name = 'files/update.html'

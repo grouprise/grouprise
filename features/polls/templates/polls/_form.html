@@ -1,0 +1,8 @@
+<div class="section section-publish section-article">
+    <h2>Antwortmöglichkeiten</h2>
+    {{ form.options.management_form }}
+    {% for form in form.options %}
+        {% if form.id %}{{ form.id }}{% endif %}
+        {% include 'core/_field.html' with field=form.title %}
+    {% endfor %}
+</div>

@@ -7,6 +7,9 @@ class Option(core.models.Model):
     poll = models.ForeignKey('content2.Content', related_name='options')
     title = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.title
+
 
 class Vote(core.models.Model):
     option = models.ForeignKey('Option')

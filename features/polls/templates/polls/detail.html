@@ -6,3 +6,16 @@
     <i class="sg sg-poll"></i>
     <span>{% if not association.public %}Interne {% endif %}Umfrage</span>
 {% endblock %}
+
+{% block content_text %}
+    {{ block.super }}
+
+    <h2>Antworten</h2>
+    <table>
+        <tr>
+            {% for option in association.container.options.all %}
+                <th>{{ option }}</th>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock %}

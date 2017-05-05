@@ -1,11 +1,5 @@
 {% extends 'content/create.html' %}
 
 {% block form_extra %}
-    <div class="section section-publish section-article">
-        <h2>Antwortmöglichkeiten</h2>
-        {{ form.options.management_form }}
-        {% for form in form.options %}
-            {% include 'core/_field.html' with field=form.title %}
-        {% endfor %}
-    </div>
+    {% include 'polls/_form.html' %}
 {% endblock %}
