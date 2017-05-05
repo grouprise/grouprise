@@ -13,6 +13,7 @@ import core.views
 from features.associations import models as associations
 import features.content.views
 import features.gestalten.models
+import features.groups.models
 from features.memberships.rules import is_member_of
 from utils import views as utils_views
 from utils.auth import get_user_resolver
@@ -115,12 +116,15 @@ class GestaltCalendarFeed(BaseCalendarFeed):
         return authenticated_gestalt == self.get_calendar_owner()
 
 
-class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
+class GroupCalendarFeed(BaseCalendarFeed):
 
     def items(self):
         filter_dict = {'group': self.get_group(),
                        'public': (self.kwargs['domain'] == "public")}
         return super().items().filter(**filter_dict)
+
+    def get_group(self):
+        return features.groups.models.Group.objects.get(slug=self.kwargs['group_slug'])
 
     def get_calendar_owner(self):
         return self.get_group()
