@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """
+Copyright 2016-2017 sense.lab e.V. <info@senselab.org>
+
 This file is part of stadtgestalten.
 
 stadtgestalten is free software: you can redistribute it and/or modify
