@@ -13,7 +13,7 @@ class Option(core.models.Model):
 
 class Vote(core.models.Model):
     option = models.ForeignKey('Option')
-    
+
     voter = models.ForeignKey('gestalten.Gestalt', null=True)
     anonymous = models.CharField(max_length=63, blank=True)
 
