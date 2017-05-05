@@ -45,7 +45,9 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.is_gallery:
+        if self.object.container.is_poll:
+            name = 'polls/detail.html'
+        elif self.object.container.is_gallery:
             name = 'galleries/detail.html'
         elif self.object.container.is_file:
             name = 'files/detail.html'
