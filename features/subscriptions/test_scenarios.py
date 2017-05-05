@@ -74,7 +74,7 @@ from features.memberships import test_mixins as memberships
 
 class AllContentUnsubscribed(
         content_subscriptions.AllContentUnsubscribeForbidden,
-        content.NoNotification,
+        # content.NoNotification,
         mixins.AllContentUnsubscribedMixin, gestalten.OtherGestaltMixin, tests.Test):
     """
     If a group member is unsubscribed from all content
@@ -88,7 +88,7 @@ class ExternalConversationUnsubscribed(
         content_subscriptions.ExternalUnsubscribeForbidden,
         # content_subscriptions.DeleteExternalUnsubscriptionAllowed,
         # comments.NoNotification,
-        conversations.NoNotificationOnExternalConversation,
+        # conversations.NoNotificationOnExternalConversation,
         mixins.ExternalUnsubscribedMixin, gestalten.OtherGestaltMixin, tests.Test):
     """
     If a group member is unsubscribed from external conversations
