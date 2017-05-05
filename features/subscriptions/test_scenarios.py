@@ -3,8 +3,6 @@ from . import (
         test_groups as group_subscriptions,
         test_mixins as mixins)
 from core import tests
-from features.content import tests as content
-from features.conversations import tests as conversations
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
