@@ -1,1 +1,1 @@
-RE_ENTITY_REF = r'@([a-zA-Z0-9_\-]+)'
+RE_CONTENT_REF = r'@([\w\-]+)(?:/([\w\-]+))?'

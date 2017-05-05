@@ -1,12 +1,14 @@
 import re
 
+from django.db.models import Q
 from markdown import Extension, util, inlinepatterns
 
 from core.markdown import markdown_extensions
 from utils.markdown import ExtendedLinkPattern
+from features.associations import models as associations
 from features.gestalten.models import Gestalt
 from features.groups.models import Group
-from . import RE_ENTITY_REF
+from . import RE_CONTENT_REF
 
 
 def get_entity(m, index_base=0):
@@ -42,7 +44,7 @@ class EntityLinkExtension:
     ENTITY_NONE = 'entity://none'
 
     def process_url(self, url):
-        match = re.match(RE_ENTITY_REF, url)
+        match = re.match(RE_CONTENT_REF, url)
 
         if match:
             entity, slug, name = get_entity(match)
@@ -67,24 +69,33 @@ class EntityLinkExtension:
         return a
 
 
-class EntityReferencePattern(inlinepatterns.ReferencePattern):
-    def handleMatch(self, m):
-        entity, slug, name = get_entity(m, 1)
-
-        if entity:
-            return set_entity_attrs(
-                self.makeTag(entity.get_absolute_url(), str(entity), name),
-                entity.id,
-                entity.is_group
-            )
-        else:
-            return get_entity_placeholder(name)
-
-
-class EntityReferenceExtension(Extension):
-    def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns['entity_reference'] = EntityReferencePattern(RE_ENTITY_REF, md)
-
-
 ExtendedLinkPattern.register_extension(EntityLinkExtension())
-markdown_extensions.append(EntityReferenceExtension())
+
+
+class ContentReferencePattern(inlinepatterns.ReferencePattern):
+    def handleMatch(self, m):
+        entity_slug = m.group(2)
+        content_slug = m.group(3)
+        if content_slug:
+            association = associations.Association.objects.get(
+                    Q(group__slug=entity_slug) | Q(gestalt__user__username=entity_slug),
+                    slug=content_slug)
+            return self.makeTag(association.get_absolute_url(), str(association), m.string)
+        else:
+            entity, slug, name = get_entity(m, 1)
+            if entity:
+                return set_entity_attrs(
+                    self.makeTag(entity.get_absolute_url(), str(entity), name),
+                    entity.id,
+                    entity.is_group
+                )
+            else:
+                return get_entity_placeholder(name)
+
+
+class ContentReferenceExtension(Extension):
+    def extendMarkdown(self, md, md_globals):
+        md.inlinePatterns['content_reference'] = ContentReferencePattern(RE_CONTENT_REF, md)
+
+
+markdown_extensions.append(ContentReferenceExtension())
