@@ -4,7 +4,7 @@ import core.models
 
 
 class Option(core.models.Model):
-    poll = models.ForeignKey('content.Content')
+    poll = models.ForeignKey('content2.Content')
     title = models.CharField(max_length=255)
 
 
