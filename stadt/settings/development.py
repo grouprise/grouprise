@@ -6,5 +6,7 @@ DEBUG = True
 # http://sorl-thumbnail.readthedocs.org/
 THUMBNAIL_DEBUG = DEBUG
 
-# _nach_ dem Laden der lokalen Einstellungen: Debug-Flags final setzen
+# TEMPLATE_DEBUG is officially deprecated in Django but still
+# required by sorl-thumbnail.
+TEMPLATE_DEBUG = DEBUG
 TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG

@@ -302,3 +302,7 @@ try:
     CACHE_VERSION = int(open(os.path.join(BASE_DIR, "stadt", "CACHE_VERSION"), "r").read().strip())
 except IOError:
     CACHE_VERSION = 1
+
+# TEMPLATE_DEBUG is officially deprecated in Django but still
+# required by sorl-thumbnail.
+TEMPLATE_DEBUG = False
