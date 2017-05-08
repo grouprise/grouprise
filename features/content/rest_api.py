@@ -1,7 +1,9 @@
-from rest_framework import viewsets, mixins, serializers
-from content import models as content_models
 from django.db.models import Q
+from rest_framework import viewsets, mixins, serializers
+
 from core import api
+from content import models as content_models
+from features.images import models as images
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -23,7 +25,7 @@ class ImageSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     class Meta:
-        model = content_models.Image
+        model = images.Image
         fields = ('id', 'file', 'weight', 'content', 'title', 'creator', 'path')
 
 

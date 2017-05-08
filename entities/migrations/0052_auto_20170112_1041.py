@@ -8,6 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('content', '0031_auto_20170112_1000'),
         ('entities', '0051_auto_20170112_0956'),
         ('gestalten', '0002_auto_20170112_0847'),
         ('groups', '0005_auto_20170112_1000'),
