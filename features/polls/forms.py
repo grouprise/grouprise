@@ -5,8 +5,8 @@ from . import models
 
 
 OptionFormSet = forms.modelformset_factory(
-        models.Option, extra=3, fields=('title',), labels={'title': 'Antwort'}, max_num=3,
-        min_num=1, validate_min=True)
+        models.Option, fields=('title',), labels={'title': 'Antwort'}, min_num=1,
+        validate_min=True, can_delete=True)
 
 
 class OptionMixin:
@@ -28,6 +28,7 @@ class Create(OptionMixin, content.Create):
         super().__init__(*args, **kwargs)
         self.options = OptionFormSet(
                 data=kwargs.get('data'), queryset=models.Option.objects.none())
+        self.options.extra = 4
 
 
 class Update(OptionMixin, content.Update):
@@ -38,3 +39,31 @@ class Update(OptionMixin, content.Update):
         self.options = OptionFormSet(
                 data=kwargs.get('data'),
                 queryset=models.Option.objects.filter(poll=self.instance.container))
+        self.options.extra = 2
+
+
+VoteFormSet = forms.modelformset_factory(
+        models.Vote, fields=('endorse',), labels={'endorse': 'Ja'})
+
+
+class Vote(forms.ModelForm):
+    class Meta:
+        model = models.Vote
+        fields = []
+
+    def __init__(self, *args, options=None, **kwargs):
+        self.options = options
+        super().__init__(*args, **kwargs)
+        self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())
+        self.votes.extra = 3
+
+    def is_valid(self):
+        return super().is_valid() and self.votes.is_valid()
+
+    def save(self, commit=True):
+        vote = super().save(False)
+        for i, form in enumerate(self.votes.forms):
+            form.instance.option = self.options[i]
+            form.instance.voter = vote.voter
+            form.save(commit)
+        return vote

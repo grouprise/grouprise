@@ -4,15 +4,15 @@ from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
 
-import core.views
+import core
 from core.views import base
+import features
 from features.associations import models as associations
 from features.contributions import views as contributions
 from features.files import forms as files
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from features.polls import forms as polls
 from . import forms, models
 
 
@@ -26,10 +26,11 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
         return super().get_queryset().ordered_user_content(self.request.user)
 
 
-class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
+class DetailBase(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
     model = associations.Association
+    template_name = 'articles/detail.html'
 
     form_class = forms.Comment
 
@@ -47,16 +48,22 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
 
     def get_template_names(self):
         if self.object.container.is_poll:
-            name = 'polls/detail.html'
+            name = ('polls/detail.html', )
         elif self.object.container.is_gallery:
-            name = 'galleries/detail.html'
+            name = ('galleries/detail.html', )
         elif self.object.container.is_file:
-            name = 'files/detail.html'
+            name = ('files/detail.html', )
         elif self.object.container.is_event:
-            name = 'events/detail.html'
-        else:
-            name = 'articles/detail.html'
-        return [name]
+            name = ('events/detail.html', )
+        return super().get_template_names()
+
+
+class Detail(DetailBase):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.container.is_poll:
+            return features.polls.views.Detail(kwargs=kwargs, request=request).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class Permalink(django.views.generic.RedirectView):
@@ -108,7 +115,7 @@ class Update(base.PermissionMixin, generic.UpdateView):
 
     def get_form_class(self):
         if self.object.container.is_poll:
-            form_class = polls.Update
+            form_class = features.polls.forms.Update
         elif self.object.container.is_gallery:
             form_class = galleries.Update
         elif self.object.container.is_file:

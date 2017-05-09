@@ -4,5 +4,6 @@
     {% for form in form.options %}
         {% if form.id %}{{ form.id }}{% endif %}
         {% include 'core/_field.html' with field=form.title %}
+        {% include 'core/_checkbox_field.html' with field=form.DELETE %}
     {% endfor %}
 </div>

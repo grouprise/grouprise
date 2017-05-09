@@ -11,11 +11,46 @@
     {{ block.super }}
 
     <h2>Antworten</h2>
-    <table>
-        <tr>
-            {% for option in association.container.options.all %}
-                <th>{{ option }}</th>
+    <form method="post" action="{% url 'vote' association.entity.slug association.slug %}">
+        {% csrf_token %}
+        {{ vote_form.votes.management_form }}
+        <table border="1" class="poll" width="100%">
+            <tr>
+                <th></th>
+                {% for option in association.container.options.all %}
+                    <th>{{ option }}</th>
+                {% endfor %}
+                <th></th>
+            </tr>
+            {% for voter, vvs in votes.items %}
+            <tr>
+                <td>
+                    {{ voter }}
+                </td>
+                {% for vote in vvs %}
+                    <td>
+                        {% if vote.endorse %}Ja{% else %}Nein{% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-    </table>
+            <tr>
+                <td>
+                    {% if user.is_authenticated %}
+                        {{ user.gestalt }}
+                    {% endif %}
+                </td>
+                {% for form in vote_form.votes %}
+                    <td>
+                        {% include 'core/_checkbox_field.html' with field=form.endorse %}
+                    </td>
+                {% endfor %}
+                <td>
+                    <button class="btn btn-default">
+                        Abstimmen
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
 {% endblock %}
