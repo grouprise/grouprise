@@ -1,8 +1,6 @@
-from django.db.models import Q
 from rest_framework import viewsets, mixins, serializers
 
 from core import api
-from content import models as content_models
 from . import models
 
 
