@@ -23,6 +23,8 @@ function quote(el) {
   let listener
   let btn
 
+  remove(testNode)
+
   function shorten() {
     el.style.maxHeight = `${maxHeight}px`
     el.classList.add('quote-shortened')
