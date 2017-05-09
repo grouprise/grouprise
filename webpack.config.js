@@ -41,18 +41,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, 'res/js')
         ],
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            ['es2015', {'modules': false}],
-            'stage-2'
-          ],
-          plugins: [
-            'transform-runtime',
-            'lodash',
-            ['babel-root-slash-import', {'rootPathSuffix': 'res/js'}]
-          ]
-        }
+        loader: 'babel-loader'
       }
     ]
   },
