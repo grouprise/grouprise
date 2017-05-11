@@ -27,8 +27,8 @@ class GroupSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: models.Group):
         repr = super().to_representation(instance)
         gallery = instance.get_head_gallery()
-        if gallery and gallery.images.first():
-            image = gallery.images.first().file
+        if gallery and gallery.container.gallery_images.first():
+            image = gallery.container.gallery_images.first().image.file
             repr['cover'] = get_thumbnail(image, '360x120', crop='center').url
         else:
             repr['cover'] = None
