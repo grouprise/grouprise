@@ -27,7 +27,11 @@
             {% for voter in voters %}
             <tr>
                 <td>
-                    {% link voter %}
+                    {% if voter.user %}
+                        {% link voter %}
+                    {% else %}
+                        {{ voter }}
+                    {% endif %}
                 </td>
                 {% for option in options %}
                     <td>
@@ -48,6 +52,8 @@
                     <td>
                         {% if user.is_authenticated %}
                             {{ user.gestalt }}
+                        {% else %}
+                            {% include 'core/_field.html' with field=vote_form.anonymous %}
                         {% endif %}
                     </td>
                     {% for option in options %}

@@ -1,3 +1,4 @@
+import django
 from django import forms
 
 from features.content import forms as content
@@ -49,16 +50,22 @@ VoteFormSet = forms.modelformset_factory(
 class Vote(forms.ModelForm):
     class Meta:
         model = models.Vote
-        fields = []
+        fields = ('anonymous',)
+        labels = {'anonymous': 'Name/Alias'}
 
     def __init__(self, poll, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields['anonymous'].required = True
+        self.fields['anonymous'].help_text = django.utils.safestring.mark_safe(
+                '<a href="{}?next=">Anmelden</a> oder Name/Alias angeben'.format(
+                    django.core.urlresolvers.reverse('account_login')))
+
         options = poll.options.all()
         self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())
         self.votes.extra = len(options)
         for i, form in enumerate(self.votes.forms):
             form.instance.option = options[i]
-            form.instance.voter = self.instance.voter
 
     def is_valid(self):
         return super().is_valid() and self.votes.is_valid()
@@ -66,5 +73,7 @@ class Vote(forms.ModelForm):
     def save(self, commit=True):
         vote = super().save(False)
         for form in self.votes.forms:
+            form.instance.anonymous = self.instance.anonymous
+            form.instance.voter = self.instance.voter
             form.save(commit)
         return vote

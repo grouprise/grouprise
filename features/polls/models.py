@@ -12,6 +12,9 @@ class Option(core.models.Model):
 
 
 class Vote(core.models.Model):
+    class Meta:
+        unique_together = ('option', 'voter', 'anonymous')
+
     option = models.ForeignKey('Option')
 
     voter = models.ForeignKey('gestalten.Gestalt', null=True, related_name='votes')
