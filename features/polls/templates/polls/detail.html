@@ -1,5 +1,7 @@
 {% extends 'content/detail.html' %}
 
+{% load rules %}
+
 {% block menu %}{% menu 'poll' association.entity %}{% endblock %}
 
 {% block content_type %}
@@ -25,7 +27,7 @@
             {% for voter in voters %}
             <tr>
                 <td>
-                    {{ voter }}
+                    {% link voter %}
                 </td>
                 {% for option in options %}
                     <td>
@@ -37,26 +39,30 @@
                         {% endif %}
                     </td>
                 {% endfor %}
+                <td></td>
             </tr>
             {% endfor %}
-            <tr>
-                <td>
-                    {% if user.is_authenticated %}
-                        {{ user.gestalt }}
-                    {% endif %}
-                </td>
-                {% for option in options %}
+            {% has_perm 'polls.vote' user association as can_vote %}
+            {% if can_vote %}
+                <tr>
                     <td>
-                        {% get vote_forms option as form %}
-                        {% include 'core/_checkbox_field.html' with field=form.endorse %}
+                        {% if user.is_authenticated %}
+                            {{ user.gestalt }}
+                        {% endif %}
                     </td>
-                {% endfor %}
-                <td>
-                    <button class="btn btn-default">
-                        Abstimmen
-                    </button>
-                </td>
-            </tr>
+                    {% for option in options %}
+                        <td>
+                            {% get vote_forms option as form %}
+                            {% include 'core/_checkbox_field.html' with field=form.endorse %}
+                        </td>
+                    {% endfor %}
+                    <td>
+                        <button class="btn btn-default">
+                            Abstimmen
+                        </button>
+                    </td>
+                </tr>
+            {% endif %}
         </table>
     </form>
 {% endblock %}

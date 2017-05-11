@@ -41,3 +41,8 @@ def is_member_of_any_content_group(user, content):
         if memberships.is_member_of(user, group):
             return True
     return False
+
+
+@rules.predicate
+def is_public(user, association):
+    return association.public
