@@ -1,5 +1,4 @@
 import collections
-import itertools
 
 import django
 
@@ -49,7 +48,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
         kwargs['instance'] = models.Vote(voter=self.request.user.gestalt)
         kwargs['poll'] = self.association.container
         return kwargs
-    
+
     def get_success_url(self):
         return self.association.get_absolute_url()
 

@@ -62,7 +62,8 @@ class Detail(DetailBase):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.container.is_poll:
-            return features.polls.views.Detail(kwargs=kwargs, request=request).get(request, *args, **kwargs)
+            return features.polls.views.Detail(kwargs=kwargs, request=request).get(
+                    request, *args, **kwargs)
         return super().get(request, *args, **kwargs)
 
 
