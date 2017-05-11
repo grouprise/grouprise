@@ -10,7 +10,7 @@
         {% block media_content %}
             <div class="media-body"
                  {% block media_content_attrs %}
-                    data-component="user-content" data-author="{{ text.author }}" data-permalink="{{ request.path }}#{% ref text %}"
+                    data-author="{{ text.author }}" data-permalink="{{ request.path }}#{% ref text %}"
                  {% endblock %}>
                 {% block media_body %}
                     {% markdown text.contribution.text heading_baselevel=3 %}

@@ -28,7 +28,7 @@
             {% if content.gallery %}
                 {% include 'content/_content_gallery.html' %}
             {% else %}
-                <div class="content-user" data-component="user-content">
+                <div class="content-user">
                     {% markdown content.text heading_baselevel=2 %}
                 </div>
             {% endif %}

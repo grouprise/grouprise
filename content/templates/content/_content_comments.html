@@ -20,7 +20,7 @@
                     {% include 'gestalten/_avatar.html' with gestalt=comment.author link=True %}
                 </div>
                 <div class="media-content">
-                    <div class="media-body" data-component="user-content" data-author="{{ comment.author }}" data-permalink="{{ content.get_absolute_url }}#{% ref comment %}">
+                    <div class="media-body" data-author="{{ comment.author }}" data-permalink="{{ content.get_absolute_url }}#{% ref comment %}">
                         {% markdown comment.text heading_baselevel=3 %}
                     </div>
                     <footer class="media-footer">
