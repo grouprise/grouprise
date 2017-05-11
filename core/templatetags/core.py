@@ -16,6 +16,16 @@ from core.assets import get_assets
 register = template.Library()
 
 
+@register.simple_tag
+def get(d, *args):
+    for i in args:
+        try:
+            d = d.get(i)
+        except AttributeError:
+            pass
+    return d
+
+
 @register.filter
 def filename(value):
     return os.path.basename(value.name)

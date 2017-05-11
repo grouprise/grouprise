@@ -14,22 +14,27 @@
     <form method="post" action="{% url 'vote' association.entity.slug association.slug %}">
         {% csrf_token %}
         {{ vote_form.votes.management_form }}
-        <table border="1" class="poll" width="100%">
+        <table class="poll" width="100%">
             <tr>
                 <th></th>
-                {% for option in association.container.options.all %}
+                {% for option in options %}
                     <th>{{ option }}</th>
                 {% endfor %}
                 <th></th>
             </tr>
-            {% for voter, vvs in votes.items %}
+            {% for voter in voters %}
             <tr>
                 <td>
                     {{ voter }}
                 </td>
-                {% for vote in vvs %}
+                {% for option in options %}
                     <td>
-                        {% if vote.endorse %}Ja{% else %}Nein{% endif %}
+                        {% get votes option voter as vote %}
+                        {% if vote %}
+                            {{ vote.endorse|yesno:'Ja,Nein' }}
+                        {% else %}
+                            ?
+                        {% endif %}
                     </td>
                 {% endfor %}
             </tr>
@@ -40,8 +45,9 @@
                         {{ user.gestalt }}
                     {% endif %}
                 </td>
-                {% for form in vote_form.votes %}
+                {% for option in options %}
                     <td>
+                        {% get vote_forms option as form %}
                         {% include 'core/_checkbox_field.html' with field=form.endorse %}
                     </td>
                 {% endfor %}

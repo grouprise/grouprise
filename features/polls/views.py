@@ -1,9 +1,10 @@
+import collections
 import itertools
 
 import django
 
 import core
-import features.content.views
+import features
 from . import forms, models
 
 
@@ -17,10 +18,23 @@ class Detail(features.content.views.DetailBase):
     template_name = 'polls/detail.html'
 
     def get_context_data(self, **kwargs):
-        votes = models.Vote.objects.filter(option__poll=self.object.container).order_by('voter')
-        votes = itertools.groupby(votes, lambda v: v.voter)
-        kwargs['votes'] = {voter: [vv for vv in vvs] for voter, vvs in votes}
-        kwargs['vote_form'] = forms.Vote()
+        kwargs['options'] = self.object.container.options.order_by('id')
+
+        voters = features.gestalten.models.Gestalt.objects.filter(
+                votes__option__poll=self.object.container)
+        kwargs['voters'] = voters.annotate(
+                min_vote_id=django.db.models.Min('votes__id')).order_by('min_vote_id')
+
+        votes = models.Vote.objects.filter(option__poll=self.object.container)
+        votes_dict = collections.defaultdict(dict)
+        for vote in votes:
+            votes_dict[vote.option][vote.voter] = vote
+        kwargs['votes'] = votes_dict
+
+        vote_form = forms.Vote(poll=self.object.container)
+        vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
+        kwargs['vote_form'] = vote_form
+        kwargs['vote_forms'] = vote_forms
         return super().get_context_data(**kwargs)
 
 
@@ -33,7 +47,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
         self.association = self.get_association()
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = models.Vote(voter=self.request.user.gestalt)
-        kwargs['options'] = self.association.container.options.all()
+        kwargs['poll'] = self.association.container
         return kwargs
     
     def get_success_url(self):

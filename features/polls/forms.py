@@ -51,19 +51,20 @@ class Vote(forms.ModelForm):
         model = models.Vote
         fields = []
 
-    def __init__(self, *args, options=None, **kwargs):
-        self.options = options
+    def __init__(self, poll, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        options = poll.options.all()
         self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())
-        self.votes.extra = 3
+        self.votes.extra = len(options)
+        for i, form in enumerate(self.votes.forms):
+            form.instance.option = options[i]
+            form.instance.voter = self.instance.voter
 
     def is_valid(self):
         return super().is_valid() and self.votes.is_valid()
 
     def save(self, commit=True):
         vote = super().save(False)
-        for i, form in enumerate(self.votes.forms):
-            form.instance.option = self.options[i]
-            form.instance.voter = vote.voter
+        for form in self.votes.forms:
             form.save(commit)
         return vote
