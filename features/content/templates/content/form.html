@@ -38,7 +38,9 @@
                 <div class="col-md-7">
                     {% block extra_settings %}{% endblock %}
                     {% if form.pinned %}
-                        {% include 'core/_checkbox_field.html' with field=form.pinned %}
+                        <div class="form-group">
+                            {% include 'core/_checkbox_field.html' with field=form.pinned %}
+                        </div>
                     {% endif %}
                 </div>
                 <div class="col-md-5">
