@@ -14,6 +14,11 @@ urlpatterns = [
         name='create-event'),
 
     url(
+        r'^stadt/events/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
+        views.Day.as_view(),
+        name='day-events'),
+
+    url(
         r'^(?P<entity_slug>[\w-]+)/events/add/$',
         views.Create.as_view(),
         name='create-group-event'),

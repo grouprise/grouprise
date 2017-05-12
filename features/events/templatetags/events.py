@@ -23,7 +23,7 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
             url = events[0].get_absolute_url()
         elif len(events) > 1:
             url = urlresolvers.reverse(
-                    'event-day', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ybd'])
+                    'day-events', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ybd'])
         return {
                 'day': thedate.day,
                 'events': events,

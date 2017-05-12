@@ -1,3 +1,5 @@
+import datetime
+
 import django.utils.timezone
 import django.views.generic
 from django.contrib.sites import models as sites_models
@@ -39,21 +41,22 @@ class Create(features.content.views.Create):
         return kwargs
 
 
-class Day(core.views.PermissionMixin, django.views.generic.DayArchiveView):
+class Day(List):
     permission_required = 'events.view_day'
-    allow_future = True
-    date_field = 'content__time'
-    model = associations.Association
-    ordering = 'content__time'
 
     def get_date(self):
         return django.views.generic.dates._date_from_string(
-                self.get_year(), self.get_year_format(),
-                self.get_month(), self.get_month_format(),
-                self.get_day(), self.get_day_format())
+                self.kwargs['year'], '%Y',
+                self.kwargs['month'], '%b',
+                self.kwargs['day'], '%d')
 
     def get_queryset(self):
-        return super().get_queryset()
+        date = self.get_date()
+        return associations.Association.objects.filter_events().filter(
+                content__time__gte=datetime.datetime.combine(date, datetime.time.min),
+                content__time__lt=datetime.datetime.combine(
+                    date + datetime.timedelta(days=1), datetime.time.min)
+                ).can_view(self.request.user).order_by('content__time')
 
 
 class BaseCalendarFeed(ICalFeed):
