@@ -19,6 +19,18 @@ def get_post_data():
             }
 
 
+def get_vote_data(anon=None):
+    data = {
+            'form-TOTAL_FORMS': '1',
+            'form-INITIAL_FORMS': '0',
+            'form-MIN_NUM_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1000',
+            }
+    if anon:
+        data['anonymous'] = anon
+    return data
+
+
 class PollMixin(gestalten.AuthenticatedMixin):
     def get_post_data(self):
         return get_post_data()
@@ -51,8 +63,15 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.client.post(self.get_url('create-poll'), kwargs)
         self.client.logout()
 
+    def get_poll_association(self):
+        return associations.Association.objects.get(content__title='Test')
+
     def get_poll_url(self):
-        return associations.Association.objects.get(content__title='Test').get_absolute_url()
+        return self.get_poll_association().get_absolute_url()
+
+    def get_vote_url(self):
+        association = self.get_poll_association()
+        return self.get_url('vote', [association.entity.slug, association.slug])
 
     def create_group_poll(self, **kwargs):
         self.client.force_login(self.gestalt.user)
@@ -106,6 +125,16 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.assertLogin(url=self.get_group_poll_url())
         self.assertLogin(url=self.get_group_poll_url(), method='post')
 
+    def test_guest_public_poll_vote(self):
+        self.create_poll(public=True)
+        self.assertRedirect(
+                self.get_vote_url(), method='post', data=get_vote_data(anon='a'),
+                other=self.get_poll_url())
+
+    def test_guest_internal_poll_vote(self):
+        self.create_poll(public=False)
+        self.assertLogin(self.get_vote_url(), method='post')
+
 
 class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
     def create_poll(self, **kwargs):
@@ -116,8 +145,15 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         kwargs.update(get_post_data())
         return self.client.post(self.get_url('create-group-poll', self.group.slug), kwargs)
 
+    def get_poll_association(self):
+        return associations.Association.objects.get(content__title='Test')
+
     def get_poll_url(self):
-        return associations.Association.objects.get(content__title='Test').get_absolute_url()
+        return self.get_poll_association().get_absolute_url()
+
+    def get_vote_url(self):
+        association = self.get_poll_association()
+        return self.get_url('vote', [association.entity.slug, association.slug])
 
     def get_group_poll_url(self):
         return associations.Association.objects.get(
@@ -172,6 +208,18 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         self.assertRedirect(
                 url=self.get_poll_url(), method='post', data={'text': 'Comment'})
         self.assertExists(contributions.Contribution, text__text='Comment')
+
+    def test_gestalt_public_poll_vote(self):
+        self.create_poll(public=True)
+        self.assertRedirect(
+                self.get_vote_url(), method='post', data=get_vote_data(),
+                other=self.get_poll_url())
+
+    def test_gestalt_internal_poll_vote(self):
+        self.create_group_poll(public=False)
+        self.assertRedirect(
+                self.get_vote_url(), method='post', data=get_vote_data(),
+                other=self.get_poll_url())
 
 
 class TwoGestalten(

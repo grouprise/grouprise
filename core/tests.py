@@ -37,6 +37,10 @@ class Test(test.TestCase):
     def assertNotExists(self, model, **kwargs):
         self.assertFalse(model.objects.filter(**kwargs))
 
+    def assertForbidden(self, url=None, method='get'):
+        response = getattr(self.client, method)(url)
+        self.assertEqual(response.status_code, 403)
+
     def assertLogin(self, url=None, url_name=None, url_args=[], method='get'):
         if url is None:
             url = django.core.urlresolvers.reverse(url_name, args=url_args)
@@ -53,9 +57,9 @@ class Test(test.TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def assertRedirect(self, url, method, data):
+    def assertRedirect(self, url, method, data, other=None):
         response = getattr(self.client, method)(url, data)
-        self.assertRedirects(response, url)
+        self.assertRedirects(response, other or url)
 
     def assertNotificationRecipient(self, gestalt):
         found = False
