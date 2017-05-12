@@ -1,14 +1,19 @@
 import django.utils.timezone
 import django.views.generic
+from django.contrib.sites import models as sites_models
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.views import generic
+from django_ical.views import ICalFeed
 
 import core.views
-from utils import views as utils_views
 import features.content.views
+import features.groups.views
 from features.associations import models as associations
 from features.memberships.rules import is_member_of
-from content import views as content_views
+from utils import views as utils_views
+from utils.auth import get_user_resolver
 
 
 class List(core.views.PermissionMixin, django.views.generic.ListView):
@@ -34,7 +39,64 @@ class Create(features.content.views.Create):
         return kwargs
 
 
-class GroupCalendarFeed(content_views.BaseCalendarFeed, features.groups.views.Mixin):
+class BaseCalendarFeed(ICalFeed):
+
+    user_resolver = get_user_resolver("calendar")
+
+    def __call__(self, request, *args, **kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        try:
+            return super().__call__(request, *args, **kwargs)
+        except PermissionDenied:
+            response = HttpResponse()
+            response.status_code = 401
+            domain = sites_models.Site.objects.get_current().domain
+            response['WWW-Authenticate'] = 'Basic realm="{}"'.format(domain)
+            return response
+
+    def get_queryset(self):
+        user = self.get_authorized_user()
+        filter_dict = {}
+        self.assemble_content_filter_dict(filter_dict)
+        if user is None:
+            if filter_dict['public']:
+                return associations.Association.objects.filter_events().filter(**filter_dict)
+            else:
+                # non-public items cannot be accessed without being authorized
+                raise PermissionDenied
+        else:
+            return associations.Association.objects.filter_events().can_view(user).filter(
+                    **filter_dict)
+
+    def assemble_content_filter_dict(self, filter_dict):
+        filter_dict['public'] = (self.kwargs['domain'] == 'public')
+
+    def get_authorized_user(self):
+        authenticated_gestalt = self.user_resolver.resolve_user(self.request,
+                                                                self.get_calendar_owner())
+        if authenticated_gestalt:
+            if self.check_authorization(authenticated_gestalt):
+                return authenticated_gestalt.user
+        return None
+
+    def items(self):
+        return self.get_queryset().order_by('-content__time')
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.text
+
+    def item_location(self, item):
+        return item.place
+
+    def item_start_datetime(self, item):
+        return item.time
+
+
+class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
 
     def items(self):
         filter_dict = {'group': self.get_group(),
@@ -65,7 +127,7 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
             relative_url = reverse(self.feed_route,
                                    kwargs={self.slug_url_kwarg: self.get_object().slug,
                                            'domain': 'private'})
-            user_resolver = content_views.BaseCalendarFeed.user_resolver
+            user_resolver = BaseCalendarFeed.user_resolver
             url_with_token = user_resolver.get_url_with_permission_token(
                 self.get_object(), self.request.user.gestalt, relative_url)
             context['private_export_url'] = self.request.build_absolute_uri(url_with_token)

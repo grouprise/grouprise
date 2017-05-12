@@ -1,10 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from content import views as content_views
 from utils import views as utils_views
 from core.views import base
 from features.associations import models as associations
+from features.events import views as events
 from . import models
 
 
@@ -20,7 +20,7 @@ class List(base.PermissionMixin, generic.ListView):
                 entity_type=models.Gestalt.get_content_type()).can_view(self.request.user)
 
 
-class CalendarFeed(content_views.BaseCalendarFeed):
+class CalendarFeed(events.BaseCalendarFeed):
 
     def get_calendar_owner(self):
         return self.get_gestalt()

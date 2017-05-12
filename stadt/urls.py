@@ -8,7 +8,6 @@ urlpatterns = [
     urls.url(r'^stadt/api/', urls.include('core.api_urls')),
 
     urls.url(r'^stadt/', urls.include('account.urls')),
-    urls.url(r'^stadt/', urls.include('content.urls')),
     urls.url(r'^stadt/', urls.include('entities.urls')),
     urls.url(r'^stadt/', urls.include('features.associations.urls')),
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
