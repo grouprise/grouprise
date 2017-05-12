@@ -64,11 +64,18 @@ class Vote(forms.ModelForm):
         #        '<a href="{}?next=">Anmelden</a> oder Name/Alias angeben'.format(
         #            django.core.urlresolvers.reverse('account_login')))
 
+        self.poll = poll
         options = poll.options.all()
         self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())
         self.votes.extra = len(options)
         for i, form in enumerate(self.votes.forms):
             form.instance.option = options[i]
+
+    def clean_anonymous(self):
+        anon = self.cleaned_data['anonymous']
+        if models.Vote.objects.filter(option__poll=self.poll, anonymous=anon).exists():
+            raise django.forms.ValidationError('%s hat bereits abgestimmt.' % anon)
+        return anon
 
     def is_valid(self):
         return super().is_valid() and self.votes.is_valid()

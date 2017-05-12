@@ -38,7 +38,7 @@ class Detail(features.content.views.DetailBase):
                 votes_dict[vote.option][vote.anonymous] = vote
         kwargs['votes'] = votes_dict
 
-        vote_form = forms.Vote(poll=self.object.container)
+        vote_form = getattr(self, 'vote_form', forms.Vote(poll=self.object.container))
         vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
         kwargs['vote_form'] = vote_form
         kwargs['vote_forms'] = vote_forms
@@ -49,6 +49,15 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'polls.vote'
     model = models.Vote
     form_class = forms.Vote
+
+    def form_invalid(self, form):
+        view = Detail(kwargs=self.kwargs, request=self.request)
+        view.vote_form = form
+        return view.get(self.request)
+
+    def get(self, *args, **kwargs):
+        return django.http.HttpResponseRedirect(django.core.urlresolvers.reverse(
+            'content', args=[self.kwargs.get('entity_slug'), self.kwargs.get('association_slug')]))
 
     def get_association(self):
         return django.shortcuts.get_object_or_404(
