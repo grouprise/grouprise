@@ -1,6 +1,6 @@
 {% extends 'content/detail.html' %}
 
-{% load rules %}
+{% load gestalten rules %}
 
 {% block menu %}{% menu 'poll' association.entity %}{% endblock %}
 
@@ -24,6 +24,7 @@
                 {% endfor %}
                 <th></th>
             </tr>
+
             {% for voter in voters %}
             <tr>
                 <td>
@@ -35,7 +36,7 @@
                 </td>
                 {% for option in options %}
                     <td>
-                        {% get votes option voter as vote %}
+                        {% get votes voter option as vote %}
                         {% if vote %}
                             {{ vote.endorse|yesno:'Ja,Nein' }}
                         {% else %}
@@ -43,9 +44,13 @@
                         {% endif %}
                     </td>
                 {% endfor %}
-                <td></td>
+                <td>
+                    {% get votes voter as vvs %}
+                    {% time vvs.latest.time_updated %}
+                </td>
             </tr>
             {% endfor %}
+
             {% has_perm 'polls.vote' user association as can_vote %}
             {% if can_vote %}
                 <tr>
@@ -53,7 +58,8 @@
                         {% if user.is_authenticated %}
                             {{ user.gestalt }}
                         {% else %}
-                            {% include 'core/_field.html' with field=vote_form.anonymous %}
+                            {% login_url request as login_url %}
+                            {% include 'core/_field.html' with field=vote_form.anonymous help_text='<a href="'|add:login_url|add:'">Anmelden</a> oder Name/Alias angeben' %}
                         {% endif %}
                     </td>
                     {% for option in options %}

@@ -20,4 +20,6 @@ class Vote(core.models.Model):
     voter = models.ForeignKey('gestalten.Gestalt', null=True, related_name='votes')
     anonymous = models.CharField(max_length=63, blank=True, null=True)
 
+    time_updated = models.DateTimeField(auto_now=True)
+
     endorse = models.BooleanField(default=False)

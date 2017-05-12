@@ -17,31 +17,37 @@ class Detail(features.content.views.DetailBase):
     template_name = 'polls/detail.html'
 
     def get_context_data(self, **kwargs):
+        # options
         kwargs['options'] = self.object.container.options.order_by('id')
 
-        gestalten_voters = features.gestalten.models.Gestalt.objects.filter(
-                votes__option__poll=self.object.container)
-        gestalten_voters = gestalten_voters.annotate(
-                min_vote_id=django.db.models.Min('votes__id')).order_by('min_vote_id')
-        votes = models.Vote.objects.filter(option__poll=self.object.container)
-        anonymous_voters = votes.exclude(anonymous__isnull=True).values_list(
-                'anonymous', flat=True).distinct()
-        anonymous_voters = anonymous_voters.annotate(
-                min_vote_id=django.db.models.Min('id')).order_by('min_vote_id')
-        kwargs['voters'] = list(gestalten_voters) + list(anonymous_voters)
-
+        # votes
+        votes = models.Vote.objects.filter(option__poll=self.object.container).order_by(
+                'time_updated')
         votes_dict = collections.defaultdict(dict)
         for vote in votes:
             if vote.voter:
-                votes_dict[vote.option][vote.voter] = vote
+                votes_dict[vote.voter][vote.option] = vote
+                votes_dict[vote.voter]['latest'] = vote
             else:
-                votes_dict[vote.option][vote.anonymous] = vote
+                votes_dict[vote.anonymous][vote.option] = vote
+                votes_dict[vote.anonymous]['latest'] = vote
         kwargs['votes'] = votes_dict
 
+        # voters
+        voters = []
+        for vote in votes.order_by('-time_updated'):
+            if vote.voter and vote.voter not in voters:
+                voters.append(vote.voter)
+            elif vote.anonymous and vote.anonymous not in voters:
+                voters.append(vote.anonymous)
+        kwargs['voters'] = voters[::-1]
+
+        # vote form
         vote_form = getattr(self, 'vote_form', forms.Vote(poll=self.object.container))
         vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
         kwargs['vote_form'] = vote_form
         kwargs['vote_forms'] = vote_forms
+
         return super().get_context_data(**kwargs)
 
 
