@@ -3,6 +3,7 @@ from django.conf.urls import static
 from django.contrib import admin
 
 urlpatterns = [
+    urls.url(r'^', urls.include('core.urls')),
     urls.url(r'^stadt/admin/', admin.site.urls),
     urls.url(r'^stadt/api/', urls.include('core.api_urls')),
 

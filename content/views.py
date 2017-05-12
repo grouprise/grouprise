@@ -103,13 +103,6 @@ class ImageList(utils_views.List):
         return self.get_content().title
 
 
-class Markdown(utils_views.PageMixin, generic.TemplateView):
-    permission = 'content.view_help'
-    sidebar = tuple()
-    template_name = 'content/markdown.html'
-    title = 'Textauszeichnung'
-
-
 class BaseCalendarFeed(ICalFeed):
 
     user_resolver = get_user_resolver("calendar")
