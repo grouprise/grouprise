@@ -107,8 +107,3 @@ class Event(Content):
 
     def get_display_type_name(self):
         return 'Ereignis' if self.public else 'Internes Ereignis'
-
-
-class Gallery(Content):
-    def get_display_type_name(self):
-        return 'Galerie' if self.public else 'Interne Galerie'

@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('entities', '0049_auto_20170112_0940'),
+        ('gestalten', '0001_initial'),
     ]
 
     operations = [
