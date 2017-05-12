@@ -9,9 +9,10 @@
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% dropdown 'content-new' 'Neuer Beitrag' %}
-            <li><a href="{% url 'create-article' %}">Artikel</a></li>
-            <li><a href="{% url 'create-event' %}">Veranstaltung</a></li>
-            <li><a href="{% url 'create-gallery' %}">Galerie</a></li>
+            <li><a href="{% url 'create-article' %}"><i class="sg sg-article"></i> Artikel</a></li>
+            <li><a href="{% url 'create-event' %}"><i class="sg sg-event"></i> Veranstaltung</a></li>
+            <li><a href="{% url 'create-gallery' %}"><i class="sg sg-gallery"></i> Galerie</a></li>
+            <li><a href="{% url 'create-poll' %}"><i class="sg sg-poll"></i>Umfrage</a></li>
         {% enddropdown %}
     {% endif %}
 {% endblock %}

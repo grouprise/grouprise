@@ -4,6 +4,11 @@ from . import views
 
 urlpatterns = [
     url(
+        r'^stadt/polls/add/$',
+        views.Create.as_view(),
+        name='create-poll'),
+
+    url(
         r'^(?P<entity_slug>[\w-]+)/polls/add/$',
         views.Create.as_view(),
         name='create-group-poll'),
