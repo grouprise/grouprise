@@ -39,6 +39,23 @@ class Create(features.content.views.Create):
         return kwargs
 
 
+class Day(core.views.PermissionMixin, django.views.generic.DayArchiveView):
+    permission_required = 'events.view_day'
+    allow_future = True
+    date_field = 'content__time'
+    model = associations.Association
+    ordering = 'content__time'
+
+    def get_date(self):
+        return django.views.generic.dates._date_from_string(
+                self.get_year(), self.get_year_format(),
+                self.get_month(), self.get_month_format(),
+                self.get_day(), self.get_day_format())
+
+    def get_queryset(self):
+        return super().get_queryset()
+
+
 class BaseCalendarFeed(ICalFeed):
 
     user_resolver = get_user_resolver("calendar")
