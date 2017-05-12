@@ -10,7 +10,13 @@
     {% if prefix %}
     </div>
     {% endif %}
-    <span class="help-block">{{ field.help_text }}</span>
+    <span class="help-block">
+        {% if help_text %}
+            {{ help_text }}
+        {% else %}
+            {{ field.help_text }}
+        {% endif %}
+    </span>
     {% for error in field.errors %}
         <span class="help-block"><strong>{{ error }}</strong></span>
     {% endfor %}

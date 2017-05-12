@@ -16,6 +16,7 @@ class Subscribe(SubscriptionMixin, views.Create):
             fields.related_object('subscribed_to'),
             fields.current_gestalt('subscriber'))
     message = 'Du erhältst nun Benachrichtigungen.'
+    template_name = 'subscriptions/create.html'
 
     def form_valid(self, form):
         try:
@@ -37,9 +38,6 @@ class ContentSubscribe(Subscribe):
 
 
 class GroupSubscribe(groups.Mixin, Subscribe):
-    description = (
-            'Benachrichtigt werden, wenn in der Gruppe <em>{{ group }}</em> '
-            'neue Beiträge veröffentlicht werden')
     permission_required = 'subscriptions.create_group_subscription'
 
     def get_related_object(self):
