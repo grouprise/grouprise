@@ -56,10 +56,13 @@ class Vote(forms.ModelForm):
     def __init__(self, poll, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['anonymous'].required = True
-        self.fields['anonymous'].help_text = django.utils.safestring.mark_safe(
-                '<a href="{}?next=">Anmelden</a> oder Name/Alias angeben'.format(
-                    django.core.urlresolvers.reverse('account_login')))
+        if self.instance.voter and self.instance.voter.user.is_authenticated():
+            del self.fields['anonymous']
+        else:
+            self.fields['anonymous'].required = True
+        # self.fields['anonymous'].help_text = django.utils.safestring.mark_safe(
+        #        '<a href="{}?next=">Anmelden</a> oder Name/Alias angeben'.format(
+        #            django.core.urlresolvers.reverse('account_login')))
 
         options = poll.options.all()
         self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())

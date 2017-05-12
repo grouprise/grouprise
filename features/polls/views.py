@@ -24,7 +24,8 @@ class Detail(features.content.views.DetailBase):
         gestalten_voters = gestalten_voters.annotate(
                 min_vote_id=django.db.models.Min('votes__id')).order_by('min_vote_id')
         votes = models.Vote.objects.filter(option__poll=self.object.container)
-        anonymous_voters = votes.values_list('anonymous', flat=True).distinct()
+        anonymous_voters = votes.exclude(anonymous__isnull=True).values_list(
+                'anonymous', flat=True).distinct()
         anonymous_voters = anonymous_voters.annotate(
                 min_vote_id=django.db.models.Min('id')).order_by('min_vote_id')
         kwargs['voters'] = list(gestalten_voters) + list(anonymous_voters)

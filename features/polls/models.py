@@ -13,11 +13,11 @@ class Option(core.models.Model):
 
 class Vote(core.models.Model):
     class Meta:
-        unique_together = ('option', 'voter', 'anonymous')
+        unique_together = (('option', 'voter'), ('option', 'anonymous'))
 
     option = models.ForeignKey('Option')
 
     voter = models.ForeignKey('gestalten.Gestalt', null=True, related_name='votes')
-    anonymous = models.CharField(max_length=63, blank=True)
+    anonymous = models.CharField(max_length=63, blank=True, null=True)
 
     endorse = models.BooleanField(default=False)
