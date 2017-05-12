@@ -58,8 +58,8 @@
                         {% if user.is_authenticated %}
                             {{ user.gestalt }}
                         {% else %}
-                            {% login_url request as login_url %}
-                            {% include 'core/_field.html' with field=vote_form.anonymous help_text='<a href="'|add:login_url|add:'">Anmelden</a> oder Name/Alias angeben' %}
+                            {% login_or_field vote_form.anonymous as help_text %}
+                            {% include 'core/_field.html' with field=vote_form.anonymous help_text=help_text %}
                         {% endif %}
                     </td>
                     {% for option in options %}
