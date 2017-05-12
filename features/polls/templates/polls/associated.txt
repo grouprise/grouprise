@@ -1,0 +1,7 @@
+Umfrage online ansehen und abstimmen oder kommentieren:
+{% url 'content' instance.entity.slug instance.slug as path %}{{ path|full_url }}
+
+{{ instance.container.versions.last.text }}
+
+Antwortmöglichkeiten der Umfrage:{% for option in instance.container.options.all %}
+* {{ option }}{% endfor %}

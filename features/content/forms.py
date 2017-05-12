@@ -74,7 +74,11 @@ class Create(forms.ModelForm):
                     all_day=self.cleaned_data.get('all_day', False))
             self.instance.container.versions.create(
                     author=self.author, text=self.cleaned_data['text'])
+            self.save_content_relations(commit)
             return super().save(commit)
+
+    def save_content_relations(self, commit):
+        pass
 
 
 class Update(forms.ModelForm):

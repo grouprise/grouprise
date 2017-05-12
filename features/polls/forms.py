@@ -14,12 +14,10 @@ class OptionMixin:
     def is_valid(self):
         return super().is_valid() and self.options.is_valid()
 
-    def save(self, commit=True):
-        association = super().save(commit)
+    def save_content_relations(self, commit):
         for form in self.options.forms:
-            form.instance.poll = association.container
+            form.instance.poll = self.instance.container
         self.options.save(commit)
-        return association
 
 
 class Create(OptionMixin, content.Create):
