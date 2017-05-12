@@ -1,5 +1,5 @@
 {% extends 'associations/detail.html' %}
-{% load rules %}
+{% load gestalten rules %}
 
 {% block meta %}
     {% include 'content/_meta.html' with content=association.container %}
@@ -59,6 +59,10 @@
                 {% if can_comment %}
                 <li>
                     {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% login_url %}" class="btn btn-default">Anmelden zum Kommentieren</a>
                 </li>
                 {% endif %}
             </ol>
