@@ -27,6 +27,7 @@ import cite from './transforms/cite'
 import grouplink from './transforms/grouplink'
 import quote from './transforms/quote'
 import masonry from './transforms/masonry'
+import galleryEditor from './transforms/gallery-editor'
 
 function init (searchIn = document) {
   const bus = PubSub()
@@ -38,6 +39,7 @@ function init (searchIn = document) {
   component('editor', editor, opts)
   component('time', time, opts)
   component('gallery', gallery, opts)
+  component('gallery-editor', galleryEditor, opts)
   component('snake', snake, opts)
   component('openable', openable, opts)
   component('clipboard', clipboard, opts)

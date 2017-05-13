@@ -7,10 +7,46 @@
     align-items: center;
     min-height: 3.5rem;
     background-color: #f2f2f2;
+    position: relative;
 
-    .on-handhelds({
-        flex-direction: column;
-    });
+    .on-handhelds({ flex-direction: column; });
+
+    h4 {
+        margin: 0;
+        font-family: @font-family-default;
+    }
+
+    small, span {
+        display: block;
+        line-height: 20px;
+        transition: opacity .1s, transform ease-out .1s .1s;
+    }
+
+    span {
+        transform: translateY(11px)
+    }
+
+    small {
+        opacity: 0;
+    }
+
+    .gallery-editor-uploading & {
+        span, small {
+            transition: opacity .1s .1s, transform ease-out .1s;
+        }
+
+        span {
+            transform: none;
+        }
+
+        small {
+            opacity: 1;
+        }
+    }
+}
+
+.gallery-editor-uploading {
+
 }
 
 .gallery-header-description {
@@ -55,4 +91,16 @@
 
 .gallery-image-preview {
     display: block;
+}
+
+.gallery-progress {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    background-color: @brand-success;
+    transition: transform .2s;
+    transform-origin: 0;
+    display: block;
+    width: 100%;
 }

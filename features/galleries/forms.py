@@ -8,7 +8,9 @@ from features.images import models as images
 class Create(content.Create):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     images = forms.ModelMultipleChoiceField(
-            label='Bilder', queryset=None, widget=forms.SelectMultiple(attrs={'size': 10}))
+        label='Bilder', queryset=None,
+        widget=forms.SelectMultiple(attrs={'size': 10, 'data-component': 'gallery-editor'})
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -24,7 +26,9 @@ class Create(content.Create):
 class Update(content.Update):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     images = forms.ModelMultipleChoiceField(
-            label='Bilder', queryset=None, widget=forms.SelectMultiple(attrs={'size': 10}))
+        label='Bilder', queryset=None,
+        widget=forms.SelectMultiple(attrs={'size': 10, 'data-component': 'gallery-editor'})
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
