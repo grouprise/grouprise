@@ -1,0 +1,27 @@
+@spinner-size: 40px;
+
+.spinner {
+    content: " ";
+    width: @spinner-size;
+    height: @spinner-size;
+    border: 4px solid @brand-primary;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: fa-spin .4s linear infinite forwards;
+}
+
+.spinner-abs-center {
+    position: absolute;
+    left: 50%;
+    margin-left: (@spinner-size / -2);
+}
+
+.spinner-abs-left {
+    position: absolute;
+    left: 0;
+}
+
+.spinner-abs-right {
+    position: absolute;
+    right: 0;
+}

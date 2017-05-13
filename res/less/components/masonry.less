@@ -7,20 +7,10 @@
     &:extend(.masonry);
 
     &.masonry-loading {
-
         &:after {
-            @size: 40px;
-            content: " ";
-            position: absolute;
+            &:extend(.spinner);
+            &:extend(.spinner-abs-center);
             top: 100px;
-            left: 50%;
-            width: @size;
-            height: @size;
-            margin-left: -(@size / 2);
-            border: 4px solid @brand-primary;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: fa-spin .4s linear infinite forwards;
         }
     }
 
