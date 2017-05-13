@@ -1,8 +1,8 @@
 import { $, getAttr, remove, toggleClass } from 'luett'
-import { sum } from 'lodash'
 import bel from 'bel'
 import EventEmitter from 'eventemitter3'
 
+import UploaderFactory from '../util/uploader'
 import { image as adapter } from '../adapters/api'
 import pickii from './pickii'
 import filePicker from './file-picker'
@@ -11,41 +11,8 @@ import progress from './progress'
 
 const contentId = getAttr($("[name='content_id']"), 'value', false)
 
+const uploader = UploaderFactory(adapter)
 let processIds = 0
-
-function progressAdapterFactory(callback) {
-  const iface = {}
-  const handlers = []
-
-  function propagateProgress() {
-    const progress = sum(handlers) / handlers.length
-    callback({
-      complete: Math.max(0, Math.min(100, progress)),
-      jobCount: handlers.length
-    })
-  }
-
-  iface.createHandler = () => {
-    const id = handlers.length
-    handlers[id] = 0
-    return progress => {
-      if(progress.lengthComputable) {
-        handlers[id] = progress.loaded / progress.total * 100
-        propagateProgress()
-      }
-    }
-  }
-
-  return iface
-}
-
-function upload (files, onProgress) {
-  const progressAdapter = progressAdapterFactory(onProgress)
-  const uploads = files.map(file => {
-    return adapter.create({file, contentId}, {onProgress: progressAdapter.createHandler()})
-  })
-  return Promise.all(uploads)
-}
 
 function dummyAdapter () {
   return Promise.resolve([])
@@ -58,7 +25,7 @@ function createFilePicker (emitter) {
     callback: (files) => {
       const processId = processIds++
       emitter.emit('files:upload', { files, processId })
-      upload(files, progress => emitter.emit('files:progress', { progress, processId }))
+      uploader.upload(files, progress => emitter.emit('files:progress', { progress, processId }))
         .then((files) => {
           emitter.emit('files:select', files)
           emitter.emit('files:add', files)
