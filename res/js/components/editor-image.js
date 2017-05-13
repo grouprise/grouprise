@@ -9,8 +9,6 @@ import filePicker from './file-picker'
 import tabbed from './tabbed'
 import progress from './progress'
 
-const contentId = getAttr($("[name='content_id']"), 'value', false)
-
 const uploader = UploaderFactory(adapter)
 let processIds = 0
 
@@ -38,13 +36,6 @@ function createFilePicker (emitter) {
   })
 }
 
-function createContentImageView (emitter) {
-  return pickii({
-    emit: emitter.emit.bind(emitter),
-    adapter: contentId ? () => adapter.get({content: contentId}) : dummyAdapter
-  })
-}
-
 function createUserImageView (emitter) {
   const creator = window.app.conf.gestalt.id
   return pickii({
@@ -54,17 +45,8 @@ function createUserImageView (emitter) {
 }
 
 function createTabbed (emitter, tabConfig = {}) {
-  const opts = Object.assign({}, {user: true, content: true}, tabConfig)
+  const opts = Object.assign({}, {user: true}, tabConfig)
   const tabs = []
-
-  if (opts.content) {
-    const contentImageView = createContentImageView(emitter)
-    emitter.on('files:add', contentImageView.refresh)
-    tabs.push({
-      content: contentImageView.el,
-      label: bel`<span>Beitragsbilder</span>`
-    })
-  }
 
   if (opts.user) {
     const userImageView = createUserImageView(emitter)
