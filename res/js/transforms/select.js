@@ -22,6 +22,7 @@ export default (el, opts) => {
   let data = $$('option', el).map(generateChoices.bind(null, opts.conf.defaultValue || ''))
   const defaultValue = data.reduce((result, option) => option.isDefault ? option.value : result, null)
   const value = data.reduce((result, option) => option.isCurrent ? option.value : result, null)
+  const Select = Vue.component('sg-select')
 
   if (get(opts, 'skipDefault', true)) {
     data = data.filter(option => !option.isDefault)
@@ -35,21 +36,32 @@ export default (el, opts) => {
       el.style.display = 'none'
 
       vue = new Vue({
-        template: `<sg-select :choices="model.choices" :defaultChoice="model.defaultChoice" 
-                              :renderer="adapter.renderer" :texts="adapter.texts" :filter="adapter.filter" 
-                              :defaultValue="defaultValue" v-model="value"></sg-select>`,
         el: `#${container.id}`,
+        render(h) {
+          return h(Select, {
+            props: {
+              choices: this.model.choices,
+              defaultChoice: this.model.defaultChoice,
+              renderer: this.adapter.renderer,
+              texts: this.adapter.texts,
+              filter: this.adapter.filter,
+              defaultValue: this.defaultValue,
+              value: this.value
+            },
+            on: {
+              input(value) {
+                vue.value = value
+                el.value = value
+                el.dispatchEvent(new window.Event('change'))
+              }
+            }
+          })
+        },
         data: {
           model,
           defaultValue,
           value,
           adapter
-        },
-        watch: {
-          value (value) {
-            el.value = value
-            el.dispatchEvent(new window.Event('change'))
-          }
         }
       })
     })

@@ -47,12 +47,23 @@ export default (el, opts) => {
       .then(group => {
         data.group = group
         vue = new Vue({
-          template: `<transition name='fade-down' appear>
-                        <group-preview v-if='show' :group="group"></group-preview>
-                     </transition>`,
           el: `#${container.id}`,
-          data: data,
-          components: { GroupPreview }
+          render(h) {
+            const renderGroup = () => {
+              return h(GroupPreview, {
+                props: {
+                  group: this.group
+                }
+              })
+            }
+            return h('transition', {
+              props: {
+                name: 'fade-down',
+                appear: true
+              }
+            }, this.show ? [renderGroup()] : [])
+          },
+          data: data
         })
       })
   }
