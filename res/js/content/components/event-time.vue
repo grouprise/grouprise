@@ -41,8 +41,12 @@
   import { inRange } from 'lodash'
 
   const calculateDuration = (start, end) => {
-    const hours = Math.max(moment.duration(moment(end).diff(moment(start))).asHours(), 1)
-    return [Math.round(hours), hours < 12 && inRange(hours / Math.round(hours) * 60, 58, 62)]
+    if(start && end) {
+      const hours = Math.max(moment.duration(moment(end).diff(moment(start))).asHours(), 1)
+      return [Math.round(hours), hours < 12 && inRange(hours / Math.round(hours) * 60, 58, 62)]
+    } else {
+      return [1, true]
+    }
   }
 
   const label = (start, end, allDay) => {
