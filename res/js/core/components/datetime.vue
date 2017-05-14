@@ -13,7 +13,7 @@
         <div class="controls">
           <input type="text" class="form-control form-control-icon" v-model="time" ref="time"
                  placeholder="z.B: 12:30" pattern="^([0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
-                @focus="isEditing = true">
+                 @focus="isEditing = true" @blur="guessTime">
         </div>
       </div>
     </transition>
@@ -65,7 +65,7 @@
       },
       timeFormat: {
         type: [String, Array],
-        default: () => ["HH:mm", "HHMM"]
+        default: () => ["HH:mm", "HH:m", "H:mm", "H:m", "HHmm", "Hmm", "HHm", "HH", "H"]
       },
       dateLabel: {
         type: String,
@@ -126,6 +126,17 @@
 
         if(this.$refs.date && this.$refs.date._flatpickr) {
           this.$refs.date._flatpickr.setDate(this.currentValue)
+        }
+      },
+      guessTime(event) {
+        const { timeFormat } = this
+        const el = event.target
+        const time = el.value
+        const parsedTime = checkDate(time, timeFormat)
+
+        if(parsedTime) {
+          event.target.value = format(parsedTime, timeFormat)
+          el.dispatchEvent(new window.Event('input'))
         }
       }
     },
