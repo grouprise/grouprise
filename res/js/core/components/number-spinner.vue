@@ -5,7 +5,7 @@
         <button type="button" class="numspi-btn" @click="modifyValue(-1)" :disabled="!allowDecrement">
           <i class="fa fa-minus"></i>
         </button>
-        <input class="numspi-input" type="number" :min="min" :max="max" :step="step" v-model="currentValue" :id="id">
+        <input class="numspi-input" type="number" :min="min" :max="max" :step="step" v-model.number="currentValue" :id="id">
         <button type="button" class="numspi-btn" @click="modifyValue(1)" :disabled="!allowIncrement">
           <i class="fa fa-plus"></i>
         </button>
