@@ -1,6 +1,7 @@
 <template>
   <div class="configurator" ref="configurator">
-    <div class="configurator-label" @click="toggle()" @keydown.enter="toggle()" tabindex="0">
+    <div class="configurator-label" tabindex="0"
+         @click.stop="toggle(true)" @keydown.enter="toggle()" @focus="toggle(true)">
       <slot name="label"></slot>
     </div>
     <transition name="fade-down">
@@ -34,6 +35,17 @@
 
 <script>
   import { mixin as onClickOutside } from 'vue-on-click-outside'
+  import { on } from 'luett'
+  import { SingletonListener } from '../../util/events'
+
+  const focusInListener = SingletonListener(
+    callback => on(document, 'focusin', callback),
+    (event, self) => {
+      if (self.opened && !self.$el.contains(event.target)) {
+        self.toggle(false)
+      }
+    }
+  )
 
   export default {
     mixins: [onClickOutside],
@@ -56,9 +68,17 @@
       },
       toggle(force = null) {
         const newState = force !== null ? force : !this.opened
-        this.$emit(newState ? 'show' : 'hide')
-        this.opened = newState
+        if (newState !== this.opened) {
+          this.$emit(newState ? 'show' : 'hide')
+          this.opened = newState
+        }
       }
+    },
+    mounted() {
+      focusInListener.register(this)
+    },
+    beforeDestroy() {
+      focusInListener.remove(this)
     }
   }
 </script>
