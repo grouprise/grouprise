@@ -13,7 +13,7 @@
         <div class="controls">
           <input type="text" class="form-control form-control-icon" v-model="time" ref="time"
                  placeholder="z.B: 12:30" pattern="^([0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
-                 @focus="isEditing = true" @blur="guessTime">
+                 @focus="isEditing = true" @blur="guessTime" @wheel.prevent="scrollTime">
         </div>
       </div>
     </transition>
@@ -74,6 +74,10 @@
       timeLabel: {
         type: String,
         default: "Zeit"
+      },
+      timeStep: {
+        type: Number,
+        default: 30,
       },
       disableDates: {
         type: Array,
@@ -138,7 +142,20 @@
           event.target.value = format(parsedTime, timeFormat)
           el.dispatchEvent(new window.Event('input'))
         }
-      }
+      },
+      increaseTime(step) {
+        const el = this.$refs.time
+        const { timeFormat } = this
+        const parsedTime = checkDate(el.value, timeFormat)
+        if (parsedTime) {
+          el.value = format(parsedTime.add(step, 'minutes'), timeFormat)
+        }
+      },
+      scrollTime(event) {
+        if (Math.abs(event.deltaY) >= 20) {
+          this.increaseTime(this.timeStep * (event.deltaY < 0 ? -1 : 1))
+        }
+      },
     },
     watch: {
       value() { setTimeout(() => this.setFromSource(), 0) },
