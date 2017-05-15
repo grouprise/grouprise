@@ -37,6 +37,7 @@ function setActive (form) {
 export default (el, opts) => {
   const reinit = opts.conf.init
   const id = getAttr(el, 'id')
+  let isSubmitting = false
 
   function replaceContent (content) {
     el.innerHTML = $(`#${id}`, content).innerHTML
@@ -49,12 +50,17 @@ export default (el, opts) => {
 
   function handleSubmit (event) {
     event.preventDefault()
+
+    if (isSubmitting) return;
+
+    isSubmitting = true
     setInactive(event.delegateTarget)
     submit(event.delegateTarget)
       .then(replaceContent)
       .then(() => reinit(el))
       .then(() => $('form textarea', el).focus())
       .catch(onFailure)
+      .then(() => isSubmitting = false)
   }
 
   const submitListener = delegate(el, 'form', 'submit', handleSubmit)
