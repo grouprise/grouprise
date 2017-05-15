@@ -16,4 +16,38 @@ function eventedFunction (func) {
   return wrapper
 }
 
-export { evented, eventedFunction }
+function SingletonListener(listenerFactory, callback) {
+  const iface = {}
+  const subscribers = []
+  let listener
+
+  function propagate(event) {
+    subscribers.forEach(sub => callback.call(this, event, sub))
+  }
+
+  function init() {
+    listener = listenerFactory(propagate)
+  }
+
+  iface.register = sub => {
+    if(!listener) init()
+    subscribers.push(sub)
+    return iface
+  }
+
+  iface.remove = sub => {
+    const index = subscribers.indexOf(sub)
+    if (index > 0) {
+      subscribers.splice(index, 1)
+      if (subscribers.length === 0) {
+        listener.destroy()
+        listener = null
+      }
+    }
+    return iface
+  }
+
+  return iface
+}
+
+export { evented, eventedFunction, SingletonListener }
