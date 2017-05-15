@@ -139,8 +139,7 @@
         const parsedTime = checkDate(time, timeFormat)
 
         if(parsedTime) {
-          event.target.value = format(parsedTime, timeFormat)
-          el.dispatchEvent(new window.Event('input'))
+          this.time = format(parsedTime, timeFormat)
         }
       },
       increaseTime(step) {
@@ -148,7 +147,7 @@
         const { timeFormat } = this
         const parsedTime = checkDate(el.value, timeFormat)
         if (parsedTime) {
-          el.value = format(parsedTime.add(step, 'minutes'), timeFormat)
+          this.time = format(parsedTime.add(step, 'minutes'), timeFormat)
         }
       },
       scrollTime(event) {
