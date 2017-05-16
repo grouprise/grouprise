@@ -11,7 +11,7 @@ fragments.insert(
 
 fragments.insert(
         'invite-member',
-        'group-meta-members')
+        'group-actions')
 
 fragments.insert(
         'sidebar-share-group',
