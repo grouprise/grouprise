@@ -116,11 +116,13 @@
                 </div>
             {% endif %}
 
-            <div class="btn-group">
-                <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default btn-sm">
-                    <i class="sg sg-message"></i> Nachricht schreiben
-                </a>
-            </div>
+            {% if not can_edit %}
+                <div class="btn-group">
+                    <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default btn-sm">
+                        <i class="sg sg-message"></i> Nachricht schreiben
+                    </a>
+                </div>
+            {% endif %}
 
             {% include_fragments 'group-actions' %}
             {% include_features '_group_actions.html' %}
