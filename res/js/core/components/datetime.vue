@@ -28,7 +28,7 @@
   const checkDate = (date, formats) => {
     const validFormats = ensureArray(formats).filter(format => moment(date, format, true).isValid())
 
-    if(validFormats.length > 0) {
+    if (validFormats.length > 0) {
       const format = validFormats[0]
       return moment(date, format)
     }
@@ -95,16 +95,16 @@
     },
     computed: {
       finalValue() {
-        const { enableTime, date, time, dateFormat, timeFormat } = this
+        const {enableTime, date, time, dateFormat, timeFormat} = this
         const parsedDate = checkDate(date, dateFormat)
         const parsedTime = checkDate(time, timeFormat)
 
-        if(parsedDate) {
+        if (parsedDate) {
           let timeOffset
 
-          if(!enableTime) {
+          if (!enableTime) {
             timeOffset = this.timeDefault
-          } else if(enableTime && parsedTime) {
+          } else if (enableTime && parsedTime) {
             timeOffset = ["hour", "minute", "second"].map(u => parsedTime.get(u))
           } else {
             return null
@@ -122,29 +122,29 @@
     },
     methods: {
       setFromSource() {
-        if(this.isEditing) return
+        if (this.isEditing) return
 
         this.currentValue = this.value || null
         this.date = format(this.currentValue, this.dateFormat)
         this.time = format(this.currentValue, this.timeFormat)
 
-        if(this.$refs.date && this.$refs.date._flatpickr) {
+        if (this.$refs.date && this.$refs.date._flatpickr) {
           this.$refs.date._flatpickr.setDate(this.currentValue)
         }
       },
       guessTime(event) {
-        const { timeFormat } = this
+        const {timeFormat} = this
         const el = event.target
         const time = el.value
         const parsedTime = checkDate(time, timeFormat)
 
-        if(parsedTime) {
+        if (parsedTime) {
           this.time = format(parsedTime, timeFormat)
         }
       },
       increaseTime(step) {
         const el = this.$refs.time
-        const { timeFormat } = this
+        const {timeFormat} = this
         const parsedTime = checkDate(el.value, timeFormat)
         if (parsedTime) {
           this.time = format(parsedTime.add(step, 'minutes'), timeFormat)
