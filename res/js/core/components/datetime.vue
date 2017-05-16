@@ -4,7 +4,8 @@
     <div class="form-group datetime-date">
       <label class="control-label" v-if="showLabels">{{ dateLabel }}</label>
       <div class="controls">
-        <input type="text" class="form-control form-control-icon" v-model="date" ref="date" @focus="isEditing = true">
+        <input type="text" class="form-control form-control-icon" v-model="date" ref="date"
+               @focus="isEditing = true" @wheel.prevent="scrollDate">
       </div>
     </div>
     <transition name="fade">
@@ -151,6 +152,19 @@
           this.time = format(parsedTime.add(step, 'minutes'), timeFormat)
         }
       },
+      increaseDate(step) {
+        const el = this.$refs.date
+        const {dateFormat} = this
+        const parsedTime = checkDate(el.value, dateFormat) || moment()
+        if (parsedTime) {
+          this.date = format(parsedTime.add(step, 'days'), dateFormat)
+        }
+      },
+      scrollDate: throttle(function (event) {
+        if (Math.abs(event.deltaY) >= 20) {
+          this.increaseDate(event.deltaY < 0 ? -1 : 1)
+        }
+      }, 35, {trailing: false}),
       scrollTime: throttle(function (event) {
         if (Math.abs(event.deltaY) >= 20) {
           this.increaseTime(this.timeStep * (event.deltaY < 0 ? -1 : 1))
