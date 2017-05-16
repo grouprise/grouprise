@@ -87,6 +87,7 @@ TEMPLATES = [
                 'features.stadt.context_processors.page_meta',
                 'stadt.context_processors.site',
                 'stadt.context_processors.assets',
+                'stadt.context_processors.tracking',
             ],
         },
     },
@@ -312,3 +313,5 @@ except IOError:
 # TEMPLATE_DEBUG is officially deprecated in Django but still
 # required by sorl-thumbnail.
 TEMPLATE_DEBUG = False
+
+TRACKING_CODE = ''

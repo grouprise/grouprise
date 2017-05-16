@@ -1,3 +1,4 @@
+from django.utils.safestring import SafeString
 from django.contrib.sites import shortcuts
 from django.conf import settings
 
@@ -17,3 +18,7 @@ def site(request):
 
 def assets(request):
     return {'asset_version': settings.ASSET_VERSION}
+
+
+def tracking(request):
+    return {'tracking_code': SafeString(settings.TRACKING_CODE)}
