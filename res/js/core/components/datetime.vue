@@ -88,7 +88,7 @@
     data() {
       return {
         date: null,
-        time: null,
+        time: '12:00',
         datePicker: null,
         currentValue: null,
         isEditing: false
@@ -127,7 +127,7 @@
 
         this.currentValue = this.value || null
         this.date = format(this.currentValue, this.dateFormat)
-        this.time = format(this.currentValue, this.timeFormat)
+        this.time = format(this.currentValue, this.timeFormat) || this.time
 
         if (this.$refs.date && this.$refs.date._flatpickr) {
           this.$refs.date._flatpickr.setDate(this.currentValue)
