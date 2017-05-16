@@ -10,7 +10,7 @@ const isDebug = env !== 'production'
 
 module.exports = {
   context: path.join(__dirname, 'res/js'),
-  devtool: isDebug ? '#eval' : '#source-map',
+  devtool: isDebug ? '#eval' : '#cheap-module-source-map',
   entry: {
     app: './index.js',
     snake: './snake.js'
