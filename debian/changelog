@@ -1,3 +1,9 @@
+stadtgestalten (1.8.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Konrad Mohrfeldt <konrad@rumpelstilzchen>  Tue, 16 May 2017 19:15:20 +0200
+
 stadtgestalten (1.7.4-1) unstable; urgency=medium
 
   * Initial release.
