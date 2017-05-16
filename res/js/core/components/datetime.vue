@@ -5,7 +5,7 @@
       <label class="control-label" v-if="showLabels">{{ dateLabel }}</label>
       <div class="controls">
         <input type="text" class="form-control form-control-icon" v-model="date" ref="date"
-               @focus="isEditing = true" @wheel.prevent="scrollDate">
+               @focus="isEditing = true" @wheel="scrollDate">
       </div>
     </div>
     <transition name="fade">
@@ -14,7 +14,7 @@
         <div class="controls">
           <input type="text" class="form-control form-control-icon" v-model="time" ref="time"
                  placeholder="z.B: 12:30" pattern="^([0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
-                 @focus="isEditing = true" @blur="guessTime" @wheel.prevent="scrollTime">
+                 @focus="isEditing = true" @blur="guessTime" @wheel="scrollTime">
         </div>
       </div>
     </transition>
@@ -26,7 +26,7 @@
   import moment from 'moment'
   import date from '../../transforms/date'
 
-  const ensureArray = value => typeof value === 'string' ? [value] : value;
+  const ensureArray = value => typeof value === 'string' ? [value] : value
   const checkDate = (date, formats) => {
     const validFormats = ensureArray(formats).filter(format => moment(date, format, true).isValid())
 
@@ -42,6 +42,15 @@
     const finalFormat = formats[0]
     const momentDate = checkDate(date, formats)
     return momentDate ? momentDate.format(finalFormat) : ""
+  }
+  const wheelListener = callback => {
+    const throttledCallback = throttle(callback, 35, { trailing: false })
+    return function(event) {
+      if(document.activeElement === event.target && Math.abs(event.deltaY) >= 20) {
+        event.preventDefault()
+        throttledCallback.call(this, event, event.deltaY < 0 ? 1 : -1)
+      }
+    }
   }
 
   export default {
@@ -160,16 +169,12 @@
           this.date = format(parsedTime.add(step, 'days'), dateFormat)
         }
       },
-      scrollDate: throttle(function (event) {
-        if (Math.abs(event.deltaY) >= 20) {
-          this.increaseDate(event.deltaY < 0 ? -1 : 1)
-        }
-      }, 35, {trailing: false}),
-      scrollTime: throttle(function (event) {
-        if (Math.abs(event.deltaY) >= 20) {
-          this.increaseTime(this.timeStep * (event.deltaY < 0 ? -1 : 1))
-        }
-      }, 35, {trailing: false}),
+      scrollDate: wheelListener(function(event, direction) {
+        this.increaseDate(direction)
+      }),
+      scrollTime: wheelListener(function(event, direction) {
+        this.increaseTime(this.timeStep * direction)
+      }),
     },
     watch: {
       value() { setTimeout(() => this.setFromSource(), 0) },
