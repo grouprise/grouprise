@@ -21,8 +21,9 @@
 </template>
 
 <script>
-  import date from '../../transforms/date'
+  import { throttle } from 'lodash'
   import moment from 'moment'
+  import date from '../../transforms/date'
 
   const ensureArray = value => typeof value === 'string' ? [value] : value;
   const checkDate = (date, formats) => {
@@ -150,11 +151,11 @@
           this.time = format(parsedTime.add(step, 'minutes'), timeFormat)
         }
       },
-      scrollTime(event) {
+      scrollTime: throttle(function (event) {
         if (Math.abs(event.deltaY) >= 20) {
           this.increaseTime(this.timeStep * (event.deltaY < 0 ? -1 : 1))
         }
-      },
+      }, 35, {trailing: false}),
     },
     watch: {
       value() { setTimeout(() => this.setFromSource(), 0) },
