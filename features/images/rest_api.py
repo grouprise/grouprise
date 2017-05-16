@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins, serializers
 from sorl.thumbnail import get_thumbnail
+from django.db.models import Q
 
 import django_filters
 import django_filters.widgets
@@ -52,7 +53,30 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
 
     def get_queryset(self):
         user = self.request.user
-        return models.Image.objects.filter(creator__user=user)
+
+        # FIXME: refactor and remove foreign model queries
+        # we want users to have access to
+        # * images that they created themselves
+        # * images part of a group gallery user has membership in
+        from features.associations.models import Association
+        from features.content.models import Content
+        from features.groups.models import Group
+        from features.galleries.models import GalleryImage
+        from django.contrib.contenttypes.models import ContentType
+        from features.memberships.models import Membership
+        memberships = Membership.objects.filter(member=user.gestalt)
+        groups = Group.objects.filter(memberships__in=memberships)
+        associations = Association.objects.filter(
+            container_type=ContentType.objects.get_for_model(Content),
+            entity_type=ContentType.objects.get_for_model(Group),
+            entity_id__in=groups
+        )
+        content = Content.objects.filter(associations__in=associations,
+                                         gallery_images__isnull=False)
+        gallery_images = GalleryImage.objects.filter(gallery__in=content)
+        images = gallery_images.values_list('image', flat=True)
+
+        return models.Image.objects.filter(Q(creator__user=user) | Q(id__in=images))
 
     def has_permission(self):
         if self.action == 'create':
