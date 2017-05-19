@@ -81,7 +81,8 @@ class ContentReferencePattern(inlinepatterns.ReferencePattern):
                 association = associations.Association.objects.get(
                         Q(group__slug=entity_slug) | Q(gestalt__user__username=entity_slug),
                         slug=content_slug)
-                return self.makeTag(association.get_absolute_url(), str(association), m.string)
+                name = '@{}/{}'.format(entity_slug, content_slug)
+                return self.makeTag(association.get_absolute_url(), str(association), name)
             except associations.Association.DoesNotExist:
                 pass
         entity, slug, name = get_entity(m, 1)
