@@ -34,7 +34,7 @@ class Association(models.QuerySet):
         return self.filter(content__time__isnull=False)
 
     def filter_upcoming(self):
-        return self.filter(content__until_time__gt=django.utils.timezone.now())
+        return self.filter(content__time__gte=django.utils.timezone.now())
 
     # TODO: replace 'conversation' by generic container
     def ordered_conversations(self, user):
