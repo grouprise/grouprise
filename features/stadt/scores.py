@@ -39,11 +39,11 @@ class Group:
             for only_public, num_gestalten in ((False, num_members), (True, num_subscribers)):
                 group_versions = content.Version.objects.filter(
                        content__associations__entity_id=instance.id,
-                       content__associations__entity_type=instance.get_content_type(),
+                       content__associations__entity_type=instance.content_type,
                        time_created__gt=THRESHOLD)
                 group_comments = contributions.Contribution.objects.filter(
                        content__associations__entity_id=instance.id,
-                       content__associations__entity_type=instance.get_content_type(),
+                       content__associations__entity_type=instance.content_type,
                        time_created__gt=THRESHOLD)
                 if only_public:
                     group_versions = group_versions.filter(content__associations__public=True)
@@ -52,7 +52,7 @@ class Group:
                 else:
                     group_conversations = contributions.Contribution.objects.filter(
                            conversation__associations__entity_id=instance.id,
-                           conversation__associations__entity_type=instance.get_content_type(),
+                           conversation__associations__entity_type=instance.content_type,
                            time_created__gt=THRESHOLD)
                 for qs in (group_versions, group_comments, group_conversations):
                     for group_authored in qs:
