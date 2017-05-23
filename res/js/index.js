@@ -57,7 +57,7 @@ function init (searchIn = document) {
 
   // initialize components not based on component interface
   component($$('input, select, textarea'), input, defaultsDeep({
-    conf: { target: el => closest(el, '.form-group') }
+    conf: { target: el => closest(el, '.form-group') || el }
   }, opts))
   component($$('blockquote'), quote, opts)
 }
