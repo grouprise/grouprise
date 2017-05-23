@@ -18,7 +18,3 @@ def site(request):
 
 def assets(request):
     return {'asset_version': settings.ASSET_VERSION}
-
-
-def tracking(request):
-    return {'tracking_code': SafeString(settings.TRACKING_CODE)}

@@ -42,6 +42,5 @@
     <body data-component="browser-warning" class="month-{% now "m" %}">
         {% block body %}{% endblock %}
         <script src="{% static 'stadt/js/app.js' %}?v={{ asset_version }}" async defer></script>
-        {{ tracking_code }}
     </body>
 </html>
