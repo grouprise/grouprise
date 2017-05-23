@@ -5,11 +5,10 @@ before_script:
     - source "$CI_PROJECT_DIR/gitlab-ci-build-venv/bin/activate"
     - pip install --upgrade pip
     - pip install -r requirements.txt
-    # apt-get install dh-exec dh-virtualenv yarn nodejs-legacy
 
-#build:
-#    script:
-#        - make test
+test:
+    script:
+        - make test
 
 deb-package:
     script:
