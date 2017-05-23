@@ -8,8 +8,16 @@ from django.template import defaultfilters
 from django.utils import html, safestring
 import markdown as python_markdown
 from markdown.extensions import toc
+from core.assets import get_assets
 
 register = template.Library()
+
+
+@register.simple_tag
+def include_assets(stage):
+    return safestring.mark_safe('\n'.join([
+        repr(asset) for asset in get_assets(stage)
+    ]))
 
 
 @register.simple_tag

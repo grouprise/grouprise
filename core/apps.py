@@ -13,3 +13,4 @@ class CoreConfig(AppConfig):
         module_loading.autodiscover_modules('rest_api')
         module_loading.autodiscover_modules('markdown')
         module_loading.autodiscover_modules('signals')
+        module_loading.autodiscover_modules('assets')
