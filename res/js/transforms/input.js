@@ -15,8 +15,8 @@ function getType (el) {
   return `input-type-${tagName !== 'input' ? tagName : type}`
 }
 
-function input (el, conf = {}) {
-  const target = conf.target ? conf.target(el) : el
+function input (el, opts = {}) {
+  const target = opts.conf.target ? opts.conf.target(el) : el
 
   function setChangedStates (event) {
     const isFilled = el.value.trim() !== ''
