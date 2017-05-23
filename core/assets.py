@@ -23,7 +23,7 @@ def build_url(urlparsedict, origin_only=False):
             result += urlparsedict['path']
         if urlparsedict['params']:
             result += ';' + urlparsedict['params']
-        if urlparsedict['query' ]:
+        if urlparsedict['query']:
             result += '?' + urlparsedict['query']
         if urlparsedict['fragment']:
             result += '#' + urlparsedict['fragment']
@@ -116,7 +116,8 @@ def get_asset_csp_hashes(asset_type):
         clazz = CascadingStyleSheetAsset
     else:
         raise ValueError('unknown type')
-    return tuple([asset.csp_hash for asset in _JS_ASSETS if isinstance(asset, clazz) and asset.csp_hash])
+    return tuple([asset.csp_hash for asset in _JS_ASSETS
+                  if isinstance(asset, clazz) and asset.csp_hash])
 
 
 def get_assets(stage):

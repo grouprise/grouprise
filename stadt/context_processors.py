@@ -1,4 +1,3 @@
-from django.utils.safestring import SafeString
 from django.contrib.sites import shortcuts
 from django.conf import settings
 
