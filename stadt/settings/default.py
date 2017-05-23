@@ -62,7 +62,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'features.gestalten.middleware.GestaltAppConfigMiddleware',
-    'stadt.middleware.DoesNotExistMiddleware',
 ]
 
 ROOT_URLCONF = 'stadt.urls'
