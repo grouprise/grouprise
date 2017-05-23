@@ -63,6 +63,9 @@ export default el => {
         editor.imagesReady = true
         files.forEach(file => images.push(file))
       })
+      .catch(e => {
+        console.error(e)
+      })
   }
 
   return {
