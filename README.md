@@ -5,7 +5,7 @@ Stadtgestalten is a platform destined to encourage and enable social action and 
 ## Quick Setup
 
 ### For administrators
-You may want to install the latest [snapshot build](wget https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package) as a deb package. Please note that this is a rather dirty package (only amd64, containing a virtualenv with python3.5 - suitable for Debian stretch).
+You may want to install the latest [snapshot build](https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package) as a deb package. Please note that this is a rather dirty package (only amd64, containing a virtualenv with python3.5 - suitable for Debian stretch).
 
 ### For developers
 1. You will need [yarn](https://yarnpkg.com/lang/en/), [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see the Dependencies Section
