@@ -1,9 +1,20 @@
 before_script:
-    - virtualenv -p python3 "$CI_PROJECT_DIR/build/venv"
-    - source "$CI_PROJECT_DIR/build/venv/bin/activate"
+    # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
+    # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.
+    - virtualenv -p python3 "$CI_PROJECT_DIR/gitlab-ci-build-venv"
+    - source "$CI_PROJECT_DIR/gitlab-ci-build-venv/bin/activate"
     - pip install --upgrade pip
     - pip install -r requirements.txt
+    # apt-get install dh-exec dh-virtualenv yarn nodejs-legacy
 
-build:
+#build:
+#    script:
+#        - make test
+
+deb-package:
     script:
-        - make test
+        - make dist-deb-packages-directory
+    artifacts:
+        paths:
+            - build/debian/export/stadtgestalten.deb
+        expire_in: 2d
