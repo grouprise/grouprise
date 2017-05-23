@@ -1,6 +1,6 @@
+import os
 from setuptools import setup, find_packages
-from os import path
-import glob
+
 from stadt import VERSION
 
 
@@ -14,15 +14,15 @@ def get_requirements():
 
 
 def get_readme():
-    with open(path.join(path.dirname(__file__), 'README.md')) as f:
+    with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
         return f.read()
 
 
-def include_recursive(directory, query=''):
+def include_recursive(directory):
     result = {}
-    for file in glob.iglob('{}/**{}'.format(directory, query), recursive=True):
-        if path.isfile(file):
-            result.setdefault(path.dirname(file), []).append(file)
+    for dirpath, dirnames, filenames in os.walk(directory):
+        if filenames:
+            result[dirpath] = [os.path.join(dirpath, fname) for fname in filenames]
     return tuple(result.items())
 
 
