@@ -104,16 +104,16 @@ class BaseCalendarFeed(ICalFeed):
         return self.get_queryset().order_by('-content__time')
 
     def item_title(self, item):
-        return item.title
+        return item.content.first().title
 
     def item_description(self, item):
-        return item.text
+        return item.content.first().subject
 
     def item_location(self, item):
-        return item.place
+        return item.content.first().place
 
     def item_start_datetime(self, item):
-        return item.time
+        return item.content.first().time
 
 
 class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
