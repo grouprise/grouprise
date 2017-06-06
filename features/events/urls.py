@@ -19,7 +19,7 @@ urlpatterns = [
         name='day-events'),
 
     url(
-        r'^(?P<entity_slug>[\w-]+)/events/add/$',
+        r'^(?P<entity_slug>[\w.@+-]+)/events/add/$',
         views.Create.as_view(),
         name='create-group-event'),
 
