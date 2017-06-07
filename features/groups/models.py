@@ -94,12 +94,6 @@ class Group(core.models.Model):
         return initials_without_short_terms if initials_without_short_terms else initials
 
     # FIXME: to be removed
-    content = models.ManyToManyField(
-            'content.Content',
-            related_name='groups',
-            through='entities.GroupContent')
-
-    # FIXME: to be removed
     # TODO: when removed check api
     def get_head_gallery(self):
         from features.associations import models as associations
