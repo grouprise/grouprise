@@ -59,22 +59,26 @@
                     <span class="sr-only">Kurzbeschreibung</span>
                 </dt>
                 <dd>{{ group.description|default:"Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen" }}</dd>
-                <dt>
-                    <i class="sg sg-address"></i>
-                    <span class="sr-only">Adresse</span>
-                </dt>
-                <dd>
-                    <address>
-                        {{ group.address|linebreaks }}
-                    </address>
-                </dd>
-                <dt>
-                    <i class="sg sg-url"></i>
-                    <span class="sr-only">Website</span>
-                </dt>
-                <dd>
-                    <a href="{{ group.url }}">{{ group.url|cut:'http://'|cut:'https://'|cuttrailing:'/' }}</a>
-                </dd>
+                {% if group.address %}
+                    <dt>
+                        <i class="sg sg-address" title="Anschrift"></i>
+                        <span class="sr-only">Anschrift</span>
+                    </dt>
+                    <dd>
+                        <address>
+                            {{ group.address|linebreaks }}
+                        </address>
+                    </dd>
+                {% endif %}
+                {% if group.url %}
+                    <dt>
+                        <i class="sg sg-url" title="Website"></i>
+                        <span class="sr-only">Website</span>
+                    </dt>
+                    <dd>
+                        <a href="{{ group.url }}">{{ group.url|cut:'http://'|cut:'https://'|cuttrailing:'/' }}</a>
+                    </dd>
+                {% endif %}
                 <dt>
                     <i class="sg sg-foundation"></i>
                     <span class="sr-only">Gründung</span>
