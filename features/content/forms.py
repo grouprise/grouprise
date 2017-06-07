@@ -27,7 +27,7 @@ class Create(forms.ModelForm):
 
     place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
     time = forms.DateTimeField(label='Beginn')
-    until_time = forms.DateTimeField(label='Ende')
+    until_time = forms.DateTimeField(label='Ende', required=False)
     all_day = forms.BooleanField(
             label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.', required=False)
 
@@ -77,7 +77,7 @@ class Update(forms.ModelForm):
 
     place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
     time = forms.DateTimeField(label='Beginn')
-    until_time = forms.DateTimeField(label='Ende')
+    until_time = forms.DateTimeField(label='Ende', required=False)
     all_day = forms.BooleanField(
             label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.', required=False)
 
