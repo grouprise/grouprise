@@ -25,7 +25,10 @@ def get_unique_slug(cls, fields):
         slug = fields[slug_field_name][:l]
         if i:
             suffix = '-{}'.format(i)
-            slug = slug[:-len(suffix)] + suffix
+            if len(slug) + len(suffix) <= l:
+                slug = slug + suffix
+            else:
+                slug = slug[:-(len(slug)+len(suffix)-l)] + suffix
         if not cls._default_manager.filter(**replace(fields, slug_field_name, slug)).exists():
             return slug
 
