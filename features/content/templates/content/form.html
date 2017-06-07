@@ -13,7 +13,7 @@
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
-            {% include 'core/_field.html' with field=form.text %}
+            {% include 'core/_field.html' with field=form.text help_text='Einfacher Text wird automatisch formatiert. Besondere Formatierungen lassen sich mit den Knöpfen oben erzeugen. Erläuterungen gibt es in der <i class="fa fa-question-circle"></i> <a href="/stadt/markdown/">Hilfe zur Textauszeichnung</a>.' %}
             {% block form_extra %}{% endblock %}
         </div>
         {% if form.time %}

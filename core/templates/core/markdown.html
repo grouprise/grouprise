@@ -5,6 +5,8 @@
 {% block heading_title %}<span class="content-classification">Textauszeichnung</span>{% endblock %}
 
 {% block content %}
+Die Grundlage der Formatierung oder Textauszeichung auf {{ site.name }} ist <a href="https://daringfireball.net/projects/markdown/">Markdown</a>. Texte lassen sich recht intuitiv so verfassen, wie Menschen das beispielsweise aus E-Mails gewohnt sind.
+
 <h2>Betonung</h2>
 <pre>*<em>kursiv</em>*
 **<strong>fett</strong>**</pre>
@@ -19,15 +21,23 @@
 3. Nummerierter Listenpunkt</pre>
 
 <h2>Überschriften</h2>
-<pre>## Überschrift
-### Unterüberschrift
-#### Unter-Unterüberschrift</pre>
+<pre># Überschrift
+## Unterüberschrift
+### Unter-Unterüberschrift</pre>
 
 <h2>Verweise</h2>
 <pre>[Anzeigetext](http://www.stadtgestalten.org)</pre>
-<pre>@gruppen-kurzname</pre>
+<pre>@gruppen-kuerzel
+@gestalten-kuerzel
+@gruppe-oder-gestalt/beitrags-kuerzel</pre>
+<pre>#Schlagwort</pre>
 
 <h2>Bilder</h2>
 <pre>![Alternativtext](http://www.sg.org/bild.jpg)</pre>
 
+<h2>Zitate</h2>
+<pre>&gt; Zitattext</pre>
+
+<h2>Technischer Inhalt</h2>
+<pre>Text über etwas `Technisches`</pre>
 {% endblock %}
