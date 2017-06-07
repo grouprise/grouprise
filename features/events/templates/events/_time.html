@@ -1,0 +1,23 @@
+{% with start=event.time end=event.until_time all_day=event.all_day %}
+    {% if not end %}
+        {% if all_day %}
+            am {{ start|date:'d. F Y' }}
+        {% else %}
+            am {{ start|date:'d. F Y' }} um {{ start|date:'H:i' }} Uhr
+        {% endif %}
+    {% else %}
+        {% if start.date == end.date %}
+            {% if all_day %}
+                am {{ start|date:'d. F Y' }}
+            {% else %}
+                am {{ start|date:'d. F Y' }} von {{ start|date:'H:i' }} Uhr bis {{ end|date:'H:i' }} Uhr
+            {% endif %}
+        {% else %}
+            {% if all_day %}
+                vom {{ start|date:'d. F Y' }} bis {{ end|date:'d. F Y' }}
+            {% else %}
+                vom {{ start|date:'d. F Y' }} um {{ start|date:'H:i' }} Uhr bis {{ end|date:'d. F Y' }} um {{ end|date:'H:i' }} Uhr
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endwith %}

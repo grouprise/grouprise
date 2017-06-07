@@ -1,7 +1,7 @@
 Ereignis online ansehen und kommentieren:
 {% url 'content' instance.entity.slug instance.slug as path %}{{ path|full_url }}
 
-Ereignis am {{ instance.container.time|date:'DATE_FORMAT' }} um {{ instance.container.time|date:'G:i' }} Uhr
+Ereignis {% load events %}{% event_time instance.container %}
 Ort: {{ instance.container.place }}
 
 {{ instance.container.versions.last.text }}

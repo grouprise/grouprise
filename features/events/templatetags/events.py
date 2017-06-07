@@ -80,6 +80,13 @@ def day_preview(associations):
         for a in associations])
 
 
+@register.simple_tag(takes_context=True)
+def event_time(context, event):
+    context['event'] = event
+    time_str = context.template.engine.get_template('events/_time.html').render(context)
+    return time_str.strip()
+
+
 @register.inclusion_tag('events/_sidebar_calendar.html')
 def sidebar_calendar(associations, group=None, preview_length=5, show_group=True):
     upcoming = associations.filter_upcoming().order_by('content__time')[:preview_length]
