@@ -48,6 +48,10 @@ class Group(core.models.Model):
     url = models.URLField(
             'Adresse im Web',
             blank=True)
+    url_import_feed = models.BooleanField(
+            'Beiträge von Website übernehmen', default=False,
+            help_text='Öffentliche Beiträge der angegebenen Website automatisch auf '
+            'Stadtgestalten veröffentlichen, wenn technisch möglich')
 
     closed = models.BooleanField(
             'Geschlossene Gruppe',

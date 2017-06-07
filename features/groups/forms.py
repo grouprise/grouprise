@@ -12,7 +12,9 @@ class Update(forms.ModelForm):
             help_text='Schlagworte durch Komma getrennt angeben')
 
     class Meta:
-        fields = ('address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url')
+        fields = (
+                'address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url',
+                'url_import_feed')
         model = models.Group
 
     def __init__(self, *args, **kwargs):
@@ -24,6 +26,7 @@ class Update(forms.ModelForm):
                 layout.Field('description', rows=4),
                 layout.Field('address', rows=4),
                 'url',
+                'url_import_feed',
                 layout.Field('date_founded', data_component='date'),
                 'tags',
                 bootstrap.PrependedText('slug', '{0}/'.format(
