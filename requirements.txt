@@ -7,10 +7,12 @@ django-ical                 # NOT IN DEBIAN
 django-mailbox              # NOT IN DEBIAN
 djangorestframework         # debian: python-djangorestframework
 flake8                      # debian: flake8
+feedparser                  # debian: python3-feedparser
 markdown                    # debian: python3-markdown
 pillow                      # debian: python-pil
 pymdown-extensions          # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
+requests                    # debian: python3-requests
 rules                       # NOT IN DEBIAN
 sorl-thumbnail==12.4a1      # debian: python3-sorl-thumbnail
 translitcodec               # NOT IN DEBIAN

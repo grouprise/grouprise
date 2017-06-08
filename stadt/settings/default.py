@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'features.gestalten',
     'features.groups',
     'features.images',
+    'features.imports',
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
     'features.stadt',
