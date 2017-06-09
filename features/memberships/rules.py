@@ -44,13 +44,14 @@ rules.add_perm(
         rules.is_authenticated
         & is_member_of)
 
-
-# redefinition of groups permissions
-
-if rules.perm_exists('groups.change_group'):
-    rules.remove_perm('groups.change_group')
-
 rules.add_perm(
         'groups.change_group',
         rules.is_authenticated
         & is_member_of)
+
+rules.add_perm(
+        'memberships.apply',
+        groups.is_group
+        & groups.is_closed
+        & rules.is_authenticated
+        & ~ is_member_of)

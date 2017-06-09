@@ -1,0 +1,28 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Mitgliedschaft beantragen - {{ block.super }}{% endblock %}
+
+{% block menu %}{% menu 'group' view.association.entity %}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb view.association.entity 'Mitgliedschaft beantragen' %}
+{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Mitgliedschaft</span>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.association.entity %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p>Möchtest Du die Mitgliedschaft in der Gruppe <em>{{ view.association.entity }}</em>
+        beantragen?</p>
+        <button class="btn btn-primary">
+            Mitgliedschaft beantragen
+        </button>
+    </form>
+{% endblock %}

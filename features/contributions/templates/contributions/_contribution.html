@@ -1,28 +1,41 @@
-<div class="media media-comment" id="{% ref text %}">
+<div class="media media-comment" id="{% ref contribution %}">
     <div class="media-image">
         {% if author %}
             {% include 'gestalten/_avatar.html' with gestalt=author link=True only %}
         {% else %}
-            {% include 'gestalten/_avatar.html' with gestalt=text.author link=True only %}
+            {% include 'gestalten/_avatar.html' with gestalt=contribution.author link=True only %}
         {% endif %}
     </div>
     <div class="media-content">
         {% block media_content %}
             <div class="media-body"
                  {% block media_content_attrs %}
-                    data-author="{{ text.author }}" data-permalink="{{ request.path }}#{% ref text %}"
+                    data-author="{{ contribution.author }}" data-permalink="{{ request.path }}#{% ref contribution %}"
                  {% endblock %}>
                 {% block media_body %}
-                    {% markdown text.contribution.text heading_baselevel=3 %}
+                    {% if contribution.contribution.text %}
+                        {% markdown contribution.contribution.text heading_baselevel=3 %}
+                    {% endif %}
+                    {% if contribution.contribution.group %}
+                        Ich möchte die Mitgliedschaft in der Gruppe
+                        <em>{{ contribution.contribution.group }}</em> beantragen.
+                    {% endif %}
                 {% endblock %}
             </div>
             <footer class="media-footer">
                 {% block media_footer %}
-                    {% time text.time_created %} ·
-                    {% link text.author %}
+                    {% time contribution.time_created %} ·
+                    {% link contribution.author %}
                     <div class="pull-right">
-                        <a class="link-plain" href="{{ request.path }}#{% ref text %}">Permalink</a> ·
-                        <a class="js" data-component="cite" href="#{% ref text %}">Zitieren</a>
+                        <a class="link-plain" href="{{ request.path }}#{% ref contribution %}">
+                            Permalink
+                        </a>
+                        {% if contribution.contribution.text %}
+                            ·
+                            <a class="js" data-component="cite" href="#{% ref contribution %}">
+                                Zitieren
+                            </a>
+                        {% endif %}
                     </div>
                 {% endblock %}
             </footer>

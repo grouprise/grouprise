@@ -1,11 +1,39 @@
-from . import models
-from core import fields, views
+import django
 from django import db, http, shortcuts
 from django.contrib import messages
 from django.core import urlresolvers
+
+import core
+from core import fields, views
+from features.associations import models as associations
+from features.contributions import models as contributions
 from features.gestalten import models as gestalten_models, views as gestalten_views
 from features.groups import models as groups_models, views as groups_views
 from utils import views as utils_views
+from . import forms, models
+
+
+class Apply(core.views.PermissionMixin, django.views.generic.CreateView):
+    permission_required = 'memberships.apply'
+    form_class = forms.Apply
+    template_name = 'memberships/apply.html'
+
+    def get_form_kwargs(self):
+        contribution = contributions.Contribution()
+        contribution.author = self.request.user.gestalt
+        contribution.container = self.association.container
+        kwargs = super().get_form_kwargs()
+        kwargs['contribution'] = contribution
+        kwargs['instance'] = models.Application(group=self.association.entity)
+        return kwargs
+
+    def get_permission_object(self):
+        self.association = django.shortcuts.get_object_or_404(
+                associations.Association, pk=self.kwargs.get('association_pk'))
+        return self.association.entity
+
+    def get_success_url(self):
+        return self.association.get_absolute_url()
 
 
 class MembershipMixin(groups_views.Mixin):

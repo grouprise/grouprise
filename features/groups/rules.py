@@ -6,6 +6,11 @@ def is_closed(user, group):
     return group.closed
 
 
+@rules.predicate
+def is_group(user, entity):
+    return entity.is_group
+
+
 rules.add_perm(
         'groups.create_group',
         rules.always_allow)

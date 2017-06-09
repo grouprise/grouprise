@@ -1,4 +1,4 @@
 Beitrag mit Kommentaren online lesen und kommentieren:
 {% url 'content' instance.container.associations.first.entity.slug instance.container.associations.first.slug as path %}{{ path|full_url }}#{% ref instance %}
 
-{{ instance.contribution.text }}
+{{ text }}

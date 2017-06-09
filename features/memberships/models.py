@@ -1,3 +1,4 @@
+from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
 
@@ -16,3 +17,13 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = ('group', 'member')
+
+
+class Application(models.Model):
+    group = models.ForeignKey('groups.Group', related_name='applications')
+
+    contribution = contenttypes.GenericRelation(
+            'contributions.Contribution',
+            content_type_field='contribution_type',
+            object_id_field='contribution_id',
+            related_query_name='membership_application')

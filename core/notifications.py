@@ -27,6 +27,9 @@ class Notification:
         self.kwargs = kwargs
         self.object = kwargs.get('instance')
 
+    def get_context_data(self, **kwargs):
+        return kwargs
+
     def get_formatted_recipients(self):
         """
         Subclasses must define get_recipients() to return a set of recipients.
@@ -108,7 +111,7 @@ class Notification:
 
         for recipient, recipient_attrs in self.get_formatted_recipients():
             subject = self.get_subject()
-            context = self.kwargs.copy()
+            context = self.get_context_data(**self.kwargs.copy())
             context.update({'site': site})
             template = loader.get_template(self.get_template_name())
             template.backend.engine.autoescape = False

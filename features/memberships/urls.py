@@ -27,4 +27,9 @@ urlpatterns = [
         r'^groups/(?P<group_pk>[0-9]+)/resign/$',
         views.Resign.as_view(),
         name='resign'),
+
+    urls.url(
+        r'^associations/(?P<association_pk>[0-9]+)/apply/$',
+        views.Apply.as_view(),
+        name='create-membership-application'),
 ]
