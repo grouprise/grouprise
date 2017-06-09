@@ -17,7 +17,7 @@ from features.imports import models
 class Command(django.core.management.base.BaseCommand):
 
     FEED_RE = r'<link [^>]*type=\"application/(?:rss|atom)\+xml\" [^>]*href=\"([^\"]+)\"[^>]*>'
-    
+
     def handle(self, *args, **options):
         author = gestalten.Gestalt.objects.get(id=django.conf.settings.IMPORTER_ID)
         for group in groups.Group.objects.filter(url_import_feed=True):

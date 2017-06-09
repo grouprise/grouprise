@@ -1,9 +1,6 @@
 from . import models
 from core import signals
 from datetime import date
-from django.conf import settings
-from django.contrib.sites import models as sites_models
-from django.core import urlresolvers
 
 
 def set_group_meta(group):

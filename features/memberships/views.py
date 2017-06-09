@@ -2,7 +2,6 @@ import django
 from django import db, http, shortcuts
 from django.contrib import messages
 from django.core import urlresolvers
-from django.db.models import Q
 
 import core
 from core import fields, views
