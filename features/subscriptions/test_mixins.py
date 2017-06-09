@@ -1,17 +1,8 @@
 from . import filters, models
 from entities import models as entities
-from features.content import tests as content
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
-
-
-class ContentSubscribedMixin(content.NoAuthorContentMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        models.Subscription.objects.create(
-                subscribed_to=cls.content, subscriber=cls.gestalt)
 
 
 class GroupSubscribedMixin(gestalten.AuthenticatedMixin, groups.GroupMixin):
@@ -20,16 +11,6 @@ class GroupSubscribedMixin(gestalten.AuthenticatedMixin, groups.GroupMixin):
         super().setUpTestData()
         models.Subscription.objects.create(
                 subscribed_to=cls.group, subscriber=cls.gestalt)
-
-
-class OtherContentSubscriberMixin(
-        content.ContentMixin, gestalten.OtherGestaltMixin, groups.GroupMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        models.Subscription.objects.create(
-                subscribed_to=cls.content,
-                subscriber=cls.other_gestalt)
 
 
 class OtherGroupSubscriberMixin(

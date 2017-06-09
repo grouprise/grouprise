@@ -6,7 +6,6 @@ from django.views import generic
 from crispy_forms import layout
 
 from utils import forms as utils_forms, views as utils_views
-from content import models as content_models
 from features.associations import models as associations
 from features.content import models as content2
 from features.gestalten import models as gestalten
@@ -90,10 +89,6 @@ class Group(utils_views.List):
     def get_context_data(self, **kwargs):
         kwargs['intro_content'] = self.get_intro_content()
         return super().get_context_data(**kwargs)
-
-    def get_events(self):
-        return content_models.Event.objects.can_view(self.request.user).filter(
-                groups=self.get_group())
 
     def get_group_content(self):
         group = self.get_group()

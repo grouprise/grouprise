@@ -2,7 +2,6 @@ from django.views import generic
 from django_filters import views as filters_views
 
 from entities import filters
-from content import models as content_models
 from core import fields, views
 from core.views import base
 from features.associations import models as associations
@@ -35,11 +34,7 @@ class Mixin:
             if 'group' in self.request.GET:
                 return models.Group.objects.get(
                         slug=self.request.GET['group'])
-            if 'content_pk' in self.kwargs:
-                return content_models.Content.objects.get(
-                        pk=self.kwargs['content_pk']).groups.first()
-        except (content_models.Content.DoesNotExist,
-                models.Group.DoesNotExist):
+        except models.Group.DoesNotExist:
             pass
         return None
 
