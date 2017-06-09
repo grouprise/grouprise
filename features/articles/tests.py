@@ -16,6 +16,9 @@ class ArticleMixin(gestalten.AuthenticatedMixin):
     def get_content_url(self):
         return self.get_url('content', (self.association.entity.slug, self.association.slug))
 
+    def get_perma_url(self):
+        return self.get_url('content-permalink', (self.association.pk))
+
     def setUp(self):
         super().setUp()
         self.association = self.create_article()
@@ -181,12 +184,15 @@ class TwoGestalten(
     def get_content_url(self):
         return self.get_url('content', (self.association.entity.slug, self.association.slug))
 
+    def get_perma_url(self):
+        return self.get_url('content-permalink', (self.association.pk))
+
     def test_article_notified(self):
         self.create_article()
         self.assertNotificationsSent(2)
         self.assertNotificationRecipient(self.gestalt)
         self.assertNotificationRecipient(self.other_gestalt)
-        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains(self.get_perma_url())
         self.assertNotificationContains('Test')
 
 
@@ -199,7 +205,7 @@ class GestaltAndArticle(ArticleMixin, core.tests.Test):
         self.create_comment()
         self.assertNotificationsSent(1)
         self.assertNotificationRecipient(self.gestalt)
-        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains(self.get_perma_url())
         self.assertNotificationContains('Comment')
 
 

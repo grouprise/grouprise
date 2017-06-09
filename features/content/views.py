@@ -56,6 +56,14 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
         return [name]
 
 
+class Permalink(django.views.generic.RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        association = django.shortcuts.get_object_or_404(
+                associations.Association, pk=kwargs.get('association_pk'))
+        return django.core.urlresolvers.reverse(
+                'content', args=(association.entity.slug, association.slug))
+
+
 class Create(base.PermissionMixin, generic.CreateView):
     permission_required = 'content.create'
     model = associations.Association
