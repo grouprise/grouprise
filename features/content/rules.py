@@ -1,5 +1,5 @@
 from features.associations import models as associations_models, predicates as associations_rules
-from features.memberships import rules as memberships
+from features.memberships import predicates as memberships
 import rules
 
 

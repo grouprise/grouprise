@@ -13,7 +13,7 @@ import core.views
 import features.content.views
 import features.groups.views
 from features.associations import models as associations
-from features.memberships.rules import is_member_of
+from features.memberships.predicates import is_member_of
 from utils import views as utils_views
 from utils.auth import get_user_resolver
 
