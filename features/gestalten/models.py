@@ -12,8 +12,6 @@ class Gestalt(models.Model):
     is_group = False
 
     about = models.TextField('Selbstauskunft', blank=True)
-    addressed_content = models.ManyToManyField(
-            'content.Content', related_name='gestalten', through='entities.GestaltContent')
     avatar = models.ImageField(blank=True)
     avatar_color = models.CharField(max_length=7, default=colors.get_random_color)
     background = models.ImageField('Hintergrundbild', blank=True)

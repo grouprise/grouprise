@@ -1,5 +1,4 @@
 from . import forms
-from content import models as content_models
 from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.auth import views as auth_views
@@ -11,17 +10,6 @@ from django.views.generic import edit as edit_views
 from features.gestalten import models as entities_models
 from features.groups import models as groups
 from rules.contrib import views as rules_views
-
-
-class ContentMixin:
-    def get_context_data(self, **kwargs):
-        kwargs['content'] = self.get_content()
-        return super().get_context_data(**kwargs)
-
-    def get_content(self):
-        if 'content_pk' in self.kwargs:
-            return content_models.Content.objects.get(pk=self.kwargs['content_pk'])
-        return None
 
 
 class GestaltMixin:
@@ -64,11 +52,7 @@ class GroupMixin:
                 return groups.Group.objects.get(slug=self.kwargs['group_slug'])
             if 'group' in self.request.GET:
                 return groups.Group.objects.get(slug=self.request.GET['group'])
-            if 'content_pk' in self.kwargs:
-                return content_models.Content.objects.get(
-                        pk=self.kwargs['content_pk']).groups.first()
-        except (content_models.Content.DoesNotExist,
-                groups.Group.DoesNotExist):
+        except groups.Group.DoesNotExist:
             pass
         return None
 
@@ -124,8 +108,6 @@ class MenuMixin:
         for instance in (getattr(self, 'related_object', None), self.get_parent()):
             if instance:
                 t = type(instance)
-                if t == content_models.Content:
-                    return type(instance.get_content())
                 return t
         return None
 
@@ -173,13 +155,7 @@ class NavigationMixin:
             None
 
     def get_parent_entity(self, child):
-        if isinstance(child, content_models.Content):
-            if child.groups.exists():
-                return child.groups.first()
-            else:
-                return child.author
-        else:
-            return None
+        return None
 
     def get_success_url(self):
         try:
@@ -257,7 +233,6 @@ class TitleMixin:
 
 
 class ActionMixin(
-        ContentMixin,
         FormMixin,
         GestaltMixin,
         GroupMixin,
