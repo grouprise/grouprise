@@ -2,7 +2,7 @@
 #    MAILTO=admin@example.org
 
 # process incoming mails
-*/3 * * * * stadtctl getmail | grep -v ^INFO:
+*/3 * * * * root    stadtctl getmail | grep -v ^INFO:
 
 # calculate scores for groups and users
-23  * * * * stadtctl update_scores
+23  * * * * root    stadtctl update_scores
