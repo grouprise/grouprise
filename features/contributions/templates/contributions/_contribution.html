@@ -17,8 +17,15 @@
                         {% markdown contribution.contribution.text heading_baselevel=3 %}
                     {% endif %}
                     {% if contribution.contribution.group %}
-                        Ich beantrage die <strong>Mitgliedschaft</strong> in der Gruppe
-                        <em>{{ contribution.contribution.group }}</em>.
+                        <p>Ich beantrage die <strong>Mitgliedschaft</strong> in der Gruppe
+                        <em>{{ contribution.contribution.group }}</em>.</p>
+                        {% load rules %}
+                        {% has_perm 'memberships.accept_application' user contribution.contribution as can_accept %}
+                        {% if can_accept %}
+                            <a href="{% url 'accept-membership-application' contribution.contribution.pk %}" class="btn btn-default">
+                                {{ contribution.author }} aufnehmen
+                            </a>
+                        {% endif %}
                     {% endif %}
                 {% endblock %}
             </div>

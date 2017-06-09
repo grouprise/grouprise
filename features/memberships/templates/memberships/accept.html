@@ -1,0 +1,27 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Mitglied aufnehmen - {{ block.super }}{% endblock %}
+
+{% block menu %}{% menu 'group' view.application.group %}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb view.application.group 'Mitglied aufnehmen' %}
+{% endblock %}
+
+{% block heading_title %}
+    <span class="content-classification">Mitgliedschaft</span>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.application.group %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p><em>{{ view.application.contribution.author }}</em> als Mitglied aufnehmen?</p>
+        <button class="btn btn-primary">
+            Mitglied aufnehmen
+        </button>
+    </form>
+{% endblock %}

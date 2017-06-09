@@ -22,8 +22,12 @@ class Membership(models.Model):
 class Application(models.Model):
     group = models.ForeignKey('groups.Group', related_name='applications')
 
-    contribution = contenttypes.GenericRelation(
+    contributions = contenttypes.GenericRelation(
             'contributions.Contribution',
             content_type_field='contribution_type',
             object_id_field='contribution_id',
             related_query_name='membership_application')
+
+    @property
+    def contribution(self):
+        return self.contributions.first()

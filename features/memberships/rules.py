@@ -1,25 +1,9 @@
-from . import models
-from features.groups import rules as groups
 import rules
 import rules.permissions
 
-
-@rules.predicate
-def is_member(user, membership):
-    if membership:
-        return membership.member == user.gestalt
-    return False
-
-
-@rules.predicate
-def is_member_of(user, group):
-    try:
-        return models.Membership.objects.filter(
-                group=group,
-                member=user.gestalt
-                ).exists()
-    except AttributeError:
-        return None
+from features.groups import rules as groups
+from . import models
+from .predicates import *
 
 
 rules.add_perm(
@@ -45,13 +29,14 @@ rules.add_perm(
         & is_member_of)
 
 rules.add_perm(
-        'groups.change_group',
-        rules.is_authenticated
-        & is_member_of)
-
-rules.add_perm(
         'memberships.apply',
         groups.is_group
         & groups.is_closed
         & rules.is_authenticated
         & ~ is_member_of)
+
+rules.add_perm(
+        'memberships.accept_application',
+        ~ applicant_is_member
+        & rules.is_authenticated
+        & is_member_of_application_group)
