@@ -11,7 +11,7 @@ class Contributed(notifications.Notification):
         if type(self.object.contribution) == contributions.Text:
             kwargs['text'] = self.object.contribution.text
         elif type(self.object.contribution) == memberships.Application:
-            kwargs['text'] = 'Ich möchte die Mitgliedschaft in der Gruppe {} beantragen.'.format(
+            kwargs['text'] = 'Ich beantrage die Mitgliedschaft in der Gruppe {}.'.format(
                     self.object.contribution.group)
         return super().get_context_data(**kwargs)
 
