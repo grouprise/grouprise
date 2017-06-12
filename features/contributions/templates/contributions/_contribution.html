@@ -10,7 +10,7 @@
         {% block media_content %}
             <div class="media-body"
                  {% block media_content_attrs %}
-                    data-author="{{ contribution.author }}" data-permalink="{{ request.path }}#{% ref contribution %}"
+                    data-author="{{ contribution.author }}" data-permalink="{{ permalink_url }}#{% ref contribution %}"
                  {% endblock %}>
                 {% block media_body %}
                     {% if contribution.contribution.text %}
@@ -34,7 +34,7 @@
                     {% time contribution.time_created %} ·
                     {% link contribution.author %}
                     <div class="pull-right">
-                        <a class="link-plain" href="{{ request.path }}#{% ref contribution %}">
+                        <a class="link-plain" href="{{ permalink_url }}#{% ref contribution %}">
                             Permalink
                         </a>
                         {% if contribution.contribution.text %}

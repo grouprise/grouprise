@@ -53,7 +53,8 @@
                 <ol class="medias">
                     {% for comment in association.container.contributions.all %}
                         <li>
-                            {% include 'contributions/_contribution.html' with contribution=comment %}
+                            {% url 'content-permalink' association.pk as permalink_url %}
+                            {% include 'contributions/_contribution.html' with contribution=comment permalink_url=permalink_url %}
                         </li>
                     {% endfor %}
                     {% has_perm 'content.comment' user association as can_comment %}
