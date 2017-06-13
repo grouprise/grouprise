@@ -7,10 +7,11 @@ from django.templatetags.static import static
 from django.utils.functional import cached_property
 from django.conf import settings
 
-_JS_ASSETS = []
+_ASSETS = []
+_CSP_DIRECTIVES = []
 
 
-def build_url(urlparsedict, origin_only=False):
+def _build_url(urlparsedict, origin_only=False):
     result = ''
 
     if urlparsedict['scheme']:
@@ -31,7 +32,7 @@ def build_url(urlparsedict, origin_only=False):
     return result
 
 
-def urlparse_to_dict(parsed_url):
+def _urlparse_to_dict(parsed_url):
     return dict(zip(
         ('scheme', 'netloc', 'path', 'params', 'query', 'fragment'),
         tuple(parsed_url)
@@ -43,6 +44,24 @@ class Asset:
         if stage not in ('early', 'late'):
             raise ValueError('invalid stage "%s". should be "early" or "late"' % stage)
         self.stage = stage
+
+
+class CSPDirectiveItem:
+    def __init__(self, directive, value):
+        self.directive = directive
+        self.value = value
+
+    @staticmethod
+    def script(value):
+        return CSPDirectiveItem('script-src', value)
+
+    @staticmethod
+    def default(value):
+        return CSPDirectiveItem('default-src', value)
+
+    @staticmethod
+    def style(value):
+        return CSPDirectiveItem('style-src', value)
 
 
 class JavaScriptAsset(Asset):
@@ -66,13 +85,13 @@ class JavaScriptReference(JavaScriptAsset):
         if self.is_absolute:
             return self.src
         else:
-            url = urlparse_to_dict(urlparse(static(self.src)))
+            url = _urlparse_to_dict(urlparse(static(self.src)))
             qs = parse_qsl(url['query'])
             qs.append(('v', settings.ASSET_VERSION))
             url['query'] = urlencode(qs)
-            return build_url(url)
+            return _build_url(url)
 
-    def __repr__(self):
+    def create_tag(self):
         return '<script src="{src}"{async}{defer}></script>'.format(
             src=self.clean_source,
             async=(' async' if self.async else ''),
@@ -80,12 +99,14 @@ class JavaScriptReference(JavaScriptAsset):
         )
 
     @cached_property
-    def csp_hash(self):
+    def csp_directive(self):
         if self.is_absolute:
             url = urlparse(self.src)
-            return build_url(urlparse_to_dict(url), origin_only=True)
+            return CSPDirectiveItem.script(
+                _build_url(_urlparse_to_dict(url), origin_only=True)
+            )
         else:
-            return ''
+            return None
 
 
 class JavaScriptInline(JavaScriptAsset):
@@ -93,57 +114,64 @@ class JavaScriptInline(JavaScriptAsset):
         super().__init__(stage)
         self.content = content
 
-    def __repr__(self):
+    def create_tag(self):
         return '<script>{}</script>'.format(self.content)
 
     @cached_property
-    def csp_hash(self):
-        return csp_hash(self.content)
+    def csp_directive(self):
+        return CSPDirectiveItem.script(_csp_hash(self.content))
+
+
+def add_csp_directive(directive, value):
+    _CSP_DIRECTIVES.append(CSPDirectiveItem(directive, value))
 
 
 def add_javascript_reference(src, defer=True, async=True, stage='late'):
-    _JS_ASSETS.append(JavaScriptReference(src, defer, async, stage))
+    _ASSETS.append(JavaScriptReference(src, defer, async, stage))
 
 
 def add_javascript_inline(content, stage='late'):
-    _JS_ASSETS.append(JavaScriptInline(content, stage))
-
-
-def get_asset_csp_hashes(asset_type):
-    if asset_type == 'js':
-        clazz = JavaScriptAsset
-    elif asset_type == 'css':
-        clazz = CascadingStyleSheetAsset
-    else:
-        raise ValueError('unknown type')
-    return tuple([asset.csp_hash for asset in _JS_ASSETS
-                  if isinstance(asset, clazz) and asset.csp_hash])
+    _ASSETS.append(JavaScriptInline(content, stage))
 
 
 def get_assets(stage):
-    return [asset for asset in _JS_ASSETS if asset.stage == stage]
+    return [asset for asset in _ASSETS if asset.stage == stage]
 
 
-def csp_hash(content):
+def _csp_hash(content):
     digest = hashlib.sha256(content.encode('utf-8')).digest()
     return "'sha256-{}'".format(base64.b64encode(digest).decode('utf-8'))
 
 
 class CSPMiddleware(object):
-    default_src = ("'self'", )
-    script_src = ("'self'", )
-    style_src = ("'self'", "'unsafe-inline'", )
+    directives = (
+        CSPDirectiveItem.default("'self'"),
+        CSPDirectiveItem.script("'self'"),
+        CSPDirectiveItem.style("'self'"),
+        CSPDirectiveItem.style("'unsafe-inline'"),
+    )
 
     def __init__(self, get_response):
         self.get_response = get_response
 
     def create_csp_policy(self):
-        return (
-            ('default-src', self.default_src),
-            ('script-src', self.script_src + get_asset_csp_hashes('js') +
-             ("'unsafe-eval'" if settings.DEBUG else '', )),
-            ('style-src', self.style_src + get_asset_csp_hashes('css')),
-        )
+        result = {}
+
+        def append_directive(item: CSPDirectiveItem):
+            if item.directive in result:
+                result[item.directive] = result[item.directive] + (item.value, )
+            else:
+                result[item.directive] = (item.value, )
+
+        for directive in self.directives:
+            append_directive(directive)
+        for directive in _CSP_DIRECTIVES:
+            append_directive(directive)
+        for asset in _ASSETS:
+            if asset.csp_directive is not None:
+                append_directive(asset.csp_directive)
+
+        return tuple(result.items())
 
     def __call__(self, request):
         response = self.get_response(request)
