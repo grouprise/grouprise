@@ -39,6 +39,28 @@ def _urlparse_to_dict(parsed_url):
     ))
 
 
+def _dict_to_xmlattributes(data: dict):
+    result = ''
+    for name, value in data.items():
+        result += ' {name}="{value}"'.format(name=name, value=value)
+    return result
+
+
+def _is_absolute(src):
+    return bool(re.match(r'^https?://', src))
+
+
+def _clean_source(src):
+    if _is_absolute(src):
+        return src
+    else:
+        url = _urlparse_to_dict(urlparse(static(src)))
+        qs = parse_qsl(url['query'])
+        qs.append(('v', settings.ASSET_VERSION))
+        url['query'] = urlencode(qs)
+        return _build_url(url)
+
+
 class Asset:
     def __init__(self, stage):
         if stage not in ('early', 'late'):
@@ -68,32 +90,21 @@ class JavaScriptAsset(Asset):
     pass
 
 
-class CascadingStyleSheetAsset(Asset):
-    pass
-
-
 class JavaScriptReference(JavaScriptAsset):
     def __init__(self, src, defer, async, stage):
         super().__init__(stage)
         self.src = src
-        self.is_absolute = bool(re.match(r'^https?://', src))
+        self.is_absolute = _is_absolute(src)
         self.defer = defer
         self.async = async
 
     @cached_property
-    def clean_source(self):
-        if self.is_absolute:
-            return self.src
-        else:
-            url = _urlparse_to_dict(urlparse(static(self.src)))
-            qs = parse_qsl(url['query'])
-            qs.append(('v', settings.ASSET_VERSION))
-            url['query'] = urlencode(qs)
-            return _build_url(url)
+    def clean_src(self):
+        return _clean_source(self.src)
 
     def create_tag(self):
         return '<script src="{src}"{async}{defer}></script>'.format(
-            src=self.clean_source,
+            src=self.clean_src,
             async=(' async' if self.async else ''),
             defer=(' defer' if self.defer else '')
         )
@@ -122,6 +133,82 @@ class JavaScriptInline(JavaScriptAsset):
         return CSPDirectiveItem.script(_csp_hash(self.content))
 
 
+class Link(Asset):
+    def __init__(self, href, rel, **attributes):
+        super().__init__('early')
+        self.href = href
+        self.rel = rel
+        self.is_absolute = _is_absolute(href)
+        self.attributes = attributes
+
+    @cached_property
+    def clean_href(self):
+        return _clean_source(self.href)
+
+    def create_tag(self):
+        return '<link rel="{rel}" href="{href}"{attributes}>'.format(
+            rel=self.rel, href=self.clean_href,
+            attributes=_dict_to_xmlattributes(self.attributes)
+        )
+
+    @property
+    def csp_directive(self):
+        return None
+
+
+class StyleAsset(Asset):
+    pass
+
+
+class StyleReference(Link, StyleAsset):
+    def __init__(self, href, media, **attributes):
+        super().__init__(href, 'stylesheet', media=media, **attributes)
+
+    @cached_property
+    def csp_directive(self):
+        if self.is_absolute:
+            url = urlparse(self.href)
+            return CSPDirectiveItem.style(
+                _build_url(_urlparse_to_dict(url), origin_only=True)
+            )
+        else:
+            return super().csp_directive
+
+
+class StyleInline(StyleAsset):
+    def __init__(self, content, media, scoped):
+        super().__init__('early')
+        self.content = content
+        self.media = media
+        self.scoped = scoped
+
+    def create_tag(self):
+        return '<style media="{media}" {scoped}>{content}</style>'.format(
+            media=self.media, scoped=('scoped' if self.scoped else ''),
+            content=self.content
+        )
+
+    @cached_property
+    def csp_directive(self):
+        return CSPDirectiveItem.style(_csp_hash(self.content))
+
+
+class Meta(Asset):
+    def __init__(self, name, content):
+        super().__init__(stage='early')
+        self.name = name
+        self.content = content
+
+    def create_tag(self):
+        return '<meta name="{name}" content="{content}">'.format(
+            name=self.name, content=self.content
+        )
+
+    @property
+    def csp_directive(self):
+        return None
+
+
 def add_csp_directive(directive, value):
     _CSP_DIRECTIVES.append(CSPDirectiveItem(directive, value))
 
@@ -132,6 +219,22 @@ def add_javascript_reference(src, defer=True, async=True, stage='late'):
 
 def add_javascript_inline(content, stage='late'):
     _ASSETS.append(JavaScriptInline(content, stage))
+
+
+def add_style_reference(src, media='all', **attributes):
+    _ASSETS.append(StyleReference(src, media, **attributes))
+
+
+def add_style_inline(content, media='all', scoped=False):
+    _ASSETS.append(StyleInline(content, media, scoped))
+
+
+def add_link(href, rel, **attributes):
+    _ASSETS.append(Link(href, rel, **attributes))
+
+
+def add_meta(name, content):
+    _ASSETS.append(Meta(name, content))
 
 
 def get_assets(stage):
@@ -184,6 +287,14 @@ class CSPMiddleware(object):
         return response
 
 
-# add core assets
+# add javascript assets
 add_javascript_reference('stadt/js/app.js')
 add_javascript_inline('document.documentElement.setAttribute("class", "js")', stage='early')
+
+# add stylesheet assets
+add_style_reference('stadt/css/app.css')
+
+# add manifest and application icons
+add_link('stadt/config/manifest.json', rel='manifest')
+for size in (16, 32, 48, 62, 144, 192):
+    add_link('stadt/img/logos/logo_%d.png' % size, 'icon', sizes=('%dx%d' % (size, size)), type='image/png')
