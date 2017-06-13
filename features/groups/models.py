@@ -1,12 +1,24 @@
 import datetime
 
-import django.contrib.contenttypes.models
+import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models
 
 import core.models
 from core import colors
+from features.gestalten import models as gestalten
+
+
+def validate_slug(slug):
+    if slug in django.conf.settings.RESERVED_SLUGS:
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
+                params={'slug': slug}, code='reserved')
+    if gestalten.Gestalt.objects.filter(user__username=slug).exists():
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
+                params={'slug': slug}, code='in-use')
 
 
 class Group(core.models.Model):
@@ -23,7 +35,9 @@ class Group(core.models.Model):
             'Name',
             max_length=255)
     score = models.IntegerField(default=0)
-    slug = models.SlugField('Adresse der Gruppenseite', blank=True, null=True, unique=True)
+    slug = models.SlugField(
+            'Adresse der Gruppenseite', blank=True, null=True, unique=True,
+            validators=[validate_slug])
 
     address = models.TextField(
             'Anschrift',

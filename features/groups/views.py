@@ -44,7 +44,7 @@ class Create(views.Create):
 
     action = 'Gruppe anlegen'
     menu = 'group'
-    parent = 'group-index'
+    # parent = 'group-index'
     title = 'Neue Gruppe'
 
     model = models.Group
