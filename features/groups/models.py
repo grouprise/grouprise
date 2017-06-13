@@ -1,9 +1,12 @@
-import core.models
-from core import colors
+import datetime
+
 import django.contrib.contenttypes.models
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models
+
+import core.models
+from core import colors
 
 
 class Group(core.models.Model):
@@ -20,11 +23,7 @@ class Group(core.models.Model):
             'Name',
             max_length=255)
     score = models.IntegerField(default=0)
-    slug = core.models.AutoSlugField(
-            'Adresse der Gruppenseite',
-            populate_from='name',
-            reserve=['gestalt', 'stadt'],
-            unique=True)
+    slug = models.SlugField('Adresse der Gruppenseite', blank=True, null=True, unique=True)
 
     address = models.TextField(
             'Anschrift',
@@ -35,9 +34,7 @@ class Group(core.models.Model):
             max_length=7,
             default=colors.get_random_color)
     date_founded = models.DateField(
-            'Gruppe gegründet',
-            null=True,
-            blank=True)
+            'Gruppe gegründet', blank=True, default=datetime.date.today)
     description = models.TextField(
             'Kurzbeschreibung',
             blank=True,

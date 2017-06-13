@@ -210,6 +210,9 @@ ROOT_SIGNALCONF = 'stadt.signals'
 
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
+RESERVED_SLUGS = [
+        'all', 'alle', 'info', 'mail', 'presse', 'stadt', 'webmaster', 'postmaster', 'www']
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/
