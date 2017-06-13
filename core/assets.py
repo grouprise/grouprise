@@ -297,4 +297,6 @@ add_style_reference('stadt/css/app.css')
 # add manifest and application icons
 add_link('stadt/config/manifest.json', rel='manifest')
 for size in (16, 32, 48, 62, 144, 192):
-    add_link('stadt/img/logos/logo_%d.png' % size, 'icon', sizes=('%dx%d' % (size, size)), type='image/png')
+    add_link(
+            'stadt/img/logos/logo_%d.png' % size, 'icon', sizes=('%dx%d' % (size, size)),
+            type='image/png')
