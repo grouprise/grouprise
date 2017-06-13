@@ -10,11 +10,6 @@ urlpatterns = [
         name='group-index'),
 
     urls.url(
-        r'^(?P<group_slug>[\w-]+)/$',
-        entities.views.Group.as_view(),
-        name='group'),
-
-    urls.url(
         r'^stadt/groups/add/$',
         views.Create.as_view(),
         name='group-create'),

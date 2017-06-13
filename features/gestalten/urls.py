@@ -10,12 +10,7 @@ urlpatterns = [
         name='gestalten'),
 
     urls.url(
-        r'^(?P<gestalt_slug>[\w.@+-]+)/$',
-        entities.views.Gestalt.as_view(),
-        name='gestalt'),
-
-    urls.url(
-        # FIXME: remove 'gestalt/' prefix
+        # TODO: remove 'gestalt/' prefix
         r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/events/(?P<domain>public|private).ics$',
         views.CalendarFeed(),
         name='gestalt-events-feed'),
