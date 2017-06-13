@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import django
 from django.db import migrations
+import core
 
 
 def no_validator(arg):
@@ -47,7 +48,7 @@ class AutoSlugField(django.db.models.SlugField):
             return super().pre_save(model_instance, add)
 
     def slugify(self, model, field, value, validator=no_validator, dodging=True):
-        orig_slug = slug = text.slugify(value)
+        orig_slug = slug = core.text.slugify(value)
         if not dodging:
             return slug
         i = 0

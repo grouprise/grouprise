@@ -3,18 +3,15 @@ import itertools
 import django.contrib.contenttypes.models
 from django.contrib.contenttypes import models as contenttypes_models
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.core import exceptions
 from django.db import models
 from django.utils import crypto
-
-from core import text
 
 
 PERMISSION_TOKEN_LENGTH = 15
 
 
-def get_unique_slug(cls, fields, reserved_slugs=[], reserved_slug_qs=None,
-        reserved_slug_qs_field='slug'):
+def get_unique_slug(
+        cls, fields, reserved_slugs=[], reserved_slug_qs=None, reserved_slug_qs_field='slug'):
     def replace(d, key, repl):
         result = d.copy()
         result[key] = repl
@@ -30,8 +27,9 @@ def get_unique_slug(cls, fields, reserved_slugs=[], reserved_slug_qs=None,
                 slug = slug + suffix
             else:
                 slug = slug[:-(len(slug)+len(suffix)-l)] + suffix
-        if (slug not in reserved_slugs 
-                and (reserved_slug_qs is None
+        if (slug not in reserved_slugs
+                and (
+                    reserved_slug_qs is None
                     or not reserved_slug_qs.filter(**{reserved_slug_qs_field: slug}).exists())
                 and not cls._default_manager.filter(
                     **replace(fields, slug_field_name, slug)).exists()):
