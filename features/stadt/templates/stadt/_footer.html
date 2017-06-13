@@ -52,22 +52,5 @@
             </li>
         </ul>
     </div>
-    <div class="page-footer-sidebar">
-        <span class="footer-heading">Deine Gruppen</span>
-        <ul class="nav-footer">
-            <li>
-                <ul>
-                    {% for membership in my_memberships %}
-                        <li>
-                            <a href="{{ membership.group.get_absolute_url }}">
-                                {{ membership.group }}
-                            </a>
-                        </li>
-                    {% empty %}
-                        <li><a href="{% url 'group-index' %}">Gruppe finden</a></li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
-    </div>
+    <div class="page-footer-sidebar"></div>
 </div>
