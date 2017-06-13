@@ -16,7 +16,7 @@ register = template.Library()
 @register.simple_tag
 def include_assets(stage):
     return safestring.mark_safe('\n'.join([
-        repr(asset) for asset in get_assets(stage)
+        asset.create_tag() for asset in get_assets(stage)
     ]))
 
 
