@@ -10,7 +10,10 @@
                 {{ gestalt }}
             </h3>
             <div class="profile-meta">
-                Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} · {{ gestalt.authored_content.count }} Beitr{{ gestalt.authored_content.count|pluralize:'ag,äge' }}
+                {% with num_content=gestalt.versions.count|add:gestalt.contributions.count %}
+                    Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} ·
+                    {{ num_content }} Beitr{{ num_content|pluralize:'ag,äge' }}
+                {% endwith %}
             </div>
         </div>
     </div>
