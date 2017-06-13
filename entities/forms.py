@@ -1,9 +1,23 @@
-from features.gestalten import models
 from crispy_forms import bootstrap, layout
+import django
 from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
+
+from features.groups import models as groups
 from utils import forms as utils_forms
+from features.gestalten import models
+
+
+def validate_slug(slug):
+    if slug in django.conf.settings.RESERVED_SLUGS:
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
+                params={'slug': slug}, code='reserved')
+    if groups.Group.objects.filter(slug=slug).exists():
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
+                params={'slug': slug}, code='in-use')
 
 
 class User(utils_forms.FormMixin, forms.ModelForm):
@@ -11,6 +25,11 @@ class User(utils_forms.FormMixin, forms.ModelForm):
         fields = ('first_name', 'last_name', 'username')
         labels = {'username': 'Adresse der Benutzerseite / Pseudonym'}
         model = auth_models.User
+
+    def clean_username(self):
+        slug = self.cleaned_data['username']
+        validate_slug(slug)
+        return slug
 
 
 class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
@@ -28,7 +47,7 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
         return (
                 bootstrap.PrependedText(
                     'username',
-                    '%(domain)s/gestalt/' % {'domain': DOMAIN}),
+                    '%(domain)s/' % {'domain': DOMAIN}),
                 'first_name',
                 'last_name',
                 layout.Field('about', rows=5),
