@@ -87,15 +87,16 @@ def event_time(context, event):
     return time_str.strip()
 
 
-@register.inclusion_tag('events/_sidebar_calendar.html')
-def sidebar_calendar(associations, group=None, preview_length=5, show_group=True):
+@register.inclusion_tag('events/_sidebar_calendar.html', takes_context=True)
+def sidebar_calendar(context, associations, group=None, preview_length=5, show_group=True):
     upcoming = associations.filter_upcoming().order_by('content__time')[:preview_length]
-    return {
-            'associations': associations,
-            'group': group,
-            'show_group': show_group,
-            'upcoming': upcoming,
-            }
+    context.update({
+        'associations': associations,
+        'group': group,
+        'show_group': show_group,
+        'upcoming': upcoming,
+    })
+    return context
 
 
 @register.filter

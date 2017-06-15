@@ -91,6 +91,12 @@ class Create(base.PermissionMixin, generic.CreateView):
             self.entity = None
         return self.entity
 
+    def has_permission(self):
+        has_perm = super().has_permission()
+        if has_perm and self.entity and self.entity.is_group:
+            has_perm = self.request.user.has_perm('content.group_create', self.entity)
+        return has_perm
+
 
 class Update(base.PermissionMixin, generic.UpdateView):
     permission_required = 'content.change'
