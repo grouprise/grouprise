@@ -1,0 +1,52 @@
+<div class="group-actions">
+    <div class="btn-toolbar">
+        
+        {# PREFERENCES #}
+        {% load rules %}
+        {% has_perm 'groups.change_group' user group as can_edit %}
+        {% if can_edit %}
+            <div class="btn-group">
+                <a class="btn btn-default btn-sm" href="{% url 'group-update' group.pk %}">
+                    <i class="sg sg-edit"></i> Gruppenangaben ändern
+                </a>
+            </div>
+        {% endif %}
+
+        {# CONVERSATION #}
+        {# should be visible most of the time as there might be no conversations section #}
+        <div class="btn-group">
+            <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default btn-sm" title="Ein Gespräch mit den Gruppenmitgliedern beginnen">
+                <i class="sg sg-message"></i> Nachricht schreiben
+            </a>
+        </div>
+
+        {# MEMBERSHIP #}
+        {% load memberships rules %}
+        {% has_perm 'memberships.join_group' user group as can_join %}
+        {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
+        {% if can_resign %}
+            <a href="{% url 'resign' group.pk %}" class="btn btn-default btn-sm btn-addon-ok" title="Aus der Gruppe austreten">
+                <i class="sg sg-group"></i> Beigetreten
+            </a>
+        {% elif can_join or not user.is_authenticated %}
+            <a href="{% url 'join' group.pk %}" class="btn btn-default btn-sm" title="Der Gruppe beitreten">
+                <i class="sg sg-join"></i> Beitreten
+            </a>
+        {% endif %}
+
+        {# SUBSCRIPTION #}
+        {% load rules subscriptions %}
+        {% has_perm 'subscriptions.create_group_subscription' user group as can_subscribe %}
+        {% has_perm 'subscriptions.delete_subscription' user user.gestalt|subscription:group as can_unsubscribe %}
+        {% if can_unsubscribe %}
+            <a href="{% url 'group-unsubscribe' group.pk %}" class="btn btn-default btn-addon-ok btn-sm" title="Du erhältst Benachrichtungen für diese Gruppe">
+                <i class="sg sg-subscription"></i> Abonniert
+            </a>
+        {% elif can_subscribe %}
+            <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+                <i class="sg sg-subscription"></i> Abonnieren
+            </a>
+        {% endif %}
+
+    </div>
+</div>
