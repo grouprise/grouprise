@@ -221,6 +221,8 @@ LOGIN_URL = 'account_login'
 
 LOGIN_REDIRECT_URL = 'index'
 
+ACCOUNT_ADAPTER = 'features.gestalten.adapters.AccountAdapter'
+
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'

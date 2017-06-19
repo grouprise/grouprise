@@ -11,13 +11,13 @@ PERMISSION_TOKEN_LENGTH = 15
 
 
 def get_unique_slug(
-        cls, fields, reserved_slugs=[], reserved_slug_qs=None, reserved_slug_qs_field='slug'):
+        cls, fields, reserved_slugs=[], reserved_slug_qs=None, reserved_slug_qs_field='slug',
+        slug_field_name='slug'):
     def replace(d, key, repl):
         result = d.copy()
         result[key] = repl
         return result
 
-    slug_field_name = 'slug'
     l = cls._meta.get_field(slug_field_name).max_length
     for i in itertools.count():
         slug = fields[slug_field_name][:l]
