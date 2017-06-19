@@ -36,12 +36,8 @@
             <h2>Beitragseinstellungen</h2>
             <div class="row">
                 <div class="col-md-7">
+                    {% include 'core/_field.html' with field=form.image %}
                     {% block extra_settings %}{% endblock %}
-                    {% if form.pinned %}
-                        <div class="form-group">
-                            {% include 'core/_checkbox_field.html' with field=form.pinned %}
-                        </div>
-                    {% endif %}
                 </div>
                 <div class="col-md-5">
                     <button class="btn btn-primary btn-block">
@@ -49,6 +45,11 @@
                     </button>
                     {% if form.public %}
                         {% include 'core/_checkbox_field.html' with field=form.public %}
+                    {% endif %}
+                    {% if form.pinned %}
+                        <div class="form-group">
+                            {% include 'core/_checkbox_field.html' with field=form.pinned %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
