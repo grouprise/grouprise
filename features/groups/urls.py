@@ -1,6 +1,5 @@
 from django.conf import urls
 
-import entities.views
 from . import views
 
 urlpatterns = [

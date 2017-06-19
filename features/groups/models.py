@@ -88,7 +88,7 @@ class Group(core.models.Model):
 
     def get_absolute_url(self):
         return urlresolvers.reverse(
-                'group', args=[type(self).objects.get(pk=self.pk).slug])
+                'entity', args=[type(self).objects.get(pk=self.pk).slug])
 
     # FIXME: move to template filter
     # TODO: when removed check api
