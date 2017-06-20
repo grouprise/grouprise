@@ -16,7 +16,13 @@ from features.imports import models
 
 class Command(django.core.management.base.BaseCommand):
 
-    FEED_RE = r'<link [^>]*type=\"application/(?:rss|atom)\+xml\" [^>]*href=\"([^\"]+)\"[^>]*>'
+    FEED_RE = (
+            r'<link\s+[^>]*'
+            r'(?:type=[\"\']application/(?:rss|atom)\+xml[\"\']\s+[^>]*'
+                r'href=[\"\']([^\"\']+)[\"\']'
+            r'|href=[\"\']([^\"\']+)[\"\']\s+[^>]*'
+                r'type=[\"\']application/(?:rss|atom)\+xml[\"\'])'
+            r'[^>]*>')
 
     def handle(self, *args, **options):
         author = gestalten.Gestalt.objects.get(id=django.conf.settings.IMPORTER_ID)
@@ -24,7 +30,7 @@ class Command(django.core.management.base.BaseCommand):
             r = requests.get(group.url)
             m = re.search(self.FEED_RE, r.text)
             if m:
-                feed_url = m.group(1)
+                feed_url = m.group(1) or m.group(2)
                 feed = feedparser.parse(feed_url)
                 for entry in feed.entries:
                     key = entry.get('id', entry.get('link'))
