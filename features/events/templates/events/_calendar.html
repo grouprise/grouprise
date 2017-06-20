@@ -1,5 +1,5 @@
 {% load events %}
-<a href="?{% get_parameters month=last_month.month year=last_month.year %}">vorheriger Monat</a>
+<a href="?{% get_parameters month=prev_month.month year=prev_month.year %}">vorheriger Monat</a>
 <a href="?{% get_parameters month=next_month.month year=next_month.year %}">nächster Monat</a>
 <table class="calendar calendar-{{ size }}">
     <caption>{{ month }}</caption>

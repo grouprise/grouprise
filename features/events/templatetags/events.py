@@ -71,7 +71,7 @@ def calendar(context, associations, size='preview'):
     next_month = around.replace(day=1) + datetime.timedelta(days=31)
     context.update({
             'days': calendar.formatweekheader(),
-            'last_month': last_month,
+            'prev_month': last_month,
             'month': calendar.formatmonthname(around.year, around.month),
             'next_month': next_month,
             'weeks': calendar.formatmonthweeks(around.year, around.month),
