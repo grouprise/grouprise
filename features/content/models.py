@@ -13,7 +13,7 @@ class Content(core.models.Model):
     is_conversation = False
 
     title = models.CharField(max_length=255)
-    image = models.ForeignKey('images.Image', null=True)
+    image = models.ForeignKey('images.Image', blank=True, null=True)
 
     place = models.CharField(blank=True, max_length=255)
 

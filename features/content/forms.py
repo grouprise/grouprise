@@ -25,7 +25,7 @@ class Create(forms.ModelForm):
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea)
     title = forms.CharField(label='Titel')
     image = forms.ModelChoiceField(
-            label='Beitragsbild', queryset=None,
+            label='Beitragsbild', queryset=None, required=False,
             help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
             'Vorschau des Beitrags angezeigt.')
 
@@ -81,7 +81,7 @@ class Update(forms.ModelForm):
     title = forms.CharField(label='Titel')
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
     image = forms.ModelChoiceField(
-            label='Beitragsbild', queryset=None,
+            label='Beitragsbild', queryset=None, required=False,
             help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
             'Vorschau des Beitrags angezeigt.')
 
