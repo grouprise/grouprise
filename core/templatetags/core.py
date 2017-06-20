@@ -13,6 +13,15 @@ from core.assets import get_assets
 register = template.Library()
 
 
+@register.simple_tag(takes_context=True)
+def get_parameters(context, **kwargs):
+    request = context.get('request')
+    params = request.GET.copy()
+    for k in kwargs:
+        params[k] = kwargs.get(k)
+    return params.urlencode()
+
+
 @register.simple_tag
 def include_assets(stage):
     return safestring.mark_safe('\n'.join([
