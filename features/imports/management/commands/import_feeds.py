@@ -19,9 +19,9 @@ class Command(django.core.management.base.BaseCommand):
     FEED_RE = (
             r'<link\s+[^>]*'
             r'(?:type=[\"\']application/(?:rss|atom)\+xml[\"\']\s+[^>]*'
-                r'href=[\"\']([^\"\']+)[\"\']'
+            r'href=[\"\']([^\"\']+)[\"\']'
             r'|href=[\"\']([^\"\']+)[\"\']\s+[^>]*'
-                r'type=[\"\']application/(?:rss|atom)\+xml[\"\'])'
+            r'type=[\"\']application/(?:rss|atom)\+xml[\"\'])'
             r'[^>]*>')
 
     def handle(self, *args, **options):
