@@ -60,8 +60,8 @@ class List(base.PermissionMixin, filters_views.FilterView):
     paginate_by = 10
 
     def get_content(self):
-        return associations.Association.objects.filter(
-                entity_type=groups.Group.content_type).can_view(self.request.user)
+        return associations.Association.objects.filter_group_containers().can_view(
+                self.request.user)
 
     def get_queryset(self):
         return groups.Group.objects.order_by('-score')
