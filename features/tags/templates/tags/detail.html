@@ -31,6 +31,17 @@
         <div class="content-header">
             <h2 class="content-classification">Beiträge</h2>
             <span class="decoration-icon sg-pen" role="presentation"></span>
+            <div class="btn-toolbar">
+                {% if view.tagged_only %}
+                    <a href="?{% get_parameters tagged=0 %}" class="btn btn-default btn-sm btn-addon-ok" title="zusätzlich Beiträge von Gruppen anzeigen, die mit diesem Schlagwort gekennzeichnet wurden">
+                        <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete angezeigt</span>
+                    </a>
+                {% else %}
+                    <a href="?{% get_parameters tagged=1 %}" class="btn btn-default btn-sm" title="nur Beiträge anzeigen, die explizit mit diesem Schlagwort gekennzeichnet wurden">
+                        <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete anzeigen</span>
+                    </a>
+                {% endif %}
+            </div>
         </div>
         <div class="content-list">
             <div class="content-block">

@@ -16,6 +16,7 @@ class Detail(core.views.PermissionMixin, django.views.generic.ListView):
     def get_queryset(self):
         self.tag = self.get_tag()
         self.groups = groups.Group.objects.filter(tags__tag=self.tag)
+        self.tagged_only = int(self.request.GET.get('tagged', 0))
         return super().get_queryset().filter(
                 container_type=content.Content.content_type,
                 entity_type=groups.Group.content_type, entity_id__in=self.groups
