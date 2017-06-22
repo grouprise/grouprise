@@ -59,7 +59,7 @@ class Association(models.QuerySet):
         qs = qs.order_by('-time_created')
         return qs
 
-    def ordered_conversations(self, user):
+    def ordered_user_conversations(self, user):
         qs = self
         qs = qs.can_view(user, container='conversation')
         qs = qs.filter(container_type=conversations.Conversation.content_type)

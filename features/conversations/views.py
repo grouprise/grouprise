@@ -38,7 +38,7 @@ class Conversations(core.views.PermissionMixin, generic.ListView):
         return associations.Association.objects.can_view(self.request.user)
 
     def get_queryset(self):
-        return super().get_queryset().ordered_conversations(self.request.user)
+        return super().get_queryset().ordered_user_conversations(self.request.user)
 
 
 class GroupConversations(Conversations):
