@@ -288,15 +288,20 @@ INTERNAL_IPS = ("127.0.0.1", )
 #
 # only entity and props are required
 TAGS_TAGGABLE = (
-    # FIXME: tagging is disabled
-    # {
-    #     'entity': 'content.Content',
-    #     'props': ['text', 'title']
-    # },
+    {
+        'entity': 'content2.Content',
+        'props': ['title'],
+        'tag_self': True,
+    },
+    {
+        'entity': 'content2.Version',
+        'props': ['text'],
+        'tag_related': [lambda v: v.content],
+    },
     # {
     #     'entity': 'contributions.Text',
     #     'props': ['text'],
-    # }
+    # },
 )
 
 try:
