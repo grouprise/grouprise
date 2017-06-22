@@ -23,13 +23,6 @@ class Tagged(models.Model):
     tagged_id = models.PositiveIntegerField()
     tagged_type = models.ForeignKey('contenttypes.ContentType')
 
-    @classmethod
-    def get_tagged_query(cls, tag, model):
-        content_type = contenttypes.ContentType.objects.get_for_model(model)
-        tagged_objects = Tagged.objects.filter(tagged_type=content_type, tag=tag)
-        model_ids = list(map(lambda tagged: tagged.tagged_id, tagged_objects))
-        return Q(pk__in=model_ids)
-
     def __repr__(self):
         return "%s was tagged with '%s'" % (str(self.tagged), str(self.tag))
 

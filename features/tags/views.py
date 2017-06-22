@@ -1,4 +1,5 @@
 import django
+from django.db.models import Q
 
 import core
 from features.associations import models as associations
@@ -17,11 +18,16 @@ class Detail(core.views.PermissionMixin, django.views.generic.ListView):
         self.tag = self.get_tag()
         self.groups = groups.Group.objects.filter(tags__tag=self.tag)
         self.tagged_only = int(self.request.GET.get('tagged', 0))
-        return super().get_queryset().filter(
-                container_type=content.Content.content_type,
-                entity_type=groups.Group.content_type, entity_id__in=self.groups
-                ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
-                    'content__versions__time_created')).order_by('-time_created')
+        tagged_query = Q(content__taggeds__tag=self.tag)
+        qs = super().get_queryset().ordered_user_content(self.request.user)
+        if self.tagged_only:
+            qs = qs.filter(tagged_query)
+        else:
+            group_tagged_query = (
+                    Q(entity_type=groups.Group.content_type)
+                    & Q(entity_id__in=self.groups))
+            qs = qs.filter(tagged_query | group_tagged_query)
+        return qs
 
     def get_tag(self):
         try:

@@ -27,7 +27,7 @@
     </ol>
 
     {# content #}
-    {% if object_list %}
+    {% if view.tagged_only or object_list %}
         <div class="content-header">
             <h2 class="content-classification">Beiträge</h2>
             <span class="decoration-icon sg-pen" role="presentation"></span>
