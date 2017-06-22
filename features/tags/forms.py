@@ -18,5 +18,8 @@ class TagGroup(forms.ModelForm):
                 tags__tag=self.instance.tag).order_by(Lower('name'))
 
     def save(self, commit=True):
+        if commit and not self.instance.tag.pk:
+            self.instance.tag.save()
+            self.instance.tag = self.instance.tag
         self.instance.tagged = self.cleaned_data['group']
         return super().save(commit)
