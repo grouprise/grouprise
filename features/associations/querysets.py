@@ -35,6 +35,7 @@ class Association(models.QuerySet):
         qs = self
         qs = qs.filter(content__time__isnull=True)  # events
         qs = qs.filter(content__gallery_images__image__isnull=True)  # galleries
+        qs = qs.filter(content__options__isnull=True)  # polls
         return qs
 
     def filter_events(self):
