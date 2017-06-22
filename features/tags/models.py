@@ -22,6 +22,10 @@ class Tag(models.Model):
 
 
 class Tagged(models.Model):
+    class Meta:
+        ordering = ('tag__name',)
+        unique_together = ('tag', 'tagged_id', 'tagged_type',)
+
     tag = models.ForeignKey('Tag', related_name='tagged')
 
     tagged = contenttypes.GenericForeignKey('tagged_type', 'tagged_id')
@@ -30,6 +34,3 @@ class Tagged(models.Model):
 
     def __repr__(self):
         return "%s was tagged with '%s'" % (str(self.tagged), str(self.tag))
-
-    class Meta:
-        ordering = ('tag__name',)

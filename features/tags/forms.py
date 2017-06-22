@@ -14,7 +14,8 @@ class TagGroup(forms.ModelForm):
     def __init__(self, **kwargs):
         tagger = kwargs.pop('tagger')
         super().__init__(**kwargs)
-        self.fields['group'].queryset = tagger.groups.order_by(Lower('name'))
+        self.fields['group'].queryset = tagger.groups.exclude(
+                tags__tag=self.instance.tag).order_by(Lower('name'))
 
     def save(self, commit=True):
         self.instance.tagged = self.cleaned_data['group']
