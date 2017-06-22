@@ -4,11 +4,15 @@
 {% block menu %}{% menu 'tag' %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb 'Schlagworte' view.tag %}{% endblock %}
 
-{% block heading %}
-    <div class="content-header">
-        <h2 class="content-classification">#{{ view.tag.slug }}</h2>
-        <span class="decoration-icon sg-group" role="presentation"></span>
-    </div>
+{% block heading_title %}
+    <h1 class="content-classification">#{{ view.tag.slug }}</h1>
+    <span class="decoration-icon sg-group" role="presentation"></span>
+{% endblock %}
+
+{% block heading_toolbar %}
+<a href="{% url 'tag-group' view.tag.slug %}" class="btn btn-ch">
+        <span class="btn-label">Gruppe hinzufügen</span>
+    </a>
 {% endblock %}
 
 {% block sidebar %}

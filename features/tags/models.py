@@ -1,6 +1,8 @@
+import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from django.db.models import Q
+
 from core.text import slugify
 
 
@@ -8,12 +10,15 @@ class Tag(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
-    def __str__(self):
-        return self.name
-
     @classmethod
     def slugify(cls, name):
         return slugify(name)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return django.core.urlresolvers.reverse('tag', args=(self.slug,))
 
 
 class Tagged(models.Model):

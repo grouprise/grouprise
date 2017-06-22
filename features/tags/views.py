@@ -5,7 +5,7 @@ import core
 from features.associations import models as associations
 from features.content import models as content
 from features.groups import models as groups
-from . import models
+from . import forms, models
 
 
 class Detail(core.views.PermissionMixin, django.views.generic.ListView):
@@ -31,7 +31,31 @@ class Detail(core.views.PermissionMixin, django.views.generic.ListView):
 
     def get_tag(self):
         try:
-            return django.shortcuts.get_object_or_404(models.Tag, slug=self.kwargs.get('slug'))
-        except django.http.Http404:
-            slug = self.kwargs.get(self.slug_url_kwarg)
-            return models.Tag(name=slug, slug=slug)
+            return models.Tag.objects.get(slug=self.kwargs.get('slug'))
+        except models.Tag.DoesNotExist:
+            return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
+
+
+class TagGroup(core.views.PermissionMixin, django.views.generic.CreateView):
+    permission_required = 'tags.tag_group'
+    form_class = forms.TagGroup
+    template_name = 'tags/tag_group.html'
+
+    def get_form_kwargs(self):
+        self.tag = self.get_tag()
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = models.Tagged(tag=self.tag)
+        kwargs['tagger'] = self.request.user.gestalt
+        return kwargs
+
+    def get_permission_object(self):
+        return None
+
+    def get_success_url(self):
+        return self.tag.get_absolute_url()
+
+    def get_tag(self):
+        try:
+            return models.Tag.objects.get(slug=self.kwargs.get('slug'))
+        except models.Tag.DoesNotExist:
+            return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
