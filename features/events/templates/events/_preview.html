@@ -9,13 +9,13 @@
     <div>
         <div class="calendar-sheet calendar-sheet-size-">
             <span class="calendar-sheet-dayname">
-                {{ time|date:'l' }}
+                {{ association.container.time|date:'l' }}
             </span>
             <span class="calendar-sheet-daynumber">
-                {{ time|date:'d' }}
+                {{ association.container.time|date:'d' }}
             </span>
             <span class="calendar-sheet-month">
-                {{ time|date:'F' }}
+                {{ association.container.time|date:'F' }}
             </span>
         </div>
     </div>
