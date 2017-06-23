@@ -1,8 +1,18 @@
 {% load events %}
-<a href="?{% get_parameters month=prev_month.month year=prev_month.year %}">vorheriger Monat</a>
-<a href="?{% get_parameters month=next_month.month year=next_month.year %}">nächster Monat</a>
 <table class="calendar calendar-{{ size }}">
-    <caption>{{ month }}</caption>
+    <caption>
+        <div class="calendar-month">
+            {% get_parameters month=prev_month.month year=prev_month.year as prev_url %}
+            {% get_parameters month=next_month.month year=next_month.year as next_url %}
+            <a href="?{{ prev_url }}" class="btn btn-icon" title="vorheriger Monat">
+                <i class="sg sg-prev"></i>
+            </a>
+            <span class="calendar-current-month">{{ month }}</span>
+            <a href="?{{ next_url }}" class="btn btn-icon" title="nächster Monat">
+                <i class="sg sg-next"></i>
+            </a>
+        </div>
+    </caption>
     <thead class="calendar-daynames">
         <tr class="calendar-daynames">
             {% for day in days %}
