@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'features.subscriptions',
     'features.tags',
     'features.texts',
+    'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
@@ -185,7 +186,8 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 DEFAULT_FROM_EMAIL = 'noreply@localhost'
 DEFAULT_REPLY_TO_EMAIL = 'stadtgestalten+{reply_key}@localhost'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'mailer.backend.DbBackend'
+MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 # Sites
@@ -210,6 +212,9 @@ ROOT_SIGNALCONF = 'stadt.signals'
 
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
+RESERVED_SLUGS = [
+        'all', 'alle', 'info', 'mail', 'presse', 'stadt', 'webmaster', 'postmaster', 'www']
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/
@@ -217,6 +222,8 @@ BACKUP_PATH = '/var/backups/stadtgestalten'
 LOGIN_URL = 'account_login'
 
 LOGIN_REDIRECT_URL = 'index'
+
+ACCOUNT_ADAPTER = 'features.gestalten.adapters.AccountAdapter'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
@@ -283,15 +290,20 @@ INTERNAL_IPS = ("127.0.0.1", )
 #
 # only entity and props are required
 TAGS_TAGGABLE = (
-    # FIXME: tagging is disabled
-    # {
-    #     'entity': 'content.Content',
-    #     'props': ['text', 'title']
-    # },
+    {
+        'entity': 'content2.Content',
+        'props': ['title'],
+        'tag_self': True,
+    },
+    {
+        'entity': 'content2.Version',
+        'props': ['text'],
+        'tag_related': [lambda v: v.content],
+    },
     # {
     #     'entity': 'contributions.Text',
     #     'props': ['text'],
-    # }
+    # },
 )
 
 try:

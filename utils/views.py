@@ -24,6 +24,9 @@ class GestaltMixin:
             if 'gestalt_slug' in self.kwargs:
                 return entities_models.Gestalt.objects.get(
                         user__username=self.kwargs['gestalt_slug'])
+            if 'entity_slug' in self.kwargs:
+                return entities_models.Gestalt.objects.get(
+                        user__username=self.kwargs['entity_slug'])
         except entities_models.Gestalt.DoesNotExist:
             pass
 
@@ -50,6 +53,8 @@ class GroupMixin:
                 return groups.Group.objects.get(pk=self.kwargs['group_pk'])
             if 'group_slug' in self.kwargs:
                 return groups.Group.objects.get(slug=self.kwargs['group_slug'])
+            if 'entity_slug' in self.kwargs:
+                return groups.Group.objects.get(slug=self.kwargs['entity_slug'])
             if 'group' in self.request.GET:
                 return groups.Group.objects.get(slug=self.request.GET['group'])
         except groups.Group.DoesNotExist:

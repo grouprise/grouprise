@@ -1,6 +1,5 @@
 from django import shortcuts
 from django.conf import settings
-from django.contrib.contenttypes import models as contenttypes
 from django.contrib.messages import views as messages
 from django.core import urlresolvers
 from django.views import generic
@@ -38,7 +37,7 @@ class Conversations(core.views.PermissionMixin, generic.ListView):
         return associations.Association.objects.can_view(self.request.user)
 
     def get_queryset(self):
-        return super().get_queryset().ordered_conversations(self.request.user)
+        return super().get_queryset().ordered_user_conversations(self.request.user)
 
 
 class GroupConversations(Conversations):
@@ -50,9 +49,7 @@ class GroupConversations(Conversations):
         return self.group
 
     def get_queryset(self):
-        return super().get_queryset().filter(
-            entity_type=contenttypes.ContentType.objects.get_for_model(self.group),
-            entity_id=self.group.id)
+        return super().get_queryset().filter_group_containers().filter(entity_id=self.group.id)
 
 
 class CreateConversation(

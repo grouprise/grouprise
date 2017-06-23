@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block content %}
-    {% block content_header %}
+    {% block gestalten_header %}
         {% has_perm 'entities.change_gestalt' user user.gestalt as can_edit %}
         {% dismissible 'gestalt-profile-visibility' %}
         <div class="disclaimer disclaimer-standalone">

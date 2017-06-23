@@ -8,10 +8,8 @@ class JoinAllowed:
                 methods=[tests.HTTP_GET],
                 url='join', key=self.group.pk,
                 response={tests.HTTP_OK})
-        self.assertRequest(
-                methods=[tests.HTTP_POST],
-                url='join', key=self.group.pk,
-                response={tests.HTTP_REDIRECTS: ('group', self.group.slug)})
+        response = self.client.post(self.get_url('join', key=self.group.pk))
+        self.assertRedirects(response, self.group.get_absolute_url())
         self.assertExists(
                 models.Membership,
                 group=self.group, member=self.gestalt)
@@ -81,8 +79,7 @@ class MemberListForbidden:
 
 class NoLink:
     def test_group(self):
-        response = self.request(
-                tests.HTTP_GET, url='group', key=self.group.slug)
+        response = self.client.get(self.group.get_absolute_url())
         self.assertNotContainsLink(response, self.get_url('join', self.group.pk))
         self.assertNotContainsLink(
                 response, self.get_url('resign', self.group.pk))
@@ -90,8 +87,7 @@ class NoLink:
 
 class OnlyJoinLink:
     def test_group(self):
-        response = self.request(
-                tests.HTTP_GET, url='group', key=self.group.slug)
+        response = self.client.get(self.group.get_absolute_url())
         self.assertContainsLink(response, self.get_url('join', self.group.pk))
         self.assertNotContainsLink(
                 response, self.get_url('resign', self.group.pk))
@@ -99,8 +95,7 @@ class OnlyJoinLink:
 
 class OnlyResignLink:
     def test_group(self):
-        response = self.request(
-                tests.HTTP_GET, url='group', key=self.group.slug)
+        response = self.client.get(self.group.get_absolute_url())
         self.assertNotContainsLink(response, self.get_url('join', self.group.pk))
         self.assertContainsLink(response, self.get_url('resign', self.group.pk))
 
@@ -111,10 +106,8 @@ class ResignAllowed:
                 methods=[tests.HTTP_GET],
                 url='resign', key=self.group.pk,
                 response={tests.HTTP_OK})
-        self.assertRequest(
-                methods=[tests.HTTP_POST],
-                url='resign', key=self.group.pk,
-                response={tests.HTTP_REDIRECTS: ('group', self.group.slug)})
+        response = self.client.post(self.get_url('resign', key=self.group.pk))
+        self.assertRedirects(response, self.group.get_absolute_url())
         self.assertNotExists(
                 models.Membership,
                 group=self.group, member=self.gestalt)
