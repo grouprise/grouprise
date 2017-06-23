@@ -50,9 +50,17 @@
                     </ul>
                 </div>
 
-                <a href="{% if group %}{% url 'create-group-event' group.slug %}{% else %}{% url 'create-event' %}{% endif %}" class="btn btn-link">
-                    Neue Veranstaltung
-                </a>
+                {% load rules %}
+                {% if group %}
+                    {% has_perm 'content.group_create' user group as can_create %}
+                {% else %}
+                    {% has_perm 'content.create' user as can_create %}
+                {% endif %}
+                {% if not user.is_authenticated or can_create %}
+                    <a href="{% if group %}{% url 'create-group-event' group.slug %}{% else %}{% url 'create-event' %}{% endif %}" class="btn btn-link">
+                        Neue Veranstaltung
+                    </a>
+                {% endif %}
             </div>
         {% endif %}
     </div>
