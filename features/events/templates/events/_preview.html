@@ -7,6 +7,16 @@
 
 {% block content_preview_image %}
     <div>
-        {% include "macros/calendar_sheet.html" with time=association.container.time %}
+        <div class="calendar-sheet calendar-sheet-size-">
+            <span class="calendar-sheet-dayname">
+                {{ time|date:'l' }}
+            </span>
+            <span class="calendar-sheet-daynumber">
+                {{ time|date:'d' }}
+            </span>
+            <span class="calendar-sheet-month">
+                {{ time|date:'F' }}
+            </span>
+        </div>
     </div>
 {% endblock %}

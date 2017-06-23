@@ -37,6 +37,7 @@ class Group:
             num_subscribers = subscriptions.Subscription.objects.filter(
                     subscribed_to=instance).count()
             for only_public, num_gestalten in ((False, num_members), (True, num_subscribers)):
+                ps = 0
                 group_versions = content.Version.objects.filter(
                        content__associations__entity_id=instance.id,
                        content__associations__entity_type=instance.content_type,
@@ -56,6 +57,6 @@ class Group:
                            time_created__gt=THRESHOLD)
                 for qs in (group_versions, group_comments, group_conversations):
                     for group_authored in qs:
-                        s += (group_authored.time_created - THRESHOLD).days
-                s *= num_gestalten
+                        ps += (group_authored.time_created - THRESHOLD).days
+                s += ps * num_gestalten
         return s

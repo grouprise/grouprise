@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.forms',
     'django_filters',
     'django_mailbox',
-    'entities.apps.EntitiesConfig',
+    'entities',
     'features.articles',
     'features.associations',
     'features.contributions',
