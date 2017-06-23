@@ -84,6 +84,13 @@ class Join(MembershipMixin, views.Create):
     permission_required = 'memberships.join_group'
     template_name = 'memberships/join.html'
 
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated():
+            django.contrib.messages.info(self.request, 'Du bist bereits Mitglied der Gruppe.')
+            return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
+        else:
+            return super().handle_no_permission()
+
 
 class Members(gestalten_views.List):
     permission_required = 'memberships.view_list'

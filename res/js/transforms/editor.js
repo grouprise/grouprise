@@ -159,8 +159,9 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
   })
 
   imageEditor.emitter.on('files:select', (files) => {
+    const text = editor.codemirror.getSelection()
     const code = files.map((file) => {
-      return `![${file.label}](${file.content})`
+      return `![${(text.length > 0) ? text : file.label}](${file.content})`
     }).join('\n')
 
     editor.codemirror.doc.replaceSelection(code)

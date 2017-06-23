@@ -1,8 +1,10 @@
-from . import filters, models
-from core import fields, views
+import django
 from django import db, http
 from django.contrib import messages
+
+from core import fields, views
 from features.groups import views as groups
+from . import filters, models
 
 
 class SubscriptionMixin:
@@ -42,6 +44,14 @@ class GroupSubscribe(groups.Mixin, Subscribe):
 
     def get_related_object(self):
         return self.get_group()
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated():
+            django.contrib.messages.info(
+                    self.request, 'Du erhältst bereits Nachrichten für diese Gruppe.')
+            return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
+        else:
+            return super().handle_no_permission()
 
 
 class Unsubscribe(SubscriptionMixin, views.Delete):
