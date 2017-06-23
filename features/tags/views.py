@@ -3,7 +3,6 @@ from django.db.models import Q
 
 import core
 from features.associations import models as associations
-from features.content import models as content
 from features.groups import models as groups
 from . import forms, models
 

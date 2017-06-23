@@ -8,7 +8,7 @@ urlpatterns = [
         name='tag'),
 
     url(
-        r'^stadt/tags/(?P<slug>[-\w]+)/tag-group$',
+        r'^stadt/tags/(?P<slug>[-\w]+)/tag-group/$',
         views.TagGroup.as_view(),
         name='tag-group'),
 ]

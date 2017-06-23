@@ -1,7 +1,6 @@
 import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
-from django.db.models import Q
 
 from core.text import slugify
 

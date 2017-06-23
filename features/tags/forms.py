@@ -20,6 +20,6 @@ class TagGroup(forms.ModelForm):
     def save(self, commit=True):
         if commit and not self.instance.tag.pk:
             self.instance.tag.save()
-            self.instance.tag = self.instance.tag
+            self.instance.tag_id = self.instance.tag.id
         self.instance.tagged = self.cleaned_data['group']
         return super().save(commit)
