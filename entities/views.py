@@ -1,11 +1,9 @@
 import django.db.models
 from django import http
 from django.contrib.contenttypes import models as contenttypes
-from django.utils import six
 from django.views import generic
-from crispy_forms import layout
 
-from utils import forms as utils_forms, views as utils_views
+from utils import views as utils_views
 from features.associations import models as associations
 from features.content import models as content2
 from features.gestalten import models as gestalten
@@ -97,27 +95,6 @@ class Group(utils_views.List):
                 entity_type=contenttypes.ContentType.objects.get_for_model(groups.Group),
                 entity_id=group.id
                 ).can_view(self.request.user)
-
-    def get_inline_view_form(self):
-        # FIXME: hacky code follows
-        if (self.request.user.has_perm('entities.create_group_content', self.get_group())
-                and not self.get_group().get_head_gallery()):
-            form = super().get_inline_view_form()
-            form.helper.filter(six.string_types).wrap(layout.Field)
-            form.helper.filter(layout.Field).update_attributes(
-                    **{'data-component': '', 'type': 'hidden'})
-            for i, item in enumerate(form.helper.layout):
-                if type(item) == utils_forms.Submit:
-                    form.helper.layout.pop(i)
-                    break
-            form.helper.layout.append(utils_forms.Submit(
-                '<i class="sg sg-2x sg-camera"></i>', 'gallery-create', 'btn btn-backdrop btn-ts'))
-            form.initial['pinned'] = True
-            form.initial['public'] = True
-            form.initial['text'] = 'Introgalerie der Gruppe @{}'.format(self.get_group().slug)
-            form.initial['title'] = self.get_group()
-            return form
-        return None
 
     def get_intro_content(self):
         pinned_content = self.get_group_content().filter(pinned=True).annotate(

@@ -2,9 +2,6 @@
 {% load events rules thumbnail %}
 
 {% block header %}
-    {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
-    {% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
-
     <header class="profile-header">
         <div class="profile-header-title-image">
             {% thumbnail gestalt.background '1140x456' crop="left center" as image %}
@@ -87,6 +84,7 @@
 
     <div class="content-toolbar">
         <div class="btn-toolbar">
+            {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
             {% if can_edit %}
                 <div class="btn-group">
                     <a href="{% url 'gestalt-update' gestalt.pk %}" class="btn btn-default btn-sm">
@@ -96,6 +94,7 @@
                 </div>
             {% endif %}
 
+            {% has_perm 'conversations.create_gestalt_conversation' user gestalt as can_create_message %}
             {% if can_create_message %}
                 <div class="btn-group">
                     <a href="{% url 'create-gestalt-conversation' gestalt.pk %}" class="btn btn-default btn-sm">
@@ -109,13 +108,11 @@
 {% endblock %}
 
 {% block heading %}
-    {% has_perm 'entities.create_gestalt_content' user gestalt as can_create_content %}
-    {% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
-
     <div class="content-header">
         <h2 class="content-classification">Beiträge</h2>
         {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
+            {% has_perm 'content.create' user gestalt as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' 'Neuer Beitrag' %}
                     <li><a href="{% url 'create-article' %}">Artikel</a></li>
