@@ -74,8 +74,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('entities', '0043_auto_20160922_1059'),
-        ('content', '0028_auto_20160831_0748'),
+        ('gestalten', '0001_initial'),
     ]
 
     operations = [
@@ -94,8 +93,7 @@ class Migration(migrations.Migration):
                 ('logo', models.ImageField(blank=True, upload_to='')),
                 ('url', models.URLField(blank=True, verbose_name='Adresse im Web')),
                 ('closed', models.BooleanField(default=False, help_text='Nur Mitglieder können neue Mitglieder aufnehmen.', verbose_name='Geschlossene Gruppe')),
-                ('content', models.ManyToManyField(related_name='groups', through='entities.GroupContent', to='content.Content')),
-                ('gestalt_created', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='entities.Gestalt')),
+                ('gestalt_created', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='gestalten.Gestalt')),
             ],
             options={
                 'ordering': ('name',),

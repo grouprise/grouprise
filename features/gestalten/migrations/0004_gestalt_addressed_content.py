@@ -8,15 +8,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('entities', '0052_auto_20170112_1041'),
-        ('content', '0031_auto_20170112_1000'),
         ('gestalten', '0003_auto_20170112_0940'),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='gestalt',
-            name='addressed_content',
-            field=models.ManyToManyField(related_name='gestalten', through='entities.GestaltContent', to='content.Content'),
-        ),
     ]

@@ -9,7 +9,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('groups', '0002_auto_20160922_1108'),
-        ('entities', '0045_auto_20160922_1330'),
         ('memberships', '0009_auto_20160923_0852'),
     ]
 
