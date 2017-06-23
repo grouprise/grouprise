@@ -20,7 +20,7 @@
         <div class="content-block">
             <div class="content-header">
                 <h2 class="content-classification">Intro</h2>
-                {% include "macros/decoration.html" with icon="sg-pin" %}
+                {% include "core/_decoration.html" with icon="sg-pin" %}
             </div>
             {% include 'content/_list.html' with associations=intro_content hide_meta=True %}
         </div>
@@ -28,7 +28,7 @@
 
     <div class="content-header">
         <h2 class="content-classification">Beiträge</h2>
-        {% include "macros/decoration.html" with icon="sg-pen" %}
+        {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
             {% if can_create_content %}
                 {% dropdown 'content-new' 'Neuer Beitrag' %}
