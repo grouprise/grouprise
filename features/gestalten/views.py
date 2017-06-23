@@ -106,7 +106,7 @@ class Gestalt(utils_views.List):
     model = associations.Association
     permission_required = 'entities.view_gestalt'
     sidebar = ('calendar',)
-    template_name = 'entities/gestalt_detail.html'
+    template_name = 'gestalten/detail.html'
 
     def get(self, request, *args, **kwargs):
         if not self.get_gestalt():

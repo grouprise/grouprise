@@ -5,10 +5,10 @@
 
 {% block sidebar %}
     {% if association.entity.is_group %}
-        {% include 'entities/_sidebar_group.html' with group=association.entity %}
+        {% include 'groups/_sidebar.html' with group=association.entity %}
     {% else %}
         {% if association.entity.public %}
-            {% include 'entities/_sidebar_author.html' with gestalt=association.entity %}
+            {% include 'gestalten/_sidebar.html' with gestalt=association.entity %}
         {% endif %}
     {% endif %}
 {% endblock %}

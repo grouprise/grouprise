@@ -33,7 +33,7 @@
                     <span class="dock-decoration"></span>
                     <header class="dock-header">
                         {% if user.is_authenticated %}
-                            {% include 'entities/_gestalt_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
+                            {% include 'gestalten/_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
                             <a href="{% url 'account_logout' %}?next={{ request.path }}" class="dock-session">
                                 <i class="sg sg-logout"></i>
                                 <span>Abmelden</span>

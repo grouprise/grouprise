@@ -104,7 +104,7 @@ class GroupLogoUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
 class Group(utils.views.List):
     menu = 'group'
     permission_required = 'entities.view_group'
-    template_name = 'entities/group_detail.html'
+    template_name = 'groups/detail.html'
 
     def get(self, *args, **kwargs):
         if not self.get_group():
