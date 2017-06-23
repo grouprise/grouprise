@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'features.subscriptions',
     'features.tags',
     'features.texts',
+    'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
@@ -185,7 +186,8 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 DEFAULT_FROM_EMAIL = 'noreply@localhost'
 DEFAULT_REPLY_TO_EMAIL = 'stadtgestalten+{reply_key}@localhost'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'mailer.backend.DbBackend'
+MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 # Sites
