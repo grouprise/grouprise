@@ -1,10 +1,11 @@
 import django.utils.timezone
 from django.contrib.contenttypes import models as contenttypes
 from django.db import models
-from django.db.models import Max
+from django.db.models import Max, Min
 
-from features.gestalten import models as gestalten
+from features.content import models as content
 from features.conversations import models as conversations
+from features.gestalten import models as gestalten
 from features.groups import models as groups
 
 
@@ -30,16 +31,38 @@ class Association(models.QuerySet):
                 query |= models.Q(**{author_query_string: user.gestalt})
         return self.filter(query)
 
+    def filter_articles(self):
+        qs = self
+        qs = qs.filter(content__time__isnull=True)  # events
+        qs = qs.filter(content__gallery_images__image__isnull=True)  # galleries
+        return qs
+
     def filter_events(self):
         return self.filter(content__time__isnull=False)
+
+    def filter_group_containers(self):
+        return self.filter(entity_type=groups.Group.content_type)
 
     def filter_upcoming(self):
         return self.filter(content__time__gte=django.utils.timezone.now())
 
-    # TODO: replace 'conversation' by generic container
-    def ordered_conversations(self, user):
-        qs = self.can_view(user, container='conversation').filter(
-            container_type=contenttypes.ContentType.objects.get_for_model(
-                conversations.Conversation))
+    def filter_user_content(self, user):
+        qs = self
+        qs = qs.can_view(user)
+        qs = qs.filter(container_type=content.Content.content_type)
+        return qs
+
+    def ordered_user_content(self, user):
+        qs = self
+        qs = qs.filter_user_content(user)
+        qs = qs.annotate(time_created=Min('content__versions__time_created'))
+        qs = qs.order_by('-time_created')
+        return qs
+
+    def ordered_user_conversations(self, user):
+        qs = self
+        qs = qs.can_view(user, container='conversation')
+        qs = qs.filter(container_type=conversations.Conversation.content_type)
         qs = qs.annotate(last_activity=Max('conversation__contributions__time_created'))
-        return qs.order_by('-last_activity')
+        qs.order_by('-last_activity')
+        return qs

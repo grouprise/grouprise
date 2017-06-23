@@ -59,7 +59,7 @@ def breadcrumb(*args):
 
 @register.inclusion_tag('core/_menu.html', takes_context=True)
 def menu(context, active, entity=None):
-    if entity.is_group:
+    if entity and entity.is_group:
         context['group'] = entity
     context['menu'] = active
     return context

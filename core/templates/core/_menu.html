@@ -33,7 +33,7 @@
                     <span class="dock-decoration"></span>
                     <header class="dock-header">
                         {% if user.is_authenticated %}
-                            {% include 'entities/_gestalt_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
+                            {% include 'gestalten/_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
                             <a href="{% url 'account_logout' %}?next={{ request.path }}" class="dock-session">
                                 <i class="sg sg-logout"></i>
                                 <span>Abmelden</span>
@@ -63,7 +63,7 @@
                                         <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
+                                        <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Veranstaltungen</a>
                                     </li>
                                     {% comment %}
                                     <li>
@@ -128,7 +128,7 @@
             <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
         </li>
         <li>
-            <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
+            <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Veranstaltungen</a>
         </li>
         {% comment %}
         <li>

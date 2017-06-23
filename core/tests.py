@@ -12,6 +12,10 @@ HTTP_REDIRECTS = 'redirects'
 HTTP_OK = 'ok'
 
 
+def get_url(url, *args):
+    return django.core.urlresolvers.reverse(url, args=args)
+
+
 class Test(test.TestCase):
     @classmethod
     def setUpTestData(cls):
