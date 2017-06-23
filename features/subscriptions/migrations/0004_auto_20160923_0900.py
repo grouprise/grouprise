@@ -6,29 +6,11 @@ from django.contrib.contenttypes import models as contenttypes
 from django.db import migrations
 
 
-def fix_group_references(apps, schema_editor):
-    ContentType = apps.get_model('contenttypes.ContentType')
-    Group1 = apps.get_model('entities.Group')
-    Group2 = apps.get_model('groups.Group')
-    Subscription = apps.get_model('subscriptions.Subscription')
-    group1_type = ContentType.objects.get_for_model(Group1)
-    group2_type = ContentType.objects.get_for_model(Group2)
-    for s in Subscription.objects.all():
-        if s.content_type == group1_type:
-            g1 = Group1.objects.get(id=s.object_id)
-            g2 = Group2.objects.get(slug=g1.slug)
-            s.content_type = group2_type
-            s.object_id = g2.id
-            s.save()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0002_auto_20160922_1108'),
         ('subscriptions', '0003_auto_20160705_1143'),
     ]
 
     operations = [
-        migrations.RunPython(fix_group_references),
     ]
