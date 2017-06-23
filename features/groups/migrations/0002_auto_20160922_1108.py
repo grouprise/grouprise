@@ -5,29 +5,6 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-def copy_groups(apps, schema_editor):
-    Group1 = apps.get_model('entities.Group')
-    Group2 = apps.get_model('groups.Group')
-    for g in Group1.objects.order_by('id'):
-        g2 = Group2.objects.create(
-                id=g.id,
-                name=g.name,
-                slug=g.slug,
-                address=g.address,
-                avatar=g.avatar,
-                avatar_color=g.avatar_color,
-                date_founded=g.date_founded,
-                description=g.description,
-                logo=g.logo,
-                url=g.url,
-                closed=g.closed)
-        g2.date_created = g.date_created
-        g2.slug = g.slug
-        g2.save()
-
-    # FIXME: check auto-id sequence by adding groups while ignoring IntegrityError
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -35,5 +12,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(copy_groups)
     ]

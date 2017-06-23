@@ -5,23 +5,11 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-def fix_group_references(apps, schema_editor):
-    Group1 = apps.get_model('entities.Group')
-    Group2 = apps.get_model('groups.Group')
-    Klass = apps.get_model('memberships.Membership')
-    for o in Klass.objects.values('id', 'group_id'):
-        g1 = Group1.objects.get(id=o['group_id'])
-        g2 = Group2.objects.get(slug=g1.slug)
-        Klass.objects.filter(id=o['id']).update(group_id=g2.id)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0002_auto_20160922_1108'),
         ('memberships', '0008_auto_20160923_0851'),
     ]
 
     operations = [
-        migrations.RunPython(fix_group_references),
     ]

@@ -9,6 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('groups', '0001_initial'),
         ('memberships', '0006_auto_20160811_1606'),
     ]
 
@@ -16,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='membership',
             name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='entities.Group'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='groups.Group'),
         ),
     ]
