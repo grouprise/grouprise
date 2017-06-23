@@ -10,7 +10,7 @@ from features.associations import models as associations
 from features.content import models as content2
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from . import forms
+from features.gestalten import forms
 
 
 class Gestalt(utils_views.List):
