@@ -5,22 +5,11 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-def move_memberships(apps, schema_editor):
-    Membership1 = apps.get_model('entities', 'Membership')
-    Membership2 = apps.get_model('memberships', 'Membership')
-    for m1 in Membership1.objects.all():
-        m2 = Membership2.objects.create(gestalt=m1.gestalt, group=m1.group)
-        m2.date_joined = m1.date_joined
-        m2.save()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('entities', '0038_auto_20160718_1045'),
         ('memberships', '0001_initial'),
     ]
 
     operations = [
-        migrations.RunPython(move_memberships),
     ]

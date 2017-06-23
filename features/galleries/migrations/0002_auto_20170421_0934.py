@@ -8,87 +8,11 @@ import core.models
 import core.text
 
 
-def copy_galleries(apps, schema_editor):
-    Gallery = apps.get_model('content.Gallery')
-    Association = apps.get_model('associations.Association')
-    ContentType = apps.get_model('contenttypes', 'ContentType')
-    Content = apps.get_model('content2.Content')
-    Contribution = apps.get_model('contributions.Contribution')
-    GestaltContent = apps.get_model('entities.GestaltContent')
-    GroupContent = apps.get_model('entities.GroupContent')
-    Text = apps.get_model('contributions.Text')
-    Version = apps.get_model('content2.Version')
-    Image2 = apps.get_model('images.Image')
-    GalleryImage = apps.get_model('galleries.GalleryImage')
-
-    for g in Gallery.objects.all():
-        content = Content.objects.create(title=g.title)
-        v = Version.objects.create(content=content, author=g.author, text=g.text)
-        v.time_created = g.date_created
-        v.save()
-        
-        for a in g.additional_authors.all():
-            Version.objects.create(content=content, author=a, text=g.text)
-
-        for c in g.comments.all():
-            t = Text.objects.create(text=c.text)
-            contrib = Contribution.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    author=c.author, contribution_id=t.id,
-                    contribution_type=ContentType.objects.get_for_model(t))
-            contrib.time_created = c.date_created
-            contrib.save()
-        
-        gc = None
-        for gc in GroupContent.objects.filter(content__gallery=g):
-            slug = g.slug or core.models.get_unique_slug(
-                    Association, {
-                        'entity_id': gc.group.id,
-                        'entity_type': ContentType.objects.get_for_model(gc.group),
-                        'slug': core.text.slugify(g.title),
-                        })
-            Association.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    entity_type=ContentType.objects.get_for_model(gc.group),
-                    entity_id=gc.group.id,
-                    pinned=gc.pinned,
-                    public=g.public,
-                    slug=slug)
-            
-        if gc is None:
-            slug = g.slug or core.models.get_unique_slug(
-                    Association, {
-                        'entity_id': g.author.id,
-                        'entity_type': ContentType.objects.get_for_model(g.author),
-                        'slug': core.text.slugify(g.title),
-                        })
-            Association.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    entity_type=ContentType.objects.get_for_model(g.author),
-                    entity_id=g.author.id,
-                    public=g.public,
-                    slug=slug)
-
-        for i1 in g.images.all():
-            i2 = Image2.objects.get(file=i1.file)
-            GalleryImage.objects.create(gallery=content, image=i2)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('associations', '0003_auto_20170330_1041'),
-        ('content', '0034_auto_20170209_1451'),
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('contributions', '0002_auto_20170309_1515'),
-        ('entities', '0052_auto_20170112_1041'),
         ('galleries', '0001_initial'),
-        ('images', '0002_auto_20170421_0911'),
     ]
 
     operations = [
-        migrations.RunPython(copy_galleries),
     ]

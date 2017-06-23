@@ -16,7 +16,6 @@ def set_created_by(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('entities', '0042_group_closed'),
         ('memberships', '0004_auto_20160724_1659'),
     ]
 
@@ -24,12 +23,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='membership',
             name='created_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='memberships_created', to='entities.Gestalt'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='memberships_created', to='gestalten.Gestalt'),
         ),
         migrations.AlterField(
             model_name='membership',
             name='member',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='entities.Gestalt'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='gestalten.Gestalt'),
         ),
         migrations.RunPython(set_created_by),
     ]

@@ -11,7 +11,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('entities', '0038_auto_20160718_1045'),
+        ('gestalten', '0001_initial'),
+        ('groups', '0001_initial'),
     ]
 
     operations = [
@@ -20,8 +21,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_joined', models.DateField(auto_now_add=True)),
-                ('gestalt', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.Gestalt')),
-                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.Group')),
+                ('gestalt', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gestalten.Gestalt')),
+                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='groups.Group')),
             ],
         ),
         migrations.AlterUniqueTogether(

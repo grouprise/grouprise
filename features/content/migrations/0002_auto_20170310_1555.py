@@ -8,80 +8,11 @@ import core.models
 import core.text
 
 
-def copy_articles(apps, schema_editor):
-    Article = apps.get_model('content.Article')
-    Association = apps.get_model('associations.Association')
-    ContentType = apps.get_model('contenttypes', 'ContentType')
-    Content = apps.get_model('content2.Content')
-    Contribution = apps.get_model('contributions.Contribution')
-    GestaltContent = apps.get_model('entities.GestaltContent')
-    GroupContent = apps.get_model('entities.GroupContent')
-    Text = apps.get_model('contributions.Text')
-    Version = apps.get_model('content2.Version')
-
-    for a in Article.objects.all():
-        content = Content.objects.create(title=a.title)
-        v = Version.objects.create(content=content, author=a.author, text=a.text)
-        v.time_created = a.date_created
-        v.save()
-        
-        for g in a.additional_authors.all():
-            Version.objects.create(content=content, author=g, text=a.text)
-
-        for c in a.comments.all():
-            t = Text.objects.create(text=c.text)
-            contrib = Contribution.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    author=c.author, contribution_id=t.id,
-                    contribution_type=ContentType.objects.get_for_model(t))
-            contrib.time_created = c.date_created
-            contrib.save()
-        
-        gc = None
-        for gc in GroupContent.objects.filter(content__article=a):
-            slug = a.slug or core.models.get_unique_slug(
-                    Association, {
-                        'entity_id': gc.group.id,
-                        'entity_type': ContentType.objects.get_for_model(gc.group),
-                        'slug': core.text.slugify(a.title),
-                        })
-            Association.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    entity_type=ContentType.objects.get_for_model(gc.group),
-                    entity_id=gc.group.id,
-                    pinned=gc.pinned,
-                    public=a.public,
-                    slug=slug)
-            
-        if gc is None:
-            slug = a.slug or core.models.get_unique_slug(
-                    Association, {
-                        'entity_id': a.author.id,
-                        'entity_type': ContentType.objects.get_for_model(a.author),
-                        'slug': core.text.slugify(a.title),
-                        })
-            Association.objects.create(
-                    container_type=ContentType.objects.get_for_model(content),
-                    container_id=content.id,
-                    entity_type=ContentType.objects.get_for_model(a.author),
-                    entity_id=a.author.id,
-                    public=a.public,
-                    slug=slug)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('associations', '0003_auto_20170330_1041'),
-        ('content', '0034_auto_20170209_1451'),
         ('content2', '0001_initial'),
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('contributions', '0002_auto_20170309_1515'),
-        ('entities', '0052_auto_20170112_1041'),
     ]
 
     operations = [
-        migrations.RunPython(copy_articles),
     ]

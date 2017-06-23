@@ -5,23 +5,11 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-def copy_images(apps, schema_editor):
-    Image1 = apps.get_model('content.Image')
-    Image2 = apps.get_model('images.Image')
-    for i1 in Image1.objects.all():
-        try:
-            i2 = Image2.objects.create(file=i1.file, creator=i1.creator or i1.content.author)
-        except AttributeError:
-            pass
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0034_auto_20170209_1451'),
         ('images', '0001_initial'),
     ]
 
     operations = [
-        migrations.RunPython(copy_images),
     ]
