@@ -54,10 +54,3 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
                 'public',
                 utils_forms.Submit('Profil ändern'),
                 )
-
-
-class GroupFilter(utils_forms.FormMixin, forms.Form):
-    name = forms.CharField()
-    inline = True
-    layout = ('name', utils_forms.Submit('Gruppen filtern', field_classes='btn btn-default'))
-    method = 'GET'

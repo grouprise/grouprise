@@ -81,7 +81,7 @@ class Group(core.models.Model):
 
     members = models.ManyToManyField(
             'gestalten.Gestalt', through='memberships.Membership',
-            through_fields=('group', 'member'))
+            through_fields=('group', 'member'), related_name='groups')
 
     def __str__(self):
         return self.name

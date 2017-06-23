@@ -6,12 +6,12 @@
         <span slot="label">{{ label }}</span>
         <i slot="icon" class="fa fa-clock-o"></i>
         <span slot="title">
-          Wann findet das Ereignis statt?
+          Wann findet die Veranstaltung statt?
         </span>
         <sg-switch slot="modifiers" v-model="currentAllDay" trueLabel="Ja" falseLabel="Nein" label="Ganztägig"></sg-switch>
         <slot>
           <div class="datetime-row">
-            <sg-datetime v-model="currentStartDate" :enableTime="!currentAllDay" :showLabels="true" dateLabel="Beginnt am" timeLabel="zu um"></sg-datetime>
+            <sg-datetime v-model="currentStartDate" :enableTime="!currentAllDay" :showLabels="true" dateLabel="Beginnt am" timeLabel="um"></sg-datetime>
             <div class="form-group" v-if="showDuration" key="duration">
               <label class="control-label">Dauer</label>
               <div class="controls">
@@ -21,7 +21,7 @@
           </div>
 
           <div class="datetime-row" v-if="configurableEndDate">
-            <sg-datetime v-model="currentEndDate" :enableTime="!currentAllDay" :showLabels="true" dateLabel="Endet am" timeLabel="zu um" :timeDefault="[23, 59, 59]"></sg-datetime>
+            <sg-datetime v-model="currentEndDate" :enableTime="!currentAllDay" :showLabels="true" dateLabel="Endet am" timeLabel="um" :timeDefault="[23, 59, 59]"></sg-datetime>
           </div>
 
           <button type="button" class="btn btn-text" @click="configurableEndDate = true" v-if="!configurableEndDate">

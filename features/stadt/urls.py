@@ -13,4 +13,7 @@ urlpatterns = [
         r'^(?P<entity_slug>[\w.@+-]+)/$',
         views.Entity.as_view(),
         name='entity'),
+
+    url(r'^imprint/$', views.Imprint.as_view(), name='imprint'),
+    url(r'^privacy/$', views.Privacy.as_view(), name='privacy'),
 ]

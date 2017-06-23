@@ -1,5 +1,5 @@
-from entities import rules as gestalten
 from features.associations import models as associations
+from features.gestalten import rules as gestalten
 from features.memberships import predicates as memberships
 import rules
 
