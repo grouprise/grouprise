@@ -1,12 +1,11 @@
 from django.views import generic
 from django_filters import views as filters_views
 
-from entities import filters
 from core import fields, views
 from core.views import base
 from features.associations import models as associations
 from features.groups import models as groups
-from . import forms, models
+from . import filters, forms, models
 
 
 class Mixin:
