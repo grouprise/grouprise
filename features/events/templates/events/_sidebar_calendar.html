@@ -45,13 +45,13 @@
                             </li>
                         {% endif %}
                         <li>
-                            <a href="{% url 'events' %}" >Alle Ereignisse</a>
+                            <a href="{% url 'events' %}" >Alle Veranstaltungen</a>
                         </li>
                     </ul>
                 </div>
 
                 <a href="{% if group %}{% url 'create-group-event' group.slug %}{% else %}{% url 'create-event' %}{% endif %}" class="btn btn-link">
-                    Neues Ereignis
+                    Neue Veranstaltung
                 </a>
             </div>
         {% endif %}

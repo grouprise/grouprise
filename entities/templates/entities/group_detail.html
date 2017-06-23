@@ -33,7 +33,7 @@
             {% if can_create_content %}
                 {% dropdown 'content-new' 'Neuer Beitrag' %}
                     <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
-                    <li><a href="{% url 'create-group-event' group.slug %}">Ereignis</a></li>
+                    <li><a href="{% url 'create-group-event' group.slug %}">Veranstaltung</a></li>
                     <li><a href="{% url 'create-group-gallery' group.slug %}">Galerie</a></li>
                 {% enddropdown %}
             {% endif %}
