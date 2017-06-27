@@ -32,18 +32,6 @@ class Email(utils_views.ActionMixin, views.EmailView):
         return self.request.user.gestalt
 
 
-class Login(utils_views.ActionMixin, views.LoginView):
-    action = 'Anmelden'
-    form_class = forms.LoginForm
-    ignore_base_templates = True
-    # parent = 'gestalt-index'
-    permission_required = 'account.login'
-    fallback_template_name = 'account/login.html'
-
-    def get_success_url(self):
-        return views.LoginView.get_success_url(self)
-
-
 class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
     action = 'Abmelden'
     ignore_base_templates = True
