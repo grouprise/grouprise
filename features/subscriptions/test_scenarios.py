@@ -8,68 +8,6 @@ from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
 
 
-# class ContentAnonymous(
-#         content_subscriptions.OnlySubscribeLink,
-#         content_subscriptions.SubscribeAllowedWithEmail,
-#         content_subscriptions.UnsubscribeForbidden,
-#         content.ContentMixin, tests.Test):
-#     pass
-
-
-# class ContentAuthor(
-#         content_subscriptions.NoLink,
-#         content_subscriptions.SubscribeForbidden,
-#         content_subscriptions.UnsubscribeForbidden,
-#         gestalten.AuthenticatedMixin, content.ContentMixin, tests.Test):
-#     pass
-
-
-# class ContentNoAuthor(
-#         content_subscriptions.OnlySubscribeLink,
-#         content_subscriptions.SubscribeAllowed,
-#         content_subscriptions.UnsubscribeForbidden,
-#         content.NoAuthorContentMixin, tests.Test):
-#     pass
-
-
-# class ContentSubscribed(
-#         content_subscriptions.OnlyUnsubscribeLink,
-#         content_subscriptions.SubscribeForbidden,
-#         content_subscriptions.UnsubscribeAllowed,
-#         mixins.ContentSubscribedMixin, tests.Test):
-#     pass
-
-
-# class OtherContentSubscriber(
-#         comments.NotificationToOtherGestalt,
-#         mixins.OtherContentSubscriberMixin, tests.Test):
-#     """
-#     If an author creates a comment
-#     * a notification to content subscribers should be sent.
-#     """
-
-
-# class Conversation(
-#         content_subscriptions.AllContentUnsubscribeLink,
-#        conversations.GroupConversation, tests.Test):
-#     """
-#     If a group member views a conversation
-#     * the conversation page has a link to unsubscribe from all group content.
-#     """
-
-
-# class ExternalConversation(
-#         content_subscriptions.ExternalUnsubscribeLink,
-#         content_subscriptions.ExternalUnsubscribeAllowed,
-#         # content_subscriptions.DeleteExternalUnsubscriptionForbidden,
-#         conversations.ExternalConversationMixin, tests.Test):
-#     """
-#     If a group member views an external conversation
-#     * the conversation page has a link to unsubscribe from all external conversations
-#     * external unsubscription is allowed
-#     """
-
-
 class AllContentUnsubscribed(
         content_subscriptions.AllContentUnsubscribeForbidden,
         # content.NoNotification,
@@ -113,7 +51,7 @@ class GroupAuthenticated(
 
 class GroupMember(
         group_subscriptions.NoLink,
-        group_subscriptions.SubscribeForbidden,
+        group_subscriptions.SubscribeRedirectToGroupPage,
         group_subscriptions.UnsubscribeForbidden,
         memberships.AuthenticatedMemberMixin, tests.Test):
     pass
@@ -121,7 +59,7 @@ class GroupMember(
 
 class GroupSubscribed(
         group_subscriptions.OnlyUnsubscribeLink,
-        group_subscriptions.SubscribeForbidden,
+        group_subscriptions.SubscribeRedirectToGroupPage,
         group_subscriptions.UnsubscribeAllowed,
         mixins.GroupSubscribedMixin, tests.Test):
     pass
@@ -129,7 +67,7 @@ class GroupSubscribed(
 
 class GroupSubscribedMember(
         group_subscriptions.OnlyUnsubscribeLink,
-        group_subscriptions.SubscribeForbidden,
+        group_subscriptions.SubscribeRedirectToGroupPage,
         group_subscriptions.UnsubscribeAllowed,
         mixins.GroupSubscribedMixin, memberships.MemberMixin, tests.Test):
     pass
