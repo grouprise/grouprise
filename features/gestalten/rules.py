@@ -13,9 +13,8 @@ def is_public(user, gestalt):
 
 rules.add_perm('entities.view_gestalt', is_public | is_gestalt)
 
-
-rules.add_perm(
-        'gestalten.view_list',
-        rules.always_allow)
-
 rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)
+
+rules.add_perm('gestalten.view_list', rules.always_allow)
+
+rules.add_perm('gestalten.login', ~rules.is_authenticated)

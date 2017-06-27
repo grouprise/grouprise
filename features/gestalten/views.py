@@ -1,3 +1,4 @@
+import allauth
 import django
 from django.views import generic
 
@@ -9,55 +10,7 @@ from features.content import models as content
 from . import forms, models
 
 
-class List(base.PermissionMixin, generic.ListView):
-    permission_required = 'gestalten.view_list'
-    queryset = models.Gestalt.objects.filter(public=True)
-    ordering = '-score'
-    paginate_by = 10
-    template_name = 'gestalten/list.html'
-
-    def get_content(self):
-        return associations.Association.objects.filter(
-                entity_type=models.Gestalt.get_content_type()).can_view(self.request.user)
-
-
-class GestaltUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Dein Profil'
-    form_class = forms.Gestalt
-    menu = 'gestalt'
-    message = 'Die Einstellungen wurden geändert.'
-    model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
-
-    def get_parent(self):
-        return self.object
-
-
-class GestaltAvatarUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Avatar ändern'
-    fields = ('avatar',)
-    layout = ('avatar',)
-    menu = 'gestalt'
-    model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
-
-    def get_parent(self):
-        return self.object
-
-
-class GestaltBackgroundUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Hintergrundbild ändern'
-    fields = ('background',)
-    layout = ('background',)
-    menu = 'gestalt'
-    model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
-
-    def get_parent(self):
-        return self.object
-
-
-class Gestalt(utils_views.List):
+class Detail(utils_views.List):
     menu = 'gestalt'
     model = associations.Association
     permission_required = 'entities.view_gestalt'
@@ -82,3 +35,57 @@ class Gestalt(utils_views.List):
 
     def get_title(self):
         return str(self.get_gestalt())
+
+
+class List(base.PermissionMixin, generic.ListView):
+    permission_required = 'gestalten.view_list'
+    queryset = models.Gestalt.objects.filter(public=True)
+    ordering = '-score'
+    paginate_by = 10
+    template_name = 'gestalten/list.html'
+
+    def get_content(self):
+        return associations.Association.objects.filter(
+                entity_type=models.Gestalt.get_content_type()).can_view(self.request.user)
+
+
+class Login(allauth.account.views.LoginView):
+    permission_required = 'gestalten.login'
+    form_class = forms.Login
+    template_name = 'gestalten/login.html'
+
+
+class Update(utils.views.ActionMixin, django.views.generic.UpdateView):
+    action = 'Dein Profil'
+    form_class = forms.Gestalt
+    menu = 'gestalt'
+    message = 'Die Einstellungen wurden geändert.'
+    model = models.Gestalt
+    permission_required = 'entities.change_gestalt'
+
+    def get_parent(self):
+        return self.object
+
+
+class UpdateAvatar(utils.views.ActionMixin, django.views.generic.UpdateView):
+    action = 'Avatar ändern'
+    fields = ('avatar',)
+    layout = ('avatar',)
+    menu = 'gestalt'
+    model = models.Gestalt
+    permission_required = 'entities.change_gestalt'
+
+    def get_parent(self):
+        return self.object
+
+
+class UpdateBackground(utils.views.ActionMixin, django.views.generic.UpdateView):
+    action = 'Hintergrundbild ändern'
+    fields = ('background',)
+    layout = ('background',)
+    menu = 'gestalt'
+    model = models.Gestalt
+    permission_required = 'entities.change_gestalt'
+
+    def get_parent(self):
+        return self.object

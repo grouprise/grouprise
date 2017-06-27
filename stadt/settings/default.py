@@ -220,7 +220,7 @@ ENTITY_SLUG_BLACKLIST = [
 # Authentication
 # http://django-allauth.readthedocs.org/
 
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'login'
 
 LOGIN_REDIRECT_URL = 'index'
 

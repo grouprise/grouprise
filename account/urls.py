@@ -8,7 +8,6 @@ urlpatterns = [
         views.Confirm.as_view(),
         name='account_confirm_email'),
     urls.url(r'^email/$', views.Email.as_view(), name='account_email'),
-    urls.url(r'^login/$', views.Login.as_view(), name='account_login'),
     urls.url(r'^logout/$', views.Logout.as_view(), name='account_logout'),
     urls.url(
         r'^password/change/$',

@@ -1,0 +1,19 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block content_row %}
+    <form class="form-login form-modern" method="post">
+        <div>
+            {% include 'core/_field.html' with field=form.login %}
+            'password',
+            'remember',
+            util_forms.Submit('Anmelden'),
+        </div>
+        <div class="account-actions">
+            layout.HTML(
+                '<a class="btn btn-link" href="{{ signup_url }}">Konto anlegen</a>'
+                '<a class="btn btn-link" '
+                'href="{% url 'account_reset_password' %}">Passwort vergessen</a>'
+            ),
+        </div>
+    </form>
+{% endblock %}

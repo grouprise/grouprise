@@ -12,7 +12,7 @@ class Entity(django.views.generic.View):
         except groups.models.Group.DoesNotExist:
             entity = django.shortcuts.get_object_or_404(
                     gestalten.models.Gestalt, user__username=kwargs.get('entity_slug'))
-            view = gestalten.views.Gestalt()
+            view = gestalten.views.Detail()
         view.request = request
         view.kwargs = kwargs
         view.object = entity
