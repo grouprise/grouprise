@@ -1,5 +1,6 @@
-from . import models
 from core import tests
+from core.tests import get_url as u
+from . import models
 
 
 class JoinAllowed:
@@ -21,6 +22,14 @@ class JoinForbidden:
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
                 url='join', key=self.group.pk,
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
+
+
+class JoinRedirectsToGroupPage:
+    def test_group_join(self):
+        r = self.client.get(u('join', self.group.pk))
+        self.assertRedirects(r, self.group.get_absolute_url())
+        r = self.client.post(u('join', self.group.pk))
+        self.assertRedirects(r, self.group.get_absolute_url())
 
 
 class MemberCreateAllowedWithEmail:
