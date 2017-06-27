@@ -50,7 +50,7 @@ class GroupConversations(Conversations):
 
     def get_queryset(self):
         return super().get_queryset().filter_group_containers().filter(
-                entity_id=self.group.id).order_by('-last_activity')
+                entity_id=self.group.id)
 
 
 class CreateConversation(
