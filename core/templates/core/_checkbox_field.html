@@ -1,10 +1,20 @@
-<div class="checkbox{% if field.errors %} has-error{% endif %}">
-    <label class="control-label">
-        {{ field }}
-        {{ field.label }}
-    </label>
-    <span class="help-block">{{ field.help_text }}</span>
-    {% for error in field.errors %}
-        <span class="help-block"><strong>{{ error }}</strong></span>
-    {% endfor %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    <div class="checkbox">
+        <label>
+            {{ field }}
+            {{ field.label }}
+        </label>
+        {% if help_text or field.help_text %}
+            <span class="help-block">
+                {% if help_text %}
+                    {{ help_text }}
+                {% else %}
+                    {{ field.help_text }}
+                {% endif %}
+            </span>
+        {% endif %}
+        {% for error in field.errors %}
+            <span class="help-block"><strong>{{ error }}</strong></span>
+        {% endfor %}
+    </div>
 </div>
