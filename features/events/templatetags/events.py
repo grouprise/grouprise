@@ -51,11 +51,14 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
         return [self.formatweekday(i) for i in self.iterweekdays()]
 
 
-@register.inclusion_tag('events/_calendar.html')
-def calendar(associations, size='preview'):
+@register.inclusion_tag('events/_calendar.html', takes_context=True)
+def calendar(context, associations, size='preview'):
+    request = context.get('request')
     around = django.utils.timezone.now()
-    # for i in range(add_to_month):
-    #     around = around.replace(day=1) + datetime.timedelta(days=32)
+    around = around.replace(
+            day=1,
+            month=int(request.GET.get('month', around.month)),
+            year=int(request.GET.get('year', around.year)))
     event_associations = associations.filter_events()
     calendar_associations = event_associations.filter(
             content__time__gt=around-datetime.timedelta(weeks=6),
@@ -64,12 +67,17 @@ def calendar(associations, size='preview'):
     calendar_event_dict = {date: list(events) for date, events in itertools.groupby(
         calendar_associations, key=lambda a: a.container.time.date())}
     calendar = Calendar(calendar_event_dict)
-    return {
+    last_month = around.replace(day=1) + datetime.timedelta(days=-1)
+    next_month = around.replace(day=1) + datetime.timedelta(days=31)
+    context.update({
             'days': calendar.formatweekheader(),
+            'prev_month': last_month,
             'month': calendar.formatmonthname(around.year, around.month),
+            'next_month': next_month,
             'weeks': calendar.formatmonthweeks(around.year, around.month),
             'size': size,
-            }
+            })
+    return context
 
 
 @register.filter

@@ -1,5 +1,6 @@
-from . import models
 from core import tests
+from core.tests import get_url as u
+from . import models
 
 
 class NoLink:
@@ -59,6 +60,14 @@ class SubscribeForbidden:
                 methods=[tests.HTTP_GET, tests.HTTP_POST],
                 url='group-subscribe', key=self.group.pk,
                 response={tests.HTTP_FORBIDDEN_OR_LOGIN})
+
+
+class SubscribeRedirectToGroupPage:
+    def test_group_subscribe(self):
+        r = self.client.get(u('group-subscribe', self.group.pk))
+        self.assertRedirects(r, self.group.get_absolute_url())
+        r = self.client.post(u('group-subscribe', self.group.pk))
+        self.assertRedirects(r, self.group.get_absolute_url())
 
 
 class UnsubscribeAllowed:

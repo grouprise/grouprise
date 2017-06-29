@@ -172,12 +172,6 @@ class NavigationMixin:
 class PaginationMixin:
     paginate_by = 10
 
-    def get_context_data(self, **kwargs):
-        kwargs['params'] = self.request.GET.copy()
-        if 'page' in kwargs['params']:
-            del kwargs['params']['page']
-        return super().get_context_data(**kwargs)
-
 
 class PermissionMixin(rules_views.PermissionRequiredMixin):
     def get_permissions(self):
