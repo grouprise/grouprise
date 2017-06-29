@@ -1,10 +1,12 @@
-from . import forms
+import allauth
+import django
 from allauth.account import views
 from crispy_forms import layout
 from django.contrib import messages
 from django.views import generic
 from django.views.generic import edit as edit_views
 from utils import views as utils_views
+from . import forms
 
 
 class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
@@ -58,6 +60,12 @@ class PasswordReset(utils_views.ActionMixin, views.PasswordResetView):
     ignore_base_templates = True
     permission_required = 'account.reset_password'
 
+    def get_context_data(self, **kwargs):
+        kwargs['login_url'] = allauth.account.utils.passthrough_next_redirect_url(
+                self.request, django.core.urlresolvers.reverse('login'),
+                self.redirect_field_name)
+        return django.views.generic.FormView.get_context_data(self, **kwargs)
+
 
 class PasswordResetDone(generic.RedirectView):
     pattern_name = 'index'
@@ -79,6 +87,12 @@ class Signup(utils_views.ActionMixin, views.SignupView):
     ignore_base_templates = True
     # parent = 'gestalt-index'
     permission_required = 'account.signup'
+
+    def get_context_data(self, **kwargs):
+        kwargs['login_url'] = allauth.account.utils.passthrough_next_redirect_url(
+                self.request, django.core.urlresolvers.reverse('login'),
+                self.redirect_field_name)
+        return django.views.generic.FormView.get_context_data(self, **kwargs)
 
     def get_success_url(self):
         return views.LoginView.get_success_url(self)
