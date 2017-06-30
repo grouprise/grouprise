@@ -81,6 +81,13 @@ class PasswordResetFromKey(utils_views.ActionMixin, views.PasswordResetFromKeyVi
     permission_required = 'account.reset_password'
 
 
+class PasswordSet(utils_views.ActionMixin, views.PasswordSetView):
+    action = 'Kennwort setzen'
+    form_class = forms.PasswordSet
+    ignore_base_templates = True
+    permission_required = 'account.set_password'
+
+
 class Signup(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
     form_class = forms.SignupForm

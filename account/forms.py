@@ -47,6 +47,19 @@ class PasswordReset(util_forms.FormMixin, allauth.account.forms.ResetPasswordFor
         self.fields['email'].label = 'E-Mail-Adresse'
 
 
+class PasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):
+    layout = (
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort setzen')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].label = 'Kennwort'
+        self.fields['password2'].label = 'Kennwort (Wiederholung)'
+
+
 class PasswordResetFromKey(util_forms.FormMixin, allauth.account.forms.ResetPasswordKeyForm):
     layout = (
             layout.Field('password1', placeholder=''),

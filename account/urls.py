@@ -30,6 +30,10 @@ urlpatterns = [
         allauth_views.password_reset_from_key_done,
         name='account_reset_password_from_key_done'),
     urls.url(
+        r'^password/set/$',
+        views.PasswordSet.as_view(),
+        name='account_set_password'),
+    urls.url(
         r'^signup/$',
         views.Signup.as_view(),
         name='account_signup'),
