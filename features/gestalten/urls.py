@@ -4,9 +4,6 @@ from django.conf.urls import url
 
 from . import views
 
-# urlpatterns = allauth.socialaccount.providers.oauth2.urls.default_urlpatterns(
-#         allauth.account.providers.facebook.provider.FacebookProvider)
-
 urlpatterns = [
     url(
         r'^stadt/gestalten/$',
@@ -41,9 +38,13 @@ urlpatterns = [
         socialaccount_views.login_error,
         name='socialaccount_login_error'),
 
-    url(r'^stadt/login/facebook/login/$',
+    url(r'^stadt/login/facebook/$',
         facebook_views.oauth2_login,
         name='facebook_login'),
+
+    url(r'^stadt/login/facebook/callback/$',
+        facebook_views.oauth2_callback,
+        name='facebook_callback'),
 
     url(r'^stadt/login/facebook/token/$',
         facebook_views.login_by_token,

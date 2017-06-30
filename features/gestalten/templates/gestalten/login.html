@@ -9,18 +9,19 @@
             {% include 'core/_field.html' with field=form.password %}
             {% include 'core/_checkbox_field.html' with field=form.remember %}
             <button class="btn btn-primary btn-block">Anmelden</button>
-            {% load socialaccount %}
-            {% providers_media_js %}
-            <a href="{% provider_login_url 'facebook' method='js_sdk' %}"
-               class="btn btn-default btn-block">
-                <span class="fa fa-facebook"></span>
-                Mit Facebook anmelden
-            </a>
         </div>
         <div class="account-actions">
             <a class="btn btn-link" href="{{ signup_url }}">Konto anlegen</a>
             <a class="btn btn-link" href="{% url 'account_reset_password' %}">
                 Passwort vergessen
+            </a>
+        </div>
+        <div class="account-actions">
+            {% load socialaccount %}
+            <a href="{% provider_login_url 'facebook' %}"
+               class="btn btn-link">
+                <span class="fa fa-facebook"></span>
+                Mit Facebook anmelden
             </a>
         </div>
     </form>
