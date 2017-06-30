@@ -16,13 +16,18 @@
                 Passwort vergessen
             </a>
         </div>
-        <div class="account-actions">
-            {% load socialaccount %}
-            <a href="{% provider_login_url 'facebook' %}"
-               class="btn btn-link">
-                <span class="fa fa-facebook"></span>
-                Mit Facebook anmelden
-            </a>
-        </div>
+        {% load socialaccount %}
+        {% get_providers as providers %}
+        {% for provider in providers %}
+            {% if provider.id == 'facebook' %}
+                <div class="account-actions">
+                    <a href="{% provider_login_url provider.id %}"
+                       class="btn btn-link">
+                        <span class="fa fa-facebook"></span>
+                        Mit Facebook anmelden
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
     </form>
 {% endblock %}
