@@ -212,8 +212,9 @@ ROOT_SIGNALCONF = 'stadt.signals'
 
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
-RESERVED_SLUGS = [
-        'all', 'alle', 'info', 'mail', 'presse', 'stadt', 'webmaster', 'postmaster', 'www']
+ENTITY_SLUG_BLACKLIST = [
+        'all', 'alle', 'antwort', 'facebook', 'gbr', 'info', 'mail', 'noreply', 'postmaster',
+        'presse', 'reply', 'stadt', 'webmaster', 'www']
 
 
 # Authentication

@@ -12,7 +12,7 @@ def post_group_save(sender, instance, created, **kwargs):
     if created:
         instance.slug = core.models.get_unique_slug(
                 models.Group, {'slug': core.text.slugify(instance.name)},
-                reserved_slugs=django.conf.settings.RESERVED_SLUGS,
+                reserved_slugs=django.conf.settings.ENTITY_SLUG_BLACKLIST,
                 reserved_slug_qs=gestalten.Gestalt.objects,
                 reserved_slug_qs_field='user__username')
         instance.save()

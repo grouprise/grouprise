@@ -10,7 +10,7 @@ from features.gestalten import models
 
 
 def validate_slug(slug):
-    if slug in django.conf.settings.RESERVED_SLUGS:
+    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
