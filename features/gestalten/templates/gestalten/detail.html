@@ -2,6 +2,8 @@
 {% load events rules thumbnail %}
 
 {% block header %}
+    {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
+
     <header class="profile-header">
         <div class="profile-header-title-image">
             {% thumbnail gestalt.background '1140x456' crop="left center" as image %}
@@ -84,7 +86,6 @@
 
     <div class="content-toolbar">
         <div class="btn-toolbar">
-            {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
             {% if can_edit %}
                 <div class="btn-group">
                     <a href="{% url 'gestalt-update' gestalt.pk %}" class="btn btn-default btn-sm">

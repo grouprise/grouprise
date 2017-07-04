@@ -46,8 +46,8 @@ class GroupMixin:
                     return instance
                 if hasattr(instance, 'group'):
                     return instance.group
-                if hasattr(instance, 'groups'):
-                    return instance.groups.first()
+                # if hasattr(instance, 'groups'):
+                #     return instance.groups.first()
         try:
             if 'group_pk' in self.kwargs:
                 return groups.Group.objects.get(pk=self.kwargs['group_pk'])
