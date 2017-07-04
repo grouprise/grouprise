@@ -217,6 +217,8 @@ ENTITY_SLUG_BLACKLIST = [
         'all', 'alle', 'antwort', 'facebook', 'gbr', 'info', 'mail', 'noreply', 'postmaster',
         'presse', 'reply', 'stadt', 'webmaster', 'www']
 
+MAX_FILE_SIZE = 5 * 1024 * 1024
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/

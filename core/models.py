@@ -6,8 +6,32 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.utils import crypto
 
+IMAGE_FIELD_HELP_TEXT = (
+        'Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- '
+        'oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
+            django.conf.settings.MAX_FILE_SIZE // (1024 * 1024)))
 
 PERMISSION_TOKEN_LENGTH = 15
+
+
+def validate_file_size(f):
+    try:
+        if f._size > django.conf.settings.MAX_FILE_SIZE:
+            raise django.forms.ValidationError('Die Datei ist zu groß.')
+    except AttributeError:
+        pass
+
+
+class ImageField(models.ImageField):
+    def __init__(self, *args, **kwargs):
+        if 'help_text' not in kwargs:
+            kwargs['help_text'] = IMAGE_FIELD_HELP_TEXT
+        super().__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super().clean(*args, **kwargs)
+        validate_file_size(data.file)
+        return data
 
 
 def get_unique_slug(

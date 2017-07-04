@@ -2,11 +2,20 @@ from rest_framework import viewsets, mixins, serializers
 from sorl.thumbnail import get_thumbnail
 from django.db.models import Q
 
+import django
 import django_filters
 import django_filters.widgets
 
+import core
 from core import api
 from . import models
+
+
+def validate_file_size(image):
+    try:
+        core.models.validate_file_size(image['file'])
+    except django.forms.ValidationError as e:
+        raise serializers.ValidationError(e)
 
 
 class ImageFilter(django_filters.rest_framework.FilterSet):
@@ -25,6 +34,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
         fields = ('id', 'file', 'title', 'creator', 'path')
+        validators = [validate_file_size]
 
     def _get_gestalt(self):
         try:
