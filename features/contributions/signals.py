@@ -72,7 +72,7 @@ def process_incoming_message(sender, message, **args):
             try:
                 process_initial(address)
             except (
-                    groups.Group.DoesNotExist, ValueError, 
+                    groups.Group.DoesNotExist, ValueError,
                     django.core.exceptions.PermissionDenied):
                 logger.error('Could not process receiver {} in message {}'.format(
                     address, message.id))
