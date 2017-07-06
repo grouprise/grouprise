@@ -6,6 +6,8 @@ import django_mailbox.signals
 from django.dispatch import receiver
 
 import core.models
+from features.associations import models as associations
+from features.conversations import models as conversations
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 from . import models, notifications
@@ -25,6 +27,14 @@ def process_incoming_message(sender, message, **args):
     token_end = len(django.conf.settings.DEFAULT_REPLY_TO_EMAIL.rsplit('}')[1])
     DOMAIN = django.conf.settings.DEFAULT_REPLY_TO_EMAIL.split('@')[1]
 
+    def create_contribution(container, gestalt, text, in_reply_to=None):
+        t = models.Text.objects.create(text=text)
+        models.Contribution.objects.create(
+                author=gestalt,
+                container=container,
+                in_reply_to=in_reply_to,
+                contribution=t)
+
     def process_reply(address):
         token = address[token_beg:-token_end]
         try:
@@ -33,12 +43,8 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
-        text = models.Text.objects.create(text=message.text)
-        models.Contribution.objects.create(
-                author=key.gestalt,
-                container=key.target.container,
-                in_reply_to=in_reply_to_text,
-                contribution=text)
+        create_contribution(
+                key.target.container, key.gestalt, message.text, in_reply_to=in_reply_to_text)
 
     def process_initial(address):
         local, domain = address.split('@')
@@ -47,6 +53,17 @@ def process_incoming_message(sender, message, **args):
         group = groups.Group.objects.get(slug=local)
         gestalt = gestalten.Gestalt.objects.get(
                 user__emailaddress__email=message.from_address[0])
+        if gestalt.user.has_perm('conversations.create_group_conversation_by_email', group):
+            conversation = conversations.Conversation.objects.create(subject=message.subject)
+            create_contribution(conversation, gestalt, message.text)
+            a = associations.Association()
+            a.entity = group
+            a.container = conversation
+            a.save()
+        else:
+            raise django.core.exceptions.PermissionDenied(
+                    'Du darfst kein Gespräch per E-Mail mit dieser Gruppe beginnen. Bitte '
+                    'verwende die Schaltfläche auf der Webseite.')
 
     for address in message.to_addresses:
         try:
@@ -54,6 +71,9 @@ def process_incoming_message(sender, message, **args):
         except core.models.PermissionToken.DoesNotExist:
             try:
                 process_initial(address)
-            except (groups.Group.DoesNotExist, ValueError):
+            except (
+                    groups.Group.DoesNotExist, ValueError, 
+                    django.core.exceptions.PermissionDenied):
                 logger.error('Could not process receiver {} in message {}'.format(
                     address, message.id))
+                # FIXME: we should generate error replies here

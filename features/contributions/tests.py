@@ -34,9 +34,9 @@ class ConversationInitiateByEmail(memberships.MemberMixin, tests.Test):
                 body='Text A')
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
-        #self.assertExists(
-        #        models.Contribution, conversation=text_a.conversation.get(),
-        #        text__text='Text B')
+        self.assertExists(
+                models.Contribution, conversation__associations__group=self.group,
+                text__text='Text A')
 
 
 class ConversationReplyByEmail(
