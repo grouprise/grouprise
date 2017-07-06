@@ -9,6 +9,7 @@ class GestaltMixin:
                 email='test@example.org', username='test').gestalt
         cls.gestalt.public = True
         cls.gestalt.save()
+        cls.gestalt.user.emailaddress_set.create(email='test@example.org')
 
 
 class OtherGestaltMixin:
