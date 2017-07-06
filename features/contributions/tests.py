@@ -38,6 +38,15 @@ class ConversationInitiateByEmail(memberships.MemberMixin, tests.Test):
                 models.Contribution, conversation__associations__group=self.group,
                 text__text='Text A')
 
+    def test_conversation_initiate_by_email_failing(self):
+        # generate initial message
+        msg = mailbox_models.Message(
+                from_header=self.gestalt.user.email, to_header='not-existing@localhost',
+                body='Text A')
+        # send signal like getmail would
+        mailbox_signals.message_received.send(self, message=msg)
+        self.assertEqual(len(mail.outbox), 1)
+
 
 class ConversationReplyByEmail(
         gestalten.AuthenticatedMixin, gestalten.OtherGestaltMixin, tests.Test):

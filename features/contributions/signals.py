@@ -62,7 +62,7 @@ def process_incoming_message(sender, message, **args):
             a.save()
         else:
             raise django.core.exceptions.PermissionDenied(
-                    'Du darfst kein Gespräch per E-Mail mit dieser Gruppe beginnen. Bitte '
+                    'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
     for address in message.to_addresses:
@@ -73,7 +73,12 @@ def process_incoming_message(sender, message, **args):
                 process_initial(address)
             except (
                     groups.Group.DoesNotExist, ValueError,
-                    django.core.exceptions.PermissionDenied):
+                    django.core.exceptions.PermissionDenied) as e:
                 logger.error('Could not process receiver {} in message {}'.format(
                     address, message.id))
-                # FIXME: we should generate error replies here
+                django.core.mail.send_mail(
+                        'Re: {}'.format(message.subject),
+                        'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
+                        from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[message.from_header],
+                        fail_silently=True)

@@ -4,6 +4,8 @@ from django.contrib import auth
 from django.contrib.sites import models as sites_models
 from django.core import cache, mail, urlresolvers
 
+import logging
+
 HTTP_GET = 'get'
 HTTP_POST = 'post'
 
@@ -137,3 +139,9 @@ class Test(test.TestCase):
     def request(self, method, **kwargs):
         url = self.get_url(kwargs['url'], kwargs.get('key'))
         return self.get_response(method, url)
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
