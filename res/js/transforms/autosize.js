@@ -9,7 +9,7 @@ export default (el, opts) => {
   autosize(el)
 
   return {
-    remove() {
+    remove () {
       autosize.destroy(el)
     }
   }

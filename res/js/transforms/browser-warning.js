@@ -48,7 +48,7 @@ export default (el) => {
 
     el.insertBefore(disclaimer, el.firstChild)
 
-    iface.remove = function() {
+    iface.remove = function () {
       el.removeChild(disclaimer)
       listener.destroy()
     }

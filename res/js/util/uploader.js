@@ -1,12 +1,12 @@
 import { sum } from 'lodash'
 
-function progressAdapterFactory(callback) {
+function progressAdapterFactory (onProgressCallback) {
   const iface = {}
   const handlers = []
 
-  function propagateProgress() {
+  function propagateProgress () {
     const progress = sum(handlers) / handlers.length
-    callback({
+    onProgressCallback({
       complete: Math.max(0, Math.min(100, progress)),
       jobCount: handlers.length
     })
@@ -16,7 +16,7 @@ function progressAdapterFactory(callback) {
     const id = handlers.length
     handlers[id] = 0
     return progress => {
-      if(progress.lengthComputable) {
+      if (progress.lengthComputable) {
         handlers[id] = progress.loaded / progress.total * 100
         propagateProgress()
       }
@@ -37,4 +37,3 @@ export default function UploaderFactory (adapter) {
 
   return { upload }
 }
-

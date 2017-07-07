@@ -1,4 +1,3 @@
-import { cookie } from 'cookie_js'
 import decorator from './_decorator'
 
 export default decorator((req, opts) => {

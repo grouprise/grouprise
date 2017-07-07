@@ -3,7 +3,7 @@ function attachAndRun (target, event, listener, capture = false) {
   events.forEach((event) => event && target.addEventListener(event, listener, capture))
   listener.call(target)
   return {
-    destroy() {
+    destroy () {
       events.forEach((event) => event && target.removeEventListener(event, listener, capture))
     }
   }
@@ -46,7 +46,7 @@ function input (el, opts = {}) {
   target.classList.toggle(typeClass, true)
 
   return {
-    remove() {
+    remove () {
       inputListeners.destroy()
       focusListeners.destroy()
       target.classList.remove(
