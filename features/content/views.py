@@ -1,3 +1,5 @@
+import itertools
+
 import django.core.urlresolvers
 import django.views.generic
 from django import shortcuts
@@ -19,6 +21,19 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     model = associations.Association
     paginate_by = 10
     template_name = 'content/list.html'
+
+    def get_context_data(self, **kwargs):
+        queryset = self.get_queryset()
+        association_tuples = queryset.values_list('id', 'entity_type', 'entity_id')
+        grouped_association_tuples = [[a for a in d] for e, d in itertools.groupby(association_tuples, lambda t: t[1:3])]
+
+        paginator, page, qs, is_paginated = self.paginate_queryset(grouped_association_tuples, self.paginate_by)
+        grouped_associations = [[associations.Association.objects.get(pk=a[0]) for a in ass] for ass in qs]
+        context = {
+            'is_paginated': is_paginated,
+            'grouped_associations': grouped_associations,
+            'page_obj': page}
+        return context
 
     def get_queryset(self):
         return super().get_queryset().ordered_user_content(self.request.user)

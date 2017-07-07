@@ -17,13 +17,23 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% sidebar_calendar paginator.object_list %}
+    {#{% sidebar_calendar paginator.object_list %}#}
     {% sidebar_groups user %}
 {% endblock %}
 
 {% block content %}
     <div class="content-list">
-        {% include 'content/_list.html' with associations=object_list %}
+        {#{% include 'content/_list.html' with associations=object_list %}#}
+        <ol class="content-preview-list">
+            {% for association_list in grouped_associations %}
+                <li>
+                    {% include 'articles/_preview.html' with association=association_list.0 %}
+                    {% if association_list|length > 1 %}
+                        und {{ association_list|length|add:-1 }} weitere
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
         {% pagination 'Weitere Beiträge' %}
     </div>
 {% endblock %}
