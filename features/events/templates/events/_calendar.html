@@ -1,5 +1,6 @@
 {% load events %}
-<table class="calendar calendar-{{ size }}">
+<table class="calendar calendar-{{ size }}"
+       {% if component_id %}data-component="calendar" id="{{ component_id }}"{% endif %}>
     <caption>
         <div class="calendar-month">
             {% get_parameters month=prev_month.month year=prev_month.year as prev_url %}
