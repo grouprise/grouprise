@@ -42,6 +42,7 @@ class GroupSerializer(serializers.ModelSerializer):
 @permission_classes((permissions.AllowAny, ))
 class GroupSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
+    lookup_field = 'slug'
     filter_fields = ('id', 'name', )
     filter_class = GroupFilter
     queryset = models.Group.objects.all()
