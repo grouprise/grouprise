@@ -8,6 +8,7 @@ import PubSub from './util/pubsub'
 
 import date from './transforms/date'
 import editor from './transforms/editor'
+import calendar from './transforms/calendar'
 import time from './transforms/time'
 import gallery from './transforms/gallery'
 import input from './transforms/input'
@@ -38,6 +39,7 @@ function init (searchIn = document) {
   component('date', date, opts)
   component('editor', editor, opts)
   component('time', time, opts)
+  component('calendar', calendar, opts)
   component('gallery', gallery, opts)
   component('gallery-editor', galleryEditor, opts)
   component('snake', snake, opts)
