@@ -32,6 +32,12 @@ class Content(core.models.Model):
             object_id_field='container_id',
             related_query_name='content')
 
+    taggeds = contenttypes.GenericRelation(
+            'tags.Tagged',
+            content_type_field='tagged_type',
+            object_id_field='tagged_id',
+            related_query_name='content')
+
     def __str__(self):
         return self.title
 

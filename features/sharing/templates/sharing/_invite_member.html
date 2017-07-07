@@ -1,8 +1,0 @@
-{% load rules %}
-{% has_perm 'sharing.invite_member' user group as can_invite %}
-{% if can_invite %}
-    <a href="{% url 'member-invite' group.pk %}" class="btn btn-default btn-sm">
-        <i class="sg sg-members-add"></i>
-        Mitglied einladen
-    </a>
-{% endif %}

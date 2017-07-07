@@ -3,7 +3,6 @@
 
 {% block header %}
     {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
-    {% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
 
     <header class="profile-header">
         <div class="profile-header-title-image">
@@ -72,7 +71,7 @@
                             <span class="sr-only">URL auf Stadtgestalten</span>
                         </dt>
                         <dd class="selectable">
-                            {{ site.domain }}/gestalt/<span class="selectable-token">{{ gestalt.user.username }}</span>
+                            {{ site.domain }}/<span class="selectable-token">{{ gestalt.user.username }}</span>
                             <button type="button" class="btn-text hide-no-js" data-component="clipboard"
                                     data-clipboard-text="{{ site.domain }}/gestalt/{{ gestalt.user.username }}"
                                     title="URL zu dieser Gestalt kopieren">
@@ -96,6 +95,7 @@
                 </div>
             {% endif %}
 
+            {% has_perm 'conversations.create_gestalt_conversation' user gestalt as can_create_message %}
             {% if can_create_message %}
                 <div class="btn-group">
                     <a href="{% url 'create-gestalt-conversation' gestalt.pk %}" class="btn btn-default btn-sm">
@@ -109,17 +109,15 @@
 {% endblock %}
 
 {% block heading %}
-    {% has_perm 'entities.create_gestalt_content' user gestalt as can_create_content %}
-    {% has_perm 'entities.create_gestalt_message' user gestalt as can_create_message %}
-
     <div class="content-header">
         <h2 class="content-classification">Beiträge</h2>
-        {% include "macros/decoration.html" with icon="sg-pen" %}
+        {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
+            {% has_perm 'content.create' user gestalt as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' 'Neuer Beitrag' %}
                     <li><a href="{% url 'create-article' %}">Artikel</a></li>
-                    <li><a href="{% url 'create-event' %}">Ereignis</a></li>
+                    <li><a href="{% url 'create-event' %}">Veranstaltung</a></li>
                     <li><a href="{% url 'create-gallery' %}">Galerie</a></li>
                 {% enddropdown %}
             {% endif %}

@@ -1,8 +1,5 @@
 {% load cache rules thumbnail utils crispy_forms_tags  %}
 
-{% cache cache_timeout group-header user.gestalt.id group.id %}
-
-{% has_perm 'groups.change_group' user group as can_edit %}
 {% has_perm 'content.group_create' user group as can_create_content %}
 {% has_perm 'entities.create_group_message' user group as can_create_message %}
 
@@ -110,28 +107,5 @@
 
 <div class="content-toolbar">
     <div class="carousel-actions"></div>
-    <div class="group-actions">
-        <div class="btn-toolbar">
-            {% if can_edit %}
-                <div class="btn-group">
-                    <a class="btn btn-default btn-sm" href="{% url 'group-update' group.pk %}">
-                        <i class="sg sg-edit"></i> Gruppe bearbeiten
-                    </a>
-                </div>
-            {% endif %}
-
-            {% if not can_edit %}
-                <div class="btn-group">
-                    <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default btn-sm">
-                        <i class="sg sg-message"></i> Nachricht schreiben
-                    </a>
-                </div>
-            {% endif %}
-
-            {% include_fragments 'group-actions' %}
-            {% include_features '_group_actions.html' %}
-        </div>
-    </div>
+    {% include 'groups/detail/_actions.html' with group=group %}
 </div>
-
-{% endcache %}
