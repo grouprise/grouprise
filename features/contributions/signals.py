@@ -51,15 +51,18 @@ def process_incoming_message(sender, message, **args):
         if domain != DOMAIN:
             raise ValueError('Domain does not match.')
         group = groups.Group.objects.get(slug=local)
-        gestalt = gestalten.Gestalt.objects.get(
-                user__emailaddress__email=message.from_address[0])
-        if gestalt.user.has_perm('conversations.create_group_conversation_by_email', group):
+        try:
+            gestalt = gestalten.Gestalt.objects.get(
+                    user__emailaddress__email=message.from_address[0])
+        except gestalten.Gestalt.DoesNotExist:
+            gestalt = None
+        if gestalt and gestalt.user.has_perm(
+                'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)
             create_contribution(conversation, gestalt, message.text)
-            a = associations.Association()
-            a.entity = group
-            a.container = conversation
-            a.save()
+            associations.Association.objects.create(
+                    entity_type=group.content_type, entity_id=group.id,
+                    container_type=conversation.content_type, container_id=conversation.id)
         else:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
