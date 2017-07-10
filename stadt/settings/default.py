@@ -213,8 +213,6 @@ BACKUP_PATH = '/var/backups/stadtgestalten'
 
 STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
 
-STADTGESTALTEN_SHORT_NAME = 'Stadtgestalten'
-
 STADTGESTALTEN_SHOW_HEADER = True
 
 
