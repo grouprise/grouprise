@@ -1,4 +1,4 @@
-{% extends 'content/list.html' %}
+{% extends 'stadt/stadt.html' %}
 {% load rules %}
 
 {% block header %}
@@ -43,4 +43,11 @@
 
 {% block sidebar %}
     {% include 'groups/detail/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-list">
+        {% include 'content/_list.html' with associations=object_list %}
+        {% pagination 'Weitere Beiträge' %}
+    </div>
 {% endblock %}

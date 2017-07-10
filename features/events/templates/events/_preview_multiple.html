@@ -1,0 +1,19 @@
+{% extends 'content/_preview_multiple_item.html' %}
+
+{% block content_type %}
+    <i class="sg sg-content-type-event"></i>
+    <span>{% if not association.public %}Internes {% endif %}Veranstaltung</span>
+{% endblock %}
+
+{% block content_preview_image %}
+    {% comment %}
+    <div class="calendar-sheet calendar-sheet-size-">
+        <span class="calendar-sheet-daynumber">
+            {{ association.container.time|date:'d' }}
+        </span>
+        <span class="calendar-sheet-month">
+            {{ association.container.time|date:'F' }}
+        </span>
+    </div>
+    {% endcomment %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends 'content/_preview_multiple_item.html' %}
+
+{% block content_type %}
+    <i class="sg sg-content-type-article"></i>
+    <span>{% if not association.public %}Interner {% endif %}Artikel</span>
+{% endblock %}

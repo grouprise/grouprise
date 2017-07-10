@@ -1,0 +1,23 @@
+<div class="content-preview-short">
+    <div class="content-preview-short-body">
+        <a href="{{ association.get_absolute_url }}" class="content-preview-body">
+            <div class="content-preview-body-content">
+                {% block content_preview_image %}{% endblock %}
+                <div class="content-preview-text-short">
+                    <h3 class="content-title">
+                        {{ association.container.title|truncatechars:30 }}
+                    </h3>
+                    <span class="text-preview">
+                        {% markdown association.container.versions.last.text as text %}
+                        {{ text|striptags|truncatechars:30 }}
+                    </span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
+        {% block content_type %}
+            <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
+        {% endblock %}
+    </span>
+</div>

@@ -1,37 +1,45 @@
 <article class="content-preview">
     {% if not hide_meta %}
     <header class="content-preview-header">
-        {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
-        <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
-            {% block content_type %}
-                <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
+        {% block content_preview_header %}
+            {% block content_meta %}
+                {% include 'content/_info.html' with association=association %}
             {% endblock %}
-        </span>
+            <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
+                {% block content_type %}
+                    <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
+                {% endblock %}
+            </span>
+        {% endblock %}
     </header>
     {% endif %}
 
-    <a href="{{ association.get_absolute_url }}" class="content-preview-body">
-        <div class="content-preview-body-content">
-            {% block content_preview_image %}
-                {% comment %}
-                {% elif content.images.first %}
-                    {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
-                        <div class="content-image">
-                            <img src="{{ image.url }}">
-                        </div>
-                    {% endthumbnail %}
-                {% endif %}
-                {% endcomment %}
-            {% endblock %}
-            <div class="content-preview-text">
-                <h3 class="content-title">
-                    {{ association.container.title }}
-                </h3>
+    {% block content_preview_body %}
+        <a href="{{ association.get_absolute_url }}" class="content-preview-body">
+            <div class="content-preview-body-content">
+                {% block content_preview_image %}
+                    {% comment %}
+                    {% elif content.images.first %}
+                        {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
+                            <div class="content-image">
+                                <img src="{{ image.url }}">
+                            </div>
+                        {% endthumbnail %}
+                    {% endif %}
+                    {% endcomment %}
+                {% endblock %}
+                <div class="content-preview-text">
+                    <h3 class="content-title">
+                        {{ association.container.title }}
+                    </h3>
 
-                {% markdown association.container.versions.last.text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
+                    {% markdown association.container.versions.last.text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
+    {% endblock %}
 
-    <a href="{{ association.get_absolute_url }}" class="read-more">Zum Beitrag &hellip;</a>
+    {% block content_preview_footer %}
+        <a href="{{ association.get_absolute_url }}" class="read-more">Beitrag ansehen &hellip;</a>
+    {% endblock %}
 </article>

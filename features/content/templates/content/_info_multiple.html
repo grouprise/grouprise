@@ -1,0 +1,14 @@
+{% extends 'content/_info.html' %}
+
+{% block content_meta_avatar %}
+    {% with association=associations.0 %}{{ block.super }}{% endwith %}
+{% endblock %}
+
+{% block content_meta_author %}
+    {% with association=associations.0 %}{{ block.super }}{% endwith %}
+{% endblock %}
+
+{% block content_meta_extra %}
+    {{ associations|length }} Beiträge
+    {% time associations.0.container.versions.first.time_created %}
+{% endblock %}

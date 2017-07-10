@@ -1,0 +1,21 @@
+{% extends 'content/_preview.html' %}
+
+{% block content_preview_header %}
+    {% include 'content/_info_multiple.html' with associations=associations %}
+{% endblock %}
+
+{% block content_preview_body %}
+    {% for association in associations|slice:':3' %}
+        {% if association.container.is_gallery %}
+            {% include 'galleries/_preview_multiple.html' %}
+        {% elif association.container.is_event %}
+            {% include 'events/_preview_multiple.html' %}
+        {% else %}
+            {% include 'articles/_preview_multiple.html' %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content_preview_footer %}
+    <a href="{{ associations.0.entity.get_absolute_url }}" class="read-more">Alle Beiträge ansehen &hellip;</a>
+{% endblock %}

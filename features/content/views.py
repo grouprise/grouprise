@@ -23,17 +23,25 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'content/list.html'
 
     def get_context_data(self, **kwargs):
-        queryset = self.get_queryset()
-        association_tuples = queryset.values_list('id', 'entity_type', 'entity_id')
-        grouped_association_tuples = [[a for a in d] for e, d in itertools.groupby(association_tuples, lambda t: t[1:3])]
+        associations, is_paginated, page = self.get_grouped_associations()
+        return super().get_context_data(
+                is_paginated=is_paginated, grouped_associations=associations, page_obj=page)
 
-        paginator, page, qs, is_paginated = self.paginate_queryset(grouped_association_tuples, self.paginate_by)
-        grouped_associations = [[associations.Association.objects.get(pk=a[0]) for a in ass] for ass in qs]
-        context = {
-            'is_paginated': is_paginated,
-            'grouped_associations': grouped_associations,
-            'page_obj': page}
-        return context
+    def get_grouped_associations(self):
+        data = self.get_grouped_queryset_data()
+        paginator, page, page_data, is_paginated = self.paginate_queryset(
+                data, self.paginate_by)
+        return (
+                [[associations.Association.objects.get(pk=t[0]) for t in ts]
+                    for ts in page_data],
+                is_paginated,
+                page)
+
+    def get_grouped_queryset_data(self):
+        self.queryset = self.get_queryset()
+        association_tuples = self.queryset.values_list('id', 'entity_type', 'entity_id')
+        return [[a for a in d] for e, d in itertools.groupby(
+            association_tuples, lambda t: t[1:3])]
 
     def get_queryset(self):
         return super().get_queryset().ordered_user_content(self.request.user)

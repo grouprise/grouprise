@@ -1,0 +1,7 @@
+{% if association.container.is_gallery %}
+    {% include 'galleries/_preview.html' %}
+{% elif association.container.is_event %}
+    {% include 'events/_preview.html' %}
+{% else %}
+    {% include 'articles/_preview.html' %}
+{% endif %}

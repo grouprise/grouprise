@@ -1,0 +1,15 @@
+{% extends 'content/_preview_multiple_item.html' %}
+
+{% block content_type %}
+    <i class="sg sg-content-type-gallery"></i>
+    <span>{% if not association.public %}Interne {% endif %}Galerie</span>
+{% endblock %}
+
+{% block content_preview_image %}
+    {% load thumbnail %}
+    {% thumbnail association.container.gallery_images.first.image.file '30x30' crop="center top" as image %}
+        <div class="content-image-small">
+            <img src="{{ image.url }}">
+        </div>
+    {% endthumbnail %}
+{% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'content/_info.html' %}
 
 {% block content_meta_extra %}
+    {{ block.super }}
     &nbsp;
     <i class="sg sg-images" title="Bilder"></i>
     {{ association.container.gallery_images.count }}
