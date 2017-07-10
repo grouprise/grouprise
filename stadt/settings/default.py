@@ -78,6 +78,7 @@ TEMPLATES = [
         'OPTIONS': {
             'builtins': ['core.templatetags.core'],
             'context_processors': [
+                'core.context_processors.settings',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -209,6 +210,8 @@ SCORE_PROCESSORS = [
 ROOT_SIGNALCONF = 'stadt.signals'
 
 BACKUP_PATH = '/var/backups/stadtgestalten'
+
+STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
 
 
 # Authentication
