@@ -24,7 +24,8 @@ class Contribution(core.models.Model):
     contribution_type = models.ForeignKey('contenttypes.ContentType', related_name='+')
 
     author = models.ForeignKey('gestalten.Gestalt', related_name='contributions')
-    in_reply_to = models.ForeignKey('Contribution', null=True)
+    attached_to = models.ForeignKey('Contribution', null=True, related_name='+')
+    in_reply_to = models.ForeignKey('Contribution', null=True, related_name='+')
     time_created = models.DateTimeField(auto_now_add=True)
 
     objects = ContributionManager()

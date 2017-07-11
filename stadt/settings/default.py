@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'features.caching',
     'features.content',
     'features.events',
+    'features.files',
     'features.galleries',
     'features.gestalten',
     'features.groups',
