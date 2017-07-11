@@ -14,11 +14,12 @@ from . import models, notifications
 
 logger = logging.getLogger(__name__)
 
+contribution_created = django.dispatch.Signal(providing_args=['instance'])
 
-@receiver(django.db.models.signals.post_save, sender=models.Contribution)
-def send_contribution_notification(sender, instance, created, **kwargs):
-    if created:
-        notifications.Contributed(instance=instance).send()
+
+@receiver(contribution_created)
+def send_contribution_notification(sender, instance, **kwargs):
+    notifications.Contributed(instance=instance).send()
 
 
 @receiver(django_mailbox.signals.message_received)
@@ -29,11 +30,12 @@ def process_incoming_message(sender, message, **args):
 
     def create_contribution(container, gestalt, text, in_reply_to=None):
         t = models.Text.objects.create(text=text)
-        models.Contribution.objects.create(
+        contribution = models.Contribution.objects.create(
                 author=gestalt,
                 container=container,
                 in_reply_to=in_reply_to,
                 contribution=t)
+        contribution_created.send(sender=None, instance=contribution)
 
     def process_reply(address):
         token = address[token_beg:-token_end]
