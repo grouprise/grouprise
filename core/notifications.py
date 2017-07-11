@@ -27,6 +27,12 @@ class Notification:
         self.kwargs = kwargs
         self.object = kwargs.get('instance')
 
+    def get_attachments(self):
+        """
+        Return a list of filenames to use as attachments.
+        """
+        return []
+
     def get_context_data(self, **kwargs):
         return kwargs
 
@@ -142,6 +148,8 @@ class Notification:
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
                     to=[recipient], headers=headers)
+            for file_name in self.get_attachments():
+                message.attach_file(file_name)
             try:
                 message.send()
             except smtplib.SMTPException:

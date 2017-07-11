@@ -32,3 +32,5 @@ class GroupMessageWithAttachmentMixin(GroupMessageMixin):
 class SendFileByEmail(GroupMessageWithAttachmentMixin, core.tests.Test):
     def test_send_file_by_email(self):
         django_mailbox.signals.message_received.send(self, message=self.message)
+        self.assertNotificationSent()
+        self.assertEqual(len(django.core.mail.outbox[0].attachments), 1)
