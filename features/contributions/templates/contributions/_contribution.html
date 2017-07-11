@@ -13,9 +13,13 @@
                     data-author="{{ contribution.author }}" data-permalink="{{ permalink_url }}#{% ref contribution %}"
                  {% endblock %}>
                 {% block media_body %}
+
+                    {# TEXT #}
                     {% if contribution.contribution.text %}
                         {% markdown contribution.contribution.text heading_baselevel=3 %}
                     {% endif %}
+
+                    {# MEMBERSHIP APPLICATION #}
                     {% if contribution.contribution.group %}
                         <p>Ich beantrage die <strong>Mitgliedschaft</strong> in der Gruppe
                         <em>{{ contribution.contribution.group }}</em>.</p>
@@ -27,6 +31,17 @@
                             </a>
                         {% endif %}
                     {% endif %}
+
+                    {# FILE ATTACHMENT #}
+                    {% if contribution.contribution.file %}
+                        <p>
+                        <strong>angehängte Datei</strong>:
+                        <a href="{{ contribution.contribution.file.url }}">
+                            {{ contribution.contribution.file|filename }}
+                        </a>
+                        </p>
+                    {% endif %}
+
                 {% endblock %}
             </div>
             <footer class="media-footer">
