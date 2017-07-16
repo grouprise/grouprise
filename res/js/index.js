@@ -30,6 +30,7 @@ import grouplink from './transforms/grouplink'
 import quote from './transforms/quote'
 import masonry from './transforms/masonry'
 import galleryEditor from './transforms/gallery-editor'
+import imagePicker from './transforms/image-picker'
 
 const bus = PubSub()
 const history = HistoryStateDispatcher()
@@ -59,6 +60,7 @@ function init (searchIn = document) {
   component('autosize', autosize, opts)
   component('cite', cite, opts)
   component('grouplink', grouplink, opts)
+  component('image-picker', imagePicker, opts)
 
   // initialize components not based on component interface
   component($$('input, select, textarea'), input, defaultsDeep({
