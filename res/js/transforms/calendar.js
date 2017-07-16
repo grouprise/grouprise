@@ -13,7 +13,7 @@ function load (url, selector) {
       return Promise.resolve({
         url,
         title: title.innerHTML || '',
-        el: el.innerHTML || '',
+        el: el.innerHTML || ''
       })
     })
 }
