@@ -30,8 +30,9 @@ import quote from './transforms/quote'
 import masonry from './transforms/masonry'
 import galleryEditor from './transforms/gallery-editor'
 
+const bus = PubSub()
+
 function init (searchIn = document) {
-  const bus = PubSub()
   const opts = { root: searchIn, conf: { bus, init } }
 
   // initialize components on load
