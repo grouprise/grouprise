@@ -26,6 +26,7 @@ class Create(forms.ModelForm):
     title = forms.CharField(label='Titel')
     image = forms.ModelChoiceField(
             label='Beitragsbild', queryset=None, required=False,
+            widget=forms.Select(attrs={'data-component': 'image-picker'}),
             help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
             'Vorschau des Beitrags angezeigt.')
 
@@ -83,6 +84,7 @@ class Update(forms.ModelForm):
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
     image = forms.ModelChoiceField(
             label='Beitragsbild', queryset=None, required=False,
+            widget=forms.Select(attrs={'data-component': 'image-picker'}),
             help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
             'Vorschau des Beitrags angezeigt.')
 
