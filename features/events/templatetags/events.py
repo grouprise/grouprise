@@ -7,6 +7,8 @@ import django.utils.timezone
 from django import template
 from django.core import urlresolvers
 
+from ..utils import get_requested_time
+
 register = template.Library()
 
 
@@ -100,7 +102,9 @@ def event_time(context, event):
 def sidebar_calendar(
         context, associations, group=None, preview_length=5, show_group=True,
         hide_buttons=False, component_id=None):
-    upcoming = associations.filter_upcoming().order_by('content__time')[:preview_length]
+    upcoming = associations\
+        .filter_upcoming(get_requested_time(context.request))\
+        .order_by('content__time')[:preview_length]
     context.update({
         'associations': associations,
         'group': group,

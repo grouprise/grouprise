@@ -18,6 +18,8 @@ from features.memberships.predicates import is_member_of
 from utils import views as utils_views
 from utils.auth import get_user_resolver
 
+from .utils import get_requested_time
+
 
 class List(core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'events.view_list'
@@ -29,8 +31,11 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
         return associations.Association.objects.can_view(self.request.user)
 
     def get_queryset(self):
-        return super().get_queryset().filter_events().filter_upcoming().can_view(
-                self.request.user).order_by('content__time')
+        return super().get_queryset()\
+            .filter_events()\
+            .filter_upcoming(get_requested_time(self.request))\
+            .can_view(self.request.user)\
+            .order_by('content__time')
 
 
 class Create(features.content.views.Create):
