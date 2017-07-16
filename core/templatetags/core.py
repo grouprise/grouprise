@@ -1,4 +1,7 @@
+import os
+
 import bleach as python_bleach
+
 from core import fragments, markdown as core_markdown
 from core.views import app_config
 from django import template
@@ -11,6 +14,11 @@ from markdown.extensions import toc
 from core.assets import get_assets
 
 register = template.Library()
+
+
+@register.filter
+def filename(value):
+    return os.path.basename(value.name)
 
 
 @register.simple_tag(takes_context=True)
