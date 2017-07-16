@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { $, getAttr } from 'luett'
+import { $, attr, className } from 'luett'
 import delegate from 'delegate'
 
-const classLoading = 'calendar-loading'
+const classLoading = className('calendar-loading')
+const href = attr('href')
 
 function load (url, selector) {
   return axios.get(url, { responseType: 'document' })
@@ -14,19 +15,19 @@ function Calendar (el, opts) {
   const reinit = opts.conf.init
 
   function replaceWith (sourceUrl) {
-    el.classList.add(classLoading)
+    classLoading.add(el)
 
     load(sourceUrl, `#${calendarId}`)
       .then(newCalendar => {
         el.innerHTML = newCalendar.innerHTML
-        el.classList.remove(classLoading)
+        classLoading.remove(el)
         reinit(el)
       })
   }
 
   const onNavigate = delegate(el, '.calendar-month a', 'click', event => {
     event.preventDefault()
-    replaceWith(getAttr(event.delegateTarget, 'href'))
+    replaceWith(href.get(event.delegateTarget))
   })
 
   return {
