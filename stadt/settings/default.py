@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
     'content',
     'core.apps.CoreConfig',
     'crispy_forms',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'features.caching',
     'features.content',
     'features.events',
+    'features.files',
     'features.galleries',
     'features.gestalten',
     'features.groups',
@@ -212,14 +214,17 @@ ROOT_SIGNALCONF = 'stadt.signals'
 
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
-RESERVED_SLUGS = [
-        'all', 'alle', 'info', 'mail', 'presse', 'stadt', 'webmaster', 'postmaster', 'www']
+ENTITY_SLUG_BLACKLIST = [
+        'all', 'alle', 'antwort', 'facebook', 'gbr', 'info', 'mail', 'noreply', 'postmaster',
+        'presse', 'reply', 'stadt', 'webmaster', 'www']
+
+MAX_FILE_SIZE = 5 * 1024 * 1024
 
 
 # Authentication
 # http://django-allauth.readthedocs.org/
 
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'login'
 
 LOGIN_REDIRECT_URL = 'index'
 

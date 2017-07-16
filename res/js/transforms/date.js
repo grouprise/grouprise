@@ -1,4 +1,4 @@
-import Flatpickr from 'flatpickr'
+import flatpickr from 'flatpickr'
 import locales from 'flatpickr/dist/l10n/de'
 import moment from 'moment'
 import { includes } from 'lodash'
@@ -23,7 +23,7 @@ export default (el, opts = {}) => {
     config.parseDate = (date) => moment(date, 'DD.MM.YYYY HH:mm:ss', 'de', true).toDate()
   }
 
-  const pickr = new Flatpickr(el, config)
+  const pickr = flatpickr(el, config)
   return {
     pickr,
     remove: () => {

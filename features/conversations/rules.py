@@ -21,6 +21,10 @@ rules.add_perm(
         rules.always_allow)
 
 rules.add_perm(
+        'conversations.create_group_conversation_by_email',
+        memberships.is_member_of)
+
+rules.add_perm(
         'conversations.list',
         rules.always_allow)
 

@@ -5,9 +5,11 @@ import { defaultsDeep } from 'lodash'
 import closest from 'closest'
 
 import PubSub from './util/pubsub'
+import HistoryStateDispatcher from './util/history'
 
 import date from './transforms/date'
 import editor from './transforms/editor'
+import calendar from './transforms/calendar'
 import time from './transforms/time'
 import gallery from './transforms/gallery'
 import input from './transforms/input'
@@ -29,15 +31,18 @@ import quote from './transforms/quote'
 import masonry from './transforms/masonry'
 import galleryEditor from './transforms/gallery-editor'
 
+const bus = PubSub()
+const history = HistoryStateDispatcher()
+
 function init (searchIn = document) {
-  const bus = PubSub()
-  const opts = { root: searchIn, conf: { bus, init } }
+  const opts = { root: searchIn, conf: { bus, init, history } }
 
   // initialize components on load
   component('masonry', masonry, opts)
   component('date', date, opts)
   component('editor', editor, opts)
   component('time', time, opts)
+  component('calendar', calendar, opts)
   component('gallery', gallery, opts)
   component('gallery-editor', galleryEditor, opts)
   component('snake', snake, opts)
@@ -60,6 +65,9 @@ function init (searchIn = document) {
     conf: { target: el => closest(el, '.form-group') || el }
   }, opts))
   component($$('blockquote'), quote, opts)
+
+  // register popstate handler
+  history.mount()
 }
 
 init()

@@ -1,15 +1,6 @@
 import { gestaltSettings } from '../adapters/api'
 import closest from 'closest'
-import { remove, addClass, setAttr } from 'luett'
-
-function on(el, event, callback) {
-  el.addEventListener(event, callback, false)
-  return {
-    destroy() {
-      el.removeEventListener(event, callback, false)
-    }
-  }
-}
+import { remove, addClass, setAttr, on } from 'luett'
 
 export default el => {
   const payload = JSON.parse(el.dataset.dismissiblePayload)
@@ -22,7 +13,7 @@ export default el => {
   })
 
   return {
-    remove() {
+    remove () {
       listener.destroy()
     }
   }

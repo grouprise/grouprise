@@ -43,8 +43,8 @@ class Association(models.QuerySet):
     def filter_group_containers(self):
         return self.filter(entity_type=groups.Group.content_type)
 
-    def filter_upcoming(self):
-        return self.filter(content__time__gte=django.utils.timezone.now())
+    def filter_upcoming(self, time=None):
+        return self.filter(content__time__gte=time or django.utils.timezone.now())
 
     def filter_user_content(self, user):
         qs = self

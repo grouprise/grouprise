@@ -1,5 +1,6 @@
 import 'object-assign-shim'
-import Promise from 'es6-promise'
+import 'matches-selector-polyfill/dist/matches-selector-polyfill'
+import 'es6-promise/auto'
 import Vue from 'vue'
 import { $ } from 'luett'
 
@@ -11,9 +12,6 @@ import DateTime from './core/components/datetime.vue'
 import NumberSpinner from './core/components/number-spinner.vue'
 import Switch from './core/components/switch.vue'
 import Configurator from './core/components/configurator.vue'
-
-// polyfills
-Promise.polyfill()
 
 // vue setup
 Vue.component('sg-file-picker', FilePicker)

@@ -8,5 +8,6 @@ rules.add_perm(
 
 rules.add_perm(
         'sharing.invite_member',
-        memberships.is_member_of
+        rules.is_authenticated
+        & memberships.is_member_of
         & ~groups.is_closed)

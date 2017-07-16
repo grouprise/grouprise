@@ -37,7 +37,7 @@ export default (el, opts) => {
 
       vue = new Vue({
         el: `#${container.id}`,
-        render(h) {
+        render (h) {
           return h(Select, {
             props: {
               choices: this.model.choices,
@@ -49,7 +49,7 @@ export default (el, opts) => {
               value: this.value
             },
             on: {
-              input(value) {
+              input (value) {
                 vue.value = value
                 el.value = value
                 el.dispatchEvent(new window.Event('change'))

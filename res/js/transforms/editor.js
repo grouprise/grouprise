@@ -1,4 +1,4 @@
-import { $, setAttr, getAttr, hasAttr } from 'luett'
+import { setAttr, hasAttr } from 'luett'
 import Drop from 'tether-drop'
 import bel from 'bel'
 import closest from 'closest'
@@ -19,7 +19,7 @@ function quote (text) {
 function editor (CodeMirror, SimpleMDE, el, opts) {
   CodeMirror.defaults.inputStyle = 'textarea'
 
-  const { bus } = opts.conf;
+  const { bus } = opts.conf
   const isRequired = hasAttr(el, 'required')
   const form = closest(el, 'form')
   const editor = new SimpleMDE({
@@ -48,14 +48,14 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     spellChecker: false,
     status: false,
     tabSize: 4,
-    previewRender: function(plainText, preview) {
+    previewRender: function (plainText, preview) {
       markdown.parse(plainText)
         .then(
           content => { preview.innerHTML = `<div class="content-body">${content}</div>` },
-          () => { preview.innerHTML = `<p class="disclaimer">Fehler beim Laden der Vorschau</p>`}
+          () => { preview.innerHTML = `<p class="disclaimer">Fehler beim Laden der Vorschau</p>` }
         )
 
-      return "Lade Vorschau...";
+      return 'Lade Vorschau...'
     },
     toolbar: [
       {
@@ -159,8 +159,9 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
   })
 
   imageEditor.emitter.on('files:select', (files) => {
+    const text = editor.codemirror.getSelection()
     const code = files.map((file) => {
-      return `![${file.label}](${file.content})`
+      return `![${(text.length > 0) ? text : file.label}](${file.content})`
     }).join('\n')
 
     editor.codemirror.doc.replaceSelection(code)

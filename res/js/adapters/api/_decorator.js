@@ -5,7 +5,7 @@ import axios from 'axios'
 const noop = config => config
 const url = extension => `/stadt/api/${extension}`
 
-function add_token(config) {
+function addToken (config) {
   const methods = ['post', 'put', 'patch', 'delete']
   const token = cookie.get('csrftoken', null)
 
@@ -22,7 +22,7 @@ export default handler => {
 
     if (!req) {
       request = axios.create()
-      request.interceptors.request.use(add_token)
+      request.interceptors.request.use(addToken)
       request.interceptors.request.use(opts.modify || noop)
     }
 

@@ -43,7 +43,7 @@ export default (el, opts) => {
     el.innerHTML = $(`#${id}`, content).innerHTML
   }
 
-  function onFailure() {
+  function onFailure () {
     danger('Bei der Verarbeitung deines Beitrags ist ein Fehler aufgetreten! Sorry 😔')
     setActive($('form', el))
   }
@@ -51,7 +51,7 @@ export default (el, opts) => {
   function handleSubmit (event) {
     event.preventDefault()
 
-    if (isSubmitting) return;
+    if (isSubmitting) return
 
     isSubmitting = true
     setInactive(event.delegateTarget)
@@ -60,7 +60,7 @@ export default (el, opts) => {
       .then(() => reinit(el))
       .then(() => $('form textarea', el).focus())
       .catch(onFailure)
-      .then(() => isSubmitting = false)
+      .then(() => { isSubmitting = false })
   }
 
   const submitListener = delegate(el, 'form', 'submit', handleSubmit)

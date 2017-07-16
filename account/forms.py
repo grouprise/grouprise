@@ -18,32 +18,6 @@ class Email(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
         self.fields['email'].label = 'E-Mail-Adresse'
 
 
-class LoginForm(util_forms.FormMixin, allauth.account.forms.LoginForm):
-    layout = (
-        layout.Div(
-            'login',
-            'password',
-            'remember',
-            util_forms.Submit('Anmelden'),
-        ),
-        layout.Div(
-            layout.HTML(
-                '<a class="btn btn-link" href="{{ signup_url }}">Konto anlegen</a>'
-                '<a class="btn btn-link" '
-                'href="{% url \'account_reset_password\' %}">Passwort vergessen</a>'
-            ),
-            css_class="account-actions",
-        )
-    )
-    password = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
-    remember = forms.BooleanField(label='Anmeldung merken', required=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['login'] = forms.CharField(label='E-Mail-Adresse oder Pseudonym')
-        self.helper.form_class += " form-login form-modern"
-
-
 class PasswordChange(util_forms.FormMixin, allauth.account.forms.ChangePasswordForm):
     layout = (
             layout.Field('oldpassword', placeholder=''),
@@ -71,6 +45,19 @@ class PasswordReset(util_forms.FormMixin, allauth.account.forms.ResetPasswordFor
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].label = 'E-Mail-Adresse'
+
+
+class PasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):
+    layout = (
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort setzen')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].label = 'Kennwort'
+        self.fields['password2'].label = 'Kennwort (Wiederholung)'
 
 
 class PasswordResetFromKey(util_forms.FormMixin, allauth.account.forms.ResetPasswordKeyForm):

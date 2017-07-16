@@ -18,21 +18,21 @@ export default (el, opts) => {
   const enterListener = on(el, 'mouseenter', matchesMedia.min.medium(show))
   const leaveListener = on(el, 'mouseleave', matchesMedia.min.medium(hide))
 
-  function show() {
+  function show () {
     clearTimeout(action)
-    setTimeout(() => data.show = true, time)
+    setTimeout(() => { data.show = true }, time)
 
-    if(!isCreated) {
+    if (!isCreated) {
       createElement()
     }
   }
 
-  function hide() {
+  function hide () {
     clearTimeout(action)
-    setTimeout(() => data.show = false, time)
+    setTimeout(() => { data.show = false }, time)
   }
 
-  function get() {
+  function get () {
     return cache[ref]
       ? Promise.resolve(cache[ref])
       : api.single(ref).then(group => {
@@ -41,14 +41,14 @@ export default (el, opts) => {
       })
   }
 
-  function createElement() {
+  function createElement () {
     isCreated = true
     return get()
       .then(group => {
         data.group = group
         vue = new Vue({
           el: `#${container.id}`,
-          render(h) {
+          render (h) {
             const renderGroup = () => {
               return h(GroupPreview, {
                 props: {
@@ -74,7 +74,7 @@ export default (el, opts) => {
   el.appendChild(container)
 
   return {
-    remove() {
+    remove () {
       enterListener.destroy()
       leaveListener.destroy()
 

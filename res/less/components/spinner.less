@@ -8,6 +8,7 @@
     border-top-color: transparent;
     border-radius: 50%;
     animation: fa-spin .4s linear infinite forwards;
+    display: inline-block;
 }
 
 .spinner-abs-center {
@@ -24,4 +25,39 @@
 .spinner-abs-right {
     position: absolute;
     right: 0;
+}
+
+.spinner-abs-center-center {
+    position: absolute;
+    left: 50%; top: 50%;
+    margin-left: (@spinner-size / -2);
+    margin-top: (@spinner-size / -2);
+}
+
+.spinner-overlay(@selector) {
+    @{selector} {
+        position: relative;
+    }
+
+    @{selector}:before {
+        content: ' ';
+        transition: .2s opacity;
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background-color: rgba(255, 255, 255, .75);
+        opacity: 0;
+        display: block;
+        pointer-events: none;
+    }
+
+    @{selector}-loading:before {
+        opacity: 1;
+        z-index: 50;
+    }
+
+    @{selector}-loading:after {
+        &:extend(.spinner);
+        &:extend(.spinner-abs-center-center);
+        z-index: 100;
+    }
 }

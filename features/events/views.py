@@ -13,9 +13,12 @@ import core.views
 import features.content.views
 import features.groups.views
 from features.associations import models as associations
+from features.gestalten import models as gestalten
 from features.memberships.predicates import is_member_of
 from utils import views as utils_views
 from utils.auth import get_user_resolver
+
+from .utils import get_requested_time
 
 
 class List(core.views.PermissionMixin, django.views.generic.ListView):
@@ -28,8 +31,11 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
         return associations.Association.objects.can_view(self.request.user)
 
     def get_queryset(self):
-        return super().get_queryset().filter_events().filter_upcoming().can_view(
-                self.request.user).order_by('content__time')
+        return super().get_queryset()\
+            .filter_events()\
+            .filter_upcoming(get_requested_time(self.request))\
+            .can_view(self.request.user)\
+            .order_by('content__time')
 
 
 class Create(features.content.views.Create):
@@ -170,3 +176,45 @@ class GroupCalendarExport(CalendarExport):
             return is_member_of(self.request.user, self.get_group())
         else:
             return False
+
+
+class GestaltCalendarFeed(BaseCalendarFeed):
+
+    def get_calendar_owner(self):
+        return self.get_gestalt()
+
+    def check_authorization(self, authenticated_gestalt):
+        return authenticated_gestalt == self.get_calendar_owner()
+
+    def assemble_content_filter_dict(self, filter_dict):
+        filter_dict['gestalt'] = self.get_gestalt()
+        super().assemble_content_filter_dict(filter_dict)
+
+
+class GestaltCalendarExport(utils_views.PageMixin, generic.DetailView):
+    model = gestalten.Gestalt
+    slug_url_kwarg = 'gestalt_slug'
+    sidebar = tuple()
+    permission = 'entities.view_gestalt'
+    title = 'Exportmöglichkeiten für Gestaltenkalender'
+    template_name = 'gestalten/events_export.html'
+    parent = 'gestalt-index'
+
+    def get_parent(self):
+        return self.get_gestalt()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['public_export_url'] = self.request.build_absolute_uri(
+            reverse('gestalt-events-feed', kwargs={
+                'gestalt_slug': self.get_object().slug,
+                'domain': 'public'
+            })
+        )
+        context['private_export_url'] = self.request.build_absolute_uri(
+            reverse('gestalt-events-feed', kwargs={
+                'gestalt_slug': self.get_object().slug,
+                'domain': 'private'
+            })
+        )
+        return context
