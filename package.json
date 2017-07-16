@@ -53,6 +53,7 @@
     "lodash": "^4.17.4",
     "luett": "^2.3.1",
     "masonry-layout": "^4.2.0",
+    "matches-selector-polyfill": "^1.0.0",
     "moment": "^2.13.0",
     "node-fontdump": "^1.2.1",
     "object-assign-shim": "^1.0.0",

@@ -1,5 +1,6 @@
 import 'object-assign-shim'
 import Promise from 'es6-promise'
+import 'matches-selector-polyfill/dist/matches-selector-polyfill'
 import Vue from 'vue'
 import { $ } from 'luett'
 
