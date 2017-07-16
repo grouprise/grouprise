@@ -7,21 +7,38 @@ const href = attr('href')
 
 function load (url, selector) {
   return axios.get(url, { responseType: 'document' })
-    .then(res => Promise.resolve($(selector, res.data)))
+    .then(res => {
+      const el = $(selector, res.data)
+      const title = $('title', res.data)
+      return Promise.resolve({
+        url,
+        title: title.innerHTML || '',
+        el: el.innerHTML || '',
+      })
+    })
 }
 
 function Calendar (el, opts) {
   const calendarId = el.id
+  const calendarEl = () => el.matches('.calendar') ? el : $('.calendar', el)
   const reinit = opts.conf.init
 
-  function replaceWith (sourceUrl) {
-    classLoading.add(el)
+  const history = opts.conf.history.register(`calendar-${calendarId}`, state => {
+    replaceWith(state ? state.url : window.location.href, false)
+  }, event => event.state === null && window.location.pathname === opts.conf.basepath)
+
+  function replaceWith (sourceUrl, push = true) {
+    classLoading.add(calendarEl())
 
     load(sourceUrl, `#${calendarId}`)
       .then(newCalendar => {
-        el.innerHTML = newCalendar.innerHTML
-        classLoading.remove(el)
+        el.innerHTML = newCalendar.el
+        classLoading.remove(calendarEl())
         reinit(el)
+
+        if (push) {
+          history.pushState(newCalendar, newCalendar.title, sourceUrl)
+        }
       })
   }
 
@@ -33,6 +50,7 @@ function Calendar (el, opts) {
   return {
     remove () {
       onNavigate.destroy()
+      history.destroy()
     }
   }
 }
