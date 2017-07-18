@@ -5,14 +5,14 @@ import Vue from 'vue'
 import { $ } from 'luett'
 
 // custom global vue components
-import FilePicker from './core/components/file-picker.vue'
-import ImagePicker from './core/components/image-picker.vue'
-import Select from './core/components/select.vue'
-import Avatar from './core/components/avatar.vue'
-import DateTime from './core/components/datetime.vue'
-import NumberSpinner from './core/components/number-spinner.vue'
-import Switch from './core/components/switch.vue'
-import Configurator from './core/components/configurator.vue'
+import FilePicker from './components/core/file-picker.vue'
+import ImagePicker from './components/image/image-picker.vue'
+import Select from './components/core/select.vue'
+import Avatar from './components/image/avatar.vue'
+import DateTime from './components/time/datetime.vue'
+import NumberSpinner from './components/core/number-spinner.vue'
+import Switch from './components/core/switch.vue'
+import Configurator from './components/core/configurator.vue'
 
 // vue setup
 Vue.component('sg-file-picker', FilePicker)

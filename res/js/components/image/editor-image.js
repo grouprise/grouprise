@@ -2,12 +2,12 @@ import { remove, toggleClass } from 'luett'
 import bel from 'bel'
 import EventEmitter from 'eventemitter3'
 
-import UploaderFactory from '../util/uploader'
-import { image as adapter } from '../adapters/api'
+import UploaderFactory from '../../util/uploader'
+import { image as adapter } from '../../adapters/api'
 import pickii from './pickii'
-import filePicker from './file-picker'
-import tabbed from './tabbed'
-import progress from './progress'
+import filePicker from '../core/file-picker'
+import tabbed from '../core/tabbed'
+import progress from '../core/progress'
 
 const uploader = UploaderFactory(adapter)
 let processIds = 0

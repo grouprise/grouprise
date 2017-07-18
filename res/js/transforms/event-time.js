@@ -2,7 +2,7 @@ import { $, hasAttr, remove, insertElement } from 'luett'
 import Vue from 'vue'
 import moment from 'moment'
 
-import EventTime from '../content/components/event-time.vue'
+import EventTime from '../components/time/event-time.vue'
 
 const timeFormat = 'DD.MM.YYYY HH:mm:ss'
 

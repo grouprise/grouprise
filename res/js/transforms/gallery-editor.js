@@ -3,7 +3,7 @@ import { $, $$, remove, insertElement } from 'luett'
 import bel from 'bel'
 import Vue from 'vue'
 import { image } from '../adapters/api'
-import GalleryCreator from '../content/components/gallery-editor.vue'
+import GalleryCreator from '../components/image/gallery-editor.vue'
 
 export default el => {
   const images = []

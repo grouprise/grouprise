@@ -1,5 +1,5 @@
 import { find, includes } from 'lodash'
-import ContentMeta from '../../content/components/content-meta.vue'
+import ContentMeta from '../../components/content/content-meta.vue'
 
 export default api => {
   const get = choices => {
