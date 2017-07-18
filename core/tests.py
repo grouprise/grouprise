@@ -4,6 +4,8 @@ from django.contrib import auth
 from django.contrib.sites import models as sites_models
 from django.core import cache, mail, urlresolvers
 
+import logging
+
 HTTP_GET = 'get'
 HTTP_POST = 'post'
 
@@ -116,8 +118,7 @@ class Test(test.TestCase):
         return 'href="{}"'.format(url)
 
     def get_login_url(self, next_url):
-        return '{}?next={}'.format(
-                urlresolvers.reverse('account_login'), next_url)
+        return '{}?next={}'.format(urlresolvers.reverse('login'), next_url)
 
     def get_response(self, method, url):
         return getattr(self.client, method)(url)
@@ -138,3 +139,9 @@ class Test(test.TestCase):
     def request(self, method, **kwargs):
         url = self.get_url(kwargs['url'], kwargs.get('key'))
         return self.get_response(method, url)
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)

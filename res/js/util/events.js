@@ -16,21 +16,21 @@ function eventedFunction (func) {
   return wrapper
 }
 
-function SingletonListener(listenerFactory, callback) {
+function SingletonListener (listenerFactory, callback) {
   const iface = {}
   const subscribers = []
   let listener
 
-  function propagate(event) {
+  function propagate (event) {
     subscribers.forEach(sub => callback.call(this, event, sub))
   }
 
-  function init() {
+  function init () {
     listener = listenerFactory(propagate)
   }
 
   iface.register = sub => {
-    if(!listener) init()
+    if (!listener) init()
     subscribers.push(sub)
     return iface
   }

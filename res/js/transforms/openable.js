@@ -7,7 +7,7 @@ function createListener (el, state) {
   const setInactive = on(el, 'mouseleave', set(false))
 
   return {
-    destroy() {
+    destroy () {
       setActive.destroy()
       setInactive.destroy()
     }

@@ -11,7 +11,7 @@ from features.gestalten import models as gestalten
 
 
 def validate_slug(slug):
-    if slug in django.conf.settings.RESERVED_SLUGS:
+    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
@@ -42,8 +42,7 @@ class Group(core.models.Model):
     address = models.TextField(
             'Anschrift',
             blank=True)
-    avatar = models.ImageField(
-            blank=True)
+    avatar = core.models.ImageField(blank=True)
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
@@ -54,8 +53,7 @@ class Group(core.models.Model):
             blank=True,
             default='',
             max_length=200)
-    logo = models.ImageField(
-            blank=True)
+    logo = core.models.ImageField(blank=True)
     url = models.URLField(
             'Adresse im Web',
             blank=True)

@@ -38,6 +38,7 @@
 <script>
   import UploaderFactory from '../../util/uploader'
   import { image } from '../../adapters/api'
+  import { danger } from '../../util/notify'
 
   const uploader = UploaderFactory(image)
 
@@ -57,10 +58,20 @@
     methods: {
       upload(files) {
         this.progress = 0
-        uploader.upload(files, progress => this.progress = progress.complete)
-          .then(files => {
+        uploader.upload(files, progress => this.progress = progress.complete, 'allSettled')
+          .then(results => {
             this.progress = null
-            this.$emit('add', files)
+            const files = results
+              .filter(r => r.state === 'fulfilled')
+              .map(r => r.value)
+
+            if (files.length > 0) {
+              this.$emit('add', files)
+            }
+
+            if (files.length !== results.length) {
+              danger(`Einige Dateien konnten nicht hochgeladen werden. Waren sie zu groß?`)
+            }
           })
       },
       remove(file) {

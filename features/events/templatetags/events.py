@@ -7,6 +7,8 @@ import django.utils.timezone
 from django import template
 from django.core import urlresolvers
 
+from ..utils import get_requested_time
+
 register = template.Library()
 
 
@@ -52,7 +54,7 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 
 
 @register.inclusion_tag('events/_calendar.html', takes_context=True)
-def calendar(context, associations, size='preview'):
+def calendar(context, associations, size='preview', component_id=None):
     request = context.get('request')
     around = django.utils.timezone.now()
     around = around.replace(
@@ -76,6 +78,7 @@ def calendar(context, associations, size='preview'):
             'next_month': next_month,
             'weeks': calendar.formatmonthweeks(around.year, around.month),
             'size': size,
+            'component_id': component_id,
             })
     return context
 
@@ -98,14 +101,17 @@ def event_time(context, event):
 @register.inclusion_tag('events/_sidebar_calendar.html', takes_context=True)
 def sidebar_calendar(
         context, associations, group=None, preview_length=5, show_group=True,
-        hide_buttons=False):
-    upcoming = associations.filter_upcoming().order_by('content__time')[:preview_length]
+        hide_buttons=False, component_id=None):
+    upcoming = associations\
+        .filter_upcoming(get_requested_time(context.request))\
+        .order_by('content__time')[:preview_length]
     context.update({
         'associations': associations,
         'group': group,
         'hide_buttons': hide_buttons,
         'show_group': show_group,
         'upcoming': upcoming,
+        'component_id': component_id
     })
     return context
 

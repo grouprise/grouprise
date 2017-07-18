@@ -40,7 +40,7 @@
                             </a>
                         {% else %}
                             <h2>Willkommen!</h2>
-                            <a href="{% url 'account_login' %}?next={{ request.path }}" class="dock-session">
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="dock-session">
                                 <i class="sg sg-login"></i>
                                 <span>Anmelden</span>
                             </a>

@@ -23,7 +23,7 @@ export default el => {
 
   const vue = new Vue({
     el: `#${container.id}`,
-    render(h) {
+    render (h) {
       return h(EventTime, {
         props: {
           start: this.start,

@@ -5,6 +5,7 @@ from django.core import urlresolvers
 from django.db import models
 from allauth.account import adapter as allauth_adapter
 
+import core
 from core import colors
 
 
@@ -12,9 +13,9 @@ class Gestalt(models.Model):
     is_group = False
 
     about = models.TextField('Selbstauskunft', blank=True)
-    avatar = models.ImageField(blank=True)
+    avatar = core.models.ImageField(blank=True)
     avatar_color = models.CharField(max_length=7, default=colors.get_random_color)
-    background = models.ImageField('Hintergrundbild', blank=True)
+    background = core.models.ImageField('Hintergrundbild', blank=True)
     public = models.BooleanField(
             'Benutzerseite veröffentlichen',
             default=False,

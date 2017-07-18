@@ -11,6 +11,6 @@ def login_or_field(context, field):
 
 @register.simple_tag(takes_context=True)
 def login_url(context):
-    # FIXME: can we use mark_safe here? what about url encoding?
-    return django.utils.safestring.mark_safe('{}?next={}'.format(
-        django.core.urlresolvers.reverse('account_login'), context['request'].path))
+    return django.utils.safestring.mark_safe('{}?{}'.format(
+        django.core.urlresolvers.reverse('login'),
+        django.utils.http.urlencode({'next': context['request'].path})))
