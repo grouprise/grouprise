@@ -36,7 +36,7 @@ class Login(utils_views.ActionMixin, views.LoginView):
     action = 'Anmelden'
     form_class = forms.LoginForm
     ignore_base_templates = True
-    parent = 'gestalt-index'
+    # parent = 'gestalt-index'
     permission_required = 'account.login'
     fallback_template_name = 'account/login.html'
 
@@ -89,7 +89,7 @@ class Signup(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
     form_class = forms.SignupForm
     ignore_base_templates = True
-    parent = 'gestalt-index'
+    # parent = 'gestalt-index'
     permission_required = 'account.signup'
 
     def get_success_url(self):

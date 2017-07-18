@@ -16,10 +16,10 @@
 
 {% block sidebar %}
     {% if view.entity.is_group %}
-        {% include 'entities/_sidebar_group.html' with group=view.entity %}
+        {% include 'groups/_sidebar.html' with group=view.entity %}
     {% else %}
         {% if view.entity.public %}
-            {% include 'entities/_sidebar_author.html' with gestalt=view.entity %}
+            {% include 'gestalten/_sidebar.html' with gestalt=view.entity %}
         {% endif %}
     {% endif %}
 {% endblock %}

@@ -1,7 +1,7 @@
-Ereignis online ansehen und kommentieren:
+Veranstaltung online ansehen und kommentieren:
 {% url 'content-permalink' instance.pk as path %}{{ path|full_url }}
 
-Ereignis {% load events %}{% event_time instance.container %}
+Veranstaltung {% load events %}{% event_time instance.container %}
 Ort: {{ instance.container.place }}
 
 {{ instance.container.versions.last.text }}

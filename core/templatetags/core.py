@@ -13,10 +13,19 @@ from core.assets import get_assets
 register = template.Library()
 
 
+@register.simple_tag(takes_context=True)
+def get_parameters(context, **kwargs):
+    request = context.get('request')
+    params = request.GET.copy()
+    for k in kwargs:
+        params[k] = kwargs.get(k)
+    return params.urlencode()
+
+
 @register.simple_tag
 def include_assets(stage):
     return safestring.mark_safe('\n'.join([
-        repr(asset) for asset in get_assets(stage)
+        asset.create_tag() for asset in get_assets(stage)
     ]))
 
 
@@ -50,7 +59,7 @@ def breadcrumb(*args):
 
 @register.inclusion_tag('core/_menu.html', takes_context=True)
 def menu(context, active, entity=None):
-    if entity.is_group:
+    if entity and entity.is_group:
         context['group'] = entity
     context['menu'] = active
     return context

@@ -63,7 +63,7 @@ class Gestalt(models.Model):
 
     def get_profile_url(self):
         return urlresolvers.reverse(
-                'gestalt', args=[type(self).objects.get(pk=self.pk).user.username])
+                'entity', args=[type(self).objects.get(pk=self.pk).user.username])
 
     # FIXME: move to template filter
     def get_initials(self):

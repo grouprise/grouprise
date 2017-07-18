@@ -29,7 +29,8 @@ class Create(forms.ModelForm):
     time = forms.DateTimeField(label='Beginn')
     until_time = forms.DateTimeField(label='Ende', required=False)
     all_day = forms.BooleanField(
-            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.', required=False)
+            label='ganztägig', help_text='Die Veranstaltung dauert den ganzen Tag.',
+            required=False)
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
@@ -79,7 +80,8 @@ class Update(forms.ModelForm):
     time = forms.DateTimeField(label='Beginn')
     until_time = forms.DateTimeField(label='Ende', required=False)
     all_day = forms.BooleanField(
-            label='ganztägig', help_text='Das Ereignis dauert den ganzen Tag.', required=False)
+            label='ganztägig', help_text='Die Veranstaltung dauert den ganzen Tag.',
+            required=False)
 
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')

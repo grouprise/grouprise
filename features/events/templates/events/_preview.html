@@ -2,11 +2,21 @@
 
 {% block content_type %}
     <i class="sg sg-content-type-event"></i>
-    <span>{% if not association.public %}Internes {% endif %}Ereignis</span>
+    <span>{% if not association.public %}Internes {% endif %}Veranstaltung</span>
 {% endblock %}
 
 {% block content_preview_image %}
     <div>
-        {% include "macros/calendar_sheet.html" with time=association.container.time %}
+        <div class="calendar-sheet calendar-sheet-size-">
+            <span class="calendar-sheet-dayname">
+                {{ association.container.time|date:'l' }}
+            </span>
+            <span class="calendar-sheet-daynumber">
+                {{ association.container.time|date:'d' }}
+            </span>
+            <span class="calendar-sheet-month">
+                {{ association.container.time|date:'F' }}
+            </span>
+        </div>
     </div>
 {% endblock %}

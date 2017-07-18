@@ -1,10 +1,8 @@
-import django.db.models
 from django.views import generic
 
 from core.views import base
 import features.content.views
 from features.associations import models as associations
-from features.content import models as content
 
 
 class List(base.PermissionMixin, generic.ListView):
@@ -17,10 +15,7 @@ class List(base.PermissionMixin, generic.ListView):
         return associations.Association.objects.can_view(self.request.user)
 
     def get_queryset(self):
-        return super().get_queryset().filter(
-                container_type=content.Content.content_type, content__time__isnull=True,
-                ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
-                    'content__versions__time_created')).order_by('-time_created')
+        return super().get_queryset().ordered_user_content(self.request.user).filter_articles()
 
 
 class Create(features.content.views.Create):

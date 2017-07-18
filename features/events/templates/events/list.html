@@ -1,18 +1,18 @@
 {% extends 'stadt/stadt.html' %}
 {% load events groups rules %}
 
-{% block title %}Ereignisse - {{ block.super }}{% endblock %}
+{% block title %}Veranstaltungen - {{ block.super }}{% endblock %}
 {% block menu %}{% with menu='event' %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block heading_title %}
-    {% include 'core/_heading.html' with title='Ereignisse' icon='sg-pen' %}
+    {% include 'core/_heading.html' with title='Veranstaltungen' icon='sg-pen' %}
 {% endblock %}
 
 {% block heading_toolbar %}
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% url 'create-event' as url %}
-        {% include 'core/_toolbutton.html' with label='Neues Ereignis' url=url %}
+        {% include 'core/_toolbutton.html' with label='Neue Veranstaltung' url=url %}
     {% endif %}
 {% endblock %}
 
@@ -30,6 +30,6 @@
             {% endfor %}
         </ol>
 
-        {% pagination 'Weitere Ereignisse' %}
+        {% pagination 'Weitere Veranstaltungen' %}
     </div>
 {% endblock %}

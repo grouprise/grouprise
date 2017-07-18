@@ -1,7 +1,6 @@
 from . import models
 from core import tests
 from django.contrib.contenttypes import models as contenttypes
-import entities.models
 from features.associations import models as associations
 from features.contributions import models as contributions
 from features.gestalten import tests as gestalten
