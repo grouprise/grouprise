@@ -27,6 +27,9 @@ def get_parameters(context, **kwargs):
     params = request.GET.copy()
     for k in kwargs:
         params[k] = kwargs.get(k)
+    # drop page parameter in case of parameter changes (#373)
+    if params != request.GET and 'page' not in kwargs and 'page' in params:
+        del params['page']
     return params.urlencode()
 
 
