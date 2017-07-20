@@ -7,7 +7,7 @@ DIR_ETC="/etc/$PKG_USER"
 
 if [ -f "/etc/uwsgi/apps-enabled/$PKG_USER.ini" ]; then
     touch "$DIR_ETC/maintenance_mode"
-    #/usr/bin/stadtctl database_dump --prefix preinst_auto
+    /usr/bin/stadtctl database_dump --prefix preinst_auto
 fi
 
 set +eu
