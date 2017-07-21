@@ -1,13 +1,17 @@
-from . import notifications
+import django
+
+import features
 from core import fields, views
 from features.groups import views as groups
+from . import notifications
 
 
 class ShareGroupMixin(groups.Mixin, views.Form):
     data_field_classes = (fields.email('recipient'),)
 
     def get_related_object(self):
-        return self.get_group()
+        return django.shortcuts.get_object_or_404(
+                features.groups.models.Group, pk=self.kwargs.get('group_pk'))
 
 
 class GroupRecommend(ShareGroupMixin):
