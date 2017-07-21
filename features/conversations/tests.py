@@ -1,11 +1,13 @@
-from . import models
-from core import tests
 from django.contrib.contenttypes import models as contenttypes
+
+import core
+from core import tests
 from features.associations import models as associations
 from features.contributions import models as contributions
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
+from . import models
 
 
 class GestaltConversation(gestalten.GestaltMixin, gestalten.OtherGestaltMixin):
@@ -278,3 +280,9 @@ class TwoGroupMembers(
         memberships.AuthenticatedMemberMixin, tests.Test):
     '''
     '''
+
+
+class TestUrls(core.tests.Test):
+    def test_404(self):
+        r = self.client.get(self.get_url('conversation', 0))
+        self.assertEqual(r.status_code, 404)
