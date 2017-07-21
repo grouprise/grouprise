@@ -286,3 +286,9 @@ class TestUrls(core.tests.Test):
     def test_404(self):
         r = self.client.get(self.get_url('conversation', 0))
         self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('create-gestalt-conversation', 0))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('group-conversations', 0))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('create-group-conversation', 0))
+        self.assertEqual(r.status_code, 404)
