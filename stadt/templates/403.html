@@ -9,6 +9,6 @@
     {% if user.is_authenticated %}
         <p>Du bist angemeldet, darfst die gewünschte Seite aber dennoch nicht ansehen. Falls Du mehrere Benutzernamen besitzt, kannst Du Dich <a href="{% url 'account_logout' %}">abmelden</a> und anschließend mit einem anderen Benutzernamen anmelden.</p>
     {% else %}
-        <p>Du darfst die gewünschte Seite nicht ansehen. Möchtest Du Dich <a href="{% url 'account_login' %}">anmelden</a>?</p>
+        <p>Du darfst die gewünschte Seite nicht ansehen. Möchtest Du Dich <a href="{% url 'login' %}">anmelden</a>?</p>
     {% endif %}
 {% endblock %}
