@@ -107,11 +107,13 @@ def include_fragments(context, fragment_group):
     return safestring.mark_safe(result)
 
 
-def bleach(text, disable_tags=tuple()):
+def bleach(text, disable_tags=tuple(), except_for=tuple()):
     if disable_tags == "all":
-        allowed_tags = tuple()
+        allowed_tags = set()
     else:
         allowed_tags = set(core_markdown.content_allowed_tags) - set(disable_tags)
+    if except_for:
+        allowed_tags |= set(except_for)
     bleached = python_bleach.clean(
             text, strip=True, tags=allowed_tags,
             attributes=core_markdown.content_allowed_attributes)
@@ -124,11 +126,13 @@ def bleach(text, disable_tags=tuple()):
 @register.simple_tag
 def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
-        plain_preview=False):
+        plain_preview=False, preset=None):
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
-    if filter_tags:
+    if preset == 'linkonly':
+        result = bleach(result, disable_tags='all', except_for=('a',))
+    elif filter_tags:
         disabled_tags = tuple(disable_tags.split(","))
         result = bleach(result, disabled_tags)
     if truncate:

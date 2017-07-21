@@ -52,10 +52,16 @@
             </h1>
             <dl class="def def-icons">
                 <dt>
-                    <i class="sg sg-question"></i>
+                    <i class="sg sg-question" title="Kurzbeschreibung"></i>
                     <span class="sr-only">Kurzbeschreibung</span>
                 </dt>
-                <dd>{{ group.description|default:"Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen" }}</dd>
+                <dd>
+                    {% if group.description %}
+                        {% markdown group.description preset='linkonly' %}
+                    {% else %}
+                        Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen
+                    {% endif %}
+                </dd>
                 {% if group.address %}
                     <dt>
                         <i class="sg sg-address" title="Anschrift"></i>
