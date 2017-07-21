@@ -3,7 +3,9 @@
 
 {% block title %}Gespräche - {{ site.name }}{% endblock %}
 {% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
-{% block heading_title %}<h1 class="content-classification">Gespräche</h1>{% endblock %}
+{% block heading_title %}
+    {% include 'core/_heading.html' with title='Gespräche' icon='sg-comments' %}
+{% endblock %}
 
 {% block sidebar %}
     {% sidebar_calendar view.get_content component_id='conversations-calendar' %}
