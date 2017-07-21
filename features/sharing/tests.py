@@ -26,8 +26,8 @@ class MemberInvite(memberships.AuthenticatedMemberMixin, tests.Test):
 
 
 class TestUrls(core.tests.Test):
-    def test_404(self):
-        #r = self.client.get(self.get_url('member-invite', 0))
-        #self.assertEqual(r.status_code, 404)
+    def test_sharing_404(self):
+        # r = self.client.get(self.get_url('member-invite', 0))
+        # self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('group-recommend', 0))
         self.assertEqual(r.status_code, 404)

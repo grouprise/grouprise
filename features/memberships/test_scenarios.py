@@ -90,7 +90,7 @@ class GestaltCreatesGroup(
 
 
 class TestUrls(core.tests.Test):
-    def test_404(self):
+    def test_member_404(self):
         r = self.client.get(self.get_url('create-membership-application', 0))
         self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('accept-membership-application', 0))
@@ -98,16 +98,16 @@ class TestUrls(core.tests.Test):
 
 
 class AuthenticatedTestUrls(gestalten.AuthenticatedMixin, core.tests.Test):
-    def test_404(self):
-        #r = self.client.get(self.get_url('join', 0))
-        #self.assertEqual(r.status_code, 404)
+    def test_member_auth_404(self):
+        # r = self.client.get(self.get_url('join', 0))
+        # self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('members', 0))
         self.assertEqual(r.status_code, 404)
-        #r = self.client.get(self.get_url('member-create', 0))
-        #self.assertEqual(r.status_code, 404)
+        # r = self.client.get(self.get_url('member-create', 0))
+        # self.assertEqual(r.status_code, 404)
 
 
 class MemberTestUrls(mixins.AuthenticatedMemberMixin, core.tests.Test):
-    def test_404(self):
+    def test_member_member_404(self):
         r = self.client.get(self.get_url('resign', 0))
         self.assertEqual(r.status_code, 404)
