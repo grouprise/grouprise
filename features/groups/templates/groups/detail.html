@@ -12,9 +12,13 @@
 {% block heading %}{% endblock %}
 
 {% block content_header %}
-    {% include_fragments 'group-content' %}
-
-    {% has_perm 'content.group_create' user group as can_create_content %}
+    {% load conversations %}
+    {% conversation_associations user group as conversations %}
+    {% if conversations %}
+        <div class="content-block">
+            {% include 'conversations/_shortlist.html' with associations=conversations %}
+        </div>
+    {% endif %}
 
     {% if intro_content %}
         <div class="content-block">
@@ -30,6 +34,7 @@
         <h2 class="content-classification">Beiträge</h2>
         {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
+            {% has_perm 'content.group_create' user group as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' 'Neuer Beitrag' %}
                     <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
