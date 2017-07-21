@@ -1,7 +1,8 @@
-from . import models, test_memberships as memberships, test_mixins as mixins
+import core
 from core import tests
 from features.gestalten import tests as gestalten
 from features.groups import models as groups_models, tests as groups
+from . import models, test_memberships as memberships, test_mixins as mixins
 
 
 class CreatedGroupHasNoMembers:
@@ -86,3 +87,27 @@ class GestaltCreatesGroup(
     If a gestalt wants to create a group:
     * it has the gestalt as a member
     """
+
+
+class TestUrls(core.tests.Test):
+    def test_404(self):
+        r = self.client.get(self.get_url('create-membership-application', 0))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('accept-membership-application', 0))
+        self.assertEqual(r.status_code, 404)
+
+
+class AuthenticatedTestUrls(gestalten.AuthenticatedMixin, core.tests.Test):
+    def test_404(self):
+        #r = self.client.get(self.get_url('join', 0))
+        #self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('members', 0))
+        self.assertEqual(r.status_code, 404)
+        #r = self.client.get(self.get_url('member-create', 0))
+        #self.assertEqual(r.status_code, 404)
+
+
+class MemberTestUrls(mixins.AuthenticatedMemberMixin, core.tests.Test):
+    def test_404(self):
+        r = self.client.get(self.get_url('resign', 0))
+        self.assertEqual(r.status_code, 404)
