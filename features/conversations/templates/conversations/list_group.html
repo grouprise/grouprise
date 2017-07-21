@@ -4,7 +4,12 @@
 {% block title %}Gespräche - {{ site.name }}{% endblock %}
 {% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.group 'Gespräche' %}{% endblock %}
-{% block heading_title %}<h1 class="content-classification">Gespräche</h1>{% endblock %}
+
+{% block heading_title %}
+    <h1 class="content-classification">Gespräche</h1>
+    <span class="decoration-icon sg-comments" role="presentation"></span>
+{% endblock %}
+
 {% block heading_toolbar %}
     {% has_perm 'conversations.create_group_conversation' user view.group as can_create_message %}
     {% if can_create_message %}
