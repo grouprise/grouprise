@@ -30,4 +30,3 @@ const danger = createMessageFactory('danger')
 const info = createMessageFactory('info')
 
 export { success, danger, info }
-

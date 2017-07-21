@@ -46,8 +46,8 @@ class GroupMixin:
                     return instance
                 if hasattr(instance, 'group'):
                     return instance.group
-                if hasattr(instance, 'groups'):
-                    return instance.groups.first()
+                # if hasattr(instance, 'groups'):
+                #     return instance.groups.first()
         try:
             if 'group_pk' in self.kwargs:
                 return groups.Group.objects.get(pk=self.kwargs['group_pk'])
@@ -171,12 +171,6 @@ class NavigationMixin:
 
 class PaginationMixin:
     paginate_by = 10
-
-    def get_context_data(self, **kwargs):
-        kwargs['params'] = self.request.GET.copy()
-        if 'page' in kwargs['params']:
-            del kwargs['params']['page']
-        return super().get_context_data(**kwargs)
 
 
 class PermissionMixin(rules_views.PermissionRequiredMixin):

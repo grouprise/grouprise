@@ -8,7 +8,7 @@
                 Kalender
             </h2>
         </header>
-        <div class="box-content">
+        <div class="box-content" {% if component_id %}data-component="calendar" id="{{ component_id }}"{% endif %}>
             {% calendar associations size='preview' %}
 
             {% if upcoming %}

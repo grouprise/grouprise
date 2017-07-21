@@ -1,4 +1,4 @@
-import { $, getAttr, remove, toggleClass } from 'luett'
+import { remove, toggleClass } from 'luett'
 import bel from 'bel'
 import EventEmitter from 'eventemitter3'
 
@@ -86,7 +86,7 @@ export default (opts = {}) => {
   emitter.on('files:upload', event => {
     toggleClass(imageEditor, 'editor-images-upload', true)
     progressBar = progress({
-      description: `${event.files.length} ${event.files.length == 1 ? 'Bild wird' : 'Bilder werden'} hochgeladen`
+      description: `${event.files.length} ${event.files.length === 1 ? 'Bild wird' : 'Bilder werden'} hochgeladen`
     })
     imageEditor.appendChild(progressBar.el)
   })

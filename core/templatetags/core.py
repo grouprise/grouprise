@@ -1,4 +1,7 @@
+import os
+
 import bleach as python_bleach
+
 from core import fragments, markdown as core_markdown
 from core.views import app_config
 from django import template
@@ -13,12 +16,20 @@ from core.assets import get_assets
 register = template.Library()
 
 
+@register.filter
+def filename(value):
+    return os.path.basename(value.name)
+
+
 @register.simple_tag(takes_context=True)
 def get_parameters(context, **kwargs):
     request = context.get('request')
     params = request.GET.copy()
     for k in kwargs:
         params[k] = kwargs.get(k)
+    # drop page parameter in case of parameter changes (#373)
+    if params != request.GET and 'page' not in kwargs and 'page' in params:
+        del params['page']
     return params.urlencode()
 
 

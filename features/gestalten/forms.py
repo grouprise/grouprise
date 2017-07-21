@@ -1,3 +1,4 @@
+import allauth
 from crispy_forms import bootstrap, layout
 import django
 from django import forms
@@ -10,7 +11,7 @@ from features.gestalten import models
 
 
 def validate_slug(slug):
-    if slug in django.conf.settings.RESERVED_SLUGS:
+    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
@@ -54,3 +55,14 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
                 'public',
                 utils_forms.Submit('Profil ändern'),
                 )
+
+
+class Login(allauth.account.forms.LoginForm):
+    password = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
+    remember = forms.BooleanField(label='Anmeldung merken', required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['login'] = forms.CharField(
+                label='E-Mail-Adresse oder Pseudonym',
+                widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))

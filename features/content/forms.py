@@ -24,6 +24,11 @@ class Create(forms.ModelForm):
             widget=core.forms.GroupSelect)
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea)
     title = forms.CharField(label='Titel')
+    image = forms.ModelChoiceField(
+            label='Beitragsbild', queryset=None, required=False,
+            widget=forms.Select(attrs={'data-component': 'image-picker'}),
+            help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
+            'Vorschau des Beitrags angezeigt.')
 
     place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
     time = forms.DateTimeField(label='Beginn')
@@ -36,6 +41,7 @@ class Create(forms.ModelForm):
         self.author = kwargs.pop('author')
         with_time = kwargs.pop('with_time')
         super().__init__(**kwargs)
+        self.fields['image'].queryset = self.author.images
         if self.instance.entity.is_group:
             del self.fields['group']
         else:
@@ -59,6 +65,7 @@ class Create(forms.ModelForm):
                         })
             self.instance.container = models.Content.objects.create(
                     title=self.cleaned_data['title'],
+                    image=self.cleaned_data['image'],
                     place=self.cleaned_data.get('place', ''),
                     time=self.cleaned_data.get('time'),
                     until_time=self.cleaned_data.get('until_time'),
@@ -75,6 +82,11 @@ class Update(forms.ModelForm):
 
     title = forms.CharField(label='Titel')
     text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
+    image = forms.ModelChoiceField(
+            label='Beitragsbild', queryset=None, required=False,
+            widget=forms.Select(attrs={'data-component': 'image-picker'}),
+            help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
+            'Vorschau des Beitrags angezeigt.')
 
     place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
     time = forms.DateTimeField(label='Beginn')
@@ -86,6 +98,7 @@ class Update(forms.ModelForm):
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
+        self.fields['image'].queryset = self.author.images
         if not self.instance.entity.is_group:
             del self.fields['pinned']
         if self.instance.public:
@@ -107,6 +120,7 @@ class Update(forms.ModelForm):
     def save(self, commit=True):
         association = super().save(commit)
         association.container.title = self.cleaned_data['title']
+        association.container.image = self.cleaned_data['image']
         if self.initial['time']:
             association.container.place = self.cleaned_data['place']
             association.container.time = self.cleaned_data['time']

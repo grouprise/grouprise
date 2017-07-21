@@ -8,7 +8,6 @@ urlpatterns = [
         views.Confirm.as_view(),
         name='account_confirm_email'),
     urls.url(r'^email/$', views.Email.as_view(), name='account_email'),
-    urls.url(r'^login/$', views.Login.as_view(), name='account_login'),
     urls.url(r'^logout/$', views.Logout.as_view(), name='account_logout'),
     urls.url(
         r'^password/change/$',
@@ -30,6 +29,10 @@ urlpatterns = [
         r'^password/reset/key/done/$',
         allauth_views.password_reset_from_key_done,
         name='account_reset_password_from_key_done'),
+    urls.url(
+        r'^password/set/$',
+        views.PasswordSet.as_view(),
+        name='account_set_password'),
     urls.url(
         r'^signup/$',
         views.Signup.as_view(),

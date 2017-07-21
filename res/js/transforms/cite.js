@@ -4,7 +4,7 @@ import getInputSelection from 'get-input-selection'
 
 export const EVENT_CITE = 'component:cite:cite'
 
-function citeSource(el, opts) {
+function citeSource (el, opts) {
   const { bus } = opts.conf
 
   const clickListener = on(el, 'click', event => {
@@ -21,13 +21,13 @@ function citeSource(el, opts) {
   })
 
   return {
-    remove() {
+    remove () {
       clickListener.destroy()
     }
   }
 }
 
-function citeSink(el, opts) {
+function citeSink (el, opts) {
   const { bus } = opts.conf
 
   const citeListener = bus.on(EVENT_CITE, data => {
@@ -39,7 +39,7 @@ function citeSink(el, opts) {
   })
 
   return {
-    remove() {
+    remove () {
       citeListener.destroy()
     }
   }

@@ -115,6 +115,7 @@ class Update(base.PermissionMixin, generic.UpdateView):
     def get_initial(self):
         return {
                 'title': self.object.container.title,
+                'image': self.object.container.image,
                 'text': self.object.container.versions.last().text,
                 'place': self.object.container.place,
                 'time': self.object.container.time,

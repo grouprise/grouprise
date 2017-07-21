@@ -1,0 +1,56 @@
+{% load utils %}
+
+<div class="page-footer">
+    <div class="page-footer-content">
+        <div class="footer-text">
+            <p>Stadtgestalten ist eine
+            <a href="https://git.hack-hro.de/stadtgestalten/stadtgestalten">freie</a>,
+            lokale und nicht-kommerzielle Plattform zur Unterstützung der Arbeit von
+            engagierten Menschen.</p>
+            
+            <p>Unterstütze Stadtgestalten mit einer
+            <a href="https://senselab.org/content/spenden">Spende</a>.
+        </div>
+        <ul class="nav-footer">
+            <li>
+                <ul>
+                    <li><a href="{% url 'index' %}">Startseite</a></li>
+                    <li class="separator"></li>
+                    <li><a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a></li>
+                    <li><a href="{% url 'imprint' %}">Impressum</a></li>
+                    <li><a href="{% url 'privacy' %}">Datenschutzhinweise</a></li>
+                    <li class="separator"></li>
+                    <li><a href="{% url 'abuse' request.path %}">Missbrauch melden</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><a href="{% url 'group-index' %}">Alle Gruppen</a></li>
+                    <li><a href="{% url 'gestalten' %}">Öffentliche Gestalten</a></li>
+                    <li class="separator"></li>
+                    <li><a href="{% url 'conversations' %}">Deine Gespräche</a></li>
+                    <li><a href="{% url 'articles' %}">Alle Artikel</a></li>
+                    <li><a href="{% url 'events' %}">Alle Veranstaltungen</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li><a href="{{ user.gestalt|url_for:user }}">Deine Seite</a></li>
+                        <li class="separator"></li>
+                        <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Deine Benutzerangaben</a></li>
+                        <li><a href="{% url 'account_email' %}">Deine E-Mail-Adressen</a></li>
+                        <li><a href="{% url 'account_change_password' %}">Dein Kennwort ändern</a></li>
+                        <li class="separator"></li>
+                        <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
+                    {% else %}
+                        <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
+                        <li class="separator"></li>
+                        <li><a href="{% url 'account_signup' %}?next={{ request.path }}">Registrieren</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="page-footer-sidebar"></div>
+</div>

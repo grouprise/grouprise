@@ -2,7 +2,7 @@ import bel from 'bel'
 import closest from 'closest'
 import { insertElement, remove, keyPressed, on } from 'luett'
 
-function usage() {
+function usage () {
   return (
     bel`<span class='pull-right media-instruction'>
         <kbd>Shift</kbd> + <kbd>Enter</kbd> sendet das Formular ab

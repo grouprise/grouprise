@@ -1,6 +1,8 @@
 from crispy_forms import helper, layout
 from django import forms
+
 from features.contributions import models as contributions
+from . import signals
 
 
 class Text(forms.ModelForm):
@@ -25,4 +27,5 @@ class Text(forms.ModelForm):
                 text=self.cleaned_data['text'])
         if commit:
             contribution.save()
+        signals.contribution_created.send(sender=self.__class__, instance=contribution)
         return contribution

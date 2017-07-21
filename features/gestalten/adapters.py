@@ -10,6 +10,6 @@ class AccountAdapter(allauth.account.adapter.DefaultAccountAdapter):
         username = super().generate_unique_username(txts, regex)
         username = core.models.get_unique_slug(
                 django.contrib.auth.get_user_model(), {'username': username},
-                reserved_slugs=django.conf.settings.RESERVED_SLUGS,
+                reserved_slugs=django.conf.settings.ENTITY_SLUG_BLACKLIST,
                 reserved_slug_qs=groups.Group.objects, slug_field_name='username')
         return username

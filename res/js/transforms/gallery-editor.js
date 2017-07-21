@@ -18,7 +18,7 @@ export default el => {
 
   const editor = new Vue({
     el: `#${container.id}`,
-    render(h) {
+    render (h) {
       return h(GalleryCreator, {
         props: {
           images: this.images,
@@ -35,14 +35,14 @@ export default el => {
       imagesReady: true
     },
     methods: {
-      addImages(newImages) {
+      addImages (newImages) {
         newImages.forEach(image => {
           el.appendChild(bel`<option value='${image.id}' selected>${image.label}</option>`)
           images.push(image)
         })
         emitChange()
       },
-      removeImage(image) {
+      removeImage (image) {
         const option = $(`option[value='${image.id}'][selected]`, el)
         const index = images.indexOf(image)
         if (index > -1) images.splice(index, 1)
@@ -58,7 +58,7 @@ export default el => {
 
   if (selectedImages.length > 0) {
     editor.imagesReady = false
-    image.get({ id: selectedImages.join(',')})
+    image.get({ id: selectedImages.join(',') })
       .then(files => {
         editor.imagesReady = true
         files.forEach(file => images.push(file))

@@ -22,7 +22,9 @@ function attachNav (el, opts) {
             </button>
         </div>
     `)
-  return { remove() { remove($(`.${opts.cssNav}`), el) }}
+  return {
+    remove () { remove($(`.${opts.cssNav}`), el) }
+  }
 }
 
 function attachIndex (el, opts, numberOfSlides) {
@@ -39,7 +41,9 @@ function attachIndex (el, opts, numberOfSlides) {
             `).join('\n')}
         </ol>
     `)
-  return { remove() { remove($(`.${opts.cssIndex}`), el) }}
+  return {
+    remove () { remove($(`.${opts.cssIndex}`), el) }
+  }
 }
 
 function carousel (root, options) {
@@ -83,9 +87,9 @@ function carousel (root, options) {
     currentSlide = idx
     const done = setCurrent(slide)
     done.then(function () {
-        root.classList.remove(conf.cssCarouselTransitioning)
-        emit('slide:end', eventData)
-      })
+      root.classList.remove(conf.cssCarouselTransitioning)
+      emit('slide:end', eventData)
+    })
 
     return done
   }

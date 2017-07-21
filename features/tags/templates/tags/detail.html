@@ -17,7 +17,7 @@
 
 {% block sidebar %}
     {% load events %}
-    {% sidebar_calendar paginator.object_list hide_buttons=True %}
+    {% sidebar_calendar paginator.object_list hide_buttons=True component_id='tags-calendar' %}
 {% endblock %}
 
 {% block content %}

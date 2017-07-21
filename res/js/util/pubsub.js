@@ -1,13 +1,13 @@
 import EventEmitter from 'eventemitter3'
 
-function PubSub() {
+function PubSub () {
   const emitter = new EventEmitter()
   const iface = {}
 
   iface.on = (event, callback, context) => {
     emitter.on(event, callback, context)
     return {
-      destroy() {
+      destroy () {
         emitter.off(event, callback, context)
       }
     }

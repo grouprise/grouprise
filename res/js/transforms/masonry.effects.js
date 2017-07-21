@@ -1,4 +1,4 @@
-import { $$, remove } from 'luett'
+import { $$ } from 'luett'
 import anime from 'animejs'
 
 export const amun = {
@@ -21,7 +21,7 @@ export const amun = {
   }
 }
 
-export default function EffectRenderer(masonry) {
+export default function EffectRenderer (masonry) {
   const items = $$("li:not([role='presentation']) > :first-child", masonry)
 
   const reset = () => {
