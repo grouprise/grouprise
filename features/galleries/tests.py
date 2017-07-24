@@ -1,4 +1,4 @@
-import core.tests
+import core
 from features.associations import models as associations
 from features.contributions import models as contributions
 from features.images import tests as images
@@ -135,3 +135,9 @@ class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, core.test
         self.assertRedirect(
                 url=self.get_gallery_url(), method='post', data={'text': 'Comment'})
         self.assertExists(contributions.Contribution, text__text='Comment')
+
+
+class TestUrls(core.tests.Test):
+    def test_galleries_404(self):
+        r = self.client.get(self.get_url('create-group-gallery', 'non-existent'))
+        self.assertEqual(r.status_code, 404)
