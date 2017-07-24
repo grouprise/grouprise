@@ -1,5 +1,7 @@
 from django.contrib import auth
 
+import core.tests
+
 
 class GestaltMixin:
     @classmethod
@@ -32,3 +34,13 @@ class OtherAuthenticatedMixin(OtherGestaltMixin):
         super().setUp()
         self.client.force_login(self.other_gestalt.user,
                                 'django.contrib.auth.backends.ModelBackend')
+
+
+class TestUrls(core.tests.Test):
+    def test_groups_404(self):
+        r = self.client.get(self.get_url('gestalt-update', 0))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('gestalt-avatar-update', 0))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('gestalt-background-update', 0))
+        self.assertEqual(r.status_code, 404)
