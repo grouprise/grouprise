@@ -1,10 +1,11 @@
-from . import (
-        test_groups as group_subscriptions,
-        test_mixins as mixins)
+import core
 from core import tests
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
+from . import (
+        test_groups as group_subscriptions,
+        test_mixins as mixins)
 
 
 class GroupAnonymous(
@@ -45,3 +46,11 @@ class GroupSubscribedMember(
         group_subscriptions.UnsubscribeAllowed,
         mixins.GroupSubscribedMixin, memberships.MemberMixin, tests.Test):
     pass
+
+
+class TestUrls(core.tests.Test):
+    def test_subscriptions_404(self):
+        r = self.client.get(self.get_url('group-subscribe', 0))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('group-unsubscribe', 0))
+        self.assertEqual(r.status_code, 404)

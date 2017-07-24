@@ -2,6 +2,7 @@ import django
 from django import db, http
 from django.contrib import messages
 
+import features
 from core import fields, views
 from features.groups import views as groups
 from . import filters, models
@@ -43,7 +44,8 @@ class GroupSubscribe(groups.Mixin, Subscribe):
     permission_required = 'subscriptions.create_group_subscription'
 
     def get_related_object(self):
-        return self.get_group()
+        return django.shortcuts.get_object_or_404(
+                features.groups.models.Group, pk=self.kwargs.get('group_pk'))
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated():
