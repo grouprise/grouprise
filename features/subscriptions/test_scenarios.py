@@ -1,36 +1,10 @@
 from . import (
-        test_content as content_subscriptions,
         test_groups as group_subscriptions,
         test_mixins as mixins)
 from core import tests
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
 from features.memberships import test_mixins as memberships
-
-
-class AllContentUnsubscribed(
-        content_subscriptions.AllContentUnsubscribeForbidden,
-        # content.NoNotification,
-        mixins.AllContentUnsubscribedMixin, gestalten.OtherGestaltMixin, tests.Test):
-    """
-    If a group member is unsubscribed from all content
-    * all content unsubscription is forbidden
-    * gestalt receives no notifications on content
-    """
-
-
-class ExternalConversationUnsubscribed(
-        # content_subscriptions.DeleteExternalUnsubscriptionLink,
-        content_subscriptions.ExternalUnsubscribeForbidden,
-        # content_subscriptions.DeleteExternalUnsubscriptionAllowed,
-        # comments.NoNotification,
-        # conversations.NoNotificationOnExternalConversation,
-        mixins.ExternalUnsubscribedMixin, gestalten.OtherGestaltMixin, tests.Test):
-    """
-    If a group member is unsubscribed from external conversations
-    * external unsubscription is forbidden
-    * gestalt receives no notifications on external conversations
-    """
 
 
 class GroupAnonymous(
