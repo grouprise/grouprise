@@ -1,10 +1,12 @@
 import re
 
-import core.tests
+import django
+
+import core
+import features
 from core import tests
 from features.associations import models as associations
 from features.contributions import models as contributions
-import features.gestalten.tests
 from features.memberships import test_mixins as memberships
 
 
@@ -237,3 +239,18 @@ class GroupCalendarExportNonMember(memberships.MemberMixin,
         match = private_url_regex.search(data.content.decode('utf8'))
         # the private URL should not be displayed
         self.assertIsNone(match)
+
+
+class TestUrls(core.tests.Test):
+    def test_events_404(self):
+        r = self.client.get(django.core.urlresolvers.reverse('day-events', args=[1970, 1, 1]))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('create-group-event', 'non-existent'))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(django.core.urlresolvers.reverse(
+            'gestalt-events-feed', args=['non-existent', 'public']))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.get_url('group-events-export', 'non-existent'))
+        self.assertEqual(r.status_code, 404)
+        r = self.client.get(django.core.urlresolvers.reverse(
+            'group-events-feed', args=['non-existent', 'public']))

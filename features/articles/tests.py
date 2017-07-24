@@ -1,6 +1,7 @@
+import django
 import django.core.mail
 
-import core.tests
+import core
 from features.associations import models as associations
 from features.contributions import models as contributions
 from features.gestalten import tests as gestalten
@@ -220,3 +221,9 @@ class TwoGestaltenAndGroupArticle(
         self.create_comment()
         self.assertNotificationsSent(2)
         self.assertNotificationRecipient(self.other_gestalt)
+
+
+class TestUrls(core.tests.Test):
+    def test_articles_404(self):
+        r = self.client.get(self.get_url('create-group-article', 'non-existent'))
+        self.assertEqual(r.status_code, 404)

@@ -181,7 +181,8 @@ class GroupCalendarExport(CalendarExport):
 class GestaltCalendarFeed(BaseCalendarFeed):
 
     def get_calendar_owner(self):
-        return self.get_gestalt()
+        return django.shortcuts.get_object_or_404(
+                gestalten.Gestalt, user__username=self.kwargs.get('gestalt_slug'))
 
     def check_authorization(self, authenticated_gestalt):
         return authenticated_gestalt == self.get_calendar_owner()
