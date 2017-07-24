@@ -37,7 +37,7 @@ class OtherAuthenticatedMixin(OtherGestaltMixin):
 
 
 class TestUrls(core.tests.Test):
-    def test_groups_404(self):
+    def test_gestalten_404(self):
         r = self.client.get(self.get_url('gestalt-update', 0))
         self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('gestalt-avatar-update', 0))
