@@ -9,6 +9,11 @@
     {% include "meta/group.html" %}
 {% endblock %}
 
+{% block meta_feed %}
+    <link rel="alternate" type="application/rss+xml" title="{{ group }}"
+        href="{% url 'group-feed' group.pk %}">
+{% endblock %}
+
 {% block heading %}{% endblock %}
 
 {% block content_header %}
