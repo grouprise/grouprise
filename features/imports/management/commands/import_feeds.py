@@ -27,7 +27,7 @@ class Command(django.core.management.base.BaseCommand):
     def handle(self, *args, **options):
         author = gestalten.Gestalt.objects.get(id=django.conf.settings.IMPORTER_ID)
         for group in groups.Group.objects.filter(url_import_feed=True):
-            r = requests.get(group.url)
+            r = requests.get(group.url, headers={'User-Agent': 'Stadtgestalten'})
             m = re.search(self.FEED_RE, r.text)
             if m:
                 feed_url = m.group(1) or m.group(2)

@@ -64,5 +64,5 @@ class Association(models.QuerySet):
         qs = qs.can_view(user, container='conversation')
         qs = qs.filter(container_type=conversations.Conversation.content_type)
         qs = qs.annotate(last_activity=Max('conversation__contributions__time_created'))
-        qs.order_by('-last_activity')
+        qs = qs.order_by('-last_activity')
         return qs

@@ -81,6 +81,7 @@ TEMPLATES = [
         'OPTIONS': {
             'builtins': ['core.templatetags.core'],
             'context_processors': [
+                'core.context_processors.settings',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -219,6 +220,10 @@ ENTITY_SLUG_BLACKLIST = [
         'presse', 'reply', 'stadt', 'webmaster', 'www']
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
+
+STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
+
+STADTGESTALTEN_SHOW_HEADER = True
 
 
 # Authentication
