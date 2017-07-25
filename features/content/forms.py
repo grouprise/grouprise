@@ -52,6 +52,8 @@ class Create(forms.ModelForm):
             del self.fields['time']
             del self.fields['until_time']
             del self.fields['all_day']
+        else:
+            del self.fields['image']
 
     def save(self, commit=True):
         with django.db.transaction.atomic():
@@ -108,6 +110,8 @@ class Update(forms.ModelForm):
             del self.fields['time']
             del self.fields['until_time']
             del self.fields['all_day']
+        else:
+            del self.fields['image']
 
     def clean_slug(self):
         q = associations.Association.objects.filter(

@@ -36,7 +36,9 @@
             <h2>Beitragseinstellungen</h2>
             <div class="row">
                 <div class="col-md-7">
-                    {% include 'core/_field.html' with field=form.image %}
+                    {% if form.image %}
+                        {% include 'core/_field.html' with field=form.image %}
+                    {% endif %}
                     {% block extra_settings %}{% endblock %}
                 </div>
                 <div class="col-md-5">
