@@ -5,7 +5,7 @@
       <label class="control-label" v-if="showLabels">{{ dateLabel }}</label>
       <div class="controls">
         <input type="text" class="form-control form-control-icon" v-model="date" ref="date"
-               @focus="isEditing = true" @wheel="scrollDate">
+               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate">
       </div>
     </div>
     <transition name="fade">
@@ -148,6 +148,8 @@
         const el = event.target
         const time = el.value
         const parsedTime = checkDate(time, timeFormat)
+
+        this.isEditing = false
 
         if (parsedTime) {
           this.time = format(parsedTime, timeFormat)
