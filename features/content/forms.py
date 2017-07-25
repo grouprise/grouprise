@@ -67,7 +67,7 @@ class Create(forms.ModelForm):
                         })
             self.instance.container = models.Content.objects.create(
                     title=self.cleaned_data['title'],
-                    image=self.cleaned_data['image'],
+                    image=self.cleaned_data.get('image'),
                     place=self.cleaned_data.get('place', ''),
                     time=self.cleaned_data.get('time'),
                     until_time=self.cleaned_data.get('until_time'),
@@ -124,7 +124,7 @@ class Update(forms.ModelForm):
     def save(self, commit=True):
         association = super().save(commit)
         association.container.title = self.cleaned_data['title']
-        association.container.image = self.cleaned_data['image']
+        association.container.image = self.cleaned_data.get('image')
         if self.initial['time']:
             association.container.place = self.cleaned_data['place']
             association.container.time = self.cleaned_data['time']
