@@ -41,12 +41,12 @@
     const formats = ensureArray(format)
     const finalFormat = formats[0]
     const momentDate = checkDate(date, formats)
-    return momentDate ? momentDate.format(finalFormat) : ""
+    return momentDate ? momentDate.format(finalFormat) : ''
   }
   const wheelListener = callback => {
     const throttledCallback = throttle(callback, 35, { trailing: false })
-    return function(event) {
-      if(document.activeElement === event.target && Math.abs(event.deltaY) >= 20) {
+    return function (event) {
+      if (document.activeElement === event.target && Math.abs(event.deltaY) >= 20) {
         event.preventDefault()
         throttledCallback.call(this, event, event.deltaY < 0 ? 1 : -1)
       }
@@ -72,30 +72,30 @@
       },
       dateFormat: {
         type: [String, Array],
-        default: () => "L"
+        default: () => 'L'
       },
       timeFormat: {
         type: [String, Array],
-        default: () => ["HH:mm", "HH:m", "H:mm", "H:m", "HHmm", "Hmm", "HHm", "HH", "H"]
+        default: () => ['HH:mm', 'HH:m', 'H:mm', 'H:m', 'HHmm', 'Hmm', 'HHm', 'HH', 'H']
       },
       dateLabel: {
         type: String,
-        default: "Datum"
+        default: 'Datum'
       },
       timeLabel: {
         type: String,
-        default: "Zeit"
+        default: 'Zeit'
       },
       timeStep: {
         type: Number,
-        default: 30,
+        default: 30
       },
       disableDates: {
         type: Array,
         default: () => []
-      },
+      }
     },
-    data() {
+    data () {
       return {
         date: null,
         time: '12:00',
@@ -105,7 +105,7 @@
       }
     },
     computed: {
-      finalValue() {
+      finalValue () {
         const {enableTime, date, time, dateFormat, timeFormat} = this
         const parsedDate = checkDate(date, dateFormat)
         const parsedTime = checkDate(time, timeFormat)
@@ -116,14 +116,14 @@
           if (!enableTime) {
             timeOffset = this.timeDefault
           } else if (enableTime && parsedTime) {
-            timeOffset = ["hour", "minute", "second"].map(u => parsedTime.get(u))
+            timeOffset = ['hour', 'minute', 'second'].map(u => parsedTime.get(u))
           } else {
             return null
           }
 
-          parsedDate.set("hour", timeOffset[0])
-          parsedDate.set("minute", timeOffset[1])
-          parsedDate.set("second", timeOffset[2])
+          parsedDate.set('hour', timeOffset[0])
+          parsedDate.set('minute', timeOffset[1])
+          parsedDate.set('second', timeOffset[2])
 
           return parsedDate.toDate()
         }
@@ -132,7 +132,7 @@
       }
     },
     methods: {
-      setFromSource() {
+      setFromSource () {
         if (this.isEditing) return
 
         this.currentValue = this.value || null
@@ -143,7 +143,7 @@
           this.$refs.date._flatpickr.setDate(this.currentValue)
         }
       },
-      guessTime(event) {
+      guessTime (event) {
         const {timeFormat} = this
         const el = event.target
         const time = el.value
@@ -155,7 +155,7 @@
           this.time = format(parsedTime, timeFormat)
         }
       },
-      increaseTime(step) {
+      increaseTime (step) {
         const el = this.$refs.time
         const {timeFormat} = this
         const parsedTime = checkDate(el.value, timeFormat)
@@ -163,7 +163,7 @@
           this.time = format(parsedTime.add(step, 'minutes'), timeFormat)
         }
       },
-      increaseDate(step) {
+      increaseDate (step) {
         const el = this.$refs.date
         const {dateFormat} = this
         const parsedTime = checkDate(el.value, dateFormat) || moment()
@@ -171,30 +171,30 @@
           this.date = format(parsedTime.add(step, 'days'), dateFormat)
         }
       },
-      scrollDate: wheelListener(function(event, direction) {
+      scrollDate: wheelListener(function (event, direction) {
         this.increaseDate(direction)
       }),
-      scrollTime: wheelListener(function(event, direction) {
+      scrollTime: wheelListener(function (event, direction) {
         this.increaseTime(this.timeStep * direction)
-      }),
+      })
     },
     watch: {
-      value() { setTimeout(() => this.setFromSource(), 0) },
-      finalValue(date) {
-        setTimeout(() => this.$emit("input", date), 0)
+      value () { setTimeout(() => this.setFromSource(), 0) },
+      finalValue (date) {
+        setTimeout(() => this.$emit('input', date), 0)
       }
     },
-    created() {
+    created () {
       this.setFromSource()
     },
-    mounted() {
+    mounted () {
       this.datePicker = date(this.$refs.date, {
         disable: this.disableDates,
         appendTo: this.$refs.calendar,
-        static: true,
+        static: true
       })
     },
-    beforeDestroy() {
+    beforeDestroy () {
       this.datePicker.remove()
     }
   }

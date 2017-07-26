@@ -49,24 +49,24 @@
 
   export default {
     mixins: [onClickOutside],
-    data() {
+    data () {
       return {
         opened: false
       }
     },
     methods: {
-      dismiss() {
+      dismiss () {
         this.abort()
       },
-      abort() {
-        this.$emit("abort")
+      abort () {
+        this.$emit('abort')
         this.toggle(false)
       },
-      save() {
-        this.$emit("save")
+      save () {
+        this.$emit('save')
         this.toggle(false)
       },
-      toggle(force = null) {
+      toggle (force = null) {
         const newState = force !== null ? force : !this.opened
         if (newState !== this.opened) {
           this.$emit(newState ? 'show' : 'hide')
@@ -74,10 +74,10 @@
         }
       }
     },
-    mounted() {
+    mounted () {
       focusInListener.register(this)
     },
-    beforeDestroy() {
+    beforeDestroy () {
       focusInListener.remove(this)
     }
   }

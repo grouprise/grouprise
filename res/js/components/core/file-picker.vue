@@ -9,8 +9,6 @@
 </template>
 
 <script>
-  import delegate from 'delegate'
-
   export default {
     props: {
       accept: Array,
@@ -33,11 +31,11 @@
       }
     },
     methods: {
-      open() {
+      open () {
         this.$refs.input.click()
       },
-      dispatch(e) {
-        this.$emit("input", [].slice.call(e.target.files))
+      dispatch (e) {
+        this.$emit('input', [].slice.call(e.target.files))
       }
     }
   }

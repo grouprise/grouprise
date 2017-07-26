@@ -10,23 +10,23 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            entity: Object,
-            size: {
-                type: Number,
-                default: 48
-            }
-        },
-        computed: {
-            avatarClasses() {
-                return [`avatar-size-${this.size}-${this.size}`]
-            },
-            avatarStyle() {
-                return {
-                    backgroundColor: this.entity.avatar_color
-                }
-            }
+  export default {
+    props: {
+      entity: Object,
+      size: {
+        type: Number,
+        default: 48
+      }
+    },
+    computed: {
+      avatarClasses () {
+        return [`avatar-size-${this.size}-${this.size}`]
+      },
+      avatarStyle () {
+        return {
+          backgroundColor: this.entity.avatar_color
         }
+      }
     }
+  }
 </script>

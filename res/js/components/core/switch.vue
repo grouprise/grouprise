@@ -18,11 +18,11 @@
     props: {
       trueLabel: {
         type: String,
-        default: "An"
+        default: 'An'
       },
       falseLabel: {
         type: String,
-        default: "Aus"
+        default: 'Aus'
       },
       label: String,
       value: {
@@ -30,22 +30,22 @@
         required: true
       }
     },
-    data() {
+    data () {
       return {
         currentValue: false
       }
     },
     methods: {
-      toggle() {
+      toggle () {
         this.currentValue = !this.currentValue
       }
     },
-    created() {
+    created () {
       this.currentValue = !!this.value
     },
     watch: {
-      currentValue(value) {
-        setTimeout(() => this.$emit("input", value), 0)
+      currentValue (value) {
+        setTimeout(() => { this.$emit('input', value) }, 0)
       }
     }
   }

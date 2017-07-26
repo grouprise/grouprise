@@ -43,12 +43,12 @@
     methods: {
       upload (files) {
         this.progress = 0
-        this.uploader.upload(files, progress => this.progress = progress.complete)
+        this.uploader.upload(files, progress => { this.progress = progress.complete })
           .then(files => {
             this.progress = null
             this.$emit('input', files)
           })
-      },
+      }
     }
   }
 </script>
