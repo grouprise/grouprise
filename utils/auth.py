@@ -1,5 +1,5 @@
 import django.contrib
-from django.core import exceptions
+from rest_framework import exceptions
 from rest_framework.authentication import BasicAuthentication
 
 from core.models import PermissionToken
