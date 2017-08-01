@@ -14,6 +14,6 @@ urlpatterns = [
         views.Entity.as_view(),
         name='entity'),
 
-    url(r'^imprint/$', views.Imprint.as_view(), name='imprint'),
-    url(r'^privacy/$', views.Privacy.as_view(), name='privacy'),
+    url(r'^stadt/imprint/$', views.Imprint.as_view(), name='imprint'),
+    url(r'^stadt/privacy/$', views.Privacy.as_view(), name='privacy'),
 ]
