@@ -216,8 +216,8 @@ ROOT_SIGNALCONF = 'stadt.signals'
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
 ENTITY_SLUG_BLACKLIST = [
-        'all', 'alle', 'antwort', 'facebook', 'gbr', 'info', 'mail', 'noreply', 'postmaster',
-        'presse', 'reply', 'stadt', 'webmaster', 'www']
+        'all', 'alle', 'antwort', 'crew', 'facebook', 'gbr', 'info', 'kontakt', 'mail',
+        'noreply', 'postmaster', 'presse', 'reply', 'stadt', 'webmaster', 'www']
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
