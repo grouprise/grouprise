@@ -10,22 +10,22 @@ const timeInstances = []
 
 const transforms = {
   'from': {
-    apply(el, opts) {
+    apply (el, opts) {
       el.innerHTML = moment(el.getAttribute('datetime')).from(opts.conf.ref || new Date())
     }
   },
   'to': {
-    apply(el, opts) {
+    apply (el, opts) {
       el.innerHTML = moment(opts.conf.ref || new Date()).to(el.getAttribute('datetime'))
     }
   },
   'days-until': {
-    apply(el, opts) {
+    apply (el, opts) {
       const days = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
       el.setAttribute('data-days', days)
       el.innerHTML = moment(el.getAttribute('datetime')).diff(opts.conf.ref || new Date(), 'days')
     },
-    destroy(el) {
+    destroy (el) {
       el.removeAttribute('data-days')
     }
   }
@@ -39,15 +39,15 @@ function Time (el, opts) {
   const origContent = el.innerHTML
   const transform = transforms[opts.conf.transform]
   const self = {
-    remove() {
+    remove () {
       if (transform.destroy) {
         transform.destroy(el, opts)
       }
       el.innerHTML = origContent
-      const index = timeInstances.indexOf(self);
-      timeInstances.splice(index, 1);
+      const index = timeInstances.indexOf(self)
+      timeInstances.splice(index, 1)
     },
-    transform() {
+    transform () {
       transform.apply(el, opts)
     }
   }

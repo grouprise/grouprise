@@ -1,9 +1,24 @@
-import core.models
-from core import colors
-import django.contrib.contenttypes.models
+import datetime
+
+import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models
+
+import core.models
+from core import colors
+from features.gestalten import models as gestalten
+
+
+def validate_slug(slug):
+    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
+                params={'slug': slug}, code='reserved')
+    if gestalten.Gestalt.objects.filter(user__username=slug).exists():
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
+                params={'slug': slug}, code='in-use')
 
 
 class Group(core.models.Model):
@@ -20,34 +35,32 @@ class Group(core.models.Model):
             'Name',
             max_length=255)
     score = models.IntegerField(default=0)
-    slug = core.models.AutoSlugField(
-            'Adresse der Gruppenseite',
-            populate_from='name',
-            reserve=['gestalt', 'stadt'],
-            unique=True)
+    slug = models.SlugField(
+            'Adresse der Gruppenseite', blank=True, null=True, unique=True,
+            validators=[validate_slug])
 
     address = models.TextField(
             'Anschrift',
             blank=True)
-    avatar = models.ImageField(
-            blank=True)
+    avatar = core.models.ImageField(blank=True)
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
     date_founded = models.DateField(
-            'Gruppe gegründet',
-            null=True,
-            blank=True)
+            'Gruppe gegründet', blank=True, default=datetime.date.today)
     description = models.TextField(
             'Kurzbeschreibung',
             blank=True,
             default='',
             max_length=200)
-    logo = models.ImageField(
-            blank=True)
+    logo = core.models.ImageField(blank=True)
     url = models.URLField(
             'Adresse im Web',
             blank=True)
+    url_import_feed = models.BooleanField(
+            'Beiträge von Website übernehmen', default=False,
+            help_text='Öffentliche Beiträge der angegebenen Website automatisch auf '
+            'Stadtgestalten veröffentlichen, wenn technisch möglich')
 
     closed = models.BooleanField(
             'Geschlossene Gruppe',
@@ -66,14 +79,14 @@ class Group(core.models.Model):
 
     members = models.ManyToManyField(
             'gestalten.Gestalt', through='memberships.Membership',
-            through_fields=('group', 'member'))
+            through_fields=('group', 'member'), related_name='groups')
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return urlresolvers.reverse(
-                'group', args=[type(self).objects.get(pk=self.pk).slug])
+                'entity', args=[type(self).objects.get(pk=self.pk).slug])
 
     # FIXME: move to template filter
     # TODO: when removed check api
@@ -92,12 +105,6 @@ class Group(core.models.Model):
                 initials_without_short_terms += m.group(0)
         # prefer the non-trivial one - otherwise pick the full one (and hope it is not empty)
         return initials_without_short_terms if initials_without_short_terms else initials
-
-    # FIXME: to be removed
-    content = models.ManyToManyField(
-            'content.Content',
-            related_name='groups',
-            through='entities.GroupContent')
 
     # FIXME: to be removed
     # TODO: when removed check api

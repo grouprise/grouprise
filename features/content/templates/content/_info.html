@@ -14,8 +14,9 @@
 
             {% if association.entity.is_group %}
                 {% has_perm 'memberships.view_list' user association.entity as can_view_members %}
+                {% has_perm 'subscriptions.create_group_subscription' user association.entity as can_subscribe %}
                 {% if can_view_members %}
-                    {% with authors=association.container.get_authors %}
+                    {% with authors=association.container.get_version_authors %}
                         {% if authors.count == 1 %}
                             ({% link authors.first %})
                         {% else %}
@@ -23,11 +24,21 @@
                         {% endif %}
                     {% endwith %}
                 {% endif %}
+
+                {% if can_subscribe %}
+                    ·
+                    <a href="{% url 'group-subscribe' association.entity.pk %}" class="content-meta-author-action">Gruppe abonnieren</a>
+                {% endif %}
             {% endif %}
         </div>
         <div class="content-meta-extra">
-            {% time association.container.versions.first.time_created %} ·
-            <i class="sg sg-comments" title="Kommentare"></i> {{ association.container.contributions.count }}
+            {% time association.container.versions.first.time_created %}
+            {% with num_comments=association.container.contributions.count %}
+                {% if num_comments > 0 %}
+                    &nbsp;
+                    <i class="sg sg-comments" title="Kommentare"></i> {{ num_comments }}
+                {% endif %}
+            {% endwith %}
             {% block content_meta_extra %}{% endblock %}
         </div>
     </div>

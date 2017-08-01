@@ -1,56 +1,60 @@
+import django
 from django.db.models import Q
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
-from django.views import generic
-from core.views import base
-from features.groups import models as group_models
-from content import models as content_models
-from .models import Tagged, Tag
+
+import core
+from features.associations import models as associations
+from features.groups import models as groups
+from . import forms, models
 
 
-def get_tag_context(tag, user, page_number):
-    groups = group_models.Group.objects.filter(
-        Tagged.get_tagged_query(tag, group_models.Group)
-    )
-    content = content_models.Content.objects.permitted(user).filter(
-        Tagged.get_tagged_query(tag, content_models.Content)
-    )
-    group_ids = groups.values_list('id')
-    events = content_models.Event.objects.permitted(user).filter(
-        Tagged.get_tagged_query(tag, content_models.Event) | Q(groupcontent__group__in=group_ids)
-    )
-    paginator = Paginator(content, 10)
-    try:
-        page = paginator.page(page_number)
-    except (PageNotAnInteger, EmptyPage):
-        page = paginator.page(1)
-
-    return {'groups': groups, 'events': events, 'paginator': paginator, 'content_page': page}
-
-
-class TagPage(base.PermissionMixin, generic.DetailView):
+class Detail(core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'tags.view'
-    model = Tag
-    template_name = 'tags/tag.html'
-    sidebar = ()
+    model = associations.Association
+    paginate_by = 10
+    template_name = 'tags/detail.html'
 
-    def get_object(self, queryset=None):
-        try:
-            return super().get_object(queryset)
-        except Http404:
-            slug = self.kwargs.get(self.slug_url_kwarg)
-            tag = Tag()
-            tag.name = slug
-            return tag
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        page = self.request.GET.get('page', 1)
-        user = self.request.user
-
-        if context['object'].pk is not None:
-            context['no_data'] = False
-            context.update(get_tag_context(self.object, user, page))
+    def get_queryset(self):
+        self.tag = self.get_tag()
+        self.groups = groups.Group.objects.filter(tags__tag=self.tag)
+        self.tagged_only = int(self.request.GET.get('tagged', 0))
+        tagged_query = Q(content__taggeds__tag=self.tag)
+        qs = super().get_queryset().ordered_user_content(self.request.user)
+        if self.tagged_only:
+            qs = qs.filter(tagged_query)
         else:
-            context['no_data'] = True
-        return context
+            group_tagged_query = (
+                    Q(entity_type=groups.Group.content_type)
+                    & Q(entity_id__in=self.groups))
+            qs = qs.filter(tagged_query | group_tagged_query)
+        return qs
+
+    def get_tag(self):
+        try:
+            return models.Tag.objects.get(slug=self.kwargs.get('slug'))
+        except models.Tag.DoesNotExist:
+            return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
+
+
+class TagGroup(core.views.PermissionMixin, django.views.generic.CreateView):
+    permission_required = 'tags.tag_group'
+    form_class = forms.TagGroup
+    template_name = 'tags/tag_group.html'
+
+    def get_form_kwargs(self):
+        self.tag = self.get_tag()
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = models.Tagged(tag=self.tag)
+        kwargs['tagger'] = self.request.user.gestalt
+        return kwargs
+
+    def get_permission_object(self):
+        return None
+
+    def get_success_url(self):
+        return self.tag.get_absolute_url()
+
+    def get_tag(self):
+        try:
+            return models.Tag.objects.get(slug=self.kwargs.get('slug'))
+        except models.Tag.DoesNotExist:
+            return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))

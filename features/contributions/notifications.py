@@ -1,9 +1,28 @@
+import os
+
+import django
+
 from core import notifications
 from features.conversations import models as conversations
+from features.contributions import models as contributions
+from features.memberships import models as memberships
 
 
 class Contributed(notifications.Notification):
     generate_reply_tokens = True
+
+    def get_attachments(self):
+        return [
+            os.path.join(django.conf.settings.MEDIA_ROOT, c.contribution.file.name)
+            for c in self.object.attachments.all()]
+
+    def get_context_data(self, **kwargs):
+        if type(self.object.contribution) == contributions.Text:
+            kwargs['text'] = self.object.contribution.text
+        elif type(self.object.contribution) == memberships.Application:
+            kwargs['text'] = 'Ich beantrage die Mitgliedschaft in der Gruppe {}.'.format(
+                    self.object.contribution.group)
+        return super().get_context_data(**kwargs)
 
     def get_message_ids(self):
         my_id = self.object.get_unique_id()

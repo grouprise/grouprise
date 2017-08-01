@@ -13,7 +13,7 @@
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
-            {% include 'core/_field.html' with field=form.text %}
+            {% include 'core/_field.html' with field=form.text help_text='Einfacher Text wird automatisch formatiert. Besondere Formatierungen lassen sich mit den Knöpfen oben erzeugen. Erläuterungen gibt es in der <i class="fa fa-question-circle"></i> <a href="/stadt/markdown/">Hilfe zur Textauszeichnung</a>.' %}
             {% block form_extra %}{% endblock %}
         </div>
         {% if form.time %}
@@ -36,10 +36,10 @@
             <h2>Beitragseinstellungen</h2>
             <div class="row">
                 <div class="col-md-7">
-                    {% block extra_settings %}{% endblock %}
-                    {% if form.pinned %}
-                        {% include 'core/_checkbox_field.html' with field=form.pinned %}
+                    {% if form.image %}
+                        {% include 'core/_field.html' with field=form.image %}
                     {% endif %}
+                    {% block extra_settings %}{% endblock %}
                 </div>
                 <div class="col-md-5">
                     <button class="btn btn-primary btn-block">
@@ -47,6 +47,11 @@
                     </button>
                     {% if form.public %}
                         {% include 'core/_checkbox_field.html' with field=form.public %}
+                    {% endif %}
+                    {% if form.pinned %}
+                        <div class="form-group">
+                            {% include 'core/_checkbox_field.html' with field=form.pinned %}
+                        </div>
                     {% endif %}
                 </div>
             </div>

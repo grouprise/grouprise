@@ -68,6 +68,37 @@
     }
 }
 
+.btn-danger {
+    &:extend(.btn-default all);
+
+    &,
+    &:hover,
+    &:focus {
+        border-color: @brand-danger;
+        color: @brand-danger;
+    }
+}
+
+.btn-icon {
+    &:extend(.btn-default all);
+
+    width: 2.2rem;
+    padding-left: 0;
+    padding-right: 0;
+    min-width: 0;
+
+    &,
+    &:hover,
+    &:focus {
+        border-color: transparent;
+        background-color: transparent;
+    }
+
+    i {
+        font-size: 1.1rem;
+    }
+}
+
 .btn-text {
     background: none;
     border: none;

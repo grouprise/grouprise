@@ -2,7 +2,7 @@ import Vue from 'vue'
 import randomId from 'random-id'
 import { on, remove, addClass, matchesMedia } from 'luett'
 import { group as api } from '../adapters/api'
-import GroupPreview from '../content/components/group-preview.vue'
+import GroupPreview from '../components/content/group-preview.vue'
 
 const cache = {}
 
@@ -18,21 +18,21 @@ export default (el, opts) => {
   const enterListener = on(el, 'mouseenter', matchesMedia.min.medium(show))
   const leaveListener = on(el, 'mouseleave', matchesMedia.min.medium(hide))
 
-  function show() {
+  function show () {
     clearTimeout(action)
-    setTimeout(() => data.show = true, time)
+    setTimeout(() => { data.show = true }, time)
 
-    if(!isCreated) {
+    if (!isCreated) {
       createElement()
     }
   }
 
-  function hide() {
+  function hide () {
     clearTimeout(action)
-    setTimeout(() => data.show = false, time)
+    setTimeout(() => { data.show = false }, time)
   }
 
-  function get() {
+  function get () {
     return cache[ref]
       ? Promise.resolve(cache[ref])
       : api.single(ref).then(group => {
@@ -41,18 +41,29 @@ export default (el, opts) => {
       })
   }
 
-  function createElement() {
+  function createElement () {
     isCreated = true
     return get()
       .then(group => {
         data.group = group
         vue = new Vue({
-          template: `<transition name='fade-down' appear>
-                        <group-preview v-if='show' :group="group"></group-preview>
-                     </transition>`,
           el: `#${container.id}`,
-          data: data,
-          components: { GroupPreview }
+          render (h) {
+            const renderGroup = () => {
+              return h(GroupPreview, {
+                props: {
+                  group: this.group
+                }
+              })
+            }
+            return h('transition', {
+              props: {
+                name: 'fade-down',
+                appear: true
+              }
+            }, this.show ? [renderGroup()] : [])
+          },
+          data: data
         })
       })
   }
@@ -63,7 +74,7 @@ export default (el, opts) => {
   el.appendChild(container)
 
   return {
-    remove() {
+    remove () {
       enterListener.destroy()
       leaveListener.destroy()
 

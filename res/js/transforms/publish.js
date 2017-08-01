@@ -4,7 +4,7 @@ import closest from 'closest'
 function addAuthorPinnedListener (el) {
   const authorSelect = $('[data-select-type="author"]', el)
   const pinnedCheck = $('input[name="pinned"]', el)
-  const pinnedWrap = closest(pinnedCheck, '.form-group')
+  const pinnedWrap = closest(pinnedCheck, '.form-group', true)
 
   if (!authorSelect || !pinnedWrap) return
 

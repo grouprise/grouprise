@@ -4,7 +4,7 @@
 
 {% block content_type %}
     <i class="sg sg-content-type-event"></i>
-    <span>{% if not association.public %}Internes {% endif %}Ereignis</span>
+    <span>{% if not association.public %}Interne {% endif %}Veranstaltung</span>
 {% endblock %}
 
 {% block user_content_header %}
@@ -16,29 +16,8 @@
                     <span>Datum & Zeit</span>
                 </h4>
                 <div class="meta-box-body">
-                    {% with start=event.time end=event.until_time all_day=event.all_day %}
-                        {% if not end %}
-                            {% if all_day %}
-                                Am {{ start|date:'d. F Y' }}, ganztägig
-                            {% else %}
-                                Am {{ start|date:'d. F Y' }} um {{ start|date:'H:i' }} Uhr
-                            {% endif %}
-                        {% else %}
-                            {% if start.date == end.date %}
-                                {% if all_day %}
-                                    Am {{ start|date:'d. F Y' }}, ganztägig
-                                {% else %}
-                                    Am {{ start|date:'d. F Y' }} von {{ start|date:'H:i' }} Uhr bis {{ end|date:'H:i' }} Uhr
-                                {% endif %}
-                            {% else %}
-                                {% if all_day %}
-                                    Vom {{ start|date:'d. F Y' }} bis {{ start|date:'d. F Y' }}
-                                {% else %}
-                                    Vom {{ start|date:'d. F Y' }} um {{ start|date:'H:i' }} Uhr bis {{ end|date:'d. F Y' }} um {{ end|date:'H:i' }} Uhr
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                    {% endwith %}
+                    {% load events %}
+                    {% event_time event %}
                 </div>
             </div>
             <div class="meta-box">

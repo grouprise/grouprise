@@ -1,9 +1,18 @@
-from . import models
 from crispy_forms import bootstrap, helper, layout
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
 from django.contrib.sites import models as sites
+
+import utils
 from features.tags import models as tags
+from . import models
+
+
+class GroupFilter(utils.forms.FormMixin, forms.Form):
+    name = forms.CharField()
+    inline = True
+    layout = ('name', utils.forms.Submit('Gruppen filtern', field_classes='btn btn-default'))
+    method = 'GET'
 
 
 class Update(forms.ModelForm):
@@ -12,7 +21,9 @@ class Update(forms.ModelForm):
             help_text='Schlagworte durch Komma getrennt angeben')
 
     class Meta:
-        fields = ('address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url')
+        fields = (
+                'address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url',
+                'url_import_feed')
         model = models.Group
 
     def __init__(self, *args, **kwargs):
@@ -24,6 +35,7 @@ class Update(forms.ModelForm):
                 layout.Field('description', rows=4),
                 layout.Field('address', rows=4),
                 'url',
+                'url_import_feed',
                 layout.Field('date_founded', data_component='date'),
                 'tags',
                 bootstrap.PrependedText('slug', '{0}/'.format(

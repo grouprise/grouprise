@@ -11,7 +11,7 @@ from features.contributions import views as contributions
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from . import forms, models
+from . import forms
 
 
 class List(core.views.PermissionMixin, django.views.generic.ListView):
@@ -21,10 +21,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'content/list.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter(
-                container_type=models.Content.content_type).can_view(
-                        self.request.user).annotate(time_created=django.db.models.Min(
-                            'content__versions__time_created')).order_by('-time_created')
+        return super().get_queryset().ordered_user_content(self.request.user)
 
 
 class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
@@ -56,6 +53,14 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
         return [name]
 
 
+class Permalink(django.views.generic.RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        association = django.shortcuts.get_object_or_404(
+                associations.Association, pk=kwargs.get('association_pk'))
+        return django.core.urlresolvers.reverse(
+                'content', args=(association.entity.slug, association.slug))
+
+
 class Create(base.PermissionMixin, generic.CreateView):
     permission_required = 'content.create'
     model = associations.Association
@@ -83,6 +88,12 @@ class Create(base.PermissionMixin, generic.CreateView):
             self.entity = None
         return self.entity
 
+    def has_permission(self):
+        has_perm = super().has_permission()
+        if has_perm and self.entity and self.entity.is_group:
+            has_perm = self.request.user.has_perm('content.group_create', self.entity)
+        return has_perm
+
 
 class Update(base.PermissionMixin, generic.UpdateView):
     permission_required = 'content.change'
@@ -104,6 +115,7 @@ class Update(base.PermissionMixin, generic.UpdateView):
     def get_initial(self):
         return {
                 'title': self.object.container.title,
+                'image': self.object.container.image,
                 'text': self.object.container.versions.last().text,
                 'place': self.object.container.place,
                 'time': self.object.container.time,

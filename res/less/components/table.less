@@ -1,0 +1,47 @@
+.table {
+    width: 100%;
+
+    th, td {
+        padding: .3rem .5rem;
+        vertical-align: middle;
+    }
+}
+
+.table-flex {
+    &, tbody, thead, tfoot {
+        display: block;
+    }
+
+    tr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.table-condensed {
+    th, td {
+        padding: .15rem .25rem;
+    }
+}
+
+.table-striped {
+    tbody tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+}
+
+.table-align-left {
+    margin-right: auto;
+    text-align: left;
+}
+
+.table-align-right {
+    margin-left: auto;
+    text-align: right;
+}
+
+.table img {
+    max-height: 3rem;
+    display: block;
+}

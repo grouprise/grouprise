@@ -1,8 +1,10 @@
-from . import filters, models
-from core import fields, views
+import django
 from django import db, http
 from django.contrib import messages
+
+from core import fields, views
 from features.groups import views as groups
+from . import filters, models
 
 
 class SubscriptionMixin:
@@ -16,6 +18,7 @@ class Subscribe(SubscriptionMixin, views.Create):
             fields.related_object('subscribed_to'),
             fields.current_gestalt('subscriber'))
     message = 'Du erhältst nun Benachrichtigungen.'
+    template_name = 'subscriptions/create.html'
 
     def form_valid(self, form):
         try:
@@ -37,13 +40,18 @@ class ContentSubscribe(Subscribe):
 
 
 class GroupSubscribe(groups.Mixin, Subscribe):
-    description = (
-            'Benachrichtigt werden, wenn in der Gruppe <em>{{ group }}</em> '
-            'neue Beiträge veröffentlicht werden')
     permission_required = 'subscriptions.create_group_subscription'
 
     def get_related_object(self):
         return self.get_group()
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated():
+            django.contrib.messages.info(
+                    self.request, 'Du erhältst bereits Nachrichten für diese Gruppe.')
+            return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
+        else:
+            return super().handle_no_permission()
 
 
 class Unsubscribe(SubscriptionMixin, views.Delete):

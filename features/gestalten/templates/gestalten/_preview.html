@@ -1,0 +1,33 @@
+{% load rules staticfiles thumbnail utils %}
+
+{% kwacro preview %}
+    <div class="profile-short">
+        {%  if not hide_avatar|default:False %}
+            {% include 'gestalten/_avatar.html' with gestalt=gestalt link=False %}
+        {% endif %}
+        <div class="profile-data">
+            <h3 class="profile-name">
+                {{ gestalt }}
+            </h3>
+            <div class="profile-meta">
+                {% with num_content=gestalt.versions.count|add:gestalt.contributions.count %}
+                    Dabei seit {{ gestalt.user.date_joined | date:"M Y" }} ·
+                    {{ num_content }} Beitr{{ num_content|pluralize:'ag,äge' }}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    {% if not hide_about|default:False %}
+        <div class="profile-about">{{ gestalt.about }}</div>
+    {% endif %}
+{% endkwacro %}
+
+{% if link %}
+    <a href="{{ gestalt|url_for:user }}" class="profile">
+        {% usekwacro preview %}
+    </a>
+{% else %}
+    <div class="profile">
+        {% usekwacro preview %}
+    </div>
+{% endif %}

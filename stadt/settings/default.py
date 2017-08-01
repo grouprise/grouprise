@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
     'content',
     'core.apps.CoreConfig',
     'crispy_forms',
@@ -28,7 +29,7 @@ INSTALLED_APPS = [
     'django.forms',
     'django_filters',
     'django_mailbox',
-    'entities.apps.EntitiesConfig',
+    'entities',
     'features.articles',
     'features.associations',
     'features.contributions',
@@ -36,23 +37,26 @@ INSTALLED_APPS = [
     'features.caching',
     'features.content',
     'features.events',
+    'features.files',
     'features.galleries',
     'features.gestalten',
     'features.groups',
     'features.images',
+    'features.imports',
     'features.memberships.apps.MembershipsConfig',
     'features.sharing',
     'features.stadt',
     'features.subscriptions',
     'features.tags',
     'features.texts',
+    'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
     'sorl.thumbnail',
     'utils',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,7 +66,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'features.gestalten.middleware.GestaltAppConfigMiddleware',
-    'stadt.middleware.DoesNotExistMiddleware',
+    'core.assets.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'stadt.urls'
@@ -77,6 +81,7 @@ TEMPLATES = [
         'OPTIONS': {
             'builtins': ['core.templatetags.core'],
             'context_processors': [
+                'core.context_processors.settings',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -184,7 +189,8 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 DEFAULT_FROM_EMAIL = 'noreply@localhost'
 DEFAULT_REPLY_TO_EMAIL = 'stadtgestalten+{reply_key}@localhost'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'mailer.backend.DbBackend'
+MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 # Sites
@@ -209,13 +215,25 @@ ROOT_SIGNALCONF = 'stadt.signals'
 
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
+ENTITY_SLUG_BLACKLIST = [
+        'all', 'alle', 'antwort', 'facebook', 'gbr', 'info', 'mail', 'noreply', 'postmaster',
+        'presse', 'reply', 'stadt', 'webmaster', 'www']
+
+MAX_FILE_SIZE = 5 * 1024 * 1024
+
+STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
+
+STADTGESTALTEN_SHOW_HEADER = True
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/
 
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'login'
 
 LOGIN_REDIRECT_URL = 'index'
+
+ACCOUNT_ADAPTER = 'features.gestalten.adapters.AccountAdapter'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
@@ -282,15 +300,20 @@ INTERNAL_IPS = ("127.0.0.1", )
 #
 # only entity and props are required
 TAGS_TAGGABLE = (
-    {'entity': 'content.Comment', 'props': ['text'], 'tag_related': [
-        lambda comment: comment.content
-    ]},
-    {'entity': 'content.Content', 'props': ['text', 'title']},
-    # FIXME make this work for contributions
-    # {'entity': 'texts.Text', 'props': ['text'],
-    #  'constraint': lambda text: text.conversation is not None, 'tag_related': [
-    #     lambda text: text.conversation
-    # ]}
+    {
+        'entity': 'content2.Content',
+        'props': ['title'],
+        'tag_self': True,
+    },
+    {
+        'entity': 'content2.Version',
+        'props': ['text'],
+        'tag_related': [lambda v: v.content],
+    },
+    # {
+    #     'entity': 'contributions.Text',
+    #     'props': ['text'],
+    # },
 )
 
 try:

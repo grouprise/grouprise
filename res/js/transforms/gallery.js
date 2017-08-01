@@ -5,7 +5,7 @@ import axios from 'axios'
 import bel from 'bel'
 
 import { eventedFunction } from '../util/events'
-import ImageEditor from '../components/editor-image'
+import ImageEditor from '../components/image/editor-image'
 import Lightbox from './lightbox'
 
 // create evented functions

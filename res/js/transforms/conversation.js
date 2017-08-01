@@ -1,5 +1,6 @@
 import delegate from 'delegate'
 import { $, getAttr } from 'luett'
+import { danger } from '../util/notify'
 
 function submit (form) {
   return new Promise((resolve, reject) => {
@@ -26,21 +27,40 @@ function setInactive (form) {
   $('textarea', form).readOnly = true
 }
 
+function setActive (form) {
+  const btn = $('.btn', form)
+  btn.disabled = false
+  btn.classList.remove('btn-progress')
+  $('textarea', form).readOnly = false
+}
+
 export default (el, opts) => {
   const reinit = opts.conf.init
   const id = getAttr(el, 'id')
+  let isSubmitting = false
 
   function replaceContent (content) {
     el.innerHTML = $(`#${id}`, content).innerHTML
   }
 
+  function onFailure () {
+    danger('Bei der Verarbeitung deines Beitrags ist ein Fehler aufgetreten! Sorry 😔')
+    setActive($('form', el))
+  }
+
   function handleSubmit (event) {
     event.preventDefault()
+
+    if (isSubmitting) return
+
+    isSubmitting = true
     setInactive(event.delegateTarget)
     submit(event.delegateTarget)
       .then(replaceContent)
       .then(() => reinit(el))
       .then(() => $('form textarea', el).focus())
+      .catch(onFailure)
+      .then(() => { isSubmitting = false })
   }
 
   const submitListener = delegate(el, 'form', 'submit', handleSubmit)

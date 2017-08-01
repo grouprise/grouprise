@@ -1,10 +1,11 @@
 __pycache__
 backup
-build
+build/
+dist/
 db.sqlite3*
-media
+media/
 node_modules
-static
+static/
 whoosh_index
 res/img/backdrops
 stadt/ASSET_VERSION

@@ -2,7 +2,7 @@ import { $, hasAttr, remove, insertElement } from 'luett'
 import Vue from 'vue'
 import moment from 'moment'
 
-import EventTime from '../content/components/event-time.vue'
+import EventTime from '../components/time/event-time.vue'
 
 const timeFormat = 'DD.MM.YYYY HH:mm:ss'
 
@@ -22,8 +22,19 @@ export default el => {
   const elAllDay = $('#id_all_day', el)
 
   const vue = new Vue({
-    template: `<event-time :start="start" :end="end" :allDay="allDay" @change="set"></event-time>`,
     el: `#${container.id}`,
+    render (h) {
+      return h(EventTime, {
+        props: {
+          start: this.start,
+          end: this.end,
+          allDay: this.allDay
+        },
+        on: {
+          change: this.set
+        }
+      })
+    },
     data: {
       start: convertDate(elStart.value),
       end: convertDate(elEnd.value),
@@ -36,9 +47,6 @@ export default el => {
         elAllDay.checked = !!data.allDay
         Object.assign(this, data)
       }
-    },
-    components: {
-      EventTime
     }
   })
 

@@ -14,14 +14,14 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include 'entities/_sidebar_group.html' with group=view.group %}
+    {% include 'groups/_sidebar.html' with group=view.group %}
 {% endblock %}
 
 {% block content %}
     <ol class="profiles" data-component="masonry">
         {% for gestalt in gestalt_list %}
             <li>
-                {% include 'entities/_gestalt_preview.html' with gestalt=gestalt link=True %}
+                {% include 'gestalten/_preview.html' with gestalt=gestalt link=True %}
             </li>
         {% endfor %}
     </ol>

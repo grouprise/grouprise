@@ -1,12 +1,15 @@
 {% load rules utils %}
 
 <nav class="nav">
-    <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
+    {% load static %}
+    <a class="nav-logo" href="{% url 'index' %}" style="background-image: url('{% static STADTGESTALTEN_LOGO_URL %}');">
+        {{ site.name }}
+    </a>
 
     <ul class="nav-menu nav-menu-self">
         {# about link #}
         <li class="hidden-xs hidden-sm">
-            <a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a>
+            <a href="{{ about_group.get_absolute_url }}">Über {{ about_group }}</a>
         </li>
         <li>
             <input class="dropdown-state" id="menu-user" type="checkbox" />
@@ -33,14 +36,14 @@
                     <span class="dock-decoration"></span>
                     <header class="dock-header">
                         {% if user.is_authenticated %}
-                            {% include 'entities/_gestalt_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
+                            {% include 'gestalten/_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
                             <a href="{% url 'account_logout' %}?next={{ request.path }}" class="dock-session">
                                 <i class="sg sg-logout"></i>
                                 <span>Abmelden</span>
                             </a>
                         {% else %}
                             <h2>Willkommen!</h2>
-                            <a href="{% url 'account_login' %}?next={{ request.path }}" class="dock-session">
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="dock-session">
                                 <i class="sg sg-login"></i>
                                 <span>Anmelden</span>
                             </a>
@@ -63,7 +66,7 @@
                                         <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-slide-current{% endif %}">Artikel</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Ereignisse</a>
+                                        <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-slide-current{% endif %}">Veranstaltungen</a>
                                     </li>
                                     {% comment %}
                                     <li>
@@ -128,7 +131,7 @@
             <a href="{% url 'articles' %}" class="{% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">Artikel</a>
         </li>
         <li>
-            <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Ereignisse</a>
+            <a href="{% url 'events' %}" class="{% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">Veranstaltungen</a>
         </li>
         {% comment %}
         <li>

@@ -1,6 +1,7 @@
 from django import forms
 from django.db.models import Q
 
+import core
 from features.content import forms as content
 from features.images import models as images
 
@@ -8,23 +9,31 @@ from features.images import models as images
 class Create(content.Create):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     images = forms.ModelMultipleChoiceField(
-            label='Bilder', queryset=None, widget=forms.SelectMultiple(attrs={'size': 10}))
+        label='Bilder', queryset=None,
+        widget=forms.SelectMultiple(attrs={'size': 10, 'data-component': 'gallery-editor'}),
+        help_text=core.models.IMAGE_FIELD_HELP_TEXT
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['images'].queryset = self.author.images
 
     def save(self, commit=True):
-        association = super().save(commit)
+        association = super().save(False)
         for image in self.cleaned_data['images']:
             association.container.gallery_images.create(image=image)
+        if commit:
+            association.save()
         return association
 
 
 class Update(content.Update):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     images = forms.ModelMultipleChoiceField(
-            label='Bilder', queryset=None, widget=forms.SelectMultiple(attrs={'size': 10}))
+        label='Bilder', queryset=None,
+        widget=forms.SelectMultiple(attrs={'size': 10, 'data-component': 'gallery-editor'}),
+        help_text=core.models.IMAGE_FIELD_HELP_TEXT
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

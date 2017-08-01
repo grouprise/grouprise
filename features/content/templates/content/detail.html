@@ -1,5 +1,5 @@
 {% extends 'associations/detail.html' %}
-{% load rules %}
+{% load gestalten rules %}
 
 {% block meta %}
     {% include 'content/_meta.html' with content=association.container %}
@@ -32,7 +32,7 @@
             </span>
         </header>
         
-        <div class="content-body" data-component="user-content">
+        <div class="content-body">
             <h1 class="content-title">
                 {{ association.container.title }}
             </h1>
@@ -49,19 +49,26 @@
                 <span class="content-classification">Kommentare</span>
                 <span class="decoration-icon sg-comments" role="presentation"></span>
             </h2>
-            <ol class="medias">
-                {% for comment in association.container.contributions.all %}
+            <div class="conversation" data-component="conversation" id="{% ref association.container %}">
+                <ol class="medias">
+                    {% for comment in association.container.contributions.all %}
+                        <li>
+                            {% url 'content-permalink' association.pk as permalink_url %}
+                            {% include 'contributions/_contribution.html' with contribution=comment permalink_url=permalink_url %}
+                        </li>
+                    {% endfor %}
+                    {% has_perm 'content.comment' user association as can_comment %}
+                    {% if can_comment %}
                     <li>
-                        {% include 'contributions/_contribution.html' with text=comment only %}
+                        {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
                     </li>
-                {% endfor %}
-                {% has_perm 'content.comment' user association as can_comment %}
-                {% if can_comment %}
-                <li>
-                    {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
-                </li>
-                {% endif %}
-            </ol>
+                    {% else %}
+                    <li>
+                        <a href="{% login_url %}" class="btn btn-default">Anmelden zum Kommentieren</a>
+                    </li>
+                    {% endif %}
+                </ol>
+            </div>
         </footer>
     </article>
 {% endblock %}

@@ -3,26 +3,6 @@ from django.conf import urls
 
 urlpatterns = [
     urls.url(
-        r'^content/(?P<content_pk>[0-9]+)/subscribe/$',
-        views.ContentSubscribe.as_view(),
-        name='content-subscribe'),
-
-    urls.url(
-        r'^content/(?P<content_pk>[0-9]+)/unsubscribe/$',
-        views.ContentUnsubscribe.as_view(),
-        name='content-unsubscribe'),
-
-    urls.url(
-        r'^group/(?P<group_pk>[0-9]+)/all-content-unsubscribe/$',
-        views.AllContentUnsubscribe.as_view(),
-        name='all-content-unsubscribe'),
-
-    urls.url(
-        r'^group/(?P<group_pk>[0-9]+)/external-content-unsubscribe/$',
-        views.ExternalContentUnsubscribe.as_view(),
-        name='external-content-unsubscribe'),
-
-    urls.url(
         r'^group/(?P<group_pk>[0-9]+)/subscribe/$',
         views.GroupSubscribe.as_view(),
         name='group-subscribe'),

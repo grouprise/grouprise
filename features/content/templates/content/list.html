@@ -10,14 +10,14 @@
     {% if can_create %}
         {% dropdown 'content-new' 'Neuer Beitrag' %}
             <li><a href="{% url 'create-article' %}">Artikel</a></li>
-            <li><a href="{% url 'create-event' %}">Ereignis</a></li>
+            <li><a href="{% url 'create-event' %}">Veranstaltung</a></li>
             <li><a href="{% url 'create-gallery' %}">Galerie</a></li>
         {% enddropdown %}
     {% endif %}
 {% endblock %}
 
 {% block sidebar %}
-    {% sidebar_calendar paginator.object_list %}
+    {% sidebar_calendar paginator.object_list component_id='content-calendar' %}
     {% sidebar_groups user %}
 {% endblock %}
 

@@ -10,7 +10,7 @@ const classLoading = 'masonry-loading'
 const selectorOrSize = value => /[0-9]+/.test(value) ? parseInt(value, 10) : value
 const time = () => (new Date()).getTime()
 
-export default function masonry(el, opts) {
+export default function masonry (el, opts) {
   const gutterEl = bel`<li class='entity-list-gutter' role='presentation'></li>`
   const conf = defaults({}, opts.conf, {
     itemselector: 'li:not([role="presentation"])',
@@ -22,7 +22,6 @@ export default function masonry(el, opts) {
   el.appendChild(gutterEl)
   el.style.height = `${el.getBoundingClientRect().height}px`
   el.classList.add(classBase, classLoading)
-
 
   const timeStart = time()
   const effectRenderer = EffectRenderer(el)
@@ -49,7 +48,7 @@ export default function masonry(el, opts) {
   imagesLoaded(el, onImagesLoaded)
 
   return {
-    remove() {
+    remove () {
       effectRenderer.reset()
       msnry.off('layoutComplete', onLayoutComplete)
       msnry.destroy()

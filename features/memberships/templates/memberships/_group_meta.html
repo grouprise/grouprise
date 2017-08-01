@@ -27,7 +27,9 @@
 </dt>
 <dd>
     Geschlossene Gruppe{% if not can_list %}:
-    <a href="{% url 'create-group-conversation' group.pk %}">Nachricht schreiben</a> 
-    um beizutreten{% endif %}
+    <span title="Im Verlauf des Gesprächs kannst Du die Mitgliedschaft beantragen.">
+        <a href="{% url 'create-group-conversation' group.pk %}">Gespräch beginnen</a> 
+        um Mitgliedschaft zu beantragen{% endif %}
+    </span>
 </dd>
 {% endif %}

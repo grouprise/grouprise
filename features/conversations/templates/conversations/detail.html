@@ -19,7 +19,7 @@
             <ol class="medias">
                 {% for message in association.container.contributions.all %}
                     <li>
-                        {% include 'contributions/_contribution.html' with text=message only %}
+                        {% include 'contributions/_contribution.html' with contribution=message permalink_url=request.path %}
                     </li>
                 {% endfor %}
                 {% if can_reply %}

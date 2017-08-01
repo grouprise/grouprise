@@ -1,11 +1,40 @@
-from django.core.urlresolvers import reverse
+import allauth
+import django
 from django.views import generic
 
-from content import views as content_views
+import utils
 from utils import views as utils_views
 from core.views import base
 from features.associations import models as associations
-from . import models
+from features.content import models as content
+from . import forms, models
+
+
+class Detail(utils_views.List):
+    menu = 'gestalt'
+    model = associations.Association
+    permission_required = 'entities.view_gestalt'
+    sidebar = ('calendar',)
+    template_name = 'gestalten/detail.html'
+
+    def get(self, request, *args, **kwargs):
+        if not self.get_gestalt():
+            raise django.http.Http404('Gestalt nicht gefunden')
+        return super().get(request, *args, **kwargs)
+
+    def get_permission_object(self):
+        return self.get_gestalt()
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+                container_type=content.Content.content_type,
+                entity_type=self.get_gestalt().get_content_type(),
+                entity_id=self.get_gestalt().id
+                ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
+                    'content__versions__time_created')).order_by('-time_created')
+
+    def get_title(self):
+        return str(self.get_gestalt())
 
 
 class List(base.PermissionMixin, generic.ListView):
@@ -20,43 +49,50 @@ class List(base.PermissionMixin, generic.ListView):
                 entity_type=models.Gestalt.get_content_type()).can_view(self.request.user)
 
 
-class CalendarFeed(content_views.BaseCalendarFeed):
+class Login(allauth.account.views.LoginView):
+    permission_required = 'gestalten.login'
+    form_class = forms.Login
+    template_name = 'gestalten/login.html'
 
-    def get_calendar_owner(self):
-        return self.get_gestalt()
-
-    def check_authorization(self, authenticated_gestalt):
-        return authenticated_gestalt == self.get_calendar_owner()
-
-    def assemble_content_filter_dict(self, filter_dict):
-        filter_dict['gestalt'] = self.get_gestalt()
-        super().assemble_content_filter_dict(filter_dict)
+    def has_facebook_app(self):
+        providers = allauth.socialaccount.providers.registry.get_list()
+        for provider in providers:
+            if provider.id == 'facebook' and provider.get_app(self.request):
+                return True
+        return False
 
 
-class CalendarExport(utils_views.PageMixin, generic.DetailView):
+class Update(utils.views.ActionMixin, django.views.generic.UpdateView):
+    action = 'Dein Profil'
+    form_class = forms.Gestalt
+    menu = 'gestalt'
+    message = 'Die Einstellungen wurden geändert.'
     model = models.Gestalt
-    slug_url_kwarg = 'gestalt_slug'
-    sidebar = tuple()
-    permission = 'entities.view_gestalt'
-    title = 'Exportmöglichkeiten für Gestaltenkalender'
-    template_name = 'gestalten/events_export.html'
-    parent = 'gestalt-index'
+    permission_required = 'entities.change_gestalt'
 
     def get_parent(self):
-        return self.get_gestalt()
+        return self.object
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['public_export_url'] = self.request.build_absolute_uri(
-            reverse('gestalt-events-feed', kwargs={
-                'gestalt_slug': self.get_object().slug,
-                'domain': 'public'
-            })
-        )
-        context['private_export_url'] = self.request.build_absolute_uri(
-            reverse('gestalt-events-feed', kwargs={
-                'gestalt_slug': self.get_object().slug,
-                'domain': 'private'
-            })
-        )
-        return context
+
+class UpdateAvatar(utils.views.ActionMixin, django.views.generic.UpdateView):
+    action = 'Avatar ändern'
+    fields = ('avatar',)
+    layout = ('avatar',)
+    menu = 'gestalt'
+    model = models.Gestalt
+    permission_required = 'entities.change_gestalt'
+
+    def get_parent(self):
+        return self.object
+
+
+class UpdateBackground(utils.views.ActionMixin, django.views.generic.UpdateView):
+    action = 'Hintergrundbild ändern'
+    fields = ('background',)
+    layout = ('background',)
+    menu = 'gestalt'
+    model = models.Gestalt
+    permission_required = 'entities.change_gestalt'
+
+    def get_parent(self):
+        return self.object

@@ -1,0 +1,26 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block content %}
+<p>Die <i>Stadtgestalten</i> ({{ site.name }}) sind ein loser Zusammenschluss von Enthusiasten, Gestaltern und Programmierern aus dem Umfeld verschiedener aktiver Gruppen.</p>
+<p>Zweck des Zusammenschlusses ist der Betrieb dieser Online-Plattform, um den aktiven Gruppen, Initiativen, Vereinen und Einzelpersonen die Möglichkeit zu geben, sich schnell und einfach einer breiten Öffentlichkeit vorzustellen, sich gegenseitig zu informieren, auszutauschen und zu vernetzen.</p>
+<p><i>{{ site.name }}</i> möchte Aktivist*innen die nötigen Werkzeuge in die Hände zu geben, um die Städte dieser Welt lebenswerter für alle zu gestalten. Wir unterstützen alle Bewegungen mit emanzipatorischem Charakter. Ansätzen, die Ausgrenzung und Unterdrückung fördern, möchte <i>{{ site.name }}</i> kein Zuhause geben.</p>
+<p>
+Die Webseite <i>{{ site.name }}</i> wird mittels der Software <a href="https://git.hack-hro.de/stadtgestalten/stadtgestalten">Stadtgestalten</a> bereitgestellt. Wir entwickeln diese Software aktiv weiter und veröffentlichen sie unter einer <a href="https://www.gnu.org/licenses/agpl.html">freien Lizenz (AGPL)</a>. Bringe Dich gern in die Entwicklung ein: Du kannst <a href="https://git.hack-hro.de/stadtgestalten/stadtgestalten">am Quelltext arbeiten</a> oder uns eine Nachricht an die Gruppe <a href="{{ about_group.get_absolute_url }}">@{{ about_group.slug }}</a> schreiben.
+</p>
+
+<h3>Verantwortlich</h3>
+<p>
+Sense.Lab e.V.<br>
+Friedrichstrasse 23<br>
+18057 Rostock<br>
+<a href="https://senselab.org/">senselab.org</a>
+</p>
+<p>
+Unsere Gruppe auf <em>{{ site.name }}</em>:<br>
+<a href="{{ about_group.get_absolute_url }}">@{{ about_group.slug }}</a>
+</p>
+
+<h3>Haftung</h3>
+<p>Für die Inhalte aller Beiträge sowie die Selbstdarstellung der Gruppen und Personen sind diese ausschließlich selbst verantwortlich. Die Betreiber übernehmen keine Haftung für die Inhalte. Solltest du annehmen, dass ein auf <i>{{ site.name }}</i> veröffentlicher Beitrag gegen geltendes Recht verstößt, dann kannst du mit uns direkt Kontakt aufnehmen, indem du den Verweis <em>Missbrauch melden</em> am Ende der jeweiligen Seite benutzt.</p>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}{{ view.tag }} - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'tag' %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb 'Schlagworte' view.tag %}{% endblock %}
+
+{% block heading_title %}
+    <h1 class="content-classification">#{{ view.tag.slug }}</h1>
+    <span class="decoration-icon sg-group" role="presentation"></span>
+{% endblock %}
+
+{% block heading_toolbar %}
+<a href="{% url 'tag-group' view.tag.slug %}" class="btn btn-ch">
+        <span class="btn-label">Gruppe hinzufügen</span>
+    </a>
+{% endblock %}
+
+{% block sidebar %}
+    {% load events %}
+    {% sidebar_calendar paginator.object_list hide_buttons=True component_id='tags-calendar' %}
+{% endblock %}
+
+{% block content %}
+    {# groups #}
+    <ol class="groups" data-component="masonry">
+        {% for group in view.groups %}
+            <li>
+                {% include 'groups/_preview.html' with group=group link=True %}
+            </li>
+        {% endfor %}
+    </ol>
+
+    {# content #}
+    {% if view.tagged_only or object_list %}
+        <div class="content-header">
+            <h2 class="content-classification">Beiträge</h2>
+            <span class="decoration-icon sg-pen" role="presentation"></span>
+            <div class="btn-toolbar">
+                {% if view.tagged_only %}
+                    <a href="?{% get_parameters tagged=0 %}" class="btn btn-default btn-sm btn-addon-ok" title="zusätzlich Beiträge von Gruppen anzeigen, die mit diesem Schlagwort gekennzeichnet wurden">
+                        <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete angezeigt</span>
+                    </a>
+                {% else %}
+                    <a href="?{% get_parameters tagged=1 %}" class="btn btn-default btn-sm" title="nur Beiträge anzeigen, die explizit mit diesem Schlagwort gekennzeichnet wurden">
+                        <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete anzeigen</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="content-list">
+            <div class="content-block">
+                {% include 'content/_list.html' with associations=object_list %}
+            </div>
+            {% pagination 'Weitere Beiträge' %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -27,6 +27,15 @@ class Notification:
         self.kwargs = kwargs
         self.object = kwargs.get('instance')
 
+    def get_attachments(self):
+        """
+        Return a list of filenames to use as attachments.
+        """
+        return []
+
+    def get_context_data(self, **kwargs):
+        return kwargs
+
     def get_formatted_recipients(self):
         """
         Subclasses must define get_recipients() to return a set of recipients.
@@ -108,7 +117,7 @@ class Notification:
 
         for recipient, recipient_attrs in self.get_formatted_recipients():
             subject = self.get_subject()
-            context = self.kwargs.copy()
+            context = self.get_context_data(**self.kwargs.copy())
             context.update({'site': site})
             template = loader.get_template(self.get_template_name())
             template.backend.engine.autoescape = False
@@ -139,6 +148,8 @@ class Notification:
             message = mail.EmailMessage(
                     body=body, from_email=from_email, subject=subject,
                     to=[recipient], headers=headers)
+            for file_name in self.get_attachments():
+                message.attach_file(file_name)
             try:
                 message.send()
             except smtplib.SMTPException:

@@ -1,19 +1,22 @@
 import 'object-assign-shim'
-import Promise from 'es6-promise'
+import 'matches-selector-polyfill/dist/matches-selector-polyfill'
+import 'es6-promise/auto'
 import Vue from 'vue'
 import { $ } from 'luett'
 
-import Select from './core/components/select.vue'
-import Avatar from './core/components/avatar.vue'
-import DateTime from './core/components/datetime.vue'
-import NumberSpinner from './core/components/number-spinner.vue'
-import Switch from './core/components/switch.vue'
-import Configurator from './core/components/configurator.vue'
+// custom global vue components
+import FilePicker from './components/core/file-picker.vue'
+import ImagePicker from './components/image/image-picker.vue'
+import Select from './components/core/select.vue'
+import Avatar from './components/image/avatar.vue'
+import DateTime from './components/time/datetime.vue'
+import NumberSpinner from './components/core/number-spinner.vue'
+import Switch from './components/core/switch.vue'
+import Configurator from './components/core/configurator.vue'
 
-// polyfills
-Promise.polyfill()
-
-// component registration
+// vue setup
+Vue.component('sg-file-picker', FilePicker)
+Vue.component('sg-image-picker', ImagePicker)
 Vue.component('sg-select', Select)
 Vue.component('sg-avatar', Avatar)
 Vue.component('sg-datetime', DateTime)

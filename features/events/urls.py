@@ -14,9 +14,20 @@ urlpatterns = [
         name='create-event'),
 
     url(
-        r'^(?P<entity_slug>[\w-]+)/events/add/$',
+        r'^stadt/events/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
+        views.Day.as_view(),
+        name='day-events'),
+
+    url(
+        r'^(?P<entity_slug>[\w.@+-]+)/events/add/$',
         views.Create.as_view(),
         name='create-group-event'),
+
+    url(
+        # TODO: remove 'gestalt/' prefix
+        r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/events/(?P<domain>public|private).ics$',
+        views.GestaltCalendarFeed(),
+        name='gestalt-events-feed'),
 
     url(
         r'^(?P<group_slug>[\w-]+)/events/export$',

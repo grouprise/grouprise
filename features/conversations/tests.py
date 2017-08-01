@@ -1,8 +1,6 @@
 from . import models
-from content import models as content
 from core import tests
 from django.contrib.contenttypes import models as contenttypes
-import entities.models
 from features.associations import models as associations
 from features.contributions import models as contributions
 from features.gestalten import tests as gestalten
@@ -32,32 +30,6 @@ class GroupConversation(gestalten.GestaltMixin, groups.GroupMixin):
                     text='Test Text'))
         cls.association = associations.Association.objects.create(
                 container=conversation, entity=cls.group)
-
-
-class ExternalConversationMixin(
-        memberships.AuthenticatedMemberMixin, gestalten.OtherGestaltMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.content = content.Article.objects.create(
-                author=cls.other_gestalt, public=False, title='Test Message')
-        entities.models.GroupContent.objects.create(content=cls.content, group=cls.group)
-
-
-class MessageMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.content = content.Article.objects.create(
-                author=cls.gestalt, public=False, title='Test Message')
-
-
-class NoNotificationOnExternalConversation:
-    def test_external_conversation(self):
-        conversation = content.Article.objects.create(
-                author=self.other_gestalt, public=False, title='Test Message')
-        entities.models.GroupContent.objects.create(content=conversation, group=self.group)
-        self.assertNoNotificationSent()
 
 
 class NotificationContainsConversationMessageIDs:

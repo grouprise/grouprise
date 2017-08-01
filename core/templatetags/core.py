@@ -1,4 +1,7 @@
+import os
+
 import bleach as python_bleach
+
 from core import fragments, markdown as core_markdown
 from core.views import app_config
 from django import template
@@ -8,8 +11,33 @@ from django.template import defaultfilters
 from django.utils import html, safestring
 import markdown as python_markdown
 from markdown.extensions import toc
+from core.assets import get_assets
 
 register = template.Library()
+
+
+@register.filter
+def filename(value):
+    return os.path.basename(value.name)
+
+
+@register.simple_tag(takes_context=True)
+def get_parameters(context, **kwargs):
+    request = context.get('request')
+    params = request.GET.copy()
+    for k in kwargs:
+        params[k] = kwargs.get(k)
+    # drop page parameter in case of parameter changes (#373)
+    if params != request.GET and 'page' not in kwargs and 'page' in params:
+        del params['page']
+    return params.urlencode()
+
+
+@register.simple_tag
+def include_assets(stage):
+    return safestring.mark_safe('\n'.join([
+        asset.create_tag() for asset in get_assets(stage)
+    ]))
 
 
 @register.simple_tag
@@ -42,7 +70,7 @@ def breadcrumb(*args):
 
 @register.inclusion_tag('core/_menu.html', takes_context=True)
 def menu(context, active, entity=None):
-    if entity.is_group:
+    if entity and entity.is_group:
         context['group'] = entity
     context['menu'] = active
     return context

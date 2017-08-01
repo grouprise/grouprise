@@ -1,5 +1,4 @@
 from . import forms
-from content import models as content_models
 from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.auth import views as auth_views
@@ -11,17 +10,6 @@ from django.views.generic import edit as edit_views
 from features.gestalten import models as entities_models
 from features.groups import models as groups
 from rules.contrib import views as rules_views
-
-
-class ContentMixin:
-    def get_context_data(self, **kwargs):
-        kwargs['content'] = self.get_content()
-        return super().get_context_data(**kwargs)
-
-    def get_content(self):
-        if 'content_pk' in self.kwargs:
-            return content_models.Content.objects.get(pk=self.kwargs['content_pk'])
-        return None
 
 
 class GestaltMixin:
@@ -36,6 +24,9 @@ class GestaltMixin:
             if 'gestalt_slug' in self.kwargs:
                 return entities_models.Gestalt.objects.get(
                         user__username=self.kwargs['gestalt_slug'])
+            if 'entity_slug' in self.kwargs:
+                return entities_models.Gestalt.objects.get(
+                        user__username=self.kwargs['entity_slug'])
         except entities_models.Gestalt.DoesNotExist:
             pass
 
@@ -55,20 +46,18 @@ class GroupMixin:
                     return instance
                 if hasattr(instance, 'group'):
                     return instance.group
-                if hasattr(instance, 'groups'):
-                    return instance.groups.first()
+                # if hasattr(instance, 'groups'):
+                #     return instance.groups.first()
         try:
             if 'group_pk' in self.kwargs:
                 return groups.Group.objects.get(pk=self.kwargs['group_pk'])
             if 'group_slug' in self.kwargs:
                 return groups.Group.objects.get(slug=self.kwargs['group_slug'])
+            if 'entity_slug' in self.kwargs:
+                return groups.Group.objects.get(slug=self.kwargs['entity_slug'])
             if 'group' in self.request.GET:
                 return groups.Group.objects.get(slug=self.request.GET['group'])
-            if 'content_pk' in self.kwargs:
-                return content_models.Content.objects.get(
-                        pk=self.kwargs['content_pk']).groups.first()
-        except (content_models.Content.DoesNotExist,
-                groups.Group.DoesNotExist):
+        except groups.Group.DoesNotExist:
             pass
         return None
 
@@ -124,8 +113,6 @@ class MenuMixin:
         for instance in (getattr(self, 'related_object', None), self.get_parent()):
             if instance:
                 t = type(instance)
-                if t == content_models.Content:
-                    return type(instance.get_content())
                 return t
         return None
 
@@ -173,13 +160,7 @@ class NavigationMixin:
             None
 
     def get_parent_entity(self, child):
-        if isinstance(child, content_models.Content):
-            if child.groups.exists():
-                return child.groups.first()
-            else:
-                return child.author
-        else:
-            return None
+        return None
 
     def get_success_url(self):
         try:
@@ -190,12 +171,6 @@ class NavigationMixin:
 
 class PaginationMixin:
     paginate_by = 10
-
-    def get_context_data(self, **kwargs):
-        kwargs['params'] = self.request.GET.copy()
-        if 'page' in kwargs['params']:
-            del kwargs['params']['page']
-        return super().get_context_data(**kwargs)
 
 
 class PermissionMixin(rules_views.PermissionRequiredMixin):
@@ -257,7 +232,6 @@ class TitleMixin:
 
 
 class ActionMixin(
-        ContentMixin,
         FormMixin,
         GestaltMixin,
         GroupMixin,

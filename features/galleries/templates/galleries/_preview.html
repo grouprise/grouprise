@@ -10,9 +10,11 @@
 {% endblock %}
 
 {% block content_preview_image %}
-    {% thumbnail association.container.gallery_images.first.image.file '200x200' crop="center top" as image %}
-        <div class="content-image">
-            <img src="{{ image.url }}">
-        </div>
-    {% endthumbnail %}
+    {% with image=association.container.image|default_if_none:association.container.gallery_images.first.image %}
+        {% thumbnail image.file '200x200' crop="center top" as thumb %}
+            <div class="content-image">
+                <img src="{{ thumb.url }}" alt="">
+            </div>
+        {% endthumbnail %}
+    {% endwith %}
 {% endblock %}

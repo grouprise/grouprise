@@ -1,28 +1,63 @@
-<div class="media media-comment" id="{% ref text %}">
+<div class="media media-comment" id="{% ref contribution %}">
     <div class="media-image">
         {% if author %}
             {% include 'gestalten/_avatar.html' with gestalt=author link=True only %}
         {% else %}
-            {% include 'gestalten/_avatar.html' with gestalt=text.author link=True only %}
+            {% include 'gestalten/_avatar.html' with gestalt=contribution.author link=True only %}
         {% endif %}
     </div>
     <div class="media-content">
         {% block media_content %}
             <div class="media-body"
                  {% block media_content_attrs %}
-                    data-component="user-content" data-author="{{ text.author }}" data-permalink="{{ request.path }}#{% ref text %}"
+                    data-author="{{ contribution.author }}" data-permalink="{{ permalink_url }}#{% ref contribution %}"
                  {% endblock %}>
                 {% block media_body %}
-                    {% markdown text.contribution.text heading_baselevel=3 %}
+
+                    {# TEXT #}
+                    {% if contribution.contribution.text %}
+                        {% markdown contribution.contribution.text heading_baselevel=3 %}
+                    {% endif %}
+
+                    {# MEMBERSHIP APPLICATION #}
+                    {% if contribution.contribution.group %}
+                        <p>Ich beantrage die <strong>Mitgliedschaft</strong> in der Gruppe
+                        <em>{{ contribution.contribution.group }}</em>.</p>
+                        {% load rules %}
+                        {% has_perm 'memberships.accept_application' user contribution.contribution as can_accept %}
+                        {% if can_accept %}
+                            <a href="{% url 'accept-membership-application' contribution.contribution.pk %}" class="btn btn-default">
+                                {{ contribution.author }} aufnehmen
+                            </a>
+                        {% endif %}
+                    {% endif %}
+
+                    {# FILE ATTACHMENT #}
+                    {% if contribution.contribution.file %}
+                        <p>
+                        <strong>angehängte Datei</strong>:
+                        <a href="{{ contribution.contribution.file.url }}">
+                            {{ contribution.contribution.file|filename }}
+                        </a>
+                        </p>
+                    {% endif %}
+
                 {% endblock %}
             </div>
             <footer class="media-footer">
                 {% block media_footer %}
-                    {% time text.time_created %} ·
-                    {% link text.author %}
+                    {% time contribution.time_created %} ·
+                    {% link contribution.author %}
                     <div class="pull-right">
-                        <a class="link-plain" href="{{ request.path }}#{% ref text %}">Permalink</a> ·
-                        <a class="js" data-component="cite" href="#{% ref text %}">Zitieren</a>
+                        <a class="link-plain" href="{{ permalink_url }}#{% ref contribution %}">
+                            Permalink
+                        </a>
+                        {% if contribution.contribution.text %}
+                            ·
+                            <a class="js" data-component="cite" href="#{% ref contribution %}">
+                                Zitieren
+                            </a>
+                        {% endif %}
                     </div>
                 {% endblock %}
             </footer>

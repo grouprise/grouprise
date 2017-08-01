@@ -34,7 +34,7 @@
 
 .sg-back {
     &:after {
-        content: @fa-var-chevron-left@fa-var-chevron-left;
+        content: @fa-var-chevron-left @fa-var-chevron-left;
     }
 }
 
@@ -83,7 +83,7 @@
 
 .sg-foundation {
     &:after {
-        content: @fa-var-flag-o;
+        content: @fa-var-flag;
     }
 }
 
@@ -135,9 +135,15 @@
     }
 }
 
+.sg-members-add {
+    &:after {
+        content: @fa-var-user-plus;
+    }
+}
+
 .sg-message {
     &:after {
-        content: @fa-var-envelope-o;
+        content: @fa-var-envelope;
     }
 }
 
@@ -294,5 +300,12 @@
 .sg-preview {
     &:after {
         content: @fa-var-eye;
+    }
+}
+
+.sg-remove {
+    &:after {
+        content: @fa-var-trash;
+        content: @fa-var-trash-o;
     }
 }

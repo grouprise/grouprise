@@ -1,18 +1,18 @@
 {% extends 'stadt/stadt.html' %}
 {% load events groups rules %}
 
-{% block title %}Ereignisse - {{ block.super }}{% endblock %}
+{% block title %}Veranstaltungen - {{ block.super }}{% endblock %}
 {% block menu %}{% with menu='event' %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block heading_title %}
-    {% include 'core/_heading.html' with title='Ereignisse' icon='sg-pen' %}
+    {% include 'core/_heading.html' with title='Veranstaltungen' icon='sg-pen' %}
 {% endblock %}
 
 {% block heading_toolbar %}
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% url 'create-event' as url %}
-        {% include 'core/_toolbutton.html' with label='Neues Ereignis' url=url %}
+        {% include 'core/_toolbutton.html' with label='Neue Veranstaltung' url=url %}
     {% endif %}
 {% endblock %}
 
@@ -21,15 +21,17 @@
 {% endblock %}
 
 {% block content %}
-    {% calendar view.get_content size="large" %}
-    
-    <div class="content-list">
-        <ol class="content-preview-list">
-            {% for association in association_list %}
-                <li>{% include 'events/_preview.html' %}</li>
-            {% endfor %}
-        </ol>
+    <div class="calendar-wrapper" id="calendar-page" data-component="calendar" data-component-basepath="{% url 'events' %}">
+        {% calendar view.get_content size="large" %}
 
-        {% pagination 'Weitere Ereignisse' %}
+        <div class="content-list">
+            <ol class="content-preview-list">
+                {% for association in association_list %}
+                    <li>{% include 'events/_preview.html' %}</li>
+                {% endfor %}
+            </ol>
+
+            {% pagination 'Weitere Veranstaltungen' %}
+        </div>
     </div>
 {% endblock %}

@@ -10,7 +10,7 @@ const isDebug = env !== 'production'
 
 module.exports = {
   context: path.join(__dirname, 'res/js'),
-  devtool: isDebug ? '#eval' : '#source-map',
+  devtool: isDebug ? '#eval' : '#cheap-module-source-map',
   entry: {
     app: './index.js',
     snake: './snake.js'
@@ -23,7 +23,7 @@ module.exports = {
   resolve: {
     alias: {
       app: path.resolve(__dirname, 'res/js'),
-      'vue$': 'vue/dist/vue.common.js'
+      'vue$': 'vue/dist/vue.runtime.common.js'
     }
   },
   module: {
@@ -32,9 +32,6 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          // vue-loader options go here
-        }
       },
       {
         test: /\.jsx?$/,

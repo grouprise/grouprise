@@ -10,14 +10,11 @@ const numberOrNull = numeric => {
 const dropInvalid = value => !!value
 
 const normalizer = {
-  id: numberOrNull,
-  weight: numberOrNull,
-  content: numberOrNull
+  id: numberOrNull
 }
 
 const filter = {
-  id: dropInvalid,
-  content: dropInvalid
+  id: dropInvalid
 }
 
 const imageDefaults = data => {
@@ -25,7 +22,7 @@ const imageDefaults = data => {
       mapValues(
         mapKeys(
           defaults(data, {
-            weight: 0,
+            creator: window.app.conf.gestalt.id,
             csrfmiddlewaretoken: cookie.get('csrftoken')
           }),
           (value, key) => ({ contentId: 'content' }[key] || key)
@@ -39,7 +36,8 @@ const imageDefaults = data => {
 const transform = file => ({
   id: file.id,
   label: file.title,
-  content: file.path
+  content: file.path,
+  preview: file.preview
 })
 
 export default decorator((req, opts) => {
@@ -64,7 +62,7 @@ export default decorator((req, opts) => {
   }
 
   const update = (data = {}) => {
-    const putData = imageDefaults(pick(data, ['id', 'weight']))
+    const putData = imageDefaults(pick(data, ['id']))
     return req.put(endpoint, putData)
       .then(res => Promise.resolve(res.data))
   }

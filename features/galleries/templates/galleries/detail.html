@@ -14,7 +14,7 @@
 {% block content_text %}
     <div class="gallery-container" data-component="gallery">
         <header class="gallery-header">
-            <div class="content-user gallery-header-description {% if association.container.versions.last.text|length > 250 %}gallery-header-description-large{% endif %}" data-component="user-content">
+            <div class="content-user gallery-header-description {% if association.container.versions.last.text|length > 250 %}gallery-header-description-large{% endif %}">
                 {% markdown association.container.versions.last.text heading_baselevel=2 %}
             </div>
         </header>

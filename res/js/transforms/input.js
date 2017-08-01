@@ -3,7 +3,7 @@ function attachAndRun (target, event, listener, capture = false) {
   events.forEach((event) => event && target.addEventListener(event, listener, capture))
   listener.call(target)
   return {
-    destroy() {
+    destroy () {
       events.forEach((event) => event && target.removeEventListener(event, listener, capture))
     }
   }
@@ -15,8 +15,8 @@ function getType (el) {
   return `input-type-${tagName !== 'input' ? tagName : type}`
 }
 
-function input (el, conf = {}) {
-  const target = conf.target ? conf.target(el) : el
+function input (el, opts = {}) {
+  const target = opts.conf.target ? opts.conf.target(el) : el
 
   function setChangedStates (event) {
     const isFilled = el.value.trim() !== ''
@@ -46,7 +46,7 @@ function input (el, conf = {}) {
   target.classList.toggle(typeClass, true)
 
   return {
-    remove() {
+    remove () {
       inputListeners.destroy()
       focusListeners.destroy()
       target.classList.remove(

@@ -1,6 +1,8 @@
 from core import tests
+from core.tests import get_url as u
 from features.gestalten import tests as gestalten
 from features.groups import tests as groups
+from features.memberships import test_mixins as memberships
 
 
 class GroupRecommend(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
@@ -12,10 +14,11 @@ class GroupRecommend(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
         self.assertNotificationRecipient(self.gestalt)
 
 
-class MemberInvite(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
+class MemberInvite(memberships.AuthenticatedMemberMixin, tests.Test):
     def test_member_invite(self):
-        self.client.post(
-                self.get_url('member-invite', self.group.pk),
-                {'recipient_email': self.gestalt.user.email})
+        r = self.client.post(
+                u('member-invite', self.group.pk),
+                data={'recipient_email': self.gestalt.user.email})
+        self.assertRedirects(r, self.group.get_absolute_url())
         self.assertNotificationSent()
         self.assertNotificationRecipient(self.gestalt)

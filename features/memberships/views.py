@@ -1,11 +1,68 @@
-from . import models
-from core import fields, views
+import django
 from django import db, http, shortcuts
 from django.contrib import messages
 from django.core import urlresolvers
+
+import core
+from core import fields, views
+from features.associations import models as associations
+from features.contributions import models as contributions
 from features.gestalten import models as gestalten_models, views as gestalten_views
 from features.groups import models as groups_models, views as groups_views
 from utils import views as utils_views
+from . import forms, models
+
+
+class Apply(core.views.PermissionMixin, django.views.generic.CreateView):
+    permission_required = 'memberships.apply'
+    form_class = forms.Apply
+    template_name = 'memberships/apply.html'
+
+    def get_form_kwargs(self):
+        contribution = contributions.Contribution()
+        contribution.author = self.request.user.gestalt
+        contribution.container = self.association.container
+        kwargs = super().get_form_kwargs()
+        kwargs['contribution'] = contribution
+        kwargs['instance'] = models.Application(group=self.association.entity)
+        return kwargs
+
+    def get_permission_object(self):
+        self.association = django.shortcuts.get_object_or_404(
+                associations.Association, pk=self.kwargs.get('association_pk'))
+        return self.association.entity
+
+    def get_success_url(self):
+        return self.association.get_absolute_url()
+
+
+class AcceptApplication(core.views.PermissionMixin, django.views.generic.CreateView):
+    permission_required = 'memberships.accept_application'
+    model = models.Membership
+    fields = []
+    template_name = 'memberships/accept.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = models.Membership(
+                created_by=self.request.user.gestalt, group=self.application.group,
+                member=self.application.contribution.author)
+        return kwargs
+
+    def get_permission_object(self):
+        self.application = django.shortcuts.get_object_or_404(
+                models.Application, pk=self.kwargs.get('application_pk'))
+        return self.application
+
+    def get_success_url(self):
+        try:
+            return associations.Association.objects.get(
+                    group=self.application.group,
+                    container_type=self.application.contribution.container.content_type,
+                    container_id=self.application.contribution.container.id
+                    ).get_absolute_url()
+        except associations.Association.DoesNotExist:
+            return self.application.group.get_absolute_url()
 
 
 class MembershipMixin(groups_views.Mixin):
@@ -26,6 +83,14 @@ class Join(MembershipMixin, views.Create):
             'Der Gruppe <em>{{ group }}</em> auf {{ site.name }} beitreten *')
     permission_required = 'memberships.join_group'
     template_name = 'memberships/join.html'
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated() and self.related_object.members.filter(
+                pk=self.request.user.gestalt.pk).exists():
+            django.contrib.messages.info(self.request, 'Du bist bereits Mitglied der Gruppe.')
+            return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
+        else:
+            return super().handle_no_permission()
 
 
 class Members(gestalten_views.List):
@@ -60,25 +125,6 @@ class MemberAdd(MembershipMixin, views.Create):
 
     def get_success_url(self):
         return urlresolvers.reverse('members', args=(self.related_object.pk,))
-
-
-class GestaltMemberAdd(utils_views.GestaltMixin, MemberAdd):
-    data_field_classes = (
-            fields.current_gestalt('created_by'),
-            fields.related_object('group'),
-            fields.view_object('member', key='gestalt'))
-    description = (
-            '<em>{{ gestalt }}</em> als Mitglied der Gruppe '
-            '<em>{{ group }}</em> aufnehmen')
-    permission_required = 'associations.create_content_group_membership'
-
-    def get_permission_object(self):
-        return self.related_object, self.get_gestalt()
-
-    def get_view_object(self, key):
-        if key == 'gestalt':
-            return self.get_gestalt()
-        return super().get_view_object(key)
 
 
 class Resign(MembershipMixin, utils_views.Delete):

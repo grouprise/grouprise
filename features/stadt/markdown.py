@@ -77,20 +77,23 @@ class ContentReferencePattern(inlinepatterns.ReferencePattern):
         entity_slug = m.group(2)
         content_slug = m.group(3)
         if content_slug:
-            association = associations.Association.objects.get(
-                    Q(group__slug=entity_slug) | Q(gestalt__user__username=entity_slug),
-                    slug=content_slug)
-            return self.makeTag(association.get_absolute_url(), str(association), m.string)
+            try:
+                association = associations.Association.objects.get(
+                        Q(group__slug=entity_slug) | Q(gestalt__user__username=entity_slug),
+                        slug=content_slug)
+                name = '@{}/{}'.format(entity_slug, content_slug)
+                return self.makeTag(association.get_absolute_url(), str(association), name)
+            except associations.Association.DoesNotExist:
+                pass
+        entity, slug, name = get_entity(m, 1)
+        if entity:
+            return set_entity_attrs(
+                self.makeTag(entity.get_absolute_url(), str(entity), name),
+                entity.id,
+                entity.is_group
+            )
         else:
-            entity, slug, name = get_entity(m, 1)
-            if entity:
-                return set_entity_attrs(
-                    self.makeTag(entity.get_absolute_url(), str(entity), name),
-                    entity.id,
-                    entity.is_group
-                )
-            else:
-                return get_entity_placeholder(name)
+            return get_entity_placeholder(name)
 
 
 class ContentReferenceExtension(Extension):

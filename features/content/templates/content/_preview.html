@@ -13,17 +13,16 @@
     <a href="{{ association.get_absolute_url }}" class="content-preview-body">
         <div class="content-preview-body-content">
             {% block content_preview_image %}
-                {% comment %}
-                {% elif content.images.first %}
-                    {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
+                {% if association.container.image %}
+                    {% load thumbnail %}
+                    {% thumbnail association.container.image.file '200x200' crop="center top" as image %}
                         <div class="content-image">
                             <img src="{{ image.url }}">
                         </div>
                     {% endthumbnail %}
                 {% endif %}
-                {% endcomment %}
             {% endblock %}
-            <div class="content-preview-text" data-component="user-content">
+            <div class="content-preview-text">
                 <h3 class="content-title">
                     {{ association.container.title }}
                 </h3>

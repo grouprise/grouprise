@@ -4,6 +4,7 @@ from django_mailbox import models as mailbox_models, signals as mailbox_signals
 from core import tests
 from features.associations import models as associations
 from features.gestalten import tests as gestalten
+from features.memberships import test_mixins as memberships
 from . import models
 
 
@@ -24,7 +25,30 @@ class ContentReplyByEmail(
                 text__text='Text B')
 
 
-class ContributionReplyByEmail(
+class ConversationInitiateByEmail(memberships.MemberMixin, tests.Test):
+    def test_conversation_initiate_by_email(self):
+        # generate initial message
+        msg = mailbox_models.Message(
+                from_header=self.gestalt.user.email,
+                to_header='{}@localhost'.format(self.group.slug),
+                body='Text A')
+        # send signal like getmail would
+        mailbox_signals.message_received.send(self, message=msg)
+        self.assertExists(
+                models.Contribution, conversation__associations__group=self.group,
+                text__text='Text A')
+
+    def test_conversation_initiate_by_email_failing(self):
+        # generate initial message
+        msg = mailbox_models.Message(
+                from_header=self.gestalt.user.email, to_header='not-existing@localhost',
+                body='Text A')
+        # send signal like getmail would
+        mailbox_signals.message_received.send(self, message=msg)
+        self.assertEqual(len(mail.outbox), 1)
+
+
+class ConversationReplyByEmail(
         gestalten.AuthenticatedMixin, gestalten.OtherGestaltMixin, tests.Test):
     def test_texts_reply_by_email(self):
         # send message to other_gestalt via web interface

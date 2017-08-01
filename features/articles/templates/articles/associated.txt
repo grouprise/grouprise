@@ -1,4 +1,4 @@
 Artikel online lesen und kommentieren:
-{% url 'content' instance.entity.slug instance.slug as path %}{{ path|full_url }}
+{% url 'content-permalink' instance.pk as path %}{{ path|full_url }}
 
 {{ instance.container.versions.last.text }}

@@ -13,6 +13,7 @@ class Content(core.models.Model):
     is_conversation = False
 
     title = models.CharField(max_length=255)
+    image = models.ForeignKey('images.Image', blank=True, null=True)
 
     place = models.CharField(blank=True, max_length=255)
 
@@ -32,12 +33,21 @@ class Content(core.models.Model):
             object_id_field='container_id',
             related_query_name='content')
 
+    taggeds = contenttypes.GenericRelation(
+            'tags.Tagged',
+            content_type_field='tagged_type',
+            object_id_field='tagged_id',
+            related_query_name='content')
+
     def __str__(self):
         return self.title
 
     def get_authors(self):
         return gestalten.Gestalt.objects.filter(
                 Q(versions__content=self) | Q(contributions__content=self)).distinct()
+
+    def get_version_authors(self):
+        return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
 
     def get_associated_gestalten(self):
         return gestalten.Gestalt.objects.filter(associations__content=self)

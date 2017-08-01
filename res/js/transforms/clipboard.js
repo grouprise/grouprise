@@ -16,7 +16,7 @@ export default (el, opts) => {
   if (isUnsupported) {
     remove(el)
     return {
-      remove() {}
+      remove () {}
     }
   }
 
@@ -33,7 +33,7 @@ export default (el, opts) => {
   })
 
   return {
-    remove() {
+    remove () {
       clipboard.off()
       clipboard.destroy()
     }
