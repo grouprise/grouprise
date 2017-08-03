@@ -37,7 +37,7 @@ def process_incoming_message(sender, message, **args):
                 in_reply_to=in_reply_to,
                 contribution=t)
         files.File.objects.create_from_message(message, attached_to=contribution)
-        contribution_created.send(sender=None, instance=contribution)
+        return contribution
 
     def process_reply(address):
         token = address[token_beg:-token_end]
@@ -47,8 +47,9 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
-        create_contribution(
+        contribution = create_contribution(
                 key.target.container, key.gestalt, message, in_reply_to=in_reply_to_text)
+        contribution_created.send(sender=None, instance=contribution)
 
     def process_initial(address):
         local, domain = address.split('@')
@@ -63,10 +64,11 @@ def process_incoming_message(sender, message, **args):
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)
-            create_contribution(conversation, gestalt, message)
+            contribution = create_contribution(conversation, gestalt, message)
             associations.Association.objects.create(
                     entity_type=group.content_type, entity_id=group.id,
                     container_type=conversation.content_type, container_id=conversation.id)
+            contribution_created.send(sender=None, instance=contribution)
         else:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
