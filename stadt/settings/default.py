@@ -314,6 +314,7 @@ TAGS_TAGGABLE = (
         'entity': 'contributions.Contribution',
         'props': ['contribution__text'],
         'tag_related': [lambda c: c.container],
+        'constraint': lambda c: hasattr(c.contribution, 'text'),
     },
 )
 
