@@ -310,10 +310,11 @@ TAGS_TAGGABLE = (
         'props': ['text'],
         'tag_related': [lambda v: v.content],
     },
-    # {
-    #     'entity': 'contributions.Text',
-    #     'props': ['text'],
-    # },
+    {
+        'entity': 'contributions.Contribution',
+        'props': ['contribution__text'],
+        'tag_related': [lambda c: c.container],
+    },
 )
 
 try:
