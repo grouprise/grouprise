@@ -3,14 +3,6 @@
 
 {% block media_body %}
     {% crispy form %}
-    
-    {% load rules %}
-    {% has_perm 'memberships.apply' user association.entity as can_apply %}
-    {% if association.container.is_conversation and can_apply %}
-        <a href="{% url 'create-membership-application' association.id %}">
-            Mitgliedschaft beantragen
-        </a>
-    {% endif %}
 {% endblock %}
 
 {% block media_footer %}{% endblock %}
