@@ -1,3 +1,4 @@
+from os import path
 import re
 
 import django
@@ -15,7 +16,7 @@ class FileManager(models.Manager):
         for attachment in message.attachments.all():
             if re.search(EXCLUDE_RE, attachment.headers):
                 continue
-            f = self.create(file=attachment.document)
+            f = self.create(file=attachment.document, filename=attachment.get_filename())
             contributions.Contribution.objects.create(
                     container_id=attached_to.container_id,
                     container_type=attached_to.container_type,
@@ -27,6 +28,7 @@ class FileManager(models.Manager):
 
 class File(core.models.Model):
     file = models.FileField()
+    filename = models.CharField(max_length=255, blank=True, null=True)
 
     contribution = django.contrib.contenttypes.fields.GenericRelation(
             'contributions.Contribution',
@@ -35,3 +37,7 @@ class File(core.models.Model):
             related_query_name='file')
 
     objects = FileManager()
+
+    @property
+    def display_name(self):
+        return self.filename or path.basename(self.file.name)
