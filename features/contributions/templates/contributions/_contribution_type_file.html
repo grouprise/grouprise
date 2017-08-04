@@ -1,0 +1,39 @@
+<!--{% load thumbnail %}-->
+<div class="media media-file" id="{% ref contribution %}">
+    {% include 'contributions/_contribution_avatar.html' %}
+    <div class="media-content">
+        <div class="media-body">
+            {% if contribution.contribution.is_image %}
+                {% if contribution.contribution.file.name|endswith:'.svg' or contribution.contribution.file.name|endswith:'.apng' or contribution.contribution.file.name|endswith:'.gif' %}
+                    <img src="{{ contribution.contribution.file.url }}"
+                         alt="{{ contribution.contribution.filename }}">
+                {% else %}
+                    {% thumbnail contribution.contribution.file.path '480'  as i_480  %}
+                    {% thumbnail contribution.contribution.file.path '768'  as i_768  %}
+                    {% thumbnail contribution.contribution.file.path '1200' as i_1200 %}
+                    {% thumbnail contribution.contribution.file.path '1920' as i_1920 %}
+                        <img src="{{ i_1200.url }}" alt="{{ contribution.contribution.filename }}"
+                             srcset="{{ i_480.url}} 480w, {{ i_768.url }} 768w, {{ i_1200.url }} 1200w, {{ i_1920.url }} 1920w"
+                        />
+                    {% endthumbnail %}
+                    {% endthumbnail %}
+                    {% endthumbnail %}
+                    {% endthumbnail %}
+                {% endif %}
+            {% elif contribution.contribution.is_video %}
+                <video src="{{ contribution.contribution.file.url }}" controls></video>
+            {% elif contribution.contribution.is_audio %}
+                <audio src="{{ contribution.contribution.file.url }}" controls></audio>
+            {% else %}
+                <p>
+                    <strong>angehängte Datei</strong>:
+                    <a href="{{ contribution.contribution.file.url }}"
+                       download="{{ contribution.contribution.display_name }}">
+                        {{ contribution.contribution.display_name }}
+                    </a>
+                </p>
+            {% endif %}
+        </div>
+        {% include 'contributions/_contribution_footer.html' %}
+    </div>
+</div>

@@ -41,3 +41,15 @@ class File(core.models.Model):
     @property
     def display_name(self):
         return self.filename or path.basename(self.file.name)
+
+    def is_image(self):
+        root, ext = path.splitext(self.file.name.lower())
+        return ext in ('.svg', '.apng', '.png', '.gif', '.jpg', '.jpeg')
+
+    def is_video(self):
+        root, ext = path.splitext(self.file.name.lower())
+        return ext in ('.mp4', '.ogg', '.webm')
+
+    def is_audio(self):
+        root, ext = path.splitext(self.file.name.lower())
+        return ext in ('.opus', '.ogg', '.aac', '.mp3', '.flac', '.m4a')
