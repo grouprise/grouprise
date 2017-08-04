@@ -46,8 +46,16 @@ a {
     color: @brand-primary;
 }
 
-p:empty {
-    display: none;
+p {
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &:empty {
+        display: none;
+    }
+}
+
 audio,
 video {
     &::-internal-media-controls-download-button {
