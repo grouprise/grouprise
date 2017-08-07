@@ -2,6 +2,7 @@
     padding: 1rem 0;
     position: relative;
     margin-bottom: 1rem;
+    border-radius: 2px;
 
     > h2 {
         margin: 0 0 1rem 0;
@@ -19,5 +20,26 @@
 
     .media-loading:before {
         background-color: fadeout(@gray-lightest, 25%);
+    }
+}
+
+.section-highlight {
+    padding: 1.6rem 0;
+
+    &:before,
+    &:after {
+        &:extend(.decoration-striped);
+        content: " ";
+        position: absolute;
+        left: 0; right: 0;
+        height: .6rem;
+    }
+
+    &:before {
+        top: 0;
+    }
+
+    &:after {
+        bottom: 0;
     }
 }

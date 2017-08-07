@@ -1,0 +1,31 @@
+{% load rules %}
+{% has_perm 'memberships.accept_application' user contribution.contribution as can_accept %}
+
+<div class="section section-highlight">
+    <h2>Mitgliedschaftsanfrage</h2>
+    <div class="row">
+        <div class="col-md-6">
+            {% include 'gestalten/_preview.html' with gestalt=contribution.author link=True %}
+        </div>
+        <div class="col-md-6">
+            <p>
+                {% if user.gestalt and user.gestalt == contribution.author%}
+                    Du hast die Mitgliedschaft in der Gruppe
+                <strong>{{ contribution.contribution.group }}</strong> beantragt.
+                {% else %}
+                    {{ contribution.author }} beantragt die Mitgliedschaft in der Gruppe
+                    <strong>{{ contribution.contribution.group }}</strong> .
+                {% endif %}
+            </p>
+
+            {% if can_accept %}
+                <div class="btn-toolbar">
+                    <a href="{% url 'accept-membership-application' contribution.contribution.pk %}"
+                       class="btn btn-primary btn-sm">
+                        {{ contribution.author }} aufnehmen
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

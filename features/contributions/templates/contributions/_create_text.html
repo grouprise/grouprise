@@ -1,17 +1,10 @@
-{% extends "contributions/_contribution.html" %}
+{% extends "contributions/_contribution_type_text.html" %}
 {% load crispy_forms_tags %}
 
 {% block media_body %}
     {% crispy form %}
-    
-    {% load rules %}
-    {% has_perm 'memberships.apply' user association.entity as can_apply %}
-    {% if association.container.is_conversation and can_apply %}
-        <a href="{% url 'create-membership-application' association.id %}">
-            Mitgliedschaft beantragen
-        </a>
-    {% endif %}
 {% endblock %}
 
 {% block media_footer %}{% endblock %}
 {% block media_content_attrs %}{% endblock %}
+{% block media_style %}style="margin-top: 3rem"{% endblock %}

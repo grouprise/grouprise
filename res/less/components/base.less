@@ -46,8 +46,29 @@ a {
     color: @brand-primary;
 }
 
-p:empty {
-    display: none;
+p {
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &:empty {
+        display: none;
+    }
+}
+
+audio,
+video {
+    &::-internal-media-controls-download-button {
+        display:none;
+    }
+
+    &::-webkit-media-controls-enclosure {
+        overflow:hidden;
+    }
+
+    &::-webkit-media-controls-panel {
+        width: calc(100% + 30px);
+    }
 }
 
 
@@ -56,7 +77,6 @@ p:empty {
 // Fixes "clickability" issue (and more generally, the firing of events such as focus as well)
 // for traditionally non-focusable elements with role="button"
 // see https://developer.mozilla.org/en-US/docs/Web/Events/click#Safari_Mobile
-
 [role="button"] {
     cursor: pointer;
 }

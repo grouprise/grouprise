@@ -1,0 +1,18 @@
+<div class="media media-comment" id="{% ref contribution %}" {% block media_style %}{% endblock %}>
+    {% include 'contributions/_contribution_avatar.html' %}
+    <div class="media-content">
+        {% block media_content %}
+            <div class="media-body"
+                 {% block media_content_attrs %}
+                 data-author="{{ contribution.author }}" data-permalink="{{ permalink_url }}#{% ref contribution %}"
+                 {% endblock %}>
+                {% block media_body %}
+                    {% markdown contribution.contribution.text heading_baselevel=3 %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+        {% block media_footer %}
+            {% include 'contributions/_contribution_footer.html' %}
+        {% endblock %}
+    </div>
+</div>

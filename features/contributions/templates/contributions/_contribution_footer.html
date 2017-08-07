@@ -1,0 +1,78 @@
+<footer class="media-footer">
+    {% block media_footer %}
+        <div class="media-footer-left">
+            {% time contribution.time_created %}
+            <span class="media-footer-separator"></span>
+            {% link contribution.author %}
+        </div>
+
+        <div class="media-footer-right">
+            {% if contribution.attachments.all|length > 0 %}
+                <div class="dropdown-container">
+                    <input class="dropdown-state" id="attachments-{{ contribution.contribution.id }}"
+                           type="checkbox">
+                    <label for="attachments-{{ contribution.contribution.id }}"
+                           data-component="openable" class="btn btn-link btn-sm btn-novspace"
+                           data-openable-target="#attachments-{{ contribution.contribution.id }}-dropdown">
+                            <span class="btn-label">
+                                <i class="sg sg-attachment"></i>
+                                {% if contribution.attachments.all|length == 1 %}
+                                    1 Dateianhang
+                                {% else %}
+                                    {{ contribution.attachments.all|length }} Dateianhänge
+                                {% endif %}
+                                <span class="caret"></span>
+                            </span>
+                    </label>
+
+                    <ul class="dropdown" id="attachments-{{ contribution.contribution.id }}-dropdown"
+                        data-dropdown>
+                        {% for attachment in contribution.attachments.all %}
+                            <li>
+                                <a href="{{ attachment.contribution.file.url }}"
+                                   download="{{ attachment.contribution.display_name }}">
+                                    {{ attachment.contribution.display_name }}
+                                    <br />
+                                    <small>
+                                        <i class="sg sg-download"></i>
+                                        {{ attachment.contribution.file.size|filesizeformat }} Download
+                                    </small>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if contribution.contribution.file %}
+                {{ contribution.contribution.file.size|filesizeformat }}
+                <a href="{{ contribution.contribution.file.url }}"
+                   class="btn btn-link btn-sm btn-novspace"
+                   download="{{ contribution.contribution.display_name }}">
+                    <i class="sg sg-download"></i>
+
+                    {% if contribution.contribution.is_image %}
+                        Bilddatei herunterladen
+                    {% elif contribution.contribution.is_video %}
+                        Videodatei herunterladen
+                    {% elif contribution.contribution.is_audio %}
+                        Audiodatei herunterladen
+                    {% else %}
+                        Datei herunterladen
+                    {% endif %}
+                </a>
+            {% else %}
+                <a class="link-plain" href="{{ permalink_url }}#{% ref contribution %}">
+                    Permalink
+                </a>
+            {% endif %}
+
+            {% if contribution.contribution.text %}
+                <span class="media-footer-separator"></span>
+                <a class="js" data-component="cite" href="#{% ref contribution %}">
+                    Zitieren
+                </a>
+            {% endif %}
+        </div>
+    {% endblock %}
+</footer>
