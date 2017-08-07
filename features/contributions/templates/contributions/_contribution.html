@@ -4,4 +4,6 @@
     {% include 'contributions/_contribution_type_file.html' %}
 {% elif contribution.contribution.group %}
     {% include 'contributions/_contribution_type_group_application.html' %}
+{% else %}
+    {% include 'contributions/_contribution_type_text.html' %}
 {% endif %}
