@@ -63,6 +63,8 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated():
+            return models.Image.objects.none()
 
         # FIXME: refactor and remove foreign model queries
         # we want users to have access to
