@@ -46,6 +46,9 @@ class Content(core.models.Model):
         return gestalten.Gestalt.objects.filter(
                 Q(versions__content=self) | Q(contributions__content=self)).distinct()
 
+    def get_version_authors(self):
+        return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
+
     def get_associated_gestalten(self):
         return gestalten.Gestalt.objects.filter(associations__content=self)
 

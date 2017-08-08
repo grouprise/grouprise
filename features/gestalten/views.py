@@ -54,6 +54,13 @@ class Login(allauth.account.views.LoginView):
     form_class = forms.Login
     template_name = 'gestalten/login.html'
 
+    def has_facebook_app(self):
+        providers = allauth.socialaccount.providers.registry.get_list()
+        for provider in providers:
+            if provider.id == 'facebook' and provider.get_app(self.request):
+                return True
+        return False
+
 
 class Update(utils.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Dein Profil'

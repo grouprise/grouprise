@@ -19,9 +19,11 @@ class Create(content.Create):
         self.fields['images'].queryset = self.author.images
 
     def save(self, commit=True):
-        association = super().save(commit)
+        association = super().save(False)
         for image in self.cleaned_data['images']:
             association.container.gallery_images.create(image=image)
+        if commit:
+            association.save()
         return association
 
 

@@ -1,12 +1,15 @@
 {% load rules utils %}
 
 <nav class="nav">
-    <a class="nav-logo" href="{% url 'index' %}">{{ site.name }}</a>
+    {% load static %}
+    <a class="nav-logo" href="{% url 'index' %}" style="background-image: url('{% static STADTGESTALTEN_LOGO_URL %}');">
+        {{ site.name }}
+    </a>
 
     <ul class="nav-menu nav-menu-self">
         {# about link #}
         <li class="hidden-xs hidden-sm">
-            <a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a>
+            <a href="{{ about_group.get_absolute_url }}">Über {{ about_group }}</a>
         </li>
         <li>
             <input class="dropdown-state" id="menu-user" type="checkbox" />

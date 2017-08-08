@@ -21,6 +21,16 @@ def filename(value):
     return os.path.basename(value.name)
 
 
+@register.filter
+def endswith(value: str, search):
+    return value.endswith(search)
+
+
+@register.filter
+def startswith(value: str, search):
+    return value.startswith(search)
+
+
 @register.simple_tag(takes_context=True)
 def get_parameters(context, **kwargs):
     request = context.get('request')

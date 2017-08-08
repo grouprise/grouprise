@@ -5,7 +5,7 @@ import closest from 'closest'
 
 import { markdown } from '../adapters/api'
 import { EVENT_CITE } from './cite'
-import editorImages from '../components/editor-image'
+import editorImages from '../components/image/editor-image'
 
 const imageEditor = editorImages()
 const imageDialog = bel`<div class="editor-dialog">${imageEditor.el}</div>`

@@ -23,6 +23,24 @@ def send_contribution_notification(sender, instance, **kwargs):
     notifications.Contributed(instance=instance).send()
 
 
+def is_autoresponse(msg):
+    email = msg.get_email_object()
+
+    # RFC 3834 (https://tools.ietf.org/html/rfc3834#section-5)
+    if email.get('Auto-Submitted') == 'no':
+        return False
+    elif email.get('Auto-Submitted'):
+        return True
+
+    # non-standard fields (https://tools.ietf.org/html/rfc3834#section-3.1.8)
+    if email.get('Precedence') == 'bulk':
+        return True
+    if email.get('X-AUTORESPONDER'):
+        return True
+
+    return False
+
+
 @receiver(django_mailbox.signals.message_received)
 def process_incoming_message(sender, message, **args):
     token_beg = len(django.conf.settings.DEFAULT_REPLY_TO_EMAIL.split('{')[0])
@@ -37,7 +55,7 @@ def process_incoming_message(sender, message, **args):
                 in_reply_to=in_reply_to,
                 contribution=t)
         files.File.objects.create_from_message(message, attached_to=contribution)
-        contribution_created.send(sender=None, instance=contribution)
+        return contribution
 
     def process_reply(address):
         token = address[token_beg:-token_end]
@@ -47,8 +65,9 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
-        create_contribution(
+        contribution = create_contribution(
                 key.target.container, key.gestalt, message, in_reply_to=in_reply_to_text)
+        contribution_created.send(sender=None, instance=contribution)
 
     def process_initial(address):
         local, domain = address.split('@')
@@ -63,29 +82,33 @@ def process_incoming_message(sender, message, **args):
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)
-            create_contribution(conversation, gestalt, message)
+            contribution = create_contribution(conversation, gestalt, message)
             associations.Association.objects.create(
                     entity_type=group.content_type, entity_id=group.id,
                     container_type=conversation.content_type, container_id=conversation.id)
+            contribution_created.send(sender=None, instance=contribution)
         else:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
     for address in message.to_addresses:
-        try:
-            process_reply(address)
-        except core.models.PermissionToken.DoesNotExist:
+        if not is_autoresponse(message):
             try:
-                process_initial(address)
-            except (
-                    groups.Group.DoesNotExist, ValueError,
-                    django.core.exceptions.PermissionDenied) as e:
-                logger.error('Could not process receiver {} in message {}'.format(
-                    address, message.id))
-                django.core.mail.send_mail(
-                        'Re: {}'.format(message.subject),
-                        'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
-                        from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[message.from_header],
-                        fail_silently=True)
+                process_reply(address)
+            except core.models.PermissionToken.DoesNotExist:
+                try:
+                    process_initial(address)
+                except (
+                        groups.Group.DoesNotExist, ValueError,
+                        django.core.exceptions.PermissionDenied) as e:
+                    logger.error('Could not process receiver {} in message {}'.format(
+                        address, message.id))
+                    django.core.mail.send_mail(
+                            'Re: {}'.format(message.subject),
+                            'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
+                            from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
+                            recipient_list=[message.from_header],
+                            fail_silently=True)
+        else:
+            logger.warning('Ignored message {} as autoresponse'.format(message.id))

@@ -58,7 +58,10 @@ def tag_entities(sender, instance, *args, **kwargs):
 
         tags = []
         for prop in conf['props']:
-            tags.extend(re.findall(RE_TAG_REF, getattr(instance, prop, '')))
+            attr = instance
+            for e in prop.split('__'):
+                attr = getattr(attr, e)
+            tags.extend(re.findall(RE_TAG_REF, attr))
 
         if len(tags) == 0:
             continue

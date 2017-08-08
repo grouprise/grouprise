@@ -16,7 +16,7 @@
                 {% has_perm 'memberships.view_list' user association.entity as can_view_members %}
                 {% has_perm 'subscriptions.create_group_subscription' user association.entity as can_subscribe %}
                 {% if can_view_members %}
-                    {% with authors=association.container.get_authors %}
+                    {% with authors=association.container.get_version_authors %}
                         {% if authors.count == 1 %}
                             ({% link authors.first %})
                         {% else %}

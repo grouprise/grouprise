@@ -9,6 +9,20 @@
     {% has_perm 'conversations.reply' user association as can_reply %}
     
     <div class="conversation" data-component="conversation" id="{% ref association.container %}">
+        {% has_perm 'memberships.apply' user association.entity as can_apply %}
+        {% if association.container.is_conversation and can_apply %}
+            <div class="btn-dialog">
+                <p>
+                    Beantrage eine Mitgliedschaft, falls du Mitglied dieser geschlossenen
+                    Gruppe werden möchtest.
+                </p>
+                <a href="{% url 'create-membership-application' association.id %}"
+                   class="btn btn-default">
+                    Mitgliedschaft beantragen
+                </a>
+            </div>
+        {% endif %}
+
         <header class="conversation-header">
             <h1 class="content-title">
                 {{ association.container.subject }}
@@ -18,14 +32,17 @@
         <div class="conversation-body">
             <ol class="medias">
                 {% for message in association.container.contributions.all %}
-                    <li>
-                        {% include 'contributions/_contribution.html' with contribution=message permalink_url=request.path %}
-                    </li>
+                    {% if message.attached_to and message.contribution.file %}
+                    {% else %}
+                        <li>
+                            {% include 'contributions/_contribution.html' with contribution=message permalink_url=request.path %}
+                        </li>
+                    {% endif %}
                 {% endfor %}
                 {% if can_reply %}
-                <li>
-                    {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
-                </li>
+                    <li>
+                        {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
+                    </li>
                 {% endif %}
             </ol>
         </div>

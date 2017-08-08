@@ -1,0 +1,7 @@
+<div class="media-image">
+    {% if author %}
+        {% include 'gestalten/_avatar.html' with gestalt=author link=True only %}
+    {% else %}
+        {% include 'gestalten/_avatar.html' with gestalt=contribution.author link=True only %}
+    {% endif %}
+</div>

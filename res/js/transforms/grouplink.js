@@ -2,7 +2,7 @@ import Vue from 'vue'
 import randomId from 'random-id'
 import { on, remove, addClass, matchesMedia } from 'luett'
 import { group as api } from '../adapters/api'
-import GroupPreview from '../content/components/group-preview.vue'
+import GroupPreview from '../components/content/group-preview.vue'
 
 const cache = {}
 

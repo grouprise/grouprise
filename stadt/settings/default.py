@@ -81,6 +81,7 @@ TEMPLATES = [
         'OPTIONS': {
             'builtins': ['core.templatetags.core'],
             'context_processors': [
+                'core.context_processors.settings',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -215,10 +216,14 @@ ROOT_SIGNALCONF = 'stadt.signals'
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
 ENTITY_SLUG_BLACKLIST = [
-        'all', 'alle', 'antwort', 'facebook', 'gbr', 'info', 'mail', 'noreply', 'postmaster',
-        'presse', 'reply', 'stadt', 'webmaster', 'www']
+        'all', 'alle', 'antwort', 'crew', 'facebook', 'gbr', 'info', 'kontakt', 'mail',
+        'noreply', 'postmaster', 'presse', 'reply', 'stadt', 'webmaster', 'www']
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
+
+STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
+
+STADTGESTALTEN_SHOW_HEADER = True
 
 
 # Authentication
@@ -305,10 +310,12 @@ TAGS_TAGGABLE = (
         'props': ['text'],
         'tag_related': [lambda v: v.content],
     },
-    # {
-    #     'entity': 'contributions.Text',
-    #     'props': ['text'],
-    # },
+    {
+        'entity': 'contributions.Contribution',
+        'props': ['contribution__text'],
+        'tag_related': [lambda c: c.container],
+        'constraint': lambda c: hasattr(c.contribution, 'text'),
+    },
 )
 
 try:

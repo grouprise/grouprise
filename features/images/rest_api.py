@@ -63,6 +63,8 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated():
+            return models.Image.objects.none()
 
         # FIXME: refactor and remove foreign model queries
         # we want users to have access to
@@ -89,16 +91,17 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
         return models.Image.objects.filter(Q(creator__user=user) | Q(id__in=images))
 
     def has_permission(self):
-        if self.action == 'create':
-            return True
-        elif self.action == 'list':
-            return True
-        elif self.action == 'retrieve':
-            image = self.get_object()
-            return self.request.user.has_perm('images.view', image)
-        elif self.action == 'update':
-            image = self.get_object()
-            return image.creator == self.request.user
+        if self.request.user.is_authenticated():
+            if self.action == 'create':
+                return True
+            elif self.action == 'list':
+                return True
+            elif self.action == 'retrieve':
+                image = self.get_object()
+                return self.request.user.has_perm('images.view', image)
+            elif self.action == 'update':
+                image = self.get_object()
+                return image.creator == self.request.user
         return False
 
 

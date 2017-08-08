@@ -1,11 +1,18 @@
+import django
 import json
+
+import utils.views
 from .base import PermissionMixin, View  # NOQA
 from .edit import CreateView as Create, FormView as Form  # NOQA
-import utils.views
 
 
 class Delete(utils.views.Delete):
     pass
+
+
+class Error(django.views.generic.View):
+    def dispatch(self, *args, **kwargs):
+        raise RuntimeError('Intentionally raised an error!')
 
 
 class AppConfig:

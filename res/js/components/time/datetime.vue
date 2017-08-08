@@ -4,15 +4,15 @@
     <div class="form-group datetime-date">
       <label class="control-label" v-if="showLabels">{{ dateLabel }}</label>
       <div class="controls">
-        <input type="text" class="form-control form-control-icon" v-model="date" ref="date"
-               @focus="isEditing = true" @wheel="scrollDate">
+        <input type="text" class="form-control form-control-icon" v-model.lazy="date" ref="date"
+               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate">
       </div>
     </div>
     <transition name="fade">
       <div class="form-group datetime-time" v-if="enableTime">
         <label class="control-label" v-if="showLabels">{{ timeLabel }}</label>
         <div class="controls">
-          <input type="text" class="form-control form-control-icon" v-model="time" ref="time"
+          <input type="text" class="form-control form-control-icon" v-model.lazy="time" ref="time"
                  placeholder="z.B: 12:30" pattern="^([0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
                  @focus="isEditing = true" @blur="guessTime" @wheel="scrollTime">
         </div>
@@ -148,6 +148,8 @@
         const el = event.target
         const time = el.value
         const parsedTime = checkDate(time, timeFormat)
+
+        this.isEditing = false
 
         if (parsedTime) {
           this.time = format(parsedTime, timeFormat)
