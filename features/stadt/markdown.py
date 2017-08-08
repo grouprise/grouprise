@@ -35,7 +35,7 @@ def set_entity_attrs(el, entity_id, is_group):
 
 def get_entity_placeholder(name):
     el = util.etree.Element('span')
-    el.text = '%s (unbekannte Gruppe/Gestalt)' % name
+    el.text = util.AtomicString('%s (unbekannte Gruppe/Gestalt)' % name)
     return el
 
 
