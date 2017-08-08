@@ -1,6 +1,8 @@
 import re
+from xml.etree import ElementTree
+import bleach
 import markdown
-from markdown import blockprocessors, inlinepatterns
+from markdown import blockprocessors, inlinepatterns, util
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):
@@ -24,17 +26,36 @@ class CuddledListExtension(markdown.Extension):
                 'cuddledlist', CuddledListProcessor(md.parser), '<paragraph')
 
 
+class SpacedHashHeaderProcessor(blockprocessors.HashHeaderProcessor):
+    # this is exactly the same pattern as the original HashHeaderProcessor
+    # except that we require at least one space between the hash
+    # and the following header text
+    RE = re.compile(r'(^|\n)(?P<level>#{1,6})\s+(?P<header>.*?)#*(\n|$)')
+
+
 class ExtendedLinkPattern(inlinepatterns.LinkPattern):
     _EXTENSIONS = []
 
-    def __init__(self, pattern, markdown_instance=None):
-        super().__init__(pattern, markdown_instance)
+    def _atomize(self, el):
+        if el.text and not isinstance(el.text, util.AtomicString):
+            el.text = util.AtomicString(self.unescape(el.text))
+        for child in el:
+            self._atomize(child)
+
+    def _processInline(self, el):
+        new_text = markdown.markdown(el.text)
+        cleaned_text = bleach.clean(new_text, strip=True, tags=('em', 'strong', 'span'))
+        children = ElementTree.fromstring('<span>{}</span>'.format(cleaned_text))
+        self._atomize(children)
+        result = ElementTree.Element('a', el.attrib)
+        result.append(children)
+        return result
 
     def handleMatch(self, m):
         el = super().handleMatch(m)
         for extension in self._EXTENSIONS:
             el = extension.process_link(el)
-        return el
+        return self._processInline(el)
 
     # in order to avoid any tampering with the original implementation
     # of LinkPattern we use sanitize_url to provide us with special
@@ -55,3 +76,4 @@ class ExtendedLinkPattern(inlinepatterns.LinkPattern):
 class ExtendedLinkExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns['link'] = ExtendedLinkPattern(inlinepatterns.LINK_RE, md)
+        md.parser.blockprocessors['hashheader'] = SpacedHashHeaderProcessor(md.parser)
