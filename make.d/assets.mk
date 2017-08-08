@@ -43,7 +43,7 @@ $(DIR_NODE): package.json
 	@# in dh_auto_install yarn tries to create a cache folder in /usr/local/share/.cache
 	@# this has something to do with the environment dh_auto_install creates
 	@# so we call it with an empty environment to be on the safe side
-	PATH="$$PATH" env -i yarn install --no-progress
+	env -i PATH="$$PATH" yarn install --no-progress
 	touch -c "$(DIR_NODE)"
 
 $(STATIC_FONT_GOOGLE): $(DIR_NODE)
