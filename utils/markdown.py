@@ -24,6 +24,13 @@ class CuddledListExtension(markdown.Extension):
                 'cuddledlist', CuddledListProcessor(md.parser), '<paragraph')
 
 
+class SpacedHashHeaderProcessor(blockprocessors.HashHeaderProcessor):
+    # this is exactly the same pattern as the original HashHeaderProcessor
+    # except that we require at least one space between the hash
+    # and the following header text
+    RE = re.compile(r'(^|\n)(?P<level>#{1,6})\s+(?P<header>.*?)#*(\n|$)')
+
+
 class ExtendedLinkPattern(inlinepatterns.LinkPattern):
     _EXTENSIONS = []
 
@@ -55,3 +62,4 @@ class ExtendedLinkPattern(inlinepatterns.LinkPattern):
 class ExtendedLinkExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns['link'] = ExtendedLinkPattern(inlinepatterns.LINK_RE, md)
+        md.parser.blockprocessors['hashheader'] = SpacedHashHeaderProcessor(md.parser)
