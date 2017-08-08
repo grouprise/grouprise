@@ -4,6 +4,7 @@ import django
 from django import urls
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
+import django.contrib.gis.db.models
 from django.db import models
 from django.utils.translation import gettext as _
 from imagekit.models import ImageSpecField
@@ -59,6 +60,7 @@ class Group(grouprise.core.models.Model):
             default='',
             max_length=200,
             help_text=_('At most 200 characters'))
+    location = django.contrib.gis.db.models.PointField(null=True)
     logo = grouprise.core.models.ImageField(
             blank=True, help_text=_("The logo is visible in the right area at the group page."))
     logo_sidebar = ImageSpecField(

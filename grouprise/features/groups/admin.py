@@ -1,4 +1,6 @@
-from . import models
+import django
 from django.contrib import admin
 
-admin.site.register(models.Group)
+from . import models
+
+admin.site.register(models.Group, django.contrib.gis.admin.OSMGeoAdmin)
