@@ -28,9 +28,12 @@ class Command(django.core.management.base.BaseCommand):
         author = gestalten.Gestalt.objects.get(id=django.conf.settings.IMPORTER_ID)
         for group in groups.Group.objects.filter(url_import_feed=True):
             r = requests.get(group.url, headers={'User-Agent': 'Stadtgestalten'})
-            m = re.search(self.FEED_RE, r.text)
-            if m:
-                feed_url = m.group(1) or m.group(2)
+            matches = re.findall(self.FEED_RE, r.text)
+            for i, match_groups in enumerate(matches):
+                feed_url = match_groups[0] or match_groups[1]
+                if i > 0:
+                    # print('{}: Ignoring feed {}'.format(group, feed_url))
+                    continue
                 feed = feedparser.parse(feed_url)
                 for entry in feed.entries:
                     key = entry.get('id', entry.get('link'))

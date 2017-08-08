@@ -25,7 +25,7 @@ def send_contribution_notification(sender, instance, **kwargs):
 
 def is_autoresponse(msg):
     email = msg.get_email_object()
-    
+
     # RFC 3834 (https://tools.ietf.org/html/rfc3834#section-5)
     if email.get('Auto-Submitted') == 'no':
         return False
@@ -37,7 +37,7 @@ def is_autoresponse(msg):
         return True
     if email.get('X-AUTORESPONDER'):
         return True
-    
+
     return False
 
 
