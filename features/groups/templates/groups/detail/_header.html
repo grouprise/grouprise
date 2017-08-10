@@ -23,7 +23,13 @@
             {% else %}
                 <div class="disclaimer">
                     <i class="fa fa-5x fa-image"></i><br />
-                    Diese Gruppe war zu faul eine Introgalerie anzulegen.
+                    <p>Diese Gruppe war bisher nicht motiviert eine Introgalerie anzulegen.</p>
+                    {% has_perm 'memberships.join_group' user group as can_join %}
+                    {% if can_join %}
+                        <p>Wenn Du in der Gruppe aktiv bist, kannst Du ihr
+                        <a href="{% url 'join' group.pk %}">beitreten</a> und ein Bild 
+                        hochladen.</p>
+                    {% endif %}
                 </div>
             {% endif %}
         {% endwith %}
@@ -59,7 +65,7 @@
                     {% if group.description %}
                         {% markdown group.description preset='linkonly' %}
                     {% else %}
-                        Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen
+                        Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen.
                     {% endif %}
                 </dd>
                 {% if group.address %}
