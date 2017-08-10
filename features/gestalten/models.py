@@ -29,6 +29,10 @@ class Gestalt(core.models.Model):
             object_id_field='entity_id', related_query_name='gestalt')
 
     @property
+    def name(self):
+        return ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
+
+    @property
     def slug(self):
         return self.user.username
 
@@ -43,8 +47,7 @@ class Gestalt(core.models.Model):
         return user.gestalt
 
     def __str__(self):
-        name = ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
-        return name if name else self.user.username
+        return self.name or self.slug
 
     def can_login(self):
         return self.user.has_usable_password()

@@ -8,6 +8,7 @@
         <div class="profile-data">
             <h3 class="profile-name">
                 {{ gestalt }}
+                <span class="profile-meta">@{{ gestalt.slug }}</span>
             </h3>
             <div class="profile-meta">
                 {% with num_content=gestalt.versions.count|add:gestalt.contributions.count %}
