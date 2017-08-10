@@ -28,7 +28,7 @@ class Detail(utils_views.List):
     def get_queryset(self):
         return super().get_queryset().filter(
                 container_type=content.Content.content_type,
-                entity_type=self.get_gestalt().get_content_type(),
+                entity_type=self.get_gestalt().content_type,
                 entity_id=self.get_gestalt().id
                 ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
                     'content__versions__time_created')).order_by('-time_created')
@@ -46,7 +46,7 @@ class List(base.PermissionMixin, generic.ListView):
 
     def get_content(self):
         return associations.Association.objects.filter(
-                entity_type=models.Gestalt.get_content_type()).can_view(self.request.user)
+                entity_type=models.Gestalt.content_type).can_view(self.request.user)
 
 
 class Login(allauth.account.views.LoginView):

@@ -9,7 +9,7 @@ import core
 from core import colors
 
 
-class Gestalt(models.Model):
+class Gestalt(core.models.Model):
     is_group = False
 
     about = models.TextField('Selbstauskunft', blank=True)
@@ -41,10 +41,6 @@ class Gestalt(models.Model):
             user.set_unusable_password()
             user.save()
         return user.gestalt
-
-    @classmethod
-    def get_content_type(cls):
-        return django.contrib.contenttypes.models.ContentType.objects.get_for_model(cls)
 
     def __str__(self):
         name = ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
