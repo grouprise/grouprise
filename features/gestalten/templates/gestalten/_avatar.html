@@ -3,10 +3,10 @@
 {% kwacro avatar %}
     {% thumbnail gestalt.avatar '64x64' format='PNG' crop="center" as avatar %}
         <span title="{{ gestalt }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }}">
-            <img src="{{ avatar.url }}" alt="{{ gestalt}}">
+            <img src="{{ avatar.url }}" alt="{{ gestalt }} (@{{ gestalt.slug }})">
         </span>
     {% empty %}
-        <span title="{{ gestalt }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
+    <span title="{{ gestalt }} (@{{ gestalt.slug }})" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
             {{ gestalt.get_initials|truncatechars:4 }}
         </span>
     {% endthumbnail %}

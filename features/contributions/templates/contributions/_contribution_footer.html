@@ -3,7 +3,7 @@
         <div class="media-footer-left">
             {% time contribution.time_created %}
             <span class="media-footer-separator"></span>
-            {% link contribution.author %}
+            {% link contribution.author '@'|add:contribution.author.slug %}
         </div>
 
         <div class="media-footer-right">
