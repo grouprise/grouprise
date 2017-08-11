@@ -1,0 +1,7 @@
+{% extends 'content/update.html' %}
+
+{% block menu %}{% menu 'file' view.entity %}{% endblock %}
+
+{% block form_extra %}
+    {% include 'core/_field.html' with field=form.file %}
+{% endblock %}

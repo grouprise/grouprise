@@ -8,6 +8,7 @@ import core.views
 from core.views import base
 from features.associations import models as associations
 from features.contributions import views as contributions
+from features.files import forms as files
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
 from features.groups import models as groups
@@ -105,6 +106,8 @@ class Update(base.PermissionMixin, generic.UpdateView):
     def get_form_class(self):
         if self.object.container.is_gallery:
             form_class = galleries.Update
+        elif self.object.container.is_file:
+            form_class = files.Update
         else:
             form_class = self.form_class
         return form_class
@@ -140,6 +143,8 @@ class Update(base.PermissionMixin, generic.UpdateView):
     def get_template_names(self):
         if self.object.container.is_gallery:
             name = 'galleries/update.html'
+        elif self.object.container.is_file:
+            name = 'files/update.html'
         elif self.object.container.is_event:
             name = 'events/update.html'
         else:
