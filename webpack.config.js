@@ -16,7 +16,7 @@ module.exports = {
     snake: './snake.js'
   },
   output: {
-    publicPath: '/static/stadt/js/',
+    publicPath: '/stadt/static/stadt/js/',
     path: path.join(__dirname, 'build/static/js/'),
     filename: '[name].js'
   },
