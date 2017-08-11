@@ -1,56 +1,33 @@
 {% extends 'content/list.html' %}
-{% load rules %}
 
-{% block header %}
-    {% include 'groups/detail/_header.html' %}
-{% endblock %}
-
-{% block meta %}
-    {% include "meta/group.html" %}
-{% endblock %}
+{% block meta %}{% include "groups/_meta.html" %}{% endblock %}
 
 {% block meta_feed %}
     <link rel="alternate" type="application/rss+xml" title="{{ group }}"
         href="{% url 'group-feed' group.pk %}">
 {% endblock %}
 
-{% block heading %}{% endblock %}
-
-{% block content_header %}
-    {% load conversations %}
-    {% conversation_associations user group as conversations %}
-    {% if conversations %}
-        <div class="content-block">
-            {% include 'conversations/_shortlist.html' with associations=conversations %}
-        </div>
-    {% endif %}
-
-    {% if intro_content %}
-        <div class="content-block">
-            <div class="content-header">
-                <h2 class="content-classification">Intro</h2>
-                {% include "core/_decoration.html" with icon="sg-pin" %}
-            </div>
-            {% include 'content/_list.html' with associations=intro_content hide_meta=True %}
-        </div>
-    {% endif %}
-
-    <div class="content-header">
-        <h2 class="content-classification">Beiträge</h2>
-        {% include "core/_decoration.html" with icon="sg-pen" %}
-        <div class="btn-toolbar">
-            {% has_perm 'content.group_create' user group as can_create_content %}
-            {% if can_create_content %}
-                {% dropdown 'content-new' 'Neuer Beitrag' %}
-                    <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
-                    <li><a href="{% url 'create-group-event' group.slug %}">Veranstaltung</a></li>
-                    <li><a href="{% url 'create-group-gallery' group.slug %}">Galerie</a></li>
-                {% enddropdown %}
-            {% endif %}
-        </div>
-    </div>
+{% block header %}
+    {% include 'groups/detail/_header.html' %}
 {% endblock %}
 
 {% block sidebar %}
     {% include 'groups/detail/_sidebar.html' %}
+{% endblock %}
+
+{% block content_header %}
+    {% include 'groups/detail/_conversations.html' %}
+    {% include 'groups/detail/_intro.html' %}
+{% endblock %}
+
+{% block heading_toolbar %}
+    {% load rules %}
+    {% has_perm 'content.group_create' user group as can_create %}
+    {% if can_create %}
+        {% dropdown 'content-new' 'Neuer Beitrag' %}
+            <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
+            <li><a href="{% url 'create-group-event' group.slug %}">Veranstaltung</a></li>
+            <li><a href="{% url 'create-group-gallery' group.slug %}">Galerie</a></li>
+        {% enddropdown %}
+    {% endif %}
 {% endblock %}
