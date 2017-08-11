@@ -25,6 +25,8 @@ class ContentAssociated(core.notifications.Notification):
     def get_template_name(self):
         if self.object.container.is_gallery:
             name = 'galleries/associated.txt'
+        elif self.object.container.is_file:
+            name = 'files/associated.txt'
         elif self.object.container.is_event:
             name = 'events/associated.txt'
         else:
