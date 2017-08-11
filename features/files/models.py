@@ -36,6 +36,9 @@ class File(core.models.Model):
             object_id_field='contribution_id',
             related_query_name='file')
 
+    version = models.ForeignKey(
+            'content2.Version', null=True, on_delete=models.CASCADE, related_name='file')
+
     objects = FileManager()
 
     @property
