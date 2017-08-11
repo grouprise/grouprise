@@ -45,6 +45,12 @@ class File(core.models.Model):
     def display_name(self):
         return self.filename or path.basename(self.file.name)
 
+    def __str__(self):
+        return self.display_name
+
+    def get_absolute_url(self):
+        return self.file.url
+
     def is_image(self):
         root, ext = path.splitext(self.file.name.lower())
         return ext in ('.svg', '.apng', '.png', '.gif', '.jpg', '.jpeg')

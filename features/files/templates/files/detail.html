@@ -1,0 +1,22 @@
+{% extends 'content/detail.html' %}
+
+{% block menu %}{% menu 'file' association.entity %}{% endblock %}
+
+{% block content_type %}
+    <i class="sg sg-content-type-file"></i>
+    <span>{% if not association.public %}Interne {% endif %}Datei</span>
+{% endblock %}
+
+{% block user_content_header %}
+    <div class="meta meta-float meta-merge">
+        <div class="meta-box">
+            <h4 class="meta-box-title">
+                <i class="sg sg-file"></i>
+                <span>Datei</span>
+            </h4>
+            <div class="meta-box-body">
+                {% link association.container.versions.last.file.get %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

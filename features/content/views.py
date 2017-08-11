@@ -46,6 +46,8 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
     def get_template_names(self):
         if self.object.container.is_gallery:
             name = 'galleries/detail.html'
+        elif self.object.container.is_file:
+            name = 'files/detail.html'
         elif self.object.container.is_event:
             name = 'events/detail.html'
         else:

@@ -67,6 +67,10 @@ class Content(core.models.Model):
         return self.time is not None
 
     @property
+    def is_file(self):
+        return self.versions.last().file is not None
+
+    @property
     def is_gallery(self):
         return self.gallery_images.count() > 0
 
