@@ -68,7 +68,7 @@ class Content(core.models.Model):
 
     @property
     def is_file(self):
-        return self.versions.last().file is not None
+        return self.versions.last().file.exists()
 
     @property
     def is_gallery(self):

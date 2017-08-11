@@ -3,6 +3,8 @@
         <li>
             {% if association.container.is_gallery %}
                 {% include 'galleries/_preview.html' %}
+            {% elif association.container.is_file %}
+                {% include 'files/_preview.html' %}
             {% elif association.container.is_event %}
                 {% include 'events/_preview.html' %}
             {% else %}
