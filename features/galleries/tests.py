@@ -28,8 +28,6 @@ class Guest(images.ImageMixin, memberships.MemberMixin, core.tests.Test):
     def test_guest_gallery_link(self):
         self.assertNotContainsLink(self.client.get('/'), self.get_url('create-gallery'))
         self.assertNotContainsLink(
-                self.client.get(self.get_url('articles')), self.get_url('create-gallery'))
-        self.assertNotContainsLink(
                 self.client.get(self.gestalt.get_absolute_url()), self.get_url('create-gallery'))
         self.assertNotContainsLink(
                 self.client.get(self.group.get_absolute_url()), self.get_url('create-gallery'))
