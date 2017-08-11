@@ -18,7 +18,7 @@
                 {% if can_view_members %}
                     {% with authors=association.container.get_version_authors %}
                         {% if authors.count == 1 %}
-                            ({% link authors.first %})
+                            (<a href="{{ authors.first.get_absolute_url }}" title="@{{ authors.first.slug }}">{{ authors.first }}</a>)
                         {% else %}
                             ({{ authors.count }} Autorinnen)
                         {% endif %}
