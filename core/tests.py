@@ -2,7 +2,7 @@ import django.core.urlresolvers
 from django import test
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
-from django.core import cache, mail, urlresolvers
+from django.core import mail, urlresolvers
 
 import logging
 
@@ -19,19 +19,6 @@ def get_url(url, *args):
 
 
 class Test(test.TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.disable_caching()
-
-    @classmethod
-    def disable_caching(cls):
-        cache.cache.cache = cache.caches['proxy']
-
-    @classmethod
-    def enable_caching(cls):
-        cache.cache.cache = cache.caches['test']
-
     def assertContainsLink(self, response=None, link_url=None, key=None, obj=None):
         if response is None:
             response = self.client.get(obj.get_absolute_url())

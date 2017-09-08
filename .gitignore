@@ -9,7 +9,6 @@ static/
 whoosh_index
 res/img/backdrops
 stadt/ASSET_VERSION
-stadt/CACHE_VERSION
 stadt/settings/local.py
 *.swp
 *.pyc
