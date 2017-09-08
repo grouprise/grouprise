@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django_mailbox',
     'features.articles',
     'features.associations',
+    'features.board',
     'features.contributions',
     'features.conversations',
     'features.caching',
