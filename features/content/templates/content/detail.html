@@ -1,5 +1,5 @@
 {% extends 'associations/detail.html' %}
-{% load gestalten rules %}
+{% load gestalten %}
 
 {% block meta %}
     {% include 'content/_meta.html' with content=association.container %}
@@ -12,6 +12,7 @@
 
 {% block heading_toolbar %}
     <div class="btn-toolbar">
+        {% load rules %}
         {% has_perm 'content.change' user association as can_edit %}
         {% if can_edit %}
         <a href="{% url 'update-content' association.entity.slug association.slug %}" class="btn btn-ch">
@@ -33,6 +34,11 @@
         </header>
         
         <div class="content-body">
+            {% load rules %}
+            {% has_perm 'board.create' user association as can_create_note %}
+            {% if can_create_note %}
+                <a href="#">Notiz zum Beitrag am "Schwarzen Brett" anheften</a>
+            {% endif %}
             <h1 class="content-title">
                 {{ association.container.title }}
             </h1>

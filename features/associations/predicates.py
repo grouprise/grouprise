@@ -1,6 +1,8 @@
+import rules
+from rules import predicate
+
 from features.groups import rules as groups
 from features.memberships import predicates as memberships
-import rules
 
 
 @rules.predicate
@@ -41,3 +43,8 @@ def is_member_of_any_content_group(user, content):
         if memberships.is_member_of(user, group):
             return True
     return False
+
+
+@predicate
+def is_public(user, association):
+    return association.public
