@@ -67,7 +67,7 @@ def calendar(context, associations, size='preview', component_id=None):
             content__time__lt=around+datetime.timedelta(weeks=6)
             ).order_by('content__time')
     calendar_event_dict = {date: list(events) for date, events in itertools.groupby(
-        calendar_associations, key=lambda a: a.container.time.date())}
+        calendar_associations, key=lambda a: a.container.time.astimezone().date())}
     calendar = Calendar(calendar_event_dict)
     last_month = around.replace(day=1) + datetime.timedelta(days=-1)
     next_month = around.replace(day=1) + datetime.timedelta(days=31)
@@ -86,8 +86,11 @@ def calendar(context, associations, size='preview', component_id=None):
 @register.filter
 def day_preview(associations):
     return ', '.join([
-        '{} {}'.format(django.utils.formats.time_format(
-            django.utils.timezone.localtime(a.container.time)), a.container.title)
+        '{}{}'.format(
+            '{} '.format(django.utils.formats.time_format(
+                django.utils.timezone.localtime(a.container.time)))
+            if not a.container.all_day else '',
+            a.container.title)
         for a in associations])
 
 
