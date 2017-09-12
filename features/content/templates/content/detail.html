@@ -37,7 +37,9 @@
             {% load rules %}
             {% has_perm 'board.create' user association as can_create_note %}
             {% if can_create_note %}
-                <a href="#">Notiz zum Beitrag am "Schwarzen Brett" anheften</a>
+                <a href="{% url 'create-note' association.entity.slug association.slug %}" title="Das Schwarze Brett ist eine Hinweistafel auf der Startseite von Stadtgestalten.">
+                    Notiz zum Beitrag am "Schwarzen Brett" anheften
+                </a>
             {% endif %}
             <h1 class="content-title">
                 {{ association.container.title }}

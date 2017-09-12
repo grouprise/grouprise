@@ -16,6 +16,7 @@ urlpatterns = [
     urls.url(r'^', urls.include('features.tags.urls')),
 
     urls.url(r'^', urls.include('features.articles.urls')),
+    urls.url(r'^', urls.include('features.board.urls')),
     urls.url(r'^', urls.include('features.events.urls')),
     urls.url(r'^', urls.include('features.files.urls')),
     urls.url(r'^', urls.include('features.galleries.urls')),
