@@ -40,7 +40,11 @@
                                 {% block heading %}
                                     <header class="content-header">
                                         {% block heading_title %}
-                                            <h1 class="content-classification">{{ title|default:site.name }}</h1>
+                                            <h1 class="content-classification">
+                                                {% block heading_title_text %}
+                                                    {{ title|default:site.name }}
+                                                {% endblock %}
+                                            </h1>
                                         {% endblock %}
 
                                         <div class="btn-toolbar">
