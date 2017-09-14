@@ -2,7 +2,7 @@ import django
 
 import core
 import features
-from . import forms, models
+from . import forms
 
 
 class Create(
