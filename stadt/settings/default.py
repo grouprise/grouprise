@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'features.board',
     'features.contributions',
     'features.conversations',
-    'features.caching',
     'features.content',
     'features.events',
     'features.files',
@@ -47,7 +46,6 @@ INSTALLED_APPS = [
     'features.stadt',
     'features.subscriptions',
     'features.tags',
-    'features.texts',
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
@@ -85,7 +83,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'features.caching.context_processors.cache_timeout',
                 'features.groups.context_processors.groups',
                 'features.memberships.context_processors.my_memberships',
                 'features.stadt.context_processors.page_meta',
@@ -253,22 +250,6 @@ ACCOUNT_USERNAME_REQUIRED = False
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
-# Caching
-# https://docs.djangoproject.com/en/1.10/topics/cache/
-
-CACHES = {
-    'default': {
-        'BACKEND': 'features.caching.backends.ProxyCache',
-    },
-    'proxy': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    },
-    'test': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
-}
-
-
 # Django Rest Framework
 # http://www.django-rest-framework.org/
 
@@ -321,11 +302,6 @@ try:
     ASSET_VERSION = open(os.path.join(BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()
 except IOError:
     ASSET_VERSION = "trunk"
-
-try:
-    CACHE_VERSION = int(open(os.path.join(BASE_DIR, "stadt", "CACHE_VERSION"), "r").read().strip())
-except IOError:
-    CACHE_VERSION = 1
 
 # TEMPLATE_DEBUG is officially deprecated in Django but still
 # required by sorl-thumbnail.

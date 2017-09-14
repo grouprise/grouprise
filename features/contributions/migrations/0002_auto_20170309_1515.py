@@ -6,29 +6,7 @@ from django.db import migrations
 
 
 def copy_texts(apps, schema_editor):
-    ContentType = apps.get_model('contenttypes.ContentType')
-    Contribution = apps.get_model('contributions.Contribution')
-    ContributionText = apps.get_model('contributions.Text')
-    ReplyKey = apps.get_model('contributions.ReplyKey')
-    Text = apps.get_model('texts.Text')
-    id_map = {}
-    for text in Text.objects.all():
-        ct = ContributionText.objects.create(text=text.text)
-        contribution = Contribution.objects.create(
-                container_type=text.container_type,
-                container_id=text.container_id,
-                contribution_id=ct.id,
-                contribution_type=ContentType.objects.get_for_model(ct),
-                author=text.author)
-        contribution.time_created = text.time_created
-        contribution.save()
-        id_map[text.id] = contribution.id
-        for rk in text.replykey_set.all():
-            ReplyKey.objects.create(contribution=contribution, gestalt=rk.gestalt, key=rk.key)
-    for text in Text.objects.filter(in_reply_to__isnull=False):
-        contribution = Contribution.objects.get(id=id_map[text.id])
-        contribution.in_reply_to_id = id_map[text.in_reply_to_id]
-        contribution.save()
+    pass
 
 
 class Migration(migrations.Migration):
@@ -36,7 +14,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('contenttypes', '0002_remove_content_type_name'),
         ('contributions', '0001_initial'),
-        ('texts', '0008_text_in_reply_to'),
     ]
 
     operations = [
