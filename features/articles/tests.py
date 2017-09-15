@@ -1,5 +1,6 @@
 import django
 import django.core.mail
+from django.core.urlresolvers import reverse
 
 import core
 from features.associations import models as associations
@@ -11,7 +12,7 @@ from features.memberships import test_mixins as memberships
 class ArticleMixin(gestalten.AuthenticatedMixin):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Test', 'text': 'Test'})
-        self.client.post(self.get_url('create-article'), kwargs)
+        self.client.post(reverse('create-article'), kwargs)
         return associations.Association.objects.get(content__title='Test')
 
     def get_content_url(self):
@@ -22,7 +23,7 @@ class ArticleMixin(gestalten.AuthenticatedMixin):
 
     def setUp(self):
         super().setUp()
-        self.association = self.create_article()
+        self.association = self.create_article(public=True)
         django.core.mail.outbox = []
 
 
