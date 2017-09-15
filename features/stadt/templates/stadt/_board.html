@@ -1,0 +1,11 @@
+<header class="content-header">
+    {% include 'core/_heading.html' with title='Schwarzes Brett' %}
+</header>
+
+<ul>
+    {% load board %}
+    {% get_notes num_max=10 as notes %}
+    {% for note in notes %}
+        <li><a href="{{ note.related_to.get_absolute_url }}">{{ note.text }}</a></li>
+    {% endfor %}
+</ul>
