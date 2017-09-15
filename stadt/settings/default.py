@@ -206,13 +206,11 @@ SCORE_PROCESSORS = [
     'features.stadt.scores.Group',
 ]
 
-ROOT_SIGNALCONF = 'stadt.signals'
-
 BACKUP_PATH = '/var/backups/stadtgestalten'
 
 ENTITY_SLUG_BLACKLIST = [
         'all', 'alle', 'antwort', 'crew', 'facebook', 'gbr', 'info', 'kontakt', 'mail',
-        'noreply', 'postmaster', 'presse', 'reply', 'stadt', 'webmaster', 'www']
+        'noreply', 'postmaster', 'presse', 'reply', 'stadt', 'unknown', 'webmaster', 'www']
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
