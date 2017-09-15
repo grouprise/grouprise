@@ -1,6 +1,18 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block title %}Notiz erstellen - {{ block.super }}{% endblock %}
-{% block menu %}{% menu 'tag' view.association.entity %}{% endblock %}
-{% block breadcrumb %}{% breadcrumb view.association.entity view.association 'Notiz erstellen' %}{% endblock %}
+{% block menu %}{% menu 'note' view.association.entity %}{% endblock %}
+{% block breadcrumb %}
+    {% breadcrumb view.association.entity view.association 'Notiz erstellen' %}
+{% endblock %}
 {% block heading_title_text %}Notiz{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% include 'core/_field.html' with field=form.text %}
+        <button class="btn btn-primary">
+            Notiz erstellen
+        </button>
+    </form>
+{% endblock %}
