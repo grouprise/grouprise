@@ -12,7 +12,7 @@
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% url 'create-article' as url %}
-        {% include 'core/_toolbutton.html' with label='Neuer Artikel' url=url %}
+        {% include 'core/_toolbutton.html' with label='<i class="sg sg-add"></i> Artikel' url=url %}
     {% endif %}
 {% endblock %}
 
