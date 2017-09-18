@@ -30,16 +30,6 @@ class Subscribe(SubscriptionMixin, views.Create):
             return http.HttpResponseRedirect(self.get_success_url())
 
 
-class ContentSubscribe(Subscribe):
-    description = (
-            'Benachrichtigt werden, wenn zum Beitrag <em>{{ content }}</em> '
-            'neue Kommentare veröffentlicht werden')
-    permission_required = 'subscriptions.create_content_subscription'
-
-    def get_related_object(self):
-        return self.get_content()
-
-
 class GroupSubscribe(groups.Mixin, Subscribe):
     permission_required = 'subscriptions.create_group_subscription'
 
@@ -65,15 +55,6 @@ class Unsubscribe(SubscriptionMixin, views.Delete):
                 subscribed_to=self.related_object,
                 subscriber=self.request.user.gestalt
                 ).first()
-
-
-class ContentUnsubscribe(Unsubscribe):
-    description = (
-            'Keine Benachrichtigungen mehr für den Beitrag '
-            '<em>{{ content }}</em> erhalten')
-
-    def get_related_object(self):
-        return self.get_content()
 
 
 class GroupUnsubscribe(Unsubscribe):

@@ -12,7 +12,7 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
-    urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),
+    urls.url(r'^', urls.include('features.subscriptions.urls')),
     urls.url(r'^', urls.include('features.tags.urls')),
 
     urls.url(r'^', urls.include('features.articles.urls')),
