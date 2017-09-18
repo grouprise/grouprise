@@ -96,6 +96,17 @@
                     {{ group.date_founded|date:'Y' }} gegründet
                 </dd>
                 {% include_fragments 'group-meta' %}
+                <dt>
+                    <i class="sg sg-subscription"></i>
+                    <span class="sr-only">Anzahl Abonnentinnen</span>
+                </dt>
+                <dd>
+                    {% load subscriptions %}
+                    {% with num_subs=group|num_subscriptions %}
+                        {{ num_subs }} Abonnentin{{ num_subs|pluralize:'nen' }}
+                    {% endwith %}
+                    {% include_fragments 'group-meta-subscriptions' %}
+                </dd>
             </dl>
         </div>
         <div class="group-info-slug">

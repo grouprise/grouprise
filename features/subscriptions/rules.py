@@ -1,4 +1,4 @@
-from . import filters, models
+from . import models
 from features.memberships import predicates as memberships
 import rules
 
