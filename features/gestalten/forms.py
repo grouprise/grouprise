@@ -10,6 +10,10 @@ from utils import forms as utils_forms
 from features.gestalten import models
 
 
+class GestaltByEmailField(forms.ModelChoiceField):
+    pass
+
+
 def validate_slug(slug):
     if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
         raise django.core.exceptions.ValidationError(

@@ -54,12 +54,18 @@
                 </button>
             </form>
         {% elif can_subscribe %}
-            <form action="{% url 'group-subscribe' group.pk %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+            {% if user.is_authenticated %}
+                <form action="{% url 'group-subscribe' group.pk %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+                        <i class="sg sg-subscription"></i> Abonnieren
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
                     <i class="sg sg-subscription"></i> Abonnieren
-                </button>
-            </form>
+                </a>
+            {% endif %}
         {% endif %}
 
     </div>

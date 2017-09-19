@@ -15,7 +15,7 @@ from features.groups import views as groups
 from features.groups.models import Group
 from features.subscriptions.models import Subscription
 from features.subscriptions.rules import is_subscribed
-from . import models
+from . import forms, models
 
 
 class Subscribe(views.Create):
@@ -30,15 +30,21 @@ class Subscribe(views.Create):
 
 class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
     permission_required = 'subscriptions.create'
-    model = Subscription
-    fields = []
+    form_class = forms.Subscribe
+    template_name = 'subscriptions/create.html'
     success_message = 'Du erhältst zukünftig Benachrichtigungen für Beiträge dieser Gruppe.'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = Subscription(subscriber=self.request.user.gestalt)
-        kwargs['instance'].subscribed_to = self.group
+        kwargs['instance'] = self.get_instance()
         return kwargs
+
+    def get_instance(self):
+        instance = Subscription()
+        if self.request.user.is_authenticated():
+            instance.subscriber = self.request.user.gestalt
+        instance.subscribed_to = self.group
+        return instance
 
     def get_permission_object(self):
         self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
