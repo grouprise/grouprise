@@ -4,12 +4,12 @@ from . import views
 
 urlpatterns = [
     url(
-        r'^stadt/group/(?P<group_pk>[0-9]+)/subscribe/$',
+        r'^stadt/groups/(?P<group_pk>[0-9]+)/subscribe/$',
         views.GroupSubscribe.as_view(),
         name='group-subscribe',
     ),
     url(
-        r'^stadt/group/(?P<group_pk>[0-9]+)/unsubscribe/$',
+        r'^stadt/groups/(?P<group_pk>[0-9]+)/unsubscribe/$',
         views.GroupUnsubscribe.as_view(),
         name='group-unsubscribe',
     ),

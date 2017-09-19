@@ -1,26 +1,24 @@
 import django
 from django import db, http
 from django.contrib import messages
+from django.contrib.messages import info
+from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.views.generic import CreateView, DeleteView
 
+import core
 import features
 from core import fields, views
+from core.views import PermissionMixin
 from features.groups import views as groups
+from features.groups.models import Group
+from features.subscriptions.models import Subscription
+from features.subscriptions.rules import is_subscribed
 from . import models
 
 
-class SubscriptionMixin:
-    model = models.Subscription
-    title = 'Abonnement'
-
-
-class Subscribe(SubscriptionMixin, views.Create):
-    action = 'Abonnieren'
-    data_field_classes = (
-            fields.related_object('subscribed_to'),
-            fields.current_gestalt('subscriber'))
-    message = 'Du erhältst nun Benachrichtigungen.'
-    template_name = 'subscriptions/create.html'
-
+class Subscribe(views.Create):
     def form_valid(self, form):
         try:
             return super().form_valid(form)
@@ -30,41 +28,45 @@ class Subscribe(SubscriptionMixin, views.Create):
             return http.HttpResponseRedirect(self.get_success_url())
 
 
-class GroupSubscribe(groups.Mixin, Subscribe):
+class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
     permission_required = 'subscriptions.create'
+    model = Subscription
+    fields = []
+    success_message = 'Du erhältst zukünftig Benachrichtigungen für Beiträge dieser Gruppe.'
 
-    def get_related_object(self):
-        return django.shortcuts.get_object_or_404(
-                features.groups.models.Group, pk=self.kwargs.get('group_pk'))
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = Subscription(subscriber=self.request.user.gestalt)
+        kwargs['instance'].subscribed_to = self.group
+        return kwargs
+
+    def get_permission_object(self):
+        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        return self.group
+
+    def get_success_url(self):
+        return self.group.get_absolute_url()
 
     def handle_no_permission(self):
-        if self.request.user.is_authenticated():
-            django.contrib.messages.info(
-                    self.request, 'Du erhältst bereits Nachrichten für diese Gruppe.')
-            return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
+        if (self.request.user.is_authenticated()
+                and is_subscribed(self.request.user, self.group)):
+            info(self.request, 'Du hast diese Gruppe bereits abonniert.')
+            return HttpResponseRedirect(self.group.get_absolute_url())
         else:
             return super().handle_no_permission()
 
 
-class Unsubscribe(SubscriptionMixin, views.Delete):
-    action = 'Abbestellen'
+class GroupUnsubscribe(PermissionMixin, DeleteView):
     permission_required = 'subscriptions.delete'
+    model = Subscription
 
     def get_object(self):
-        return models.Subscription.objects.filter(
-                subscribed_to_type=self.related_object.content_type,
-                subscribed_to_id=self.related_object.id,
-                subscriber=self.request.user.gestalt
-                ).first()
+        return self.request.user.gestalt.subscriptions.filter(
+                subscribed_to_type=self.group.content_type, subscribed_to_id=self.group.id)
 
     def get_permission_object(self):
-        return self.related_object
+        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        return self.group
 
-
-class GroupUnsubscribe(Unsubscribe):
-    description = (
-            'Keine Benachrichtigungen mehr für die Gruppe '
-            '<em>{{ group }}</em> erhalten')
-
-    def get_related_object(self):
-        return self.get_group()
+    def get_success_url(self):
+        return self.group.get_absolute_url()
