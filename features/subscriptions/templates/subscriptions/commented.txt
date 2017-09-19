@@ -1,5 +1,0 @@
-{% load core %}{{ comment.text }}
-
--- 
-Beitrag mit Kommentaren im Browser ansehen:
-{{ comment.content.get_absolute_url|full_url }}#{% ref comment %}
