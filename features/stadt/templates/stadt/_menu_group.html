@@ -1,5 +1,3 @@
-{% load utils %}
-
 <li data-order="high">
     <div class="tabbl">
         <header class="tabbl-header">
@@ -12,7 +10,15 @@
                 Zur Gruppenseite
             </a>
 
-            {% include_features '_group_menu_actions.html' %}
+            {% load memberships rules subscriptions %}
+            {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
+            {% has_perm 'subscriptions.delete_subscription' user group as can_unsubscribe %}
+
+            {% if not can_resign and not can_unsubscribe %}
+                <a href="{% url 'group-subscribe' group.pk %}">
+                    Abonnieren
+                </a>
+            {% endif %}
 
             <a href="{% url 'create-group-conversation' group.pk %}">
                 Nachricht schreiben

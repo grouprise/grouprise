@@ -1,9 +1,0 @@
-{% load memberships rules subscriptions %}
-{% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
-{% has_perm 'subscriptions.delete_subscription' user user.gestalt|subscription:group as can_unsubscribe %}
-
-{% if not can_resign and not can_unsubscribe %}
-    <a href="{% url 'group-subscribe' group.pk %}">
-        Abonnieren
-    </a>
-{% endif %}

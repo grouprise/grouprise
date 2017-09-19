@@ -101,8 +101,7 @@
                     <span class="sr-only">Anzahl Abonnentinnen</span>
                 </dt>
                 <dd>
-                    {% load subscriptions %}
-                    {% with num_subs=group|num_subscriptions %}
+                    {% with num_subs=group.subscriptions.count %}
                         {{ num_subs }} Abonnentin{{ num_subs|pluralize:'nen' }}
                     {% endwith %}
                     {% include_fragments 'group-meta-subscriptions' %}
