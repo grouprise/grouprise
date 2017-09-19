@@ -31,7 +31,7 @@ class Subscribe(SubscriptionMixin, views.Create):
 
 
 class GroupSubscribe(groups.Mixin, Subscribe):
-    permission_required = 'subscriptions.create_group_subscription'
+    permission_required = 'subscriptions.create'
 
     def get_related_object(self):
         return django.shortcuts.get_object_or_404(
@@ -48,13 +48,17 @@ class GroupSubscribe(groups.Mixin, Subscribe):
 
 class Unsubscribe(SubscriptionMixin, views.Delete):
     action = 'Abbestellen'
-    permission_required = 'subscriptions.delete_subscription'
+    permission_required = 'subscriptions.delete'
 
     def get_object(self):
         return models.Subscription.objects.filter(
-                subscribed_to=self.related_object,
+                subscribed_to_type=self.related_object.content_type,
+                subscribed_to_id=self.related_object.id,
                 subscriber=self.request.user.gestalt
                 ).first()
+
+    def get_permission_object(self):
+        return self.related_object
 
 
 class GroupUnsubscribe(Unsubscribe):

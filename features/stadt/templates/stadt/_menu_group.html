@@ -10,9 +10,9 @@
                 Zur Gruppenseite
             </a>
 
-            {% load memberships rules subscriptions %}
+            {% load memberships rules %}
             {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
-            {% has_perm 'subscriptions.delete_subscription' user group as can_unsubscribe %}
+            {% has_perm 'subscriptions.delete' user group as can_unsubscribe %}
 
             {% if not can_resign and not can_unsubscribe %}
                 <a href="{% url 'group-subscribe' group.pk %}">
