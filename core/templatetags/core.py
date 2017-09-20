@@ -137,7 +137,10 @@ def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
         plain_preview=False):
     def wrap(result):
-        return "<div data-original-content='{}'>{}</div>".format(json.dumps(text), result)
+        if plain_preview:
+            return result
+        else:
+            return "<div data-original-content='{}'>{}</div>".format(json.dumps(text), result)
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
