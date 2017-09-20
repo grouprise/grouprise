@@ -66,7 +66,7 @@ function init (searchIn = document) {
   component($$('input, select, textarea'), input, defaultsDeep({
     conf: { target: el => closest(el, '.form-group') || el }
   }, opts))
-  component($$('blockquote'), quote, opts)
+  component($$('blockquote').filter(b => !closest(b, 'blockquote')), quote, opts)
 
   // register popstate handler
   history.mount()
