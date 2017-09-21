@@ -3,6 +3,7 @@ import { $, remove, insertElement } from 'luett'
 import { image as imageAdapter } from '../adapters/api'
 import DomAdapter from '../adapters/dom'
 import UploaderFactory from '../util/uploader'
+import { danger } from '../util/notify'
 
 const uploader = UploaderFactory(imageAdapter)
 
@@ -47,10 +48,14 @@ export default el => {
         },
         on: {
           input (images) {
-            const image = images[0]
-            const valueObj = { value: image.id, name: image.title }
-            store.set(valueObj, true)
-            updateState(valueObj.value)
+            if (images && images.length > 0) {
+              const image = images[0]
+              const valueObj = { value: image.id, name: image.title }
+              store.set(valueObj, true)
+              updateState(valueObj.value)
+            } else {
+              danger('Upload fehlgeschlagen. Benutzt du ein übliches Bildformat?')
+            }
           }
         }
       })

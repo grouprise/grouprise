@@ -20,6 +20,7 @@ function inputAdapter (el) {
 
 function selectAdapter (el) {
   return {
+    emptyOption: '',
     get () {
       return {
         value: el.options[el.selectedIndex].value,
@@ -27,14 +28,16 @@ function selectAdapter (el) {
       }
     },
     set (valueObj, propagate = false) {
-      if (!$(`[value="${valueObj.value}"]`, el)) {
+      const value = valueObj.value
+
+      if (value && !$(`[value="${valueObj.value}"]`, el)) {
         const option = document.createElement('option')
         option.value = valueObj.value
         option.textContent = valueObj.name
         el.appendChild(option)
       }
 
-      el.value = valueObj.value
+      el.value = value === null ? this.emptyOption : value
 
       if (propagate) {
         el.dispatchEvent(new window.Event('change'))

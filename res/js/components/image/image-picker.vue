@@ -48,6 +48,10 @@
             this.progress = null
             this.$emit('input', files)
           })
+          .catch(files => {
+            this.progress = null
+            this.$emit('input', null)
+          })
       },
     }
   }

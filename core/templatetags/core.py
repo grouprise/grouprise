@@ -1,4 +1,5 @@
 import os
+import json
 
 import bleach as python_bleach
 
@@ -135,6 +136,11 @@ def bleach(text, disable_tags=tuple()):
 def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
         plain_preview=False):
+    def wrap(result):
+        if plain_preview:
+            return result
+        else:
+            return "<div data-original-content='{}'>{}</div>".format(json.dumps(text), result)
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
@@ -148,7 +154,7 @@ def markdown(
         result = defaultfilters.truncatewords(result, plain_preview)
         result = html.conditional_escape(result)
 
-    return safestring.mark_safe(result)
+    return safestring.mark_safe(wrap(result))
 
 
 @register.tag
