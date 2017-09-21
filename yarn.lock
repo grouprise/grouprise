@@ -3595,6 +3595,10 @@ pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
+popper.js@^1.12.5:
+  version "1.12.5"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.12.5.tgz#229e4dea01629e1f1a1e26991ffade5024220fa6"
+
 postcss-banner@>=1:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/postcss-banner/-/postcss-banner-3.0.0.tgz#baf2269c19680096d996a079830325030c80ed96"
