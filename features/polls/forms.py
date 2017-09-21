@@ -36,14 +36,26 @@ class Create(OptionMixin, content.Create):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        data = kwargs.get('data')
-        if data and data.get('poll_type') == 'event':
+        self.is_type_change = self.data.get('change_type')
+
+        # init options
+        if self.data.get('poll_type') == 'event':
             self.options = EventOptionFormSet(
-                    data=data, queryset=models.EventOption.objects.none())
+                    data=kwargs.get('data'), queryset=models.EventOption.objects.none())
         else:
             self.options = SimpleOptionFormSet(
-                    data=data, queryset=models.SimpleOption.objects.none())
+                    data=kwargs.get('data'), queryset=models.SimpleOption.objects.none())
         self.options.extra = 4
+
+        # permit empty form in case of type change
+        if self.is_type_change:
+            self.empty_permitted = True
+            for form in self.options.forms:
+                form.empty_permitted = True
+
+    def is_valid(self):
+        # prevent saving in case of type change
+        return False if self.is_type_change else super().is_valid()
 
 
 class Update(OptionMixin, content.Update):
