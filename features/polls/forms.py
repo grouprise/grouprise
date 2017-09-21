@@ -1,5 +1,6 @@
 import django
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 from features.content import forms as content
 from . import models
@@ -8,6 +9,7 @@ from . import models
 SimpleOptionFormSet = forms.modelformset_factory(
         models.SimpleOption, fields=('title',), labels={'title': 'Antwort'}, min_num=1,
         validate_min=True, can_delete=True)
+
 
 EventOptionFormSet = forms.modelformset_factory(
         models.EventOption, fields=('time', 'until_time'),
@@ -27,18 +29,20 @@ class OptionMixin:
 
 class Create(OptionMixin, content.Create):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
+    poll_type = forms.ChoiceField(
+            label='Art der Umfrage',
+            choices=[('simple', 'einfach'), ('event', 'Datum / Zeit')],
+            initial='simple')
 
     def __init__(self, *args, **kwargs):
-        poll_type = None
-        if 'poll_type' in kwargs:
-            poll_type = kwargs.pop('poll_type')
         super().__init__(*args, **kwargs)
-        if poll_type == 'event':
+        data = kwargs.get('data')
+        if data and data.get('poll_type') == 'event':
             self.options = EventOptionFormSet(
-                    data=kwargs.get('data'), queryset=models.Option.objects.none())
+                    data=data, queryset=models.EventOption.objects.none())
         else:
             self.options = SimpleOptionFormSet(
-                    data=kwargs.get('data'), queryset=models.Option.objects.none())
+                    data=data, queryset=models.SimpleOption.objects.none())
         self.options.extra = 4
 
 
@@ -47,9 +51,15 @@ class Update(OptionMixin, content.Update):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.options = OptionFormSet(
-                data=kwargs.get('data'),
-                queryset=models.Option.objects.filter(poll=self.instance.container))
+        try:
+            models.Option.objects.filter(poll=self.instance.container).first().eventoption
+            self.options = EventOptionFormSet(
+                    data=kwargs.get('data'),
+                    queryset=models.EventOption.objects.filter(poll=self.instance.container))
+        except ObjectDoesNotExist:
+            self.options = SimpleOptionFormSet(
+                    data=kwargs.get('data'),
+                    queryset=models.SimpleOption.objects.filter(poll=self.instance.container))
         self.options.extra = 2
 
 

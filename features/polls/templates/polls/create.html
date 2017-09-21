@@ -1,14 +1,6 @@
 {% extends 'content/create.html' %}
 
 {% block form_extra %}
-    {% if view.poll_type == 'event' %}
-        <button name="type" value="simple" class="btn btn-default">
-            Einfache Umfrage
-        </button>
-    {% else %}
-        <button name="type" value="event" class="btn btn-default">
-            Terminumfrage
-        </button>
-    {% endif %}
+    {% include 'core/_field.html' with field=form.poll_type %}
     {% include 'polls/_form.html' %}
 {% endblock %}
