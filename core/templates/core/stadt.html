@@ -1,4 +1,4 @@
-{% extends 'stadt/base.html' %}
+{% extends 'core/base.html' %}
 
 {% block title %}{% if title %}{{ title }} - {% endif %}{{ site.name }}{% endblock %}
 
@@ -16,7 +16,7 @@
             <div class="page-prefix">
                 <div class="breadcrumb">{% spaceless %}
                     {% block breadcrumb %}
-                        {% include 'stadt/_breadcrumb.html' %}
+                        {% include 'core/_page_breadcrumb.html' %}
                     {% endblock %}
                 {% endspaceless %}</div>
                 {% include 'stadt/_page_meta.html' %}
@@ -27,7 +27,7 @@
     <div class="wrap wrap-page">
         <div class="container">
             <div class="page">
-                {% include 'stadt/_messages.html' %}
+                {% include 'core/_messages.html' %}
 
                 {% block header %}{% endblock %}
 
@@ -40,7 +40,11 @@
                                 {% block heading %}
                                     <header class="content-header">
                                         {% block heading_title %}
-                                            <h1 class="content-classification">{{ title|default:site.name }}</h1>
+                                            <h1 class="content-classification">
+                                                {% block heading_title_text %}
+                                                    {{ title|default:site.name }}
+                                                {% endblock %}
+                                            </h1>
                                         {% endblock %}
 
                                         <div class="btn-toolbar">

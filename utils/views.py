@@ -258,7 +258,7 @@ class PageMixin(
         TemplateMixin,
         TitleMixin,
         ):
-    fallback_template_name = 'stadt/list.html'
+    fallback_template_name = 'stadt/stadt.html'
 
 
 class RelatedObjectMixin:

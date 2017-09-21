@@ -1,8 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-from stadt import VERSION
-
 
 # parse dependencies from requirements.txt
 def get_requirements():
@@ -16,6 +14,11 @@ def get_requirements():
 def get_readme():
     with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
         return f.read()
+
+
+def get_version():
+    with open(os.path.join(os.path.dirname(__file__), 'VERSION')) as f:
+        return f.read().strip()
 
 
 def include_recursive(directory):
@@ -35,7 +38,7 @@ offline_website = include_recursive('offline-website')
 
 setup(
     name='stadtgestalten',
-    version=VERSION,
+    version=get_version(),
     description='Stadtgestalten is a platform that encourages and enables '
                 'social action and solidarity',
     long_description=get_readme(),
@@ -57,6 +60,8 @@ setup(
     ],
     install_requires=get_requirements(),
     data_files=(
-        ('.', ('manage.py', 'README.md', 'LICENSE', 'CONTRIBUTORS.md', 'CONTRIBUTING.md')),
+        ('.', (
+            'manage.py', 'README.md', 'LICENSE', 'CONTRIBUTORS.md', 'CONTRIBUTING.md',
+        )),
     ) + static_files + offline_website,
 )

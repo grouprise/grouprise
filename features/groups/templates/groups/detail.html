@@ -24,7 +24,7 @@
     {% load rules %}
     {% has_perm 'content.group_create' user group as can_create %}
     {% if can_create %}
-        {% dropdown 'content-new' 'Neuer Beitrag' %}
+        {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
             <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
             <li><a href="{% url 'create-group-event' group.slug %}">Veranstaltung</a></li>
             <li><a href="{% url 'create-group-gallery' group.slug %}">Galerie</a></li>
