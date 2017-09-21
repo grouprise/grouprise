@@ -5,8 +5,12 @@ from features.content import forms as content
 from . import models
 
 
-OptionFormSet = forms.modelformset_factory(
+SimpleOptionFormSet = forms.modelformset_factory(
         models.Option, fields=('title',), labels={'title': 'Antwort'}, min_num=1,
+        validate_min=True, can_delete=True)
+
+EventOptionFormSet = forms.modelformset_factory(
+        models.Option, fields=('title',), labels={'title': 'Datum!'}, min_num=1,
         validate_min=True, can_delete=True)
 
 
@@ -24,9 +28,16 @@ class Create(OptionMixin, content.Create):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
 
     def __init__(self, *args, **kwargs):
+        poll_type = None
+        if 'poll_type' in kwargs:
+            poll_type = kwargs.pop('poll_type')
         super().__init__(*args, **kwargs)
-        self.options = OptionFormSet(
-                data=kwargs.get('data'), queryset=models.Option.objects.none())
+        if poll_type == 'event':
+            self.options = EventOptionFormSet(
+                    data=kwargs.get('data'), queryset=models.Option.objects.none())
+        else:
+            self.options = SimpleOptionFormSet(
+                    data=kwargs.get('data'), queryset=models.Option.objects.none())
         self.options.extra = 4
 
 

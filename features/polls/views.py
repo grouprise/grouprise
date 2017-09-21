@@ -12,6 +12,12 @@ class Create(features.content.views.Create):
 
     form_class = forms.Create
 
+    def get_form_kwargs(self):
+        self.poll_type = self.request.POST.get('type')
+        kwargs = super().get_form_kwargs()
+        kwargs['poll_type'] = self.poll_type
+        return kwargs
+
 
 class Detail(features.content.views.DetailBase):
     template_name = 'polls/detail.html'
