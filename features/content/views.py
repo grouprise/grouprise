@@ -13,7 +13,7 @@ from features.files import forms as files
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from . import forms, models
+from . import forms
 
 
 class List(core.views.PermissionMixin, django.views.generic.ListView):
@@ -48,14 +48,16 @@ class DetailBase(contributions.ContributionFormMixin, base.PermissionMixin, gene
 
     def get_template_names(self):
         if self.object.container.is_poll:
-            name = ('polls/detail.html', )
+            names = ('polls/detail.html',)
         elif self.object.container.is_gallery:
-            name = ('galleries/detail.html', )
+            names = ('galleries/detail.html',)
         elif self.object.container.is_file:
-            name = ('files/detail.html', )
+            names = ('files/detail.html',)
         elif self.object.container.is_event:
-            name = ('events/detail.html', )
-        return super().get_template_names()
+            names = ('events/detail.html',)
+        else:
+            names = super().get_template_names()
+        return names
 
 
 class Detail(DetailBase):
