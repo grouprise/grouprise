@@ -6,12 +6,13 @@ from . import models
 
 
 SimpleOptionFormSet = forms.modelformset_factory(
-        models.Option, fields=('title',), labels={'title': 'Antwort'}, min_num=1,
+        models.SimpleOption, fields=('title',), labels={'title': 'Antwort'}, min_num=1,
         validate_min=True, can_delete=True)
 
 EventOptionFormSet = forms.modelformset_factory(
-        models.Option, fields=('title',), labels={'title': 'Datum!'}, min_num=1,
-        validate_min=True, can_delete=True)
+        models.EventOption, fields=('time', 'until_time'),
+        labels={'time': 'Datum / Zeit', 'until_time': 'Ende'},
+        min_num=1, validate_min=True, can_delete=True)
 
 
 class OptionMixin:

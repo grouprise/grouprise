@@ -3,7 +3,12 @@
     {{ form.options.management_form }}
     {% for form in form.options %}
         {% if form.id %}{{ form.id }}{% endif %}
-        {% include 'core/_field.html' with field=form.title %}
+        {% if form.title %}
+            {% include 'core/_field.html' with field=form.title %}
+        {% else %}
+            {% include 'core/_field.html' with field=form.time %}
+            {% include 'core/_field.html' with field=form.until_time %}
+        {% endif %}
         {% include 'core/_checkbox_field.html' with field=form.DELETE %}
     {% endfor %}
 </div>

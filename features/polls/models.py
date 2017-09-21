@@ -5,10 +5,18 @@ import core.models
 
 class Option(core.models.Model):
     poll = models.ForeignKey('content2.Content', related_name='options')
+
+
+class SimpleOption(Option):
     title = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
+
+
+class EventOption(Option):
+    time = models.DateTimeField()
+    until_time = models.DateTimeField(blank=True, null=True)
 
 
 class Vote(core.models.Model):
