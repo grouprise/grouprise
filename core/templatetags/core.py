@@ -190,7 +190,7 @@ def dropdown(parser, token):
 class DropdownNode(template.Node):
     def __init__(self, name, label, nodelist):
         self.name = name
-        self.label = label
+        self.label = safestring.mark_safe(label)
         self.nodelist = nodelist
 
     def render(self, context):
