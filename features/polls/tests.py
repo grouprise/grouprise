@@ -1,4 +1,5 @@
 import django.core.mail
+from django.core.urlresolvers import reverse
 
 import core.tests
 from features.associations import models as associations
@@ -11,6 +12,7 @@ def get_post_data():
     return {
             'title': 'Test',
             'text': 'Test',
+            'poll_type': 'simple',
             'form-TOTAL_FORMS': '5',
             'form-INITIAL_FORMS': '0',
             'form-MIN_NUM_FORMS': '1',
@@ -237,7 +239,8 @@ class TwoGestalten(
         self.assertNotificationsSent(2)
         self.assertNotificationRecipient(self.gestalt)
         self.assertNotificationRecipient(self.other_gestalt)
-        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains(
+                reverse('content-permalink', args=[self.association.pk]))
         self.assertNotificationContains('Test')
 
 
@@ -250,7 +253,8 @@ class GestaltAndPoll(PollMixin, core.tests.Test):
         self.create_comment()
         self.assertNotificationsSent(1)
         self.assertNotificationRecipient(self.gestalt)
-        self.assertNotificationContains(self.get_content_url())
+        self.assertNotificationContains(
+                reverse('content-permalink', args=[self.association.pk]))
         self.assertNotificationContains('Comment')
 
 
