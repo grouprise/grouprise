@@ -76,7 +76,7 @@ class Update(OptionMixin, content.Update):
 
 
 VoteFormSet = forms.modelformset_factory(
-        models.Vote, fields=('endorse',), labels={'endorse': 'Ja'})
+        models.Vote, fields=('endorse',), labels={'endorse': 'Zustimmung'})
 
 
 class Vote(forms.ModelForm):

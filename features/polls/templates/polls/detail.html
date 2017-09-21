@@ -38,7 +38,7 @@
                     <td>
                         {% get votes voter option as vote %}
                         {% if vote %}
-                            {{ vote.endorse|yesno:'Ja,Nein' }}
+                            {{ vote.endorse|yesno:'Ja,Nein,Vielleicht' }}
                         {% else %}
                             ?
                         {% endif %}
@@ -65,7 +65,7 @@
                     {% for option in options %}
                         <td>
                             {% get vote_forms option as form %}
-                            {% include 'core/_checkbox_field.html' with field=form.endorse %}
+                            {% include 'core/_field.html' with field=form.endorse %}
                         </td>
                     {% endfor %}
                     <td>

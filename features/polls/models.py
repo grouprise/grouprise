@@ -40,4 +40,4 @@ class Vote(core.models.Model):
 
     time_updated = models.DateTimeField(auto_now=True)
 
-    endorse = models.BooleanField(default=False)
+    endorse = models.NullBooleanField(default=False)
