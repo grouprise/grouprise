@@ -12,7 +12,7 @@
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% url 'create-event' as url %}
-        {% include 'core/_toolbutton.html' with label='Neue Veranstaltung' url=url %}
+        {% include 'core/_toolbutton.html' with label='<i class="sg sg-add"></i> Veranstaltung' url=url %}
     {% endif %}
 {% endblock %}
 

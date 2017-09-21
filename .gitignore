@@ -8,7 +8,7 @@ node_modules
 static/
 whoosh_index
 res/img/backdrops
-stadt/ASSET_VERSION
+ASSET_VERSION
 stadt/settings/local.py
 *.swp
 *.pyc

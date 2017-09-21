@@ -1,5 +1,5 @@
 DIR_INSTALL_ROOT ?= usr/share/stadtgestalten
-FILE_VERSION_ASSET = stadt/ASSET_VERSION
+FILE_VERSION_ASSET = ASSET_VERSION
 
 PYTHON_INSTALL_ARGS = --root "$(DESTDIR)" \
 	--install-lib="/$(DIR_INSTALL_ROOT)" \

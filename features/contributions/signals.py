@@ -75,10 +75,13 @@ def process_incoming_message(sender, message, **args):
             raise ValueError('Domain does not match.')
         group = groups.Group.objects.get(slug=local)
         try:
-            gestalt = gestalten.Gestalt.objects.get(
-                    user__emailaddress__email=message.from_address[0])
+            gestalt = gestalten.Gestalt.objects.get(user__email=message.from_address[0])
         except gestalten.Gestalt.DoesNotExist:
-            gestalt = None
+            try:
+                gestalt = gestalten.Gestalt.objects.get(
+                        user__emailaddress__email=message.from_address[0])
+            except gestalten.Gestalt.DoesNotExist:
+                gestalt = None
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)

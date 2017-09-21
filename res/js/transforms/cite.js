@@ -13,8 +13,8 @@ function citeSource (el, opts) {
     const target = $(`${event.target.getAttribute('href')} .media-body`)
     const author = getAttr(target, 'data-author')
     const permalink = getAttr(target, 'data-permalink')
-    const text = target.innerText
-    const formattedText = text + (author ? `\n — [${author}](${permalink})` : '')
+    const text = JSON.parse($('[data-original-content]', target).dataset.originalContent)
+    const formattedText = (text + (author ? `\n — [${author}](${permalink})` : '')).replace(/^/gm, '> ')
     const data = { author, permalink, text, formattedText }
 
     bus.emit(EVENT_CITE, data)

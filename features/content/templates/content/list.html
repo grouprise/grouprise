@@ -8,7 +8,7 @@
 {% block heading_toolbar %}
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
-        {% dropdown 'content-new' 'Neuer Beitrag' %}
+        {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
             <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>
             <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> Veranstaltung</a></li>
             <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> Galerie</a></li>
