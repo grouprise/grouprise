@@ -2,7 +2,7 @@
     <h2>Antwortmöglichkeiten</h2>
     {{ form.options.management_form }}
     {% for form in form.options %}
-        {% if form.id %}{{ form.id }}{% endif %}
+        {% if form.option_ptr %}{{ form.option_ptr }}{% endif %}
         {% if form.title %}
             {% include 'core/_field.html' with field=form.title %}
         {% else %}

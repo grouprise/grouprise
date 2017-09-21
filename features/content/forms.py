@@ -136,4 +136,8 @@ class Update(forms.ModelForm):
             association.container.all_day = self.cleaned_data['all_day']
         association.container.save()
         association.container.versions.create(author=self.author, text=self.cleaned_data['text'])
+        self.save_content_relations(commit)
         return association
+
+    def save_content_relations(self, commit):
+        pass
