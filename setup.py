@@ -62,7 +62,6 @@ setup(
     data_files=(
         ('.', (
             'manage.py', 'README.md', 'LICENSE', 'CONTRIBUTORS.md', 'CONTRIBUTING.md',
-            'ASSET_VERSION',
         )),
     ) + static_files + offline_website,
 )
