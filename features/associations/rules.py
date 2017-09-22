@@ -2,9 +2,11 @@ from rules import add_perm, is_authenticated, predicate
 
 from . import predicates
 
+
 @predicate
 def is_creator(user, association):
     return association.container.versions.first().author == user.gestalt
+
 
 add_perm(
         'associations.create_content_group_membership',
