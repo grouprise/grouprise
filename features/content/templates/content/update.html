@@ -6,8 +6,27 @@
     {% breadcrumb association.entity association 'Beitrag bearbeiten' %}
 {% endblock %}
 
-{% block extra_settings %}
+{% block extra_settings_left %}
     {% include 'core/_field.html' with field=form.slug prefix='@'|add:association.entity.slug|add:'/' %}
+{% endblock %}
+
+{% block extra_settings_right %}{% endblock %}
+        
+{% block extra_form_content %}
+    {% load rules %}
+    {% has_perm 'associations.delete' user association as can_delete %}
+    {% if can_delete %}
+        <div class="section section-publish section-article" data-component="publish">
+            <h2>Gefahrenbereich</h2>
+            <div class="row">
+                <div class="col-md-5">
+                    <a href="#" class="btn btn-danger btn-sm btn-block">
+                        Beitrag löschen
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block submit_label %}Beitrag ändern{% endblock %}
