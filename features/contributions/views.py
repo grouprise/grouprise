@@ -1,5 +1,6 @@
 import django.views.generic.edit
 
+import core
 from . import models
 
 
@@ -41,3 +42,10 @@ class ContributionFormMixin(django.views.generic.edit.FormMixin):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
+
+class Delete(core.views.PermissionMixin, django.views.generic.UpdateView):
+    permission_required = 'contributions.delete'
+    model = models.Contribution
+    fields = []
+    template_name = 'contributions/delete.html'
