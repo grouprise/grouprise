@@ -5,6 +5,7 @@ from django.contrib.contenttypes import models as contenttypes
 from django.views import generic
 
 import core.views
+import features
 from core.views import base
 from features.associations import models as associations
 from features.contributions import views as contributions
@@ -25,7 +26,9 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
         return super().get_queryset().ordered_user_content(self.request.user)
 
 
-class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
+class Detail(
+        features.associations.views.AssociationMixin, contributions.ContributionFormMixin,
+        base.PermissionMixin, generic.DetailView):
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
     model = associations.Association
@@ -33,16 +36,7 @@ class Detail(contributions.ContributionFormMixin, base.PermissionMixin, generic.
     form_class = forms.Comment
 
     def get_object(self, queryset=None):
-        try:
-            entity = groups.Group.objects.get(slug=self.kwargs['entity_slug'])
-        except groups.Group.DoesNotExist:
-            entity = shortcuts.get_object_or_404(
-                    gestalten.Gestalt, user__username=self.kwargs['entity_slug'])
-        return shortcuts.get_object_or_404(
-                self.model,
-                entity_id=entity.id,
-                entity_type=contenttypes.ContentType.objects.get_for_model(entity),
-                slug=self.kwargs['association_slug'])
+        return self.get_association()
 
     def get_template_names(self):
         if self.object.container.is_gallery:

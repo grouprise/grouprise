@@ -20,6 +20,8 @@ class Association(core.models.Model):
             help_text='Der Kurzname wird beispielsweise in der Webadresse des Beitrags '
             'verwendet.')
 
+    deleted = models.DateTimeField(null=True, blank=True)
+
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
     container_id = models.PositiveIntegerField()
     container_type = models.ForeignKey(

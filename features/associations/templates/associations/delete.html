@@ -1,0 +1,24 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Beitrag löschen - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'content' association.entity %}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb association.entity association 'Beitrag löschen' %}
+{% endblock %}
+
+{% block heading_title_text %}Beitrag{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <p>Möchtest Du den Beitrag
+        <em><a href="{{ association.get_absolute_url }}">{{ association }}</a></em>
+        wirklich löschen?</p>
+
+        <button class="btn btn-danger">
+            Beitrag löschen
+        </button>
+    </form>
+{% endblock %}
