@@ -10,6 +10,13 @@ from features.groups.models import Group
 from . import models
 
 
+def get_association_or_404(**kwargs):
+    association = get_object_or_404(Association, **kwargs)
+    if association.deleted:
+        raise Http404('The Association was deleted.')
+    return association
+
+
 class AssociationMixin:
     def get_association(self):
         # determine entity
@@ -21,12 +28,8 @@ class AssociationMixin:
 
         # determine association
         association_slug = self.kwargs.get('association_slug')
-        association = get_object_or_404(
-                Association, entity_type=entity.content_type, entity_id=entity.id,
-                slug=association_slug)
-        if association.deleted:
-            raise Http404('The Association was deleted.')
-        return association
+        return get_association_or_404(
+                entity_type=entity.content_type, entity_id=entity.id, slug=association_slug)
 
 
 class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.UpdateView):

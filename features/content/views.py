@@ -8,6 +8,7 @@ import core.views
 import features
 from core.views import base
 from features.associations import models as associations
+from features.associations.views import get_association_or_404
 from features.contributions import views as contributions
 from features.files import forms as files
 from features.galleries import forms as galleries
@@ -52,8 +53,7 @@ class Detail(
 
 class Permalink(django.views.generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        association = django.shortcuts.get_object_or_404(
-                associations.Association, pk=kwargs.get('association_pk'))
+        association = get_association_or_404(pk=kwargs.get('association_pk'))
         return django.core.urlresolvers.reverse(
                 'content', args=(association.entity.slug, association.slug))
 
