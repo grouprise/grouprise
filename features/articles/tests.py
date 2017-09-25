@@ -1,8 +1,8 @@
 import django
-import django.core.mail
+from django.core.urlresolvers import reverse
 
 import core
-from features.associations import models as associations
+from features.associations.models import Association
 from features.contributions import models as contributions
 from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
@@ -11,8 +11,8 @@ from features.memberships import test_mixins as memberships
 class ArticleMixin(gestalten.AuthenticatedMixin):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Test', 'text': 'Test'})
-        self.client.post(self.get_url('create-article'), kwargs)
-        return associations.Association.objects.get(content__title='Test')
+        self.client.post(reverse('create-article'), kwargs)
+        return Association.objects.get(content__title='Test')
 
     def get_content_url(self):
         return self.get_url('content', (self.association.entity.slug, self.association.slug))
@@ -30,7 +30,7 @@ class GroupArticleMixin(ArticleMixin):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Group Article', 'text': 'Test'})
         self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
-        return associations.Association.objects.get(content__title='Group Article')
+        return Association.objects.get(content__title='Group Article')
 
 
 class Guest(memberships.MemberMixin, core.tests.Test):
@@ -41,7 +41,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.client.logout()
 
     def get_article_url(self):
-        return associations.Association.objects.get(content__title='Test').get_absolute_url()
+        return Association.objects.get(content__title='Test').get_absolute_url()
 
     def create_group_article(self, **kwargs):
         self.client.force_login(self.gestalt.user)
@@ -50,7 +50,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.client.logout()
 
     def get_group_article_url(self):
-        return associations.Association.objects.get(
+        return Association.objects.get(
                 content__title='Group Article').get_absolute_url()
 
     def test_guest_article_link(self):
@@ -112,10 +112,10 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         return self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
 
     def get_article_url(self):
-        return associations.Association.objects.get(content__title='Test').get_absolute_url()
+        return Association.objects.get(content__title='Test').get_absolute_url()
 
     def get_group_article_url(self):
-        return associations.Association.objects.get(
+        return Association.objects.get(
                 content__title='Group Article').get_absolute_url()
 
     def test_gestalt_article_link(self):
@@ -131,14 +131,14 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
         self.assertEqual(self.client.get(self.get_url('create-article')).status_code, 200)
         response = self.create_article()
         self.assertRedirects(response, self.get_article_url())
-        self.assertExists(associations.Association, content__title='Test')
+        self.assertExists(Association, content__title='Test')
 
     def test_gestalt_create_group_article(self):
         self.assertEqual(self.client.get(self.get_url(
             'create-group-article', self.group.slug)).status_code, 200)
         response = self.create_group_article()
         self.assertRedirects(response, self.get_group_article_url())
-        self.assertExists(associations.Association, content__title='Group Article')
+        self.assertExists(Association, content__title='Group Article')
 
     def test_gestalt_public_article(self):
         self.create_article(public=True)
@@ -180,7 +180,7 @@ class TwoGestalten(
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Group Article', 'text': 'Test'})
         self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
-        self.association = associations.Association.objects.get(content__title='Group Article')
+        self.association = Association.objects.get(content__title='Group Article')
 
     def get_content_url(self):
         return self.get_url('content', (self.association.entity.slug, self.association.slug))
