@@ -41,6 +41,7 @@ class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['instance'].deleted = now()
+        kwargs['instance'].slug = None
         return kwargs
 
     def get_object(self):
