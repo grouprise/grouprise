@@ -1,3 +1,26 @@
 {% extends 'stadt/stadt.html' %}
 
+{% block title %}Kommentar löschen - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'content' view.association.entity %}{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb view.association.entity view.association 'Kommentar löschen' %}
+{% endblock %}
+
+{% block heading_title_text %}Kommentar{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <p>Möchtest Du den Kommentar 
+        <em>{{ contribution.contribution.text|truncatechars:50 }}</em>
+        wirklich löschen?</p>
+
+        <button class="btn btn-danger">
+            Kommentar löschen
+        </button>
+    </form>
+{% endblock %}
+
 
