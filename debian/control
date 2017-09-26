@@ -9,7 +9,7 @@ Standards-Version: 3.9.6
 Package: stadtgestalten
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}
-Recommends: python3-psycopg2, uwsgi, uwsgi-plugin-python3,
+Recommends: ghostscript, python3-psycopg2, uwsgi, uwsgi-plugin-python3,
  uwsgi-plugin-router-access, ${misc:Recommends}
 Suggests: sqlite3, postgresql-client-common
 Description: Web platform that enables social action and solidarity
