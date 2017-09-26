@@ -83,7 +83,7 @@ class ConversationReplyByEmail(
 
 
 class Delete(ContributionMixin, django.test.TestCase):
-    def test_delete_association(self):
+    def test_delete_contribution(self):
         delete_url = reverse(
                 'delete-contribution',
                 args=[
