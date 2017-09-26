@@ -13,6 +13,14 @@ class ContributionManager(models.Manager):
                 return self.get(id=m.group(1))
         raise self.model.DoesNotExist
 
+    def get_queryset(self):
+        return super().get_queryset().exclude_deleted()
+
+
+class ContributionQuerySet(models.QuerySet):
+    def exclude_deleted(self):
+        return self.exclude(deleted__isnull=False)
+
 
 class Contribution(core.models.Model):
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
@@ -25,10 +33,11 @@ class Contribution(core.models.Model):
 
     author = models.ForeignKey('gestalten.Gestalt', related_name='contributions')
     attached_to = models.ForeignKey('Contribution', null=True, related_name='attachments')
+    deleted = models.DateTimeField(null=True, blank=True)
     in_reply_to = models.ForeignKey('Contribution', null=True, related_name='replies')
     time_created = models.DateTimeField(auto_now_add=True)
 
-    objects = ContributionManager()
+    objects = ContributionManager.from_queryset(ContributionQuerySet)()
 
     class Meta:
         ordering = ('time_created',)

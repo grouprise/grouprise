@@ -18,11 +18,15 @@
             </ul>
         </div>
         <div class="btn-toolbar btn-toolbar-right">
-            <a href="{% url 'group-index' %}" class="btn btn-link">Alle Gruppen</a>
+            <a href="{% url 'group-index' %}" class="btn btn-link">
+                <i class="sg sg-list"></i> Gruppen auflisten
+            </a>
 
             {% has_perm 'groups.create_group' user as can_create_group %}
             {% if can_create_group %}
-                <a href="{% url 'group-create' %}" class="btn btn-link">Neue Gruppe</a>
+                <a href="{% url 'group-create' %}" class="btn btn-link">
+                    <i class="sg sg-add"></i> Gruppe anlegen
+                </a>
             {% endif %}
         </div>
     </div>

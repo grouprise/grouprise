@@ -78,6 +78,7 @@ TEMPLATES = [
             'builtins': ['core.templatetags.core'],
             'context_processors': [
                 'core.context_processors.settings',
+                'core.context_processors.site',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -85,8 +86,6 @@ TEMPLATES = [
                 'features.groups.context_processors.groups',
                 'features.memberships.context_processors.my_memberships',
                 'features.stadt.context_processors.page_meta',
-                'stadt.context_processors.site',
-                'stadt.context_processors.assets',
             ],
         },
     },
@@ -296,7 +295,7 @@ TAGS_TAGGABLE = (
 )
 
 try:
-    ASSET_VERSION = open(os.path.join(BASE_DIR, "stadt", "ASSET_VERSION"), "r").read().strip()
+    ASSET_VERSION = open(os.path.join(BASE_DIR, "ASSET_VERSION"), "r").read().strip()
 except IOError:
     ASSET_VERSION = "trunk"
 

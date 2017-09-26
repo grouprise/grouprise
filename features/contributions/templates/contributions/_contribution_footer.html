@@ -67,6 +67,13 @@
                 </a>
             {% endif %}
 
+            {% load rules %}
+            {% has_perm 'contributions.delete' user contribution as can_delete %}
+            {% if can_delete %}
+                <span class="media-footer-separator"></span>
+                <a href="{% url 'delete-contribution' association.entity.slug association.slug contribution.id %}">Löschen</a>
+            {% endif %}
+
             {% if contribution.contribution.text %}
                 <span class="media-footer-separator"></span>
                 <a class="js" data-component="cite" href="#{% ref contribution %}">

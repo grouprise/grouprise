@@ -13,13 +13,14 @@ urlpatterns = [
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
     urls.url(r'^stadt/', urls.include('features.subscriptions.urls')),
-    urls.url(r'^', urls.include('features.tags.urls')),
 
     urls.url(r'^', urls.include('features.articles.urls')),
+    urls.url(r'^', urls.include('features.contributions.urls')),
     urls.url(r'^', urls.include('features.events.urls')),
     urls.url(r'^', urls.include('features.files.urls')),
     urls.url(r'^', urls.include('features.galleries.urls')),
     urls.url(r'^', urls.include('features.stadt.urls')),
+    urls.url(r'^', urls.include('features.tags.urls')),
 
     # matches /*/, should be included late, groups before gestalten
     urls.url(r'^', urls.include('features.groups.urls')),

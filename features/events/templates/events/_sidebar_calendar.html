@@ -35,7 +35,7 @@
                     <input class="dropdown-state" id="calendar-more" type="checkbox" />
                     <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
                             <span class="btn-label">
-                                Mehr <span class="caret"></span>
+                                <i class="sg sg-menu"></i> Mehr <span class="caret"></span>
                             </span>
                     </label>
                     <ul class="dropdown" id="calendar-more-dropdown" data-dropdown>
@@ -45,7 +45,7 @@
                             </li>
                         {% endif %}
                         <li>
-                            <a href="{% url 'events' %}" >Alle Veranstaltungen</a>
+                            <a href="{% url 'events' %}" >Veranstaltungen auflisten</a>
                         </li>
                     </ul>
                 </div>
@@ -58,7 +58,7 @@
                 {% endif %}
                 {% if not user.is_authenticated or can_create %}
                     <a href="{% if group %}{% url 'create-group-event' group.slug %}{% else %}{% url 'create-event' %}{% endif %}" class="btn btn-link">
-                        Neue Veranstaltung
+                        <i class="sg sg-add"></i> Veranstaltung eintragen
                     </a>
                 {% endif %}
             </div>

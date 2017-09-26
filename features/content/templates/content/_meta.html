@@ -6,16 +6,16 @@
 <meta property="og:url" content="{{ http_origin }}{{ content.get_absolute_url }}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ content.title }}">
-<meta property="og:description" content="{% markdown content.text plain_preview=50 %}">
+<meta property="og:description" content="{% markdown content.versions.last.text plain_preview=50 %}">
 <meta property="og:locale" content="de_DE">
-<meta property="og:article:published_time" content="{{ content.date_created|date:"c" }}">
+<meta property="og:article:published_time" content="{{ content.versions.first.time_created|date:"c" }}">
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@stadtgestalten">
 {# todo not a real absolute url #}
 <meta name="twitter:url" content="{{ http_origin }}{{ content.get_absolute_url }}">
 <meta name="twitter:title" content="{{ content.title }}">
-<meta name="twitter:description" content="{% markdown content.text plain_preview=50 %}">
+<meta name="twitter:description" content="{% markdown content.versions.last.text plain_preview=50 %}">
 
 {% if content.image %}
     {% thumbnail content.image.file '200x200' crop="center top" as image %}
