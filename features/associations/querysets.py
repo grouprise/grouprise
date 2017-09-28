@@ -43,6 +43,9 @@ class Association(models.QuerySet):
     def filter_events(self):
         return self.filter(content__time__isnull=False)
 
+    def filter_galleries(self):
+        return self.filter(content__gallery_images__image__isnull=False)
+
     def filter_group_containers(self):
         return self.filter(entity_type=groups.Group.content_type)
 

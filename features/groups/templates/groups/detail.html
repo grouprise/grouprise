@@ -7,8 +7,22 @@
         href="{% url 'group-feed' group.pk %}">
 {% endblock %}
 
+{% block title %}{{ group }} - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'group' group %}{% endblock %}
+
 {% block header %}
-    {% include 'groups/detail/_header.html' %}
+    <div class="group-header">
+        <div class="group-gallery">
+            {% include 'groups/detail/_intro_gallery.html' %}
+        </div>
+        <div class="group-info">
+            {% include 'groups/detail/_about.html' %}
+        </div>
+    </div>
+    <div class="content-toolbar">
+        <div class="carousel-actions"></div>
+        {% include 'groups/detail/_actions.html' with group=group %}
+    </div>
 {% endblock %}
 
 {% block sidebar %}
