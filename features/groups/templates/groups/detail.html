@@ -30,8 +30,10 @@
 {% endblock %}
 
 {% block content_header %}
-    {% include 'groups/detail/_conversations.html' %}
-    {% include 'groups/detail/_intro.html' %}
+    {% if not page_obj.has_previous %}
+        {% include 'groups/detail/_conversations.html' %}
+        {% include 'groups/detail/_intro.html' %}
+    {% endif %}
 {% endblock %}
 
 {% block heading_toolbar %}
