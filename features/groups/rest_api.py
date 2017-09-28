@@ -27,11 +27,7 @@ class GroupSerializer(serializers.ModelSerializer):
     cover = serializers.SerializerMethodField()
 
     def get_cover(self, instance: models.Group):
-        gallery = instance.get_head_gallery()
-        if gallery and gallery.container.gallery_images.first():
-            image = gallery.container.gallery_images.first().image.file
-            return get_thumbnail(image, '366x120', crop='center').url
-        return None
+        return instance.get_cover_url()
 
     class Meta:
         model = models.Group

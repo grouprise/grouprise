@@ -64,10 +64,7 @@ class Detail(core.views.PermissionMixin, django.views.generic.DetailView):
     template_name = 'groups/detail.html'
 
     def get_context_data(self, **kwargs):
-        associations = Association.objects \
-                .filter_group_containers() \
-                .filter(entity_id=self.object.id) \
-                .ordered_user_content(self.request.user)
+        associations = self.object.associations.ordered_user_content(self.request.user)
         intro_associations = associations.filter(pinned=True).order_by('time_created')
         intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
         if intro_gallery:
