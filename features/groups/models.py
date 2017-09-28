@@ -92,7 +92,7 @@ class Group(core.models.Model):
     def get_cover_url(self):
         url = None
         intro_gallery = self.associations.filter_galleries().filter(pinned=True, public=True) \
-                .order_content_by_time_created().first()
+            .order_content_by_time_created().first()
         if intro_gallery:
             first_image_file = intro_gallery.container.gallery_images.first().image.file
             url = get_thumbnail(first_image_file, '366x120', crop='center').url

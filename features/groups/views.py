@@ -7,8 +7,6 @@ import utils
 from core import fields, views
 from core.views import base
 from features.associations import models as associations
-from features.associations.models import Association
-from features.content import models as content
 from features.groups import models as groups
 from . import filters, forms, models
 

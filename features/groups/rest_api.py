@@ -1,6 +1,5 @@
 from rest_framework import viewsets, serializers, permissions
 from rest_framework.decorators import permission_classes
-from sorl.thumbnail import get_thumbnail
 import django_filters
 import django_filters.widgets
 
