@@ -56,9 +56,12 @@ class Create(views.Create):
             fields.model_field('name'))
 
 
-class Detail(core.views.PermissionMixin, django.views.generic.DetailView):
+class Detail(
+        core.views.PermissionMixin, django.views.generic.list.MultipleObjectMixin,
+        django.views.generic.DetailView):
     permission_required = 'groups.view'
     model = models.Group
+    paginate_by = 10
     template_name = 'groups/detail.html'
 
     def get_context_data(self, **kwargs):
@@ -67,12 +70,13 @@ class Detail(core.views.PermissionMixin, django.views.generic.DetailView):
         intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
         if intro_gallery:
             intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
-        kwargs.update({
-            'associations': associations,
-            'intro_associations': intro_associations,
-            'intro_gallery': intro_gallery,
-        })
-        return super().get_context_data(**kwargs)
+        return super().get_context_data(
+                associations=associations,
+                intro_associations=intro_associations,
+                intro_gallery=intro_gallery,
+                group=self.object,
+                object_list=associations,
+                **kwargs)
 
 
 class List(base.PermissionMixin, filters_views.FilterView):

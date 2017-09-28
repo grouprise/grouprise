@@ -29,6 +29,7 @@ class Entity(core.views.PermissionMixin, django.views.generic.View):
 
         # set view attributes
         view.object = entity
+        view.object_list = None
         view.kwargs = self.kwargs
         view.request = self.request
 
