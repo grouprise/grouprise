@@ -1,4 +1,5 @@
 import django
+import django_filters
 from django.views import generic
 from django_filters import views as filters_views
 
@@ -7,6 +8,7 @@ import utils
 from core import fields, views
 from core.views import base
 from features.associations import models as associations
+from features.associations.filters import ContentFilterSet
 from features.groups import models as groups
 from . import filters, forms, models
 
@@ -57,25 +59,31 @@ class Create(views.Create):
 
 
 class Detail(
-        core.views.PermissionMixin, django.views.generic.list.MultipleObjectMixin,
-        django.views.generic.DetailView):
+        core.views.PermissionMixin, django_filters.views.FilterMixin,
+        django.views.generic.list.MultipleObjectMixin, django.views.generic.DetailView):
     permission_required = 'groups.view'
     model = models.Group
+    filterset_class = ContentFilterSet
     paginate_by = 10
     template_name = 'groups/detail.html'
 
+    def get_queryset(self):
+        return self.object.associations.ordered_user_content(self.request.user)
+
     def get_context_data(self, **kwargs):
-        associations = self.object.associations.ordered_user_content(self.request.user)
+        associations = self.get_queryset()
+        filterset = self.get_filterset(self.get_filterset_class())
         intro_associations = associations.filter(pinned=True).order_by('time_created')
         intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
         if intro_gallery:
             intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
         return super().get_context_data(
                 associations=associations,
+                filter=filterset,
                 intro_associations=intro_associations,
                 intro_gallery=intro_gallery,
                 group=self.object,
-                object_list=associations,
+                object_list=filterset.qs,
                 **kwargs)
 
 
