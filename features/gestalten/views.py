@@ -2,39 +2,28 @@ import allauth
 import django
 from django.views import generic
 
+import core
 import utils
-from utils import views as utils_views
 from core.views import base
 from features.associations import models as associations
-from features.content import models as content
 from . import forms, models
 
 
-class Detail(utils_views.List):
-    menu = 'gestalt'
-    model = associations.Association
-    permission_required = 'entities.view_gestalt'
-    sidebar = ('calendar',)
+class Detail(
+        core.views.PermissionMixin, django.views.generic.list.MultipleObjectMixin,
+        django.views.generic.DetailView):
+    permission_required = 'gestalten.view'
+    model = models.Gestalt
+    paginate_by = 10
     template_name = 'gestalten/detail.html'
 
-    def get(self, request, *args, **kwargs):
-        if not self.get_gestalt():
-            raise django.http.Http404('Gestalt nicht gefunden')
-        return super().get(request, *args, **kwargs)
-
-    def get_permission_object(self):
-        return self.get_gestalt()
-
-    def get_queryset(self):
-        return super().get_queryset().filter(
-                container_type=content.Content.content_type,
-                entity_type=self.get_gestalt().content_type,
-                entity_id=self.get_gestalt().id
-                ).can_view(self.request.user).annotate(time_created=django.db.models.Min(
-                    'content__versions__time_created')).order_by('-time_created')
-
-    def get_title(self):
-        return str(self.get_gestalt())
+    def get_context_data(self, **kwargs):
+        associations = self.object.associations.ordered_user_content(self.request.user)
+        return super().get_context_data(
+                associations=associations,
+                gestalt=self.object,
+                object_list=associations,
+                **kwargs)
 
 
 class List(base.PermissionMixin, generic.ListView):
