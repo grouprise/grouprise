@@ -34,8 +34,12 @@ class Gestalt(models.Model):
 
     @staticmethod
     def get_or_create(email):
-        user, created = auth.get_user_model().objects.get_or_create(
-                email=email)
+        try:
+            created = False
+            user = auth.get_user_model().objects.get(emailaddress__email=email)
+        except auth.get_user_model().DoesNotExist:
+            user, created = auth.get_user_model().objects.get_or_create(
+                    email=email)
         if created:
             allauth_adapter.get_adapter().populate_username(None, user)
             user.set_unusable_password()
