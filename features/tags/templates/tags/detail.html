@@ -6,13 +6,19 @@
 
 {% block heading_title %}
     <h1 class="content-classification">#{{ view.tag.slug }}</h1>
-    <span class="decoration-icon sg-group" role="presentation"></span>
+    {% if view.groups %}
+        <span class="decoration-icon sg-group" role="presentation"></span>
+    {% else %}
+        <span class="decoration-icon sg-pen" role="presentation"></span>
+    {% endif %}
 {% endblock %}
 
 {% block heading_toolbar %}
-<a href="{% url 'tag-group' view.tag.slug %}" class="btn btn-ch">
-        <span class="btn-label">Gruppe hinzufügen</span>
-    </a>
+    {% if view.groups %}
+        <a href="{% url 'tag-group' view.tag.slug %}" class="btn btn-ch">
+            <span class="btn-label">Gruppe hinzufügen</span>
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block sidebar %}
@@ -32,21 +38,25 @@
 
     {# content #}
     {% if view.tagged_only or object_list %}
-        <div class="content-header">
-            <h2 class="content-classification">Beiträge</h2>
-            <span class="decoration-icon sg-pen" role="presentation"></span>
-            <div class="btn-toolbar">
-                {% if view.tagged_only %}
-                    <a href="?{% get_parameters tagged=0 %}" class="btn btn-default btn-sm btn-addon-ok" title="zusätzlich Beiträge von Gruppen anzeigen, die mit diesem Schlagwort gekennzeichnet wurden">
-                        <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete angezeigt</span>
-                    </a>
-                {% else %}
-                    <a href="?{% get_parameters tagged=1 %}" class="btn btn-default btn-sm" title="nur Beiträge anzeigen, die explizit mit diesem Schlagwort gekennzeichnet wurden">
-                        <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete anzeigen</span>
-                    </a>
+        {% if view.groups %}
+            <div class="content-header">
+                <h2 class="content-classification">Beiträge</h2>
+                <span class="decoration-icon sg-pen" role="presentation"></span>
+                {% if view.groups %}
+                    <div class="btn-toolbar">
+                        {% if view.tagged_only %}
+                            <a href="?{% get_parameters tagged=0 %}" class="btn btn-default btn-sm btn-addon-ok" title="zusätzlich Beiträge von Gruppen anzeigen, die mit diesem Schlagwort gekennzeichnet wurden">
+                                <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete angezeigt</span>
+                            </a>
+                        {% else %}
+                            <a href="?{% get_parameters tagged=1 %}" class="btn btn-default btn-sm" title="nur Beiträge anzeigen, die explizit mit diesem Schlagwort gekennzeichnet wurden">
+                                <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete anzeigen</span>
+                            </a>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
-        </div>
+        {% endif %}
         <div class="content-list">
             <div class="content-block">
                 {% include 'content/_list.html' with associations=object_list %}
