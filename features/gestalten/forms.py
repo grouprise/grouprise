@@ -5,19 +5,16 @@ from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
-from django.utils.safestring import mark_safe
 
 from features.groups import models as groups
 from features.gestalten import models
 from utils import forms as utils_forms
-from . import models
 
 
 class GestaltByEmailField(forms.EmailField):
     default_error_messages = {
         'login': 'Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde '
-                    'Dich mit E-Mail-Adresse und Kennwort an.'
+                 'Dich mit E-Mail-Adresse und Kennwort an.'
     }
 
     def __init__(self, *args, **kwargs):
