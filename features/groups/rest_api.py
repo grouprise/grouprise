@@ -30,7 +30,7 @@ class GroupSerializer(serializers.ModelSerializer):
         gallery = instance.get_head_gallery()
         if gallery and gallery.container.gallery_images.first():
             image = gallery.container.gallery_images.first().image.file
-            return get_thumbnail(image, '360x120', crop='center').url
+            return get_thumbnail(image, '366x120', crop='center').url
         return None
 
     class Meta:

@@ -29,7 +29,10 @@ class Association(models.QuerySet):
             if container:
                 author_query_string = '{}__contributions__author'.format(container)
                 query |= models.Q(**{author_query_string: user.gestalt})
-        return self.filter(query)
+        return self.exclude_deleted().filter(query)
+
+    def exclude_deleted(self):
+        return self.exclude(deleted__isnull=False)
 
     def filter_articles(self):
         qs = self

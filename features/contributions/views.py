@@ -1,5 +1,8 @@
 import django.views.generic.edit
+from django.utils.timezone import now
 
+import core
+import features
 from . import models
 
 
@@ -41,3 +44,21 @@ class ContributionFormMixin(django.views.generic.edit.FormMixin):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
+
+class Delete(
+        features.associations.views.AssociationMixin, core.views.PermissionMixin,
+        django.views.generic.UpdateView):
+    permission_required = 'contributions.delete'
+    model = models.Contribution
+    fields = []
+    template_name = 'contributions/delete.html'
+
+    def get_form_kwargs(self):
+        self.association = self.get_association()
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'].deleted = now()
+        return kwargs
+
+    def get_success_url(self):
+        return self.association.get_absolute_url()

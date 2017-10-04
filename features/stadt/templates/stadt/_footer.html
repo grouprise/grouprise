@@ -3,20 +3,19 @@
 <div class="page-footer">
     <div class="page-footer-content">
         <div class="footer-text">
-            <p>Stadtgestalten ist eine
-            <a href="https://git.hack-hro.de/stadtgestalten/stadtgestalten">freie</a>
-            und nicht-kommerzielle Plattform zur Unterstützung der Arbeit von lokal
-            engagierten Menschen und Initiativen.</p>
+            <p>{% markdown about_group.description preset='linkonly' %}</p>
             
-            <p>Unterstütze Stadtgestalten mit einer
-            <a href="https://senselab.org/content/spenden">Spende (Stichwort „Stadtgestalten“)</a>.
+            <p>Unterstütze {{ about_group }} mit einer
+            <a href="https://senselab.org/content/spenden">
+                Spende (Stichwort „Stadtgestalten“)
+            </a>.
         </div>
         <ul class="nav-footer">
             <li>
                 <ul>
                     <li><a href="{% url 'index' %}">Startseite</a></li>
                     <li class="separator"></li>
-                    <li><a href="{{ about_group.get_absolute_url }}">Über Stadtgestalten</a></li>
+                    <li><a href="{{ about_group.get_absolute_url }}">Über {{ about_group }}</a></li>
                     <li><a href="{% url 'imprint' %}">Impressum</a></li>
                     <li><a href="{% url 'privacy' %}">Datenschutzhinweise</a></li>
                     <li class="separator"></li>

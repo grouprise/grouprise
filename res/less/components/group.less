@@ -111,9 +111,6 @@
     max-width: 100%;
 
     .group-link & {
-        position: absolute;
-        margin-top: 5px;
-        z-index: 20;
         background: white;
         max-width: none;
         .material-shadow(3);
@@ -204,6 +201,7 @@
 }
 
 .group-link {
-    display: inline-block;
-    position: relative;
+    transition: transform .2s ease-out;
+    z-index: 101;
+    margin-top: 5px;
 }

@@ -1,16 +1,16 @@
 {% load staticfiles %}
-<meta name="description" content="{{ site_description }}">
+<meta name="description" content="{{ about_group.description }}">
 
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Stadtgestalten">
+<meta property="og:title" content="{{ site.name }}">
 <meta property="og:image" content="{{ http_origin }}{% static "stadt/img/logos/logo_text_large.png" %}">
-<meta property="og:description" content="{{ site_description }}">
+<meta property="og:description" content="{{ about_group.description }}">
 <meta property="og:locale" content="de_DE">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@stadtgestalten">
 <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
-<meta name="twitter:title" content="Gestalte deine Stadt mit Stadtgestalten">
-<meta name="twitter:description" content="{{ site_description }}">
+<meta name="twitter:title" content="{{ site.name }}">
+<meta name="twitter:description" content="{{ about_group.description }}">
 <meta name="twitter:image" content="{{ http_origin }}{% static "stadt/img/logos/logo_text_large.png" %}">

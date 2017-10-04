@@ -38,6 +38,10 @@ urlpatterns = [
         socialaccount_views.login_error,
         name='socialaccount_login_error'),
 
+    url(r'^stadt/login/signup/$',
+        socialaccount_views.signup,
+        name='socialaccount_signup'),
+
     url(r'^stadt/login/facebook/$',
         facebook_views.oauth2_login,
         name='facebook_login'),

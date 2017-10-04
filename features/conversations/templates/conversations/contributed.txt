@@ -1,4 +1,5 @@
+{{ text }}
+
+-- 
 Nachricht online lesen und beantworten:
 {% url 'conversation' instance.container.associations.first.pk as path %}{{ path|full_url }}#{% ref instance %}
-
-{{ text }}
