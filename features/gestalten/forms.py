@@ -1,17 +1,34 @@
 import allauth
-from crispy_forms import bootstrap, layout
 import django
+from crispy_forms import bootstrap, layout
 from django import forms
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
 
 from features.groups import models as groups
-from utils import forms as utils_forms
 from features.gestalten import models
+from utils import forms as utils_forms
+from . import models
 
 
-class GestaltByEmailField(forms.ModelChoiceField):
-    pass
+class GestaltByEmailField(forms.EmailField):
+    default_error_messages = {
+        'login': 'Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde '
+                    'Dich mit E-Mail-Adresse und Kennwort an.'
+    }
+
+    def __init__(self, *args, **kwargs):
+        del kwargs['limit_choices_to']
+        del kwargs['queryset']
+        del kwargs['to_field_name']
+        super().__init__(*args, **kwargs)
+
+    def clean(self, value):
+        value = super().clean(value)
+        gestalt = models.Gestalt.get_or_create(value)
+        if gestalt.can_login():
+            raise ValidationError(self.error_messages['login'], code='login')
+        return gestalt
 
 
 def validate_slug(slug):
