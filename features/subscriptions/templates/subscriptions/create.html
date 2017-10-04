@@ -15,7 +15,9 @@
         <p>Ich möchte benachrichtigt werden, wenn die Gruppe <em>{{ view.group }}</em> neue Beiträge veröffentlicht.</p>
         <div>
             {% if form.subscriber %}
-                {% include 'core/_field.html' with field=form.subscriber %}
+                {% load gestalten %}
+                {% login_or_field form.subscriber as help_text %}
+                {% include 'core/_field.html' with field=form.subscriber help_text=help_text %}
             {% endif %}
         </div>
         <button class="btn btn-primary">Gruppe abonnieren</button>

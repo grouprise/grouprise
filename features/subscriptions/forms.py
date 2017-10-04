@@ -9,6 +9,7 @@ class Subscribe(forms.ModelForm):
         model = Subscription
         fields = ('subscriber',)
         field_classes = {'subscriber': GestaltByEmailField}
+        labels = {'subscriber': 'E-Mail-Adresse'}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
