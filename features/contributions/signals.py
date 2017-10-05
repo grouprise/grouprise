@@ -11,16 +11,17 @@ from features.conversations import models as conversations
 from features.files import models as files
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from . import models, notifications
+from features.subscriptions.notifications import ContributionCreated
+from . import models
 
 logger = logging.getLogger(__name__)
 
-contribution_created = django.dispatch.Signal(providing_args=['instance'])
+contribution_post_create = django.dispatch.Signal(providing_args=['instance'])
 
 
-@receiver(contribution_created)
-def send_contribution_notification(sender, instance, **kwargs):
-    notifications.Contributed(instance=instance).send()
+@receiver(contribution_post_create)
+def contribution_created(sender, instance, **kwargs):
+    ContributionCreated(instance).send()
 
 
 def is_autoresponse(msg):
@@ -67,7 +68,7 @@ def process_incoming_message(sender, message, **args):
         key = core.models.PermissionToken.objects.get(secret_key=token)
         contribution = create_contribution(
                 key.target.container, key.gestalt, message, in_reply_to=in_reply_to_text)
-        contribution_created.send(sender=None, instance=contribution)
+        contribution_post_create.send(sender=None, instance=contribution)
 
     def process_initial(address):
         local, domain = address.split('@')
@@ -89,7 +90,7 @@ def process_incoming_message(sender, message, **args):
             associations.Association.objects.create(
                     entity_type=group.content_type, entity_id=group.id,
                     container_type=conversation.content_type, container_id=conversation.id)
-            contribution_created.send(sender=None, instance=contribution)
+            contribution_post_create.send(sender=None, instance=contribution)
         else:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '

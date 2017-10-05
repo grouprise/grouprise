@@ -27,5 +27,5 @@ class Text(forms.ModelForm):
                 text=self.cleaned_data['text'])
         if commit:
             contribution.save()
-        signals.contribution_created.send(sender=self.__class__, instance=contribution)
+        signals.contribution_post_create.send(sender=self.__class__, instance=contribution)
         return contribution
