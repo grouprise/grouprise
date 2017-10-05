@@ -10,7 +10,7 @@ from features.gestalten import models as gestalten
 import core.notifications
 
 
-class ContentAssociated(core.notifications.Notification):
+class ContentCreated(core.notifications.Notification):
     generate_reply_tokens = True
 
     def get_message_ids(self):
@@ -43,7 +43,7 @@ class ContentAssociated(core.notifications.Notification):
         return name
 
 
-class ContentPublicallyAssociated(ContentAssociated):
+class ContentPublicallyAssociated(ContentCreated):
     def get_recipients(self):
         return gestalten.Gestalt.objects.filter(
                 subscriptions__content_type=self.object.entity_type,

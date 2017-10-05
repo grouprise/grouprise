@@ -16,11 +16,11 @@ from . import models
 
 logger = logging.getLogger(__name__)
 
-contribution_post_create = django.dispatch.Signal(providing_args=['instance'])
+post_create = django.dispatch.Signal(providing_args=['instance'])
 
 
-@receiver(contribution_post_create)
-def contribution_created(sender, instance, **kwargs):
+@receiver(post_create)
+def created(sender, instance, **kwargs):
     ContributionCreated.send_all(instance)
 
 
@@ -68,7 +68,7 @@ def process_incoming_message(sender, message, **args):
         key = core.models.PermissionToken.objects.get(secret_key=token)
         contribution = create_contribution(
                 key.target.container, key.gestalt, message, in_reply_to=in_reply_to_text)
-        contribution_post_create.send(sender=None, instance=contribution)
+        post_create.send(sender=None, instance=contribution)
 
     def process_initial(address):
         local, domain = address.split('@')
@@ -90,7 +90,7 @@ def process_incoming_message(sender, message, **args):
             associations.Association.objects.create(
                     entity_type=group.content_type, entity_id=group.id,
                     container_type=conversation.content_type, container_id=conversation.id)
-            contribution_post_create.send(sender=None, instance=contribution)
+            post_create.send(sender=None, instance=contribution)
         else:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '

@@ -19,6 +19,7 @@ class Create(content.Create):
                 filename=os.path.basename(self.cleaned_data.get('file').name))
         if commit:
             association.save()
+            self.send_post_create(association.container)
         return association
 
 

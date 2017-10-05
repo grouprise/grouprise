@@ -6,6 +6,7 @@ from . import models
 from features.associations import models as associations
 from features.contributions import forms as contributions
 from features.groups import models as groups
+from . import signals
 
 
 class Comment(contributions.Text):
@@ -75,6 +76,11 @@ class Create(forms.ModelForm):
             self.instance.container.versions.create(
                     author=self.author, text=self.cleaned_data['text'])
             return super().save(commit)
+
+    def send_post_create(self, instance=None):
+        signals.post_create.send(
+                sender=self.__class__,
+                instance=instance if instance else self.instance.container)
 
 
 class Update(forms.ModelForm):

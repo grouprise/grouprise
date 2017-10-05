@@ -3,6 +3,7 @@ from django.views import generic
 from core.views import base
 import features.content.views
 from features.associations import models as associations
+from . import forms
 
 
 class List(base.PermissionMixin, generic.ListView):
@@ -19,6 +20,7 @@ class List(base.PermissionMixin, generic.ListView):
 
 
 class Create(features.content.views.Create):
+    form_class = forms.Create
     template_name = 'articles/create.html'
 
     def get_form_kwargs(self):
