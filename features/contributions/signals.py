@@ -21,7 +21,7 @@ contribution_post_create = django.dispatch.Signal(providing_args=['instance'])
 
 @receiver(contribution_post_create)
 def contribution_created(sender, instance, **kwargs):
-    ContributionCreated(instance).send()
+    ContributionCreated.send_all(instance)
 
 
 def is_autoresponse(msg):

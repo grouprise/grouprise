@@ -23,6 +23,11 @@ class Notification:
     def format_recipient(gestalt):
         return '{} <{}>'.format(gestalt, gestalt.user.email)
 
+    @classmethod
+    def send_all(cls, instance):
+        for recipient, reason in cls.get_recipients(instance):
+            cls(instance).send(recipient, reason)
+
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         self.object = kwargs.get('instance')

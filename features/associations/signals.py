@@ -10,4 +10,4 @@ from . import models
 @receiver(post_save, sender=models.Association)
 def association_saved(sender, instance, created, **kwargs):
     if created and not instance.container.is_conversation:
-        ContentAssociated(instance).send()
+        ContentAssociated.send_all(instance)
