@@ -10,19 +10,40 @@ from features.gestalten import models as gestalten
 import core.notifications
 
 
+def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):
+    # association für [betreff]
+    # reason für --signatur
+    # sender für From:
+    # sender ist member?
+    # content oder conversation?
+    for subscription in subscriptions:
+        recipients_dict[subscription.subscriber] = {}
+    for contribution in contributions:
+        recipients_dict[contribution.author] = {}
+    if association and not association.entity.is_group:
+        recipients_dict[association.entity] = {}
+
+
 class ContentCreated(core.notifications.Notification):
     generate_reply_tokens = True
 
+    @classmethod
+    def get_recipients(cls, content):
+        recipients = {}
+        # send notifications to groups associated with content (instance)
+        associations = content.associations.filter(entity_type=Group.content_type)
+        for association in associations:
+            # all subscribers receive a notification
+            subscriptions = association.entity.subscriptions
+            if not association.public:
+                # for internal content, only subscribed members receive a notification
+                subscriptions = subscriptions.filter(
+                        subscriber__memberships__group=association.entity)
+            update_recipients(recipients, association=association, subscriptions=subscriptions)
+        return recipients
+
     def get_message_ids(self):
         return self.object.container.get_unique_id(), None, []
-
-    def get_recipients(self):
-        recipients = set(self.object.container.get_authors())
-        if self.object.entity.is_group:
-            recipients.update(set(self.object.entity.members.all()))
-        else:
-            recipients.add(self.object.entity)
-        return recipients
 
     def get_sender(self):
         return self.object.container.versions.last().author
@@ -43,19 +64,26 @@ class ContentCreated(core.notifications.Notification):
         return name
 
 
-class ContentPublicallyAssociated(ContentCreated):
-    def get_recipients(self):
-        return gestalten.Gestalt.objects.filter(
-                subscriptions__content_type=self.object.entity_type,
-                subscriptions__object_id=self.object.entity_id,
-                subscriptions__unsubscribe=False)
-
-    def get_sender(self):
-        return None
-
-
 class ContributionCreated(notifications.Notification):
     generate_reply_tokens = True
+
+    @classmethod
+    def get_recipients(cls, contribution):
+        recipients = {}
+        # send notifications to gestalten and groups associated with content (instance)
+        for association in contribution.container.associations:
+            if association.entity.is_group:
+                # subscribed members receive a notification
+                subscriptions = association.entity.subscriptions.filter(
+                        subscriber__memberships__group=association.entity)
+                update_recipients(
+                        recipients, association=association, subscriptions=subscriptions)
+            else:
+                # associated gestalten receive a notification
+                update_recipients(recipients, association=association)
+        # send notifications to contributing gestalten
+        update_recipients(recipients, contributions=contribution.container.contributions)
+        return recipients
 
     def get_attachments(self):
         return [
@@ -83,13 +111,6 @@ class ContributionCreated(notifications.Notification):
             if thread_id != parent_id:
                 ref_ids.append(thread_id)
         return my_id, parent_id, ref_ids
-
-    def get_recipients(self):
-        recipients = set(self.object.container.get_authors())
-        recipients.update(set(self.object.container.get_associated_gestalten()))
-        for group in self.object.container.get_associated_groups():
-            recipients.update(set(group.members.all()))
-        return recipients
 
     def get_sender(self):
         return self.object.author

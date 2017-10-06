@@ -19,11 +19,6 @@ logger = logging.getLogger(__name__)
 post_create = django.dispatch.Signal(providing_args=['instance'])
 
 
-@receiver(post_create)
-def created(sender, instance, **kwargs):
-    ContributionCreated.send_all(instance)
-
-
 def is_autoresponse(msg):
     email = msg.get_email_object()
 
