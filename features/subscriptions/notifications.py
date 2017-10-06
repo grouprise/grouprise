@@ -7,6 +7,7 @@ from features.conversations import models as conversations
 from features.contributions import models as contributions
 from features.memberships import models as memberships
 from features.gestalten import models as gestalten
+from features.groups.models import Group
 import core.notifications
 
 
@@ -34,7 +35,7 @@ class ContentCreated(core.notifications.Notification):
         associations = content.associations.filter(entity_type=Group.content_type)
         for association in associations:
             # all subscribers receive a notification
-            subscriptions = association.entity.subscriptions
+            subscriptions = association.entity.subscriptions.all()
             if not association.public:
                 # for internal content, only subscribed members receive a notification
                 subscriptions = subscriptions.filter(
@@ -43,21 +44,21 @@ class ContentCreated(core.notifications.Notification):
         return recipients
 
     def get_message_ids(self):
-        return self.object.container.get_unique_id(), None, []
+        return self.object.get_unique_id(), None, []
 
     def get_sender(self):
-        return self.object.container.versions.last().author
+        return self.object.versions.last().author
 
     def get_subject(self):
-        group = '[{}] '.format(self.object.entity.slug) if self.object.entity.is_group else ''
-        return group + self.object.container.subject
+        #group = '[{}] '.format(self.object.entity.slug) if self.object.entity.is_group else ''
+        return self.object.subject
 
     def get_template_name(self):
-        if self.object.container.is_gallery:
+        if self.object.is_gallery:
             name = 'galleries/associated.txt'
-        elif self.object.container.is_file:
+        elif self.object.is_file:
             name = 'files/associated.txt'
-        elif self.object.container.is_event:
+        elif self.object.is_event:
             name = 'events/associated.txt'
         else:
             name = 'articles/associated.txt'

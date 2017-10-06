@@ -2,6 +2,7 @@ import datetime
 
 import django
 from django.contrib.contenttypes import fields as contenttypes
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core import urlresolvers
 from django.db import models
 
@@ -80,6 +81,10 @@ class Group(core.models.Model):
     members = models.ManyToManyField(
             'gestalten.Gestalt', through='memberships.Membership',
             through_fields=('group', 'member'), related_name='groups')
+
+    subscriptions = GenericRelation(
+            'subscriptions.Subscription', content_type_field='subscribed_to_type',
+            object_id_field='subscribed_to_id', related_query_name='group')
 
     def __str__(self):
         return self.name

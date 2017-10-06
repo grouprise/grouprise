@@ -25,12 +25,11 @@ class Notification:
 
     @classmethod
     def send_all(cls, instance):
-        for recipient, reason in cls.get_recipients(instance):
-            cls(instance).send(recipient, reason)
+        for recipient, attributes in cls.get_recipients(instance).items():
+            cls(instance).send(recipient, attributes)
 
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
-        self.object = kwargs.get('instance')
+    def __init__(self, instance):
+        self.object = instance
 
     def get_attachments(self):
         """
@@ -111,7 +110,7 @@ class Notification:
     def get_reply_key(self):
         return None
 
-    def send(self):
+    def send(self, recipient, attributes):
         site = sites_models.Site.objects.get_current()
 
         def format_message_id(message_id, recipient):
@@ -120,42 +119,43 @@ class Notification:
             recipient_token = hashlib.sha256(recipient.encode("utf-8")).hexdigest()[:16]
             return '<{}-{}@{}>'.format(message_id, recipient_token, site.domain)
 
-        for recipient, recipient_attrs in self.get_formatted_recipients():
-            subject = self.get_subject()
-            context = self.get_context_data(**self.kwargs.copy())
-            context.update({'site': site})
-            template = loader.get_template(self.get_template_name())
-            template.backend.engine.autoescape = False
-            body = template.render(context)
-            sender = self.get_sender()
-            name = ''
-            if sender and recipient_attrs.get('with_name', True):
-                name = '{} via '.format(sender)
-            from_email = '{name}{site} <{email}>'.format(
-                    name=name,
-                    site=site.name,
-                    email=self.get_sender_email())
-            headers = {}
-            headers['Date'] = email_utils.formatdate(localtime=True)
-            message_id, parent_id, reference_ids = self.get_message_ids()
-            headers['Message-ID'] = format_message_id(message_id, recipient)
-            if parent_id:
-                headers['In-Reply-To'] = format_message_id(parent_id, recipient)
-                if parent_id not in reference_ids:
-                    reference_ids.append(parent_id)
-            if reference_ids:
-                headers['References'] = ' '.join([format_message_id(ref_id, recipient)
-                                                  for ref_id in reference_ids])
-            reply_key = recipient_attrs.get('reply_key')
-            if reply_key:
-                headers['Reply-To'] = '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
-                    reply_key=reply_key))
-            message = mail.EmailMessage(
-                    body=body, from_email=from_email, subject=subject,
-                    to=[recipient], headers=headers)
-            for file_name in self.get_attachments():
-                message.attach_file(file_name)
-            try:
-                message.send()
-            except smtplib.SMTPException:
-                logger.error('Error while trying to send notification')
+        recipient = self.format_recipient(recipient)
+        recipient_attrs = {}
+        subject = self.get_subject()
+        context = self.get_context_data()
+        context.update({'site': site})
+        template = loader.get_template(self.get_template_name())
+        template.backend.engine.autoescape = False
+        body = template.render(context)
+        sender = self.get_sender()
+        name = ''
+        if sender and recipient_attrs.get('with_name', True):
+            name = '{} via '.format(sender)
+        from_email = '{name}{site} <{email}>'.format(
+                name=name,
+                site=site.name,
+                email=self.get_sender_email())
+        headers = {}
+        headers['Date'] = email_utils.formatdate(localtime=True)
+        message_id, parent_id, reference_ids = self.get_message_ids()
+        headers['Message-ID'] = format_message_id(message_id, recipient)
+        if parent_id:
+            headers['In-Reply-To'] = format_message_id(parent_id, recipient)
+            if parent_id not in reference_ids:
+                reference_ids.append(parent_id)
+        if reference_ids:
+            headers['References'] = ' '.join([format_message_id(ref_id, recipient)
+                                              for ref_id in reference_ids])
+        reply_key = recipient_attrs.get('reply_key')
+        if reply_key:
+            headers['Reply-To'] = '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
+                reply_key=reply_key))
+        message = mail.EmailMessage(
+                body=body, from_email=from_email, subject=subject,
+                to=[recipient], headers=headers)
+        for file_name in self.get_attachments():
+            message.attach_file(file_name)
+        try:
+            message.send()
+        except smtplib.SMTPException:
+            logger.error('Error while trying to send notification')
