@@ -46,6 +46,9 @@ class ContentCreated(core.notifications.Notification):
     def get_message_ids(self):
         return self.object.get_unique_id(), None, []
 
+    def get_reply_token(self):
+        return self.create_token()
+
     def get_sender(self):
         return self.object.versions.last().author
 
