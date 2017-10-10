@@ -1,5 +1,5 @@
-import { on, remove, /* toggleClass, */ matchesMedia } from 'luett'
-// import Popper from 'popper.js'
+import { on, remove, matchesMedia } from 'luett'
+import Popper from 'popper.js'
 import randomId from 'random-id'
 import Vue from 'vue'
 import { group as api } from '../adapters/api'
@@ -49,16 +49,16 @@ export default async (el, opts) => {
       })
     }
   })
-  /*
+
   const popper = new Popper(el, container, {
     placement: 'bottom-start'
   })
-  */
   const enterListener = on(el, 'mouseenter', matchesMedia.min.medium(() => { toggle(true) }))
   const leaveListener = on(el, 'mouseleave', matchesMedia.min.medium(() => { toggle(false) }))
 
   return {
     remove () {
+      popper.destroy()
       enterListener.destroy()
       leaveListener.destroy()
       vue.$destroy()
