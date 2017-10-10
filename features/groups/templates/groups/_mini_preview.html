@@ -1,0 +1,21 @@
+{% load cache thumbnail utils %}
+
+{% kwacro preview_body %}
+    <header class="group-media-image">
+        {% include "groups/_avatar.html" with group=group link=False %}
+    </header>
+    <div class="group-media-body">
+        <h3>{{ group.name }}</h3>
+        <p>{{ group.description|default:"Diese Gruppe hat noch keine Beschreibung auf Stadtgestalten hinterlegt."|truncatewords:10 }}</p>
+    </div>
+{% endkwacro %}
+
+{% if link %}
+    <a class="group-media" href="{{ group.get_absolute_url }}">
+        {% usekwacro preview_body %}
+    </a>
+{% else %}
+    <div class="group-media">
+        {% usekwacro preview_body %}
+    </div>
+{% endif %}
