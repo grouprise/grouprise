@@ -12,7 +12,7 @@
     {% if view.entity.is_group %}{{ block.super }}{% endif %}
 {% endblock %}
 
-{% block extra_settings %}
+{% block extra_settings_left %}
     {% if form.group %}
         {% include 'core/_field.html' with field=form.group %}
     {% endif %}

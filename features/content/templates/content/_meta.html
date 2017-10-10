@@ -17,8 +17,8 @@
 <meta name="twitter:title" content="{{ content.title }}">
 <meta name="twitter:description" content="{% markdown content.versions.last.text plain_preview=50 %}">
 
-{% if content.images.first %}
-    {% thumbnail content.images.first.file '200x200' crop="center top" as image %}
+{% if content.image %}
+    {% thumbnail content.image.file '200x200' crop="center top" as image %}
         <meta property="og:image" content="{{ http_origin }}{{ image.url }}">
         <meta name="twitter:image" content="{{ http_origin }}{{ image.url }}">
     {% endthumbnail %}

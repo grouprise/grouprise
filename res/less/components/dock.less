@@ -1,15 +1,34 @@
-@dock-speed: .75;
+@dock-speed: .6;
 
 .dock {
     padding: 2rem;
     border-radius: 2px;
     font-size: 1rem;
     overflow: hidden;
+    min-width: 250px;
+}
+
+.dock-menu {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .dock-fit {
     margin-left: -2rem;
     margin-right: -2rem;
+}
+
+.dock-screen(@media-width, @width) {
+    @media (min-width: @media-width) {
+        max-width: (@width * .75);
+        right: calc((100vw - @width) / 2 + 12px);
+        left: auto;
+
+        &.dock-left {
+            left: calc((100vw - @width) / 2 + 12px);
+            right: auto;
+        }
+    }
 }
 
 .dock[data-dropdown] {
@@ -20,6 +39,21 @@
     transform-origin: 50% 0;
     margin-top: 1rem;
     .material-shadow(1);
+    max-width: 100vw;
+
+    &.dock-left {
+        left: 0;
+        right: auto;
+    }
+
+    &.dock-screen {
+        position: fixed;
+        top: @nav-height;
+        max-height: calc(100vh - @nav-height);
+        .dock-screen(768px, 750px);
+        .dock-screen(992px, 970px);
+        .dock-screen(1200px, 1170px);
+    }
 
     .dock-inner {
         .dock-header,
@@ -52,12 +86,10 @@
         margin-top: 0;
         padding-left: 0;
         padding-right: 0;
-        padding-top: 1rem;
+        padding-top: .75rem;
         position: fixed;
         top: @nav-height;
-        border-top: 2px solid rgba(0, 0, 0, .1);
-        box-shadow: none !important;
-        height: calc(100vh - @nav-height);
+        border-top: 2px solid #eaeaea;
     });
 }
 
@@ -74,6 +106,7 @@
     background-color: #373F52;
 
     &,
+    .dock-header-link,
     .dock-session,
     .tabbl-content a,
     .profile-name {
@@ -85,6 +118,12 @@
     }
 }
 
+.dock-meta {
+    &:extend(.content-mute);
+    margin: 0;
+    min-width: 220px;
+}
+
 .dock-header {
     max-width: 100vw;
     display: flex;
@@ -92,8 +131,20 @@
     justify-content: space-between;
     padding: 1rem 0 2rem;
     margin-left: auto;
+    transition: box-shadow (@dock-speed * .4s) ease-out;
 
-    h2 {
+    .dock-content-scrolled & {
+        position: relative;
+        z-index: 20;
+        box-shadow+: 0 -2px 0 white;
+        .material-shadow(1);
+    }
+
+    :first-child {
+        min-width: 0;
+    }
+
+    h3 {
         margin: 0;
     }
 
@@ -117,7 +168,7 @@
 .dock-content {
     .on-handhelds({
         // screen height - nav height - dock top border - approx dock header size - dock header margin
-        max-height: calc(100vh - @nav-height - 2px - 100px - 1rem);
+        max-height: calc(100vh - (2 * @nav-height) - 2px - 100px - (2rem + .75rem));
         overflow: auto;
     });
 }
@@ -128,6 +179,7 @@
     });
 }
 
+.dock-header-link,
 .dock-session {
     &:extend(.btn all);
     &:extend(.btn-link all);
@@ -140,6 +192,7 @@
     overflow: visible;
     display: flex;
     align-items: center;
+    flex: none;
 
     &:hover,
     &:focus,

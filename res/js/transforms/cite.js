@@ -2,7 +2,13 @@ import { includes } from 'lodash'
 import { on, $, getAttr } from 'luett'
 import getInputSelection from 'get-input-selection'
 
+const DOMParser = window.DOMParser
 export const EVENT_CITE = 'component:cite:cite'
+
+function decode (input) {
+  const doc = new DOMParser().parseFromString(input, 'text/html')
+  return doc.documentElement.textContent
+}
 
 function citeSource (el, opts) {
   const { bus } = opts.conf
@@ -13,7 +19,7 @@ function citeSource (el, opts) {
     const target = $(`${event.target.getAttribute('href')} .media-body`)
     const author = getAttr(target, 'data-author')
     const permalink = getAttr(target, 'data-permalink')
-    const text = JSON.parse($('[data-original-content]', target).dataset.originalContent)
+    const text = decode(JSON.parse($('[data-original-content]', target).textContent))
     const formattedText = (text + (author ? `\n — [${author}](${permalink})` : '')).replace(/^/gm, '> ')
     const data = { author, permalink, text, formattedText }
 
