@@ -14,7 +14,12 @@ import NumberSpinner from './components/core/number-spinner.vue'
 import Switch from './components/core/switch.vue'
 import Configurator from './components/core/configurator.vue'
 
+// custom global vue filters
+import { fallback, truncatewords } from './components/core/filters.js'
+
 // vue setup
+Vue.filter('default', fallback)
+Vue.filter('truncatewords', truncatewords)
 Vue.component('sg-file-picker', FilePicker)
 Vue.component('sg-image-picker', ImagePicker)
 Vue.component('sg-select', Select)
