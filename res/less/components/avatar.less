@@ -102,6 +102,14 @@
     .avatar-size(32px);
 }
 
+.avatar-size-24-24 {
+    .avatar-size(24px);
+}
+
+.avatar-size-16-16 {
+    .avatar-size(16px);
+}
+
 .avatars {
     margin: -.3rem;
     padding: 0;
@@ -143,6 +151,7 @@
         transition: opacity .2s;
         line-height: (64px / 100 * 65);
         pointer-events: none;
+        z-index: 100;
     }
 
     &:hover:after,

@@ -1,0 +1,53 @@
+{% load static utils %}
+
+<input class="dropdown-state" id="menu-group-current" type="checkbox" data-menu-group="main">
+<label for="menu-group-current" class="nav-menu-item nav-state-toggle"
+       aria-label="Zeige Menü für {{ group.name }}" tabindex="0"
+       data-component="openable" data-openable-target="#menu-group-current-dropdown">
+    <span class="nav-tab-icon">
+        {% include 'groups/_avatar.html' with size=24 %}
+    </span>
+    {% include 'groups/_avatar.html' with size=48 %}
+    <span class="nav-menu-item-label">{{ group }}</span>
+    <i class="caret"></i>
+</label>
+
+<div class="dock dock-light" id="menu-group-current-dropdown" data-dropdown data-component="dock">
+    <div class="dock-inner">
+        <span class="dock-decoration"></span>
+        <header class="dock-header">
+            <div>
+                <h3>{{ group }}</h3>
+                <p class="dock-meta">
+                    <span class="content-nobreak">
+                        {{ group.date_founded|date:'Y' }} gegründet ·
+                        {% with num_members=group.memberships.count %}
+                            {{ num_members }} Mitglied{{ num_members|pluralize:"er" }}
+                        {% endwith %}
+                    </span>
+                    {% for tag in group.tags.all %}
+                        <a href="{% url 'tag' tag.tag.slug %}">#{{ tag.tag }}</a>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+            <a href="{{ group.get_absolute_url }}" class="dock-header-link">
+                <i class="sg sg-home"></i>
+                <span>Home</span>
+            </a>
+        </header>
+        <div class="dock-content">
+            <div class="dock-content-inner">
+                <ol class="nav-vertical">
+                    {% include_features '_group_menu_actions.html' %}
+
+                    <li>
+                        <a href="{% url 'create-group-conversation' group.pk %}" class="nav-menu-item">
+                            <i class="sg sg-fw sg-message"></i>
+                            <span class="nav-menu-item-label">Nachricht schreiben</span>
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>

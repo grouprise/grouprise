@@ -31,6 +31,9 @@ import quote from './transforms/quote'
 import masonry from './transforms/masonry'
 import galleryEditor from './transforms/gallery-editor'
 import imagePicker from './transforms/image-picker'
+import groupSearch from './transforms/group-search'
+import menu from './transforms/menu'
+import dock from './transforms/dock'
 
 const bus = PubSub()
 const history = HistoryStateDispatcher()
@@ -41,6 +44,8 @@ function init (searchIn = document) {
   // initialize components on load
   component('masonry', masonry, opts)
   component('date', date, opts)
+  component('menu', menu, opts)
+  component('dock', dock, opts)
   component('editor', editor, opts)
   component('time', time, opts)
   component('calendar', calendar, opts)
@@ -61,9 +66,10 @@ function init (searchIn = document) {
   component('cite', cite, opts)
   component('grouplink', grouplink, opts)
   component('image-picker', imagePicker, opts)
+  component('group-search', groupSearch, opts)
 
   // initialize components not based on component interface
-  component($$('input, select, textarea'), input, defaultsDeep({
+  component($$('input:not(.vue-input), select, textarea'), input, defaultsDeep({
     conf: { target: el => closest(el, '.form-group') || el }
   }, opts))
   component($$('blockquote').filter(b => !closest(b, 'blockquote')), quote, opts)

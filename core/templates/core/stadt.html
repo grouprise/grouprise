@@ -4,11 +4,11 @@
 
 {% block body %}
     <div class="wrap wrap-nav">
-        <div class="container">
-            {% block menu %}
+        {% block menu %}
+            <div class="nav-row">
                 {% include 'core/_menu.html' %}
-            {% endblock %}
-        </div>
+            </div>
+        {% endblock %}
     </div>
 
     <div class="wrap wrap-prefix">

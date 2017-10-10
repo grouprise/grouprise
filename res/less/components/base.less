@@ -32,10 +32,8 @@ body {
     z-index: 1;
     position: relative;
     overflow-y: scroll;
-
-    .on-handhelds({
-        padding-top: @nav-height;
-    });
+    padding-top: @nav-height;
+    max-width: 100vw;
 }
 
 h1, h2, h3, h4, h5 {
@@ -161,4 +159,12 @@ pre {
     .on-small-devices({
         display: none;
     });
+}
+
+// force all inputs on iOS devices to a font-size of 16px,
+// because otherwise iOS will zoom into the input fields on-focus
+@media screen and (pointer: coarse) and (-webkit-min-device-pixel-ratio: 0) {
+    select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+        font-size: 16px !important;
+    }
 }

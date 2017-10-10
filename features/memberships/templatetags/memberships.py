@@ -14,3 +14,8 @@ def is_member(gestalt, group):
 def membership(gestalt, group):
     return models.Membership.objects.filter(
             group=group, member=gestalt or None).first()
+
+
+@register.filter
+def favorite_groups(gestalt):
+    return gestalt.memberships.order_by_gestalt_activity(gestalt)

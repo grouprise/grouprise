@@ -5,12 +5,18 @@
 
     > li {
         display: block;
+
+        &:not(:last-child) {
+            margin-right: 2rem;
+        }
     }
 
     .on-small-devices({
         flex-direction: column;
 
         > li {
+            margin: 0 !important;
+
             &[data-order="low"] {
                 order: 3
             }
@@ -35,6 +41,10 @@
     });
 }
 
+.tabbl-wide {
+    width: auto;
+}
+
 .tabbl-header {
     position: relative;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
@@ -56,12 +66,13 @@
 
 .tabbl-content {
     padding: 1rem 0;
-    margin-right: 2rem;
 
     .on-small-devices({
         margin-right: 0;
     });
+}
 
+.tabbl-list {
     a {
         display: block;
         border-bottom: 1px solid rgba(0, 0, 0, .05);

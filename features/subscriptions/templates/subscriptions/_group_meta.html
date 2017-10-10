@@ -2,11 +2,15 @@
 
 <dt>
     <i class="sg sg-subscription"></i>
-    <span class="sr-only">Anzahl Abonnentinnen</span>
+    <span class="sr-only">Anzahl Abonnent_innen</span>
 </dt>
 <dd>
     {% with num_subs=group|num_subscriptions %}
-        {{ num_subs }} Abonnentin{{ num_subs|pluralize:'nen' }}
+        {% if num_subs == 1 %}
+            {{ num_subs }} Abonnent_in
+        {% else %}
+            {{ num_subs }} Abonnent_innen
+        {% endif %}
     {% endwith %}
     {% include_fragments 'group-meta-subscriptions' %}
 </dd>

@@ -1,0 +1,86 @@
+{% load memberships %}
+
+{% if user.is_authenticated %}
+    <input class="dropdown-state" id="menu-groups-main" type="checkbox" data-menu-group="main">
+    <label for="menu-groups-main" aria-label="Zeige Gruppenmenü" tabindex="0"
+           class="nav-menu-item nav-state-toggle"
+           data-component="openable" data-openable-target="#group-main-menu-dropdown">
+        <i class="nav-tab-icon sg sg-group"></i>
+        <span>Gruppen</span>
+        <i class="caret"></i>
+    </label>
+{% else %}
+    <a href="{% url 'group-index' %}" class="nav-menu-item">
+        <i class="nav-tab-icon sg sg-group"></i>
+        <span class="nav-menu-item-label">Gruppen</span>
+    </a>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <div class="dock dock-light dock-screen" id="group-main-menu-dropdown" data-dropdown
+         data-component="dock">
+        <div class="dock-inner">
+            <span class="dock-decoration"></span>
+            <header class="dock-header">
+                <div>
+                    <h3>Gruppen</h3>
+                    {% if user.is_authenticated %}
+                        <p class="dock-meta">
+                            Du bist Mitglied in {{ user.gestalt.memberships.count }}
+                            Gruppen
+                        </p>
+                    {% else %}
+                        <p class="dock-meta">
+                            Melde dich an, um deine Gruppenmitgliedschaften zu sehen.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <a href="{% url 'group-index' %}" class="dock-header-link">
+                    <i class="sg sg-group"></i>
+                    <span>Alle Gruppen</span>
+                </a>
+            </header>
+            <div class="dock-content">
+                <div class="dock-content-inner">
+                    <ol class="tabbls">
+                        <li data-order="medium">
+                            <div class="tabbl">
+                                <header class="tabbl-header">
+                                    <span class="tabbl-title">Meine Gruppen</span>
+                                </header>
+                                <div class="tabbl-content">
+                                    <div class="tabbl-list">
+                                        {% for membership in user.gestalt|favorite_groups %}
+                                            <a href="{{ membership.group.get_absolute_url }}">
+                                                {{ membership.group }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-order="high">
+                            <div class="tabbl tabbl-wide">
+                                <div class="tabbl-content">
+                                    <noscript>
+                                        <p class="alert alert-info alert-block">
+                                            Mit aktiviertem JavaScript könntest du hier jetzt Gruppen&nbsp;suchen
+                                        </p>
+                                    </noscript>
+                                    <div data-component="group-search">
+                                        <div class="search-results hidden-xs">
+                                            {% for membership in user.gestalt|favorite_groups|slice:":3" %}
+                                                {% include 'groups/_mini_preview.html' with group=membership.group link=True %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

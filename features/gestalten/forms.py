@@ -65,4 +65,10 @@ class Login(allauth.account.forms.LoginForm):
         super().__init__(*args, **kwargs)
         self.fields['login'] = forms.CharField(
                 label='E-Mail-Adresse oder Pseudonym',
-                widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+                widget=forms.TextInput(attrs={
+                    'autofocus': 'autofocus',
+                    'autocomplete': 'username',
+                    'autocorrect': 'off',
+                    'autocapitalize': 'none',
+                    'spellcheck': 'false'
+                }))
