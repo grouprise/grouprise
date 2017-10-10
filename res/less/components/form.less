@@ -124,6 +124,45 @@ label {
             border-color: @brand-danger !important;
             border-radius: 2px 2px 0 2px;
         }
+
+        &.input-type-search {
+            border-radius: 50000px !important;
+            padding-left: 1.5rem;
+            padding-right: 2.75rem;
+            margin: 0;
+
+            &:before,
+            &:after {
+                .fa-icon();
+                position: absolute;
+                right: 1.5rem;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-top: -1px;
+                font-size: 1.25rem;
+                transition: opacity .1s ease-out;
+            }
+
+            &:before {
+                content: @fa-var-circle-o-notch;
+                animation: search-spin .45s linear infinite;
+                opacity: 0;
+            }
+
+            &:after {
+                content: @fa-var-search;
+            }
+
+            &.search-loading {
+                &:before {
+                    opacity: 1;
+                }
+
+                &:after {
+                    opacity: 0;
+                }
+            }
+        }
     }
 
     .help-block {
