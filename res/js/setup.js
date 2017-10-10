@@ -13,6 +13,7 @@ import DateTime from './components/time/datetime.vue'
 import NumberSpinner from './components/core/number-spinner.vue'
 import Switch from './components/core/switch.vue'
 import Configurator from './components/core/configurator.vue'
+import Input from './components/core/input.vue'
 
 // custom global vue filters
 import { fallback, truncatewords } from './components/core/filters.js'
@@ -22,6 +23,7 @@ Vue.filter('default', fallback)
 Vue.filter('truncatewords', truncatewords)
 Vue.component('sg-file-picker', FilePicker)
 Vue.component('sg-image-picker', ImagePicker)
+Vue.component('sg-input', Input)
 Vue.component('sg-select', Select)
 Vue.component('sg-avatar', Avatar)
 Vue.component('sg-datetime', DateTime)
