@@ -1,4 +1,5 @@
 import os
+import html
 import json
 
 import bleach as python_bleach
@@ -142,7 +143,10 @@ def markdown(
         if plain_preview:
             return result
         else:
-            return "<div data-original-content='{}'>{}</div>".format(json.dumps(text), result)
+            script = """
+            <script type='text/markdown' data-original-content>{}</script>
+            """.format(json.dumps(html.escape(text)))
+            return "<div>{}{}</div>".format(script, result)
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
