@@ -3053,8 +3053,8 @@ lru-cache@^4.0.1:
     yallist "^2.0.0"
 
 luett@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/luett/-/luett-2.3.1.tgz#b3eeb96e767531a44af804bec69300ab13ed7d84"
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/luett/-/luett-2.5.0.tgz#da3a395f771414115db9f83c87f255de2aefad56"
 
 macaddress@^0.2.8:
   version "0.2.8"
