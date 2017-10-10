@@ -10,7 +10,7 @@ from django import template
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.template import defaultfilters
-from django.utils import html, safestring
+from django.utils import html as django_html, safestring
 import markdown as python_markdown
 from markdown.extensions import toc
 from core.assets import get_assets
@@ -160,7 +160,7 @@ def markdown(
     if plain_preview:
         result = bleach(result, disable_tags="all")
         result = defaultfilters.truncatewords(result, plain_preview)
-        result = html.conditional_escape(result)
+        result = django_html.conditional_escape(result)
 
     return safestring.mark_safe(wrap(result))
 
