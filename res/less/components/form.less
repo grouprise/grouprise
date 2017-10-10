@@ -141,8 +141,12 @@ label {
             font-weight: normal;
         }
     }
+}
 
-    .form-control {
+
+
+.form-control {
+    .form-modern & {
         padding: 1.09375rem 1rem;
         display: block;
         width: 100%;
@@ -154,7 +158,7 @@ label {
 
         .js & {
             padding: 1.5625rem 0 .625rem;
-            border: none;
+            border: 0 none !important;
         }
 
         &:focus {
@@ -163,9 +167,15 @@ label {
         }
     }
 
-    .control-label {
+    &.flatpickr-input[readonly] {
+        background: white;
+    }
+}
+
+.control-label {
+    .form-modern & {
         color: @color-text-light;
-        transition: top .2s, transform .2s, font-size .2s, color .2s;
+        transition: transform .2s, font-size .2s, color .2s;
         display: block;
         transform-origin: 0 50%;
         pointer-events: none;
@@ -181,20 +191,47 @@ label {
             transform: translateY(-50%);
         }
     }
+
+    .js .form-modern .input-blurred & {
+        animation: grow-control-label .4s ease-out forwards;
+    }
+
+    .js .form-modern .input-filled &,
+    .js .form-modern .input-focused & {
+        animation: shrink-control-label .35s ease-out forwards;
+        top: .225rem !important;
+    }
+
+    .js .form-modern .input-empty.input-type-textarea & {
+        top: .825rem;
+        transform: none;
+    }
 }
 
-.form-control.flatpickr-input[readonly] {
-    background: white;
+
+@keyframes shrink-control-label {
+    0% {
+        transform: scale(0.8) translateY(6px);
+        opacity: 0;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.8) translateY(2px);
+        color: @brand-primary;
+    }
 }
 
-.js .form-modern .input-empty.input-type-textarea .control-label {
-    top: .825rem;
-    transform: none;
-}
-
-.js .form-modern .input-filled .control-label,
-.js .form-modern .input-focused .control-label {
-    top: .225rem !important;
-    transform: scale(0.675) !important;
-    color: @brand-primary;
+@keyframes grow-control-label {
+    0% {
+        opacity: 0;
+        transform: translateY(calc(-50% - 4px));
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50%);
+    }
 }
