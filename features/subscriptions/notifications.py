@@ -26,8 +26,6 @@ def update_recipients(recipients_dict, association=None, subscriptions=[], contr
 
 
 class ContentCreated(core.notifications.Notification):
-    generate_reply_tokens = True
-
     @classmethod
     def get_recipients(cls, content):
         recipients = {}
