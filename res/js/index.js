@@ -31,6 +31,7 @@ import quote from './transforms/quote'
 import masonry from './transforms/masonry'
 import galleryEditor from './transforms/gallery-editor'
 import imagePicker from './transforms/image-picker'
+import pollEditor from './transforms/poll-editor'
 import groupSearch from './transforms/group-search'
 import menu from './transforms/menu'
 import dock from './transforms/dock'
@@ -67,6 +68,7 @@ function init (searchIn = document) {
   component('grouplink', grouplink, opts)
   component('image-picker', imagePicker, opts)
   component('group-search', groupSearch, opts)
+  component('poll-editor', pollEditor, opts)
 
   // initialize components not based on component interface
   component($$('input:not(.vue-input), select, textarea'), input, defaultsDeep({

@@ -3,5 +3,6 @@
 {% block menu %}{% menu 'poll' view.entity %}{% endblock %}
 
 {% block form_extra %}
+    {{ form.poll_type }}
     {% include 'polls/_form.html' %}
 {% endblock %}

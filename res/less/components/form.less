@@ -252,6 +252,44 @@ label {
     }
 }
 
+.form-overflow {
+    max-width: 100%;
+    overflow: auto;
+    padding-bottom: 2px;
+}
+
+.flatpickr-calendar {
+    min-width: 346px;
+}
+
+.choices {
+    padding: 0;
+    margin: 0;
+
+    > li {
+        display: block;
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+    }
+}
+
+.choices-radio {
+    input[type="radio"] {
+        width: auto;
+        margin: 0 .5rem 0 0;
+    }
+
+    label {
+        border-radius: 2px;;
+        background-color: rgba(0, 0, 0, .05);
+        padding: .5em;
+        cursor: pointer;
+    }
+}
 
 @keyframes shrink-control-label {
     0% {

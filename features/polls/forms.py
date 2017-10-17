@@ -32,7 +32,7 @@ class Create(OptionMixin, content.Create):
     poll_type = forms.ChoiceField(
             label='Art der Umfrage',
             choices=[('simple', 'einfach'), ('event', 'Datum / Zeit')],
-            initial='simple')
+            initial='simple', widget=forms.Select({'data-poll-type': ''}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,7 +45,7 @@ class Create(OptionMixin, content.Create):
         else:
             self.options = SimpleOptionFormSet(
                     data=kwargs.get('data'), queryset=models.SimpleOption.objects.none())
-        self.options.extra = 4
+        self.options.extra = 0
 
         # permit empty form in case of type change
         if self.is_type_change:
@@ -60,6 +60,7 @@ class Create(OptionMixin, content.Create):
 
 class Update(OptionMixin, content.Update):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
+    poll_type = forms.CharField(widget=forms.HiddenInput({'data-poll-type': ''}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -68,11 +69,22 @@ class Update(OptionMixin, content.Update):
             self.options = EventOptionFormSet(
                     data=kwargs.get('data'),
                     queryset=models.EventOption.objects.filter(poll=self.instance.container))
+            self.fields['poll_type'].initial = 'event'
         except ObjectDoesNotExist:
             self.options = SimpleOptionFormSet(
                     data=kwargs.get('data'),
                     queryset=models.SimpleOption.objects.filter(poll=self.instance.container))
-        self.options.extra = 2
+            self.fields['poll_type'].initial = 'simple'
+        self.options.extra = 0
+
+    def get_initial_for_field(self, field, field_name):
+        if field_name == 'poll_type':
+            return {
+                EventOptionFormSet: 'event',
+                SimpleOptionFormSet: 'simple'
+            }[type(self.options)]
+        else:
+            return super().get_initial_for_field(field, field_name)
 
 
 VoteFormSet = forms.modelformset_factory(

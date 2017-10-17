@@ -46,6 +46,52 @@
     display: block;
 }
 
+.table-poll {
+    .sg-winner {
+        color: @brand-secondary;
+    }
+
+    td {
+        text-align: center;
+
+        &:first-child {
+            min-width: 150px;
+        }
+
+        .form-group {
+            padding: .5rem 0;
+
+            > label {
+                display: none;
+            }
+
+            .choices li {
+                &:nth-child(1) label {
+                    background-color: hsla(120, 100%, 97%, 1);
+                }
+                &:nth-child(2) label {
+                    background-color: hsla(0, 100%, 97%, 1);
+                }
+                &:nth-child(3) label {
+                    background-color: hsla(60, 100%, 97%, 1);
+                }
+            }
+        }
+    }
+
+    thead tr:last-child {
+        th, td {
+            border-bottom: 2px solid rgba(0, 0, 0, .05);
+        }
+    }
+
+    tfoot tr:first-child {
+        th, td {
+            border-top: 2px solid rgba(0, 0, 0, .05);
+        }
+    }
+}
+
 .table-column-highlight {
     background-color: rgba(0, 0, 0, .05);
 }

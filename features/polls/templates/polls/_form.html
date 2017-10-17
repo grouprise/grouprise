@@ -1,6 +1,9 @@
-<div class="section section-publish section-article">
+<section class="section" data-component="poll-editor">
     <h2>Antwortmöglichkeiten</h2>
     {{ form.options.management_form }}
+    <script type="text/html" data-formset-example>
+        {{ form.options.empty_form }}
+    </script>
     {% for form in form.options %}
         {% if form.option_ptr %}{{ form.option_ptr }}{% endif %}
         {% if form.title %}
@@ -11,4 +14,4 @@
         {% endif %}
         {% include 'core/_checkbox_field.html' with field=form.DELETE %}
     {% endfor %}
-</div>
+</section>
