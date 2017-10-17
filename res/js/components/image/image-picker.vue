@@ -7,7 +7,7 @@
     <div class="media-content">
       <sg-file-picker :accept="['image/png', 'image/gif', 'image/jpeg', 'capture=camera']"
                       @input="upload" :disabled="isLoading" :multiple="multiple"
-                      :btnLabel="btnLabel"></sg-file-picker>
+                      :btnLabel="btnLabel" :btnClasses="['btn', 'btn-default', 'btn-sm']" />
       <div class="help-block" v-if="help">{{ help }}</div>
     </div>
   </div>
