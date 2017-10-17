@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" {% block form_attrs %}{% endblock %}>
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
