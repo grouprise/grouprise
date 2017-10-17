@@ -1,19 +1,19 @@
 <template>
   <div class="datetime">
     <div class="datetime-calendar" ref="calendar"></div>
-    <div class="form-group datetime-date">
-      <label class="control-label" v-if="showLabels">{{ dateLabel }}</label>
+    <div class="form-group datetime-date" ref="dateFieldGroup">
+      <label class="control-label" v-if="showLabels" :for="dateFieldId">{{ dateLabel }}</label>
       <div class="controls">
         <input type="text" class="form-control form-control-icon" v-model.lazy="date" ref="date"
-               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate">
+               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate" :id="dateFieldId">
       </div>
     </div>
     <transition name="fade">
-      <div class="form-group datetime-time" v-if="enableTime">
-        <label class="control-label" v-if="showLabels">{{ timeLabel }}</label>
+      <div class="form-group datetime-time" v-if="enableTime" ref="timeFieldGroup">
+        <label class="control-label" v-if="showLabels" :for="timeFieldId">{{ timeLabel }}</label>
         <div class="controls">
           <input type="text" class="form-control form-control-icon" v-model.lazy="time" ref="time"
-                 placeholder="z.B: 12:30" pattern="^([0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
+                 pattern="^(0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$" :id="timeFieldId" :placeholder="timePlaceholder"
                  @focus="isEditing = true" @blur="guessTime" @wheel="scrollTime">
         </div>
       </div>
@@ -22,9 +22,11 @@
 </template>
 
 <script>
+  import randomId from 'random-id'
   import { throttle } from 'lodash'
   import moment from 'moment'
   import date from '../../transforms/date'
+  import input from '../../transforms/input'
 
   const ensureArray = value => typeof value === 'string' ? [value] : value
   const checkDate = (date, formats) => {
@@ -78,6 +80,7 @@
         type: [String, Array],
         default: () => ['HH:mm', 'HH:m', 'H:mm', 'H:m', 'HHmm', 'Hmm', 'HHm', 'HH', 'H']
       },
+      timePlaceholder: String,
       dateLabel: {
         type: String,
         default: 'Datum'
@@ -100,11 +103,20 @@
         date: null,
         time: '12:00',
         datePicker: null,
+        dateField: null,
+        timeField: null,
         currentValue: null,
-        isEditing: false
+        isEditing: false,
+        id: randomId(20, 'a')
       }
     },
     computed: {
+      dateFieldId () {
+        return `${this.id}-date`
+      },
+      timeFieldId () {
+        return `${this.id}-time`
+      },
       finalValue () {
         const {enableTime, date, time, dateFormat, timeFormat} = this
         const parsedDate = checkDate(date, dateFormat)
@@ -179,15 +191,35 @@
       })
     },
     watch: {
-      value () { setTimeout(() => this.setFromSource(), 0) },
+      value () {
+        setTimeout(() => this.setFromSource(), 0)
+      },
       finalValue (date) {
         setTimeout(() => this.$emit('input', date), 0)
+      },
+      enableTime (enable) {
+        if (enable) {
+          this.timeField = input(this.$refs.time, {
+            conf: { target: () => this.$refs.timeFieldGroup }
+          })
+        } else if (this.timeField) {
+          this.timeField.remove()
+          this.timeField = null
+        }
       }
     },
     created () {
       this.setFromSource()
     },
     mounted () {
+      this.dateField = input(this.$refs.date, {
+        conf: { target: () => this.$refs.dateFieldGroup }
+      })
+      if (this.enableTime) {
+        this.timeField = input(this.$refs.time, {
+          conf: { target: () => this.$refs.timeFieldGroup }
+        })
+      }
       this.datePicker = date(this.$refs.date, {
         disable: this.disableDates,
         appendTo: this.$refs.calendar,
@@ -196,6 +228,8 @@
     },
     beforeDestroy () {
       this.datePicker.remove()
+      this.dateField.remove()
+      if (this.timeField) this.timeField.remove()
     }
   }
 </script>
