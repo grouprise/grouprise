@@ -29,8 +29,9 @@ def get(d, *args):
 
 
 @register.filter
-def filename(value):
-    return os.path.basename(value.name)
+def filename(value, include_ext=True):
+    base = os.path.basename(getattr(value, 'name', value))
+    return base if include_ext else os.path.splitext(base)[0]
 
 
 @register.filter
