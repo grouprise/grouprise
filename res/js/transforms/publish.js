@@ -24,8 +24,8 @@ function addAuthorPinnedListener (el) {
 
 function addPublishListener (el) {
   const form = closest(el, 'form')
-  const submitButton = $('[type="submit"]', el)
-  const submitListener = on(form, 'submit', event => {
+  const submitButton = $('[data-publish-submit]', el)
+  const submitListener = on(form, 'submit', () => {
     toggleClass(submitButton, 'btn-progress', true)
     setAttr(submitButton, 'disabled', 'disabled')
   })
