@@ -35,6 +35,7 @@ import pollEditor from './transforms/poll-editor'
 import groupSearch from './transforms/group-search'
 import menu from './transforms/menu'
 import dock from './transforms/dock'
+import contentOrder from './transforms/content-order'
 
 const bus = PubSub()
 const history = HistoryStateDispatcher()
@@ -69,6 +70,7 @@ function init (searchIn = document) {
   component('image-picker', imagePicker, opts)
   component('group-search', groupSearch, opts)
   component('poll-editor', pollEditor, opts)
+  component('content-order', contentOrder, opts)
 
   // initialize components not based on component interface
   component($$('input:not(.vue-input), select, textarea'), input, defaultsDeep({

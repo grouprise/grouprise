@@ -108,6 +108,10 @@
         background-color: transparent;
     }
 
+    &[aria-pressed="true"] {
+        color: @brand-primary;
+    }
+
     i {
         font-size: 1.1rem;
     }
@@ -234,6 +238,14 @@
 
 .btn-toolbar-centered {
     justify-content: center;
+}
+
+.btn-toolbar-vertical {
+    flex-direction: column;
+}
+
+.btn-toolbar-label {
+    margin-right: .5rem;
 }
 
 .btn-group {
