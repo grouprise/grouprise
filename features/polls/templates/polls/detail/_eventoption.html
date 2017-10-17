@@ -1,0 +1,12 @@
+<span class="content-nobreak">
+    {% if option.time and not option.until_time %}
+        {{ option.time|date:"d. m." }}<br>
+        {{ option.time|time }}
+    {% elif option.time.date == option.until_time.date %}
+        {{ option.time|date:"d. m." }}<br>
+        {{ option.time|time }} bis {{ option.until_time|time }}
+    {% else %}
+        {{ option.time|date:"d. m." }} {{ option.time|time }} bis<br>
+        {{ option.until_time|date }} {{ option.until_time|time }}
+    {% endif %}
+</span>

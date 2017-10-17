@@ -25,21 +25,6 @@ class EventOption(Option):
     time = models.DateTimeField()
     until_time = models.DateTimeField(blank=True, null=True)
 
-    def __str__(self):
-        if self.time and self.until_time is None:
-            return self.time.strftime('%d. %m.\n%H:%M')
-        if self.time.date() == self.until_time.date():
-            return '{date}\n{time_start} bis {time_end}'.format(
-                date=self.time.strftime('%d. %m.'),
-                time_start=self.time.strftime('%H:%M'),
-                time_end=self.until_time.strftime('%H:%M')
-            )
-        else:
-            return '{time_start} bis\n{time_end}'.format(
-                time_start=self.time.date.strftime('%d. %m. %H:%M'),
-                time_end=self.until_time.date.strftime('%d. %m. %H:%M'),
-            )
-
 
 class Vote(core.models.Model):
     class Meta:
