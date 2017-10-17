@@ -45,6 +45,9 @@ class Association(models.QuerySet):
     def filter_events(self):
         return self.filter(content__time__isnull=False)
 
+    def filter_galleries(self):
+        return self.filter(content__gallery_images__image__isnull=False)
+
     def filter_group_containers(self):
         return self.filter(entity_type=groups.Group.content_type)
 
@@ -57,11 +60,16 @@ class Association(models.QuerySet):
         qs = qs.filter(container_type=content.Content.content_type)
         return qs
 
+    def order_content_by_time_created(self, ascending=True):
+        qs = self
+        qs = qs.annotate(time_created=Min('content__versions__time_created'))
+        qs = qs.order_by('time_created' if ascending else '-time_created')
+        return qs
+
     def ordered_user_content(self, user):
         qs = self
         qs = qs.filter_user_content(user)
-        qs = qs.annotate(time_created=Min('content__versions__time_created'))
-        qs = qs.order_by('-time_created')
+        qs = qs.order_content_by_time_created(ascending=False)
         return qs
 
     def ordered_user_conversations(self, user):

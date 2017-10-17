@@ -4,6 +4,7 @@ import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.core import urlresolvers
 from django.db import models
+from sorl.thumbnail import get_thumbnail
 
 import core.models
 from core import colors
@@ -88,6 +89,15 @@ class Group(core.models.Model):
         return urlresolvers.reverse(
                 'entity', args=[type(self).objects.get(pk=self.pk).slug])
 
+    def get_cover_url(self):
+        url = None
+        intro_gallery = self.associations.filter_galleries().filter(pinned=True, public=True) \
+            .order_content_by_time_created().first()
+        if intro_gallery:
+            first_image_file = intro_gallery.container.gallery_images.first().image.file
+            url = get_thumbnail(first_image_file, '366x120', crop='center').url
+        return url
+
     # FIXME: move to template filter
     # TODO: when removed check api
     def get_initials(self):
@@ -105,11 +115,3 @@ class Group(core.models.Model):
                 initials_without_short_terms += m.group(0)
         # prefer the non-trivial one - otherwise pick the full one (and hope it is not empty)
         return initials_without_short_terms if initials_without_short_terms else initials
-
-    # FIXME: to be removed
-    # TODO: when removed check api
-    def get_head_gallery(self):
-        from features.associations import models as associations
-        return associations.Association.objects.filter(
-                entity_type=self.content_type, entity_id=self.id,
-                content__gallery_images__isnull=False, public=True, pinned=True).first()

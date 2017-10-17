@@ -1,6 +1,9 @@
 {% extends 'content/list.html' %}
 {% load events rules thumbnail %}
 
+{% block title %}{{ gestalt }} - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'gestalt' %}{% endblock %}
+
 {% block header %}
     {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
 

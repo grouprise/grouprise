@@ -1,31 +1,42 @@
 import django
+from django.shortcuts import get_object_or_404
 
 import core
 import utils
 from features import gestalten, groups
+from features.groups.models import Group
 
 
 class Entity(core.views.PermissionMixin, django.views.generic.View):
     def get(self, request, *args, **kwargs):
-        return self.view.get(request, *args, **kwargs)
+        context = self.view.get_context_data(object=self.view.object)
+        return self.view.render_to_response(context)
+
+    def get_object(self):
+        slug = self.kwargs.get('entity_slug')
+        try:
+            return Group.objects.get(slug=slug)
+        except Group.DoesNotExist:
+            return get_object_or_404(gestalten.models.Gestalt, user__username=slug)
 
     def get_view(self):
-        entity_slug = self.kwargs.get('entity_slug')
-        try:
-            entity = groups.models.Group.objects.get(slug=entity_slug)
-            view = groups.views.Group()
-            view.related_object = entity
-        except groups.models.Group.DoesNotExist:
-            entity = django.shortcuts.get_object_or_404(
-                    gestalten.models.Gestalt, user__username=entity_slug)
+        # choose view based on entity type
+        entity = self.get_object()
+        if entity.is_group:
+            view = groups.views.Detail()
+        else:
             view = gestalten.views.Detail()
-            view.object = entity
+
+        # set view attributes
+        view.object = entity
+        view.object_list = None
+        view.kwargs = self.kwargs
+        view.request = self.request
+
         return view
 
     def has_permission(self):
         self.view = self.get_view()
-        self.view.request = self.request
-        self.view.kwargs = self.kwargs
         return self.view.has_permission()
 
 

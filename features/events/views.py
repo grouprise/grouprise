@@ -163,7 +163,7 @@ class CalendarExport(utils_views.PageMixin, generic.DetailView):
 class GroupCalendarExport(CalendarExport):
     model = features.groups.models.Group
     slug_url_kwarg = 'group_slug'
-    permission_required = 'entities.view_group'
+    permission_required = 'groups.view'
     title = 'Exportmöglichkeiten für Gruppenkalender'
     parent = 'group'
     feed_route = 'group-events-feed'
@@ -196,7 +196,7 @@ class GestaltCalendarExport(utils_views.PageMixin, generic.DetailView):
     model = gestalten.Gestalt
     slug_url_kwarg = 'gestalt_slug'
     sidebar = tuple()
-    permission = 'entities.view_gestalt'
+    permission = 'gestalten.view'
     title = 'Exportmöglichkeiten für Gestaltenkalender'
     template_name = 'gestalten/events_export.html'
     parent = 'gestalt-index'

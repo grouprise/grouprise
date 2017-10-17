@@ -1,31 +1,22 @@
-import rules
+from rules import add_perm, always_allow, is_authenticated, predicate
 
 from features.memberships import predicates as memberships
 
 
-@rules.predicate
+@predicate
 def is_closed(user, group):
     return group.closed
 
 
-@rules.predicate
+@predicate
 def is_group(user, entity):
     return entity.is_group
 
 
-rules.add_perm(
-        'groups.create_group',
-        rules.always_allow)
+add_perm('groups.create_group', always_allow)
 
-rules.add_perm(
-        'entities.view_group',
-        rules.always_allow)
+add_perm('groups.view', always_allow)
 
-rules.add_perm(
-        'groups.view_list',
-        rules.always_allow)
+add_perm('groups.view_list', always_allow)
 
-rules.add_perm(
-        'groups.change_group',
-        rules.is_authenticated
-        & memberships.is_member_of)
+add_perm('groups.change_group', is_authenticated & memberships.is_member_of)
