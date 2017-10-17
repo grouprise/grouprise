@@ -7,7 +7,7 @@
     <div class="media-content">
       <sg-file-picker :accept="['image/png', 'image/gif', 'image/jpeg', 'capture=camera']"
                       @input="upload" :disabled="isLoading" :multiple="multiple"
-                      :btnLabel="btnLabel"></sg-file-picker>
+                      :btnLabel="btnLabel" :btnClasses="['btn', 'btn-default', 'btn-sm']" />
       <div class="help-block" v-if="help">{{ help }}</div>
     </div>
   </div>
@@ -43,7 +43,7 @@
     methods: {
       upload (files) {
         this.progress = 0
-        this.uploader.upload(files, progress => this.progress = progress.complete)
+        this.uploader.upload(files, progress => { this.progress = progress.complete })
           .then(files => {
             this.progress = null
             this.$emit('input', files)
@@ -52,7 +52,7 @@
             this.progress = null
             this.$emit('input', null)
           })
-      },
+      }
     }
   }
 </script>

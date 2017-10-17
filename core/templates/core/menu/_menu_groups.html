@@ -5,13 +5,17 @@
     <label for="menu-groups-main" aria-label="Zeige Gruppenmenü" tabindex="0"
            class="nav-menu-item nav-state-toggle"
            data-component="openable" data-openable-target="#group-main-menu-dropdown">
-        <i class="nav-tab-icon sg sg-group"></i>
+        <span class="nav-tab-icon">
+            <i class="sg sg-group"></i>
+        </span>
         <span>Gruppen</span>
         <i class="caret"></i>
     </label>
 {% else %}
     <a href="{% url 'group-index' %}" class="nav-menu-item">
-        <i class="nav-tab-icon sg sg-group"></i>
+        <span class="nav-tab-icon">
+            <i class="sg sg-group"></i>
+        </span>
         <span class="nav-menu-item-label">Gruppen</span>
     </a>
 {% endif %}

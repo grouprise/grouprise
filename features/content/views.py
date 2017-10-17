@@ -27,12 +27,12 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
         return super().get_queryset().ordered_user_content(self.request.user)
 
 
-class Detail(
-        features.associations.views.AssociationMixin, contributions.ContributionFormMixin,
-        base.PermissionMixin, generic.DetailView):
+class DetailBase(features.associations.views.AssociationMixin,
+                 contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
     model = associations.Association
+    template_name = 'articles/detail.html'
 
     form_class = forms.Comment
 
@@ -40,15 +40,26 @@ class Detail(
         return self.get_association()
 
     def get_template_names(self):
-        if self.object.container.is_gallery:
-            name = 'galleries/detail.html'
+        if self.object.container.is_poll:
+            names = ('polls/detail.html',)
+        elif self.object.container.is_gallery:
+            names = ('galleries/detail.html',)
         elif self.object.container.is_file:
-            name = 'files/detail.html'
+            names = ('files/detail.html',)
         elif self.object.container.is_event:
-            name = 'events/detail.html'
+            names = ('events/detail.html',)
         else:
-            name = 'articles/detail.html'
-        return [name]
+            names = super().get_template_names()
+        return names
+
+
+class Detail(DetailBase):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.container.is_poll:
+            return features.polls.views.Detail(kwargs=kwargs, request=request).get(
+                    request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class Permalink(django.views.generic.RedirectView):
@@ -98,7 +109,9 @@ class Update(base.PermissionMixin, generic.UpdateView):
     form_class = forms.Update
 
     def get_form_class(self):
-        if self.object.container.is_gallery:
+        if self.object.container.is_poll:
+            form_class = features.polls.forms.Update
+        elif self.object.container.is_gallery:
             form_class = galleries.Update
         elif self.object.container.is_file:
             form_class = files.Update
@@ -135,7 +148,9 @@ class Update(base.PermissionMixin, generic.UpdateView):
                 slug=self.kwargs['association_slug'])
 
     def get_template_names(self):
-        if self.object.container.is_gallery:
+        if self.object.container.is_poll:
+            name = 'polls/update.html'
+        elif self.object.container.is_gallery:
             name = 'galleries/update.html'
         elif self.object.container.is_file:
             name = 'files/update.html'

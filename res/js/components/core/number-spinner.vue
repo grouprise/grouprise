@@ -17,7 +17,7 @@
 
 <script>
   import randomId from 'random-id'
-  const stepValue = step => typeof step === "number" ? step : 1
+  const stepValue = step => typeof step === 'number' ? step : 1
 
   export default {
     props: {
@@ -39,31 +39,31 @@
       },
       label: String
     },
-    data() {
+    data () {
       return {
         currentValue: 1,
-        id: randomId(20, "a")
+        id: randomId(20, 'a')
       }
     },
     computed: {
-      allowIncrement() {
+      allowIncrement () {
         return this.max === null || this.currentValue + stepValue(this.step) <= this.max
       },
-      allowDecrement() {
+      allowDecrement () {
         return this.min === null || this.currentValue - stepValue(this.step) >= this.min
       }
     },
     methods: {
-      modifyValue(modifier) {
+      modifyValue (modifier) {
         this.currentValue += stepValue(this.step) * modifier
       }
     },
-    created() {
+    created () {
       this.currentValue = this.value || null
     },
     watch: {
-      currentValue(value) {
-        setTimeout(() => this.$emit("input", value), 0)
+      currentValue (value) {
+        setTimeout(() => { this.$emit('input', value) }, 0)
       }
     }
   }

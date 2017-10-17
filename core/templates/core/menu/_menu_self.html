@@ -14,7 +14,9 @@
     </label>
 {% else %}
     <a href="{% url 'login' %}?next={{ request.path }}" class="nav-menu-item">
-        <i class="nav-tab-icon sg sg-login"></i>
+        <span class="nav-tab-icon">
+            <i class="sg sg-login"></i>
+        </span>
         <div class="avatar-wrap">
             <span class="avatar avatar-size-48-48">
                 <img src="{% static 'stadt/img/logos/logo_96.png' %}" alt="Stadtgestalten Logo">
