@@ -1,6 +1,6 @@
 import { $ } from 'luett'
 
-function inputAdapter (el) {
+export function inputAdapter (el) {
   return {
     get () {
       return {
@@ -18,7 +18,7 @@ function inputAdapter (el) {
   }
 }
 
-function selectAdapter (el) {
+export function selectAdapter (el) {
   return {
     emptyOption: '',
     get () {
