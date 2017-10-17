@@ -75,6 +75,10 @@ class Content(core.models.Model):
         return self.gallery_images.count() > 0
 
     @property
+    def is_poll(self):
+        return self.options.count() > 0
+
+    @property
     def subject(self):
         return self.title
 

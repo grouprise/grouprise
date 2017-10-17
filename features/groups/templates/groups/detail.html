@@ -25,10 +25,11 @@
     {% has_perm 'content.group_create' user group as can_create %}
     {% if can_create %}
         {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
-            <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
-            <li><a href="{% url 'create-group-event' group.slug %}">Veranstaltung</a></li>
-            <li><a href="{% url 'create-group-gallery' group.slug %}">Galerie</a></li>
-            <li><a href="{% url 'create-group-file' group.slug %}">Datei</a></li>
+            <li><a href="{% url 'create-group-article' group.slug %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>
+            <li><a href="{% url 'create-group-event' group.slug %}"><i class="sg sg-fw sg-event"></i> Veranstaltung</a></li>
+            <li><a href="{% url 'create-group-gallery' group.slug %}"><i class="sg sg-fw sg-gallery"></i> Galerie</a></li>
+            <li><a href="{% url 'create-group-poll' group.slug %}"><i class="sg sg-fw sg-poll"></i> Umfrage</a></li>
+            <li><a href="{% url 'create-group-file' group.slug %}"><i class="sg sg-fw sg-file"></i> Datei</a></li>
         {% enddropdown %}
     {% endif %}
 {% endblock %}

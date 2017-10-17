@@ -1,0 +1,9 @@
+{% load rules %}
+
+{% has_perm 'sharing.invite_member' user group as can_invite %}
+{% if can_invite %}
+    <a href="{% url 'member-invite' group.pk %}" class="nav-menu-item">
+        <i class="sg sg-fw sg-members-add"></i>
+        <span class="nav-menu-item-label">Mitglied einladen</span>
+    </a>
+{% endif %}

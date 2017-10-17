@@ -41,7 +41,7 @@
   import { inRange } from 'lodash'
 
   const calculateDuration = (start, end) => {
-    if(start && end) {
+    if (start && end) {
       const hours = Math.max(moment.duration(moment(end).diff(moment(start))).asHours(), 1)
       return [Math.round(hours), hours < 12 && inRange(hours / Math.round(hours) * 60, 58, 62)]
     } else {
@@ -50,18 +50,18 @@
   }
 
   const label = (start, end, allDay) => {
-    if(!start && !end) return '\u00A0'
+    if (!start && !end) return '\u00A0'
 
-    if(!end) {
-      if(allDay) return `Am ${moment(start).format('LL')}, ganztägig`
+    if (!end) {
+      if (allDay) return `Am ${moment(start).format('LL')}, ganztägig`
       else return `Am ${moment(start).format('LLL')} Uhr`
     } else {
-      const sameDay = moment(start).isSame(end, "day")
-      if(sameDay) {
-        if(allDay) return `${moment(start).format('LL')}, ganztägig`
+      const sameDay = moment(start).isSame(end, 'day')
+      if (sameDay) {
+        if (allDay) return `${moment(start).format('LL')}, ganztägig`
         else return `Am ${moment(start).format('LLL')} Uhr bis ${moment(end).format('LT')} Uhr`
       } else {
-        if(allDay) return `Vom ${moment(start).format('LL')} bis ${moment(end).format('LL')}, ganztägig`
+        if (allDay) return `Vom ${moment(start).format('LL')} bis ${moment(end).format('LL')}, ganztägig`
         else return `Vom ${moment(start).format('LLL')} Uhr bis ${moment(end).format('LLL')} Uhr`
       }
     }
@@ -82,7 +82,7 @@
         default: false
       }
     },
-    data() {
+    data () {
       return {
         configurableEndDate: false,
         duration: 1,
@@ -92,77 +92,77 @@
       }
     },
     computed: {
-      showDuration() {
+      showDuration () {
         return !this.configurableEndDate && !this.currentAllDay
       },
-      durationLabel() {
+      durationLabel () {
         return this.duration === 1 ? 'Stunde' : 'Stunden'
       },
-      finalEndDate() {
+      finalEndDate () {
         const { configurableEndDate, duration, currentStartDate, currentEndDate, currentAllDay } = this
 
-        if(configurableEndDate) {
-          return moment(currentStartDate).isSame(currentEndDate, "day") && currentAllDay ? null : currentEndDate
-        } else if(currentStartDate && currentAllDay) {
+        if (configurableEndDate) {
+          return moment(currentStartDate).isSame(currentEndDate, 'day') && currentAllDay ? null : currentEndDate
+        } else if (currentStartDate && currentAllDay) {
           return null
-        } else if(currentStartDate && duration > 0) {
+        } else if (currentStartDate && duration > 0) {
           const date = moment(currentStartDate)
-          date.add(duration, "hours")
+          date.add(duration, 'hours')
           return date.toDate()
         } else {
           return null
         }
       },
-      label() {
+      label () {
         return label(this.start, this.end, this.allDay)
       }
     },
     methods: {
-      propagate() {
+      propagate () {
         window.setTimeout(() => {
-          this.$emit("change", {
+          this.$emit('change', {
             start: this.currentStartDate,
             end: this.finalEndDate,
-            allDay: this.currentAllDay,
+            allDay: this.currentAllDay
           })
         }, 0)
       },
-      configure() {
+      configure () {
         const [duration, showDuration] = calculateDuration(this.start, this.end)
         this.configurableEndDate = !showDuration
         this.duration = duration
       }
     },
     watch: {
-      currentStartDate(currentStartDate) {
+      currentStartDate (currentStartDate) {
         // check if dates are valid and prefer start date when fixing
         const { configurableEndDate, currentEndDate, duration } = this
-        if(configurableEndDate && currentEndDate && currentStartDate > currentEndDate ) {
+        if (configurableEndDate && currentEndDate && currentStartDate > currentEndDate) {
           const momentDate = moment(currentStartDate)
-          momentDate.add(duration, "hours")
+          momentDate.add(duration, 'hours')
           this.currentEndDate = momentDate.toDate()
         }
       },
-      currentEndDate(currentEndDate) {
+      currentEndDate (currentEndDate) {
         // check if dates are valid and prefer end date when fixing
         const { configurableEndDate, currentStartDate, duration } = this
-        if(configurableEndDate && currentEndDate && currentStartDate > currentEndDate) {
+        if (configurableEndDate && currentEndDate && currentStartDate > currentEndDate) {
           const momentDate = moment(currentEndDate)
-          momentDate.subtract(duration, "hours")
+          momentDate.subtract(duration, 'hours')
           this.currentStartDate = momentDate.toDate()
         }
       },
-      configurableEndDate(isConfigurable) {
-        if(!isConfigurable) {
-          this.currentEndDate = null;
+      configurableEndDate (isConfigurable) {
+        if (!isConfigurable) {
+          this.currentEndDate = null
         } else {
           const momentDate = moment(this.currentStartDate)
-          momentDate.add(this.duration, "hours")
+          momentDate.add(this.duration, 'hours')
           this.currentEndDate = momentDate.toDate()
         }
       }
     },
-    created() {
+    created () {
       this.currentStartDate = this.start
       this.currentEndDate = this.end
       this.currentAllDay = this.allDay

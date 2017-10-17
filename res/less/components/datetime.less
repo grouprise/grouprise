@@ -37,7 +37,7 @@
 }
 
 .datetime-date {
-    flex: 1;
+    flex: 2 1 auto;
 
     input {
         width: 10rem;
@@ -51,6 +51,17 @@
     input {
         width: 8rem;
     }
+}
+
+.datetime-duration {
+    align-self: center;
+    flex: 1 0 250px;
+    margin-left: 1rem;
+
+    .on-handhelds({
+        margin-top: 1rem;
+        margin-left: 0;
+    })
 }
 
 .datetime-time-hidden {

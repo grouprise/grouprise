@@ -21,6 +21,7 @@ urlpatterns = [
     urls.url(r'^', urls.include('features.galleries.urls')),
     urls.url(r'^', urls.include('features.gestalten.urls')),
     urls.url(r'^', urls.include('features.groups.urls')),
+    urls.url(r'^', urls.include('features.polls.urls')),
     urls.url(r'^', urls.include('features.stadt.urls')),
     urls.url(r'^', urls.include('features.tags.urls')),
 

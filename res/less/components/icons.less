@@ -68,12 +68,14 @@
     }
 }
 
+.sg-article,
 .sg-content-type-article {
     &:after {
         content: @fa-var-file-text-o;
     }
 }
 
+.sg-event,
 .sg-content-type-event {
     &:after {
         content: @fa-var-calendar-o;
@@ -87,6 +89,7 @@
     }
 }
 
+.sg-gallery,
 .sg-content-type-gallery {
     &:after {
         content: @fa-var-picture-o;
@@ -102,6 +105,13 @@
 .sg-content-type-gestalt {
     &:after {
         content: @fa-var-user;
+    }
+}
+
+.sg-content-type-poll,
+.sg-poll {
+    &:after {
+        content: @fa-var-thumbs-o-up;
     }
 }
 
@@ -355,5 +365,11 @@
 .sg-attachment {
     &:after {
         content: @fa-var-paperclip;
+    }
+}
+
+.sg-winner {
+    &:after {
+        content: @fa-var-star;
     }
 }

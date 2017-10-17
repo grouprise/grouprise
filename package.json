@@ -6,7 +6,7 @@
   },
   "scripts": {
     "test": "true",
-    "lint": "standard 'res/**/*.js'"
+    "lint": "standard --plugin html 'res/**/*.{js,vue}'"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -20,6 +20,7 @@
     "babel-root-slash-import": "^1.1.0",
     "css-loader": "^0.28.4",
     "csswring": "v4.2.3",
+    "eslint-plugin-html": "^3.1.1",
     "less": "^2.7.2",
     "lodash-webpack-plugin": "^0.11.4",
     "postcss": "^6.0.6",
@@ -69,6 +70,7 @@
     "tether-drop": "^1.4.2",
     "tether-tooltip": "^1.2.0",
     "vue": "^2.4.1",
-    "vue-on-click-outside": "^1.0.3"
+    "vue-on-click-outside": "^1.0.3",
+    "vue-tabs-component": "https://github.com/stadtgestalten/vue-tabs-component.git#dist"
   }
 }

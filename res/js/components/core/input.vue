@@ -13,6 +13,7 @@
 
   export default {
     props: {
+      value: String,
       type: {
         type: String,
         default: 'text'

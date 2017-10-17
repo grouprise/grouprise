@@ -19,10 +19,6 @@
 .media-image {
     min-width: 64px;
     margin-right: @padding-base-horizontal;
-
-    .on-handhelds({
-        display: none;
-    })
 }
 
 .media-content {
@@ -120,6 +116,12 @@
 
     .btn {
         margin-bottom: .5rem;
+    }
+
+    .media-image {
+        .on-handhelds({
+            display: none;
+        })
     }
 }
 
