@@ -53,6 +53,7 @@ export default async (el, opts) => {
   const popper = new Popper(el, container, {
     placement: 'bottom-start'
   })
+
   const enterListener = on(el, 'mouseenter', matchesMedia.min.medium(() => { toggle(true) }))
   const leaveListener = on(el, 'mouseleave', matchesMedia.min.medium(() => { toggle(false) }))
 
