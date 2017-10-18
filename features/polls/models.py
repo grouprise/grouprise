@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 import core.models
 
@@ -24,6 +25,23 @@ class SimpleOption(Option):
 class EventOption(Option):
     time = models.DateTimeField()
     until_time = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        time = timezone.localtime(self.time)
+        until_time = timezone.localtime(self.until_time) if self.until_time else None
+        if time and until_time is None:
+            return time.strftime('%d. %m.\n%H:%M')
+        if time.date() == until_time.date():
+            return '{date}\n{time_start} bis {time_end}'.format(
+                date=time.strftime('%d. %m.'),
+                time_start=time.strftime('%H:%M'),
+                time_end=until_time.strftime('%H:%M'),
+            )
+        else:
+            return '{time_start} bis\n{time_end}'.format(
+                time_start=time.strftime('%d. %m. %H:%M'),
+                time_end=until_time.strftime('%d. %m. %H:%M'),
+            )
 
 
 class Vote(core.models.Model):

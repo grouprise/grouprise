@@ -34,7 +34,9 @@
                     {% for option in options %}
                         <th class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
                             {% if option.eventoption %}
-                                {% include 'polls/detail/_eventoption.html' with option=option.eventoption %}
+                                <span class="content-nobreak">
+                                    {{ option | linebreaksbr }}
+                                </span>
                             {% else %}
                                 {{ option | linebreaksbr }}
                             {% endif %}
