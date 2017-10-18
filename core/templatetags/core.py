@@ -44,6 +44,11 @@ def startswith(value: str, search):
     return value.startswith(search)
 
 
+@register.filter
+def nolinebreaks(value):
+    return ' '.join(str(value).split('\n'))
+
+
 @register.simple_tag(takes_context=True)
 def get_parameters(context, **kwargs):
     request = context.get('request')
