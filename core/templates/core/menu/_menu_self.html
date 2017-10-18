@@ -49,7 +49,10 @@
                                 <div class="tabbl-content">
                                     <div class="tabbl-list">
                                         <a href="{{ user.gestalt|url_for:user }}">
-                                            Meine Seite
+                                            Deine Seite
+                                        </a>
+                                        <a href="{% url 'conversations' %}">
+                                            Deine Gespräche
                                         </a>
                                         <a href="{% url 'gestalt-update' user.gestalt.pk %}">
                                             Profil ändern

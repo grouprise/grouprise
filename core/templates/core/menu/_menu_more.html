@@ -22,15 +22,6 @@
                             <span class="nav-menu-item-label">Veranstaltungen</span>
                         </a>
                     </li>
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'conversations' %}"
-                               class="nav-menu-item {% if menu|lower == 'conversation' %}nav-menu-item-current{% endif %}">
-                                <i class="sg sg-fw sg-content-type-conversation"></i>
-                                <span class="nav-menu-item-label">Deine Gespräche</span>
-                            </a>
-                        </li>
-                    {% endif %}
                     <li>
                         <a href="{% url 'articles' %}"
                            class="nav-menu-item {% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">
