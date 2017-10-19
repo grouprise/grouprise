@@ -1,5 +1,4 @@
 DIR_INSTALL_ROOT ?= usr/share/stadtgestalten
-FILE_VERSION_ASSET = ASSET_VERSION
 
 PYTHON_INSTALL_ARGS = --root "$(DESTDIR)" \
 	--install-lib="/$(DIR_INSTALL_ROOT)" \
@@ -17,4 +16,3 @@ build: assets app_collect_static
 
 .PHONY: install
 install: build
-	git log --oneline res | head -n 1 | cut -f 1 -d " " > "$(DESTDIR)/$(DIR_INSTALL_ROOT)/$(FILE_VERSION_ASSET)"

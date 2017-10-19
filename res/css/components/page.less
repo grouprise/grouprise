@@ -1,0 +1,64 @@
+.page-meta {
+    font-size: 0.85em;
+    color: @color-text-extralight;
+    text-align: right;
+
+    .on-handhelds({
+        display: none;
+    });
+}
+
+.page-footer {
+    &:extend(.decoration-striped);
+    margin: 4rem 0 0;
+    display: flex;
+    align-items: stretch;
+}
+
+.page-footer-content,
+.page-footer-sidebar {
+    padding: 2rem 2rem 3rem;
+    position: relative;;
+}
+
+.page-footer-content {
+    background: url("../../img/logos/logo_white.svg") no-repeat 2rem 2rem rgba(255, 255, 255, .8);
+    background-size: 5rem auto;
+    padding-left: 9rem;
+    min-height: 7rem;
+    flex: 1;
+
+    :first-child {
+        margin-top: 0;
+    }
+}
+
+.page-footer-sidebar {
+    flex-basis: 31.5%;
+
+    &:after {
+        content: " ";
+        display: block;
+        background-color: rgba(255, 255, 255, .8);
+        position: absolute;
+        top: .6rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.page-prefix {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5.25rem;
+
+    .on-handhelds({
+        padding: 0;
+        height: auto;
+        display: block;
+        margin: 0 -15px;
+    });
+}
