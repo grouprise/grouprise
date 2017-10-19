@@ -5,7 +5,6 @@ from urllib.parse import urlparse, urlencode, parse_qsl
 from django.http.response import HttpResponse
 from django.templatetags.static import static
 from django.utils.functional import cached_property
-from django.conf import settings
 
 _ASSETS = []
 _CSP_DIRECTIVES = []
