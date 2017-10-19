@@ -24,18 +24,18 @@ $(DIR_NODE): $(BIN_NODE) package.json
 	@# in dh_auto_install yarn tries to create a cache folder in /usr/local/share/.cache
 	@# this has something to do with the environment dh_auto_install creates
 	@# so we call it with an empty environment to be on the safe side
-	env -i PATH="$$PATH" "$(BIN_NODE)" "$(BIN_NODE_PKG)" install --no-progress
+	env -i $(RUN_NODE) "$(BIN_NODE_PKG)" install --no-progress
 	touch -c "$(DIR_NODE)"
 
 $(STATIC_FONT_GOOGLE): $(DIR_NODE)
 	mkdir -p "$(BUILD_FONT_GOOGLE)"
-	"$(BIN_NODE)" "$(BIN_FONTDUMP)" --target-directory "$(BUILD_FONT_GOOGLE)" --web-directory "." "$(URL_FONT_GOOGLE)"
+	$(RUN_NODE) "$(BIN_FONTDUMP)" --target-directory "$(BUILD_FONT_GOOGLE)" --web-directory "." "$(URL_FONT_GOOGLE)"
 	mkdir -p "$(STATIC_FONT_GOOGLE)"
 	rsync -a --exclude "*.css" "$(BUILD_FONT_GOOGLE)/" "$(STATIC_FONT_GOOGLE)"
 	touch "$(STATIC_FONT_GOOGLE)"
 
 $(DIR_STATIC): $(STATIC_FONT_GOOGLE) $(DEPS_ASSETS)
-	NODE_ENV=production "$(BIN_NODE)" $(BIN_WEBPACK)" --bail
+	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK)" --bail
 	touch "$(DIR_STATIC)"
 
 .PHONY: assets_fonts
