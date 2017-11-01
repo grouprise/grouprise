@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'features.images',
     'features.imports',
     'features.memberships.apps.MembershipsConfig',
+    'features.polls',
     'features.sharing',
     'features.stadt',
     'features.subscriptions',
@@ -262,7 +263,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser'
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework.filters.DjangoFilterBackend',
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
 

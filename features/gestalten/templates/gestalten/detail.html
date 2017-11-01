@@ -1,6 +1,9 @@
 {% extends 'content/list.html' %}
 {% load events rules thumbnail %}
 
+{% block title %}{{ gestalt }} - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'gestalt' %}{% endblock %}
+
 {% block header %}
     {% has_perm 'entities.change_gestalt' user gestalt as can_edit %}
 
@@ -116,9 +119,10 @@
             {% has_perm 'content.create' user gestalt as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
-                    <li><a href="{% url 'create-article' %}">Artikel</a></li>
-                    <li><a href="{% url 'create-event' %}">Veranstaltung</a></li>
-                    <li><a href="{% url 'create-gallery' %}">Galerie</a></li>
+                    <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>
+                    <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> Veranstaltung</a></li>
+                    <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> Galerie</a></li>
+                    <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> Umfrage</a></li>
                 {% enddropdown %}
             {% endif %}
         </div>

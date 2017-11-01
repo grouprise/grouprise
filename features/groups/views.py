@@ -1,12 +1,14 @@
 import django
+import django_filters
 from django.views import generic
 from django_filters import views as filters_views
 
+import core
 import utils
 from core import fields, views
 from core.views import base
 from features.associations import models as associations
-from features.content import models as content
+from features.associations.filters import ContentFilterSet
 from features.groups import models as groups
 from . import filters, forms, models
 
@@ -56,6 +58,35 @@ class Create(views.Create):
             fields.model_field('name'))
 
 
+class Detail(
+        core.views.PermissionMixin, django_filters.views.FilterMixin,
+        django.views.generic.list.MultipleObjectMixin, django.views.generic.DetailView):
+    permission_required = 'groups.view'
+    model = models.Group
+    filterset_class = ContentFilterSet
+    paginate_by = 10
+    template_name = 'groups/detail.html'
+
+    def get_queryset(self):
+        return self.object.associations.ordered_user_content(self.request.user)
+
+    def get_context_data(self, **kwargs):
+        associations = self.get_queryset()
+        filterset = self.get_filterset(self.get_filterset_class())
+        intro_associations = associations.filter(pinned=True).order_by('time_created')
+        intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
+        if intro_gallery:
+            intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
+        return super().get_context_data(
+                associations=associations,
+                filter=filterset,
+                intro_associations=intro_associations,
+                intro_gallery=intro_gallery,
+                group=self.object,
+                object_list=filterset.qs,
+                **kwargs)
+
+
 class List(base.PermissionMixin, filters_views.FilterView):
     permission_required = 'groups.view_list'
     filterset_class = filters.Group
@@ -99,46 +130,3 @@ class GroupLogoUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
 
     def get_parent(self):
         return self.object
-
-
-class Group(utils.views.List):
-    menu = 'group'
-    permission_required = 'entities.view_group'
-    template_name = 'groups/detail.html'
-
-    def get(self, *args, **kwargs):
-        if not self.get_group():
-            raise django.http.Http404('Gruppe nicht gefunden')
-        return super().get(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        kwargs['intro_content'] = self.get_intro_content()
-        return super().get_context_data(**kwargs)
-
-    def get_group_content(self):
-        group = self.get_group()
-        return associations.Association.objects.filter(
-                container_type=content.Content.content_type,
-                entity_type=models.Group.content_type,
-                entity_id=group.id
-                ).can_view(self.request.user)
-
-    def get_intro_content(self):
-        pinned_content = self.get_group_content().filter(pinned=True).annotate(
-                time_created=django.db.models.Min('content__versions__time_created')
-                ).order_by('time_created')
-        try:
-            return pinned_content.exclude(pk=self.get_group().get_head_gallery().pk)
-        except AttributeError:
-            return pinned_content
-
-    def get_queryset(self):
-        return self.get_group_content().filter(pinned=False).annotate(
-                time_created=django.db.models.Min(
-                    'content__versions__time_created')).order_by('-time_created')
-
-    def get_related_object(self):
-        return self.get_group()
-
-    def get_title(self):
-        return self.get_group().name

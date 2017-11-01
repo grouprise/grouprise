@@ -2,16 +2,15 @@
 
 {% kwacro preview_body %}
     <header class="group-preview-header">
-        {% if group.get_head_gallery  %}
-            <div class="group-preview-image">
-                {% comment %}WHEN CHANGING GROUP COVER IMAGE SIZE CHANGE IN API TOO{% endcomment %}
-                {% thumbnail group.get_head_gallery.container.gallery_images.first.image.file '366x120' crop='center' as thumb %}
-                    <img src="{{ thumb.url }}" />
-                {% endthumbnail %}
-            </div>
-        {% else %}
-            <div class="group-preview-image group-preview-image-placeholder"></div>
-        {% endif %}
+        {% with cover_url=group.get_cover_url %}
+            {% if cover_url %}
+                <div class="group-preview-image">
+                    <img src="{{ cover_url }}" />
+                </div>
+            {% else %}
+                <div class="group-preview-image group-preview-image-placeholder"></div>
+            {% endif %}
+        {% endwith %}
         {% include "groups/_avatar.html" with group=group link=False %}
         {% if user.is_authenticated %}
             <div class="group-preview-stats">

@@ -1,4 +1,5 @@
 import os
+import html
 import json
 
 import bleach as python_bleach
@@ -9,7 +10,7 @@ from django import template
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.template import defaultfilters
-from django.utils import html, safestring
+from django.utils import html as django_html, safestring
 import markdown as python_markdown
 from markdown.extensions import toc
 from core.assets import get_assets
@@ -17,9 +18,20 @@ from core.assets import get_assets
 register = template.Library()
 
 
+@register.simple_tag
+def get(d, *args):
+    for i in args:
+        try:
+            d = d.get(i)
+        except AttributeError:
+            pass
+    return d
+
+
 @register.filter
-def filename(value):
-    return os.path.basename(value.name)
+def filename(value, include_ext=True):
+    base = os.path.basename(getattr(value, 'name', value))
+    return base if include_ext else os.path.splitext(base)[0]
 
 
 @register.filter
@@ -30,6 +42,11 @@ def endswith(value: str, search):
 @register.filter
 def startswith(value: str, search):
     return value.startswith(search)
+
+
+@register.filter
+def nolinebreaks(value):
+    return ' '.join(str(value).split('\n'))
 
 
 @register.simple_tag(takes_context=True)
@@ -142,7 +159,10 @@ def markdown(
         if plain_preview:
             return result
         else:
-            return "<div data-original-content='{}'>{}</div>".format(json.dumps(text), result)
+            script = """
+            <script type='text/markdown' data-original-content>{}</script>
+            """.format(json.dumps(html.escape(text)))
+            return "<div>{}{}</div>".format(script, result)
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel), )
     result = python_markdown.markdown(text, extensions=extensions)
@@ -156,7 +176,7 @@ def markdown(
     if plain_preview:
         result = bleach(result, disable_tags="all")
         result = defaultfilters.truncatewords(result, plain_preview)
-        result = html.conditional_escape(result)
+        result = django_html.conditional_escape(result)
 
     return safestring.mark_safe(wrap(result))
 

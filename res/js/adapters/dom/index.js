@@ -1,6 +1,6 @@
 import { $ } from 'luett'
 
-function inputAdapter (el) {
+export function inputAdapter (el) {
   return {
     get () {
       return {
@@ -18,7 +18,7 @@ function inputAdapter (el) {
   }
 }
 
-function selectAdapter (el) {
+export function selectAdapter (el) {
   return {
     emptyOption: '',
     get () {
@@ -44,6 +44,24 @@ function selectAdapter (el) {
       }
     }
   }
+}
+
+export function valueSubmissionAdapter (inputAdapter, submit) {
+  const iface = {
+    get: (...args) => inputAdapter.get(...args),
+    set: (valueObj, ...args) => {
+      const currentValue = iface.get().value
+      inputAdapter.set(valueObj, ...args)
+      if (currentValue !== valueObj.value) {
+        if (!submit) {
+          console.error('tried to auto-submit value but submit is missing')
+        } else {
+          submit.click()
+        }
+      }
+    }
+  }
+  return iface
 }
 
 export default el => {

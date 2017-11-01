@@ -1,6 +1,5 @@
 from rest_framework import viewsets, serializers, permissions
 from rest_framework.decorators import permission_classes
-from sorl.thumbnail import get_thumbnail
 import django_filters
 import django_filters.widgets
 
@@ -24,19 +23,16 @@ class GroupFilter(django_filters.rest_framework.FilterSet):
 class GroupSerializer(serializers.ModelSerializer):
     tags = FlattenedTagSerializer(many=True)
     initials = serializers.CharField(source='get_initials', read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
     cover = serializers.SerializerMethodField()
 
     def get_cover(self, instance: models.Group):
-        gallery = instance.get_head_gallery()
-        if gallery and gallery.container.gallery_images.first():
-            image = gallery.container.gallery_images.first().image.file
-            return get_thumbnail(image, '366x120', crop='center').url
-        return None
+        return instance.get_cover_url()
 
     class Meta:
         model = models.Group
         fields = ('id', 'slug', 'name', 'initials', 'description', 'avatar',
-                  'avatar_color', 'tags', 'cover', )
+                  'avatar_color', 'tags', 'cover', 'url', )
 
 
 @permission_classes((permissions.AllowAny, ))

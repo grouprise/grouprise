@@ -1,9 +1,9 @@
-{% if intro_content %}
+{% if intro_associations %}
     <div class="content-block">
         <div class="content-header">
             <h2 class="content-classification">Intro</h2>
             {% include "core/_decoration.html" with icon="sg-pin" %}
         </div>
-        {% include 'content/_list.html' with associations=intro_content hide_meta=True %}
+        {% include 'content/_list.html' with associations=intro_associations hide_meta=True %}
     </div>
 {% endif %}

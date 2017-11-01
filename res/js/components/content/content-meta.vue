@@ -11,17 +11,17 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            choice: {
-                choice: Object,
-                required: true
-            }
-        },
-        computed: {
-            tags() {
-                return (this.choice.tags || []).map(tag => `#${tag.name}`).join(", ")
-            }
-        }
+  export default {
+    props: {
+      choice: {
+        choice: Object,
+        required: true
+      }
+    },
+    computed: {
+      tags () {
+        return (this.choice.tags || []).map(tag => `#${tag.name}`).join(', ')
+      }
     }
+  }
 </script>

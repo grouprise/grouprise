@@ -205,3 +205,39 @@
     z-index: 101;
     margin-top: 5px;
 }
+
+.group-media {
+    display: flex;
+    color: @color-text-default;
+    text-decoration: none;
+    margin-bottom: 1rem;
+
+    a& {
+        padding: 1rem;
+        background-color: #f2f2f2;
+        border-radius: 2px;
+        border: 2px solid transparent;
+        transition: border-color .2s;
+
+        &:hover {
+            border-color: rgba(0, 0, 0, .2);
+        }
+    }
+}
+
+.group-media-image {
+    margin-right: .5rem;
+}
+
+.group-media-body {
+    font-size: @font-size-small;
+
+    h3 {
+        margin: 0 0 .25em 0;
+    }
+
+    p {
+        margin: 0;
+        color: @color-text-light;
+    }
+}

@@ -75,7 +75,11 @@ class Create(forms.ModelForm):
                     all_day=self.cleaned_data.get('all_day', False))
             self.instance.container.versions.create(
                     author=self.author, text=self.cleaned_data['text'])
+            self.save_content_relations(commit)
             return super().save(commit)
+
+    def save_content_relations(self, commit):
+        pass
 
     def send_post_create(self, instance=None):
         signals.post_create.send(
@@ -138,4 +142,8 @@ class Update(forms.ModelForm):
             association.container.all_day = self.cleaned_data['all_day']
         association.container.save()
         association.container.versions.create(author=self.author, text=self.cleaned_data['text'])
+        self.save_content_relations(commit)
         return association
+
+    def save_content_relations(self, commit):
+        pass

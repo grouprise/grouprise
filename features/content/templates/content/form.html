@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" {% block form_attrs %}{% endblock %}>
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
@@ -47,7 +47,7 @@
                     {% block extra_settings_left %}{% endblock %}
                 </div>
                 <div class="col-md-5">
-                    <button class="btn btn-primary btn-block">
+                    <button class="btn btn-primary btn-block" data-publish-submit>
                         {% block submit_label %}{% endblock %}
                     </button>
                     {% if form.public %}

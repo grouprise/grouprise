@@ -1,0 +1,45 @@
+{% with images=intro_gallery.container.gallery_images.all %}
+    {% if images %}
+        <div class="carousel-container" data-component="carousel">
+            <div class="carousel">
+                <ol class="carousel-slides">
+                    {% for image in images %}
+                        <li>
+                            {% load thumbnail %}
+                            {% thumbnail image.image.file 'x500' crop='center' as thumb %}
+                                <img src="{{ thumb.url }}" alt="{{ group.name }}">
+                            {% endthumbnail %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    {% else %}
+        <div class="disclaimer">
+            <i class="fa fa-5x fa-image"></i><br />
+            <p>Diese Gruppe war bisher nicht motiviert eine Introgalerie anzulegen.</p>
+            {% load rules %}
+            {% has_perm 'memberships.join_group' user group as can_join %}
+            {% if can_join %}
+                <p>Wenn Du in der Gruppe aktiv bist, kannst Du ihr
+                <a href="{% url 'join' group.pk %}">beitreten</a> und ein Bild 
+                hochladen.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+{% has_perm 'content.group_create' user group as can_create_content %}
+{% if can_create_content %}
+    <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
+        {% if intro_gallery %}
+            <a class="btn btn-backdrop btn-ts" href="{{ intro_gallery.get_absolute_url }}" title="Introgalerie anzeigen">
+                <i class="fa fa-2x fa-camera"></i>
+            </a>
+        {% else %}
+        <a class="btn btn-backdrop btn-ts" href="{% url 'create-group-gallery' group.slug %}?pinned=1&amp;public=1&amp;text=Introgalerie%20der%20Gruppe%20%40{{ group.slug|urlencode }}&amp;title={{ group|urlencode }}" title="Introgalerie anlegen">
+                <i class="fa fa-2x fa-camera"></i>
+            </a>
+        {% endif %}
+    </div>
+{% endif %}

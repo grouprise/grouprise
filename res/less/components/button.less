@@ -1,7 +1,7 @@
 .btn {
     display: inline-block;
-    padding: 0.35em 0.7em;
-    border: 2px solid transparent;
+    padding: 0.75em 1em;
+    border: none;
     border-radius: 2px;
     min-width: 3.5rem;
     text-align: center;
@@ -10,7 +10,7 @@
     z-index: 2;
     overflow: hidden;
     cursor: pointer;
-    transition: color .1s, background-color .2s, border-color .2s, transform .2s;
+    transition: color .1s, background-color .2s, transform .2s;
     vertical-align: middle;
     font-weight: 500;
     margin: 0;
@@ -26,6 +26,10 @@
     &:focus,
     &:active {
         z-index: 100;
+    }
+
+    i {
+        margin-right: .25em;
     }
 }
 
@@ -62,14 +66,12 @@
 }
 
 .btn-default {
-    border-color: @color-text-default;
+    background-color: #eaeaea;
     color: @color-text-default;
-    background-color: white;
 
     &:hover,
     &:focus {
-        border-color: @brand-primary;
-        color: @brand-primary;
+        background-color: #ddd;
 
         &.btn-addon-ok:after {
             background-color: @brand-primary;
@@ -88,7 +90,6 @@
     &,
     &:hover,
     &:focus {
-        border-color: @brand-danger;
         color: @brand-danger;
     }
 }
@@ -104,8 +105,11 @@
     &,
     &:hover,
     &:focus {
-        border-color: transparent;
         background-color: transparent;
+    }
+
+    &[aria-pressed="true"] {
+        color: @brand-primary;
     }
 
     i {
@@ -155,14 +159,18 @@
 
 .btn-sm {
     font-size: @font-size-small;
+    padding: 0.5em 0.75em;
 }
 
 .btn-primary {
-    border-color: @brand-primary;
-    background-color: @brand-primary;
+    background: @brand-primary;
     color: white;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: lighten(@brand-primary, 10%);
+    }
 
     &.btn-addon-ok:after {
         background-color: rgba(0, 0, 0, .2);
@@ -201,7 +209,7 @@
     }
 
     > * + *:not(.btn-link) {
-        margin-left: .7em;
+        margin-left: .75em;
     }
 
     h3 {
@@ -230,6 +238,14 @@
 
 .btn-toolbar-centered {
     justify-content: center;
+}
+
+.btn-toolbar-vertical {
+    flex-direction: column;
+}
+
+.btn-toolbar-label {
+    margin-right: .5rem;
 }
 
 .btn-group {
@@ -266,12 +282,12 @@
 }
 
 .btn-addon-ok {
-    padding-right: 2.7rem;
+    padding-right: 3.25em;
 
     &:after {
         .fa-icon();
         content: @fa-var-check;
-        width: 2rem;
+        width: 2.5em;
         text-align: center;
         position: absolute;
         top: 0; bottom: 0; right: 0;

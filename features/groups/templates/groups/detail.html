@@ -7,8 +7,22 @@
         href="{% url 'group-feed' group.pk %}">
 {% endblock %}
 
+{% block title %}{{ group }} - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'group' group %}{% endblock %}
+
 {% block header %}
-    {% include 'groups/detail/_header.html' %}
+    <div class="group-header">
+        <div class="group-gallery">
+            {% include 'groups/detail/_intro_gallery.html' %}
+        </div>
+        <div class="group-info">
+            {% include 'groups/detail/_about.html' %}
+        </div>
+    </div>
+    <div class="content-toolbar">
+        <div class="carousel-actions"></div>
+        {% include 'groups/detail/_actions.html' with group=group %}
+    </div>
 {% endblock %}
 
 {% block sidebar %}
@@ -16,8 +30,10 @@
 {% endblock %}
 
 {% block content_header %}
-    {% include 'groups/detail/_conversations.html' %}
-    {% include 'groups/detail/_intro.html' %}
+    {% if not page_obj.has_previous %}
+        {% include 'groups/detail/_conversations.html' %}
+        {% include 'groups/detail/_intro.html' %}
+    {% endif %}
 {% endblock %}
 
 {% block heading_toolbar %}
@@ -25,10 +41,21 @@
     {% has_perm 'content.group_create' user group as can_create %}
     {% if can_create %}
         {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
-            <li><a href="{% url 'create-group-article' group.slug %}">Artikel</a></li>
-            <li><a href="{% url 'create-group-event' group.slug %}">Veranstaltung</a></li>
-            <li><a href="{% url 'create-group-gallery' group.slug %}">Galerie</a></li>
-            <li><a href="{% url 'create-group-file' group.slug %}">Datei</a></li>
+            <li><a href="{% url 'create-group-article' group.slug %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>
+            <li><a href="{% url 'create-group-event' group.slug %}"><i class="sg sg-fw sg-event"></i> Veranstaltung</a></li>
+            <li><a href="{% url 'create-group-gallery' group.slug %}"><i class="sg sg-fw sg-gallery"></i> Galerie</a></li>
+            <li><a href="{% url 'create-group-poll' group.slug %}"><i class="sg sg-fw sg-poll"></i> Umfrage</a></li>
+            <li><a href="{% url 'create-group-file' group.slug %}"><i class="sg sg-fw sg-file"></i> Datei</a></li>
         {% enddropdown %}
     {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-filter" data-component="content-order">
+        <form>
+            {{ filter.form }}
+            <button>Anzeigen</button>
+        </form>
+    </div>
+    {{ block.super }}
 {% endblock %}

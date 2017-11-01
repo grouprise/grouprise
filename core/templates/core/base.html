@@ -1,5 +1,6 @@
-{% load staticfiles %}
-<!doctype html>
+{% spaceless %}
+{% load staticfiles core %}
+{% endspaceless %}<!doctype html>
 <html lang="{{ request.LANGUAGE_CODE|default:"de" }}" class="no-js">
     <head>
         <meta charset="utf-8">
@@ -22,7 +23,7 @@
         <script type="application/json" id="app-configuration">{% app_config %}</script>
     </head>
 
-    <body data-component="browser-warning" class="month-{% now "m" %}">
+    <body data-component="browser-warning" class="month-{% now "m" %}{% block body_class %}{% endblock %}">
         {% block body %}{% endblock %}
         {% include_assets 'late' %}
     </body>

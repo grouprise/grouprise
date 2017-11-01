@@ -50,15 +50,15 @@
         default: true
       }
     },
-    data() {
+    data () {
       return {
         progress: null
       }
     },
     methods: {
-      upload(files) {
+      upload (files) {
         this.progress = 0
-        uploader.upload(files, progress => this.progress = progress.complete, 'allSettled')
+        uploader.upload(files, progress => { this.progress = progress.complete }, 'allSettled')
           .then(results => {
             this.progress = null
             const files = results
@@ -74,29 +74,29 @@
             }
           })
       },
-      remove(file) {
+      remove (file) {
         this.$emit('remove', file)
       }
     },
     computed: {
-      isLoading() {
+      isLoading () {
         return this.progress !== null
       },
-      loaderStyle() {
+      loaderStyle () {
         return this.isLoading
-          ? { transform: `scaleX(${this.progress / 100})`}
+          ? { transform: `scaleX(${this.progress / 100})` }
           : {}
       },
-      imageCount() {
-        return this.images.length == 0
+      imageCount () {
+        return this.images.length === 0
           ? 'Keine Bilder in der Galerie'
-          : this.images.length == 1
+          : this.images.length === 1
           ? `Ein Bild in der Galerie`
-          : `${this.images.length} Bilder in der Galerie`;
+          : `${this.images.length} Bilder in der Galerie`
       }
     },
     filters: {
-      percent(value) {
+      percent (value) {
         return new Intl.NumberFormat('de-DE', {
           maximumFractionDigits: 0
         }).format(value)

@@ -1,19 +1,19 @@
 <template>
   <div class="datetime">
     <div class="datetime-calendar" ref="calendar"></div>
-    <div class="form-group datetime-date">
-      <label class="control-label" v-if="showLabels">{{ dateLabel }}</label>
+    <div class="form-group datetime-date" ref="dateFieldGroup">
+      <label class="control-label" v-if="showLabels" :for="dateFieldId">{{ dateLabel }}</label>
       <div class="controls">
         <input type="text" class="form-control form-control-icon" v-model.lazy="date" ref="date"
-               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate">
+               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate" :id="dateFieldId">
       </div>
     </div>
     <transition name="fade">
-      <div class="form-group datetime-time" v-if="enableTime">
-        <label class="control-label" v-if="showLabels">{{ timeLabel }}</label>
+      <div class="form-group datetime-time" v-if="enableTime" ref="timeFieldGroup">
+        <label class="control-label" v-if="showLabels" :for="timeFieldId">{{ timeLabel }}</label>
         <div class="controls">
           <input type="text" class="form-control form-control-icon" v-model.lazy="time" ref="time"
-                 placeholder="z.B: 12:30" pattern="^([0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
+                 pattern="^(0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$" :id="timeFieldId" :placeholder="timePlaceholder"
                  @focus="isEditing = true" @blur="guessTime" @wheel="scrollTime">
         </div>
       </div>
@@ -22,9 +22,11 @@
 </template>
 
 <script>
+  import randomId from 'random-id'
   import { throttle } from 'lodash'
   import moment from 'moment'
   import date from '../../transforms/date'
+  import input from '../../transforms/input'
 
   const ensureArray = value => typeof value === 'string' ? [value] : value
   const checkDate = (date, formats) => {
@@ -41,12 +43,12 @@
     const formats = ensureArray(format)
     const finalFormat = formats[0]
     const momentDate = checkDate(date, formats)
-    return momentDate ? momentDate.format(finalFormat) : ""
+    return momentDate ? momentDate.format(finalFormat) : ''
   }
   const wheelListener = callback => {
     const throttledCallback = throttle(callback, 35, { trailing: false })
-    return function(event) {
-      if(document.activeElement === event.target && Math.abs(event.deltaY) >= 20) {
+    return function (event) {
+      if (document.activeElement === event.target && Math.abs(event.deltaY) >= 20) {
         event.preventDefault()
         throttledCallback.call(this, event, event.deltaY < 0 ? 1 : -1)
       }
@@ -72,40 +74,50 @@
       },
       dateFormat: {
         type: [String, Array],
-        default: () => "L"
+        default: () => 'L'
       },
       timeFormat: {
         type: [String, Array],
-        default: () => ["HH:mm", "HH:m", "H:mm", "H:m", "HHmm", "Hmm", "HHm", "HH", "H"]
+        default: () => ['HH:mm', 'HH:m', 'H:mm', 'H:m', 'HHmm', 'Hmm', 'HHm', 'HH', 'H']
       },
+      timePlaceholder: String,
       dateLabel: {
         type: String,
-        default: "Datum"
+        default: 'Datum'
       },
       timeLabel: {
         type: String,
-        default: "Zeit"
+        default: 'Zeit'
       },
       timeStep: {
         type: Number,
-        default: 30,
+        default: 30
       },
       disableDates: {
         type: Array,
         default: () => []
-      },
+      }
     },
-    data() {
+    data () {
       return {
         date: null,
         time: '12:00',
         datePicker: null,
+        dateField: null,
+        timeField: null,
         currentValue: null,
-        isEditing: false
+        isEditing: false,
+        id: randomId(20, 'a')
       }
     },
     computed: {
-      finalValue() {
+      dateFieldId () {
+        return `${this.id}-date`
+      },
+      timeFieldId () {
+        return `${this.id}-time`
+      },
+      finalValue () {
         const {enableTime, date, time, dateFormat, timeFormat} = this
         const parsedDate = checkDate(date, dateFormat)
         const parsedTime = checkDate(time, timeFormat)
@@ -116,14 +128,14 @@
           if (!enableTime) {
             timeOffset = this.timeDefault
           } else if (enableTime && parsedTime) {
-            timeOffset = ["hour", "minute", "second"].map(u => parsedTime.get(u))
+            timeOffset = ['hour', 'minute', 'second'].map(u => parsedTime.get(u))
           } else {
             return null
           }
 
-          parsedDate.set("hour", timeOffset[0])
-          parsedDate.set("minute", timeOffset[1])
-          parsedDate.set("second", timeOffset[2])
+          parsedDate.set('hour', timeOffset[0])
+          parsedDate.set('minute', timeOffset[1])
+          parsedDate.set('second', timeOffset[2])
 
           return parsedDate.toDate()
         }
@@ -132,7 +144,7 @@
       }
     },
     methods: {
-      setFromSource() {
+      setFromSource () {
         if (this.isEditing) return
 
         this.currentValue = this.value || null
@@ -143,7 +155,7 @@
           this.$refs.date._flatpickr.setDate(this.currentValue)
         }
       },
-      guessTime(event) {
+      guessTime (event) {
         const {timeFormat} = this
         const el = event.target
         const time = el.value
@@ -155,7 +167,7 @@
           this.time = format(parsedTime, timeFormat)
         }
       },
-      increaseTime(step) {
+      increaseTime (step) {
         const el = this.$refs.time
         const {timeFormat} = this
         const parsedTime = checkDate(el.value, timeFormat)
@@ -163,7 +175,7 @@
           this.time = format(parsedTime.add(step, 'minutes'), timeFormat)
         }
       },
-      increaseDate(step) {
+      increaseDate (step) {
         const el = this.$refs.date
         const {dateFormat} = this
         const parsedTime = checkDate(el.value, dateFormat) || moment()
@@ -171,31 +183,53 @@
           this.date = format(parsedTime.add(step, 'days'), dateFormat)
         }
       },
-      scrollDate: wheelListener(function(event, direction) {
+      scrollDate: wheelListener(function (event, direction) {
         this.increaseDate(direction)
       }),
-      scrollTime: wheelListener(function(event, direction) {
+      scrollTime: wheelListener(function (event, direction) {
         this.increaseTime(this.timeStep * direction)
-      }),
+      })
     },
     watch: {
-      value() { setTimeout(() => this.setFromSource(), 0) },
-      finalValue(date) {
-        setTimeout(() => this.$emit("input", date), 0)
+      value () {
+        setTimeout(() => this.setFromSource(), 0)
+      },
+      finalValue (date) {
+        setTimeout(() => this.$emit('input', date), 0)
+      },
+      enableTime (enable) {
+        if (enable) {
+          this.timeField = input(this.$refs.time, {
+            conf: { target: () => this.$refs.timeFieldGroup }
+          })
+        } else if (this.timeField) {
+          this.timeField.remove()
+          this.timeField = null
+        }
       }
     },
-    created() {
+    created () {
       this.setFromSource()
     },
-    mounted() {
+    mounted () {
+      this.dateField = input(this.$refs.date, {
+        conf: { target: () => this.$refs.dateFieldGroup }
+      })
+      if (this.enableTime) {
+        this.timeField = input(this.$refs.time, {
+          conf: { target: () => this.$refs.timeFieldGroup }
+        })
+      }
       this.datePicker = date(this.$refs.date, {
         disable: this.disableDates,
         appendTo: this.$refs.calendar,
-        static: true,
+        static: true
       })
     },
-    beforeDestroy() {
+    beforeDestroy () {
       this.datePicker.remove()
+      this.dateField.remove()
+      if (this.timeField) this.timeField.remove()
     }
   }
 </script>
