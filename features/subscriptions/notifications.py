@@ -12,17 +12,16 @@ import core.notifications
 
 
 def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):
-    # association für [betreff]
-    # reason für --signatur
-    # sender für From:
-    # sender ist member?
-    # content oder conversation?
+    def update_attributes(key, **kwargs):
+        attributes = recipients_dict.setdefault(key, {})
+        attributes.update((k, v) for k, v in kwargs.items() if v)
+
     for subscription in subscriptions:
-        recipients_dict[subscription.subscriber] = {}
+        update_attributes(subscription.subscriber, association=association)
     for contribution in contributions:
         recipients_dict[contribution.author] = {}
     if association and not association.entity.is_group:
-        recipients_dict[association.entity] = {}
+        update_attributes(association.entity, association=association)
 
 
 class ContentCreated(core.notifications.Notification):
@@ -51,7 +50,6 @@ class ContentCreated(core.notifications.Notification):
         return self.object.versions.last().author
 
     def get_subject(self):
-        #group = '[{}] '.format(self.object.entity.slug) if self.object.entity.is_group else ''
         return self.object.subject
 
     def get_template_name(self):
@@ -59,6 +57,8 @@ class ContentCreated(core.notifications.Notification):
             name = 'galleries/associated.txt'
         elif self.object.is_file:
             name = 'files/associated.txt'
+        elif self.object.is_poll:
+            name = 'polls/associated.txt'
         elif self.object.is_event:
             name = 'events/associated.txt'
         else:

@@ -53,32 +53,8 @@ class Notification:
     def get_date(self):
         return formatdate(localtime=True)
 
-    @staticmethod
-    def format_recipient(gestalt):
-        return '{} <{}>'.format(gestalt, gestalt.user.email)
-
     def get_formatted_recipient(self):
-        return self.format_recipient(self.recipient)
-
-    def get_formatted_recipients(self):
-        """
-        Subclasses must define get_recipients() to return a set of recipients.
-        The set may as well be a dictionary with the values being dictionaries. Each
-        recipient may be assigned additional attributes:
-        * `reply_key`: a string to identify replies
-        * `with_name`: should senders identity be put in from header?
-
-        If defined, the `Reply-To` header is set to DEFAULT_REPLY_TO_EMAIL with `{reply_key}`
-        replaced by the reply key.
-        """
-        recipients = self.get_recipients()
-        if self.generate_reply_tokens:
-            recipients = self.get_reply_tokens(recipients)
-        if type(recipients) == dict:
-            return [(self.format_recipient(r), recipient_attrs)
-                    for r, recipient_attrs in recipients.items()]
-        else:
-            return [(self.format_recipient(r), {}) for r in recipients]
+        return '{} <{}>'.format(self.recipient, self.recipient.user.email)
 
     def get_formatted_reply_address(self, token):
         return '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
@@ -102,41 +78,14 @@ class Notification:
             kwargs['Reply-To'] = self.get_formatted_reply_address(token)
         return kwargs
 
-    def get_thread_headers(self):
-        def format_message_id(message_id, recipient):
-            # The reference towards the recipient is not a security measure, thus
-            # collisions (due the capping of 16 bytes) are acceptable.
-            recipient_token = hashlib.sha256(recipient.user.email.encode("utf-8")).hexdigest()[:16]
-            return '<{}-{}@{}>'.format(message_id, recipient_token, self.site.domain)
-
-        headers = {}
-        message_id, parent_id, reference_ids = self.get_message_ids()
-        headers['Message-ID'] = format_message_id(message_id, self.recipient)
-        if parent_id:
-            headers['In-Reply-To'] = format_message_id(parent_id, self.recipient)
-            if parent_id not in reference_ids:
-                reference_ids.append(parent_id)
-        if reference_ids:
-            headers['References'] = ' '.join([format_message_id(ref_id, self.recipient)
-                                              for ref_id in reference_ids])
-        return headers
-
-    def get_reply_token(self):
-        return None
-
-    def get_sender(self):
-        return None
-
-    def get_sender_email(self):
-        return settings.DEFAULT_FROM_EMAIL
-
-    def get_subject(self):
-        return self.subject
-
-    def get_template_name(self):
-        app_label = apps.get_containing_app_config(type(self).__module__).label
-        return '{}/{}.txt'.format(
-                app_label, type(self).__name__.lower())
+    def get_message(self):
+        headers = self.get_headers(Date=self.get_date())
+        subject_prefix = '[{}] '.format(self.group.slug) if self.group else ''
+        subject = subject_prefix + self.get_subject()
+        return mail.EmailMessage(
+                body=self.get_body(), from_email=self.get_formatted_sender(),
+                headers=headers, subject=subject,
+                to=[self.get_formatted_recipient()])
 
     def get_message_ids(self):
         """ generate a unique message ID for this specific email message and related IDs
@@ -156,19 +105,53 @@ class Notification:
         my_id = '{}.{}'.format(now_string, uuid_string)
         return my_id, None, []
 
-    def get_reply_key(self):
+    def get_reply_token(self):
         return None
+
+    def get_sender(self):
+        return None
+
+    def get_sender_email(self):
+        return settings.DEFAULT_FROM_EMAIL
+
+    def get_subject(self):
+        return self.subject
+
+    def get_template_name(self):
+        app_label = apps.get_containing_app_config(type(self).__module__).label
+        return '{}/{}.txt'.format(
+                app_label, type(self).__name__.lower())
+
+    def get_thread_headers(self):
+        def format_message_id(message_id, recipient):
+            # The reference towards the recipient is not a security measure, thus
+            # collisions (due the capping of 16 bytes) are acceptable.
+            recipient_token = hashlib.sha256(recipient.user.email.encode("utf-8")).hexdigest()[:16]
+            return '<{}-{}@{}>'.format(message_id, recipient_token, self.site.domain)
+
+        headers = {}
+        message_id, parent_id, reference_ids = self.get_message_ids()
+        headers['Message-ID'] = format_message_id(message_id, self.recipient)
+        if parent_id:
+            headers['In-Reply-To'] = format_message_id(parent_id, self.recipient)
+            if parent_id not in reference_ids:
+                reference_ids.append(parent_id)
+        if reference_ids:
+            headers['References'] = ' '.join([format_message_id(ref_id, self.recipient)
+                                              for ref_id in reference_ids])
+        return headers
 
     def send(self, recipient, **kwargs):
         self.recipient = recipient
         self.kwargs = kwargs
+        association = kwargs.get('association')
+        if association and association.entity.is_group:
+            self.group = association.entity
+        else:
+            self.group = None
 
-        # construct message with additional headers
-        headers = self.get_headers(Date=self.get_date())
-        message = mail.EmailMessage(
-                body=self.get_body(), from_email=self.get_formatted_sender(),
-                headers=headers, subject=self.get_subject(),
-                to=[self.get_formatted_recipient()])
+        # construct message
+        message = self.get_message()
 
         # add attachments
         for file_name in self.get_attachments():
