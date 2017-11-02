@@ -65,5 +65,5 @@ class Command(django.core.management.base.BaseCommand):
                                         container_type=c.content_type, container_id=c.id,
                                         public=True, slug=slug)
                                 models.Imported.objects.create(key=key)
-            except requests.exceptions.ConnectionError:
+            except (ConnectionError, requests.exceptions.ConnectionError):
                 pass
