@@ -1,0 +1,7 @@
+Artikel online lesen und kommentieren:
+{% url 'content-permalink' association.pk as path %}{{ path|full_url }}
+
+{{ object.versions.last.text }}
+
+-- 
+Du erhältst diese Benachrichtigung weil Du {% if subscription %}die Gruppe {{ subscription.subscribed_to }} abonniert hast{% endif %}.

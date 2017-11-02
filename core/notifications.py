@@ -42,12 +42,14 @@ class Notification:
 
     def get_body(self):
         context = self.get_context_data()
-        context.update({'site': self.site})
         template = loader.get_template(self.get_template_name())
         template.backend.engine.autoescape = False
         return template.render(context)
 
     def get_context_data(self, **kwargs):
+        kwargs['object'] = self.object
+        kwargs['site'] = self.site
+        kwargs.update(self.kwargs)
         return kwargs
 
     def get_date(self):
@@ -143,9 +145,9 @@ class Notification:
     def send(self, recipient, **kwargs):
         self.recipient = recipient
         self.kwargs = kwargs
-        association = kwargs.get('association')
-        if association and association.entity.is_group:
-            self.group = association.entity
+        self.association = kwargs.get('association')
+        if self.association and self.association.entity.is_group:
+            self.group = self.association.entity
         else:
             self.group = None
 

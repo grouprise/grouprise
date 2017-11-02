@@ -17,7 +17,8 @@ def update_recipients(recipients_dict, association=None, subscriptions=[], contr
         attributes.update((k, v) for k, v in kwargs.items() if v)
 
     for subscription in subscriptions:
-        update_attributes(subscription.subscriber, association=association)
+        update_attributes(
+                subscription.subscriber, association=association, subscription=subscription)
     for contribution in contributions:
         recipients_dict[contribution.author] = {}
     if association and not association.entity.is_group:
@@ -66,7 +67,7 @@ class ContentCreated(core.notifications.Notification):
         elif self.object.is_event:
             name = 'events/associated.txt'
         else:
-            name = 'articles/associated.txt'
+            name = 'articles/created.txt'
         return name
 
 

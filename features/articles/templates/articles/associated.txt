@@ -1,4 +1,0 @@
-Artikel online lesen und kommentieren:
-{% url 'content-permalink' instance.pk as path %}{{ path|full_url }}
-
-{{ instance.container.versions.last.text }}
