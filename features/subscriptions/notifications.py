@@ -17,8 +17,11 @@ def update_recipients(recipients_dict, association=None, subscriptions=[], contr
         attributes.update((k, v) for k, v in kwargs.items() if v)
 
     for subscription in subscriptions:
+        membership = subscription.subscriber.memberships \
+                .filter(group=subscription.subscribed_to).first()
         update_attributes(
-                subscription.subscriber, association=association, subscription=subscription)
+                subscription.subscriber, association=association, membership=membership,
+                subscription=subscription)
     for contribution in contributions:
         recipients_dict[contribution.author] = {}
     if association and not association.entity.is_group:
@@ -59,13 +62,13 @@ class ContentCreated(core.notifications.Notification):
 
     def get_template_name(self):
         if self.object.is_gallery:
-            name = 'galleries/associated.txt'
+            name = 'galleries/created.txt'
         elif self.object.is_file:
-            name = 'files/associated.txt'
+            name = 'files/created.txt'
         elif self.object.is_poll:
-            name = 'polls/associated.txt'
+            name = 'polls/created.txt'
         elif self.object.is_event:
-            name = 'events/associated.txt'
+            name = 'events/created.txt'
         else:
             name = 'articles/created.txt'
         return name

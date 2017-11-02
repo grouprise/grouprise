@@ -1,0 +1,7 @@
+{% extends 'content/created.txt' %}{% block content %}Veranstaltung online ansehen und kommentieren:
+{% url 'content-permalink' association.pk as path %}{{ path|full_url }}
+
+Veranstaltung {% load events %}{% event_time object %}
+Ort: {{ object.place }}
+
+{{ object.versions.last.text }}{% endblock %}
