@@ -23,7 +23,7 @@ def update_recipients(recipients_dict, association=None, subscriptions=[], contr
                 subscription.subscriber, association=association, membership=membership,
                 subscription=subscription)
     for contribution in contributions:
-        update_attributes(contribution.author)
+        update_attributes(contribution.author, contribution=contribution)
     if association and not association.entity.is_group:
         update_attributes(association.entity, association=association)
 
