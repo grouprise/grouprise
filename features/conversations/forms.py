@@ -64,7 +64,7 @@ class Create(forms.ModelForm):
         self.contribution.save()
 
         # send contribution creation signal
-        features.contributions.signals.contribution_created.send(
+        features.contributions.signals.post_create.send(
                 sender=self.__class__, instance=self.contribution)
 
         return association
