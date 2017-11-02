@@ -23,7 +23,7 @@ def update_recipients(recipients_dict, association=None, subscriptions=[], contr
                 subscription.subscriber, association=association, membership=membership,
                 subscription=subscription)
     for contribution in contributions:
-        recipients_dict[contribution.author] = {}
+        update_attributes(contribution.author)
     if association and not association.entity.is_group:
         update_attributes(association.entity, association=association)
 
@@ -75,13 +75,11 @@ class ContentCreated(core.notifications.Notification):
 
 
 class ContributionCreated(notifications.Notification):
-    generate_reply_tokens = True
-
     @classmethod
     def get_recipients(cls, contribution):
         recipients = {}
         # send notifications to gestalten and groups associated with content (instance)
-        for association in contribution.container.associations:
+        for association in contribution.container.associations.all():
             if association.entity.is_group:
                 # subscribed members receive a notification
                 subscriptions = association.entity.subscriptions.filter(
@@ -92,7 +90,7 @@ class ContributionCreated(notifications.Notification):
                 # associated gestalten receive a notification
                 update_recipients(recipients, association=association)
         # send notifications to contributing gestalten
-        update_recipients(recipients, contributions=contribution.container.contributions)
+        update_recipients(recipients, contributions=contribution.container.contributions.all())
         return recipients
 
     def get_attachments(self):
@@ -126,14 +124,7 @@ class ContributionCreated(notifications.Notification):
         return self.object.author
 
     def get_subject(self):
-        prefix = 'Re: '
-        if (self.object.container_type == conversations.Conversation.get_content_type()
-                and self.object.container.contributions.first() == self.object):
-            prefix = ''
-        slugs = self.object.container.get_associated_groups().values_list(
-                'slug', flat=True)
-        groups = '[{}] '.format(','.join(slugs)) if slugs else ''
-        return prefix + groups + self.object.container.subject
+        return self.object.container.subject
 
     def get_template_name(self):
         if self.object.container.is_conversation:
@@ -141,3 +132,7 @@ class ContributionCreated(notifications.Notification):
         else:
             name = 'content/contributed.txt'
         return name
+
+    def is_reply(self):
+        return not (self.object.container.is_conversation
+                and self.object.container.contributions.first() == self.object)

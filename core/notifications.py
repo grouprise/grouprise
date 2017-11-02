@@ -84,7 +84,8 @@ class Notification:
 
     def get_message(self):
         headers = self.get_headers(Date=self.get_date())
-        subject_prefix = '[{}] '.format(self.group.slug) if self.group else ''
+        subject_prefix = 'Re: ' if self.is_reply() else ''
+        subject_prefix += '[{}] '.format(self.group.slug) if self.group else ''
         subject = subject_prefix + self.get_subject()
         return mail.EmailMessage(
                 body=self.get_body(), from_email=self.get_formatted_sender(),
@@ -141,6 +142,9 @@ class Notification:
             headers['References'] = ' '.join([format_message_id(ref_id, self.recipient)
                                               for ref_id in reference_ids])
         return headers
+
+    def is_reply(self):
+        return False
 
     def send(self, recipient, **kwargs):
         self.recipient = recipient
