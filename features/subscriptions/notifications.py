@@ -47,7 +47,11 @@ class ContentCreated(core.notifications.Notification):
         return self.create_token()
 
     def get_sender(self):
-        return self.object.versions.last().author
+        if (self.group
+                and not self.recipient.user.has_perm('memberships.view_list', self.group)):
+            return self.group
+        else:
+            return self.object.versions.last().author
 
     def get_subject(self):
         return self.object.subject

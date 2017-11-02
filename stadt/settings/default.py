@@ -183,6 +183,7 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 DEFAULT_FROM_EMAIL = 'noreply@localhost'
 DEFAULT_REPLY_TO_EMAIL = 'stadtgestalten+{reply_key}@localhost'
+FROM_EMAIL_WITH_SLUG = 'noreply+{slug}@localhost'
 
 EMAIL_BACKEND = 'mailer.backend.DbBackend'
 MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

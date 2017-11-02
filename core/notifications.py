@@ -62,13 +62,15 @@ class Notification:
 
     def get_formatted_sender(self):
         sender = self.get_sender()
-        name = ''
-        if sender: # and recipient_attrs.get('with_name', True):
-            name = '{} via '.format(sender)
+        name = '{} via '.format(sender) if sender else ''
+        if sender:
+            email = settings.FROM_EMAIL_WITH_SLUG.format(slug=sender.slug)
+        else:
+            email = settings.DEFAULT_FROM_EMAIL
         from_email = '{name}{site} <{email}>'.format(
                 name=name,
                 site=self.site.name,
-                email=self.get_sender_email())
+                email=email)
         return from_email
 
     def get_headers(self, **kwargs):
@@ -110,9 +112,6 @@ class Notification:
 
     def get_sender(self):
         return None
-
-    def get_sender_email(self):
-        return settings.DEFAULT_FROM_EMAIL
 
     def get_subject(self):
         return self.subject
