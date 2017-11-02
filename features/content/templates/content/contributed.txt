@@ -1,5 +1,5 @@
 Beitrag mit Kommentaren online lesen und kommentieren:
-{% url 'content-permalink' association.pk as path %}{{ path|full_url }}#{% ref object %}
+{% if association %}{% url 'content-permalink' association.pk as path %}{% else %}{% url 'content-permalink' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}#{% ref object %}
 
 {{ text }}
 {% if subscription %}
