@@ -63,6 +63,13 @@ class ContributionCreated(notifications.Notification):
     def get_subject(self):
         return self.object.container.subject
 
+    def get_subject_context(self):
+        association = self.kwargs.get('association')
+        if association and association.entity.is_group:
+            return association.entity.slug
+        else:
+            return None
+
     def get_template_name(self):
         if self.object.container.is_conversation:
             name = 'conversations/contributed.txt'

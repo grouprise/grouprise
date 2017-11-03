@@ -82,7 +82,9 @@ class Notification:
     def get_message(self):
         headers = self.get_headers(Date=self.get_date())
         subject_prefix = 'Re: ' if self.is_reply() else ''
-        subject_prefix += '[{}] '.format(self.group.slug) if self.group else ''
+        subject_context = self.get_subject_context()
+        if subject_context:
+            subject_prefix += '[{}] '.format(subject_context)
         subject = subject_prefix + self.get_subject()
         return mail.EmailMessage(
                 body=self.get_body(), from_email=self.get_formatted_sender(),
@@ -116,6 +118,9 @@ class Notification:
     def get_subject(self):
         return self.subject
 
+    def get_subject_context(self):
+        return None
+
     def get_template_name(self):
         app_label = apps.get_containing_app_config(type(self).__module__).label
         return '{}/{}.txt'.format(
@@ -146,11 +151,6 @@ class Notification:
     def send(self, recipient, **kwargs):
         self.recipient = recipient
         self.kwargs = kwargs
-        self.association = kwargs.get('association')
-        if self.association and self.association.entity.is_group:
-            self.group = self.association.entity
-        else:
-            self.group = None
 
         # construct message
         message = self.get_message()
