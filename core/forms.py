@@ -37,12 +37,12 @@ class StadtMixin:
         return dict(filter(lambda x: x[1], fields))
 
     def get_layout(self, **kwargs):
-        l = []
+        lay = []
         if kwargs['description']:
-            l += [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
-        l += filter(None, [f.get_layout() for f in self.data_fields])
-        l += [Submit(kwargs['action'])]
-        return layout.Layout(*l)
+            lay += [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
+        lay += filter(None, [f.get_layout() for f in self.data_fields])
+        lay += [Submit(kwargs['action'])]
+        return layout.Layout(*lay)
 
 
 class Form(StadtMixin, django.Form):
