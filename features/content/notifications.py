@@ -1,6 +1,6 @@
 import core
 from features.groups.models import Group
-from feaures.subscriptions.notifications import update_recipients
+from features.subscriptions.notifications import update_recipients
 
 
 class ContentCreated(core.notifications.Notification):

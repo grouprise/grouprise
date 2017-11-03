@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 post_create = django.dispatch.Signal(providing_args=['instance'])
 
 
-@receiver(features.contributions.signals.post_create)
+@receiver(post_create)
 def contribution_created(sender, instance, **kwargs):
     notifications.ContributionCreated.send_all(instance)
 
