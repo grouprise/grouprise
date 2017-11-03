@@ -21,10 +21,8 @@ class GroupRecommend(ShareGroupMixin):
     title = 'Empfehlung'
 
     def form_valid(self, form):
-        notifications.GroupRecommend(
-                group=self.related_object,
-                recipient_email=form.cleaned_data['recipient_email']
-                ).send()
+        notifications.GroupRecommend(self.related_object).send(
+                form.cleaned_data['recipient_email'])
         return super().form_valid(form)
 
 
@@ -35,8 +33,6 @@ class MemberInvite(ShareGroupMixin):
     title = 'Einladung'
 
     def form_valid(self, form):
-        notifications.MemberInvite(
-                group=self.related_object,
-                recipient_email=form.cleaned_data['recipient_email']
-                ).send()
+        notifications.MemberInvite(self.related_object).send(
+                form.cleaned_data['recipient_email'])
         return super().form_valid(form)

@@ -128,10 +128,14 @@ class Notification:
 
     def get_thread_headers(self):
         def format_message_id(message_id, recipient):
-            # The reference towards the recipient is not a security measure, thus
-            # collisions (due the capping of 16 bytes) are acceptable.
-            recipient_token = hashlib.sha256(recipient.user.email.encode("utf-8")).hexdigest()[:16]
-            return '<{}-{}@{}>'.format(message_id, recipient_token, self.site.domain)
+            try:
+                # The reference towards the recipient is not a security measure, thus
+                # collisions (due the capping of 16 bytes) are acceptable.
+                recipient_token = hashlib.sha256(recipient.user.email.encode("utf-8")) \
+                        .hexdigest()[:16]
+                return '<{}-{}@{}>'.format(message_id, recipient_token, self.site.domain)
+            except AttributeError:
+                return '<{}@{}>'.format(message_id, self.site.domain)
 
         headers = {}
         message_id, parent_id, reference_ids = self.get_message_ids()
