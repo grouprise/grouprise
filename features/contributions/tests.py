@@ -24,10 +24,12 @@ class ContributionMixin(features.articles.tests.ArticleMixin):
 
 
 class ContentReplyByEmail(
-        gestalten.AuthenticatedMixin, tests.Test):
+        memberships.AuthenticatedMemberMixin, tests.Test):
     def test_content_reply_by_email(self):
         # create article
-        self.client.post(self.get_url('create-article'), {'title': 'Test', 'text': 'Test'})
+        self.client.post(
+                reverse('create-group-article', args=(self.group.slug,)),
+                {'title': 'Test', 'text': 'Test'})
         a = self.assertExists(associations.Association, content__title='Test')
         self.assertNotificationSent()
         # generate reply message

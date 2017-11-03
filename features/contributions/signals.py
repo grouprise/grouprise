@@ -7,6 +7,7 @@ from django.dispatch import receiver
 
 import core.models
 from features.associations import models as associations
+from features.content.models import Content
 from features.conversations import models as conversations
 from features.files import models as files
 from features.gestalten import models as gestalten
@@ -65,8 +66,12 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
+        if type(key.target) == Content:
+            container = key.target
+        else:
+            container = key.target.container
         contribution = create_contribution(
-                key.target.container, key.gestalt, message, in_reply_to=in_reply_to_text)
+                container, key.gestalt, message, in_reply_to=in_reply_to_text)
         post_create.send(sender=None, instance=contribution)
 
     def process_initial(address):
