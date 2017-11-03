@@ -74,13 +74,13 @@ class FormMixin(forms.LayoutMixin):
 
     def get_layout(self):
         if hasattr(self, '_fields'):
-            l = self._fields
+            layout = self._fields
         else:
-            l = super().get_layout()
+            layout = super().get_layout()
         if hasattr(self, 'description'):
-            l = (layout.HTML('<p>{}</p>'.format(self.description)),) + l
-        l += (forms.Submit(self.get_action()),)
-        return l
+            layout = (layout.HTML('<p>{}</p>'.format(self.description)),) + layout
+        layout += (forms.Submit(self.get_action()),)
+        return layout
 
 
 class InlineViewMixin:
