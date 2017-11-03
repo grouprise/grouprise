@@ -73,10 +73,10 @@ class MemberSubscription(AuthenticatedMemberMixin, TestCase):
         self.assertTrue(list(filterfalse(
             lambda x: x < 0,
             map(lambda m: m.to[0].find(self.gestalt.user.email), mail.outbox))))
-        
+
         # unsubscribed member does not get notified on internal content
         mail.outbox = []
-        r = self.client.post(unsubscribe_url)
+        self.client.post(unsubscribe_url)
         self.client.post(
                 reverse('create-group-article', args=(self.group.slug,)),
                 {'title': 'Test', 'text': 'Test', 'public': False})
