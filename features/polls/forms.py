@@ -57,6 +57,12 @@ class Create(OptionMixin, content.Create):
         # prevent saving in case of type change
         return False if self.is_type_change else super().is_valid()
 
+    def save(self, commit=True):
+        super().save(commit)
+        if commit:
+            self.send_post_create()
+        return self.instance
+
 
 class Update(OptionMixin, content.Update):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
