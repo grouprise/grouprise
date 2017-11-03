@@ -3,11 +3,8 @@ import os
 import django
 
 from core import notifications
-from features.conversations import models as conversations
 from features.contributions import models as contributions
 from features.memberships import models as memberships
-from features.gestalten import models as gestalten
-from features.groups.models import Group
 from features.subscriptions.notifications import update_recipients
 
 
@@ -75,4 +72,4 @@ class ContributionCreated(notifications.Notification):
 
     def is_reply(self):
         return not (self.object.container.is_conversation
-                and self.object.container.contributions.first() == self.object)
+                    and self.object.container.contributions.first() == self.object)

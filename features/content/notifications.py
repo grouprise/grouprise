@@ -1,12 +1,4 @@
-import os
-
-import django
-
-from core import notifications
-from features.conversations import models as conversations
-from features.contributions import models as contributions
-from features.memberships import models as memberships
-from features.gestalten import models as gestalten
+import core
 from features.groups.models import Group
 from feaures.subscriptions.notifications import update_recipients
 

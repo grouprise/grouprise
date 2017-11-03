@@ -12,7 +12,6 @@ from features.conversations import models as conversations
 from features.files import models as files
 from features.gestalten import models as gestalten
 from features.groups import models as groups
-from features.subscriptions.notifications import ContributionCreated
 from . import models, notifications
 
 logger = logging.getLogger(__name__)

@@ -1,16 +1,3 @@
-import os
-
-import django
-
-from core import notifications
-from features.conversations import models as conversations
-from features.contributions import models as contributions
-from features.memberships import models as memberships
-from features.gestalten import models as gestalten
-from features.groups.models import Group
-import core.notifications
-
-
 def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):
     def update_attributes(key, **kwargs):
         attributes = recipients_dict.setdefault(key, {})

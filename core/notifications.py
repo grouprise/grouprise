@@ -2,18 +2,15 @@ import datetime
 from email.utils import formatdate
 import hashlib
 import logging
-import smtplib
 import uuid
 
 from django.apps import apps
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.contrib.sites.shortcuts import get_current_site
 from django.core import mail
 from django.template import loader
 
 from core.models import PermissionToken
-from . import models
 
 logger = logging.getLogger(__name__)
 
