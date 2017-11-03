@@ -4,7 +4,6 @@ from django.dispatch import receiver
 
 from features.memberships.models import Membership
 from features.subscriptions.models import Subscription
-from . import models
 
 
 @receiver(post_save, sender=Membership)

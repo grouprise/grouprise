@@ -6,7 +6,6 @@ import django_mailbox.signals
 from django.dispatch import receiver
 
 import core.models
-import features
 from features.associations import models as associations
 from features.conversations import models as conversations
 from features.files import models as files

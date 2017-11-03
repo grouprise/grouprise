@@ -19,6 +19,17 @@ class ContentCreated(core.notifications.Notification):
             update_recipients(recipients, association=association, subscriptions=subscriptions)
         return recipients
 
+    def get_group(self):
+        association = self.kwargs.get('association')
+        if association and association.entity.is_group:
+            return association.entity
+        else:
+            return None
+
+    def get_message(self):
+        self.group = self.get_group()
+        return super().get_message()
+
     def get_message_ids(self):
         return self.object.get_unique_id(), None, []
 
@@ -36,9 +47,8 @@ class ContentCreated(core.notifications.Notification):
         return self.object.subject
 
     def get_subject_context(self):
-        association = self.kwargs.get('association')
-        if association and association.entity.is_group:
-            return association.entity.slug
+        if self.group:
+            return self.group.slug
         else:
             return None
 

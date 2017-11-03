@@ -1,6 +1,5 @@
 from django.dispatch import receiver, Signal
 
-import features
 from . import notifications
 
 post_create = Signal(providing_args=['instance'])
