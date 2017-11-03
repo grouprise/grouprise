@@ -6,17 +6,23 @@ import django_mailbox.signals
 from django.dispatch import receiver
 
 import core.models
+import features
 from features.associations import models as associations
 from features.conversations import models as conversations
 from features.files import models as files
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 from features.subscriptions.notifications import ContributionCreated
-from . import models
+from . import models, notifications
 
 logger = logging.getLogger(__name__)
 
 post_create = django.dispatch.Signal(providing_args=['instance'])
+
+
+@receiver(features.contributions.signals.post_create)
+def contribution_created(sender, instance, **kwargs):
+    notifications.ContributionCreated.send_all(instance)
 
 
 def is_autoresponse(msg):
