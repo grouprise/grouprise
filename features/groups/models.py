@@ -10,6 +10,7 @@ from sorl.thumbnail import get_thumbnail
 import core.models
 from core import colors
 from features.gestalten import models as gestalten
+from features.gestalten.models import Gestalt
 
 
 def validate_slug(slug):
@@ -120,3 +121,7 @@ class Group(core.models.Model):
                 initials_without_short_terms += m.group(0)
         # prefer the non-trivial one - otherwise pick the full one (and hope it is not empty)
         return initials_without_short_terms if initials_without_short_terms else initials
+
+    @property
+    def subscribers(self):
+        return Gestalt.objects.filter(subscriptions__group=self)
