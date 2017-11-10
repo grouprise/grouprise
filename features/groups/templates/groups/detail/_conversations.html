@@ -1,6 +1,7 @@
-{% load conversations %}
+{% load conversations rules %}
 {% conversation_associations user group as conversations %}
-{% if conversations %}
+{% has_perm 'conversations.list_group' user group as can_list_group_conversations %}
+{% if conversations or can_list_group_conversations %}
     <div class="content-block">
         {% include 'conversations/_shortlist.html' with associations=conversations %}
     </div>
