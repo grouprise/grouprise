@@ -48,7 +48,7 @@
                                 </header>
                                 <div class="tabbl-content">
                                     <div class="tabbl-list">
-                                        <a href="{{ user.gestalt|url_for:user }}">
+                                        <a href="{{ user.gestalt.get_profile_url }}">
                                             Deine Seite
                                         </a>
                                         <a href="{% url 'conversations' %}">
