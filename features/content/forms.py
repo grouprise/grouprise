@@ -1,11 +1,14 @@
 import django.db.transaction
 from django import forms
+from django.db.models import Q
 
 import core.forms
 from . import models
 from features.associations import models as associations
 from features.contributions import forms as contributions
 from features.groups import models as groups
+from features.images.models import Image
+from . import signals
 
 
 class Comment(contributions.Text):
@@ -104,7 +107,8 @@ class Update(forms.ModelForm):
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
-        self.fields['image'].queryset = self.author.images
+        self.fields['image'].queryset = Image.objects.filter(
+                Q(pk=self.initial['image'].pk) | Q(creator=self.author))
         if not self.instance.entity.is_group:
             del self.fields['pinned']
         if self.instance.public:
