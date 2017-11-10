@@ -27,7 +27,7 @@ content_allowed_tags = (
 )
 
 content_allowed_attributes = {
-    '*': 'title',
+    '*': ['id', 'title'],
     'a': ['href', 'title', 'data-component', 'data-grouplink-ref'],
     'code': ['class'],
     'img': ['src', 'alt']

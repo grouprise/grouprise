@@ -42,7 +42,7 @@
                         <input class="dropdown-state" id="calendar-more" type="checkbox" />
                         <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
                                 <span class="btn-label">
-                                    <i class="sg sg-menu"></i> Mehr <span class="caret"></span>
+                                    Mehr <span class="caret"></span>
                                 </span>
                         </label>
                         <ul class="dropdown" id="calendar-more-dropdown" data-dropdown>
@@ -50,7 +50,7 @@
                                 {% if upcoming %}
                                     <li>
                                         <a href="{% if group %}{{ group.get_absolute_url|add:'?content=events' }}{% else %}{% url 'events' %}{% endif %}" >
-                                            Veranstaltungen auflisten
+                                            Alle Veranstaltungen
                                         </a>
                                     </li>
                                 {% endif %}
@@ -70,7 +70,7 @@
                     </a>
                 {% elif upcoming %}
                     <a href="{% if group %}{{ group.get_absolute_url|add:'?content=events' }}{% else %}{% url 'events' %}{% endif %}" class="btn btn-link">
-                        <i class="sg sg-list"></i> Veranstaltungen auflisten
+                        Alle Veranstaltungen
                     </a>
                 {% else %}
                     <a href="{% url 'group-events-export' group_slug=group.slug %}" class="btn btn-link">
