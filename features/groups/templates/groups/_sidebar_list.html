@@ -19,7 +19,7 @@
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{% url 'group-index' %}" class="btn btn-link">
-                <i class="sg sg-list"></i> Gruppen auflisten
+                <i class="sg sg-group"></i> Alle Gruppen
             </a>
 
             {% has_perm 'groups.create_group' user as can_create_group %}
