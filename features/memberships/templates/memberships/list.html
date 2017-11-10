@@ -9,7 +9,9 @@
 {% block heading_toolbar %}
     {% has_perm 'memberships.create_membership' user view.group as can_create %}
     {% if can_create %}
-        <a href="{% url 'member-create' view.group.pk %}" class="btn btn-default">Neues Mitglied</a>
+        <a href="{% url 'member-create' view.group.pk %}" class="btn btn-primary btn-ch">
+            <span class="btn-label"><i class="sg sg-add"></i> Mitglied</span>
+        </a>
     {% endif %}
 {% endblock %}
 
