@@ -1,6 +1,9 @@
-from features.associations import models as associations_models, predicates as associations_rules
-from features.memberships import predicates as memberships
 import rules
+from rules import is_authenticated
+
+from features.associations import models as associations_models, predicates as associations_rules
+from features.gestalten.rules import is_gestalt
+from features.memberships import predicates as memberships
 
 
 @rules.predicate
@@ -24,6 +27,10 @@ rules.add_perm(
 rules.add_perm(
         'content.create',
         rules.is_authenticated)
+
+rules.add_perm(
+        'content.create_for_gestalt',
+        is_authenticated & is_gestalt)
 
 rules.add_perm(
         'content.group_create',
