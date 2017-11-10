@@ -164,7 +164,7 @@ def markdown(
             """.format(json.dumps(html.escape(text)))
             return "<div>{}{}</div>".format(script, result)
     extensions = tuple(core_markdown.markdown_extensions) + (
-            toc.TocExtension(baselevel=heading_baselevel), )
+            toc.TocExtension(baselevel=heading_baselevel, marker='[INHALT]'), )
     result = python_markdown.markdown(text, extensions=extensions)
     if preset == 'linkonly':
         result = bleach(result, disable_tags='all', except_for=('a',))
