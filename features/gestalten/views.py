@@ -62,6 +62,9 @@ class Update(utils.views.ActionMixin, django.views.generic.UpdateView):
     def get_parent(self):
         return self.object
 
+    def get_success_url(self):
+        return self.object.get_profile_url()
+
 
 class UpdateAvatar(utils.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Avatar ändern'
@@ -74,6 +77,9 @@ class UpdateAvatar(utils.views.ActionMixin, django.views.generic.UpdateView):
     def get_parent(self):
         return self.object
 
+    def get_success_url(self):
+        return self.object.get_profile_url()
+
 
 class UpdateBackground(utils.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Hintergrundbild ändern'
@@ -85,3 +91,6 @@ class UpdateBackground(utils.views.ActionMixin, django.views.generic.UpdateView)
 
     def get_parent(self):
         return self.object
+
+    def get_success_url(self):
+        return self.object.get_profile_url()
