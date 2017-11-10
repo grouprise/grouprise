@@ -116,7 +116,7 @@
         <h2 class="content-classification">Beiträge</h2>
         {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
-            {% has_perm 'content.create' user gestalt as can_create_content %}
+            {% has_perm 'content.create_for_gestalt' user gestalt as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
                     <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>
