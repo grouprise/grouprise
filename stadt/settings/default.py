@@ -302,7 +302,3 @@ try:
     ASSET_VERSION = open(os.path.join(BASE_DIR, "ASSET_VERSION"), "r").read().strip()
 except IOError:
     ASSET_VERSION = "trunk"
-
-# TEMPLATE_DEBUG is officially deprecated in Django but still
-# required by sorl-thumbnail.
-TEMPLATE_DEBUG = False
