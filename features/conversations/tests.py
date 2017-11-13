@@ -237,6 +237,10 @@ class Anonymous(
     * should see a message creation link on the group page
     '''
 
+    def setUp(self):
+        self.other_gestalt.public = True
+        self.other_gestalt.save()
+
 
 class Authenticated(
         GroupPageHasCreateLink,

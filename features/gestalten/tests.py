@@ -1,4 +1,6 @@
 from django.contrib import auth
+from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 import core.tests
 
@@ -34,6 +36,22 @@ class OtherAuthenticatedMixin(OtherGestaltMixin):
         super().setUp()
         self.client.force_login(self.other_gestalt.user,
                                 'django.contrib.auth.backends.ModelBackend')
+
+
+class Gestalt(GestaltMixin, TestCase):
+    def test_private_gestalt_page(self):
+        self.gestalt.public = False
+        self.gestalt.save()
+        gestalt_url = reverse('entity', args=(self.gestalt.user.username,))
+        r = self.client.get(gestalt_url)
+        self.assertRedirects(r, '{}?next={}'.format(reverse('login'), gestalt_url))
+
+    def test_public_gestalt_page(self):
+        self.gestalt.public = True
+        self.gestalt.save()
+        gestalt_url = reverse('entity', args=(self.gestalt.user.username,))
+        r = self.client.get(gestalt_url)
+        self.assertEqual(r.status_code, 200)
 
 
 class TestUrls(core.tests.Test):
