@@ -86,6 +86,9 @@ class Detail(
                 object_list=filterset.qs,
                 **kwargs)
 
+    def get_object(self):
+        return self.object
+
 
 class List(base.PermissionMixin, filters_views.FilterView):
     permission_required = 'groups.view_list'

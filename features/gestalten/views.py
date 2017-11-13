@@ -25,6 +25,9 @@ class Detail(
                 object_list=associations,
                 **kwargs)
 
+    def get_object(self):
+        return self.object
+
 
 class List(base.PermissionMixin, generic.ListView):
     permission_required = 'gestalten.view_list'

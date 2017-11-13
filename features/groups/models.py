@@ -9,7 +9,6 @@ from sorl.thumbnail import get_thumbnail
 
 import core.models
 from core import colors
-from features.gestalten import models as gestalten
 from features.gestalten.models import Gestalt
 
 
@@ -18,7 +17,7 @@ def validate_slug(slug):
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
-    if gestalten.Gestalt.objects.filter(user__username=slug).exists():
+    if Gestalt.objects.filter(user__username__iexact=slug).exists():
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist bereits vergeben.',
                 params={'slug': slug}, code='in-use')

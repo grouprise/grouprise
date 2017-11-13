@@ -15,7 +15,7 @@ markdown_extensions = [
 
 content_allowed_tags = (
     # text
-    'p', 'em', 'strong', 'br', 'a', 'img',
+    'p', 'em', 'strong', 'br', 'a', 'img', 'sub', 'sup',
     # citation
     'blockquote', 'cite',
     # headings

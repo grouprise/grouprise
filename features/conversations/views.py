@@ -2,15 +2,17 @@ from django import shortcuts
 from django.conf import settings
 from django.contrib.messages import views as messages
 from django.core import urlresolvers
+from django.shortcuts import get_object_or_404
 from django.views import generic
 
 import core.views
 import features.contributions.models
 import features.contributions.views
-from . import forms
-from features.gestalten import models as gestalten
+from features.gestalten.models import Gestalt
 from features.associations import models as associations
 from features.groups import models as groups
+from features.groups.models import Group
+from . import forms
 
 
 class Conversation(
@@ -82,25 +84,19 @@ class CreateConversation(
 class CreateGestaltConversation(CreateConversation):
     permission_required = 'conversations.create_gestalt_conversation'
 
-    def get(self, *args, **kwargs):
-        self.entity = shortcuts.get_object_or_404(gestalten.Gestalt, pk=kwargs['gestalt_pk'])
-        return super().get(*args, **kwargs)
-
-    def post(self, *args, **kwargs):
-        self.entity = shortcuts.get_object_or_404(gestalten.Gestalt, pk=kwargs['gestalt_pk'])
-        return super().post(*args, **kwargs)
+    def get_object(self):
+        if not hasattr(self, 'entity'):
+            self.entity = get_object_or_404(Gestalt, pk=self.kwargs['gestalt_pk'])
+        return self.entity
 
 
 class CreateGroupConversation(CreateConversation):
     permission_required = 'conversations.create_group_conversation'
 
-    def get(self, *args, **kwargs):
-        self.entity = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
-        return super().get(*args, **kwargs)
-
-    def post(self, *args, **kwargs):
-        self.entity = shortcuts.get_object_or_404(groups.Group, pk=kwargs['group_pk'])
-        return super().post(*args, **kwargs)
+    def get_object(self):
+        if not hasattr(self, 'entity'):
+            self.entity = get_object_or_404(Group, pk=self.kwargs['group_pk'])
+        return self.entity
 
 
 class CreateAbuseConversation(CreateGroupConversation):
@@ -115,6 +111,6 @@ class CreateAbuseConversation(CreateGroupConversation):
                         'Regeln verstößt.'.format(
                             self.request.build_absolute_uri(self.kwargs['path']))}
 
-    def post(self, *args, **kwargs):
-        kwargs['group_pk'] = settings.ABOUT_GROUP_ID
-        return super().post(*args, **kwargs)
+    def get_object(self):
+        self.kwargs['group_pk'] = settings.ABOUT_GROUP_ID
+        return super().get_object()

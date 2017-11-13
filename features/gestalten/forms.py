@@ -6,7 +6,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import ValidationError
 
-from features.groups import models as groups
+from features.groups.models import Group
 from features.gestalten import models
 from utils import forms as utils_forms
 
@@ -36,7 +36,8 @@ def validate_slug(slug):
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
-    if groups.Group.objects.filter(slug=slug).exists():
+    if (Group.objects.filter(slug__iexact=slug).exists()
+            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist bereits vergeben.',
                 params={'slug': slug}, code='in-use')
