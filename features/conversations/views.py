@@ -111,6 +111,6 @@ class CreateAbuseConversation(CreateGroupConversation):
                         'Regeln verstößt.'.format(
                             self.request.build_absolute_uri(self.kwargs['path']))}
 
-    def post(self, *args, **kwargs):
-        kwargs['group_pk'] = settings.ABOUT_GROUP_ID
-        return super().post(*args, **kwargs)
+    def get_object(self):
+        self.kwargs['group_pk'] = settings.ABOUT_GROUP_ID
+        return super().get_object()
