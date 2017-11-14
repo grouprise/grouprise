@@ -32,12 +32,7 @@
         <div class="conversation-body">
             <ol class="medias">
                 {% for message in association.container.contributions.all %}
-                    {% if message.attached_to and message.contribution.file %}
-                    {% else %}
-                        <li>
-                            {% include 'contributions/_contribution.html' with contribution=message permalink_url=request.path %}
-                        </li>
-                    {% endif %}
+                    {% include 'contributions/_contribution.html' with contribution=message permalink_url=request.path %}
                 {% endfor %}
                 {% if can_reply %}
                     <li>
