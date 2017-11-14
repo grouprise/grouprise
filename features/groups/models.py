@@ -5,6 +5,8 @@ from django.contrib.contenttypes import fields as contenttypes
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core import urlresolvers
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import SmartResize, Transpose
 
 import core.models
 from core import colors
@@ -44,6 +46,8 @@ class Group(core.models.Model):
             'Anschrift',
             blank=True)
     avatar = core.models.ImageField(blank=True)
+    avatar_64 = ImageSpecField(
+            source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)

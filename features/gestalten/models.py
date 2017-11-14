@@ -1,9 +1,11 @@
 import django.contrib.contenttypes.models
+from allauth.account import adapter as allauth_adapter
 from django.conf import settings
 from django.contrib import auth
 from django.core import urlresolvers
 from django.db import models
-from allauth.account import adapter as allauth_adapter
+from imagekit.models import ImageSpecField
+from imagekit.processors import SmartResize, Transpose
 
 import core
 from core import colors
@@ -14,8 +16,13 @@ class Gestalt(core.models.Model):
 
     about = models.TextField('Selbstauskunft', blank=True)
     avatar = core.models.ImageField(blank=True)
+    avatar_64 = ImageSpecField(
+            source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
     avatar_color = models.CharField(max_length=7, default=colors.get_random_color)
     background = core.models.ImageField('Hintergrundbild', blank=True)
+    background_cover = ImageSpecField(
+            source='background', processors=[Transpose(), SmartResize(1140, 456)],
+            format='JPEG')
     public = models.BooleanField(
             'Benutzerseite veröffentlichen',
             default=False,
