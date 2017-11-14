@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'features.stadt',
     'features.subscriptions',
     'features.tags',
+    'imagekit',
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
