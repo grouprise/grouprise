@@ -51,7 +51,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: models.Image):
         repr = super().to_representation(instance)
-        repr['preview'] = instance.preview_250.url
+        repr['preview'] = instance.preview_api.url
         return repr
 
 

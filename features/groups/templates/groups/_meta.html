@@ -13,10 +13,8 @@
 <meta name="twitter:description" content="{{ group.description }}">
 
 {% if group.avatar %}
-    {% thumbnail group.avatar '256x256' format='PNG' padding=True as avatar %}
-        <meta property="og:image" content="{{ http_origin }}{{ avatar.url }}">
-        <meta name="twitter:image" content="{{ http_origin }}{{ avatar.url }}">
-    {% endthumbnail %}
+    <meta property="og:image" content="{{ http_origin }}{{ group.avatar_256.url }}">
+    <meta name="twitter:image" content="{{ http_origin }}{{ group.avatar_256.url }}">
 {% endif %}
 
 

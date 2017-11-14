@@ -15,7 +15,7 @@
             {% block content_preview_image %}
                 {% if association.container.image %}
                     <div class="content-image">
-                        <img src="{{ association.container.image.preview.url }}">
+                        <img src="{{ association.container.image.preview_content.url }}">
                     </div>
                 {% endif %}
             {% endblock %}

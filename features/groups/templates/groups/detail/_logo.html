@@ -15,9 +15,7 @@
             {% endif %}
         {% else %}
             <div class="box-content">
-                {% thumbnail group.logo '400x400' format='PNG' as logo %}
-                    <img src="{{ logo.url }}" alt="{{ group }}">
-                {% endthumbnail %}
+                <img src="{{ group.logo_sidebar.url }}" alt="{{ group }}">
             </div>
         {% endif %}
 

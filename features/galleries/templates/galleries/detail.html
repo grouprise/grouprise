@@ -21,13 +21,11 @@
 
         <ul class="gallery" data-component="masonry">
             {% for image in association.container.gallery_images.all %}
-                {% thumbnail image.image.file '250' format='PNG' as thumb %}
-                    <li>
-                        <a href="{{ image.image.file.url }}" class="gallery-link" data-size="{{ image.image.file.width }}x{{ image.image.file.height }}">
-                            <img src="{{ thumb.url }}" class="gallery-image-preview">
-                        </a>
-                    </li>
-                {% endthumbnail %}
+                <li>
+                    <a href="{{ image.image.file.url }}" class="gallery-link" data-size="{{ image.image.file.width }}x{{ image.image.file.height }}">
+                        <img src="{{ image.image.preview_gallery.url }}" class="gallery-image-preview">
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     </div>

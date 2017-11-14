@@ -6,7 +6,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core import urlresolvers
 from django.db import models
 from imagekit.models import ImageSpecField
-from imagekit.processors import SmartResize, Transpose
+from imagekit.processors import ResizeToFit, SmartResize, Transpose
 
 import core.models
 from core import colors
@@ -48,6 +48,8 @@ class Group(core.models.Model):
     avatar = core.models.ImageField(blank=True)
     avatar_64 = ImageSpecField(
             source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
+    avatar_256 = ImageSpecField(
+            source='avatar', processors=[Transpose(), SmartResize(256, 256)], format='PNG')
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
@@ -59,6 +61,8 @@ class Group(core.models.Model):
             default='',
             max_length=200)
     logo = core.models.ImageField(blank=True)
+    logo_sidebar = ImageSpecField(
+            source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')
     url = models.URLField(
             'Adresse im Web',
             blank=True)
@@ -102,8 +106,7 @@ class Group(core.models.Model):
         intro_gallery = self.associations.filter_galleries().filter(pinned=True, public=True) \
             .order_content_by_time_created().first()
         if intro_gallery:
-            first_image_file = intro_gallery.container.gallery_images.first().image.file
-            url = get_thumbnail(first_image_file, '366x120', crop='center').url
+            url = intro_gallery.container.gallery_images.first().image.preview_group.url
         return url
 
     # FIXME: move to template filter
