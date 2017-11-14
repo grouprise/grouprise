@@ -1,15 +1,15 @@
 {% load utils %}
 
 {% kwacro avatar %}
-    {% thumbnail gestalt.avatar '64x64' format='PNG' crop="center" as avatar %}
+    {% if gestalt.avatar %}
         <span title="{{ gestalt }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }}">
-            <img src="{{ avatar.url }}" alt="{{ gestalt }} (@{{ gestalt.slug }})">
+            <img src="{{ gestalt.avatar_64.url }}" alt="{{ gestalt }} (@{{ gestalt.slug }})">
         </span>
-    {% empty %}
-    <span title="{{ gestalt }} (@{{ gestalt.slug }})" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
+    {% else %}
+        <span title="{{ gestalt }} (@{{ gestalt.slug }})" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ gestalt.get_initials|length }}" style="background-color: {{ gestalt.avatar_color }}">
             {{ gestalt.get_initials|truncatechars:4 }}
         </span>
-    {% endthumbnail %}
+    {% endif %}
 {% endkwacro %}
 
 {% if link %}

@@ -3,9 +3,7 @@
 {% kwacro avatar %}
     {% if group.avatar %}
         <div title="{{ group.name }}" class="avatar avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }}">
-            {% thumbnail group.avatar '64x64' format='PNG' padding=True as avatar %}
-                <img src="{{ avatar.url }}" alt="{{ group.name }}">
-            {% endthumbnail %}
+            <img src="{{ group.avatar_64.url }}" alt="{{ group.name }}">
         </div>
     {% else %}
         <div title="{{ group.name }}" class="avatar  avatar-size-{{ size|default:"64" }}-{{ size|default:"64" }} avatar-initials" data-initials="{{ group.get_initials|length }}" style="background-color: {{ group.avatar_color }}">

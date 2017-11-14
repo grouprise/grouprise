@@ -14,11 +14,9 @@
         <div class="content-preview-body-content">
             {% block content_preview_image %}
                 {% if association.container.image %}
-                    {% thumbnail association.container.image.file '200x200' crop="center" as image %}
-                        <div class="content-image">
-                            <img src="{{ image.url }}">
-                        </div>
-                    {% endthumbnail %}
+                    <div class="content-image">
+                        <img src="{{ association.container.image.preview.url }}">
+                    </div>
                 {% endif %}
             {% endblock %}
             <div class="content-preview-text">

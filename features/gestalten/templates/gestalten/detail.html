@@ -9,11 +9,11 @@
 
     <header class="profile-header">
         <div class="profile-header-title-image">
-            {% thumbnail gestalt.background '1140x456' crop="left center" as image %}
-                <img src="{{ image.url }}" alt="Titelbild von {{ gestalt }}">
-            {% empty %}
+            {% if gestalt.background %}
+                <img src="{{ gestalt.background_cover.url }}" alt="Titelbild von {{ gestalt }}">
+            {% else %}
                 <div class="disclaimer"></div>
-            {% endthumbnail %}
+            {% endif %}
 
             {% if can_edit %}
                 <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
