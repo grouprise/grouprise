@@ -5,7 +5,6 @@ from django.contrib.contenttypes import fields as contenttypes
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core import urlresolvers
 from django.db import models
-from sorl.thumbnail import get_thumbnail
 
 import core.models
 from core import colors

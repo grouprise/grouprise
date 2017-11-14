@@ -1,5 +1,4 @@
 from rest_framework import viewsets, mixins, serializers
-from sorl.thumbnail import get_thumbnail
 from django.db.models import Q
 
 import django
