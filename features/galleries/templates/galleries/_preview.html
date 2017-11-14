@@ -10,7 +10,7 @@
 {% block content_preview_image %}
     {% with image=association.container.image|default_if_none:association.container.gallery_images.first.image %}
         <div class="content-image">
-            <img src="{{ image.preview.url }}" alt="">
+            <img src="{{ image.preview_content.url }}" alt="">
         </div>
     {% endwith %}
 {% endblock %}
