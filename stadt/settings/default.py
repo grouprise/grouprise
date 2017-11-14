@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
-    'sorl.thumbnail',
     'utils',
 ]
 
