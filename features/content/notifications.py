@@ -64,3 +64,7 @@ class ContentCreated(core.notifications.Notification):
         else:
             name = 'articles/created.txt'
         return name
+
+    def get_url(self):
+        association = self.kwargs.get('association')
+        return association.get_absolute_url()

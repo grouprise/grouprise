@@ -73,10 +73,20 @@ class Notification:
         return from_email
 
     def get_headers(self, **kwargs):
+        # thread headers
         kwargs.update(self.get_thread_headers())
+
+        # reply-to with token
         token = self.get_reply_token()
         if token:
             kwargs['Reply-To'] = self.get_formatted_reply_address(token)
+
+        # archived-at with url
+        url = self.get_url()
+        if url:
+            kwargs['Archived-At'] = '<{}://{}{}>'.format(
+                    settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL, self.site.domain, url)
+
         return kwargs
 
     def get_message(self):
@@ -148,6 +158,9 @@ class Notification:
             headers['References'] = ' '.join([format_message_id(ref_id, self.recipient)
                                               for ref_id in reference_ids])
         return headers
+
+    def get_url(self):
+        return None
 
     def is_reply(self):
         return False
