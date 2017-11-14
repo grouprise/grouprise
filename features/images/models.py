@@ -7,7 +7,10 @@ class Image(models.Model):
     file = models.ImageField('Datei')
     creator = models.ForeignKey('gestalten.Gestalt', related_name='images')
 
-    preview = ImageSpecField(source='file', processors=[Transpose(), SmartResize(200, 200)])
+    preview = ImageSpecField(
+            source='file', processors=[Transpose(), SmartResize(200, 200)], format='PNG')
+    preview_250 = ImageSpecField(
+            source='file', processors=[Transpose(), SmartResize(250, 250)], format='PNG')
 
     def __str__(self):
         return '{} ({})'.format(self.file, self.creator)[2:]
