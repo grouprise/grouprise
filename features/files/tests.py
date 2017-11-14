@@ -16,8 +16,7 @@ class GroupMessageMixin(memberships.MemberMixin):
         self.message = django_mailbox.models.Message.objects.create(
                 mailbox=mailbox,
                 from_header=self.gestalt.user.email,
-                to_header='{}@localhost'.format(self.group.slug),
-                body='Text A')
+                body='Delivered-To: {}@localhost\n\nText A'.format(self.group.slug))
 
 
 class GroupMessageWithAttachmentMixin(GroupMessageMixin):
