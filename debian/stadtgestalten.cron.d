@@ -2,7 +2,7 @@
 #    MAILTO=admin@example.org
 
 # process incoming mails
-*/3 * * * * root    stadtctl getmail 2>&1 | grep -v ^INFO:
+*/3 * * * * root    stadtctl getmail 2>&1 | grep -vE "^(INFO:|WARNING:django_mailbox.models:.*content-transfer-encoding)"
 
 # calculate scores for groups and users
 23  * * * * root    stadtctl update_scores
