@@ -7,17 +7,9 @@
                     <img src="{{ contribution.contribution.file.url }}"
                          alt="{{ contribution.contribution.filename }}">
                 {% else %}
-                    {% thumbnail contribution.contribution.file.path '480'  as i_480  %}
-                    {% thumbnail contribution.contribution.file.path '768'  as i_768  %}
-                    {% thumbnail contribution.contribution.file.path '1200' as i_1200 %}
-                    {% thumbnail contribution.contribution.file.path '1920' as i_1920 %}
-                        <img src="{{ i_1200.url }}" alt="{{ contribution.contribution.filename }}"
-                             srcset="{{ i_480.url}} 480w, {{ i_768.url }} 768w, {{ i_1200.url }} 1200w, {{ i_1920.url }} 1920w"
-                        />
-                    {% endthumbnail %}
-                    {% endthumbnail %}
-                    {% endthumbnail %}
-                    {% endthumbnail %}
+                    <img src="{{ contribution.contribution.image_1200.url }}" alt="{{ contribution.contribution.filename }}"
+                         srcset="{{ contribution.contribution.image_480.url }} 480w, {{ contribution.contribution.image_768.url }} 768w, {{ contribution.contribution.image_1200.url }} 1200w, {{ contribution.contribution.image_1920.url }} 1920w"
+                    />
                 {% endif %}
             {% elif contribution.contribution.is_video %}
                 <video src="{{ contribution.contribution.file.url }}" controls></video>

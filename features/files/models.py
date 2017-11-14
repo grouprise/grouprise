@@ -3,6 +3,8 @@ import re
 
 import django
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit, Transpose
 
 import core
 from features.contributions import models as contributions
@@ -38,6 +40,15 @@ class File(core.models.Model):
 
     version = models.ForeignKey(
             'content2.Version', null=True, on_delete=models.CASCADE, related_name='file')
+
+    image_480 = ImageSpecField(
+            source='file', processors=[Transpose(), ResizeToFit(480)], format='JPEG')
+    image_768 = ImageSpecField(
+            source='file', processors=[Transpose(), ResizeToFit(768)], format='JPEG')
+    image_1200 = ImageSpecField(
+            source='file', processors=[Transpose(), ResizeToFit(1200)], format='JPEG')
+    image_1920 = ImageSpecField(
+            source='file', processors=[Transpose(), ResizeToFit(1920)], format='JPEG')
 
     objects = FileManager()
 
