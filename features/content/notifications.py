@@ -67,4 +67,6 @@ class ContentCreated(core.notifications.Notification):
 
     def get_url(self):
         association = self.kwargs.get('association')
-        return association.get_absolute_url()
+        if association:
+            return association.get_absolute_url()
+        return super().get_url()

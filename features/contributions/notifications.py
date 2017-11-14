@@ -3,6 +3,7 @@ import os
 import django
 
 from core import notifications
+from core.templatetags.core import ref
 from features.contributions import models as contributions
 from features.memberships import models as memberships
 from features.subscriptions.notifications import update_recipients
@@ -76,6 +77,12 @@ class ContributionCreated(notifications.Notification):
         else:
             name = 'content/contributed.txt'
         return name
+
+    def get_url(self):
+        association = self.kwargs.get('association')
+        if association:
+            return '{}#{}'.format(association.get_absolute_url(), ref(self.object))
+        return super().get_url()
 
     def is_reply(self):
         return not (self.object.container.is_conversation

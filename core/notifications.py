@@ -11,6 +11,7 @@ from django.core import mail
 from django.template import loader
 
 from core.models import PermissionToken
+from core.templatetags.core import full_url
 
 logger = logging.getLogger(__name__)
 
@@ -84,8 +85,7 @@ class Notification:
         # archived-at with url
         url = self.get_url()
         if url:
-            kwargs['Archived-At'] = '<{}://{}{}>'.format(
-                    settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL, self.site.domain, url)
+            kwargs['Archived-At'] = '<{}>'.format(full_url(url))
 
         return kwargs
 
