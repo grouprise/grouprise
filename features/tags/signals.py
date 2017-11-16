@@ -76,11 +76,7 @@ def tag_entities(sender, instance, *args, **kwargs):
 
         for tag in final_tags:
             for model in tagged_models:
-                try:
-                    tagged_type = contenttypes.ContentType.objects.get_for_model(model)
-                except AttributeError:
-                    logger.error("Failed to retrieve tagged type of model: %s", model)
-                    continue
+                tagged_type = contenttypes.ContentType.objects.get_for_model(model)
                 Tagged.objects.get_or_create(
                     tag=tag, tagged_id=model.id,
                     tagged_type=tagged_type
