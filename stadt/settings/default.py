@@ -10,7 +10,6 @@ DATA_DIR = BASE_DIR if os.access(BASE_DIR, os.W_OK) else os.path.expanduser("~")
 
 # Application definition
 INSTALLED_APPS = [
-    'account.apps.AccountConfig',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
