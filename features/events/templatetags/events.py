@@ -6,6 +6,8 @@ import django.utils.formats
 import django.utils.timezone
 from django import template
 from django.core import urlresolvers
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 from ..utils import get_requested_time
 
@@ -105,10 +107,30 @@ def event_time(context, event):
 def sidebar_calendar(
         context, associations, group=None, preview_length=5, show_group=True,
         hide_buttons=False, component_id=None):
+    user = context['user']
+    group = context.get('group')
     upcoming = associations\
         .filter_upcoming(get_requested_time(context.request))\
         .order_by('content__time')[:preview_length]
+
+    # collect toolbar actions
+    actions = []
+    if not user.is_authenticated() or user.has_perm('content.create'):
+        url = reverse('create-event')
+        if group:
+            url = reverse('create-group-event', args=(group.slug,))
+        actions.append((mark_safe('<i class="sg sg-add"></i> Veranstaltung eintragen'), url))
+    if upcoming:
+        url = reverse('events')
+        if group:
+            url = '{}?content=events'.format(group.get_absolute_url())
+        actions.append(('Alle Veranstaltungen', url))
+    if group:
+        url = reverse('group-events-export', args=(group.slug,))
+        actions.append(('Kalender exportieren', url))
+
     context.update({
+        'actions': actions,
         'associations': associations,
         'group': group,
         'hide_buttons': hide_buttons,
