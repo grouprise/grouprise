@@ -1,3 +1,6 @@
+# Use with care. See
+# https://git.hack-hro.de/stadtgestalten/stadtgestalten/issues/468
+
 from crispy_forms import bootstrap, helper, layout
 from django import forms as django
 

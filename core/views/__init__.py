@@ -1,3 +1,5 @@
+# Obsolete code. Do not use for new views. Use django.views.generic instead.
+
 import django
 import json
 

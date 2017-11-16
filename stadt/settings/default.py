@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
-    'utils',
 ]
 
 MIDDLEWARE = [
