@@ -88,7 +88,15 @@ class Notification:
         if self.url:
             kwargs['Archived-At'] = '<{}>'.format(build_absolute_uri(self.url))
 
+        # list-id
+        list_id = self.get_list_id()
+        if list_id:
+            kwargs['List-Id'] = list_id
+
         return kwargs
+
+    def get_list_id(self):
+        return None
 
     def get_message(self):
         headers = self.get_headers(Date=self.get_date())

@@ -42,8 +42,20 @@ class ContributionCreated(notifications.Notification):
                     self.object.contribution.group)
         return super().get_context_data(**kwargs)
 
+    def get_group(self):
+        if self.association and self.association.entity.is_group:
+            return self.association.entity
+        else:
+            return None
+
+    def get_list_id(self):
+        if self.group:
+            return '{} <{}.{}>'.format(str(self.group), self.group.slug, self.site.domain)
+        return super().get_list_id()
+
     def get_message(self):
         self.association = self.kwargs.get('association')
+        self.group = self.get_group()
         return super().get_message()
 
     def get_message_ids(self):
