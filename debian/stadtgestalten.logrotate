@@ -1,0 +1,9 @@
+/var/log/stadtgestalten/*.log {
+        daily
+        rotate 5
+        compress
+        delaycompress
+        missingok
+        notifempty
+        create 0640 stadtgestalten adm
+}
