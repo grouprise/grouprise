@@ -115,7 +115,7 @@ def sidebar_calendar(
 
     # collect toolbar actions
     actions = []
-    if (not user.is_authenticated() 
+    if (not user.is_authenticated()
             or not group and user.has_perm('content.create')
             or user.has_perm('content.group_create', group)):
         url = reverse('create-event')
