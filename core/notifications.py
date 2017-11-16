@@ -11,7 +11,7 @@ from django.core import mail
 from django.template import loader
 
 from core.models import PermissionToken
-from core.templatetags.core import full_url
+from core.templatetags.core import full_url as build_absolute_uri
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +47,7 @@ class Notification:
     def get_context_data(self, **kwargs):
         kwargs['object'] = self.object
         kwargs['site'] = self.site
+        kwargs['url'] = self.url
         kwargs.update(self.kwargs)
         return kwargs
 
@@ -83,9 +84,9 @@ class Notification:
             kwargs['Reply-To'] = self.get_formatted_reply_address(token)
 
         # archived-at with url
-        url = self.get_url()
-        if url:
-            kwargs['Archived-At'] = '<{}>'.format(full_url(url))
+        self.url = self.get_url()
+        if self.url:
+            kwargs['Archived-At'] = '<{}>'.format(build_absolute_uri(self.url))
 
         return kwargs
 

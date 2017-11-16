@@ -1,3 +1,5 @@
+from django.core.urlresolvers import reverse
+
 import core
 from features.groups.models import Group
 from features.subscriptions.notifications import update_recipients
@@ -20,13 +22,13 @@ class ContentCreated(core.notifications.Notification):
         return recipients
 
     def get_group(self):
-        association = self.kwargs.get('association')
-        if association and association.entity.is_group:
-            return association.entity
+        if self.association and self.association.entity.is_group:
+            return self.association.entity
         else:
             return None
 
     def get_message(self):
+        self.association = self.kwargs.get('association')
         self.group = self.get_group()
         return super().get_message()
 
@@ -66,7 +68,6 @@ class ContentCreated(core.notifications.Notification):
         return name
 
     def get_url(self):
-        association = self.kwargs.get('association')
-        if association:
-            return association.get_absolute_url()
+        if self.association:
+            return reverse('content-permalink', args=(self.association.pk,))
         return super().get_url()

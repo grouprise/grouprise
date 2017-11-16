@@ -1,6 +1,7 @@
 import os
 
 import django
+from django.core.urlresolvers import reverse
 
 from core import notifications
 from core.templatetags.core import ref
@@ -41,6 +42,10 @@ class ContributionCreated(notifications.Notification):
                     self.object.contribution.group)
         return super().get_context_data(**kwargs)
 
+    def get_message(self):
+        self.association = self.kwargs.get('association')
+        return super().get_message()
+
     def get_message_ids(self):
         my_id = self.object.get_unique_id()
         previous_texts = self.object.container.contributions.exclude(
@@ -65,9 +70,8 @@ class ContributionCreated(notifications.Notification):
         return self.object.container.subject
 
     def get_subject_context(self):
-        association = self.kwargs.get('association')
-        if association and association.entity.is_group:
-            return association.entity.slug
+        if self.association and self.association.entity.is_group:
+            return self.association.entity.slug
         else:
             return None
 
@@ -79,9 +83,12 @@ class ContributionCreated(notifications.Notification):
         return name
 
     def get_url(self):
-        association = self.kwargs.get('association')
-        if association:
-            return '{}#{}'.format(association.get_absolute_url(), ref(self.object))
+        if self.association:
+            if self.object.container.is_conversation:
+                return '{}#{}'.format(self.association.get_absolute_url(), ref(self.object))
+            else:
+                return '{}#{}'.format(reverse(
+                    'content-permalink', args=(self.association.pk,)), ref(self.object))
         return super().get_url()
 
     def is_reply(self):
