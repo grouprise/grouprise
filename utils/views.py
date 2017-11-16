@@ -1,4 +1,4 @@
-from . import forms
+from core import forms
 from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.auth import views as auth_views

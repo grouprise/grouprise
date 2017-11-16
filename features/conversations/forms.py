@@ -5,7 +5,7 @@ import features
 from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.contributions import forms as contributions, models as contributions_models
-from utils import forms as utils_forms
+from core import forms as utils_forms
 from . import models
 
 

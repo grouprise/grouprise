@@ -5,7 +5,7 @@ import allauth.account.utils
 from crispy_forms import layout
 from django import forms
 from django.contrib import auth
-from utils import forms as util_forms
+from core import forms as util_forms
 
 
 class Email(util_forms.FormMixin, allauth.account.forms.AddEmailForm):

@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 
 from features.groups.models import Group
 from features.gestalten import models
-from utils import forms as utils_forms
+from core import forms as utils_forms
 
 
 class GestaltByEmailField(forms.EmailField):
