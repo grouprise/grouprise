@@ -34,7 +34,6 @@
                 <span class="sr-only">Website</span>
             </dt>
             <dd>
-                {% load utils %}
                 <a href="{{ group.url }}">{{ group.url|cut:'http://'|cut:'https://'|cuttrailing:'/' }}</a>
             </dd>
         {% endif %}
