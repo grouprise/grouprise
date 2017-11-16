@@ -32,7 +32,7 @@ class Detail(
 class List(base.PermissionMixin, generic.ListView):
     permission_required = 'gestalten.view_list'
     queryset = models.Gestalt.objects.filter(public=True)
-    ordering = '-score'
+    ordering = ['-score', '-user__date_joined']
     paginate_by = 10
     template_name = 'gestalten/list.html'
 
