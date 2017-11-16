@@ -4,7 +4,6 @@ from django.views import generic
 from django_filters import views as filters_views
 
 import core
-import utils
 from core import fields, views
 from core.views import base
 from features.associations import models as associations
@@ -111,7 +110,7 @@ class Update(base.PermissionMixin, generic.UpdateView):
     form_class = forms.Update
 
 
-class GroupAvatarUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
+class GroupAvatarUpdate(core.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Avatar ändern'
     fields = ('avatar',)
     layout = ('avatar',)
@@ -123,7 +122,7 @@ class GroupAvatarUpdate(utils.views.ActionMixin, django.views.generic.UpdateView
         return self.object
 
 
-class GroupLogoUpdate(utils.views.ActionMixin, django.views.generic.UpdateView):
+class GroupLogoUpdate(core.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Logo ändern'
     fields = ('logo',)
     layout = ('logo',)

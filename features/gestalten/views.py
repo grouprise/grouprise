@@ -3,7 +3,6 @@ import django
 from django.views import generic
 
 import core
-import utils
 from core.views import base
 from features.associations import models as associations
 from . import forms, models
@@ -54,7 +53,7 @@ class Login(allauth.account.views.LoginView):
         return False
 
 
-class Update(utils.views.ActionMixin, django.views.generic.UpdateView):
+class Update(core.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Dein Profil'
     form_class = forms.Gestalt
     menu = 'gestalt'
@@ -69,7 +68,7 @@ class Update(utils.views.ActionMixin, django.views.generic.UpdateView):
         return self.object.get_profile_url()
 
 
-class UpdateAvatar(utils.views.ActionMixin, django.views.generic.UpdateView):
+class UpdateAvatar(core.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Avatar ändern'
     fields = ('avatar',)
     layout = ('avatar',)
@@ -84,7 +83,7 @@ class UpdateAvatar(utils.views.ActionMixin, django.views.generic.UpdateView):
         return self.object.get_profile_url()
 
 
-class UpdateBackground(utils.views.ActionMixin, django.views.generic.UpdateView):
+class UpdateBackground(core.views.ActionMixin, django.views.generic.UpdateView):
     action = 'Hintergrundbild ändern'
     fields = ('background',)
     layout = ('background',)

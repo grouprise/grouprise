@@ -9,7 +9,7 @@ from features.associations import models as associations
 from features.contributions import models as contributions
 from features.gestalten import models as gestalten_models, views as gestalten_views
 from features.groups import models as groups_models, views as groups_views
-from utils import views as utils_views
+from core import views as utils_views
 from . import forms, models
 
 

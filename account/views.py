@@ -5,7 +5,7 @@ from crispy_forms import layout
 from django.contrib import messages
 from django.views import generic
 from django.views.generic import edit as edit_views
-from utils import views as utils_views
+from core import views as utils_views
 from . import forms
 
 
