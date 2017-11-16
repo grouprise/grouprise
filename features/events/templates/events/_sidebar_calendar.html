@@ -31,16 +31,20 @@
 
         {% if not hide_buttons %}
             <div class="btn-toolbar btn-toolbar-right">
-                {% if actions|length > 2 %}
-                    {% dropdown 'calendar-more' 'Mehr' %}
-                        {% for action, url in actions|slice:'1:' %}
-                            <a href="{{ url }}">{{ action }}</a>
-                        {% endfor %}
-                    {% enddropdown %}
-                {% elif actions|length > 1 %}
-                    {% for action, url in actions|slice:'1:2' %}
-                        <a href="{{ url }}" class="btn btn-link">{{ action }}</a>
-                    {% endfor %}
+                {% if actions|length > 1 %}
+                    <div class="dropdown-container">
+                        <input class="dropdown-state" id="calendar-more" type="checkbox" />
+                        <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
+                                <span class="btn-label">
+                                    Mehr <span class="caret"></span>
+                                </span>
+                        </label>
+                        <ul class="dropdown" id="calendar-more-dropdown" data-dropdown>
+                            {% for action, url in actions|slice:'1:' %}
+                                <li><a href="{{ url }}">{{ action }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
 
                 {% for action, url in actions|slice:':1' %}
