@@ -14,9 +14,9 @@ import features.content.views
 import features.groups.views
 from features.associations import models as associations
 from features.gestalten import models as gestalten
+from features.gestalten.auth import get_user_resolver
 from features.memberships.predicates import is_member_of
 from utils import views as utils_views
-from utils.auth import get_user_resolver
 from .utils import get_requested_time
 from . import forms
 
