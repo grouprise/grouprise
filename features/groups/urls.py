@@ -14,9 +14,9 @@ urlpatterns = [
         name='group-create'),
 
     urls.url(
-        r'^stadt/groups/(?P<pk>[0-9]+)/edit$',
+        r'^stadt/settings/group/$',
         views.Update.as_view(),
-        name='group-update'),
+        name='group-settings'),
 
     urls.url(
         r'^stadt/groups/(?P<pk>[0-9]+)/edit/avatar/$',

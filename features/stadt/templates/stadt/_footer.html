@@ -36,9 +36,7 @@
                         <li><a href="{{ user.gestalt|url_for:user }}">Deine Seite</a></li>
                         <li><a href="{% url 'conversations' %}">Deine Gespräche</a></li>
                         <li class="separator"></li>
-                        <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Deine Benutzerangaben</a></li>
-                        <li><a href="{% url 'account_email' %}">Deine E-Mail-Adressen</a></li>
-                        <li><a href="{% url 'account_change_password' %}">Dein Kennwort ändern</a></li>
+                        <li><a href="{% url 'settings' %}">Einstellungen</a></li>
                         <li class="separator"></li>
                         <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
                     {% else %}

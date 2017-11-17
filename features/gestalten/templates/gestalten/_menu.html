@@ -46,7 +46,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'gestalt-update' user.gestalt.pk %}"
+                            <a href="{% url 'settings' %}{% if group %}?group={{ group }}{% endif %}"
                                class="nav-menu-item">
                                 <i class="sg sg-fw sg-settings"></i>
                                 <span class="nav-menu-item-label">Einstellungen</span>

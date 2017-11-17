@@ -19,4 +19,4 @@ add_perm('groups.view', always_allow)
 
 add_perm('groups.view_list', always_allow)
 
-add_perm('groups.change_group', is_authenticated & memberships.is_member_of)
+add_perm('groups.change', is_authenticated & memberships.is_member_of)

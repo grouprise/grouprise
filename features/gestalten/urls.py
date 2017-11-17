@@ -12,9 +12,9 @@ urlpatterns = [
         name='gestalten'),
 
     url(
-        r'^stadt/gestalten/(?P<pk>[0-9]+)/edit/$',
+        r'^stadt/settings/$',
         views.Update.as_view(),
-        name='gestalt-update'),
+        name='settings'),
 
     url(
         r'^stadt/gestalten/(?P<pk>[0-9]+)/edit/avatar/$',
