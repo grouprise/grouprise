@@ -25,22 +25,18 @@ class Update(forms.ModelForm):
                 'address', 'closed', 'description', 'date_founded', 'name', 'slug', 'url',
                 'url_import_feed')
         model = models.Group
+        widgets = {
+                'description': forms.Textarea({'rows': 2}),
+                'address': forms.Textarea({'rows': 3}),
+                'date_founded': forms.DateInput({'data-component': 'date'}),
+                }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['tags'] = ', '.join(self.instance.tags.values_list('tag__name', flat=True))
-        self.helper = helper.FormHelper()
-        self.helper.layout = layout.Layout(
-                'name',
-                layout.Field('description', rows=4),
-                layout.Field('address', rows=4),
-                'url',
-                'url_import_feed',
-                layout.Field('date_founded', data_component='date'),
-                'tags',
+        ayout = layout.Layout(
                 bootstrap.PrependedText('slug', '{0}/'.format(
                     sites.Site.objects.get_current().domain)),
-                'closed',
                 layout.Submit('update', 'Angaben speichern'))
 
     def save(self, commit=True):

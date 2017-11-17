@@ -16,6 +16,9 @@ from . import filters, forms, models
 
 
 class Mixin:
+    '''
+    Obsolete: Do not use in new code!
+    '''
     def get_context_data(self, **kwargs):
         kwargs['group'] = self.get_group()
         return super().get_context_data(**kwargs)
@@ -108,8 +111,8 @@ class List(base.PermissionMixin, filters_views.FilterView):
 class Update(PermissionMixin, UpdateView):
     permission_required = 'groups.change'
     model = models.Group
-    template_name = 'groups/update.html'
     form_class = forms.Update
+    template_name = 'groups/update.html'
 
     def get_object(self):
         return get_object_or_404(models.Group, slug=self.request.GET.get('group'))

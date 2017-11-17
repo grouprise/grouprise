@@ -64,12 +64,12 @@ class Group(core.models.Model):
     logo_sidebar = ImageSpecField(
             source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')
     url = models.URLField(
-            'Adresse im Web',
+            'Externe Website',
             blank=True)
     url_import_feed = models.BooleanField(
             'Beiträge von Website übernehmen', default=False,
             help_text='Öffentliche Beiträge der angegebenen Website automatisch auf '
-            'Stadtgestalten veröffentlichen, wenn technisch möglich')
+            'dieser Plattform veröffentlichen, wenn technisch möglich')
 
     closed = models.BooleanField(
             'Geschlossene Gruppe',

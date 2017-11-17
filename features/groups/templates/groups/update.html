@@ -1,16 +1,61 @@
 {% extends 'stadt/stadt.html' %}
 
-{% load crispy_forms_tags %}
-
-{% block title %}Gruppe bearbeiten - {{ site.name }}{% endblock %}
-{% block menu %}{% with menu='group' %}{{ block.super}}{% endwith %}{% endblock %}
-{% block breadcrumb %}{% breadcrumb group 'Gruppe bearbeiten' %}{% endblock %}
-{% block heading_title %}<h1 class="content-classification">Gruppe</h1>{% endblock %}
+{% block title %}Einstellungen - {{ block.super }}{% endblock %}
+{% block menu %}{% menu entity=group %}{% endblock %}
+{% block heading_title_text %}Einstellungen{% endblock %}
 
 {% block sidebar %}
-    {% include 'groups/_sidebar.html' with group=group %}
+    <div class="box box-striped">
+        <div class="box-inner">
+            <header class="box-header">
+                <h2 class="box-title">
+                    <i class="sg sg-gestalt"></i>
+                    Gestalt
+                </h2>
+            </header>
+            <div class="box-content">
+                <ul>
+                    <li><a href="#">Allgemein</a></li>
+                    <li><a href="#">Avatar</a></li>
+                    <li><a href="#">Hintergrundbild</a></li>
+                    <li><a href="#">E-Mail-Adressen</a></li>
+                    <li><a href="#">Kennwort</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="box box-striped">
+        <div class="box-inner">
+            <header class="box-header">
+                <h2 class="box-title">
+                    <i class="sg sg-group"></i>
+                    Gruppe
+                </h2>
+            </header>
+            <div class="box-content">
+                <ul>
+                    <li><a href="#">Allgemein</a> <i class="fa fa-arrow-left"></i></li>
+                    <li><a href="#">Avatar</a></li>
+                    <li><a href="#">Logo</a></li>
+                    <li><a href="#">Benachrichtigungen & Mitgliedschaft</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
-    {% crispy form %}
+    <form method="post">
+        {% csrf_token %}
+        {% field form.name %}
+        {% field form.description %}
+        {% field form.tags %}
+        {% field form.address %}
+        {% field form.url %}
+        {% field_checkbox form.url_import_feed %}
+        {% field form.date_founded %}
+        {% field_checkbox form.closed %}
+        {% field form.slug prefix=site.domain|add:'/' %}
+        <button class="btn btn-primary">Einstellungen speichern</button>
+    </form>
 {% endblock %}
