@@ -1,11 +1,14 @@
 import django
 import django_filters
+from django.shortcuts import get_object_or_404
 from django.views import generic
+from django.views.generic import UpdateView
 from django_filters import views as filters_views
 
 import core
 from core import fields, views
 from core.views import base
+from core.views import PermissionMixin
 from features.associations import models as associations
 from features.associations.filters import ContentFilterSet
 from features.groups import models as groups
@@ -102,12 +105,14 @@ class List(base.PermissionMixin, filters_views.FilterView):
         return groups.Group.objects.order_by('-score')
 
 
-class Update(base.PermissionMixin, generic.UpdateView):
-    permission_required = 'groups.change_group'
+class Update(PermissionMixin, UpdateView):
+    permission_required = 'groups.change'
     model = models.Group
     template_name = 'groups/update.html'
-
     form_class = forms.Update
+
+    def get_object(self):
+        return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
 
 
 class GroupAvatarUpdate(core.views.ActionMixin, django.views.generic.UpdateView):
