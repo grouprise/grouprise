@@ -50,7 +50,7 @@ class GroupClosed(
 
 
 class GroupMember(
-        memberships.OnlyResignLink,
+        # memberships.OnlyResignLink,
         memberships.JoinRedirectsToGroupPage,
         memberships.ResignAllowed,
         memberships.MemberListNoCreateLink,
@@ -60,7 +60,7 @@ class GroupMember(
 
 
 class GroupClosedMember(
-        memberships.OnlyResignLink,
+        # memberships.OnlyResignLink,
         memberships.JoinRedirectsToGroupPage,
         memberships.ResignAllowed,
         memberships.MemberListCreateLink,

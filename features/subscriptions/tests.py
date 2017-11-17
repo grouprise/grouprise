@@ -51,10 +51,6 @@ class AuthenticatedSubscription(AuthenticatedMixin, GroupMixin, TestCase):
         self.assertRedirects(r, self.group.get_absolute_url())
         self.assertTrue(self.gestalt in self.group.subscribers)
 
-        # group page contains unsubscribe form
-        r = self.client.get(self.group.get_absolute_url())
-        self.assertContains(r, 'action="{}"'.format(unsubscribe_url))
-
         # unsubscription succeeds
         r = self.client.post(unsubscribe_url)
         self.assertRedirects(r, self.group.get_absolute_url())
