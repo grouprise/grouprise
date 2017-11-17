@@ -1,5 +1,3 @@
-{% load static %}
-
 {% if user.is_authenticated %}
     <input class="dropdown-state" id="menu-user" type="checkbox" data-menu-group="main">
     <label for="menu-user" class="nav-menu-item nav-state-toggle"
@@ -19,6 +17,7 @@
         </span>
         <div class="avatar-wrap">
             <span class="avatar avatar-size-48-48">
+                {% load static %}
                 <img src="{% static 'stadt/img/logos/logo_96.png' %}" alt="Stadtgestalten Logo">
             </span>
         </div>
