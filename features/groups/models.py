@@ -40,7 +40,7 @@ class Group(core.models.Model):
     score = models.IntegerField(default=0)
     slug = models.SlugField(
             'Adresse der Gruppenseite', blank=True, null=True, unique=True,
-            validators=[validate_slug])
+            validators=[validate_slug], help_text='Wird auch als Kurzname verwendet')
 
     address = models.TextField(
             'Anschrift',
@@ -54,12 +54,14 @@ class Group(core.models.Model):
             max_length=7,
             default=colors.get_random_color)
     date_founded = models.DateField(
-            'Gruppe gegründet', blank=True, default=datetime.date.today)
+            'Gruppe gegründet', blank=True, default=datetime.date.today,
+            help_text='Ungefähres Datum der tatsächlichen Gruppengründung')
     description = models.TextField(
             'Kurzbeschreibung',
             blank=True,
             default='',
-            max_length=200)
+            max_length=200,
+            help_text='Höchstens 200 Zeichen')
     logo = core.models.ImageField(blank=True)
     logo_sidebar = ImageSpecField(
             source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')
@@ -68,13 +70,13 @@ class Group(core.models.Model):
             blank=True)
     url_import_feed = models.BooleanField(
             'Beiträge von Website übernehmen', default=False,
-            help_text='Öffentliche Beiträge der angegebenen Website automatisch auf '
-            'dieser Plattform veröffentlichen, wenn technisch möglich')
+            help_text='Öffentliche Beiträge der angegebenen Website nach Möglichkeit '
+            'automatisch in dieser Gruppe veröffentlichen')
 
     closed = models.BooleanField(
             'Geschlossene Gruppe',
             default=False,
-            help_text='Nur Mitglieder können neue Mitglieder aufnehmen.')
+            help_text='In eine geschlossenen Gruppe können nur Mitglieder neue Mitglieder aufnehmen.')
 
     tags = contenttypes.GenericRelation(
             'tags.Tagged',

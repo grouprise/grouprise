@@ -17,7 +17,7 @@ class GroupFilter(core.forms.FormMixin, forms.Form):
 
 class Update(forms.ModelForm):
     tags = forms.CharField(
-            label='Schlagworte', required=False,
+            label='Schlagworte', required=False, widget=forms.Textarea({'rows': 4}),
             help_text='Schlagworte durch Komma getrennt angeben')
 
     class Meta:
@@ -26,18 +26,14 @@ class Update(forms.ModelForm):
                 'url_import_feed')
         model = models.Group
         widgets = {
-                'description': forms.Textarea({'rows': 2}),
                 'address': forms.Textarea({'rows': 3}),
                 'date_founded': forms.DateInput({'data-component': 'date'}),
+                'description': forms.Textarea({'rows': 5}),
                 }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['tags'] = ', '.join(self.instance.tags.values_list('tag__name', flat=True))
-        ayout = layout.Layout(
-                bootstrap.PrependedText('slug', '{0}/'.format(
-                    sites.Site.objects.get_current().domain)),
-                layout.Submit('update', 'Angaben speichern'))
 
     def save(self, commit=True):
         tagged_set = set(self.instance.tags.all())

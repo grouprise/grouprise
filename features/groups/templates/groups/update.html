@@ -47,15 +47,40 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {% field form.name %}
-        {% field form.description %}
-        {% field form.tags %}
-        {% field form.address %}
-        {% field form.url %}
-        {% field_checkbox form.url_import_feed %}
-        {% field form.date_founded %}
-        {% field_checkbox form.closed %}
-        {% field form.slug prefix=site.domain|add:'/' %}
+
+        <div class="section section-group">
+            <h2>Angaben zur Gruppe</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    {% field form.name %}
+                    {% field form.description %}
+                </div>
+                <div class="col-md-6">
+                    {% field form.tags %}
+                    {% field form.slug prefix=site.domain|add:'/' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="section section-group">
+            <h2>Zusätzliche Angaben</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    {% field form.address %}
+                </div>
+                <div class="col-md-6">
+                    {% field form.date_founded %}
+                </div>
+            </div>
+            {% field form.url %}
+            {% field_checkbox form.url_import_feed %}
+        </div>
+
+        <div class="section section-group">
+            <h2>Einstellungen</h2>
+            {% field_checkbox form.closed %}
+        </div>
+
         <button class="btn btn-primary">Einstellungen speichern</button>
     </form>
 {% endblock %}
