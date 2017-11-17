@@ -36,22 +36,62 @@
         <div class="dock-content">
             <div class="dock-content-inner">
                 <ol class="nav-vertical">
+                    {# SUBSCRIPTION #}
+                    {% load rules %}
+                    {% has_perm 'subscriptions.create' user group as can_subscribe %}
+                    {% if can_subscribe %}
+                        <li>
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'group-subscribe' group.pk %}"
+                                      method="post" class="nav-menu-item">
+                                    {% csrf_token %}
+                                    <button>
+                                        <i class="sg sg-fw sg-subscription"></i>
+                                        <span class="nav-menu-item-label">Abonnieren</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a href="{% url 'group-subscribe' group.pk %}"
+                                   class="nav-menu-item">
+                                    <i class="sg sg-fw sg-subscription"></i>
+                                    <span class="nav-menu-item-label">Abonnieren</span>
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+
+                    {# CONVERSATION #}
                     <li>
-                        <a href="{% url 'create-group-conversation' group.pk %}" class="nav-menu-item">
+                        <a href="{% url 'create-group-conversation' group.pk %}"
+                           class="nav-menu-item">
                             <i class="sg sg-fw sg-message"></i>
                             <span class="nav-menu-item-label">Nachricht schreiben</span>
                         </a>
                     </li>
+                    
+                    {# MEMBERSHIP #}
                     {% load rules %}
+                    {% has_perm 'memberships.try_to_join' user group as can_join %}
                     {% has_perm 'sharing.invite_member' user group as can_invite %}
-                    {% if can_invite %}
-                        <a href="{% url 'member-invite' group.pk %}" class="nav-menu-item">
-                            <i class="sg sg-fw sg-members-add"></i>
-                            <span class="nav-menu-item-label">Mitglied einladen</span>
-                        </a>
+                    {% if can_join %}
+                        <li>
+                            <a href="{% url 'join' group.pk %}" class="nav-menu-item">
+                                <i class="sg sg-fw sg-join"></i>
+                                <span class="nav-menu-item-label">Beitreten</span>
+                            </a>
+                        </li>
+                    {% elif can_invite %}
+                        <li>
+                            <a href="{% url 'member-invite' group.pk %}" class="nav-menu-item">
+                                <i class="sg sg-fw sg-members-add"></i>
+                                <span class="nav-menu-item-label">Mitglied einladen</span>
+                            </a>
+                        </li>
                     {% endif %}
+                    
+                    {# SETTINGS #}
                     <li>
-                        <a href="{% url 'gestalt-update' user.gestalt.pk %}"
+                        <a href="#"
                            class="nav-menu-item">
                             <i class="sg sg-fw sg-settings"></i>
                             <span class="nav-menu-item-label">Einstellungen</span>
