@@ -1,9 +1,0 @@
-{% load rules %}
-
-{% has_perm 'groups.change_group' user group as can_edit %}
-{% if can_edit %}
-    <a href="{% url 'group-update' group.pk %}" class="nav-menu-item">
-        <i class="sg sg-fw sg-edit"></i>
-        <span class="nav-menu-item-label">Gruppenangaben ändern</span>
-    </a>
-{% endif %}
