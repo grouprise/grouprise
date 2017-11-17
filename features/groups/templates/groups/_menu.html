@@ -73,6 +73,7 @@
                     {% load rules %}
                     {% has_perm 'memberships.try_to_join' user group as can_join %}
                     {% has_perm 'sharing.invite_member' user group as can_invite %}
+                    {% has_perm 'memberships.create_membership' user group as can_create_membership %}
                     {% if can_join %}
                         <li>
                             <a href="{% url 'join' group.pk %}" class="nav-menu-item">
@@ -87,6 +88,12 @@
                                 <span class="nav-menu-item-label">Mitglied einladen</span>
                             </a>
                         </li>
+                    {% elif can_create_membership %}
+                        <li>
+                            <a href="{% url 'member-create' group.pk %}" class="nav-menu-item">
+                                <i class="sg sg-fw sg-members-add"></i>
+                                <span class="nav-menu-item-label">Mitglied aufnehmen</span>
+                            </a>
                     {% endif %}
                     
                     {# SETTINGS #}
