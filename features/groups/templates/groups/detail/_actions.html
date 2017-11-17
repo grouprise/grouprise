@@ -12,14 +12,9 @@
         {% endif %}
 
         {# MEMBERSHIP #}
-        {% load memberships rules %}
+        {% load rules %}
         {% has_perm 'memberships.try_to_join' user group as can_join %}
-        {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
-        {% if can_resign %}
-            <a href="{% url 'resign' group.pk %}" class="btn btn-default btn-sm btn-addon-ok" title="Aus der Gruppe austreten">
-                <i class="sg sg-group"></i> Beigetreten
-            </a>
-        {% elif can_join %}
+        {% if can_join %}
             <a href="{% url 'join' group.pk %}" class="btn btn-default btn-sm" title="Der Gruppe beitreten">
                 <i class="sg sg-join"></i> Beitreten
             </a>
@@ -28,15 +23,7 @@
         {# SUBSCRIPTION #}
         {% load rules %}
         {% has_perm 'subscriptions.create' user group as can_subscribe %}
-        {% has_perm 'subscriptions.delete' user group as can_unsubscribe %}
-        {% if can_unsubscribe %}
-            <form action="{% url 'group-unsubscribe' group.pk %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-default btn-addon-ok btn-sm" title="Du erhältst Benachrichtungen für diese Gruppe">
-                    <i class="sg sg-subscription"></i> Abonniert
-                </button>
-            </form>
-        {% elif can_subscribe %}
+        {% if can_subscribe %}
             {% if user.is_authenticated %}
                 <form action="{% url 'group-subscribe' group.pk %}" method="post">
                     {% csrf_token %}

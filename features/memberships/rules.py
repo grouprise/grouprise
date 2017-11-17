@@ -16,7 +16,7 @@ rules.add_perm(
 
 add_perm(
         'memberships.try_to_join',
-        ~is_closed | (is_authenticated & ~is_closed & ~is_member_of))
+        (~is_authenticated & ~is_closed) | (is_authenticated & ~is_closed & ~is_member_of))
 
 rules.add_perm(
         'memberships.create_membership',
