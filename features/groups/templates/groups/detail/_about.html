@@ -17,6 +17,17 @@
                 Die Gruppe war zu beschäftigt eine Kurzbeschreibung zu hinterlegen.
             {% endif %}
         </dd>
+        {% if group.tags.exists %}
+            <dt title="Schlagworte">
+                <i class="sg sg-tags"></i>
+                <span class="sr-only">Schlagworte</span>
+            </dt>
+            <dd>
+                {% for tag in group.tags.all %}
+                    <a href="{% url 'tag' tag.tag.slug %}">#{{ tag.tag }}</a>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </dd>
+        {% endif %}
         {% if group.address %}
             <dt>
                 <i class="sg sg-address" title="Anschrift"></i>
@@ -44,9 +55,80 @@
         <dd>
             {{ group.date_founded|date:'Y' }} gegründet
         </dd>
-        {% include_fragments 'group-meta' %}
+
+        {% load rules %}
+        {% has_perm 'memberships.create_membership' user group as can_create %}
+        {% has_perm 'memberships.view_list' user group as can_list %}
+        {% has_perm 'sharing.invite_member' user group as can_invite %}
+        {% has_perm 'memberships.try_to_join' user group as can_join %}
+
+        <dt>
+            <i class="sg sg-members"></i>
+            <span class="sr-only">Anzahl Mitglieder</span>
+        </dt>
+        <dd>
+            {% if can_list %}
+                <a href="{% url 'members' group.pk %}">
+            {% endif %}
+            {% with num_members=group.memberships.count %}
+                {{ num_members }} Mitglied{{ num_members|pluralize:"er" }}
+            {% endwith %}
+            {% if can_list %}</a>{% endif %}
+            {% if can_join %}
+            &middot; <a href="{% url 'join' group.pk %}">Beitreten</a>
+            {% elif can_invite %}
+            &middot; <a href="{% url 'member-invite' group.pk %}">Mitglied einladen</a>
+            {% elif can_create %}
+            &middot; <a href="{% url 'member-create' group.pk %}">Mitglied aufnehmen</a>
+            {% endif %}
+        </dd>
+
+        {% if group.closed %}
+            <dt>
+                <i class="sg sg-closed"></i>
+                <span class="sr-only">Geschlossene Gruppe</span>
+            </dt>
+            <dd>
+                Geschlossene Gruppe{% if not can_list %}:
+                <span title="Im Verlauf des Gesprächs kannst Du die Mitgliedschaft beantragen.">
+                    <a href="{% url 'create-group-conversation' group.pk %}">Gespräch beginnen</a> 
+                    um Mitgliedschaft zu beantragen{% endif %}
+                </span>
+            </dd>
+        {% endif %}
+
+        <dt>
+            <i class="sg sg-subscription"></i>
+        </dt>
+        <dd>
+            {% with num_subscribers=group.subscriptions.count %}
+                {{ num_subscribers }} Abonnentin{{ num_subscribers|pluralize:'nen' }}
+            {% endwith %}
+            &middot;
+            {% load rules %}
+            {% has_perm 'subscriptions.create' user group as can_subscribe %}
+            {% if can_subscribe %}
+                {% if user.is_authenticated %}
+                    <form action="{% url 'group-subscribe' group.pk %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-link"
+                                title="Bei neuen Beiträgen benachrichtigt werden">
+                            Gruppe abonnieren
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'group-subscribe' group.pk %}"
+                       title="Bei neuen Beiträgen benachrichtigt werden">
+                        Gruppe abonnieren
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'group-recommend' group.pk %}">Gruppe empfehlen</a>
+            {% endif %}
+        </dd>
     </dl>
 </div>
+
 <div class="group-info-slug">
     <dl class="def def-icons">
         <dt>
