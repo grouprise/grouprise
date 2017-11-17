@@ -98,7 +98,7 @@ def breadcrumb(*args):
     return {'crumbs': crumbs}
 
 
-@register.inclusion_tag('core/_menu.html', takes_context=True)
+@register.inclusion_tag('stadt/_menu.html', takes_context=True)
 def menu(context, active, entity=None):
     if entity and entity.is_group:
         context['group'] = entity

@@ -1,38 +1,26 @@
-{% load rules static memberships %}
+<div class="nav-row">
+    <div class="container">
+        <div class="nav-container" data-component="menu">
+            <input type="checkbox" class="dropdown-state" id="menu-main-state" data-menu-switch>
 
-<div class="container">
-    <div class="nav-container" data-component="menu">
-        <input type="checkbox" class="dropdown-state" id="menu-main-state" data-menu-switch>
+            <a class="nav-logo" href="{% url 'index' %}">
+                {% load staticfiles %}
+                <img src="{% static STADTGESTALTEN_LOGO_URL %}" alt="{{ site.name }}"/>
+            </a>
 
-        <a class="nav-logo" href="{% url 'index' %}">
-            <img src="{% static STADTGESTALTEN_LOGO_URL %}" alt="{{ site.name }}"/>
-        </a>
+            <label for="menu-main-state" class="nav-state-toggle nav-switch" aria-label="Zeige Menü" data-component="openable" data-openable-target="#menu-main">
+                <span class="hamburger">
+                    <span class="hamburger-lines" aria-hidden="true"></span>
+                </span>
+            </label>
 
-        <label for="menu-main-state" class="nav-state-toggle nav-switch" aria-label="Zeige Menü" data-component="openable" data-openable-target="#menu-main">
-            <span class="hamburger">
-                <span class="hamburger-lines" aria-hidden="true"></span>
-            </span>
-        </label>
-
-        <nav class="nav" id="menu-main">
-            <div class="nav-inner">
-                <ul class="nav-menu">
-                    <li>
-                        {% include 'core/menu/_menu_groups.html' %}
-                    </li>
-                    <li>
-                        {% include 'core/menu/_menu_more.html' %}
-                    </li>
-                    {% if group %}
-                        <li>
-                            {% include 'core/menu/_menu_group.html' %}
-                        </li>
-                    {% endif %}
-                    <li>
-                        {% include 'core/menu/_menu_self.html' %}
-                    </li>
-                </ul>
-            </div>
-        </nav>
+            <nav class="nav" id="menu-main">
+                <div class="nav-inner">
+                    <ul class="nav-menu">
+                        {% block menu_items %}{% endblock %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </div>
 </div>

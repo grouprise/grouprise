@@ -1,0 +1,18 @@
+{% extends 'core/_menu.html' %}
+
+{% block menu_items %}
+    <li>
+        {% include 'core/menu/_menu_groups.html' %}
+    </li>
+    <li>
+        {% include 'core/menu/_menu_more.html' %}
+    </li>
+    {% if group %}
+        <li>
+            {% include 'core/menu/_menu_group.html' %}
+        </li>
+    {% endif %}
+    <li>
+        {% include 'gestalten/_menu.html' %}
+    </li>
+{% endblock %}
