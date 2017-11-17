@@ -32,40 +32,33 @@
             <span class="dock-decoration"></span>
             <header class="dock-header">
                 {% include 'gestalten/_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
-                <a href="{% url 'account_logout' %}?next={{ request.path }}"
-                   class="dock-session">
-                    <i class="sg sg-logout"></i>
-                    <span>Abmelden</span>
+                <a href="{{ user.gestalt.get_profile_url }}" class="dock-header-link">
+                    <i class="sg sg-home"></i>
+                    <span>Home</span>
                 </a>
             </header>
             <div class="dock-content">
                 <div class="dock-content-inner">
-                    <ol class="tabbls">
-                        <li data-order="high">
-                            <div class="tabbl">
-                                <header class="tabbl-header">
-                                    <span class="tabbl-title">Profil</span>
-                                </header>
-                                <div class="tabbl-content">
-                                    <div class="tabbl-list">
-                                        <a href="{{ user.gestalt.get_profile_url }}">
-                                            Deine Seite
-                                        </a>
-                                        <a href="{% url 'conversations' %}">
-                                            Deine Gespräche
-                                        </a>
-                                        <a href="{% url 'gestalt-update' user.gestalt.pk %}">
-                                            Profil ändern
-                                        </a>
-                                        <a href="{% url 'account_change_password' %}">
-                                            Kennwort ändern
-                                        </a>
-                                        <a href="{% url 'account_email' %}">
-                                            E-Mail-Adressen
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                    <ol class="nav-vertical">
+                        <li>
+                            <a href="{% url 'conversations' %}" class="nav-menu-item">
+                                <i class="sg sg-fw sg-conversations"></i>
+                                <span class="nav-menu-item-label">Gespräche</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'gestalt-update' user.gestalt.pk %}"
+                               class="nav-menu-item">
+                                <i class="sg sg-fw sg-settings"></i>
+                                <span class="nav-menu-item-label">Einstellungen</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'account_logout' %}?next={{ request.path }}"
+                               class="nav-menu-item">
+                                <i class="sg sg-fw sg-logout"></i>
+                                <span class="nav-menu-item-label">Abmelden</span>
+                            </a>
                         </li>
                     </ol>
                 </div>
