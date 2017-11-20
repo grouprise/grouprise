@@ -50,7 +50,14 @@
                             <i class="fa fa-arrow-left"></i>
                         {% endif %}
                     </li>
-                    <li><a href="#">Benachrichtigungen & Mitgliedschaft</a></li>
+                    <li>
+                        <a href="{% url 'subscriptions-memberships-settings' %}?group={{ group.slug }}">
+                            Benachrichtigungen & Mitgliedschaft
+                        </a>
+                        {% if chapter == 'subscriptions-memberships' %}
+                            <i class="fa fa-arrow-left"></i>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
         </div>

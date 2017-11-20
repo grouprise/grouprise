@@ -2,7 +2,7 @@ import django
 import django_filters
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from django.views.generic import UpdateView
+from django.views.generic import TemplateView, UpdateView
 from django_filters import views as filters_views
 
 import core
@@ -126,3 +126,19 @@ class ImageUpdate(PermissionMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
+
+
+class SubscriptionsMemberships(PermissionMixin, TemplateView):
+    permission_required = 'groups.change_subscriptions_memberships'
+    template_name = 'groups/subscriptions_memberships.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['group'] = self.group
+        return super().get_context_data(**kwargs)
+
+    def get_object(self):
+        return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
+
+    def get_permission_object(self):
+        self.group = super().get_permission_object()
+        return self.group

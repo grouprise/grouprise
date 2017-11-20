@@ -1,25 +1,30 @@
-from django.conf import urls
+from django.conf.urls import url
 
 from . import views
 
 urlpatterns = [
-    urls.url(
+    url(
         r'^stadt/groups/$',
         views.List.as_view(),
         name='group-index'),
 
-    urls.url(
+    url(
         r'^stadt/groups/add/$',
         views.Create.as_view(),
         name='group-create'),
 
-    urls.url(
+    url(
         r'^stadt/settings/group/$',
         views.Update.as_view(),
         name='group-settings'),
 
-    urls.url(
+    url(
         r'^stadt/settings/group/images/$',
         views.ImageUpdate.as_view(),
         name='group-image-settings'),
+
+    url(
+        r'^stadt/settings/group/subscriptions-memberships/$',
+        views.SubscriptionsMemberships.as_view(),
+        name='subscriptions-memberships-settings'),
 ]
