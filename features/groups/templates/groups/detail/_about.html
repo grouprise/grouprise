@@ -1,5 +1,5 @@
 <div class="group-info-main">
-    <a href="{% url 'group-avatar-update' group.pk %}" class="avatar-edit-inline">
+    <a href="{% url 'group-image-settings' %}?group={{ group.slug }}" class="avatar-edit-inline">
         {% include 'groups/_avatar.html' with group=group link=False %}
     </a>
     <h1 class="group-title">

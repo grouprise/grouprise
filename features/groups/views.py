@@ -118,25 +118,11 @@ class Update(PermissionMixin, UpdateView):
         return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
 
 
-class GroupAvatarUpdate(core.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Avatar ändern'
-    fields = ('avatar',)
-    layout = ('avatar',)
-    menu = 'group'
+class ImageUpdate(PermissionMixin, UpdateView):
+    permission_required = 'groups.change'
     model = models.Group
-    permission_required = 'groups.change_group'
+    fields = ('avatar', 'logo')
+    template_name = 'groups/update_images.html'
 
-    def get_parent(self):
-        return self.object
-
-
-class GroupLogoUpdate(core.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Logo ändern'
-    fields = ('logo',)
-    layout = ('logo',)
-    menu = 'group'
-    model = models.Group
-    permission_required = 'groups.change_group'
-
-    def get_parent(self):
-        return self.object
+    def get_object(self):
+        return get_object_or_404(models.Group, slug=self.request.GET.get('group'))

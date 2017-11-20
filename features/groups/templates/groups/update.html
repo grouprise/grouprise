@@ -1,47 +1,7 @@
-{% extends 'stadt/stadt.html' %}
-
-{% block title %}Einstellungen - {{ block.super }}{% endblock %}
-{% block menu %}{% menu entity=group %}{% endblock %}
-{% block heading_title_text %}Einstellungen{% endblock %}
+{% extends 'groups/form.html' %}
 
 {% block sidebar %}
-    <div class="box box-striped">
-        <div class="box-inner">
-            <header class="box-header">
-                <h2 class="box-title">
-                    <i class="sg sg-gestalt"></i>
-                    Gestalt
-                </h2>
-            </header>
-            <div class="box-content">
-                <ul>
-                    <li><a href="#">Allgemein</a></li>
-                    <li><a href="#">Avatar</a></li>
-                    <li><a href="#">Hintergrundbild</a></li>
-                    <li><a href="#">E-Mail-Adressen</a></li>
-                    <li><a href="#">Kennwort</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="box box-striped">
-        <div class="box-inner">
-            <header class="box-header">
-                <h2 class="box-title">
-                    <i class="sg sg-group"></i>
-                    Gruppe
-                </h2>
-            </header>
-            <div class="box-content">
-                <ul>
-                    <li><a href="#">Allgemein</a> <i class="fa fa-arrow-left"></i></li>
-                    <li><a href="#">Avatar</a></li>
-                    <li><a href="#">Logo</a></li>
-                    <li><a href="#">Benachrichtigungen & Mitgliedschaft</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    {% with chapter='group' %}{{ block.super }}{% endwith %}
 {% endblock %}
 
 {% block content %}

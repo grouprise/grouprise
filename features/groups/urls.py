@@ -19,12 +19,7 @@ urlpatterns = [
         name='group-settings'),
 
     urls.url(
-        r'^stadt/groups/(?P<pk>[0-9]+)/edit/avatar/$',
-        views.GroupAvatarUpdate.as_view(),
-        name='group-avatar-update'),
-
-    urls.url(
-        r'^stadt/groups/(?P<pk>[0-9]+)/edit/logo/$',
-        views.GroupLogoUpdate.as_view(),
-        name='group-logo-update'),
+        r'^stadt/settings/group/images/$',
+        views.ImageUpdate.as_view(),
+        name='group-image-settings'),
 ]

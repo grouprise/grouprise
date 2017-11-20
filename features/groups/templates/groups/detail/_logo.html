@@ -1,5 +1,5 @@
 {% load rules %}
-{% has_perm 'groups.change_group' user group as can_edit %}
+{% has_perm 'groups.change' user group as can_edit %}
 
 <div class="box box-striped">
     <div class="box-inner">
@@ -11,7 +11,10 @@
         </header>
         {% if not group.logo %}
             {% if can_edit %}
-                <a href="{% url 'group-logo-update' group.pk %}" class="btn btn-default">Logo hochladen</a>
+                <a href="{% url 'group-image-settings' %}?group={{ group.slug }}"
+                   class="btn btn-default">
+                    Logo hochladen
+                </a>
             {% endif %}
         {% else %}
             <div class="box-content">
@@ -19,9 +22,12 @@
             </div>
         {% endif %}
 
-        {% if group.logo and can_edit%}
+        {% if group.logo and can_edit %}
             <div class="btn-toolbar btn-toolbar-right">
-                <a href="{% url 'group-logo-update' group.pk %}" class="btn btn-link">Logo ändern</a>
+                <a href="{% url 'group-image-settings' %}?group={{ group.slug }}"
+                   class="btn btn-link">
+                    Logo ändern
+                </a>
             </div>
         {% endif %}
     </div>

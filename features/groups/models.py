@@ -45,7 +45,9 @@ class Group(core.models.Model):
     address = models.TextField(
             'Anschrift',
             blank=True)
-    avatar = core.models.ImageField(blank=True)
+    avatar = core.models.ImageField(
+            blank=True, help_text='Der Avatar ist ein kleines quadratisches Vorschaubild, '
+            'an welchem sich die Gruppe leicht erkennen lässt.')
     avatar_64 = ImageSpecField(
             source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
     avatar_256 = ImageSpecField(
@@ -62,7 +64,8 @@ class Group(core.models.Model):
             default='',
             max_length=200,
             help_text='Höchstens 200 Zeichen')
-    logo = core.models.ImageField(blank=True)
+    logo = core.models.ImageField(
+            blank=True, help_text='Das Logo wird auf der Gruppenseite rechts angezeigt.')
     logo_sidebar = ImageSpecField(
             source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')
     url = models.URLField(

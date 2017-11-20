@@ -1,0 +1,58 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Einstellungen - {{ block.super }}{% endblock %}
+{% block menu %}{% menu entity=group %}{% endblock %}
+{% block heading_title_text %}Einstellungen{% endblock %}
+
+{% block sidebar %}
+    <div class="box box-striped">
+        <div class="box-inner">
+            <header class="box-header">
+                <h2 class="box-title">
+                    <i class="sg sg-gestalt"></i>
+                    Gestalt
+                </h2>
+            </header>
+            <div class="box-content">
+                <ul>
+                    <li><a href="#">Allgemein</a></li>
+                    <li><a href="#">Avatar</a></li>
+                    <li><a href="#">Hintergrundbild</a></li>
+                    <li><a href="#">E-Mail-Adressen</a></li>
+                    <li><a href="#">Kennwort</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="box box-striped">
+        <div class="box-inner">
+            <header class="box-header">
+                <h2 class="box-title">
+                    <i class="sg sg-group"></i>
+                    Gruppe
+                </h2>
+            </header>
+            <div class="box-content">
+                <ul>
+                    <li>
+                        <a href="{% url 'group-settings' %}?group={{ group.slug }}">
+                            Allgemein
+                        </a> 
+                        {% if chapter == 'group' %}
+                            <i class="fa fa-arrow-left"></i>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{% url 'group-image-settings' %}?group={{ group.slug }}">
+                            Bilder
+                        </a>
+                        {% if chapter == 'group-images' %}
+                            <i class="fa fa-arrow-left"></i>
+                        {% endif %}
+                    </li>
+                    <li><a href="#">Benachrichtigungen & Mitgliedschaft</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

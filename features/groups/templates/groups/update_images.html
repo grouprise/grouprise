@@ -1,0 +1,23 @@
+{% extends 'groups/form.html' %}
+
+{% block sidebar %}
+    {% with chapter='group-images' %}{{ block.super }}{% endwith %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="section section-group">
+            <h2>Bilder</h2>
+            {% field form.avatar %}
+            {% field form.logo %}
+            <span class="help-block">
+                Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden
+                PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 5 MB.
+            </span>
+        </div>
+
+        <button class="btn btn-primary">Einstellungen speichern</button>
+    </form>
+{% endblock %}
