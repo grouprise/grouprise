@@ -76,7 +76,7 @@ class Group(core.models.Model):
     closed = models.BooleanField(
             'Geschlossene Gruppe',
             default=False,
-            help_text='In eine geschlossenen Gruppe können nur Mitglieder neue Mitglieder aufnehmen.')
+            help_text='In eine geschlossene Gruppe können nur Mitglieder neue Mitglieder aufnehmen.')
 
     tags = contenttypes.GenericRelation(
             'tags.Tagged',

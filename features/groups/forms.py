@@ -17,7 +17,7 @@ class GroupFilter(core.forms.FormMixin, forms.Form):
 
 class Update(forms.ModelForm):
     tags = forms.CharField(
-            label='Schlagworte', required=False, widget=forms.Textarea({'rows': 4}),
+            label='Schlagworte', required=False, widget=forms.Textarea({'rows': 2}),
             help_text='Schlagworte durch Komma getrennt angeben')
 
     class Meta:
