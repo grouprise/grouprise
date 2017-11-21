@@ -3,3 +3,61 @@
 {% block sidebar %}
     {% with chapter='subscriptions-memberships' %}{{ block.super }}{% endwith %}
 {% endblock %}
+
+{% block content %}
+    <div class="section section-group">
+        <h2>Abonnement</h2>
+        {% load rules %}
+        {% has_perm 'subscriptions.create' user group as can_subscribe %}
+        {% has_perm 'subscriptions.delete' user group as can_unsubscribe %}
+        {% if can_unsubscribe %}
+            <form action="{% url 'group-unsubscribe' group.pk %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-default btn-addon-ok">
+                    <i class="sg sg-subscription"></i> Abonniert
+                </button>
+                <span class="help-block">
+                    Du erhältst Benachrichtigungen für die Gruppe <em>{{ group }}</em>.
+                </span>
+            </form>
+        {% elif can_subscribe %}
+            {% if user.is_authenticated %}
+                <form action="{% url 'group-subscribe' group.pk %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary">
+                        <i class="sg sg-subscription"></i> Abonnieren
+                    </button>
+                    <span class="help-block">
+                        Du erhältst keine Benachrichtigungen für die Gruppe
+                        <em>{{ group }}</em>.
+                    </span>
+                </form>
+            {% else %}
+                <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-primary">
+                    <i class="sg sg-subscription"></i> Abonnieren
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="section section-group">
+        <h2>Mitgliedschaft</h2>
+        {% load memberships rules %}
+        {% has_perm 'memberships.try_to_join' user group as can_join %}
+        {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
+        {% if can_resign %}
+            <a href="{% url 'resign' group.pk %}" class="btn btn-default btn-addon-ok">
+                <i class="sg sg-group"></i> Beigetreten
+            </a>
+            <span class="help-block">
+                Du bist Mitglied der Gruppe <em>{{ group }}</em>.
+            </span>
+        {% elif can_join %}
+            <a href="{% url 'join' group.pk %}" class="btn btn-default">
+                <i class="sg sg-join"></i> Beitreten
+            </a>
+            <span class="help-block">
+                Du bist nicht Mitglied der Gruppe <em>{{ group }}</em>.
+            </span>
+        {% endif %}
+    </div>
+{% endblock %}
