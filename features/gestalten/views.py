@@ -162,6 +162,9 @@ class Update(core.views.ActionMixin, django.views.generic.UpdateView):
     model = models.Gestalt
     permission_required = 'entities.change_gestalt'
 
+    def get_object(self):
+        return self.request.user.gestalt
+
     def get_parent(self):
         return self.object
 
