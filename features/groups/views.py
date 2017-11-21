@@ -1,7 +1,6 @@
 import django
 import django_filters
 from django.shortcuts import get_object_or_404
-from django.views import generic
 from django.views.generic import TemplateView, UpdateView
 from django_filters import views as filters_views
 

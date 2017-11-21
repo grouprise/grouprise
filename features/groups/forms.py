@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
-from django.contrib.sites import models as sites
 
 import core
 from features.tags import models as tags

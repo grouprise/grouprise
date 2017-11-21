@@ -1,4 +1,3 @@
-import core
 from core import tests
 from features.gestalten import tests as gestalten
 from . import models
@@ -58,13 +57,3 @@ class CreateAuthenticated(
     * which renders a form
     * which on submission creates a group
     """
-
-
-class TestUrls(core.tests.Test):
-    def test_groups_404(self):
-        r = self.client.get(self.get_url('group-update', 0))
-        self.assertEqual(r.status_code, 404)
-        r = self.client.get(self.get_url('group-avatar-update', 0))
-        self.assertEqual(r.status_code, 404)
-        r = self.client.get(self.get_url('group-logo-update', 0))
-        self.assertEqual(r.status_code, 404)
