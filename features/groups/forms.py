@@ -1,4 +1,3 @@
-from crispy_forms import bootstrap, helper, layout
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
 from django.contrib.sites import models as sites
