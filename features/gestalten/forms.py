@@ -42,20 +42,6 @@ class PasswordChange(util_forms.FormMixin, allauth.account.forms.ChangePasswordF
         self.fields['password2'].label = 'Neues Kennwort (Wiederholung)'
 
 
-class PasswordReset(util_forms.FormMixin, allauth.account.forms.ResetPasswordForm):
-    layout = (
-            layout.HTML('<p>Wenn Du Dein Kennwort vergessen hast, gib bitte Deine '
-                        'E-Mail-Adresse ein. Du erhältst dann eine Nachricht mit einem '
-                        'Verweis zum Zurücksetzen des Kennworts an diese Adresse.</p>'),
-            layout.Field('email', placeholder=''),
-            util_forms.Submit('Kennwort zurücksetzen')
-            )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['email'].label = 'E-Mail-Adresse'
-
-
 class PasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):
     layout = (
             layout.Field('password1', placeholder=''),
@@ -196,20 +182,3 @@ class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
                 'public',
                 utils_forms.Submit('Profil ändern'),
                 )
-
-
-class Login(allauth.account.forms.LoginForm):
-    password = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
-    remember = forms.BooleanField(label='Anmeldung merken', required=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['login'] = forms.CharField(
-                label='E-Mail-Adresse oder Pseudonym',
-                widget=forms.TextInput(attrs={
-                    'autofocus': 'autofocus',
-                    'autocomplete': 'username',
-                    'autocorrect': 'off',
-                    'autocapitalize': 'none',
-                    'spellcheck': 'false'
-                }))
