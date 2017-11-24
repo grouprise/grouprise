@@ -30,7 +30,7 @@ urlpatterns = [
         name='privacy'),
 
     url(
-        r'^(?P<entity_slug>[\w.@+-]+)/$',
+        r'^(?P<entity_slug>[\w-]+)/$',
         views.Entity.as_view(),
         name='entity'),
 ]

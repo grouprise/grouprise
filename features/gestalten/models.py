@@ -1,3 +1,4 @@
+import django
 import django.contrib.contenttypes.models
 from allauth.account import adapter as allauth_adapter
 from django.conf import settings
@@ -9,6 +10,9 @@ from imagekit.processors import SmartResize, Transpose
 
 import core
 from core import colors
+
+
+username_validators = [django.core.validators.validate_slug]
 
 
 class Gestalt(core.models.Model):
