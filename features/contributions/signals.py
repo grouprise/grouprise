@@ -7,6 +7,7 @@ from django.dispatch import receiver
 
 import core.models
 from features.associations import models as associations
+from features.content.models import Content
 from features.conversations import models as conversations
 from features.files import models as files
 from features.gestalten import models as gestalten
@@ -15,12 +16,12 @@ from . import models, notifications
 
 logger = logging.getLogger(__name__)
 
-contribution_created = django.dispatch.Signal(providing_args=['instance'])
+post_create = django.dispatch.Signal(providing_args=['instance'])
 
 
-@receiver(contribution_created)
-def send_contribution_notification(sender, instance, **kwargs):
-    notifications.Contributed(instance=instance).send()
+@receiver(post_create)
+def contribution_created(sender, instance, **kwargs):
+    notifications.ContributionCreated.send_all(instance)
 
 
 def is_autoresponse(msg):
@@ -65,9 +66,13 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
+        if type(key.target) == Content:
+            container = key.target
+        else:
+            container = key.target.container
         contribution = create_contribution(
-                key.target.container, key.gestalt, message, in_reply_to=in_reply_to_text)
-        contribution_created.send(sender=None, instance=contribution)
+                container, key.gestalt, message, in_reply_to=in_reply_to_text)
+        post_create.send(sender=None, instance=contribution)
 
     def process_initial(address):
         local, domain = address.split('@')
@@ -89,13 +94,19 @@ def process_incoming_message(sender, message, **args):
             associations.Association.objects.create(
                     entity_type=group.content_type, entity_id=group.id,
                     container_type=conversation.content_type, container_id=conversation.id)
-            contribution_created.send(sender=None, instance=contribution)
+            post_create.send(sender=None, instance=contribution)
         else:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
-    for address in message.to_addresses:
+    delivered_to = message.get_email_object()['Delivered-To']
+    if not delivered_to:
+        logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
+        return
+    for address in [delivered_to]:
+        address = address.lstrip('<')
+        address = address.rstrip('>')
         if not is_autoresponse(message):
             try:
                 process_reply(address)

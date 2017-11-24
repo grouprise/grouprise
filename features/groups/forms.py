@@ -3,15 +3,15 @@ from django import forms
 from django.contrib.contenttypes import models as contenttypes
 from django.contrib.sites import models as sites
 
-import utils
+import core
 from features.tags import models as tags
 from . import models
 
 
-class GroupFilter(utils.forms.FormMixin, forms.Form):
+class GroupFilter(core.forms.FormMixin, forms.Form):
     name = forms.CharField()
     inline = True
-    layout = ('name', utils.forms.Submit('Gruppen filtern', field_classes='btn btn-default'))
+    layout = ('name', core.forms.Submit('Gruppen filtern', field_classes='btn btn-default'))
     method = 'GET'
 
 

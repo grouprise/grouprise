@@ -1,7 +1,5 @@
 {% extends 'content/_preview.html' %}
 
-{% load thumbnail %}
-
 {% block content_meta %}{% include 'galleries/_info.html' %}{% endblock %}
 
 {% block content_type %}
@@ -11,10 +9,8 @@
 
 {% block content_preview_image %}
     {% with image=association.container.image|default_if_none:association.container.gallery_images.first.image %}
-        {% thumbnail image.file '200x200' crop="center top" as thumb %}
-            <div class="content-image">
-                <img src="{{ thumb.url }}" alt="">
-            </div>
-        {% endthumbnail %}
+        <div class="content-image">
+            <img src="{{ image.preview_content.url }}" alt="">
+        </div>
     {% endwith %}
 {% endblock %}

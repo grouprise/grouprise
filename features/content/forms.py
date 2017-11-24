@@ -1,11 +1,14 @@
 import django.db.transaction
 from django import forms
+from django.db.models import Q
 
 import core.forms
 from . import models
 from features.associations import models as associations
 from features.contributions import forms as contributions
 from features.groups import models as groups
+from features.images.models import Image
+from . import signals
 
 
 class Comment(contributions.Text):
@@ -80,6 +83,11 @@ class Create(forms.ModelForm):
     def save_content_relations(self, commit):
         pass
 
+    def send_post_create(self, instance=None):
+        signals.post_create.send(
+                sender=self.__class__,
+                instance=instance if instance else self.instance.container)
+
 
 class Update(forms.ModelForm):
     class Meta:
@@ -104,7 +112,10 @@ class Update(forms.ModelForm):
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
-        self.fields['image'].queryset = self.author.images
+        q = Q(creator=self.author)
+        if self.initial['image']:
+            q |= Q(pk=self.initial['image'].pk)
+        self.fields['image'].queryset = Image.objects.filter(q)
         if not self.instance.entity.is_group:
             del self.fields['pinned']
         if self.instance.public:

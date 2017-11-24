@@ -1,5 +1,3 @@
-{% load thumbnail %}
-
 <meta name="description" content="{{ content.title }}">
 
 {# todo not a real absolute url #}
@@ -18,9 +16,7 @@
 <meta name="twitter:description" content="{% markdown content.versions.last.text plain_preview=50 %}">
 
 {% if content.image %}
-    {% thumbnail content.image.file '200x200' crop="center top" as image %}
-        <meta property="og:image" content="{{ http_origin }}{{ image.url }}">
-        <meta name="twitter:image" content="{{ http_origin }}{{ image.url }}">
-    {% endthumbnail %}
+    <meta property="og:image" content="{{ http_origin }}{{ content.image.preview.url }}">
+    <meta name="twitter:image" content="{{ http_origin }}{{ content.image.preview.url }}">
 {% endif %}
 

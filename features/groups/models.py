@@ -2,13 +2,15 @@ import datetime
 
 import django
 from django.contrib.contenttypes import fields as contenttypes
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core import urlresolvers
 from django.db import models
-from sorl.thumbnail import get_thumbnail
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit, SmartResize, Transpose
 
 import core.models
 from core import colors
-from features.gestalten import models as gestalten
+from features.gestalten.models import Gestalt
 
 
 def validate_slug(slug):
@@ -16,7 +18,7 @@ def validate_slug(slug):
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
-    if gestalten.Gestalt.objects.filter(user__username=slug).exists():
+    if Gestalt.objects.filter(user__username__iexact=slug).exists():
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist bereits vergeben.',
                 params={'slug': slug}, code='in-use')
@@ -44,6 +46,10 @@ class Group(core.models.Model):
             'Anschrift',
             blank=True)
     avatar = core.models.ImageField(blank=True)
+    avatar_64 = ImageSpecField(
+            source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
+    avatar_256 = ImageSpecField(
+            source='avatar', processors=[Transpose(), SmartResize(256, 256)], format='PNG')
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
@@ -55,6 +61,8 @@ class Group(core.models.Model):
             default='',
             max_length=200)
     logo = core.models.ImageField(blank=True)
+    logo_sidebar = ImageSpecField(
+            source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')
     url = models.URLField(
             'Adresse im Web',
             blank=True)
@@ -82,6 +90,10 @@ class Group(core.models.Model):
             'gestalten.Gestalt', through='memberships.Membership',
             through_fields=('group', 'member'), related_name='groups')
 
+    subscriptions = GenericRelation(
+            'subscriptions.Subscription', content_type_field='subscribed_to_type',
+            object_id_field='subscribed_to_id', related_query_name='group')
+
     def __str__(self):
         return self.name
 
@@ -94,8 +106,7 @@ class Group(core.models.Model):
         intro_gallery = self.associations.filter_galleries().filter(pinned=True, public=True) \
             .order_content_by_time_created().first()
         if intro_gallery:
-            first_image_file = intro_gallery.container.gallery_images.first().image.file
-            url = get_thumbnail(first_image_file, '366x120', crop='center').url
+            url = intro_gallery.container.gallery_images.first().image.preview_group.url
         return url
 
     # FIXME: move to template filter
@@ -115,3 +126,7 @@ class Group(core.models.Model):
                 initials_without_short_terms += m.group(0)
         # prefer the non-trivial one - otherwise pick the full one (and hope it is not empty)
         return initials_without_short_terms if initials_without_short_terms else initials
+
+    @property
+    def subscribers(self):
+        return Gestalt.objects.filter(subscriptions__group=self)

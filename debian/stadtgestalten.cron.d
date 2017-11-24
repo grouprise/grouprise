@@ -2,7 +2,7 @@
 #    MAILTO=admin@example.org
 
 # process incoming mails
-*/3 * * * * root    stadtctl getmail 2>&1 | grep -v ^INFO:
+*/3 * * * * root    stadtctl getmail 2>&1 | grep -vE "^(INFO:|WARNING:django_mailbox.models:.*content-transfer-encoding)"
 
 # calculate scores for groups and users
 23  * * * * root    stadtctl update_scores
@@ -11,5 +11,5 @@
 46  * * * * root    stadtctl import_feeds
 
 # send mails with django-mailer
-*   * * * * root    stadtctl send_mail >>/var/lib/stadtgestalten/mailer.log 2>&1
-9,29,49 * * * * root stadtctl retry_deferred >>/var/lib/stadtgestalten/mailer.log 2>&1
+*   * * * * root    stadtctl send_mail >>/var/log/stadtgestalten/mailer-stadtgestalten.log 2>&1
+9,29,49 * * * * root stadtctl retry_deferred >>/var/log/stadtgestalten/mailer-stadtgestalten.log 2>&1

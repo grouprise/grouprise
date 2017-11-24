@@ -1,8 +1,7 @@
 import re
 from django.core import urlresolvers
 from markdown import inlinepatterns, Extension
-from core.markdown import markdown_extensions
-from utils.markdown import ExtendedLinkPattern
+from core.markdown import ExtendedLinkPattern, markdown_extensions
 from .models import Tag
 from . import RE_TAG_REF
 

@@ -1,4 +1,4 @@
-{% load cache thumbnail utils %}
+{% load cache %}
 
 {% kwacro preview_body %}
     <header class="group-preview-header">
@@ -14,6 +14,11 @@
         {% include "groups/_avatar.html" with group=group link=False %}
         {% if user.is_authenticated %}
             <div class="group-preview-stats">
+                {% if user.gestalt in group.subscribers %}
+                    <i class="sg sg-subscription sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
+                {% else %}
+                    <i class="sg sg-subscription" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
+                {% endif %}
                 {% include_features '_group_preview_stats.html' %}
             </div>
         {% endif %}

@@ -29,54 +29,27 @@
             {% endif %}
         </div>
 
-        {% load rules %}
-        {% if group %}
-            {% has_perm 'content.group_create' user group as can_create %}
-        {% else %}
-            {% has_perm 'content.create' user as can_create %}
-        {% endif %}
         {% if not hide_buttons %}
             <div class="btn-toolbar btn-toolbar-right">
-                {% if not user.is_authenticated or can_create or upcoming %}
+                {% if actions|length > 1 %}
                     <div class="dropdown-container">
                         <input class="dropdown-state" id="calendar-more" type="checkbox" />
                         <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
                                 <span class="btn-label">
-                                    <i class="sg sg-menu"></i> Mehr <span class="caret"></span>
+                                    Mehr <span class="caret"></span>
                                 </span>
                         </label>
                         <ul class="dropdown" id="calendar-more-dropdown" data-dropdown>
-                            {% if not user.is_authenticated or can_create %}
-                                {% if upcoming %}
-                                    <li>
-                                        <a href="{% if group %}{{ group.get_absolute_url|add:'?content=events' }}{% else %}{% url 'events' %}{% endif %}" >
-                                            Veranstaltungen auflisten
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endif %}
-                            {% if group %}
-                                <li>
-                                    <a href="{% url 'group-events-export' group_slug=group.slug %}">Kalender exportieren</a>
-                                </li>
-                            {% endif %}
+                            {% for action, url in actions|slice:'1:' %}
+                                <li><a href="{{ url }}">{{ action }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                 {% endif %}
 
-                {% if not user.is_authenticated or can_create %}
-                    <a href="{% if group %}{% url 'create-group-event' group.slug %}{% else %}{% url 'create-event' %}{% endif %}" class="btn btn-link">
-                        <i class="sg sg-add"></i> Veranstaltung eintragen
-                    </a>
-                {% elif upcoming %}
-                    <a href="{% if group %}{{ group.get_absolute_url|add:'?content=events' }}{% else %}{% url 'events' %}{% endif %}" class="btn btn-link">
-                        <i class="sg sg-list"></i> Veranstaltungen auflisten
-                    </a>
-                {% else %}
-                    <a href="{% url 'group-events-export' group_slug=group.slug %}" class="btn btn-link">
-                        Kalender exportieren
-                    </a>
-                {% endif %}
+                {% for action, url in actions|slice:':1' %}
+                    <a href="{{ url }}" class="btn btn-link">{{ action }}</a>
+                {% endfor %}
             </div>
         {% endif %}
     </div>

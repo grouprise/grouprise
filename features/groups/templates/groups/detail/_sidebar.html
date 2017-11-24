@@ -7,9 +7,5 @@
 {% load events %}
 {% sidebar_calendar associations preview_length=3 show_group=False group=group component_id='group-calendar' %}
 
-{% sidebarblock 'Teilen' 'share' %}
-<a href="{% url 'group-recommend' group.pk %}" class="btn btn-default btn-sm"><i class="sg sg-recommend"></i> Gruppe empfehlen</a>
-{% endsidebarblock %}
-
 {% load groups %}
 {% sidebar_groups user group %}

@@ -1,0 +1,6 @@
+{% extends 'content/created.txt' %}{% block content %}Galerie online ansehen und kommentieren:
+{% url 'content-permalink' association.pk as path %}{{ path|full_url }}
+
+Galerie mit {{ content.gallery_images.count }} Bild{{ content.gallery_images.count|pluralize:'ern' }}
+
+{{ content.versions.last.text }}{% endblock %}

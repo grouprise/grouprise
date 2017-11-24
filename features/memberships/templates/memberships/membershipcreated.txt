@@ -1,5 +1,5 @@
-{% load core %}Du wurdest auf {{ site.name }} in die Gruppe {{ membership.group }} aufgenommen:
-{{ membership.group.get_absolute_url|full_url }}
-{% if not membership.member.can_login %}
+Du wurdest auf {{ site.name }} in die Gruppe {{ object.group }} aufgenommen:
+{{ object.group.get_absolute_url|full_url }}
+{% if not object.member.can_login %}
 Bitte leg Dir ein Benutzerkonto an, um als Mitglied der Gruppe aktiv werden zu können:
-{% url 'account_signup' as signup_url %}{{ signup_url|full_url }}?next={{ membership.group.get_absolute_url }}{% endif %}
+{% url 'account_signup' as signup_url %}{{ signup_url|full_url }}?next={{ object.group.get_absolute_url }}{% endif %}

@@ -1,23 +1,23 @@
 {% extends 'stadt/stadt.html' %}
 
-{% load gestalten %}
-
-{% block heading_title %}
-    <span class="content-classification">Abonnenment</span>
-{% endblock %}
+{% block title %}Abonnement - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'group' view.group %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb view.group 'Abonnement' %}{% endblock %}
+{% block heading_title_text %}Abonnenment{% endblock %}
 
 {% block sidebar %}
-    {% include 'associations/_sidebar_entity.html' with entity=group %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.group %}
 {% endblock %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <p>Ich möchte benachrichtigt werden, wenn die Gruppe <em>{{ group }}</em> neue Beiträge veröffentlicht.</p>
+        <p>Ich möchte benachrichtigt werden, wenn die Gruppe <em>{{ view.group }}</em> neue Beiträge veröffentlicht.</p>
         <div>
-            {% if form.subscriber_email %}
-                {% login_or_field form.subscriber_email as help_text %}
-                {% include 'core/_field.html' with field=form.subscriber_email help_text=help_text %}
+            {% if form.subscriber %}
+                {% load gestalten %}
+                {% login_or_field form.subscriber as help_text %}
+                {% include 'core/_field.html' with field=form.subscriber help_text=help_text %}
             {% endif %}
         </div>
         <button class="btn btn-primary">Gruppe abonnieren</button>

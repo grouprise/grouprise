@@ -1,6 +1,0 @@
-Datei online ansehen und kommentieren:
-{% url 'content-permalink' instance.pk as path %}{{ path|full_url }}
-
-Datei {{ instance.container.versions.last.file.get }}
-
-{{ instance.container.versions.last.text }}

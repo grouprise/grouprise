@@ -24,6 +24,7 @@ class Create(content.Create):
             association.container.gallery_images.create(image=image)
         if commit:
             association.save()
+            self.send_post_create(association.container)
         return association
 
 

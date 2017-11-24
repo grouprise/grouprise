@@ -1,9 +1,11 @@
-{% if contribution.contribution.text %}
-    {% include 'contributions/_contribution_type_text.html' %}
-{% elif contribution.contribution.file %}
-    {% include 'contributions/_contribution_type_file.html' %}
-{% elif contribution.contribution.group %}
-    {% include 'contributions/_contribution_type_group_application.html' %}
-{% else %}
-    {% include 'contributions/_contribution_type_text.html' %}
+{% if not contribution.attached_to or not contribution.contribution.file %}
+    <li>
+        {% if contribution.contribution.file %}
+            {% include 'contributions/_contribution_type_file.html' %}
+        {% elif contribution.contribution.group %}
+            {% include 'contributions/_contribution_type_group_application.html' %}
+        {% else %}
+            {% include 'contributions/_contribution_type_text.html' %}
+        {% endif %}
+    </li>
 {% endif %}

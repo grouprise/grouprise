@@ -1,15 +1,33 @@
 import os
 
 import django
+from django.core.urlresolvers import reverse
 
 from core import notifications
-from features.conversations import models as conversations
+from core.templatetags.core import ref
 from features.contributions import models as contributions
 from features.memberships import models as memberships
+from features.subscriptions.notifications import update_recipients
 
 
-class Contributed(notifications.Notification):
-    generate_reply_tokens = True
+class ContributionCreated(notifications.Notification):
+    @classmethod
+    def get_recipients(cls, contribution):
+        recipients = {}
+        # send notifications to gestalten and groups associated with content (instance)
+        for association in contribution.container.associations.all():
+            if association.entity.is_group:
+                # subscribed members receive a notification
+                subscriptions = association.entity.subscriptions.filter(
+                        subscriber__memberships__group=association.entity)
+                update_recipients(
+                        recipients, association=association, subscriptions=subscriptions)
+            else:
+                # associated gestalten receive a notification
+                update_recipients(recipients, association=association)
+        # send notifications to contributing gestalten
+        update_recipients(recipients, contributions=contribution.container.contributions.all())
+        return recipients
 
     def get_attachments(self):
         return [
@@ -23,6 +41,22 @@ class Contributed(notifications.Notification):
             kwargs['text'] = 'Ich beantrage die Mitgliedschaft in der Gruppe {}.'.format(
                     self.object.contribution.group)
         return super().get_context_data(**kwargs)
+
+    def get_group(self):
+        if self.association and self.association.entity.is_group:
+            return self.association.entity
+        else:
+            return None
+
+    def get_list_id(self):
+        if self.group:
+            return '{} <{}.{}>'.format(str(self.group), self.group.slug, self.site.domain)
+        return super().get_list_id()
+
+    def get_message(self):
+        self.association = self.kwargs.get('association')
+        self.group = self.get_group()
+        return super().get_message()
 
     def get_message_ids(self):
         my_id = self.object.get_unique_id()
@@ -38,25 +72,20 @@ class Contributed(notifications.Notification):
                 ref_ids.append(thread_id)
         return my_id, parent_id, ref_ids
 
-    def get_recipients(self):
-        recipients = set(self.object.container.get_authors())
-        recipients.update(set(self.object.container.get_associated_gestalten()))
-        for group in self.object.container.get_associated_groups():
-            recipients.update(set(group.members.all()))
-        return recipients
+    def get_reply_token(self):
+        return self.create_token()
 
     def get_sender(self):
         return self.object.author
 
     def get_subject(self):
-        prefix = 'Re: '
-        if (self.object.container_type == conversations.Conversation.get_content_type()
-                and self.object.container.contributions.first() == self.object):
-            prefix = ''
-        slugs = self.object.container.get_associated_groups().values_list(
-                'slug', flat=True)
-        groups = '[{}] '.format(','.join(slugs)) if slugs else ''
-        return prefix + groups + self.object.container.subject
+        return self.object.container.subject
+
+    def get_subject_context(self):
+        if self.association and self.association.entity.is_group:
+            return self.association.entity.slug
+        else:
+            return None
 
     def get_template_name(self):
         if self.object.container.is_conversation:
@@ -64,3 +93,16 @@ class Contributed(notifications.Notification):
         else:
             name = 'content/contributed.txt'
         return name
+
+    def get_url(self):
+        if self.association:
+            if self.object.container.is_conversation:
+                return '{}#{}'.format(self.association.get_absolute_url(), ref(self.object))
+            else:
+                return '{}#{}'.format(reverse(
+                    'content-permalink', args=(self.association.pk,)), ref(self.object))
+        return super().get_url()
+
+    def is_reply(self):
+        return not (self.object.container.is_conversation
+                    and self.object.container.contributions.first() == self.object)

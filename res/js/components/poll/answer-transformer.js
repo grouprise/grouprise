@@ -1,6 +1,5 @@
 import moment from 'moment'
-
-const timeFormat = 'YYYY-MM-DD HH:mm'
+import { getTimeFormat } from '../../util/dom'
 
 export default (pollTypeAdapter, formsetAdapter) => {
   const pollType = pollTypeAdapter.get().value
@@ -21,9 +20,12 @@ export default (pollTypeAdapter, formsetAdapter) => {
             const timeField = row.field('time')
             const timeUntilField = row.field('until_time')
 
-            const time = timeField.value ? moment(timeField.value, timeFormat) : moment()
+            const time = timeField.value
+              ? moment(timeField.value, getTimeFormat(timeField), true)
+              : moment()
             const timeUntil = timeUntilField.value
-              ? moment(timeUntilField.value, timeFormat).diff(time, 'hours')
+              ? moment(timeUntilField.value, getTimeFormat(timeUntilField), true)
+                  .diff(time, 'hours')
               : null
             return {
               rowIndex: row.index,
@@ -55,9 +57,9 @@ export default (pollTypeAdapter, formsetAdapter) => {
         event: row => ({
           rowIndex: row.rowIndex,
           value: formsetAdapter.dataArrayFromObject({
-            time: moment(row.value.start).format(timeFormat),
+            time: moment(row.value.start).format(String(getTimeFormat)),
             until_time: row.value.duration
-              ? moment(row.value.start).add(row.value.duration, 'h').format(timeFormat)
+              ? moment(row.value.start).add(row.value.duration, 'h').format(String(getTimeFormat))
               : ''
           })
         })

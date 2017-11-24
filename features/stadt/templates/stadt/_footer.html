@@ -1,8 +1,6 @@
-{% load utils %}
-
 <div class="page-footer">
     <div class="page-footer-content">
-        <div class="footer-text">
+        <div class="page-footer-text">
             <p>{% markdown about_group.description preset='linkonly' %}</p>
             
             <p>Unterstütze {{ about_group }} mit einer
@@ -25,17 +23,18 @@
             <li>
                 <ul>
                     <li><a href="{% url 'group-index' %}">Alle Gruppen</a></li>
-                    <li><a href="{% url 'gestalten' %}">Öffentliche Gestalten</a></li>
                     <li class="separator"></li>
-                    <li><a href="{% url 'conversations' %}">Deine Gespräche</a></li>
-                    <li><a href="{% url 'articles' %}">Alle Artikel</a></li>
-                    <li><a href="{% url 'events' %}">Alle Veranstaltungen</a></li>
+                    <li><a href="{% url 'events' %}">Veranstaltungen</a></li>
+                    <li><a href="{% url 'articles' %}">Artikel</a></li>
+                    <li class="separator"></li>
+                    <li><a href="{% url 'gestalten' %}">Öffentliche Gestalten</a></li>
                 </ul>
             </li>
             <li>
                 <ul>
                     {% if user.is_authenticated %}
                         <li><a href="{{ user.gestalt|url_for:user }}">Deine Seite</a></li>
+                        <li><a href="{% url 'conversations' %}">Deine Gespräche</a></li>
                         <li class="separator"></li>
                         <li><a href="{% url 'gestalt-update' user.gestalt.pk %}">Deine Benutzerangaben</a></li>
                         <li><a href="{% url 'account_email' %}">Deine E-Mail-Adressen</a></li>

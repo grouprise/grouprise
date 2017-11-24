@@ -1,5 +1,4 @@
 from rest_framework import viewsets, mixins, serializers
-from sorl.thumbnail import get_thumbnail
 from django.db.models import Q
 
 import django
@@ -52,7 +51,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: models.Image):
         repr = super().to_representation(instance)
-        repr['preview'] = get_thumbnail(instance.file, '250x250', crop='center', format='PNG').url
+        repr['preview'] = instance.preview_api.url
         return repr
 
 

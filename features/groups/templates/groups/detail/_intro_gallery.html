@@ -5,10 +5,7 @@
                 <ol class="carousel-slides">
                     {% for image in images %}
                         <li>
-                            {% load thumbnail %}
-                            {% thumbnail image.image.file 'x500' crop='center' as thumb %}
-                                <img src="{{ thumb.url }}" alt="{{ group.name }}">
-                            {% endthumbnail %}
+                            <img src="{{ image.image.intro.url }}" alt="{{ group.name }}">
                         </li>
                     {% endfor %}
                 </ol>

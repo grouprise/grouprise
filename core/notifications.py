@@ -1,31 +1,36 @@
 import datetime
-from email import utils as email_utils
+from email.utils import formatdate
 import hashlib
 import logging
-import smtplib
 import uuid
 
 from django.apps import apps
 from django.conf import settings
-from django.contrib.sites import models as sites_models
+from django.contrib.sites.models import Site
 from django.core import mail
 from django.template import loader
 
-from . import models
+from core.models import PermissionToken
+from core.templatetags.core import full_url as build_absolute_uri
 
 logger = logging.getLogger(__name__)
 
 
 class Notification:
-    generate_reply_tokens = False
+    @classmethod
+    def send_all(cls, instance):
+        for recipient, kwargs in cls.get_recipients(instance).items():
+            cls(instance).send(recipient, **kwargs)
 
-    @staticmethod
-    def format_recipient(gestalt):
-        return '{} <{}>'.format(gestalt, gestalt.user.email)
+    def __init__(self, instance):
+        self.object = instance
+        self.site = Site.objects.get_current()
 
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
-        self.object = kwargs.get('instance')
+    def create_token(self):
+        token = PermissionToken(feature_key='notification-reply', gestalt=self.recipient)
+        token.target = self.object
+        token.save()
+        return token
 
     def get_attachments(self):
         """
@@ -33,57 +38,77 @@ class Notification:
         """
         return []
 
+    def get_body(self):
+        context = self.get_context_data()
+        template = loader.get_template(self.get_template_name())
+        template.backend.engine.autoescape = False
+        return template.render(context)
+
     def get_context_data(self, **kwargs):
+        kwargs['object'] = self.object
+        kwargs['site'] = self.site
+        kwargs['url'] = self.url
+        kwargs.update(self.kwargs)
         return kwargs
 
-    def get_formatted_recipients(self):
-        """
-        Subclasses must define get_recipients() to return a set of recipients.
-        The set may as well be a dictionary with the values being dictionaries. Each
-        recipient may be assigned additional attributes:
-        * `reply_key`: a string to identify replies
-        * `with_name`: should senders identity be put in from header?
+    def get_date(self):
+        return formatdate(localtime=True)
 
-        If defined, the `Reply-To` header is set to DEFAULT_REPLY_TO_EMAIL with `{reply_key}`
-        replaced by the reply key.
-        """
-        recipients = self.get_recipients()
-        if self.generate_reply_tokens:
-            recipients = self.get_reply_tokens(recipients)
-        if type(recipients) == dict:
-            return [(self.format_recipient(r), recipient_attrs)
-                    for r, recipient_attrs in recipients.items()]
+    def get_formatted_recipient(self):
+        return '{} <{}>'.format(self.recipient, self.recipient.user.email)
+
+    def get_formatted_reply_address(self, token):
+        return '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
+                reply_key=token.secret_key))
+
+    def get_formatted_sender(self):
+        sender = self.get_sender()
+        name = '{} via '.format(sender) if sender else ''
+        if sender:
+            email = settings.FROM_EMAIL_WITH_SLUG.format(slug=sender.slug)
         else:
-            return [(self.format_recipient(r), {}) for r in recipients]
+            email = settings.DEFAULT_FROM_EMAIL
+        from_email = '{name}{site} <{email}>'.format(
+                name=name,
+                site=self.site.name,
+                email=email)
+        return from_email
 
-    def get_reply_tokens(self, recipients):
-        if type(recipients) == dict:
-            result = recipients
-            recipients = recipients.keys()
-        else:
-            result = {}
-        for gestalt in recipients:
-            token = models.PermissionToken.objects.create(
-                    feature_key='notification-reply', gestalt=gestalt,
-                    target_type=self.object.content_type, target_id=self.object.id)
-            recipient_props = result.get(gestalt, {})
-            recipient_props['reply_key'] = token.secret_key
-            result[gestalt] = recipient_props
-        return result
+    def get_headers(self, **kwargs):
+        # thread headers
+        kwargs.update(self.get_thread_headers())
 
-    def get_sender(self):
+        # reply-to with token
+        token = self.get_reply_token()
+        if token:
+            kwargs['Reply-To'] = self.get_formatted_reply_address(token)
+
+        # archived-at with url
+        self.url = self.get_url()
+        if self.url:
+            kwargs['Archived-At'] = '<{}>'.format(build_absolute_uri(self.url))
+
+        # list-id
+        list_id = self.get_list_id()
+        if list_id:
+            kwargs['List-Id'] = list_id
+
+        return kwargs
+
+    def get_list_id(self):
         return None
 
-    def get_sender_email(self):
-        return settings.DEFAULT_FROM_EMAIL
-
-    def get_subject(self):
-        return self.subject
-
-    def get_template_name(self):
-        app_label = apps.get_containing_app_config(type(self).__module__).label
-        return '{}/{}.txt'.format(
-                app_label, type(self).__name__.lower())
+    def get_message(self):
+        headers = self.get_headers(Date=self.get_date())
+        subject_prefix = 'Re: ' if self.is_reply() else ''
+        subject_context = self.get_subject_context()
+        if subject_context:
+            subject_prefix += '[{}] '.format(subject_context)
+        subject = subject_prefix + self.get_subject()
+        return mail.EmailMessage(
+                body=self.get_body(), from_email=self.get_formatted_sender(),
+                headers=headers, subject=subject,
+                to=[self.get_formatted_recipient()])
 
     def get_message_ids(self):
         """ generate a unique message ID for this specific email message and related IDs
@@ -103,54 +128,62 @@ class Notification:
         my_id = '{}.{}'.format(now_string, uuid_string)
         return my_id, None, []
 
-    def get_reply_key(self):
+    def get_reply_token(self):
         return None
 
-    def send(self):
-        site = sites_models.Site.objects.get_current()
+    def get_sender(self):
+        return None
 
+    def get_subject(self):
+        return self.subject
+
+    def get_subject_context(self):
+        return None
+
+    def get_template_name(self):
+        app_label = apps.get_containing_app_config(type(self).__module__).label
+        return '{}/{}.txt'.format(
+                app_label, type(self).__name__.lower())
+
+    def get_thread_headers(self):
         def format_message_id(message_id, recipient):
-            # The reference towards the recipient is not a security measure, thus
-            # collisions (due the capping of 16 bytes) are acceptable.
-            recipient_token = hashlib.sha256(recipient.encode("utf-8")).hexdigest()[:16]
-            return '<{}-{}@{}>'.format(message_id, recipient_token, site.domain)
-
-        for recipient, recipient_attrs in self.get_formatted_recipients():
-            subject = self.get_subject()
-            context = self.get_context_data(**self.kwargs.copy())
-            context.update({'site': site})
-            template = loader.get_template(self.get_template_name())
-            template.backend.engine.autoescape = False
-            body = template.render(context)
-            sender = self.get_sender()
-            name = ''
-            if sender and recipient_attrs.get('with_name', True):
-                name = '{} via '.format(sender)
-            from_email = '{name}{site} <{email}>'.format(
-                    name=name,
-                    site=site.name,
-                    email=self.get_sender_email())
-            headers = {}
-            headers['Date'] = email_utils.formatdate(localtime=True)
-            message_id, parent_id, reference_ids = self.get_message_ids()
-            headers['Message-ID'] = format_message_id(message_id, recipient)
-            if parent_id:
-                headers['In-Reply-To'] = format_message_id(parent_id, recipient)
-                if parent_id not in reference_ids:
-                    reference_ids.append(parent_id)
-            if reference_ids:
-                headers['References'] = ' '.join([format_message_id(ref_id, recipient)
-                                                  for ref_id in reference_ids])
-            reply_key = recipient_attrs.get('reply_key')
-            if reply_key:
-                headers['Reply-To'] = '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
-                    reply_key=reply_key))
-            message = mail.EmailMessage(
-                    body=body, from_email=from_email, subject=subject,
-                    to=[recipient], headers=headers)
-            for file_name in self.get_attachments():
-                message.attach_file(file_name)
             try:
-                message.send()
-            except smtplib.SMTPException:
-                logger.error('Error while trying to send notification')
+                # The reference towards the recipient is not a security measure, thus
+                # collisions (due the capping of 16 bytes) are acceptable.
+                recipient_token = hashlib.sha256(recipient.user.email.encode("utf-8")) \
+                        .hexdigest()[:16]
+                return '<{}-{}@{}>'.format(message_id, recipient_token, self.site.domain)
+            except AttributeError:
+                return '<{}@{}>'.format(message_id, self.site.domain)
+
+        headers = {}
+        message_id, parent_id, reference_ids = self.get_message_ids()
+        headers['Message-ID'] = format_message_id(message_id, self.recipient)
+        if parent_id:
+            headers['In-Reply-To'] = format_message_id(parent_id, self.recipient)
+            if parent_id not in reference_ids:
+                reference_ids.append(parent_id)
+        if reference_ids:
+            headers['References'] = ' '.join([format_message_id(ref_id, self.recipient)
+                                              for ref_id in reference_ids])
+        return headers
+
+    def get_url(self):
+        return None
+
+    def is_reply(self):
+        return False
+
+    def send(self, recipient, **kwargs):
+        self.recipient = recipient
+        self.kwargs = kwargs
+
+        # construct message
+        message = self.get_message()
+
+        # add attachments
+        for file_name in self.get_attachments():
+            message.attach_file(file_name)
+
+        # we don't expect errors when sending mails because we just pass mails to django-mailer
+        message.send()

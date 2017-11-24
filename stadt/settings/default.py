@@ -10,7 +10,6 @@ DATA_DIR = BASE_DIR if os.access(BASE_DIR, os.W_OK) else os.path.expanduser("~")
 
 # Application definition
 INSTALLED_APPS = [
-    'account.apps.AccountConfig',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -46,11 +45,10 @@ INSTALLED_APPS = [
     'features.stadt',
     'features.subscriptions',
     'features.tags',
+    'imagekit',
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
-    'sorl.thumbnail',
-    'utils',
 ]
 
 MIDDLEWARE = [
@@ -236,6 +234,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+
 ACCOUNT_USER_DISPLAY = lambda u: u.gestalt    # noqa: E731
 
 ACCOUNT_USERNAME_REQUIRED = False
@@ -291,10 +291,7 @@ TAGS_TAGGABLE = (
         'entity': 'contributions.Contribution',
         'props': ['contribution__text'],
         'tag_related': [lambda c: c.container],
-        'constraint': lambda c: hasattr(c.contribution, 'text'),
+        'constraint': lambda c: (not c.container.is_conversation
+                                 and hasattr(c.contribution, 'text')),
     },
 )
-
-# TEMPLATE_DEBUG is officially deprecated in Django but still
-# required by sorl-thumbnail.
-TEMPLATE_DEBUG = False

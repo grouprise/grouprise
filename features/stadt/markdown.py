@@ -3,8 +3,7 @@ import re
 from django.db.models import Q
 from markdown import Extension, util, inlinepatterns
 
-from core.markdown import markdown_extensions
-from utils.markdown import ExtendedLinkPattern
+from core.markdown import ExtendedLinkPattern, markdown_extensions
 from features.associations import models as associations
 from features.gestalten.models import Gestalt
 from features.groups.models import Group

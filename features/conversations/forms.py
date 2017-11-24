@@ -5,7 +5,7 @@ import features
 from features.gestalten import models as gestalten
 from features.associations import models as associations
 from features.contributions import forms as contributions, models as contributions_models
-from utils import forms as utils_forms
+from core import forms as utils_forms
 from . import models
 
 
@@ -64,7 +64,7 @@ class Create(forms.ModelForm):
         self.contribution.save()
 
         # send contribution creation signal
-        features.contributions.signals.contribution_created.send(
+        features.contributions.signals.post_create.send(
                 sender=self.__class__, instance=self.contribution)
 
         return association

@@ -18,4 +18,4 @@ def add_first_member(sender, instance, **kwargs):
 def send_membership_notification(sender, instance, **kwargs):
     membership = instance
     if membership.created_by != membership.member:
-        notifications.MembershipCreated(membership=membership).send()
+        notifications.MembershipCreated(membership).send(membership.member)

@@ -1,6 +1,0 @@
-Galerie online ansehen und kommentieren:
-{% url 'content-permalink' instance.pk as path %}{{ path|full_url }}
-
-Galerie mit {{ instance.container.gallery_images.count }} Bild{{ instance.container.gallery_images.count|pluralize:'ern' }}
-
-{{ instance.container.versions.last.text }}

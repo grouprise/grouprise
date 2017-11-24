@@ -1,5 +1,5 @@
 {% extends 'content/list.html' %}
-{% load events rules thumbnail %}
+{% load events rules %}
 
 {% block title %}{{ gestalt }} - {{ block.super }}{% endblock %}
 {% block menu %}{% menu 'gestalt' %}{% endblock %}
@@ -9,11 +9,11 @@
 
     <header class="profile-header">
         <div class="profile-header-title-image">
-            {% thumbnail gestalt.background '1140x456' crop="left center" as image %}
-                <img src="{{ image.url }}" alt="Titelbild von {{ gestalt }}">
-            {% empty %}
+            {% if gestalt.background %}
+                <img src="{{ gestalt.background_cover.url }}" alt="Titelbild von {{ gestalt }}">
+            {% else %}
                 <div class="disclaimer"></div>
-            {% endthumbnail %}
+            {% endif %}
 
             {% if can_edit %}
                 <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
@@ -116,7 +116,7 @@
         <h2 class="content-classification">Beiträge</h2>
         {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
-            {% has_perm 'content.create' user gestalt as can_create_content %}
+            {% has_perm 'content.create_for_gestalt' user gestalt as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
                     <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>

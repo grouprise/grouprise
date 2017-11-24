@@ -24,15 +24,17 @@ class ContributionMixin(features.articles.tests.ArticleMixin):
 
 
 class ContentReplyByEmail(
-        gestalten.AuthenticatedMixin, tests.Test):
+        memberships.AuthenticatedMemberMixin, tests.Test):
     def test_content_reply_by_email(self):
         # create article
-        self.client.post(self.get_url('create-article'), {'title': 'Test', 'text': 'Test'})
+        self.client.post(
+                reverse('create-group-article', args=(self.group.slug,)),
+                {'title': 'Test', 'text': 'Test'})
         a = self.assertExists(associations.Association, content__title='Test')
         self.assertNotificationSent()
         # generate reply message
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(to_header=reply_to, body='Text B')
+        msg = mailbox_models.Message(body='Delivered-To: {}\n\nText B'.format(reply_to))
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
         self.assertExists(
@@ -45,8 +47,7 @@ class ConversationInitiateByEmail(memberships.MemberMixin, tests.Test):
         # generate initial message
         msg = mailbox_models.Message(
                 from_header=self.gestalt.user.email,
-                to_header='{}@localhost'.format(self.group.slug),
-                body='Text A')
+                body='Delivered-To: {}@localhost\n\nText A'.format(self.group.slug))
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
         self.assertExists(
@@ -56,8 +57,8 @@ class ConversationInitiateByEmail(memberships.MemberMixin, tests.Test):
     def test_conversation_initiate_by_email_failing(self):
         # generate initial message
         msg = mailbox_models.Message(
-                from_header=self.gestalt.user.email, to_header='not-existing@localhost',
-                body='Text A')
+                from_header=self.gestalt.user.email,
+                body='Delivered-To: not-existing@localhost\n\nText A')
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
         self.assertEqual(len(mail.outbox), 1)
@@ -74,7 +75,7 @@ class ConversationReplyByEmail(
         self.assertNotificationSent()
         # generate reply message
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(to_header=reply_to, body='Text B')
+        msg = mailbox_models.Message(body='Delivered-To: {}\n\nText B'.format(reply_to))
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
         self.assertExists(

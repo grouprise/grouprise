@@ -1,13 +1,15 @@
-from features.content import notifications as content
-from features.gestalten import models as gestalten
+def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):
+    def update_attributes(key, **kwargs):
+        attributes = recipients_dict.setdefault(key, {})
+        attributes.update((k, v) for k, v in kwargs.items() if v)
 
-
-class ContentPublicallyAssociated(content.ContentAssociated):
-    def get_recipients(self):
-        return gestalten.Gestalt.objects.filter(
-                subscriptions__content_type=self.object.entity_type,
-                subscriptions__object_id=self.object.entity_id,
-                subscriptions__unsubscribe=False)
-
-    def get_sender(self):
-        return None
+    for subscription in subscriptions:
+        membership = subscription.subscriber.memberships \
+                .filter(group=subscription.subscribed_to).first()
+        update_attributes(
+                subscription.subscriber, association=association, membership=membership,
+                subscription=subscription)
+    for contribution in contributions:
+        update_attributes(contribution.author, contribution=contribution)
+    if association and not association.entity.is_group:
+        update_attributes(association.entity, association=association)

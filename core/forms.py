@@ -1,3 +1,6 @@
+# Use with care. See
+# https://git.hack-hro.de/stadtgestalten/stadtgestalten/issues/468
+
 from crispy_forms import bootstrap, helper, layout
 from django import forms as django
 
@@ -37,12 +40,12 @@ class StadtMixin:
         return dict(filter(lambda x: x[1], fields))
 
     def get_layout(self, **kwargs):
-        l = []
+        lay = []
         if kwargs['description']:
-            l += [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
-        l += filter(None, [f.get_layout() for f in self.data_fields])
-        l += [Submit(kwargs['action'])]
-        return layout.Layout(*l)
+            lay += [layout.HTML('<p>{}</p>'.format(kwargs['description']))]
+        lay += filter(None, [f.get_layout() for f in self.data_fields])
+        lay += [Submit(kwargs['action'])]
+        return layout.Layout(*lay)
 
 
 class Form(StadtMixin, django.Form):
@@ -62,5 +65,63 @@ class ModelForm(StadtMixin, django.ModelForm):
 class Submit(bootstrap.StrictButton):
     field_classes = "btn btn-primary"
 
-    def __init__(self, value, name=''):
+    def __init__(self, value, name='', field_classes=None):
+        if field_classes is not None:
+            self.field_classes = field_classes
         super().__init__(value, name=name, value=value, type="submit")
+
+
+class LayoutMixin:
+    def get_helper(self):
+        h = helper.FormHelper()
+        h.layout = layout.Layout(*self.get_layout())
+        if hasattr(self, 'inline') and self.inline:
+            h.field_template = 'bootstrap3/layout/inline_field.html'
+            h.form_class = 'form-inline'
+        return h
+
+    def get_layout(self):
+        layout = self.layout if hasattr(self, 'layout') else tuple()
+        if not isinstance(layout, (tuple, list)):
+            layout = (layout,)
+        return layout
+
+
+class FormMixin(LayoutMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = self.get_helper()
+        if hasattr(self, 'method'):
+            self.helper.form_method = self.method
+
+
+class ExtraFormMixin(FormMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        kwargs['instance'] = self.get_instance()
+        self.extra_form = self.extra_form_class(*args, **kwargs)
+        self.errors.update(self.extra_form.errors)
+        self.fields.update(self.extra_form.fields)
+        self.initial.update(self.extra_form.initial)
+
+    def is_valid(self):
+        return super().is_valid() and self.extra_form.is_valid()
+
+    def save(self):
+        self.extra_form.save()
+        return super().save()
+
+
+class EditorField(layout.Field):
+    def __init__(self, *args, **kwargs):
+        kwargs['data_component'] = 'editor'
+        super().__init__(*args, **kwargs)
+
+
+class Field(layout.Field):
+    def __init__(self, name, **kwargs):
+        self.constant = False
+        if 'type' in kwargs and kwargs['type'] == 'constant':
+            self.constant = True
+            kwargs['type'] = 'hidden'
+        super().__init__(name, **kwargs)

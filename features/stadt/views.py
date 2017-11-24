@@ -2,7 +2,6 @@ import django
 from django.shortcuts import get_object_or_404
 
 import core
-import utils
 from features import gestalten, groups
 from features.groups.models import Group
 
@@ -40,13 +39,13 @@ class Entity(core.views.PermissionMixin, django.views.generic.View):
         return self.view.has_permission()
 
 
-class Imprint(utils.views.PageMixin, django.views.generic.TemplateView):
+class Imprint(core.views.PageMixin, django.views.generic.TemplateView):
     permission_required = 'entities.view_imprint'
     template_name = 'entities/imprint.html'
     title = 'Impressum'
 
 
-class Privacy(utils.views.PageMixin, django.views.generic.TemplateView):
+class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
     permission_required = 'entities.view_imprint'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'

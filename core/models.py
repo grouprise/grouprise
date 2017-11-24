@@ -42,15 +42,15 @@ def get_unique_slug(
         result[key] = repl
         return result
 
-    l = cls._meta.get_field(slug_field_name).max_length
+    length = cls._meta.get_field(slug_field_name).max_length
     for i in itertools.count():
-        slug = fields[slug_field_name][:l]
+        slug = fields[slug_field_name][:length]
         if i:
             suffix = '-{}'.format(i)
-            if len(slug) + len(suffix) <= l:
+            if len(slug) + len(suffix) <= length:
                 slug = slug + suffix
             else:
-                slug = slug[:-(len(slug)+len(suffix)-l)] + suffix
+                slug = slug[:-(len(slug)+len(suffix)-length)] + suffix
         if (slug not in reserved_slugs
                 and (
                     reserved_slug_qs is None
