@@ -2,10 +2,7 @@ import allauth
 import django
 from django.views import generic
 
-import core
-from core.views import base
-from features.associations import models as associations
-from . import forms, models
+from . import forms
 from allauth.account import views
 from crispy_forms import layout
 from django.contrib import messages

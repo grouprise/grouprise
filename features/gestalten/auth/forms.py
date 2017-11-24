@@ -1,19 +1,11 @@
 import allauth
-import django
-from crispy_forms import bootstrap, layout
+from crispy_forms import layout
 from django import forms
-from django.contrib.auth import models as auth_models
-from django.contrib.sites import models as sites_models
-from django.core.exceptions import ValidationError
 
-from features.groups.models import Group
-from features.gestalten import models
-from core import forms as utils_forms
 import allauth.account
 import allauth.account.forms
 import allauth.account.adapter
 import allauth.account.utils
-from django.contrib import auth
 from core import forms as util_forms
 
 

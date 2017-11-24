@@ -8,7 +8,6 @@ from features.associations import models as associations
 from . import forms, models
 from allauth.account import views
 from crispy_forms import layout
-from django.contrib import messages
 from django.views.generic import edit as edit_views
 from core import views as utils_views
 

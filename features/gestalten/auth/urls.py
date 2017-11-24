@@ -1,4 +1,3 @@
-from allauth.account import views as allauth_views
 from allauth.socialaccount import views as socialaccount_views
 from allauth.socialaccount.providers.facebook import views as facebook_views
 from django.conf.urls import url
@@ -10,7 +9,7 @@ urlpatterns = [
         r'^stadt/login/$',
         views.Login.as_view(),
         name='login'),
-    
+
     url(r'^stadt/logout/$', views.Logout.as_view(), name='account_logout'),
 
     url(r'^stadt/login/cancelled/$',

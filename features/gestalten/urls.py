@@ -1,6 +1,5 @@
 from allauth.account import views as allauth_views
 from allauth.socialaccount import views as socialaccount_views
-from allauth.socialaccount.providers.facebook import views as facebook_views
 from django.conf.urls import url
 
 from . import views
