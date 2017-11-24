@@ -13,7 +13,8 @@ urlpatterns = [
     url(r'^stadt/logout/$', views.Logout.as_view(), name='account_logout'),
 
     url(r'^stadt/login/cancelled/$',
-        socialaccount_views.login_cancelled,
+        socialaccount_views.LoginCancelledView.as_view(
+            template_name='auth/login_cancelled.html'),
         name='socialaccount_login_cancelled'),
 
     url(r'^stadt/login/error/$',
