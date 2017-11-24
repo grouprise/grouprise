@@ -6,6 +6,15 @@ from . import views
 
 urlpatterns = [
     url(
+        r'^stadt/signup/$',
+        views.Create.as_view(),
+        name='account_signup'),
+
+    url(r'^stadt/login/signup/$',
+        socialaccount_views.signup,
+        name='socialaccount_signup'),
+
+    url(
         r'^stadt/gestalten/$',
         views.List.as_view(),
         name='gestalten'),
@@ -25,33 +34,32 @@ urlpatterns = [
         views.UpdateBackground.as_view(),
         name='gestalt-background-update'),
 
-    url(r'^stadt/login/signup/$',
-        socialaccount_views.signup,
-        name='socialaccount_signup'),
+    url(r'^stadt/email/$',
+        views.UpdateEmail.as_view(),
+        name='account_email'),
 
     url(
         r'^stadt/confirm/(?P<key>[-:\w]+)/$',
-        views.Confirm.as_view(),
+        views.UpdateEmailConfirm.as_view(),
         name='account_confirm_email'),
-    url(r'^stadt/email/$', views.Email.as_view(), name='account_email'),
+
     url(
         r'^stadt/password/change/$',
-        views.PasswordChange.as_view(),
+        views.UpdatePassword.as_view(),
         name='account_change_password'),
+
     url(
         r'^stadt/password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$',
-        views.PasswordResetFromKey.as_view(),
+        views.UpdatePasswordKey.as_view(),
         name='account_reset_password_from_key'),
+
     url(
         r'^stadt/password/reset/key/done/$',
         allauth_views.password_reset_from_key_done,
         name='account_reset_password_from_key_done'),
+
     url(
         r'^stadt/password/set/$',
-        views.PasswordSet.as_view(),
+        views.UpdatePasswordSet.as_view(),
         name='account_set_password'),
-    url(
-        r'^stadt/signup/$',
-        views.Signup.as_view(),
-        name='account_signup'),
 ]

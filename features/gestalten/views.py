@@ -12,55 +12,7 @@ from django.views.generic import edit as edit_views
 from core import views as utils_views
 
 
-class Confirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
-    action = 'E-Mail-Adresse bestätigen'
-    ignore_base_templates = True
-    layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">'
-                         '{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des '
-                         'Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
-    permission_required = 'account.confirm'
-
-    def get_context_data(self, **kwargs):
-        # as FormMixin doesn't call get_context_data() on super() we have to call it explicitly
-        return views.ConfirmEmailView.get_context_data(self, **super().get_context_data(**kwargs))
-
-    def get_parent(self):
-        return self.get_redirect_url()
-
-
-class Email(utils_views.ActionMixin, views.EmailView):
-    form_class = forms.Email
-    permission_required = 'account.email'
-    title = 'E-Mail-Adressen'
-
-    def get_parent(self):
-        return self.request.user.gestalt
-
-
-class PasswordChange(utils_views.ActionMixin, views.PasswordChangeView):
-    action = 'Kennwort ändern'
-    form_class = forms.PasswordChange
-    ignore_base_templates = True
-    permission_required = 'account.change_password'
-
-    def get_parent(self):
-        return self.request.user.gestalt
-
-
-class PasswordResetFromKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
-    action = 'Kennwort ändern'
-    form_class = forms.PasswordResetFromKey
-    permission_required = 'account.reset_password'
-
-
-class PasswordSet(utils_views.ActionMixin, views.PasswordSetView):
-    action = 'Kennwort setzen'
-    form_class = forms.PasswordSet
-    ignore_base_templates = True
-    permission_required = 'account.set_password'
-
-
-class Signup(utils_views.ActionMixin, views.SignupView):
+class Create(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
     form_class = forms.SignupForm
     ignore_base_templates = True
@@ -155,3 +107,51 @@ class UpdateBackground(core.views.ActionMixin, django.views.generic.UpdateView):
 
     def get_success_url(self):
         return self.object.get_profile_url()
+
+
+class UpdateEmail(utils_views.ActionMixin, views.EmailView):
+    form_class = forms.Email
+    permission_required = 'account.email'
+    title = 'E-Mail-Adressen'
+
+    def get_parent(self):
+        return self.request.user.gestalt
+
+
+class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
+    action = 'E-Mail-Adresse bestätigen'
+    ignore_base_templates = True
+    layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">'
+                         '{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des '
+                         'Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
+    permission_required = 'account.confirm'
+
+    def get_context_data(self, **kwargs):
+        # as FormMixin doesn't call get_context_data() on super() we have to call it explicitly
+        return views.ConfirmEmailView.get_context_data(self, **super().get_context_data(**kwargs))
+
+    def get_parent(self):
+        return self.get_redirect_url()
+
+
+class UpdatePassword(utils_views.ActionMixin, views.PasswordChangeView):
+    action = 'Kennwort ändern'
+    form_class = forms.PasswordChange
+    ignore_base_templates = True
+    permission_required = 'account.change_password'
+
+    def get_parent(self):
+        return self.request.user.gestalt
+
+
+class UpdatePasswordKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
+    action = 'Kennwort ändern'
+    form_class = forms.PasswordResetFromKey
+    permission_required = 'account.reset_password'
+
+
+class UpdatePasswordSet(utils_views.ActionMixin, views.PasswordSetView):
+    action = 'Kennwort setzen'
+    form_class = forms.PasswordSet
+    ignore_base_templates = True
+    permission_required = 'account.set_password'
