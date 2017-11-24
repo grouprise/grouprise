@@ -13,7 +13,7 @@ from core import views as utils_views
 class Login(allauth.account.views.LoginView):
     permission_required = 'gestalten.login'
     form_class = forms.Login
-    template_name = 'gestalten/login.html'
+    template_name = 'auth/login.html'
 
     def has_facebook_app(self):
         providers = allauth.socialaccount.providers.registry.get_list()

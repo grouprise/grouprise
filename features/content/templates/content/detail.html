@@ -1,5 +1,5 @@
 {% extends 'associations/detail.html' %}
-{% load gestalten rules %}
+{% load rules %}
 
 {% block meta %}
     {% include 'content/_meta.html' with content=association.container %}
@@ -62,6 +62,7 @@
                     </li>
                     {% else %}
                     <li>
+                        {% load auth %}
                         <a href="{% login_url %}" class="btn btn-default">Anmelden zum Kommentieren</a>
                     </li>
                     {% endif %}

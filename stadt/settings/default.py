@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'features.files',
     'features.galleries',
     'features.gestalten',
+    'features.gestalten.auth',
     'features.groups',
     'features.images',
     'features.imports',
