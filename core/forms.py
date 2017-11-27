@@ -107,9 +107,9 @@ class ExtraFormMixin(FormMixin):
     def is_valid(self):
         return super().is_valid() and self.extra_form.is_valid()
 
-    def save(self):
+    def save(self, commit=True):
         self.extra_form.save()
-        return super().save()
+        return super().save(commit)
 
 
 class EditorField(layout.Field):

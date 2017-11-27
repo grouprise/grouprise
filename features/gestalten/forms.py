@@ -84,28 +84,34 @@ class Create(util_forms.FormMixin, allauth.account.forms.SignupForm):
 
 class UpdateUser(utils_forms.FormMixin, forms.ModelForm):
     class Meta:
-        fields = ('first_name', 'last_name', 'username')
-        labels = {'username': 'Adresse der Benutzerseite / Pseudonym'}
+        fields = ('first_name', 'last_name')
         model = auth_models.User
-
-    def clean_username(self):
-        slug = self.cleaned_data['username']
-        validate_entity_slug(self.instance.gestalt, slug)
-        return slug
 
 
 class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
-    extra_form_class = UpdateUser
-
     class Meta:
-        fields = ('about', 'public')
         model = models.Gestalt
-        widgets = {
-                'about': forms.Textarea({'rows': 5}),
-                }
+        fields = ('about', 'public')
+        widgets = {'about': forms.Textarea({'rows': 5})}
+
+    extra_form_class = UpdateUser
+    slug = forms.SlugField(
+            label='Pseudonym', help_text='Nur Buchstaben, Ziffern, Unter- und Bindestriche. '
+            'Keine Umlaute, ß oder andere Sonderzeichen.')
+
+    def clean_slug(self):
+        slug = self.cleaned_data['slug']
+        validate_entity_slug(self.instance, slug)
+        return slug
 
     def get_instance(self):
         return self.instance.user
+
+    def save(self, commit=True):
+        self.instance.user.username = self.cleaned_data['slug']
+        if commit:
+            self.instance.user.save()
+        return super().save(commit)
 
 
 class UpdateEmail(util_forms.FormMixin, allauth.account.forms.AddEmailForm):

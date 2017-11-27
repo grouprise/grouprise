@@ -30,7 +30,7 @@ class Gestalt(core.models.Model):
     public = models.BooleanField(
             'Benutzerseite veröffentlichen',
             default=False,
-            help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.'
+            help_text='Öffentliche Benutzerseiten sind für alle Besucherinnen sichtbar.'
             )
     score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)

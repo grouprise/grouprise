@@ -90,6 +90,9 @@ class Update(PermissionMixin, UpdateView):
             kwargs['group'] = group
         return super().get_context_data(**kwargs)
 
+    def get_initial(self):
+        return {'slug': self.object.slug}
+
     def get_object(self):
         return self.request.user.gestalt
 

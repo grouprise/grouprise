@@ -8,17 +8,17 @@
     <form method="post">
         {% csrf_token %}
 
-        {% field form.username prefix=site.domain|add:'/' %}
         <div class="row">
             <div class="col-md-6">
+                {% field form.slug prefix='@' %}
                 {% field form.first_name %}
                 {% field form.last_name %}
             </div>
             <div class="col-md-6">
                 {% field form.about %}
+                {% field_checkbox form.public %}
             </div>
         </div>
-        {% field_checkbox form.public %}
 
         <button class="btn btn-primary">Einstellungen speichern</button>
     </form>
