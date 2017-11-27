@@ -107,8 +107,10 @@ class Update(forms.ModelForm):
     def __init__(self, **kwargs):
         self.author = kwargs.pop('author')
         super().__init__(**kwargs)
-        self.fields['image'].queryset = Image.objects.filter(
-                Q(pk=self.initial['image'].pk) | Q(creator=self.author))
+        q = Q(creator=self.author)
+        if self.initial['image']:
+            q |= Q(pk=self.initial['image'].pk)
+        self.fields['image'].queryset = Image.objects.filter(q)
         if not self.instance.entity.is_group:
             del self.fields['pinned']
         if self.instance.public:
