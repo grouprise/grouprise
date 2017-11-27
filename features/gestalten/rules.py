@@ -1,25 +1,24 @@
-import rules
-from rules import is_authenticated
+from rules import add_perm, always_allow, is_authenticated, predicate
 
 
-@rules.predicate
-def is_gestalt(user, gestalt):
+@predicate
+def is_self(user, gestalt):
     return user == gestalt.user
 
 
-@rules.predicate
+@predicate
 def is_public(user, gestalt):
     return gestalt.public
 
 
-rules.add_perm('gestalten.view', is_public | (is_authenticated & is_gestalt))
+add_perm('gestalten.view', is_public | (is_authenticated & is_self))
 
-rules.add_perm('entities.change_gestalt', rules.is_authenticated & is_gestalt)
+add_perm('gestalten.change', is_authenticated & is_self)
 
-rules.add_perm('gestalten.view_list', rules.always_allow)
+add_perm('gestalten.view_list', always_allow)
 
-rules.add_perm('account.change_password', rules.is_authenticated)
-rules.add_perm('account.confirm', rules.always_allow)
-rules.add_perm('account.email', rules.is_authenticated)
-rules.add_perm('account.set_password', rules.is_authenticated)
-rules.add_perm('account.signup', ~rules.is_authenticated)
+add_perm('account.change_password', is_authenticated)
+add_perm('account.confirm', always_allow)
+add_perm('account.email', is_authenticated)
+add_perm('account.set_password', is_authenticated)
+add_perm('account.signup', ~is_authenticated)

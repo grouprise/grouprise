@@ -1,15 +1,16 @@
 import allauth
 import django
-from django.views import generic
-
-import core
-from core.views import base
-from features.associations import models as associations
-from . import forms, models
 from allauth.account import views
 from crispy_forms import layout
-from django.views.generic import edit as edit_views
+from django.views import generic
+from django.views.generic import edit as edit_views, UpdateView
+
+import core
 from core import views as utils_views
+from core.views import base, PermissionMixin
+from features.associations import models as associations
+from features.groups.models import Group
+from . import forms, models
 
 
 class Create(utils_views.ActionMixin, views.SignupView):
@@ -61,19 +62,19 @@ class List(base.PermissionMixin, generic.ListView):
                 entity_type=models.Gestalt.content_type).can_view(self.request.user)
 
 
-class Update(core.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Dein Profil'
-    form_class = forms.Gestalt
-    menu = 'gestalt'
-    message = 'Die Einstellungen wurden geändert.'
-    model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
+class Update(PermissionMixin, UpdateView):
+    permission_required = 'gestalten.change'
+    form_class = forms.Update
+    template_name = 'gestalten/update.html'
+
+    def get_context_data(self, **kwargs):
+        group = Group.objects.filter(slug=self.request.GET.get('group')).first()
+        if group:
+            kwargs['group'] = group
+        return super().get_context_data(**kwargs)
 
     def get_object(self):
         return self.request.user.gestalt
-
-    def get_parent(self):
-        return self.object
 
     def get_success_url(self):
         return self.object.get_profile_url()

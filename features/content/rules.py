@@ -2,7 +2,7 @@ import rules
 from rules import is_authenticated
 
 from features.associations import models as associations_models, predicates as associations_rules
-from features.gestalten.rules import is_gestalt
+from features.gestalten.rules import is_self as is_gestalt
 from features.memberships import predicates as memberships
 
 

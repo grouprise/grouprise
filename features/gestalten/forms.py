@@ -160,7 +160,7 @@ class User(utils_forms.FormMixin, forms.ModelForm):
         return slug
 
 
-class Gestalt(utils_forms.ExtraFormMixin, forms.ModelForm):
+class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
     extra_form_class = User
 
     class Meta:
