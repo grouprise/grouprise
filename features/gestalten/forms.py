@@ -1,16 +1,11 @@
 import allauth
-import django
-from crispy_forms import bootstrap, layout
+from crispy_forms import layout
 from django import forms
 from django.contrib import auth
-from django.contrib.auth import models as auth_models
-from django.contrib.sites import models as sites_models
 from django.core.exceptions import ValidationError
 
 from core import forms as util_forms
-from core import forms as utils_forms
 from features.gestalten import models
-from features.groups.models import Group
 from features.stadt.forms import validate_entity_slug
 
 username_validators = [validate_entity_slug]
