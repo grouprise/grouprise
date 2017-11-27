@@ -82,19 +82,14 @@ class Create(util_forms.FormMixin, allauth.account.forms.SignupForm):
             return super().save(request)
 
 
-class UpdateUser(utils_forms.FormMixin, forms.ModelForm):
-    class Meta:
-        fields = ('first_name', 'last_name')
-        model = auth_models.User
-
-
-class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
+class Update(forms.ModelForm):
     class Meta:
         model = models.Gestalt
         fields = ('about', 'public')
         widgets = {'about': forms.Textarea({'rows': 5})}
 
-    extra_form_class = UpdateUser
+    first_name = forms.CharField(label='Vorname', required=False)
+    last_name = forms.CharField(label='Nachname', required=False)
     slug = forms.SlugField(
             label='Pseudonym', help_text='Nur Buchstaben, Ziffern, Unter- und Bindestriche. '
             'Keine Umlaute, ß oder andere Sonderzeichen.')
@@ -108,6 +103,8 @@ class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
         return self.instance.user
 
     def save(self, commit=True):
+        self.instance.user.first_name = self.cleaned_data['first_name']
+        self.instance.user.last_name = self.cleaned_data['last_name']
         self.instance.user.username = self.cleaned_data['slug']
         if commit:
             self.instance.user.save()

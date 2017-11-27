@@ -91,7 +91,11 @@ class Update(PermissionMixin, UpdateView):
         return super().get_context_data(**kwargs)
 
     def get_initial(self):
-        return {'slug': self.object.slug}
+        return {
+                'first_name': self.object.user.first_name,
+                'last_name': self.object.user.last_name,
+                'slug': self.object.slug,
+                }
 
     def get_object(self):
         return self.request.user.gestalt
