@@ -242,7 +242,7 @@ ACCOUNT_USER_DISPLAY = lambda u: u.gestalt    # noqa: E731
 
 ACCOUNT_USERNAME_REQUIRED = False
 
-ACCOUNT_USERNAME_VALIDATORS = 'features.gestalten.models.username_validators'
+ACCOUNT_USERNAME_VALIDATORS = 'features.gestalten.forms.username_validators'
 
 
 # Crispy forms

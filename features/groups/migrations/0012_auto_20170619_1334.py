@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='slug',
-            field=models.SlugField(blank=True, null=True, unique=True, validators=[features.groups.models.validate_slug], verbose_name='Adresse der Gruppenseite'),
+            field=models.SlugField(blank=True, null=True, unique=True, validators=[], verbose_name='Adresse der Gruppenseite'),
         ),
     ]

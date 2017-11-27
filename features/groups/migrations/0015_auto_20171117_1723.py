@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='slug',
-            field=models.SlugField(blank=True, help_text='Wird auch als Kurzname verwendet', null=True, unique=True, validators=[features.groups.models.validate_slug], verbose_name='Adresse der Gruppenseite'),
+            field=models.SlugField(blank=True, help_text='Wird auch als Kurzname verwendet', null=True, unique=True, validators=[], verbose_name='Adresse der Gruppenseite'),
         ),
         migrations.AlterField(
             model_name='group',

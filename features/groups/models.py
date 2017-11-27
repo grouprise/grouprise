@@ -11,17 +11,7 @@ from imagekit.processors import ResizeToFit, SmartResize, Transpose
 import core.models
 from core import colors
 from features.gestalten.models import Gestalt
-
-
-def validate_slug(slug):
-    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
-                params={'slug': slug}, code='reserved')
-    if Gestalt.objects.filter(user__username__iexact=slug).exists():
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
-                params={'slug': slug}, code='in-use')
+from features.stadt.forms import validate_entity_slug
 
 
 class Group(core.models.Model):
@@ -40,7 +30,7 @@ class Group(core.models.Model):
     score = models.IntegerField(default=0)
     slug = models.SlugField(
             'Adresse der Gruppenseite', blank=True, null=True, unique=True,
-            validators=[validate_slug], help_text='Wird auch als Kurzname verwendet')
+            validators=[validate_entity_slug], help_text='Wird auch als Kurzname verwendet')
 
     address = models.TextField(
             'Anschrift',

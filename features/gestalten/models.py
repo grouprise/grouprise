@@ -12,9 +12,6 @@ import core
 from core import colors
 
 
-username_validators = [django.core.validators.validate_slug]
-
-
 class Gestalt(core.models.Model):
     is_group = False
 

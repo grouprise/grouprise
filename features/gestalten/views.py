@@ -13,23 +13,6 @@ from features.groups.models import Group
 from . import forms, models
 
 
-def validate_slug(slug):
-    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
-                params={'slug': slug}, code='reserved')
-    if (Group.objects.filter(slug__iexact=slug).exists()
-            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
-                params={'slug': slug}, code='in-use')
-    permission_required = 'account.email'
-    title = 'E-Mail-Adressen'
-
-    def get_parent(self):
-        return self.request.user.gestalt
-
-
 class Create(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
     form_class = forms.Create

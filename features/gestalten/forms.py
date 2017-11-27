@@ -13,6 +13,8 @@ from features.gestalten import models
 from features.groups.models import Group
 from features.stadt.forms import validate_entity_slug
 
+username_validators = [validate_entity_slug]
+
 
 class GestaltByEmailField(forms.EmailField):
     default_error_messages = {
@@ -96,7 +98,7 @@ class Update(forms.ModelForm):
 
     def clean_slug(self):
         slug = self.cleaned_data['slug']
-        validate_entity_slug(self.instance, slug)
+        validate_entity_slug(slug, self.instance)
         return slug
 
     def get_instance(self):
