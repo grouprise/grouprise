@@ -13,9 +13,26 @@ from features.groups.models import Group
 from . import forms, models
 
 
+def validate_slug(slug):
+    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
+                params={'slug': slug}, code='reserved')
+    if (Group.objects.filter(slug__iexact=slug).exists()
+            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
+                params={'slug': slug}, code='in-use')
+    permission_required = 'account.email'
+    title = 'E-Mail-Adressen'
+
+    def get_parent(self):
+        return self.request.user.gestalt
+
+
 class Create(utils_views.ActionMixin, views.SignupView):
     action = 'Registrieren'
-    form_class = forms.SignupForm
+    form_class = forms.Create
     ignore_base_templates = True
     # parent = 'gestalt-index'
     permission_required = 'account.signup'
@@ -111,12 +128,7 @@ class UpdateBackground(core.views.ActionMixin, django.views.generic.UpdateView):
 
 
 class UpdateEmail(utils_views.ActionMixin, views.EmailView):
-    form_class = forms.Email
-    permission_required = 'account.email'
-    title = 'E-Mail-Adressen'
-
-    def get_parent(self):
-        return self.request.user.gestalt
+    form_class = forms.UpdateEmail
 
 
 class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
@@ -137,7 +149,7 @@ class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.Co
 
 class UpdatePassword(utils_views.ActionMixin, views.PasswordChangeView):
     action = 'Kennwort ändern'
-    form_class = forms.PasswordChange
+    form_class = forms.UpdatePassword
     ignore_base_templates = True
     permission_required = 'account.change_password'
 
@@ -147,12 +159,12 @@ class UpdatePassword(utils_views.ActionMixin, views.PasswordChangeView):
 
 class UpdatePasswordKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
     action = 'Kennwort ändern'
-    form_class = forms.PasswordResetFromKey
+    form_class = forms.UpdatePasswordKey
     permission_required = 'account.reset_password'
 
 
 class UpdatePasswordSet(utils_views.ActionMixin, views.PasswordSetView):
     action = 'Kennwort setzen'
-    form_class = forms.PasswordSet
+    form_class = forms.UpdatePasswordSet
     ignore_base_templates = True
     permission_required = 'account.set_password'

@@ -5,4 +5,9 @@
 {% endblock %}
 
 {% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <button class="btn btn-primary">Einstellungen speichern</button>
+    </form>
 {% endblock %}

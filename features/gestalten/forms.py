@@ -17,58 +17,39 @@ from django.contrib import auth
 from core import forms as util_forms
 
 
-class Email(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
-    layout = (
-            layout.Field('email', placeholder=''),
-            util_forms.Submit('E-Mail-Adresse hinzufügen', 'action_add'))
+def validate_slug(slug):
+    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
+                params={'slug': slug}, code='reserved')
+    if (Group.objects.filter(slug__iexact=slug).exists()
+            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
+        raise django.core.exceptions.ValidationError(
+                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
+                params={'slug': slug}, code='in-use')
+
+
+class GestaltByEmailField(forms.EmailField):
+    default_error_messages = {
+        'login': 'Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde '
+                 'Dich mit E-Mail-Adresse und Kennwort an.'
+    }
 
     def __init__(self, *args, **kwargs):
+        del kwargs['limit_choices_to']
+        del kwargs['queryset']
+        del kwargs['to_field_name']
         super().__init__(*args, **kwargs)
-        self.fields['email'].label = 'E-Mail-Adresse'
+
+    def clean(self, value):
+        value = super().clean(value)
+        gestalt = models.Gestalt.get_or_create(value)
+        if gestalt.can_login():
+            raise ValidationError(self.error_messages['login'], code='login')
+        return gestalt
 
 
-class PasswordChange(util_forms.FormMixin, allauth.account.forms.ChangePasswordForm):
-    layout = (
-            layout.Field('oldpassword', placeholder=''),
-            layout.Field('password1', placeholder=''),
-            layout.Field('password2', placeholder=''),
-            util_forms.Submit('Kennwort ändern')
-            )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['oldpassword'].label = 'Aktuelles Kennwort'
-        self.fields['password1'].label = 'Neues Kennwort'
-        self.fields['password2'].label = 'Neues Kennwort (Wiederholung)'
-
-
-class PasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):
-    layout = (
-            layout.Field('password1', placeholder=''),
-            layout.Field('password2', placeholder=''),
-            util_forms.Submit('Kennwort setzen')
-            )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'].label = 'Kennwort'
-        self.fields['password2'].label = 'Kennwort (Wiederholung)'
-
-
-class PasswordResetFromKey(util_forms.FormMixin, allauth.account.forms.ResetPasswordKeyForm):
-    layout = (
-            layout.Field('password1', placeholder=''),
-            layout.Field('password2', placeholder=''),
-            util_forms.Submit('Kennwort ändern')
-            )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'].label = 'Kennwort'
-        self.fields['password2'].label = 'Kennwort (Wiederholung)'
-
-
-class SignupForm(util_forms.FormMixin, allauth.account.forms.SignupForm):
+class Create(util_forms.FormMixin, allauth.account.forms.SignupForm):
     layout = (
             layout.HTML(
                 '<p>'
@@ -116,39 +97,7 @@ class SignupForm(util_forms.FormMixin, allauth.account.forms.SignupForm):
             return super().save(request)
 
 
-class GestaltByEmailField(forms.EmailField):
-    default_error_messages = {
-        'login': 'Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte melde '
-                 'Dich mit E-Mail-Adresse und Kennwort an.'
-    }
-
-    def __init__(self, *args, **kwargs):
-        del kwargs['limit_choices_to']
-        del kwargs['queryset']
-        del kwargs['to_field_name']
-        super().__init__(*args, **kwargs)
-
-    def clean(self, value):
-        value = super().clean(value)
-        gestalt = models.Gestalt.get_or_create(value)
-        if gestalt.can_login():
-            raise ValidationError(self.error_messages['login'], code='login')
-        return gestalt
-
-
-def validate_slug(slug):
-    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
-                params={'slug': slug}, code='reserved')
-    if (Group.objects.filter(slug__iexact=slug).exists()
-            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
-                params={'slug': slug}, code='in-use')
-
-
-class User(utils_forms.FormMixin, forms.ModelForm):
+class UpdateUser(utils_forms.FormMixin, forms.ModelForm):
     class Meta:
         fields = ('first_name', 'last_name', 'username')
         labels = {'username': 'Adresse der Benutzerseite / Pseudonym'}
@@ -161,7 +110,7 @@ class User(utils_forms.FormMixin, forms.ModelForm):
 
 
 class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
-    extra_form_class = User
+    extra_form_class = UpdateUser
 
     class Meta:
         fields = ('about', 'public')
@@ -182,3 +131,54 @@ class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
                 'public',
                 utils_forms.Submit('Profil ändern'),
                 )
+
+
+class UpdateEmail(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
+    layout = (
+            layout.Field('email', placeholder=''),
+            util_forms.Submit('E-Mail-Adresse hinzufügen', 'action_add'))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label = 'E-Mail-Adresse'
+
+
+class UpdatePassword(util_forms.FormMixin, allauth.account.forms.ChangePasswordForm):
+    layout = (
+            layout.Field('oldpassword', placeholder=''),
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort ändern')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['oldpassword'].label = 'Aktuelles Kennwort'
+        self.fields['password1'].label = 'Neues Kennwort'
+        self.fields['password2'].label = 'Neues Kennwort (Wiederholung)'
+
+
+class UpdatePasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):
+    layout = (
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort setzen')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].label = 'Kennwort'
+        self.fields['password2'].label = 'Kennwort (Wiederholung)'
+
+
+class UpdatePasswordKey(util_forms.FormMixin, allauth.account.forms.ResetPasswordKeyForm):
+    layout = (
+            layout.Field('password1', placeholder=''),
+            layout.Field('password2', placeholder=''),
+            util_forms.Submit('Kennwort ändern')
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].label = 'Kennwort'
+        self.fields['password2'].label = 'Kennwort (Wiederholung)'
