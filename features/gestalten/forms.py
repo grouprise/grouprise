@@ -2,31 +2,16 @@ import allauth
 import django
 from crispy_forms import bootstrap, layout
 from django import forms
+from django.contrib import auth
 from django.contrib.auth import models as auth_models
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import ValidationError
 
-from features.groups.models import Group
-from features.gestalten import models
-from core import forms as utils_forms
-import allauth.account
-import allauth.account.forms
-import allauth.account.adapter
-import allauth.account.utils
-from django.contrib import auth
 from core import forms as util_forms
-
-
-def validate_slug(slug):
-    if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
-                params={'slug': slug}, code='reserved')
-    if (Group.objects.filter(slug__iexact=slug).exists()
-            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
-        raise django.core.exceptions.ValidationError(
-                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
-                params={'slug': slug}, code='in-use')
+from core import forms as utils_forms
+from features.gestalten import models
+from features.groups.models import Group
+from features.stadt.forms import validate_entity_slug
 
 
 class GestaltByEmailField(forms.EmailField):
@@ -105,7 +90,7 @@ class UpdateUser(utils_forms.FormMixin, forms.ModelForm):
 
     def clean_username(self):
         slug = self.cleaned_data['username']
-        validate_slug(slug)
+        validate_entity_slug(self.instance.gestalt, slug)
         return slug
 
 
@@ -115,22 +100,12 @@ class Update(utils_forms.ExtraFormMixin, forms.ModelForm):
     class Meta:
         fields = ('about', 'public')
         model = models.Gestalt
+        widgets = {
+                'about': forms.Textarea({'rows': 5}),
+                }
 
     def get_instance(self):
         return self.instance.user
-
-    def get_layout(self):
-        DOMAIN = sites_models.Site.objects.get_current().domain
-        return (
-                bootstrap.PrependedText(
-                    'username',
-                    '%(domain)s/' % {'domain': DOMAIN}),
-                'first_name',
-                'last_name',
-                layout.Field('about', rows=5),
-                'public',
-                utils_forms.Submit('Profil ändern'),
-                )
 
 
 class UpdateEmail(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
