@@ -68,7 +68,8 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
         # FIXME: refactor and remove foreign model queries
         # we want users to have access to
         # * images that they created themselves
-        # * images part of a group gallery user has membership in
+        # * images part of a group gallery with user having membership in group
+        # * images posted in a group as preview image with user having membership in group
         from features.associations.models import Association
         from features.content.models import Content
         from features.groups.models import Group
@@ -82,12 +83,18 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
             entity_type=ContentType.objects.get_for_model(Group),
             entity_id__in=groups
         )
-        content = Content.objects.filter(associations__in=associations,
-                                         gallery_images__isnull=False)
-        gallery_images = GalleryImage.objects.filter(gallery__in=content)
-        images = gallery_images.values_list('image', flat=True)
+        group_content = Content.objects.filter(associations__in=associations)
+        gallery_images = GalleryImage.objects.filter(
+            gallery__in=group_content.filter(gallery_images__isnull=False))
+        gallery_image_ids = gallery_images.values_list('image', flat=True)
+        preview_images = group_content.filter(image__isnull=False)
+        preview_image_ids = preview_images.values_list('image', flat=True)
 
-        return models.Image.objects.filter(Q(creator__user=user) | Q(id__in=images))
+        return models.Image.objects.filter(
+            Q(creator__user=user)  # own images
+            | Q(id__in=gallery_image_ids)  # gallery images
+            | Q(id__in=preview_image_ids)  # content preview images
+        )
 
     def has_permission(self):
         if self.request.user.is_authenticated():
