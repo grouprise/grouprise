@@ -1,0 +1,19 @@
+{% extends 'stadt/settings.html' %}
+
+{% block sidebar %}
+    {% with chapter='gestalt-images' %}{{ block.super }}{% endwith %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="section section-group">
+            <h2>Bilder</h2>
+            {% field form.avatar %}
+            {% field form.background %}
+        </div>
+
+        <button class="btn btn-primary">Einstellungen speichern</button>
+    </form>
+{% endblock %}

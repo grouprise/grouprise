@@ -137,6 +137,22 @@ class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.Co
         return self.get_redirect_url()
 
 
+class UpdateImages(PermissionMixin, UpdateView):
+    permission_required = 'gestalten.change'
+    model = models.Gestalt
+    fields = ('avatar', 'background')
+    template_name = 'gestalten/update_images.html'
+
+    def get_context_data(self, **kwargs):
+        group = Group.objects.filter(slug=self.request.GET.get('group')).first()
+        if group:
+            kwargs['group'] = group
+        return super().get_context_data(**kwargs)
+
+    def get_object(self):
+        return self.request.user.gestalt
+
+
 class UpdatePassword(utils_views.ActionMixin, views.PasswordChangeView):
     action = 'Kennwort ändern'
     form_class = forms.UpdatePassword

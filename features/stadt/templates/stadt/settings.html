@@ -23,7 +23,14 @@
                             <i class="fa fa-arrow-left"></i>
                         {% endif %}
                     </li>
-                    <li><a href="#">Bilder</a></li>
+                    <li>
+                        <a href="{% url 'image-settings' %}?group={{ group.slug }}">
+                            Bilder
+                        </a> 
+                        {% if chapter == 'gestalt-images' %}
+                            <i class="fa fa-arrow-left"></i>
+                        {% endif %}
+                    </li>
                     <li><a href="#">E-Mail-Adressen</a></li>
                     <li><a href="#">Kennwort</a></li>
                 </ul>

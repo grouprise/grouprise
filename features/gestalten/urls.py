@@ -25,14 +25,9 @@ urlpatterns = [
         name='settings'),
 
     url(
-        r'^stadt/gestalten/(?P<pk>[0-9]+)/edit/avatar/$',
-        views.UpdateAvatar.as_view(),
-        name='gestalt-avatar-update'),
-
-    url(
-        r'^stadt/gestalten/(?P<pk>[0-9]+)/edit/background/$',
-        views.UpdateBackground.as_view(),
-        name='gestalt-background-update'),
+        r'^stadt/settings/images/$',
+        views.UpdateImages.as_view(),
+        name='image-settings'),
 
     url(r'^stadt/email/$',
         views.UpdateEmail.as_view(),
