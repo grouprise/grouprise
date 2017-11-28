@@ -11,7 +11,7 @@ from imagekit.processors import ResizeToFit, SmartResize, Transpose
 import core.models
 from core import colors
 from features.gestalten.models import Gestalt
-from features.stadt.forms import validate_entity_slug
+from features.stadt.models import EntitySlugField
 
 
 class Group(core.models.Model):
@@ -28,9 +28,9 @@ class Group(core.models.Model):
             'Name',
             max_length=255)
     score = models.IntegerField(default=0)
-    slug = models.SlugField(
+    slug = EntitySlugField(
             'Adresse der Gruppenseite', blank=True, null=True, unique=True,
-            validators=[validate_entity_slug], help_text='Wird auch als Kurzname verwendet')
+            help_text='Wird auch als Kurzname verwendet')
 
     address = models.TextField(
             'Anschrift',
