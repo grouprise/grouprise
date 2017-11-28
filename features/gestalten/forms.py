@@ -118,19 +118,15 @@ class UpdateEmail(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
         self.fields['email'].label = 'E-Mail-Adresse'
 
 
-class UpdatePassword(util_forms.FormMixin, allauth.account.forms.ChangePasswordForm):
-    layout = (
-            layout.Field('oldpassword', placeholder=''),
-            layout.Field('password1', placeholder=''),
-            layout.Field('password2', placeholder=''),
-            util_forms.Submit('Kennwort ändern')
-            )
-
+class UpdatePassword(allauth.account.forms.ChangePasswordForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['oldpassword'].label = 'Aktuelles Kennwort'
         self.fields['password1'].label = 'Neues Kennwort'
         self.fields['password2'].label = 'Neues Kennwort (Wiederholung)'
+        del self.fields['oldpassword'].widget.attrs['placeholder']
+        del self.fields['password1'].widget.attrs['placeholder']
+        del self.fields['password2'].widget.attrs['placeholder']
 
 
 class UpdatePasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):

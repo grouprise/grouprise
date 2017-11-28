@@ -1,6 +1,7 @@
 import allauth
 import django
 from allauth.account import views
+from allauth.account import views as allauth_views
 from crispy_forms import layout
 from django.views import generic
 from django.views.generic import edit as edit_views, UpdateView
@@ -87,36 +88,6 @@ class Update(PermissionMixin, UpdateView):
         return self.object.get_profile_url()
 
 
-class UpdateAvatar(core.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Avatar ändern'
-    fields = ('avatar',)
-    layout = ('avatar',)
-    menu = 'gestalt'
-    model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
-
-    def get_parent(self):
-        return self.object
-
-    def get_success_url(self):
-        return self.object.get_profile_url()
-
-
-class UpdateBackground(core.views.ActionMixin, django.views.generic.UpdateView):
-    action = 'Hintergrundbild ändern'
-    fields = ('background',)
-    layout = ('background',)
-    menu = 'gestalt'
-    model = models.Gestalt
-    permission_required = 'entities.change_gestalt'
-
-    def get_parent(self):
-        return self.object
-
-    def get_success_url(self):
-        return self.object.get_profile_url()
-
-
 class UpdateEmail(utils_views.ActionMixin, views.EmailView):
     form_class = forms.UpdateEmail
 
@@ -153,14 +124,19 @@ class UpdateImages(PermissionMixin, UpdateView):
         return self.request.user.gestalt
 
 
-class UpdatePassword(utils_views.ActionMixin, views.PasswordChangeView):
-    action = 'Kennwort ändern'
+class UpdatePassword(PermissionMixin, allauth_views.PasswordChangeView):
+    permission_required = 'gestalten.change_password'
     form_class = forms.UpdatePassword
-    ignore_base_templates = True
-    permission_required = 'account.change_password'
+    template_name = 'gestalten/update_password.html'
 
-    def get_parent(self):
-        return self.request.user.gestalt
+    def get_context_data(self, **kwargs):
+        group = Group.objects.filter(slug=self.request.GET.get('group')).first()
+        if group:
+            kwargs['group'] = group
+        return super().get_context_data(**kwargs)
+
+    def get_success_url(self):
+        return self.request.user.gestalt.get_profile_url()
 
 
 class UpdatePasswordKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
