@@ -100,16 +100,19 @@
                     <li>
                         {% load rules %}
                         {% has_perm 'groups.change' user group as can_change_group %}
+                        {% has_perm 'groups.change_subscriptions_memberships' user group as can_edit_subscription_settings %}
                         {% if can_change_group %}
                             {% url 'group-settings' as settings_url %}
-                        {% else %}
-                            {% url 'membership-subscription-settings' as settings_url %}
+                        {% elif can_edit_subscription_settings %}
+                            {% url 'subscriptions-memberships-settings' as settings_url %}
                         {% endif %}
-                        <a href="{{ settings_url }}?group={{ group.slug }}"
-                           class="nav-menu-item">
-                            <i class="sg sg-fw sg-settings"></i>
-                            <span class="nav-menu-item-label">Einstellungen</span>
-                        </a>
+                        {% if settings_url %}
+                            <a href="{{ settings_url }}?group={{ group.slug }}"
+                               class="nav-menu-item">
+                                <i class="sg sg-fw sg-settings"></i>
+                                <span class="nav-menu-item-label">Einstellungen</span>
+                            </a>
+                        {% endif %}
                     </li>
                 </ol>
             </div>

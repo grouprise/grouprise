@@ -5,45 +5,47 @@
 {% block heading_title_text %}Einstellungen{% endblock %}
 
 {% block sidebar %}
-    <div class="box box-striped">
-        <div class="box-inner">
-            <header class="box-header">
-                <h2 class="box-title">
-                    <i class="sg sg-gestalt"></i>
-                    Gestalt
-                </h2>
-            </header>
-            <div class="box-content">
-                <ul>
-                    <li>
-                        <a href="{% url 'settings' %}?group={{ group.slug }}">
-                            Allgemein
-                        </a> 
-                        {% if chapter == 'gestalt' %}
-                            <i class="fa fa-arrow-left"></i>
-                        {% endif %}
-                    </li>
-                    <li>
-                        <a href="{% url 'image-settings' %}?group={{ group.slug }}">
-                            Bilder
-                        </a> 
-                        {% if chapter == 'gestalt-images' %}
-                            <i class="fa fa-arrow-left"></i>
-                        {% endif %}
-                    </li>
-                    <li><a href="#">E-Mail-Adressen</a></li>
-                    <li>
-                        <a href="{% url 'password-settings' %}?group={{ group.slug }}">
-                            Kennwort
-                        </a> 
-                        {% if chapter == 'gestalt-password' %}
-                            <i class="fa fa-arrow-left"></i>
-                        {% endif %}
-                    </li>
-                </ul>
+    {% if user.is_authenticated %}
+        <div class="box box-striped">
+            <div class="box-inner">
+                <header class="box-header">
+                    <h2 class="box-title">
+                        <i class="sg sg-gestalt"></i>
+                        Gestalt
+                    </h2>
+                </header>
+                <div class="box-content">
+                    <ul>
+                        <li>
+                            <a href="{% url 'settings' %}?group={{ group.slug }}">
+                                Allgemein
+                            </a> 
+                            {% if chapter == 'gestalt' %}
+                                <i class="fa fa-arrow-left"></i>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <a href="{% url 'image-settings' %}?group={{ group.slug }}">
+                                Bilder
+                            </a> 
+                            {% if chapter == 'gestalt-images' %}
+                                <i class="fa fa-arrow-left"></i>
+                            {% endif %}
+                        </li>
+                        <li><a href="#">E-Mail-Adressen</a></li>
+                        <li>
+                            <a href="{% url 'password-settings' %}?group={{ group.slug }}">
+                                Kennwort
+                            </a> 
+                            {% if chapter == 'gestalt-password' %}
+                                <i class="fa fa-arrow-left"></i>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
     {% if group %}
         <div class="box box-striped">
             <div class="box-inner">
@@ -55,22 +57,26 @@
                 </header>
                 <div class="box-content">
                     <ul>
-                        <li>
-                            <a href="{% url 'group-settings' %}?group={{ group.slug }}">
-                                Allgemein
-                            </a> 
-                            {% if chapter == 'group' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
-                        <li>
-                            <a href="{% url 'group-image-settings' %}?group={{ group.slug }}">
-                                Bilder
-                            </a>
-                            {% if chapter == 'group-images' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
+                        {% load rules %}
+                        {% has_perm 'groups.change' user group as can_edit_group_settings %}
+                        {% if can_edit_group_settings %}
+                            <li>
+                                <a href="{% url 'group-settings' %}?group={{ group.slug }}">
+                                    Allgemein
+                                </a> 
+                                {% if chapter == 'group' %}
+                                    <i class="fa fa-arrow-left"></i>
+                                {% endif %}
+                            </li>
+                            <li>
+                                <a href="{% url 'group-image-settings' %}?group={{ group.slug }}">
+                                    Bilder
+                                </a>
+                                {% if chapter == 'group-images' %}
+                                    <i class="fa fa-arrow-left"></i>
+                                {% endif %}
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="{% url 'subscriptions-memberships-settings' %}?group={{ group.slug }}">
                                 Benachrichtigungen & Mitgliedschaft
