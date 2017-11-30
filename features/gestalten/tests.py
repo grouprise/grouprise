@@ -2,8 +2,6 @@ from django.contrib import auth
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-import core.tests
-
 
 class GestaltMixin:
     @classmethod
@@ -52,11 +50,3 @@ class Gestalt(GestaltMixin, TestCase):
         gestalt_url = reverse('entity', args=(self.gestalt.user.username,))
         r = self.client.get(gestalt_url)
         self.assertEqual(r.status_code, 200)
-
-
-class TestUrls(core.tests.Test):
-    def test_gestalten_404(self):
-        r = self.client.get(self.get_url('gestalt-avatar-update', 0))
-        self.assertEqual(r.status_code, 404)
-        r = self.client.get(self.get_url('gestalt-background-update', 0))
-        self.assertEqual(r.status_code, 404)
