@@ -35,7 +35,7 @@ $(STATIC_FONT_GOOGLE): $(DIR_NODE)
 	touch "$(STATIC_FONT_GOOGLE)"
 
 $(DIR_STATIC): $(STATIC_FONT_GOOGLE) $(DEPS_ASSETS)
-	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK)" --bail
+	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK) --bail
 	touch "$(DIR_STATIC)"
 
 .PHONY: assets_fonts
