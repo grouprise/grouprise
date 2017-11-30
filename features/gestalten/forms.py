@@ -109,13 +109,10 @@ class Update(forms.ModelForm):
 
 
 class UpdateEmail(util_forms.FormMixin, allauth.account.forms.AddEmailForm):
-    layout = (
-            layout.Field('email', placeholder=''),
-            util_forms.Submit('E-Mail-Adresse hinzufügen', 'action_add'))
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].label = 'E-Mail-Adresse'
+        del self.fields['email'].widget.attrs['placeholder']
 
 
 class UpdatePassword(allauth.account.forms.ChangePasswordForm):

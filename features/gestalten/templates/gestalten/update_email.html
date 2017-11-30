@@ -7,8 +7,51 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
+        <ul>
+            {% for address in user.emailaddress_set.all %}
+            <li>
+                <label for="email_radio_{{forloop.counter}}">
+                    <input
+                       {% if address.primary or user.emailaddress_set.count == 1 %}
+                       checked="checked"
+                       {% endif %}
+                       id="email_radio_{{forloop.counter}}"
+                       name="email"
+                       type="radio"
+                       value="{{ address.email }}"
+                       />
+                    {{ address.email }}
+                    {% if address.verified %}
+                    <span class="verified">bestätigt</span>
+                    {% else %}
+                    <span class="unverified">unbestätigt</span>
+                    {% endif %}
+                    {% if address.primary %}
+                    <span class="primary">Hauptadresse</span>
+                    {% endif %}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
 
+        <div>
+            <button class="btn btn-default" type="submit" name="action_send" >
+                Adresse bestätigen
+            </button>
+            {% if user.emailaddress_set.count > 1 %}
+                <button class="btn btn-default" type="submit" name="action_primary" >
+                    Hauptadresse wählen
+                </button>
+                <button class="btn btn-danger" type="submit" name="action_remove" >
+                    Adresse entfernen
+                </button>
+            {% endif %}
+        </div>
+    </form>
 
-        <button class="btn btn-primary">Einstellungen speichern</button>
+    <form method="post">
+        {% csrf_token %}
+        {% field form.email %}
+        <button name="action_add" class="btn btn-primary">E-Mail-Adresse hinzufügen</button>
     </form>
 {% endblock %}
