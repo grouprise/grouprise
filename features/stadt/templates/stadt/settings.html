@@ -32,7 +32,14 @@
                                 <i class="fa fa-arrow-left"></i>
                             {% endif %}
                         </li>
-                        <li><a href="#">E-Mail-Adressen</a></li>
+                        <li>
+                            <a href="{% url 'email-settings' %}?group={{ group.slug }}">
+                                E-Mail-Adressen
+                            </a> 
+                            {% if chapter == 'gestalt-email' %}
+                                <i class="fa fa-arrow-left"></i>
+                            {% endif %}
+                        </li>
                         <li>
                             <a href="{% url 'password-settings' %}?group={{ group.slug }}">
                                 Kennwort

@@ -88,8 +88,16 @@ class Update(PermissionMixin, UpdateView):
         return self.object.get_profile_url()
 
 
-class UpdateEmail(utils_views.ActionMixin, views.EmailView):
+class UpdateEmail(PermissionMixin, views.EmailView):
+    permission_required = 'gestalten.change_email'
     form_class = forms.UpdateEmail
+    template_name = 'gestalten/update_email.html'
+
+    def get_context_data(self, **kwargs):
+        group = Group.objects.filter(slug=self.request.GET.get('group')).first()
+        if group:
+            kwargs['group'] = group
+        return super().get_context_data(**kwargs)
 
 
 class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):

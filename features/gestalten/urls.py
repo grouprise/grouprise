@@ -31,7 +31,7 @@ urlpatterns = [
 
     url(r'^stadt/email/$',
         views.UpdateEmail.as_view(),
-        name='account_email'),
+        name='email-settings'),
 
     url(
         r'^stadt/confirm/(?P<key>[-:\w]+)/$',
