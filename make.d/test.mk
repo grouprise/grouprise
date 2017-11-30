@@ -8,7 +8,7 @@ lint: lint_js lint-python lint_packages
 
 .PHONY: lint_js
 lint_js: $(DIR_NODE)
-	$(BIN_YARN) run lint
+	$(RUN_NODE) "$(BIN_NODE_PKG)" run lint
 
 .PHONY: lint_packages
 lint_packages:
@@ -42,4 +42,4 @@ test_py: virtualenv_check
 
 .PHONY: test_js
 test_js: $(DIR_NODE) lint_js
-	$(BIN_YARN) run test
+	$(RUN_NODE) "$(BIN_NODE_PKG)" run test

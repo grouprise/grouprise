@@ -1,3 +1,5 @@
+import '../css/app.less'
+import './files'
 import './setup'
 
 import { $$, component } from 'luett'
@@ -36,6 +38,8 @@ import groupSearch from './transforms/group-search'
 import menu from './transforms/menu'
 import dock from './transforms/dock'
 import contentOrder from './transforms/content-order'
+
+__webpack_nonce__ = 'value'  // eslint-disable-line
 
 const bus = PubSub()
 const history = HistoryStateDispatcher()

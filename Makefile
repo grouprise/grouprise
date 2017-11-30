@@ -8,6 +8,7 @@ default-target: build
 # include project makefiles
 include make.d/virtualenv.mk
 include make.d/app.mk
+include make.d/nodejs.mk
 include make.d/assets.mk
 include make.d/test.mk
 include make.d/dist.mk
