@@ -10,10 +10,6 @@ DATA_DIR = BASE_DIR if os.access(BASE_DIR, os.W_OK) else os.path.expanduser("~")
 
 # Application definition
 INSTALLED_APPS = [
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
     'core.apps.CoreConfig',
     'crispy_forms',
     'django.contrib.admin',
@@ -50,6 +46,11 @@ INSTALLED_APPS = [
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
+    # HACK: load allauth late to allow overriding templates
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
 ]
 
 MIDDLEWARE = [
