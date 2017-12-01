@@ -33,7 +33,9 @@ class Test(memberships.AuthenticatedMemberMixin, core.tests.Test):
                 reverse('create-group-conversation', args=(self.group.pk,)),
                 {'subject': 'Subject', 'text': 'Text'})
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = Message(body='Delivered-To: {}\n\nText with #tag'.format(reply_to))
+        msg = Message(
+                from_header=self.gestalt.user.email,
+                body='Delivered-To: {}\n\nText with #tag'.format(reply_to))
         message_received.send(self, message=msg)
 
     def test_receive_content_contribution_with_tag_by_mail(self):
@@ -42,7 +44,9 @@ class Test(memberships.AuthenticatedMemberMixin, core.tests.Test):
                 reverse('create-group-article', args=(self.group.slug,)),
                 {'title': 'Test', 'text': 'Test'})
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = Message(body='Delivered-To: {}\n\nText with #tag'.format(reply_to))
+        msg = Message(
+                from_header=self.gestalt.user.email,
+                body='Delivered-To: {}\n\nText with #tag'.format(reply_to))
         message_received.send(self, message=msg)
 
         # check, that tag page contains link to article

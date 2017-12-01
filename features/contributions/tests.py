@@ -34,7 +34,9 @@ class ContentReplyByEmail(
         self.assertNotificationSent()
         # generate reply message
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(body='Delivered-To: {}\n\nText B'.format(reply_to))
+        msg = mailbox_models.Message(
+                from_header=self.gestalt.user.email,
+                body='Delivered-To: {}\n\nText B'.format(reply_to))
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
         self.assertExists(
@@ -75,7 +77,9 @@ class ConversationReplyByEmail(
         self.assertNotificationSent()
         # generate reply message
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(body='Delivered-To: {}\n\nText B'.format(reply_to))
+        msg = mailbox_models.Message(
+                from_header=self.other_gestalt.user.email,
+                body='Delivered-To: {}\n\nText B'.format(reply_to))
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
         self.assertExists(

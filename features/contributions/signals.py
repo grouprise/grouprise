@@ -24,6 +24,18 @@ def contribution_created(sender, instance, **kwargs):
     notifications.ContributionCreated.send_all(instance)
 
 
+def get_sender(message):
+    try:
+        gestalt = gestalten.Gestalt.objects.get(user__email=message.from_address[0])
+    except gestalten.Gestalt.DoesNotExist:
+        try:
+            gestalt = gestalten.Gestalt.objects.get(
+                    user__emailaddress__email=message.from_address[0])
+        except gestalten.Gestalt.DoesNotExist:
+            gestalt = None
+    return gestalt
+
+
 def is_autoresponse(msg):
     email = msg.get_email_object()
 
@@ -66,6 +78,13 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
+        sender = get_sender(message)
+        if key.gestalt != sender:
+            raise django.core.exceptions.PermissionDenied(
+                    'Du darfst nicht auf eine Benachrichtigung antworten, die an eine andere '
+                    'E-Mail-Adresse zugestellt wurde. Bitte melde Dich auf der Website an und '
+                    'beantworte die Nachricht dort. (Oder antworte unter der E-Mail-Adresse, '
+                    'an die die Benachrichtigung gesendet wurde.)')
         if type(key.target) == Content:
             container = key.target
         else:
@@ -78,15 +97,8 @@ def process_incoming_message(sender, message, **args):
         local, domain = address.split('@')
         if domain != DOMAIN:
             raise ValueError('Domain does not match.')
+        gestalt = get_sender(message)
         group = groups.Group.objects.get(slug=local)
-        try:
-            gestalt = gestalten.Gestalt.objects.get(user__email=message.from_address[0])
-        except gestalten.Gestalt.DoesNotExist:
-            try:
-                gestalt = gestalten.Gestalt.objects.get(
-                        user__emailaddress__email=message.from_address[0])
-            except gestalten.Gestalt.DoesNotExist:
-                gestalt = None
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)
