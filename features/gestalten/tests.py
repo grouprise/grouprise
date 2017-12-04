@@ -50,3 +50,43 @@ class Gestalt(GestaltMixin, TestCase):
         gestalt_url = reverse('entity', args=(self.gestalt.user.username,))
         r = self.client.get(gestalt_url)
         self.assertEqual(r.status_code, 200)
+
+
+class Settings(TestCase):
+    def test_settings(self):
+        # general settings not accessible
+        r = self.client.get('/')
+        self.assertNotContains(r, 'href="{}"'.format(reverse('settings')))
+        r = self.client.get(reverse('settings'))
+        self.assertEqual(r.status_code, 302)
+
+
+class AuthenticatedSettings(AuthenticatedMixin, TestCase):
+    def test_authenticated_settings(self):
+        # general settings accessible
+        r = self.client.get('/')
+        self.assertContains(r, 'href="{}"'.format(reverse('settings')))
+        r = self.client.get(reverse('settings'))
+        self.assertEqual(r.status_code, 200)
+
+        # save form with changed values
+        r = self.client.post(reverse('settings'), {'slug': 'changed-username'})
+        self.gestalt.user.refresh_from_db()
+        self.assertRedirects(r, self.gestalt.get_profile_url())
+        self.assertEqual(self.gestalt.user.username, 'changed-username')
+
+    def test_other_settings(self):
+        image_settings_url = reverse('image-settings')
+        email_settings_url = reverse('email-settings')
+        password_settings_url = reverse('password-settings')
+
+        r = self.client.get(reverse('settings'))
+        self.assertContains(r, 'href="{}'.format(image_settings_url))
+        self.assertContains(r, 'href="{}'.format(email_settings_url))
+        self.assertContains(r, 'href="{}'.format(password_settings_url))
+        r = self.client.get(image_settings_url)
+        self.assertEqual(r.status_code, 200)
+        r = self.client.get(email_settings_url)
+        self.assertEqual(r.status_code, 200)
+        r = self.client.get(password_settings_url)
+        self.assertEqual(r.status_code, 302)
