@@ -2,6 +2,7 @@ import django
 from django.core.urlresolvers import reverse
 
 import core
+import core.tests
 from features.associations.models import Association
 from features.contributions import models as contributions
 from features.gestalten import tests as gestalten

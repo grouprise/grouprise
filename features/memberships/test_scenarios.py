@@ -1,7 +1,8 @@
 import core
 from core import tests
 from features.gestalten import tests as gestalten
-from features.groups import models as groups_models, tests as groups
+from features.groups import models as groups_models
+from features.groups.tests import mixins as groups
 from . import models, test_memberships as memberships, test_mixins as mixins
 
 

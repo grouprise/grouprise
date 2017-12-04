@@ -2,7 +2,7 @@ import core
 from core import tests
 from core.tests import get_url as u
 from features.gestalten import tests as gestalten
-from features.groups import tests as groups
+from features.groups.tests import mixins as groups
 from features.memberships import test_mixins as memberships
 
 

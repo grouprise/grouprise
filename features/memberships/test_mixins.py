@@ -1,9 +1,9 @@
 from . import models
 from features.gestalten import tests as gestalten
-from features.groups.tests import mixins as groups
+from features.groups.tests.mixins import GroupMixin
 
 
-class MemberMixin(gestalten.GestaltMixin, groups.GroupMixin):
+class MemberMixin(gestalten.GestaltMixin, GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -11,7 +11,7 @@ class MemberMixin(gestalten.GestaltMixin, groups.GroupMixin):
                 created_by=cls.gestalt, group=cls.group, member=cls.gestalt)
 
 
-class OtherMemberMixin(gestalten.OtherGestaltMixin, groups.GroupMixin):
+class OtherMemberMixin(gestalten.OtherGestaltMixin, GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()

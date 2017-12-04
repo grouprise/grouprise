@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from features.gestalten.tests import AuthenticatedMixin
-from features.groups.tests import GroupMixin
+from features.groups.tests.mixins import GroupMixin
 from features.memberships.test_mixins import AuthenticatedMemberMixin, MemberMixin
 
 TEST_EMAIL = 'test.subscription@test.local'
