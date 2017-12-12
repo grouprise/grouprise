@@ -2,10 +2,17 @@ from django.db import models
 from django.utils import timezone
 
 import core.models
+from features.content.models import Content
+
+
+class Poll(Content):
+    condorcet = models.BooleanField(default=False)
 
 
 class Option(core.models.Model):
     poll = models.ForeignKey('content2.Content', related_name='options')
+    poll_new = models.ForeignKey(
+            'Poll', related_name='options_new', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         if hasattr(self, 'simpleoption'):
@@ -56,3 +63,11 @@ class Vote(core.models.Model):
     time_updated = models.DateTimeField(auto_now=True)
 
     endorse = models.NullBooleanField(default=False)
+
+
+class SimpleVote(Vote):
+    endorse_new = models.NullBooleanField(default=False)
+
+
+class CondorcetVote(Vote):
+    rank = models.SmallIntegerField()
