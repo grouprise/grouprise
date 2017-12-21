@@ -7,6 +7,18 @@
         + * {
             margin-top: 0;
         }
+
+        &[id] {
+            &::before {
+                @spacing: (@nav-height * 1.25);
+                display: block;
+                content: " ";
+                margin-top: -@spacing;
+                height: @spacing;
+                visibility: hidden;
+                pointer-events: none;
+            }
+        }
     }
 }
 
