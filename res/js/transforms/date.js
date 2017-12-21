@@ -11,7 +11,8 @@ const base = {
   minuteIncrement: 15,
   weekNumbers: true,
   locale: de,
-  parseDate: (date) => moment(date, 'DD.MM.YYYY', 'de', true).toDate()
+  parseDate: (date) => moment(date, 'DD.MM.YYYY', 'de', true).toDate(),
+  getWeek: givenDate => moment(givenDate).week()
 }
 
 export default (el, opts = {}) => {
