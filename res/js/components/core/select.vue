@@ -286,7 +286,7 @@
       this.updateSize()
       this.updateFinderPosition()
       window.addEventListener('resize', this.resizeListener)
-      window.addEventListener('scroll', this.scrollListener)
+      window.addEventListener('scroll', this.scrollListener, { passive: true })
     },
     beforeDestroy () {
       window.removeEventListener('resize', this.resizeListener)
