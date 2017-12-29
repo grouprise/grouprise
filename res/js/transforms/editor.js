@@ -36,7 +36,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     },
     promptURLs: true,
     shortcuts: {
-      'toggleBold': 'Shift-Ctrl-F',
+      'toggleBold': 'Ctrl-B',
       'toggleItalic': 'Ctrl-I',
       'undo': 'Ctrl-Z',
       'redo': 'Ctrl-Y',
