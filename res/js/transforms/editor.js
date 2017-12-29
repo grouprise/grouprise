@@ -1,13 +1,15 @@
-import { setAttr, hasAttr } from 'luett'
+import { $, setAttr, hasAttr, on } from 'luett'
 import Drop from 'tether-drop'
 import bel from 'bel'
 import closest from 'closest'
+import { throttle } from 'lodash'
 
 import { markdown } from '../adapters/api'
 import { EVENT_CITE } from './cite'
-import editorImages from '../components/image/editor-image'
+import ImageEditor from '../components/image/editor-image'
 
-const imageEditor = editorImages()
+const HEADER_OFFSET = 60
+const imageEditor = ImageEditor()
 const imageDialog = bel`<div class="editor-dialog">${imageEditor.el}</div>`
 
 function quote (text) {
@@ -16,8 +18,18 @@ function quote (text) {
         .join('\n')
 }
 
+function createStandardEventEmitter (obj) {
+  return {
+    addEventListener: obj.on.bind(obj),
+    removeEventListener: obj.off.bind(obj)
+  }
+}
+
 function editor (CodeMirror, SimpleMDE, el, opts) {
   CodeMirror.defaults.inputStyle = 'textarea'
+
+  const containerEl = closest(el, '.editor-container')
+  containerEl.classList.add('editor-container-ready')
 
   const { bus } = opts.conf
   const isRequired = hasAttr(el, 'required')
@@ -158,6 +170,28 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
 
   })
 
+  const wrapper = editor.codemirror.display.wrapper
+  const toolbar = editor.gui.toolbar
+  const toolbarRect = toolbar.getBoundingClientRect()
+  const toolbarTop = document.documentElement.scrollTop + toolbarRect.y
+  const codemirrorEvents = createStandardEventEmitter(editor.codemirror)
+
+  // add scroll-listener for positioning the
+  // editor-toolbar while scrolling
+  const scrollListener = on(window, 'scroll', throttle(() => {
+    const wrapperRect = wrapper.getBoundingClientRect()
+    const scrollTop = document.documentElement.scrollTop
+    const headerTop = scrollTop + HEADER_OFFSET
+    const wrapperTop = scrollTop + wrapperRect.y + wrapperRect.height - toolbarRect.height
+    const offset = headerTop > toolbarTop
+      ? Math.min(wrapperTop - toolbarTop, Math.abs(toolbarTop - headerTop + 2)) : 0
+    toolbar.style.transform = offset > 0 ? `translateY(${offset}px)` : ''
+  }, 250), { passive: true })
+
+  const focusListener = on(codemirrorEvents, ['focus', 'blur'], () => {
+    containerEl.classList.toggle('editor-container-active', editor.codemirror.hasFocus())
+  })
+
   imageEditor.emitter.on('files:select', (files) => {
     const text = editor.codemirror.getSelection()
     const code = files.map((file) => {
@@ -188,6 +222,8 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
       if (isRequired) setAttr(el, 'required', 'required')
       editor.toTextArea()
       citeListener.destroy()
+      scrollListener.destroy()
+      focusListener.destroy()
     }
   }
 }

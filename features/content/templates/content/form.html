@@ -13,11 +13,20 @@
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
-            {% if form.fields.text.widget.has_buttons %}
-                {% include 'core/_field.html' with field=form.text help_text='Einfacher Text wird automatisch formatiert. Besondere Formatierungen lassen sich mit den Knöpfen oben erzeugen. Erläuterungen gibt es in der <i class="fa fa-question-circle"></i> <a href="/stadt/markdown/">Hilfe zur Textauszeichnung</a>.' %}
-            {% else %}
-                {% include 'core/_field.html' with field=form.text help_text='Einfacher Text wird automatisch formatiert. Erläuterungen gibt es in der <i class="fa fa-question-circle"></i> <a href="/stadt/markdown/">Hilfe zur Textauszeichnung</a>.' %}
-            {% endif %}
+            <div class="form-group">
+                <div class="editor-container">
+                    {% include 'core/_field.html' with field=form.text %}
+                </div>
+
+                <p class="help-block">
+                    Einfacher Text wird automatisch formatiert.
+                    {% if form.fields.text.widget.has_buttons %}
+                        Besondere Formatierungen lassen sich mit den Knöpfen oben erzeugen.
+                    {% endif %}
+                    Erläuterungen gibt es in der
+                    <a href="/stadt/markdown/"><i class="fa fa-question-circle">&nbsp;</i>Hilfe zur Textauszeichnung</a>.
+                </p>
+            </div>
             {% block form_extra %}{% endblock %}
         </div>
         {% if form.time %}
