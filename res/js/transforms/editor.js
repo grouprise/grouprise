@@ -80,6 +80,21 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
     containerEl.classList.toggle('editor-container-active', editor.codemirror.hasFocus())
   })
 
+  // prevent users from accidentally leaving the page when
+  // they’ve changed the content of the editor
+  let editorHasChanged = false
+  const changeListener = on(codemirrorEvents, 'change', () => {
+    editorHasChanged = true
+  })
+  const beforeUnloadListener = on(window, 'beforeunload', event => {
+    const message = 'Du hast Änderungen am Inhalt vorgenommen. Bist du sicher, dass du die ' +
+      'Seite verlassen willst?'
+    if (editorHasChanged) {
+      event.returnValue = message
+      return message
+    }
+  })
+
   // whenever images have been selected and uploaded insert image
   // markdown image references into the editor
   imageEditor.emitter.on('files:select', files => {
@@ -123,6 +138,8 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
       citeListener.destroy()
       scrollListener.destroy()
       focusListener.destroy()
+      changeListener.destroy()
+      beforeUnloadListener.destroy()
     }
   }
 }
