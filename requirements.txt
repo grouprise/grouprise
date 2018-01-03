@@ -18,3 +18,4 @@ rules                       # NOT IN DEBIAN
 sorl-thumbnail==12.4a1      # debian: python3-sorl-thumbnail
 translitcodec               # NOT IN DEBIAN
 mdx_unimoji                 # NOT IN DEBIAN
+raven                       # NOT IN DEBIAN
