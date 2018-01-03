@@ -1,5 +1,5 @@
 bleach                      # debian: python3-bleach
-django                      # debian: python3-django
+django<2                    # debian: python3-django
 django-allauth              # NOT IN DEBIAN
 django-crispy-forms         # debian: python3-django-crispy-forms
 django-filter               # debian: python3-django-filters
