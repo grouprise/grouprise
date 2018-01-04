@@ -37,7 +37,7 @@ class Detail(features.content.views.DetailBase):
                 return 'no'
 
         # options
-        kwargs['options'] = self.object.container.options.order_by('id')
+        kwargs['options'] = self.object.container.poll.options.order_by('id')
 
         # votes
         votes = models.Vote.objects.filter(option__poll=self.object.container).order_by(
@@ -64,7 +64,7 @@ class Detail(features.content.views.DetailBase):
         kwargs['voters'] = voters[::-1]
 
         # vote form
-        vote_form = getattr(self, 'vote_form', forms.Vote(poll=self.object.container))
+        vote_form = getattr(self, 'vote_form', forms.Vote(poll=self.object.container.poll))
         vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
         kwargs['vote_form'] = vote_form
         kwargs['vote_forms'] = vote_forms
@@ -99,7 +99,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
         kwargs = super().get_form_kwargs()
         if self.request.user.is_authenticated():
             kwargs['instance'] = models.Vote(voter=self.request.user.gestalt)
-        kwargs['poll'] = self.association.container
+        kwargs['poll'] = self.association.container.poll
         return kwargs
 
     def get_permission_object(self):

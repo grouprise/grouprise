@@ -40,6 +40,7 @@ class Content(core.models.Model):
             related_query_name='content')
 
     def __str__(self):
+        print('KJLSADF', self.title)
         return self.title
 
     def get_authors(self):
@@ -76,7 +77,7 @@ class Content(core.models.Model):
 
     @property
     def is_poll(self):
-        return self.options.count() > 0
+        return hasattr(self, 'poll')
 
     @property
     def subject(self):

@@ -10,9 +10,8 @@ class Poll(Content):
 
 
 class Option(core.models.Model):
-    poll = models.ForeignKey('content2.Content', related_name='options')
-    poll_new = models.ForeignKey(
-            'Poll', related_name='options_new', on_delete=models.CASCADE, null=True)
+    poll = models.ForeignKey(
+            'Poll', related_name='options', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         if hasattr(self, 'simpleoption'):
