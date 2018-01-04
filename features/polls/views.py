@@ -40,7 +40,7 @@ class Detail(features.content.views.DetailBase):
         kwargs['options'] = self.object.container.poll.options.order_by('id')
 
         # votes
-        votes = models.Vote.objects.filter(option__poll=self.object.container).order_by(
+        votes = models.SimpleVote.objects.filter(option__poll=self.object.container).order_by(
                 'time_updated')
         votes_dict = collections.defaultdict(dict)
         vote_count = collections.defaultdict(lambda: dict(yes=0, no=0, maybe=0))
@@ -76,7 +76,7 @@ class Detail(features.content.views.DetailBase):
 
 class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'polls.vote'
-    model = models.Vote
+    model = models.SimpleVote
     form_class = forms.Vote
 
     def form_invalid(self, form):
@@ -98,7 +98,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if self.request.user.is_authenticated():
-            kwargs['instance'] = models.Vote(voter=self.request.user.gestalt)
+            kwargs['instance'] = models.SimpleVote(voter=self.request.user.gestalt)
         kwargs['poll'] = self.association.container.poll
         return kwargs
 

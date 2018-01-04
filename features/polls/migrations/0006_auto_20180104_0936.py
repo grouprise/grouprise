@@ -7,7 +7,6 @@ from django.db import connection, migrations
 
 def convert_polls(apps, schema_editor):
     Content = apps.get_model('content2', 'Content')
-    Poll = apps.get_model('polls', 'Poll')
     with connection.cursor() as cursor:
         for c in Content.objects.all():
             if c.options.count() > 0:

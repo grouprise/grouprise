@@ -40,7 +40,6 @@ class Content(core.models.Model):
             related_query_name='content')
 
     def __str__(self):
-        print('KJLSADF', self.title)
         return self.title
 
     def get_authors(self):

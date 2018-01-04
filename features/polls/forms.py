@@ -94,14 +94,14 @@ class Update(OptionMixin, content.Update):
 
 
 VoteFormSet = forms.modelformset_factory(
-        models.Vote, fields=('endorse',), labels={'endorse': 'Zustimmung'},
+        models.SimpleVote, fields=('endorse',), labels={'endorse': 'Zustimmung'},
         widgets={'endorse': forms.RadioSelect(
             choices=[(True, 'Ja'), (False, 'Nein'), (None, 'Vielleicht')])})
 
 
 class Vote(forms.ModelForm):
     class Meta:
-        model = models.Vote
+        model = models.SimpleVote
         fields = ('anonymous',)
         labels = {'anonymous': 'Name/Alias'}
 
@@ -115,14 +115,14 @@ class Vote(forms.ModelForm):
 
         self.poll = poll
         options = poll.options.all()
-        self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())
+        self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
         self.votes.extra = len(options)
         for i, form in enumerate(self.votes.forms):
             form.instance.option = options[i]
 
     def clean_anonymous(self):
         anon = self.cleaned_data['anonymous']
-        if models.Vote.objects.filter(option__poll=self.poll, anonymous=anon).exists():
+        if models.SimpleVote.objects.filter(option__poll=self.poll, anonymous=anon).exists():
             raise django.forms.ValidationError('%s hat bereits abgestimmt.' % anon)
         return anon
 

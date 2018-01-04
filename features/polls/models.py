@@ -61,11 +61,9 @@ class Vote(core.models.Model):
 
     time_updated = models.DateTimeField(auto_now=True)
 
-    endorse = models.NullBooleanField(default=False)
-
 
 class SimpleVote(Vote):
-    endorse_new = models.NullBooleanField(default=False)
+    endorse = models.NullBooleanField(default=False)
 
 
 class CondorcetVote(Vote):
