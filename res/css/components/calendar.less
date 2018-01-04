@@ -37,6 +37,16 @@
         text-align: center;
         padding: .2em;
     }
+
+    th {
+        color: @color-text-light;
+        font-weight: normal;
+    }
+
+    td {
+        // height behaves like min-height in table cells
+        height: 2.65rem;
+    }
 }
 
 .calendar-large {
@@ -50,6 +60,22 @@
 
 .calendar-day-today {
     font-weight: bold;
+
+    > div {
+        background: @gray-lighter;
+        height: 2.65rem;
+        width: 2.65rem;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+
+        > span {
+            position: relative;
+            top: 1px;
+        }
+    }
 }
 
 .calendar-day-has-events {
@@ -57,12 +83,13 @@
         padding: 0;
     }
 
-    > a {
+    a {
         position: relative;
         display: block;
         padding: .2em;
         z-index: 5;
         font-weight: bold;
+        text-decoration: none;
 
         &:after {
             position: absolute;

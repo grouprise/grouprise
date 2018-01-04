@@ -12,7 +12,7 @@
 {% block heading_toolbar %}
     {% has_perm 'groups.create_group' user as can_create_group %}
     {% if can_create_group %}
-        <a href="{% url 'group-create' %}" class="btn btn-primary btn-ch">
+        <a href="{% url 'group-create' %}" class="btn btn-ch">
             <span class="btn-label"><i class="sg sg-add"></i> Gruppe</span>
         </a>
     {% endif %}
