@@ -24,4 +24,3 @@ PROFILING_DIR = os.environ.get("PROFILING_DIRECTORY", False)
 if PROFILING_DIR:
     from werkzeug.contrib.profiler import ProfilerMiddleware
     application = ProfilerMiddleware(application, profile_dir=PROFILING_DIR)
-

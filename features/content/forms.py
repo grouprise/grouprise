@@ -8,7 +8,6 @@ from features.associations import models as associations
 from features.contributions import forms as contributions
 from features.groups import models as groups
 from features.images.models import Image
-from . import signals
 
 
 class Comment(contributions.Text):
