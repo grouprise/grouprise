@@ -8,7 +8,7 @@ Standards-Version: 3.9.6
 
 Package: stadtgestalten
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends}
+Depends: ${misc:Depends}, ${python3:Depends}, moreutils
 Recommends: ghostscript, python3-psycopg2, uwsgi, uwsgi-plugin-python3,
  uwsgi-plugin-router-access, ${misc:Recommends}
 Suggests: sqlite3, postgresql-client-common
