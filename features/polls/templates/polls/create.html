@@ -4,7 +4,8 @@
 
 {% block form_extra %}
     <div class="form-group">
-        {% include 'core/_field.html' with field=form.poll_type %}
+        {% field form.vote_type %}
+        {% field form.poll_type %}
         <button name="change_type" value="1" class="btn btn-sm btn-default" data-poll-type-switch>
             Art ändern
         </button>

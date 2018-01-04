@@ -28,11 +28,17 @@ class OptionMixin:
 
 
 class Create(OptionMixin, content.Create):
+    container_class = models.Poll
+
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
     poll_type = forms.ChoiceField(
-            label='Art der Umfrage',
-            choices=[('simple', 'einfach'), ('event', 'Datum / Zeit')],
+            label='Art der Antwortmöglichkeiten',
+            choices=[('simple', 'einfacher Text'), ('event', 'Datum / Zeit')],
             initial='simple', widget=forms.Select({'data-poll-type': ''}))
+    vote_type = forms.ChoiceField(
+            label='Art der Abstimmmöglichkeiten',
+            choices=[('simple', 'Ja/Nein/Vielleicht'), ('condorcet', 'Stimmen ordnen (rangbasiert)')],
+            initial='simple', widget=forms.RadioSelect)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,10 +64,12 @@ class Create(OptionMixin, content.Create):
         return False if self.is_type_change else super().is_valid()
 
     def save(self, commit=True):
-        super().save(commit)
+        association = super().save(commit)
+        association.container.condorcet = self.cleaned_data['vote_type'] == 'condorcet'
+        association.container.save()
         if commit:
             self.send_post_create()
-        return self.instance
+        return association
 
 
 class Update(OptionMixin, content.Update):
@@ -93,10 +101,14 @@ class Update(OptionMixin, content.Update):
             return super().get_initial_for_field(field, field_name)
 
 
-VoteFormSet = forms.modelformset_factory(
+SimpleVoteFormSet = forms.modelformset_factory(
         models.SimpleVote, fields=('endorse',), labels={'endorse': 'Zustimmung'},
         widgets={'endorse': forms.RadioSelect(
             choices=[(True, 'Ja'), (False, 'Nein'), (None, 'Vielleicht')])})
+
+
+CondorcetVoteFormSet = forms.modelformset_factory(
+        models.CondorcetVote, fields=('rank',), labels={'rank': 'Rang / Platz'})
 
 
 class Vote(forms.ModelForm):
@@ -115,7 +127,10 @@ class Vote(forms.ModelForm):
 
         self.poll = poll
         options = poll.options.all()
-        self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
+        if self.poll.condorcet:
+            self.votes = CondorcetVoteFormSet(data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
+        else:
+            self.votes = SimpleVoteFormSet(data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
         self.votes.extra = len(options)
         for i, form in enumerate(self.votes.forms):
             form.instance.option = options[i]

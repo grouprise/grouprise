@@ -18,6 +18,8 @@ class Comment(contributions.Text):
 
 
 class Create(forms.ModelForm):
+    container_class = models.Content
+
     class Meta:
         model = associations.Association
         fields = ('pinned', 'public')
@@ -68,7 +70,7 @@ class Create(forms.ModelForm):
                         'entity_type': self.instance.entity_type,
                         'slug': core.text.slugify(self.cleaned_data['title']),
                         })
-            self.instance.container = models.Content.objects.create(
+            self.instance.container = self.container_class.objects.create(
                     title=self.cleaned_data['title'],
                     image=self.cleaned_data.get('image'),
                     place=self.cleaned_data.get('place', ''),
