@@ -1,6 +1,7 @@
 import collections
 
 import django
+from py3votecore.schulze_method import SchulzeMethod
 
 import core
 import features
@@ -46,7 +47,15 @@ class Detail(features.content.views.DetailBase):
         return super().get_context_data(**kwargs)
 
     def get_condorcet_votes(self, votes):
-        return {}
+        votes_dict = collections.defaultdict(dict)
+        for vote in votes:
+            if vote.voter:
+                votes_dict[vote.voter][vote.option] = vote.condorcetvote.rank
+            else:
+                votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
+        data = SchulzeMethod([{'ballot': b} for b in votes_dict.values()]).as_dict()
+        data['votes'] = votes_dict
+        return data
         
     def get_simple_votes(self, votes):
         def get_winner(vote_count: dict):
@@ -78,7 +87,6 @@ class Detail(features.content.views.DetailBase):
             else:
                 votes_dict[vote.anonymous][vote.option] = vote
                 votes_dict[vote.anonymous]['latest'] = vote
-        print(votes_dict)
         return {
                 'votes': votes_dict,
                 'vote_count': vote_count,
