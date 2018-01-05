@@ -90,14 +90,14 @@ class PermissionToken(models.Model):
     After retrieving a permission token for a specific purpose, you need to verify that the
     authenticated user is really allowed to access the given resource.
     """
-    gestalt = models.ForeignKey('gestalten.Gestalt')
+    gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE)
     # FIXME: secret_key should be unique
     secret_key = models.CharField(max_length=PERMISSION_TOKEN_LENGTH, default=generate_token)
     time_created = models.DateTimeField(auto_now_add=True)
     # Every feature (e.g. the calendar) defines its own unique string describing its permission
     # token (e.g. "calendar-read").
     feature_key = models.CharField(max_length=32)
-    target_type = models.ForeignKey(contenttypes_models.ContentType)
+    target_type = models.ForeignKey(contenttypes_models.ContentType, on_delete=models.CASCADE)
     target_id = models.PositiveIntegerField()
     target = GenericForeignKey('target_type', 'target_id')
 
