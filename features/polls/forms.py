@@ -23,7 +23,7 @@ class OptionMixin:
 
     def save_content_relations(self, commit):
         for form in self.options.forms:
-            form.instance.poll = self.instance.container
+            form.instance.poll = self.instance.container.poll
         self.options.save(commit)
 
 
@@ -65,8 +65,8 @@ class Create(OptionMixin, content.Create):
 
     def save(self, commit=True):
         association = super().save(commit)
-        association.container.condorcet = self.cleaned_data['vote_type'] == 'condorcet'
-        association.container.save()
+        association.container.poll.condorcet = self.cleaned_data['vote_type'] == 'condorcet'
+        association.container.poll.save()
         if commit:
             self.send_post_create()
         return association
