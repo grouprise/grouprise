@@ -12,110 +12,116 @@
 {% block content_text %}
     {{ block.super }}
 
-    <h2>Antworten</h2>
-    <form method="post" action="{% url 'vote' association.entity.slug association.slug %}" class="form-overflow">
-        {% csrf_token %}
-        {{ vote_form.votes.management_form }}
-        <table class="table table-poll table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    {% for option in options %}
-                        <th class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
-                        {% if option == winner %}
-                            <i class="sg sg-2x sg-winner"></i>
-                        {% endif %}
-                        </th>
-                    {% endfor %}
-                    <th></th>
-                </tr>
-                <tr>
-                    <th></th>
-                    {% for option in options %}
-                        <th class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
-                            {% if option.eventoption %}
-                                <span class="content-nobreak">
-                                    {{ option | linebreaksbr }}
-                                </span>
-                            {% else %}
-                                {{ option | linebreaksbr }}
-                            {% endif %}
-                        </th>
-                    {% endfor %}
-                    <th></th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for voter in voters %}
-                <tr>
-                    <td>
-                        {% if voter.user %}
-                            {% link voter %}
-                        {% else %}
-                            {{ voter }}
-                        {% endif %}
-                        {% get votes voter as vvs %}
-                        <div class="content-mute">{% time vvs.latest.time_updated %}</div>
-                    </td>
-                    {% for option in options %}
-                        <td class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
-                            {% get votes voter option as vote %}
-                            {% if vote %}
-                                {{ vote.endorse|yesno:'Ja,Nein,Vielleicht' }}
-                            {% else %}
-                                ?
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                    <td>
-
-                    </td>
-                </tr>
-                {% endfor %}
-
-                {% has_perm 'polls.vote' user association as can_vote %}
-                {% if can_vote %}
+    {% has_perm 'polls.vote' user association as can_vote %}
+    {% if can_vote or not association.container.poll.condorcet %}
+        <form method="post" action="{% url 'vote' association.entity.slug association.slug %}" class="form-overflow">
+            {% csrf_token %}
+            {{ vote_form.votes.management_form }}
+            <table class="table table-poll table-striped">
+                <thead>
                     <tr>
-                        <td>
-                            {% if user.is_authenticated %}
-                                {{ user.gestalt }}
-                            {% else %}
-                                {% load auth %}
-                                {% login_or_field vote_form.anonymous as help_text %}
-                                {% include 'core/_field.html' with field=vote_form.anonymous help_text=help_text %}
-                            {% endif %}
-                        </td>
+                        <th></th>
                         {% for option in options %}
-                            <td class="{% cycle 'table-column-highlight' '' %}">
-                                {% get vote_forms option as form %}
-                                {% if form.endorse %}
-                                    {% field form.endorse %}
-                                {% elif form.rank %}
-                                    {% field form.rank %}
+                            <th class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
+                            {% if option == winner %}
+                                <i class="sg sg-2x sg-winner"></i>
+                            {% endif %}
+                            </th>
+                        {% endfor %}
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        {% for option in options %}
+                            <th class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
+                                {% if option.eventoption %}
+                                    <span class="content-nobreak">
+                                        {{ option | linebreaksbr }}
+                                    </span>
+                                {% else %}
+                                    {{ option | linebreaksbr }}
+                                {% endif %}
+                            </th>
+                        {% endfor %}
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% if not association.container.poll.condorcet %}
+                        {% for voter in voters %}
+                        <tr>
+                            <td>
+                                {% if voter.user %}
+                                    {% link voter %}
+                                {% else %}
+                                    {{ voter }}
+                                {% endif %}
+                                {% get votes voter as vvs %}
+                                <div class="content-mute">{% time vvs.latest.time_updated %}</div>
+                            </td>
+                            {% for option in options %}
+                                <td class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
+                                    {% get votes voter option as vote %}
+                                    {% if vote %}
+                                        {{ vote.simplevote.endorse|yesno:'Ja,Nein,Vielleicht' }}
+                                    {% else %}
+                                        ?
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                            <td>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% has_perm 'polls.vote' user association as can_vote %}
+                    {% if can_vote %}
+                        <tr>
+                            <td>
+                                {% if user.is_authenticated %}
+                                    {{ user.gestalt }}
+                                {% else %}
+                                    {% load auth %}
+                                    {% login_or_field vote_form.anonymous as help_text %}
+                                    {% include 'core/_field.html' with field=vote_form.anonymous help_text=help_text %}
                                 {% endif %}
                             </td>
-                        {% endfor %}
-                        <td>
-                            <button class="btn btn-sm btn-primary">
-                                Abstimmen
-                            </button>
-                        </td>
-                    </tr>
+                            {% for option in options %}
+                                <td class="{% cycle 'table-column-highlight' '' %}">
+                                    {% get vote_forms option as form %}
+                                    {% if form.endorse %}
+                                        {% field form.endorse %}
+                                    {% elif form.rank %}
+                                        {% field form.rank %}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                            <td>
+                                <button class="btn btn-sm btn-primary">
+                                    Abstimmen
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+                {% if not association.container.poll.condorcet %}
+                    <tfoot>
+                        <tr>
+                            <th scope="row">Stimmen</th>
+                            {% for option in options %}
+                                {% get vote_count option as votes %}
+                                <td class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
+                                    <span class="content-nobreak">Ja: {{ votes.yes|default:0 }}</span><br>
+                                    <span class="content-nobreak">Vielleicht: {{ votes.maybe|default:0 }}</span>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
                 {% endif %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th scope="row">Stimmen</th>
-                    {% for option in options %}
-                        {% get vote_count option as votes %}
-                        <td class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
-                            <span class="content-nobreak">Ja: {{ votes.yes|default:0 }}</span><br>
-                            <span class="content-nobreak">Vielleicht: {{ votes.maybe|default:0 }}</span>
-                        </td>
-                    {% endfor %}
-                </tr>
-            </tfoot>
-        </table>
-    </form>
+            </table>
+        </form>
+    {% endif %}
 {% endblock %}
