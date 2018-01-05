@@ -40,7 +40,7 @@ class Detail(features.content.views.DetailBase):
         kwargs['options'] = self.object.container.poll.options.order_by('id')
 
         # votes
-        votes = models.SimpleVote.objects.filter(option__poll=self.object.container).order_by(
+        votes = models.SimpleVote.objects.filter(option__poll=self.object.container.poll).order_by(
                 'time_updated')
         votes_dict = collections.defaultdict(dict)
         vote_count = collections.defaultdict(lambda: dict(yes=0, no=0, maybe=0))
@@ -66,11 +66,11 @@ class Detail(features.content.views.DetailBase):
         # vote form
         vote_form = getattr(self, 'vote_form', forms.Vote(poll=self.object.container.poll))
         vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
+
         kwargs['vote_form'] = vote_form
         kwargs['vote_forms'] = vote_forms
         kwargs['vote_count'] = vote_count
         kwargs['winner'] = self.get_winner(vote_count)
-
         return super().get_context_data(**kwargs)
 
 

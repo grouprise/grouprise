@@ -89,7 +89,11 @@
                         {% for option in options %}
                             <td class="{% cycle 'table-column-highlight' '' %}">
                                 {% get vote_forms option as form %}
-                                {% include 'core/_field.html' with field=form.endorse %}
+                                {% if form.endorse %}
+                                    {% field form.endorse %}
+                                {% elif form.rank %}
+                                    {% field form.rank %}
+                                {% endif %}
                             </td>
                         {% endfor %}
                         <td>

@@ -13,6 +13,7 @@ feedparser                  # debian: python3-feedparser
 markdown                    # debian: python3-markdown
 pillow                      # debian: python-pil
 pymdown-extensions          # NOT IN DEBIAN
+python3-vote-core           # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
 requests                    # debian: python3-requests
 rules                       # NOT IN DEBIAN
