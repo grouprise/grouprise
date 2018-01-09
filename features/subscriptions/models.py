@@ -7,7 +7,8 @@ class Subscription(models.Model):
         unique_together = ('subscribed_to_type', 'subscribed_to_id', 'subscriber')
 
     # target (e.g. a group)
-    subscribed_to_type = models.ForeignKey('contenttypes.ContentType')
+    subscribed_to_type = models.ForeignKey(
+            'contenttypes.ContentType', on_delete=models.CASCADE)
     subscribed_to_id = models.PositiveIntegerField()
     subscribed_to = django.contrib.contenttypes.fields.GenericForeignKey(
             'subscribed_to_type', 'subscribed_to_id')

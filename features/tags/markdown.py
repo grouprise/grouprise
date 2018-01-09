@@ -1,5 +1,5 @@
 import re
-from django.core import urlresolvers
+from django import urls
 from markdown import inlinepatterns, Extension
 from core.markdown import ExtendedLinkPattern, markdown_extensions
 from .models import Tag

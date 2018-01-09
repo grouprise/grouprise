@@ -4,7 +4,7 @@ import django.utils.timezone
 import django.views.generic
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse
 from django.views import generic
 from django_ical.views import ICalFeed

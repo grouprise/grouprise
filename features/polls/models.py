@@ -5,7 +5,8 @@ import core.models
 
 
 class Option(core.models.Model):
-    poll = models.ForeignKey('content2.Content', related_name='options')
+    poll = models.ForeignKey(
+            'content2.Content', related_name='options', on_delete=models.CASCADE)
 
     def __str__(self):
         if hasattr(self, 'simpleoption'):
@@ -48,9 +49,10 @@ class Vote(core.models.Model):
     class Meta:
         unique_together = (('option', 'voter'), ('option', 'anonymous'))
 
-    option = models.ForeignKey('Option')
+    option = models.ForeignKey('Option', on_delete=models.CASCADE)
 
-    voter = models.ForeignKey('gestalten.Gestalt', null=True, related_name='votes')
+    voter = models.ForeignKey(
+            'gestalten.Gestalt', null=True, related_name='votes', on_delete=models.PROTECT)
     anonymous = models.CharField(max_length=63, blank=True, null=True)
 
     time_updated = models.DateTimeField(auto_now=True)

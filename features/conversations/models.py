@@ -1,4 +1,4 @@
-import django.core.urlresolvers
+import django.urls
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 

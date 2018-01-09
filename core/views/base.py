@@ -1,4 +1,4 @@
-from django.core import urlresolvers
+from django import urls
 from django.utils import six
 from django.views import generic as django_generic_views
 from django.views.generic import base as django_generic_views_base

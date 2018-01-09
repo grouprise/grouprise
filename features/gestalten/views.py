@@ -3,7 +3,7 @@ import django
 from allauth.account import views
 from allauth.account import views as allauth_views
 from crispy_forms import layout
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views import generic
 from django.views.generic import edit as edit_views, UpdateView
 

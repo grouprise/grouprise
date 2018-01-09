@@ -1,7 +1,7 @@
 from django import shortcuts
 from django.conf import settings
 from django.contrib.messages import views as messages
-from django.core import urlresolvers
+from django import urls
 from django.shortcuts import get_object_or_404
 from django.views import generic
 

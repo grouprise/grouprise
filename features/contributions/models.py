@@ -25,16 +25,21 @@ class ContributionQuerySet(models.QuerySet):
 class Contribution(core.models.Model):
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
     container_id = models.PositiveIntegerField()
-    container_type = models.ForeignKey('contenttypes.ContentType', related_name='+')
+    container_type = models.ForeignKey(
+            'contenttypes.ContentType', related_name='+', on_delete=models.CASCADE)
 
     contribution = contenttypes.GenericForeignKey('contribution_type', 'contribution_id')
     contribution_id = models.PositiveIntegerField()
-    contribution_type = models.ForeignKey('contenttypes.ContentType', related_name='+')
+    contribution_type = models.ForeignKey(
+            'contenttypes.ContentType', related_name='+', on_delete=models.CASCADE)
 
-    author = models.ForeignKey('gestalten.Gestalt', related_name='contributions')
-    attached_to = models.ForeignKey('Contribution', null=True, related_name='attachments')
+    author = models.ForeignKey(
+            'gestalten.Gestalt', related_name='contributions', on_delete=models.PROTECT)
+    attached_to = models.ForeignKey(
+            'Contribution', null=True, related_name='attachments', on_delete=models.SET_NULL)
     deleted = models.DateTimeField(null=True, blank=True)
-    in_reply_to = models.ForeignKey('Contribution', null=True, related_name='replies')
+    in_reply_to = models.ForeignKey(
+            'Contribution', null=True, related_name='replies', on_delete=models.SET_NULL)
     time_created = models.DateTimeField(auto_now_add=True)
 
     objects = ContributionManager.from_queryset(ContributionQuerySet)()

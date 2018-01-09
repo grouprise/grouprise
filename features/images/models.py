@@ -5,7 +5,8 @@ from imagekit.processors import ResizeToFit, SmartResize, Transpose
 
 class Image(models.Model):
     file = models.ImageField('Datei')
-    creator = models.ForeignKey('gestalten.Gestalt', related_name='images')
+    creator = models.ForeignKey(
+            'gestalten.Gestalt', related_name='images', on_delete=models.PROTECT)
 
     preview_api = ImageSpecField(
             source='file', processors=[Transpose(), SmartResize(250, 250)], format='PNG')

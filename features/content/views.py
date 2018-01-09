@@ -1,4 +1,4 @@
-import django.core.urlresolvers
+import django.urls
 import django.views.generic
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes

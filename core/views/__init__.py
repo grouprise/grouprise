@@ -10,7 +10,8 @@ from core import forms
 from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.messages import views as messages_views
-from django.core import exceptions, urlresolvers
+from django.core import exceptions
+from django import urls
 from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views

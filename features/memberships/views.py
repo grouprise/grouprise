@@ -1,7 +1,7 @@
 import django
 from django import db, http, shortcuts
 from django.contrib import messages
-from django.core import urlresolvers
+from django import urls
 
 import core
 from core import fields, views

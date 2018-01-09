@@ -3,7 +3,7 @@ import django.contrib.contenttypes.models
 from allauth.account import adapter as allauth_adapter
 from django.conf import settings
 from django.contrib import auth
-from django.core import urlresolvers
+from django import urls
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import SmartResize, Transpose
@@ -30,7 +30,7 @@ class Gestalt(core.models.Model):
             help_text='Öffentliche Benutzerseiten sind für alle Besucherinnen sichtbar.'
             )
     score = models.IntegerField(default=0)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     associations = django.contrib.contenttypes.fields.GenericRelation(
             'associations.Association', content_type_field='entity_type',

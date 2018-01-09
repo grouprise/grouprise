@@ -3,7 +3,7 @@ import datetime
 import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core import urlresolvers
+from django import urls
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, SmartResize, Transpose
@@ -20,10 +20,8 @@ class Group(core.models.Model):
     date_created = models.DateField(
             auto_now_add=True)
     gestalt_created = models.ForeignKey(
-            'gestalten.Gestalt',
-            null=True,
-            blank=True,
-            related_name='+')
+            'gestalten.Gestalt', null=True, blank=True, related_name='+',
+            on_delete=models.SET_NULL)
     name = models.CharField(
             'Name',
             max_length=255)
