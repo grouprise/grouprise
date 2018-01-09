@@ -76,7 +76,7 @@ class CreateConversation(
 
     def get_success_url(self):
         if self.request.user.is_authenticated():
-            return urlresolvers.reverse('conversation', args=[self.object.pk])
+            return urls.reverse('conversation', args=[self.object.pk])
         else:
             return self.entity.get_absolute_url()
 

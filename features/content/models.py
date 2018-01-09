@@ -59,7 +59,7 @@ class Content(core.models.Model):
         return 'content.{}'.format(self.id)
 
     def get_url_for(self, association):
-        return django.core.urlresolvers.reverse(
+        return django.urls.reverse(
                 'content', args=[association.entity.slug, association.slug])
 
     @property
@@ -86,7 +86,7 @@ class Content(core.models.Model):
 class Version(models.Model):
     content = models.ForeignKey('Content', related_name='versions', on_delete=models.CASCADE)
 
-    author = models.ForeignKey('gestalten.Gestalt', related_name='versions',
-            on_delete=models.PROTECT)
+    author = models.ForeignKey(
+            'gestalten.Gestalt', related_name='versions', on_delete=models.PROTECT)
     text = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)

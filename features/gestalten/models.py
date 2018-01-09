@@ -71,10 +71,10 @@ class Gestalt(core.models.Model):
             return self.get_contact_url()
 
     def get_contact_url(self):
-        return urlresolvers.reverse('create-gestalt-conversation', args=(self.pk,))
+        return urls.reverse('create-gestalt-conversation', args=(self.pk,))
 
     def get_profile_url(self):
-        return urlresolvers.reverse(
+        return urls.reverse(
                 'entity', args=[type(self).objects.get(pk=self.pk).user.username])
 
     # FIXME: move to template filter

@@ -152,11 +152,11 @@ class NavigationMixin:
         title = str(instance)
         try:
             if isinstance(instance, six.string_types):
-                url = urlresolvers.reverse(instance)
-                title = urlresolvers.resolve(url).func.view_class.title
+                url = urls.reverse(instance)
+                title = urls.resolve(url).func.view_class.title
             else:
                 url = instance.get_absolute_url()
-        except (AttributeError, urlresolvers.NoReverseMatch):
+        except (AttributeError, urls.NoReverseMatch):
             url = None
         return title, url
 

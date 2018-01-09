@@ -124,7 +124,7 @@ class MemberAdd(MembershipMixin, views.Create):
             return http.HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return urlresolvers.reverse('members', args=(self.related_object.pk,))
+        return urls.reverse('members', args=(self.related_object.pk,))
 
 
 class Resign(MembershipMixin, utils_views.Delete):

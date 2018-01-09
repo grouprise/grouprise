@@ -90,7 +90,7 @@ class Group(core.models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return urlresolvers.reverse(
+        return urls.reverse(
                 'entity', args=[type(self).objects.get(pk=self.pk).slug])
 
     def get_cover_url(self):
