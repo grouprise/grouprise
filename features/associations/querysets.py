@@ -14,7 +14,7 @@ class Association(models.QuerySet):
         # public associations can be viewed
         query = models.Q(public=True)
         # authenticated users can view associations for entities they are members in
-        if user.is_authenticated():
+        if user.is_authenticated:
             GESTALT_TYPE = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
             GROUP_TYPE = contenttypes.ContentType.objects.get_for_model(groups.Group)
             gestalt_groups = groups.Group.objects.filter(memberships__member=user.gestalt)

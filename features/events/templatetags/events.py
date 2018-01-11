@@ -4,9 +4,8 @@ import itertools
 
 import django.utils.formats
 import django.utils.timezone
-from django import template
-from django.core import urlresolvers
-from django.core.urlresolvers import reverse
+from django import template, urls
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from ..utils import get_requested_time
@@ -26,7 +25,7 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
         if len(events) == 1:
             url = events[0].get_absolute_url()
         elif len(events) > 1:
-            url = urlresolvers.reverse(
+            url = urls.reverse(
                     'day-events', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ybd'])
         return {
                 'day': thedate.day,
@@ -115,7 +114,7 @@ def sidebar_calendar(
 
     # collect toolbar actions
     actions = []
-    if (not user.is_authenticated()
+    if (not user.is_authenticated
             or not group and user.has_perm('content.create')
             or user.has_perm('content.group_create', group)):
         url = reverse('create-event')

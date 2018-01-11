@@ -173,7 +173,7 @@ class GroupCalendarExport(CalendarExport):
         return self.get_group()
 
     def has_private_access(self):
-        if self.request.user and self.request.user.is_authenticated():
+        if self.request.user and self.request.user.is_authenticated:
             return is_member_of(self.request.user, self.get_group())
         else:
             return False

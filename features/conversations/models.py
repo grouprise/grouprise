@@ -41,4 +41,4 @@ class Conversation(core.models.Model):
         return groups.Group.objects.filter(associations__conversation=self)
 
     def get_url_for(self, association):
-        return django.core.urlresolvers.reverse('conversation', args=[association.pk])
+        return django.urls.reverse('conversation', args=[association.pk])

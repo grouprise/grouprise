@@ -62,7 +62,7 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
 
     def get_queryset(self):
         user = self.request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return models.Image.objects.none()
 
         # FIXME: refactor and remove foreign model queries
@@ -97,7 +97,7 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
         )
 
     def has_permission(self):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             if self.action == 'create':
                 return True
             elif self.action == 'list':

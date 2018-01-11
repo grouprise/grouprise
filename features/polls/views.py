@@ -97,7 +97,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             kwargs['instance'] = models.Vote(voter=self.request.user.gestalt)
         kwargs['poll'] = self.association.container
         return kwargs

@@ -9,7 +9,7 @@ from rules.contrib import views as rules
 class PermissionMixin(rules.PermissionRequiredMixin):
     @property
     def raise_exception(self):
-        return self.request.user.is_authenticated()
+        return self.request.user.is_authenticated
 
 
 class StadtMixin(django_generic_views_base.ContextMixin):

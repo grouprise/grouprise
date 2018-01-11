@@ -63,7 +63,7 @@ class CreateConversation(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['has_author'] = self.request.user.is_authenticated()
+        kwargs['has_author'] = self.request.user.is_authenticated
         kwargs['instance'] = associations.Association(entity=self.entity)
         kwargs['contribution'] = features.contributions.models.Contribution()
         if kwargs['has_author']:
@@ -71,11 +71,11 @@ class CreateConversation(
         return kwargs
 
     def get_success_message(self, cleaned_data):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return 'Die Nachricht wurde versendet.'
 
     def get_success_url(self):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             return urls.reverse('conversation', args=[self.object.pk])
         else:
             return self.entity.get_absolute_url()

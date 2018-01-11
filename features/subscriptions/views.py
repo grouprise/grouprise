@@ -33,7 +33,7 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
 
     def get_instance(self):
         instance = Subscription()
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             instance.subscriber = self.request.user.gestalt
         instance.subscribed_to = self.group
         return instance
@@ -46,7 +46,7 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
         return self.group.get_absolute_url()
 
     def handle_no_permission(self):
-        if (self.request.user.is_authenticated()
+        if (self.request.user.is_authenticated
                 and is_subscribed(self.request.user, self.group)):
             info(self.request, self.already_subscribed_message)
             return HttpResponseRedirect(self.get_success_url())

@@ -48,7 +48,7 @@ class Test(test.TestCase):
         self.assertRedirects(response, self.get_login_url(url))
 
     def assertForbiddenOrLogin(self, response, next_url):
-        if auth.get_user(self.client).is_authenticated():
+        if auth.get_user(self.client).is_authenticated:
             self.assertEqual(response.status_code, 403)
         else:
             self.assertRedirects(response, self.get_login_url(next_url))

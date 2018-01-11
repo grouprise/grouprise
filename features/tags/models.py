@@ -17,7 +17,7 @@ class Tag(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return django.core.urlresolvers.reverse('tag', args=(self.slug,))
+        return django.urls.reverse('tag', args=(self.slug,))
 
 
 class Tagged(models.Model):

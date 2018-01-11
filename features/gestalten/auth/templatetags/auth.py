@@ -12,5 +12,5 @@ def login_or_field(context, field):
 @register.simple_tag(takes_context=True)
 def login_url(context):
     return django.utils.safestring.mark_safe('{}?{}'.format(
-        django.core.urlresolvers.reverse('login'),
+        django.urls.reverse('login'),
         django.utils.http.urlencode({'next': context['request'].path})))
