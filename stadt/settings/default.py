@@ -175,6 +175,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/stadt/media/'
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 
 # Email
 # https://docs.djangoproject.com/en/1.9/topics/email/
