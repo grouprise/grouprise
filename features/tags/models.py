@@ -31,5 +31,5 @@ class Tagged(models.Model):
     tagged_id = models.PositiveIntegerField()
     tagged_type = models.ForeignKey('contenttypes.ContentType', on_delete=models.CASCADE)
 
-    def __repr__(self):
+    def __str__(self):
         return "%s was tagged with '%s'" % (str(self.tagged), str(self.tag))
