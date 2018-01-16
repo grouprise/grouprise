@@ -220,6 +220,8 @@ STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
 
 STADTGESTALTEN_SHOW_HEADER = True
 
+HAS_PIWIK = True
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/

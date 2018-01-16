@@ -1,9 +1,12 @@
 import django
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 
 import core
 import utils
 from features import gestalten, groups
+from features.content import views as content
 from features.groups.models import Group
 
 
@@ -46,7 +49,19 @@ class Imprint(utils.views.PageMixin, django.views.generic.TemplateView):
     title = 'Impressum'
 
 
+class Index(content.List):
+    template_name = 'stadt/index.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
+        return super().get_context_data(**kwargs)
+
+
 class Privacy(utils.views.PageMixin, django.views.generic.TemplateView):
     permission_required = 'entities.view_imprint'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'
+
+    def get_context_data(self, **kwargs):
+        kwargs['HAS_PIWIK'] = settings.HAS_PIWIK
+        return super().get_context_data(**kwargs)

@@ -1,22 +1,24 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block content %}
-<p>Wir freuen uns sehr, dass du Stadtgestalten nutzt. Da wir den Schutz deiner personenbezogenen Daten sehr ernst nehmen, wollen wir dich auf dieser Seite darüber informieren, wann wir welche Daten speichern und wie wir sie verwenden.</p>
+<p>Wir freuen uns sehr, dass du {{ about_group }} nutzt. Da wir den Schutz deiner personenbezogenen Daten sehr ernst nehmen, wollen wir dich auf dieser Seite darüber informieren, wann wir welche Daten speichern und wie wir sie verwenden.</p>
 
 <h3>Personenbezogene Daten</h3>
 <p>Personenbezogene Daten werden nur mit deiner ausdrücklichen Einwilligung erhoben. Personenbezogene Informationen sind Auskünfte, die deine Identität offen legen – wie z. B. dein wirklicher Name, Anschrift, Telefonnummer oder E-Mail-Adresse. Informationen, die nicht direkt mit deiner wirklichen Identität in Verbindung gebracht werden fallen nicht darunter.</p>
-<p>Du kannst Stadtgestalten ohne Offenlegung deiner Identität nutzen. Zur Einrichtung eines Accounts ist die Angabe einer E-Mail-Adresse erforderlich. Alle weiteren Angaben sind freiwillig - es unterliegt deiner freien Entscheidung, ob du weitere Informationen über dich auf Stadtgestalten veröffentlichst.</p>
+<p>Du kannst {{ about_group }} ohne Offenlegung deiner Identität nutzen. Zur Einrichtung eines Accounts ist die Angabe einer E-Mail-Adresse erforderlich. Alle weiteren Angaben sind freiwillig - es unterliegt deiner freien Entscheidung, ob du weitere Informationen über dich auf {{ about_group }} veröffentlichst.</p>
 
 <h3>Speicherung der IP-Adresse</h3>
-<p>In Verbindung mit deinem Zugriff auf Stadtgestalten werden auf unseren Servern Daten gespeichert, die möglicherweise eine Identifizierung zulassen (zum Beispiel deine IP-Adresse, Datum, Uhrzeit und betrachtete Seiten). Es findet keine personenbezogene Auswertung statt.</p>
+<p>In Verbindung mit deinem Zugriff auf {{ about_group }} werden auf unseren Servern Daten gespeichert, die möglicherweise eine Identifizierung zulassen (zum Beispiel deine IP-Adresse, Datum, Uhrzeit und betrachtete Seiten). Es findet keine personenbezogene Auswertung statt.</p>
 
 <p>IP-Adressen speichern wir über einen Zeitraum von maximal einem Tag. Anschließend löschen wir die Daten automatisch. Die Speicherung erfolgt aus Gründen der Datensicherheit, um die Stabilität und die Betriebssicherheit unserer Systeme zu gewährleisten.</p>
 
+{% if HAS_PIWIK %}
 <h3>Statistische Auswertung</h3>
-<p>Für die statistische Auswertung der Nutzung der Webseite Stadtgestalten verwenden wir die Freie Software <a href="https://piwik.org/">Piwik</a> mit aktivierter IP-Anonymisierung.</p>
+<p>Für die statistische Auswertung der Nutzung der Webseite {{ about_group }} verwenden wir die Freie Software <a href="https://piwik.org/">Piwik</a> mit aktivierter IP-Anonymisierung.</p>
 
 <p>Verwende die folgende Einstellung, um deine Nutzung der Webseite von der statistischen Erfassung auszuschließen:</p>
 <iframe style="border: 0; height: 200px; width: 600px;" src="https://piwik.stadtgestalten.org/index.php?module=CoreAdminHome&action=optOut&language=de"></iframe>
+{% endif %}
 
 <h3>Weitergabe personenbezogener Informationen an Dritte</h3>
 <p>Wir geben deine personenbezogenen Daten nicht an Dritte weiter. Punkt.</p>
@@ -24,13 +26,13 @@
 <p>Öffentliche Beiträge sind für jeden zugänglich. Du solltest also damit rechnen, dass deine öffentlichen Beiträge von Suchmaschinen erfasst werden. Wir empfehlen dir, deine Beiträge vor der Veröffentlichung sorgfältig darauf überprüfen, ob sie keine persönlichen oder sonstigen Angaben enthalten, die nicht für die Öffentlichkeit bestimmt sind. Die nachträgliche Bearbeitung von Beiträgen ist jederzeit möglich. Dies gilt allerdings nicht für Kommentare. Falls du die Löschung eines <em>deiner</em> Kommentare wünscht, nimm mit uns Kontakt auf. Ein Anspruch auf Löschung besteht allerdings nicht.</p>
 
 <h3>Recht auf Widerruf und Korrektur</h3>
-<p>Du kannst jederzeit die Löschung deiner personenbezogenen Daten veranlassen. Schicke dazu bitte eine Nachricht an unsere <a href="https://stadtgestalten.org/stadtgestalten">Stadtgestalten-Gruppe</a>.</p>
+<p>Du kannst jederzeit die Löschung deiner personenbezogenen Daten veranlassen. Schicke dazu bitte eine Nachricht an unsere <a href="{{ about_group.get_absolute_url }}">{{ about_group }}-Gruppe</a>.</p>
 
 <h3>Einsatz von Cookies</h3>
 <p>Cookies sind kleine Textdateien, die temporär auf deiner Festplatte abgelegt werden. In einigen Bereichen unseres Angebots verwenden wir Cookies, um Benutzerfunktionen zu realisieren. Die Nutzung der meisten Funktionen ist grundsätzlich auch ohne Cookies möglich. Da die meisten Browser so eingestellt sind, dass sie Cookies automatisch akzeptieren, musst du das Speichern von Cookies manuell deaktivieren. Für die Benutzeranmeldung und die dadurch verfügbaren Funktionen muss dein Browser allerdings Cookies akzeptieren.</p>
 
 <h3>Fragen und Kommentare</h3>
-Für Fragen, Anregungen oder Kommentare rund um das Thema Datenschutz und personenbezogene Daten wende dich bitte an unsere <a href="https://stadtgestalten.org/stadtgestalten">Stadtgestalten-Gruppe</a>.</p>
+Für Fragen, Anregungen oder Kommentare rund um das Thema Datenschutz und personenbezogene Daten wende dich bitte an unsere <a href="{{ about_group.get_absolute_url }}">{{ about_group }}-Gruppe</a>.</p>
 
 <hr>
 

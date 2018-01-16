@@ -5,7 +5,7 @@
         {% load dismissible %}
         {% dismissible 'stadtgestalten-intro' %}
             <header class="content-header">
-                {% include 'core/_heading.html' with title='Stadtgestalten' %}
+                {% include 'core/_heading.html' with title=about_group.name %}
                 {% dismiss 'stadtgestalten-intro' %}
             </header>
             <ul class="actions">
@@ -28,7 +28,7 @@
                                 <i class="fa fa-anchor"></i>
                             </span>
                             <span class="action-description">
-                                Für Rostock
+                                Für {{ town_name }}
                             </span>
                         </span>
                     </label>
@@ -62,7 +62,7 @@
                 <input type="radio" name="sg-help" id="sg-help-group" class="content-state">
                 <div class="content-state-target content-info">
                     <p>
-                        In 0, nix kannst Du bei Stadtgestalten eine Gruppe anlegen, Beiträge schreiben, Diskussionen führen, Veranstaltungen
+                    In 0, nix kannst Du bei {{ about_group }} eine Gruppe anlegen, Beiträge schreiben, Diskussionen führen, Veranstaltungen
                         ankündigen und mit anderen Gruppen in Kontakt treten und deren Aktivitäten im Auge behalten.
                     </p>
                     <p>
@@ -80,7 +80,7 @@
                 <input type="radio" name="sg-help" id="sg-help-privacy" class="content-state">
                 <div class="content-state-target content-info">
                     <p>
-                        Stadtgestalten ist ein unkommerzielles Projekt, das von Freiwilligen in ihrer Freizeit entwickelt wird.
+                    {{ about_group }} ist ein unkommerzielles Projekt, das von Freiwilligen in ihrer Freizeit entwickelt wird.
                         Deine Daten sind uns so wichtig, dass wir sie nach Möglichkeit gar nicht erst speichern. Und wenn doch,
                         dann kannst Du sicher sein, dass wir damit verantwortungsvoll umgehen.
                     </p>
@@ -89,8 +89,8 @@
                 <input type="radio" name="sg-help" id="sg-help-participate" class="content-state">
                 <div class="content-state-target content-info">
                     <p>
-                        Stadtgestalten ist keine Einbahnstraße. Wir freuen uns über Deine Ideen, Anregungen und Vorschläge.
-                        Ohne unsere Mitstreiter_innen sind wir aufgeschmissen. Darum wollen wir mit Euch weiter an Stadtgestalten arbeiten.
+                    {{ about_group }} ist keine Einbahnstraße. Wir freuen uns über Deine Ideen, Anregungen und Vorschläge.
+                    Ohne unsere Mitstreiter_innen sind wir aufgeschmissen. Darum wollen wir mit Euch weiter an {{ about_group }} arbeiten.
                     </p>
                     {% if about_group %}
                         <p><a href="{% url 'create-group-conversation' about_group.pk %}">Schreib uns</a>!</p>

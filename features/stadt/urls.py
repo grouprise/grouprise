@@ -6,7 +6,7 @@ from . import feeds, views
 urlpatterns = [
     url(
         r'^$',
-        content.List.as_view(template_name='stadt/index.html'),
+        views.Index.as_view(),
         name='index'),
 
     url(
