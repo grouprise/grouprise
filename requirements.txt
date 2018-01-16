@@ -8,13 +8,13 @@ django-imagekit             # debian (buster): python3-django-imagekit
 git+https://github.com/coddingtonbear/django-mailbox.git              # NOT IN DEBIAN
 django-mailer               # NOT IN DEBIAN
 djangorestframework         # debian: python-djangorestframework
-flake8                      # debian: flake8
 feedparser                  # debian: python3-feedparser
+flake8                      # debian: flake8
 markdown                    # debian: python3-markdown
+mdx_unimoji                 # NOT IN DEBIAN
 pillow                      # debian: python-pil
 pymdown-extensions          # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
 requests                    # debian: python3-requests
 rules                       # debian (buster): python3-django-rules
 translitcodec               # NOT IN DEBIAN
-mdx_unimoji                 # NOT IN DEBIAN
