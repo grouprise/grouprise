@@ -52,7 +52,7 @@ class Index(content.List):
 
 
 class Privacy(utils.views.PageMixin, django.views.generic.TemplateView):
-    permission_required = 'entities.view_imprint'
+    permission_required = 'stadt.view_privacy'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'
 
