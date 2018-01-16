@@ -43,12 +43,6 @@ class Entity(core.views.PermissionMixin, django.views.generic.View):
         return self.view.has_permission()
 
 
-class Imprint(utils.views.PageMixin, django.views.generic.TemplateView):
-    permission_required = 'entities.view_imprint'
-    template_name = 'entities/imprint.html'
-    title = 'Impressum'
-
-
 class Index(content.List):
     template_name = 'stadt/index.html'
 
