@@ -16,7 +16,9 @@
                     <li><a href="{% url 'index' %}">Startseite</a></li>
                     <li class="separator"></li>
                     <li><a href="{{ about_group.get_absolute_url }}">Über {{ about_group }}</a></li>
-                    <li><a href="{% url 'content' about_group.slug 'imprint' %}">Impressum</a></li>
+                    {% if about_group %}
+                        <li><a href="{% url 'content' about_group.slug 'imprint' %}">Impressum</a></li>
+                    {% endif %}
                     <li><a href="{% url 'privacy' %}">Datenschutzhinweise</a></li>
                     <li class="separator"></li>
                     <li><a href="{% url 'abuse' request.path %}">Missbrauch melden</a></li>

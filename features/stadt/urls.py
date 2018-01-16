@@ -1,6 +1,5 @@
 from django.conf.urls import url
 
-from features.content import views as content
 from . import feeds, views
 
 urlpatterns = [
