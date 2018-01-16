@@ -10,13 +10,14 @@ from utils import forms as utils_forms
 from . import models
 
 
-def validate_slug(slug):
+def validate_slug(slug, gestalt):
     if slug in django.conf.settings.ENTITY_SLUG_BLACKLIST:
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')
     if (Group.objects.filter(slug__iexact=slug).exists()
-            or models.Gestalt.objects.filter(user__username__iexact=slug).exists()):
+            or models.Gestalt.objects.exclude(id=gestalt.id).filter(
+                user__username__iexact=slug).exists()):
         raise django.core.exceptions.ValidationError(
                 'Die Adresse \'%(slug)s\' ist bereits vergeben.',
                 params={'slug': slug}, code='in-use')
@@ -30,7 +31,7 @@ class User(utils_forms.FormMixin, forms.ModelForm):
 
     def clean_username(self):
         slug = self.cleaned_data['username']
-        validate_slug(slug)
+        validate_slug(slug, self.instance.gestalt)
         return slug
 
 
