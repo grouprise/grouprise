@@ -1,12 +1,11 @@
 from django.conf.urls import url
 
-from features.content import views as content
 from . import feeds, views
 
 urlpatterns = [
     url(
         r'^$',
-        content.List.as_view(template_name='stadt/index.html'),
+        views.Index.as_view(),
         name='index'),
 
     url(
@@ -18,11 +17,6 @@ urlpatterns = [
         r'^stadt/groups/(?P<group_pk>[0-9]+)/feed/$',
         feeds.Group(),
         name='group-feed'),
-
-    url(
-        r'^stadt/imprint/$',
-        views.Imprint.as_view(),
-        name='imprint'),
 
     url(
         r'^stadt/privacy/$',

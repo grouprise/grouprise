@@ -3,12 +3,11 @@ from django import forms
 from django.db.models import Q
 
 import core.forms
-from . import models
+from . import models, signals
 from features.associations import models as associations
 from features.contributions import forms as contributions
 from features.groups import models as groups
 from features.images.models import Image
-from . import signals
 
 
 class Comment(contributions.Text):
