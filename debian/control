@@ -8,7 +8,10 @@ Standards-Version: 3.9.6
 
 Package: stadtgestalten
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends}
+# python3-requests: for django-allauth
+# python3-six: for django-mailbox
+Depends: python3-pil, python3-requests, python3-six, ${misc:Depends},
+ ${python3:Depends}
 Recommends: ghostscript, python3-psycopg2, uwsgi, uwsgi-plugin-python3,
  uwsgi-plugin-router-access, ${misc:Recommends}
 Suggests: sqlite3, postgresql-client-common
