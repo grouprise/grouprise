@@ -25,7 +25,9 @@ class Create(forms.ModelForm):
         self.helper = helper.FormHelper()
         self.helper.layout = layout.Layout(
                 'subject',
-                layout.Field('text', rows=5),
+                layout.Field('text', rows=5, **{
+                    'data-component': 'keysubmit autosize'
+                }),
                 layout.Submit('create', 'Nachricht senden'))
         if self.has_author:
             del self.fields['author']
