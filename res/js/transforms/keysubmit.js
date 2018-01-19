@@ -15,7 +15,15 @@ export default el => {
 
   const keyDownListener = on(el, 'keydown', keyPressed(13, { ctrlKey: true }, event => {
     event.preventDefault()
-    closest(el, 'form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }))
+    const submitEvent = new window.Event('submit', { bubbles: true, cancelable: true })
+    const form = closest(el, 'form')
+    const submitter = form.querySelector('button[type="submit"], input[type="submit"]')
+
+    if (submitter) {
+      submitter.click()
+    } else {
+      form.dispatchEvent(submitEvent)
+    }
   }))
 
   return {
