@@ -95,6 +95,30 @@
                                 <span class="nav-menu-item-label">Mitglied aufnehmen</span>
                             </a>
                     {% endif %}
+
+                    {# CONTENT #}
+                    {% load rules %}
+                    {% has_perm 'content.group_create' user group as can_create %}
+                    {% if can_create %}
+                        <li>
+                            <a href="{% url 'create-group-article' group.slug %}" class="nav-menu-item">
+                                <i class="sg sg-fw sg-article"></i>
+                                <span class="nav-menu-item-label">Artikel schreiben</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'create-group-event' group.slug %}" class="nav-menu-item">
+                                <i class="sg sg-fw sg-event"></i>
+                                <span class="nav-menu-item-label">Veranstaltung eintragen</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'content' about_group.slug 'tools' %}" class="nav-menu-item">
+                            <i class="sg sg-fw sg-tools"></i>
+                            <span class="nav-menu-item-label">Weitere Möglichkeiten</span>
+                        </a>
+                    </li>
                     
                     {# SETTINGS #}
                     <li>

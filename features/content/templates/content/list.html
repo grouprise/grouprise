@@ -9,10 +9,13 @@
     {% has_perm 'content.create' user as can_create %}
     {% if can_create %}
         {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
-            <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel</a></li>
-            <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> Veranstaltung</a></li>
-            <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> Galerie</a></li>
-            <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> Umfrage</a></li>
+            <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel schreiben</a></li>
+            <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> Veranstaltung eintragen</a></li>
+            <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> Bildergalerie anlegen</a></li>
+            <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> (Termin-)Umfrage beginnen</a></li>
+            {% if about_group %}
+                <li><a href="{% url 'content' about_group.slug 'tools' %}#8-werkzeuge-fur-andere-anwendungsfalle"><i class="sg sg-fw sg-tools"></i> Weitere Möglichkeiten</a></li>
+            {% endif %}
         {% enddropdown %}
     {% endif %}
 {% endblock %}
