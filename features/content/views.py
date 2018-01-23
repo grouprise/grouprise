@@ -34,7 +34,7 @@ class DetailBase(features.associations.views.AssociationMixin,
     model = associations.Association
     template_name = 'articles/detail.html'
 
-    form_class = forms.Comment
+    form_class = features.contributions.forms.Text
 
     def get_object(self, queryset=None):
         return self.get_association()

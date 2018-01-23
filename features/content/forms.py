@@ -5,15 +5,8 @@ from django.db.models import Q
 import core.forms
 from . import models, signals
 from features.associations import models as associations
-from features.contributions import forms as contributions
 from features.groups import models as groups
 from features.images.models import Image
-
-
-class Comment(contributions.Text):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper.layout.append(core.forms.Submit('Kommentieren'))
 
 
 class Create(forms.ModelForm):

@@ -1,7 +1,9 @@
 <div id="div_{{ field.id_for_label }}" class="form-group{% if field.errors %} has-error{% endif %}">
-    <label for="{{ field.id_for_label }}" class="control-label">
-        {{ field.label }}
-    </label>
+    {% if not hide_label %}
+        <label for="{{ field.id_for_label }}" class="control-label">
+            {{ field.label }}
+        </label>
+    {% endif %}
     {% if prefix %}
     <div class="input-group">
         <span class="input-group-addon">{{ prefix }}</span>

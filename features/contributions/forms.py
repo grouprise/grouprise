@@ -1,4 +1,3 @@
-from crispy_forms import helper, layout
 from django import forms
 
 from features.contributions import models as contributions
@@ -6,20 +5,17 @@ from . import signals
 
 
 class Text(forms.ModelForm):
-    text = forms.CharField(widget=forms.Textarea)
+    text = forms.CharField(widget=forms.Textarea({
+        'rows': 3, 'data-component': 'keysubmit autosize cite cite-sink'}))
 
     class Meta:
         model = contributions.Contribution
-        fields = []
+        fields = ['in_reply_to']
 
     def __init__(self, *args, **kwargs):
+        contributions = kwargs.pop('contributions')
         super().__init__(*args, **kwargs)
-        self.helper = helper.FormHelper()
-        self.helper.form_show_labels = False
-        self.helper.layout = layout.Layout(
-                layout.Field('text', rows=3, **{
-                    'data-component': 'keysubmit autosize cite cite-sink'
-                }))
+        self.fields['in_reply_to'].queryset = contributions
 
     def save(self, commit=True):
         contribution = super().save(False)

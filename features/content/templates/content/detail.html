@@ -58,7 +58,7 @@
                     {% has_perm 'content.comment' user association as can_comment %}
                     {% if can_comment %}
                     <li>
-                        {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
+                        {% include "contributions/_create_text.html" with form=form author=user.gestalt submit_label='Kommentieren' %}
                     </li>
                     {% else %}
                     <li>

@@ -36,7 +36,7 @@
                 {% endfor %}
                 {% if can_reply %}
                     <li>
-                        {% include "contributions/_create_text.html" with form=form author=user.gestalt %}
+                        {% include "contributions/_create_text.html" with form=form author=user.gestalt submit_label='Antworten' %}
                     </li>
                 {% endif %}
             </ol>

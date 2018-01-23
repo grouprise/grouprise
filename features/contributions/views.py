@@ -22,6 +22,7 @@ class ContributionFormMixin(django.views.generic.edit.FormMixin):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['contributions'] = self.object.container.contributions
         kwargs['instance'] = models.Contribution(
                 author=self.request.user.gestalt, container=self.object.container)
         return kwargs

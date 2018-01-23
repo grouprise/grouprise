@@ -1,8 +1,12 @@
 {% extends "contributions/_contribution_type_text.html" %}
-{% load crispy_forms_tags %}
 
 {% block media_body %}
-    {% crispy form %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.in_reply_to.as_hidden }}
+        {% field form.text hide_label=True %}
+        <button class="btn btn-primary">{{ submit_label }}</button>
+    </form>
 {% endblock %}
 
 {% block media_footer %}{% endblock %}

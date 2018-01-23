@@ -4,8 +4,7 @@ from django import forms
 import features
 from features.gestalten import models as gestalten
 from features.associations import models as associations
-from features.contributions import forms as contributions, models as contributions_models
-from core import forms as utils_forms
+from features.contributions import models as contributions_models
 from . import models
 
 
@@ -70,9 +69,3 @@ class Create(forms.ModelForm):
                 sender=self.__class__, instance=self.contribution)
 
         return association
-
-
-class Reply(contributions.Text):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper.layout.append(utils_forms.Submit('Antworten'))

@@ -39,7 +39,8 @@ class Contribution(core.models.Model):
             'Contribution', null=True, related_name='attachments', on_delete=models.SET_NULL)
     deleted = models.DateTimeField(null=True, blank=True)
     in_reply_to = models.ForeignKey(
-            'Contribution', null=True, related_name='replies', on_delete=models.SET_NULL)
+            'Contribution', null=True, blank=True, related_name='replies',
+            on_delete=models.SET_NULL)
     time_created = models.DateTimeField(auto_now_add=True)
 
     objects = ContributionManager.from_queryset(ContributionQuerySet)()

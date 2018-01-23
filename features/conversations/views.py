@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 
 import core.views
-import features.contributions.models
+import features.contributions.forms
 import features.contributions.views
 from features.gestalten.models import Gestalt
 from features.associations import models as associations
@@ -26,7 +26,7 @@ class Conversation(
     pk_url_kwarg = 'association_pk'
     template_name = 'conversations/detail.html'
 
-    form_class = forms.Reply
+    form_class = features.contributions.forms.Text
 
 
 class Conversations(core.views.PermissionMixin, generic.ListView):
