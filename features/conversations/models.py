@@ -40,5 +40,8 @@ class Conversation(core.models.Model):
     def get_associated_groups(self):
         return groups.Group.objects.filter(associations__conversation=self)
 
+    def get_unique_id(self):
+        return self.contributions.first().get_unique_id()
+
     def get_url_for(self, association):
         return django.urls.reverse('conversation', args=[association.pk])

@@ -60,16 +60,13 @@ class ContributionCreated(notifications.Notification):
 
     def get_message_ids(self):
         my_id = self.object.get_unique_id()
-        previous_texts = self.object.container.contributions.exclude(
-                id=self.object.id)
-        thread_obj = previous_texts.first()
-        parent_obj = previous_texts.last()
+        container = self.object.container
+        parent_obj = self.object.in_reply_to or container
         parent_id = parent_obj.get_unique_id() if parent_obj else None
         ref_ids = []
-        if thread_obj:
-            thread_id = thread_obj.get_unique_id()
-            if thread_id != parent_id:
-                ref_ids.append(thread_id)
+        thread_id = container.get_unique_id()
+        if thread_id != parent_id:
+            ref_ids.append(thread_id)
         return my_id, parent_id, ref_ids
 
     def get_reply_token(self):
