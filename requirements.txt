@@ -3,6 +3,7 @@ django                      # debian: python3-django
 django-allauth              # debian (buster): python3-django-allauth
 django-crispy-forms         # debian: python3-django-crispy-forms
 django-filter               # debian: python3-django-filters
+django-haystack             # debian: python3-django-haystack
 django-ical                 # NOT IN DEBIAN
 django-imagekit             # debian (buster): python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
@@ -19,3 +20,4 @@ raven                       # NOT IN DEBIAN
 requests                    # debian: python3-requests
 rules                       # debian (buster): python3-django-rules
 translitcodec               # NOT IN DEBIAN
+whoosh                      # debian: python3-whoosh
