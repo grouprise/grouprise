@@ -12,10 +12,7 @@
         {% block meta %}
             {% include "core/_meta.html" %}
         {% endblock %}
-        {% block meta_feed %}
-            <link rel="alternate" type="application/rss+xml" title="{{ site.name }}"
-                href="{% url 'feed' %}">
-        {% endblock %}
+        {% block meta_feed %}{% endblock %}
         <meta name="robots" content="index,follow,noodp">
         <meta name="rating" content="General">
 
