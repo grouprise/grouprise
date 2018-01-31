@@ -48,7 +48,7 @@ class Group(core.models.Model):
             max_length=7,
             default=colors.get_random_color)
     date_founded = models.DateField(
-            'Gruppe gegründet', blank=True, default=datetime.date.today)
+            'Gruppe gegründet', default=datetime.date.today)
     description = models.TextField(
             'Kurzbeschreibung',
             blank=True,
