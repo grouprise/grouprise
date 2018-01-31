@@ -334,9 +334,10 @@
 
 .btn-ch {
     @width: 200px;
+    @height: 3rem;
 
     width: @width;
-    height: 3rem;
+    height: @height;
     border-radius: 0;
     position: relative;
     display: flex;
@@ -346,6 +347,7 @@
     color: white;
     right: -.5rem;
     overflow: hidden;
+    clip-path: polygon(0 100%, @height 0%, 100% 0, 100% 100%);
 
     &:after {
         content: ' ';
@@ -370,6 +372,7 @@
     }
 
     .btn-label {
+        // recreate the optical effect that the button label is centered
         transform: translateX(14.4px);
     }
 }
