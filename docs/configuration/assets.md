@@ -1,11 +1,11 @@
 # Asset Management
 
-stadtgestalten assets are compiled during build time, but in order to support dynamic setups we support some function to add new assets or add metadata to the markup.
+stadtgestalten assets are compiled during build time but in order to support dynamic setups we provide you with some functions to add new assets or add metadata to the markup.
 
 
 ## Function Reference
 
-All following subsections refer to functions in the `core.assets` module. Optional arguments usually refer to element specific attributes with the exception of `stage` that refers to assets and references that are in included in the `head` element (`early` stage) and at the end of the body element (`late` stage).
+All following subsections refer to functions in the `core.assets` module. Optional arguments usually refer to element specific attributes with the exception of `stage` that refers to assets and references that are in included in the `head` element (`early` stage) or at the end of the body element (`late` stage).
 
 ### add_javascript_reference
 
@@ -15,7 +15,7 @@ Optional arguments: `defer`, `async`, `stage`
 
 ### add_javascript_inline
 
-Add a literal JavaScript string that is embedded as a `script` tag.
+Add a literal JavaScript string that is embedded as a `script` element.
 
 Optional arguments: `stage`
 
@@ -27,9 +27,9 @@ Optional arguments: `media`, `**kwargs` as link attributes
 
 ### add_style_inline
 
-Add a literal CSS string that is embedded via a `style` tag.
+Add a literal CSS string that is embedded as a `style` element.
 
-NOTE: This breaks support for inline styles due to Content-Security-Policy restrictions. You will some JavaScript code in very subtle ways and you’ll most likely won’t notice the problems immediately.
+NOTE: This breaks support for inline styles due to Content-Security-Policy restrictions. You will render some JavaScript components inoperable. These problems are likely to be subtle in nature and you’ll most likely won’t notice them immediately. You have been warned :).
 
 Optional arguments: `media`, `scoped`
 
@@ -45,7 +45,7 @@ Add a `meta` element to the `head` with the provided `name` and `content` attrib
 
 ### add_csp_directive
 
-Adds a Content-Security-Policy directive with the provided `directive` (like `style-src`) and `value`. Note that stadtgestalten servers CSP via response headers so you won’t find any of the provided directives in the HTML output.  
+Adds a Content-Security-Policy directive with the provided `directive` (like `style-src`) and `value`. Note that stadtgestalten serves CSP via HTTP response headers so you won’t find any of the provided directives in the HTML output.  
 
 
 ## Overriding Styles
@@ -58,7 +58,7 @@ from core.assets import add_style_reference
 add_style_reference('stadt/custom.css')
 ```
 
-This will add a stylesheet reference to `/stadt/static/stadt/custom.css`. On your local machine this matches the `$PROJECT_DIR/build/static/custom.css` path. On a production server you would add a configuraton to the webserver that creates an alias for the mentioned path to the local filesystem. In nginx this would look like this:
+This will add a stylesheet reference to `/stadt/static/stadt/custom.css`. On your local machine this matches the `$PROJECT_DIR/build/static/custom.css` path. On a production server you would add a configuraton to the webserver that creates an alias for the mentioned path to the local filesystem. A simple nginx example:
 
 ```nginx
 location /stadt/static/stadt/custom.css {
@@ -66,14 +66,14 @@ location /stadt/static/stadt/custom.css {
 }
 ```
 
-Take a look at the section about style variables
+Take a look at the next section about style variables to learn about easy style overrides with CSS variables.
 
-Note: Please refrain vom using the `add_style_inline` function from the `core.assets` module as it will break JavaScript-generated inline-styles in html.
+Note: Please refrain vom using the `add_style_inline` function from the `core.assets` module as it will break JavaScript-generated inline-styles in HTML.
  
 
 ## Style Variables
 
-To ease the process of overriding styles, stadtgestalten supports CSS variables where applicable. CSS variables are a nice thing, because with a single rule you can override a setting on the entire platform. Please mind that the support for these variables is a browser feature and rather new so you may still want to override individual styles depending on your target audience. 
+To ease the process of overriding styles, stadtgestalten supports CSS variables where applicable. CSS variables are a nice thing because with a single rule you can override a setting on the entire platform. Please mind that support for these type of variables is a browser feature and rather new, so you may still want to override individual styles depending on your target audience. 
 
 ### Supported Variables
 
@@ -85,7 +85,7 @@ The following variables are supported:
 `-color-primary-dark`
  : used for active states where `--color-primary` is used. if you override `--color-primary` you want to override this variable.
  
- ### CSS Example
+### CSS Example
 
 ```css
 :root {
