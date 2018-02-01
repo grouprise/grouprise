@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'features.stadt',
     'features.subscriptions',
     'features.tags',
-    'haystack',
     'imagekit',
     'mailer',
     'rest_framework',
@@ -304,14 +303,3 @@ TAGS_TAGGABLE = (
                                  and hasattr(c.contribution, 'text')),
     },
 )
-
-
-# Search Engine
-# http://django-haystack.readthedocs.io/
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-    },
-}
