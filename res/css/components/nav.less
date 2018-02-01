@@ -48,7 +48,7 @@
     &:focus,
     &:active,
     .dropdown-state:checked ~ & {
-        background-color: #f0f0f0;
+        background-color: rgba(0, 0, 0, (1 - (240 / 255)));  // roughly #f0f0f0 on white
         outline: none;
     }
 
@@ -181,6 +181,12 @@
     .dock-inner & .nav-menu-item {
         padding-left: 2rem;
         padding-right: 2rem;
+    }
+
+    .nav-vertical {
+        margin-left: 0;
+        margin-right: 0;
+        background-color: rgba(0, 0, 0, (1 - (245 / 255)));  // roughly #f5f5f5 on white
     }
 }
 
