@@ -102,12 +102,14 @@
                         <li>
                             <input class="dropdown-state" id="menu-group-create" type="checkbox">
                             <label for="menu-group-create" class="nav-menu-item nav-state-toggle"
-                                   tabindex="0">
+                                   tabindex="0" data-component="openable"
+                                   data-openable-target="#menu-group-create-dropdown">
                                 <i class="sg sg-fw sg-add"></i>
                                 <span class="nav-menu-item-label">Beitrag schreiben</span>
                                 <i class="caret"></i>
                             </label>
-                            <ol class="nav-vertical" data-dropdown="static">
+                            <ol class="nav-vertical" id="menu-group-create-dropdown"
+                                data-dropdown="static">
                                 <li>
                                     <a href="{% url 'create-group-article' group.slug %}" class="nav-menu-item">
                                         <i class="sg sg-fw sg-article"></i>
