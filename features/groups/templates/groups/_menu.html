@@ -42,10 +42,9 @@
                     {% if can_subscribe %}
                         <li>
                             {% if user.is_authenticated %}
-                                <form action="{% url 'group-subscribe' group.pk %}"
-                                      method="post" class="nav-menu-item">
+                                <form action="{% url 'group-subscribe' group.pk %}" method="post">
                                     {% csrf_token %}
-                                    <button>
+                                    <button class="nav-menu-item">
                                         <i class="sg sg-fw sg-subscription"></i>
                                         <span class="nav-menu-item-label">Abonnieren</span>
                                     </button>
