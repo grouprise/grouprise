@@ -1,12 +1,31 @@
 {% extends 'stadt/stadt.html' %}
 
+{% block title %}Suche - {{ block.super }}{% endblock %}
 {% block heading_title %}
-    {% include 'core/_heading.html' with title='Suche' icon='sg-search' %}
+    {% include 'core/_heading.html' with title='Suchergebnis' icon='sg-search' %}
 {% endblock %}
 
 {% block content %}
     <div class="content-list">
-        {% include 'content/_list.html' with associations=object_list %}
+        <ol class="content-preview-list">
+            {% for result in object_list %}
+                {% with association=result.object %}
+                    <li>
+                        {% if association.container.is_poll %}
+                            {% include 'polls/_preview.html' %}
+                        {% elif association.container.is_gallery %}
+                            {% include 'galleries/_preview.html' %}
+                        {% elif association.container.is_file %}
+                            {% include 'files/_preview.html' %}
+                        {% elif association.container.is_event %}
+                            {% include 'events/_preview.html' %}
+                        {% else %}
+                            {% include 'articles/_preview.html' %}
+                        {% endif %}
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ol>
         {% pagination 'Weitere Beiträge' %}
     </div>
 {% endblock %}
