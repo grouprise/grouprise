@@ -23,6 +23,8 @@ urlpatterns = [
         views.Privacy.as_view(),
         name='privacy'),
 
+    url(r'^stadt/search/$', views.Search.as_view(), name='search'),
+
     url(
         r'^(?P<entity_slug>[\w-]+)/$',
         views.Entity.as_view(),

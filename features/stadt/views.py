@@ -2,6 +2,8 @@ import django
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
+from django.views.generic import ListView
+from watson.views import SearchMixin
 
 import core
 from features import gestalten, groups
@@ -58,3 +60,7 @@ class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
     def get_context_data(self, **kwargs):
         kwargs['HAS_PIWIK'] = settings.HAS_PIWIK
         return super().get_context_data(**kwargs)
+
+
+class Search(SearchMixin, ListView):
+    template_name = 'stadt/search.html'
