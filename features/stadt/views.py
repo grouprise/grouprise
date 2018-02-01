@@ -6,6 +6,7 @@ from django.views.generic import ListView
 from watson.views import SearchMixin
 
 import core
+from core.views import PermissionMixin
 from features import gestalten, groups
 from features.content import views as content
 from features.groups.models import Group
@@ -62,5 +63,7 @@ class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class Search(SearchMixin, ListView):
+class Search(PermissionMixin, SearchMixin, ListView):
+    permission_required = 'stadt.search'
+    paginate_by = 10
     template_name = 'stadt/search.html'
