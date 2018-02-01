@@ -182,31 +182,18 @@
 .dock-header-link,
 .dock-session {
     &:extend(.btn all);
-    &:extend(.btn-link all);
+    &:extend(.btn-default all);
     color: @color-text-default;
     white-space: nowrap;
-    font-size: .75rem;
-    padding-right: 0;
-    padding-left: 0;
+    font-size: .9rem;
     margin-left: 2rem;
     overflow: visible;
     display: flex;
     align-items: center;
     flex: none;
 
-    &:hover,
-    &:focus,
-    &:active {
-        text-decoration: none;
-
-        span {
-            text-decoration: underline;
-        }
-    }
-
     i {
-        color: @color-primary;
-        font-size: 1.75rem;
+        font-size: 1.25rem;
         margin-right: .75rem;
     }
 }
