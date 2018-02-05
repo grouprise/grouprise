@@ -44,6 +44,7 @@
     "modernizr-loader": "^1.0.1",
     "postcss": "^6.0.6",
     "postcss-banner": ">=1",
+    "postcss-custom-properties": "^6.2.0",
     "postcss-loader": "^2.0.8",
     "standard": "^10.0.2",
     "svgo": "^0.7.2",

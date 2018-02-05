@@ -8,6 +8,10 @@
     .input-changed &:invalid {
         border-color: @brand-danger;
     }
+
+    &:focus {
+        border-color: @color-primary;
+    }
 }
 
 .input-group-addon {
@@ -120,7 +124,7 @@ label {
         }
 
         &.input-focused {
-            border-color: @brand-primary !important;
+            border-color: @color-primary !important;
         }
 
         &.has-error {
@@ -206,7 +210,7 @@ label {
 
         &:focus {
             outline: none;
-            border-color: @brand-primary;
+            border-color: @color-primary;
         }
     }
 
@@ -301,7 +305,7 @@ label {
     }
     100% {
         transform: scale(0.8) translateY(2px);
-        color: @brand-primary;
+        color: @color-primary;
     }
 }
 
