@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'watson.middleware.SearchContextMiddleware',
     'features.gestalten.middleware.GestaltAppConfigMiddleware',
     'core.assets.CSPMiddleware',
 ]
@@ -304,3 +305,9 @@ TAGS_TAGGABLE = (
                                  and hasattr(c.contribution, 'text')),
     },
 )
+
+
+# Search (engine)
+# https://github.com/etianen/django-watson/wiki/language-support
+
+WATSON_POSTGRES_SEARCH_CONFIG = "pg_catalog.german"
