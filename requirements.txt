@@ -3,11 +3,11 @@ django                      # debian: python3-django
 django-allauth              # debian (buster): python3-django-allauth
 django-crispy-forms         # debian: python3-django-crispy-forms
 django-filter               # debian: python3-django-filters
+django-haystack             # debian: python3-django-haystack
 django-ical                 # NOT IN DEBIAN
 django-imagekit             # debian (buster): python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
 django-mailer               # NOT IN DEBIAN
-django-watson               # NOT IN DEBIAN
 djangorestframework         # debian: python-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: flake8
