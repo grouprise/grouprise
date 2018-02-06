@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
+    <form method="post" class="form form-modern section">
         {% csrf_token %}
         <ul>
             {% for address in user.emailaddress_set.all %}
@@ -35,23 +35,29 @@
         </ul>
 
         <div>
-            <button class="btn btn-default" type="submit" name="action_send" >
+            <button class="btn btn-sm btn-default" type="submit" name="action_send" >
                 Adresse bestätigen
             </button>
             {% if user.emailaddress_set.count > 1 %}
-                <button class="btn btn-default" type="submit" name="action_primary" >
+                <button class="btn btn-sm btn-default" type="submit" name="action_primary" >
                     Hauptadresse wählen
                 </button>
-                <button class="btn btn-danger" type="submit" name="action_remove" >
+                <button class="btn btn-sm btn-danger" type="submit" name="action_remove" >
                     Adresse entfernen
                 </button>
             {% endif %}
         </div>
     </form>
 
-    <form method="post">
+    <form method="post" class="form form-modern">
         {% csrf_token %}
-        {% field form.email %}
-        <button name="action_add" class="btn btn-primary">E-Mail-Adresse hinzufügen</button>
+        <div class="row">
+            <div class="col-md-8">
+                {% field form.email %}
+            </div>
+            <div class="col-md-4">
+                <button name="action_add" class="btn btn-primary">E-Mail-Adresse hinzufügen</button>
+            </div>
+        </div>
     </form>
 {% endblock %}

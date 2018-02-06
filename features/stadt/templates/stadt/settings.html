@@ -4,97 +4,133 @@
 {% block menu %}{% menu entity=group %}{% endblock %}
 {% block heading_title_text %}Einstellungen{% endblock %}
 
+{% kwacro gestalt_links %}
+    <li>
+        <a href="{% url 'settings' %}?group={{ group.slug }}"
+           class="nav-menu-item {% if chapter == 'gestalt' %}nav-menu-item-active{% endif %}">
+            <i class="sg sg-fw sg-info"></i>
+            <span class="nav-menu-item-label">Allgemein</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'image-settings' %}?group={{ group.slug }}"
+           class="nav-menu-item {% if chapter == 'gestalt-images' %}nav-menu-item-active{% endif %}">
+            <i class="sg sg-fw sg-images"></i>
+            <span class="nav-menu-item-label">Bilder</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'email-settings' %}?group={{ group.slug }}"
+           class="nav-menu-item {% if chapter == 'gestalt-email' %}nav-menu-item-active{% endif %}">
+            <i class="sg sg-fw sg-message"></i>
+            <span class="nav-menu-item-label">E-Mail-Adressen</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'password-settings' %}?group={{ group.slug }}"
+           class="nav-menu-item {% if chapter == 'gestalt-password' %}nav-menu-item-active{% endif %}">
+            <i class="sg sg-fw sg-password"></i>
+            <span class="nav-menu-item-label">Kennwort</span>
+        </a>
+    </li>
+{% endkwacro %}
+
+{% kwacro group_links %}
+    {% load rules %}
+    {% has_perm 'groups.change' user group as can_edit_group_settings %}
+    {% if can_edit_group_settings %}
+        <li>
+            <a href="{% url 'group-settings' %}?group={{ group.slug }}"
+               class="nav-menu-item {% if chapter == 'group' %}nav-menu-item-active{% endif %}">
+                <i class="sg sg-fw sg-info"></i>
+                <span class="nav-menu-item-label">Allgemein</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'group-image-settings' %}?group={{ group.slug }}"
+               class="nav-menu-item {% if chapter == 'group-images' %}nav-menu-item-active{% endif %}">
+                <i class="sg sg-fw sg-images"></i>
+                <span class="nav-menu-item-label">Bilder</span>
+            </a>
+        </li>
+    {% endif %}
+    <li>
+        <a href="{% url 'subscriptions-memberships-settings' %}?group={{ group.slug }}"
+           class="nav-menu-item {% if chapter == 'subscriptions-memberships' %}nav-menu-item-active{% endif %}">
+            <i class="sg sg-fw sg-subscription"></i>
+            <span class="nav-menu-item-label">Benachrichtigungen & Mitgliedschaft</span>
+        </a>
+    </li>
+{% endkwacro %}
+
+{% block content_before %}
+    <nav class="nav-standalone hidden-md hidden-lg">
+        <div class="nav-inner">
+            <ul class="nav-menu">
+                <li>
+                    <input class="dropdown-state" id="menu-settings-gestalt" type="checkbox">
+                    <label class="nav-menu-item nav-menu-item-centered" for="menu-settings-gestalt"
+                           data-component="openable" data-openable-target="#menu-settings-gestalt">
+                        {% include 'gestalten/_avatar.html' with size=24 gestalt=user.gestalt %}
+                        <span class="nav-menu-item-label">Profil</span>
+                        <i class="caret"></i>
+                    </label>
+                    <div class="dock dock-light dock-menu dock-absolute" id="menu-settings-gestalt" data-dropdown>
+                        <div class="dock-inner">
+                            <span class="dock-decoration"></span>
+                            <div class="dock-content">
+                                <div class="dock-content-inner">
+                                    <ol class="nav-vertical">
+                                        {% usekwacro gestalt_links %}
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <input class="dropdown-state" id="menu-settings-group" type="checkbox">
+                    <label class="nav-menu-item nav-menu-item-centered" for="menu-settings-group"
+                           data-component="openable" data-openable-target="#menu-settings-group">
+                        {% include 'groups/_avatar.html' with size=24 %}
+                        <span class="nav-menu-item-label">Gruppe</span>
+                        <i class="caret"></i>
+                    </label>
+                    <div class="dock dock-light dock-menu dock-absolute" id="menu-settings-group" data-dropdown>
+                        <div class="dock-inner">
+                            <span class="dock-decoration"></span>
+                            <div class="dock-content">
+                                <div class="dock-content-inner">
+                                    <ol class="nav-vertical">
+                                        {% usekwacro group_links %}
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
 {% block sidebar %}
     {% if user.is_authenticated %}
-        <div class="box box-striped">
-            <div class="box-inner">
-                <header class="box-header">
-                    <h2 class="box-title">
-                        <i class="sg sg-gestalt"></i>
-                        Gestalt
-                    </h2>
-                </header>
-                <div class="box-content">
-                    <ul>
-                        <li>
-                            <a href="{% url 'settings' %}?group={{ group.slug }}">
-                                Allgemein
-                            </a> 
-                            {% if chapter == 'gestalt' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
-                        <li>
-                            <a href="{% url 'image-settings' %}?group={{ group.slug }}">
-                                Bilder
-                            </a> 
-                            {% if chapter == 'gestalt-images' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
-                        <li>
-                            <a href="{% url 'email-settings' %}?group={{ group.slug }}">
-                                E-Mail-Adressen
-                            </a> 
-                            {% if chapter == 'gestalt-email' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
-                        <li>
-                            <a href="{% url 'password-settings' %}?group={{ group.slug }}">
-                                Kennwort
-                            </a> 
-                            {% if chapter == 'gestalt-password' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <h3 class="nav-header">
+            {% include 'gestalten/_avatar.html' with size=32 gestalt=user.gestalt %}
+            <span class="nav-label">{{ user.gestalt }}</span>
+        </h3>
+        <ul class="nav-vertical nav-vertical-standalone">
+            {% usekwacro gestalt_links %}
+        </ul>
     {% endif %}
     {% if group %}
-        <div class="box box-striped">
-            <div class="box-inner">
-                <header class="box-header">
-                    <h2 class="box-title">
-                        <i class="sg sg-group"></i>
-                        Gruppe
-                    </h2>
-                </header>
-                <div class="box-content">
-                    <ul>
-                        {% load rules %}
-                        {% has_perm 'groups.change' user group as can_edit_group_settings %}
-                        {% if can_edit_group_settings %}
-                            <li>
-                                <a href="{% url 'group-settings' %}?group={{ group.slug }}">
-                                    Allgemein
-                                </a> 
-                                {% if chapter == 'group' %}
-                                    <i class="fa fa-arrow-left"></i>
-                                {% endif %}
-                            </li>
-                            <li>
-                                <a href="{% url 'group-image-settings' %}?group={{ group.slug }}">
-                                    Bilder
-                                </a>
-                                {% if chapter == 'group-images' %}
-                                    <i class="fa fa-arrow-left"></i>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="{% url 'subscriptions-memberships-settings' %}?group={{ group.slug }}">
-                                Benachrichtigungen & Mitgliedschaft
-                            </a>
-                            {% if chapter == 'subscriptions-memberships' %}
-                                <i class="fa fa-arrow-left"></i>
-                            {% endif %}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <h3 class="nav-header">
+            {% include 'groups/_avatar.html' with size=32 %}
+            <span class="nav-label">{{ group }}</span>
+        </h3>
+        <ul class="nav-vertical nav-vertical-standalone">
+            {% usekwacro group_links %}
+        </ul>
     {% endif %}
 {% endblock %}
