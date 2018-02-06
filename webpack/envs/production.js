@@ -8,6 +8,7 @@ module.exports = [
       require('../plugins/html'),
       require('../plugins/html-favicons'),
       require('../plugins/html-pwa'),
+      require('../plugins/html-extensions'),
       require('../plugins/define'),
       require('../plugins/lodash'),
       require('../plugins/loader-options'),
