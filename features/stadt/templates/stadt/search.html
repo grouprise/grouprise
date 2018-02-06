@@ -7,13 +7,17 @@
 
 {% block content %}
     <div class="content-list">
-        <ol class="content-preview-list">
-            {% for result in object_list %}
-                <li>
-                    {% include 'associations/_preview.html' with association=result.object %}
-                </li>
-            {% endfor %}
-        </ol>
-        {% pagination 'Weitere Beiträge' %}
+        {% if object_list %}
+            <ol class="content-preview-list">
+                {% for result in object_list %}
+                    <li>
+                        {% include 'associations/_preview.html' with association=result.object %}
+                    </li>
+                {% endfor %}
+            </ol>
+            {% pagination 'Weitere Beiträge' %}
+        {% else %}
+            <p>Nichts gefunden.</p>
+        {% endif %}
     </div>
 {% endblock %}
