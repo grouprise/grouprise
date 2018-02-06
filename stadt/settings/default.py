@@ -318,3 +318,5 @@ HAYSTACK_CONNECTIONS = {
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'xapian_index'),
     },
 }
+
+HAYSTACK_XAPIAN_LANGUAGE = 'german2'

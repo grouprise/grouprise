@@ -1,2 +1,10 @@
 {{ object.slug }}
 {{ object.container.title }}
+{{ object.container.versions.last.text }}
+{{ object.container.place }}
+{% for tagged in object.container.taggeds.all %}
+    {{ tagged.tag.name }}
+{% endfor %}
+{% for contribution in object.container.contributions.all %}
+    {{ contribution.contribution.text }}
+{% endfor %}
