@@ -308,7 +308,13 @@ TAGS_TAGGABLE = (
 )
 
 
-# Search (engine)
-# https://github.com/etianen/django-watson/wiki/language-support
+# Search engine
+# https://django-haystack.readthedocs.io/
 
-WATSON_POSTGRES_SEARCH_CONFIG = "pg_catalog.german"
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'xapian_backend.XapianEngine',
+        'PATH': os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'xapian_index'),
+    },
+}

@@ -3,8 +3,9 @@ from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
-from watson.views import SearchMixin
 from django.urls import reverse
+from haystack.inputs import AutoQuery
+from haystack.query import SearchQuerySet
 
 import core
 from core.views import PermissionMixin
@@ -66,7 +67,10 @@ class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class Search(PermissionMixin, SearchMixin, ListView):
+class Search(PermissionMixin, ListView):
     permission_required = 'stadt.search'
     paginate_by = 10
     template_name = 'stadt/search.html'
+
+    def get_queryset(self):
+        return SearchQuerySet().filter(text=AutoQuery(self.request.GET['q']))
