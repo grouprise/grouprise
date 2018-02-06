@@ -1,5 +1,9 @@
 {% extends 'content/list.html' %}
 
+{% block meta_feed %}
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ feed_url }}">
+{% endblock %}
+
 {% block content_header %}
     {% if STADTGESTALTEN_SHOW_HEADER %}
         {% load dismissible %}
@@ -8,6 +12,9 @@
                 {% include 'core/_heading.html' with title=about_group.name %}
                 {% dismiss 'stadtgestalten-intro' %}
             </header>
+            {% if intro_text %}
+                <p>{{ intro_text }}</p>
+            {% endif %}
             <ul class="actions">
                 <li>
                     <label class="action" for="sg-help-group">

@@ -25,7 +25,13 @@
     </header>
     <div class="group-preview-body">
         <h3>{{ group.name }}</h3>
-        <p>{{ group.description|default:"Diese Gruppe hat noch keine Beschreibung auf Stadtgestalten hinterlegt." }}</p>
+        <p>
+            {% if group.description %}
+                {{ group.description }}
+            {% else %}
+                Diese Gruppe hat noch keine Beschreibung auf {{ about_group }} hinterlegt.
+            {% endif %}
+        </p>
     </div>
 {% endkwacro %}
 

@@ -222,6 +222,8 @@ STADTGESTALTEN_SHOW_HEADER = True
 
 HAS_PIWIK = True
 
+STADTGESTALTEN_INTRO_TEXT = ''
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/
