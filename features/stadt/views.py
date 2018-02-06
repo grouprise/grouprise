@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.urls import reverse
 from haystack.inputs import AutoQuery
-from haystack.query import SearchQuerySet
+from haystack.query import EmptySearchQuerySet, SearchQuerySet
 
 import core
 from core.views import PermissionMixin
@@ -73,4 +73,8 @@ class Search(PermissionMixin, ListView):
     template_name = 'stadt/search.html'
 
     def get_queryset(self):
-        return SearchQuerySet().filter(text=AutoQuery(self.request.GET['q']))
+        query_string = self.request.GET.get('q', '').strip()
+        if query_string:
+            return SearchQuerySet().filter(content=AutoQuery(query_string))
+        else:
+            return EmptySearchQuerySet()
