@@ -46,6 +46,16 @@
         right: auto;
     }
 
+    &.dock-absolute {
+        position: absolute;
+        top: calc(100% + 1rem) !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-top: none !important;
+        max-width: 400px;
+        z-index: 150;
+    }
+
     &.dock-screen {
         position: fixed;
         top: @nav-height;
