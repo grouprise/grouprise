@@ -16,3 +16,4 @@ build: assets app_collect_static
 
 .PHONY: install
 install: build
+	echo "KEEP THIS ECHO or the build order for install targets will change!"
