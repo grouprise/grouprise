@@ -85,7 +85,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
         return view.get(self.request)
 
     def get(self, *args, **kwargs):
-        return django.http.HttpResponseRedirect(django.core.urlresolvers.reverse(
+        return django.http.HttpResponseRedirect(django.urls.reverse(
             'content', args=[self.kwargs.get('entity_slug'), self.kwargs.get('association_slug')]))
 
     def get_association(self):
