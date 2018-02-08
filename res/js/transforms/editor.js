@@ -86,6 +86,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
   const changeListener = on(codemirrorEvents, 'change', () => {
     editorHasChanged = true
   })
+  /*
   const beforeUnloadListener = on(window, 'beforeunload', event => {
     const message = 'Du hast Änderungen am Inhalt vorgenommen. Bist du sicher, dass du die ' +
       'Seite verlassen willst?'
@@ -94,6 +95,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
       return message
     }
   })
+  */
 
   // whenever images have been selected and uploaded insert image
   // markdown image references into the editor
@@ -139,7 +141,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
       scrollListener.destroy()
       focusListener.destroy()
       changeListener.destroy()
-      beforeUnloadListener.destroy()
+      //beforeUnloadListener.destroy()
     }
   }
 }
