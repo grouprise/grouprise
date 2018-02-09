@@ -53,7 +53,10 @@ class Detail(features.content.views.DetailBase):
                 votes_dict[vote.voter][vote.option] = vote.condorcetvote.rank
             else:
                 votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
-        data = SchulzeMethod([{'ballot': b} for b in votes_dict.values()]).as_dict()
+        if votes_dict:
+            data = SchulzeMethod([{'ballot': b} for b in votes_dict.values()]).as_dict()
+        else:
+            data = {}
         data['votes'] = votes_dict
         return data
 
