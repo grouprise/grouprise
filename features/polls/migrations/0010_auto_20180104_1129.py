@@ -9,7 +9,7 @@ def convert_votes(apps, schema_editor):
     Vote = apps.get_model('polls', 'Vote')
     with connection.cursor() as cursor:
         for v in Vote.objects.all():
-            cursor.execute('INSERT INTO polls_simplevote VALUES (%s, 0)', [v.id])
+            cursor.execute('INSERT INTO polls_simplevote VALUES (%s, \'0\')', [v.id])
 
 
 def adapt_endorsement(apps, schema_editor):

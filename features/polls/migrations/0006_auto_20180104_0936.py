@@ -10,7 +10,7 @@ def convert_polls(apps, schema_editor):
     with connection.cursor() as cursor:
         for c in Content.objects.all():
             if c.options.count() > 0:
-                cursor.execute('INSERT INTO polls_poll VALUES (%s, 0)', [c.id])
+                cursor.execute('INSERT INTO polls_poll VALUES (%s, \'0\')', [c.id])
 
 
 def adapt_options(apps, schema_editor):
