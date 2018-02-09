@@ -37,7 +37,8 @@ class Create(OptionMixin, content.Create):
             initial='simple', widget=forms.Select({'data-poll-type': ''}))
     vote_type = forms.ChoiceField(
             label='Art der Abstimmmöglichkeiten',
-            choices=[('simple', 'Ja/Nein/Vielleicht'), ('condorcet', 'Stimmen ordnen (rangbasiert)')],
+            choices=[('simple', 'Ja/Nein/Vielleicht'),
+                     ('condorcet', 'Stimmen ordnen (rangbasiert)')],
             initial='simple', widget=forms.RadioSelect)
 
     def __init__(self, *args, **kwargs):
@@ -128,9 +129,11 @@ class Vote(forms.ModelForm):
         self.poll = poll
         options = poll.options.all()
         if self.poll.condorcet:
-            self.votes = CondorcetVoteFormSet(data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
+            self.votes = CondorcetVoteFormSet(
+                    data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
         else:
-            self.votes = SimpleVoteFormSet(data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
+            self.votes = SimpleVoteFormSet(
+                    data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
         self.votes.extra = len(options)
         for i, form in enumerate(self.votes.forms):
             form.instance.option = options[i]
