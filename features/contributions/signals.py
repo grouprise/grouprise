@@ -3,6 +3,7 @@ import logging
 import django.conf
 import django.db.models.signals
 import django_mailbox.signals
+from django.conf import settings
 from django.dispatch import receiver
 
 import core.models
@@ -124,7 +125,11 @@ def process_incoming_message(sender, message, **args):
                 process_reply(address)
             except core.models.PermissionToken.DoesNotExist:
                 try:
-                    process_initial(address)
+                    if address == settings.STADTGESTALTEN_BOT_EMAIL:
+                        for to_address in message.to_addresses:
+                            process_initial(to_address)
+                    else:
+                        process_initial(address)
                 except (
                         groups.Group.DoesNotExist, ValueError,
                         django.core.exceptions.PermissionDenied) as e:
