@@ -95,8 +95,8 @@ class Group(core.models.Model):
 
     def get_cover_url(self):
         url = None
-        intro_gallery = self.associations.filter_galleries().filter(pinned=True, public=True) \
-            .order_content_by_time_created().first()
+        intro_gallery = self.associations.exclude_deleted().filter_galleries() \
+            .filter(pinned=True, public=True).order_content_by_time_created().first()
         if intro_gallery:
             url = intro_gallery.container.gallery_images.first().image.preview_group.url
         return url
