@@ -120,7 +120,7 @@ class Vote(forms.ModelForm):
     def __init__(self, poll, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self.instance.voter and self.instance.voter.user.is_authenticated():
+        if self.instance.voter and self.instance.voter.user.is_authenticated:
             del self.fields['anonymous']
         else:
             self.fields['anonymous'].required = True

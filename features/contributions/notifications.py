@@ -1,7 +1,7 @@
 import os
 
 import django
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from core import notifications
 from core.templatetags.core import ref

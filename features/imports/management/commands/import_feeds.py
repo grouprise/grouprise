@@ -25,7 +25,8 @@ class Command(django.core.management.base.BaseCommand):
             r'[^>]*>')
 
     def handle(self, *args, **options):
-        author = gestalten.Gestalt.objects.get(id=django.conf.settings.IMPORTER_ID)
+        author = gestalten.Gestalt.objects.get(
+            id=django.conf.settings.STADTGESTALTEN_FEEDS_IMPORTER_USER_ID)
         for group in groups.Group.objects.filter(url_import_feed=True):
             try:
                 r = requests.get(group.url, headers={'User-Agent': 'Stadtgestalten'})

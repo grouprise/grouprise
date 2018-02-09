@@ -1,4 +1,4 @@
-from django.core import urlresolvers
+from django import urls
 from django.utils import six
 from django.views import generic as django_generic_views
 from django.views.generic import base as django_generic_views_base
@@ -9,7 +9,7 @@ from rules.contrib import views as rules
 class PermissionMixin(rules.PermissionRequiredMixin):
     @property
     def raise_exception(self):
-        return self.request.user.is_authenticated()
+        return self.request.user.is_authenticated
 
 
 class StadtMixin(django_generic_views_base.ContextMixin):
@@ -40,11 +40,11 @@ class StadtMixin(django_generic_views_base.ContextMixin):
         title = str(instance)
         try:
             if isinstance(instance, six.string_types):
-                url = urlresolvers.reverse(instance)
-                title = urlresolvers.resolve(url).func.view_class.title
+                url = urls.reverse(instance)
+                title = urls.resolve(url).func.view_class.title
             else:
                 url = instance.get_absolute_url()
-        except (AttributeError, urlresolvers.NoReverseMatch):
+        except (AttributeError, urls.NoReverseMatch):
             url = None
         return title, url
 

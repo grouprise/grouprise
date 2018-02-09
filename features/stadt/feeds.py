@@ -5,7 +5,7 @@ from features.groups import models as groups
 
 
 class Index(django.contrib.syndication.views.Feed):
-    link = django.core.urlresolvers.reverse_lazy('index')
+    link = django.urls.reverse_lazy('index')
     description_template = 'feeds/detail.html'
 
     def items(self):

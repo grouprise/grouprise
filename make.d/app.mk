@@ -11,6 +11,9 @@ ADMINS = [
 ]
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
 ABOUT_GROUP_ID = 1
+
+# optional: user ID to be used as virtual "author" for articles imported via feeds
+#STADTGESTALTEN_FEEDS_IMPORTER_USER_ID = 1
 endef
 export APP_SETUP_CONFIG
 

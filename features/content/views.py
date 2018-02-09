@@ -1,4 +1,4 @@
-import django.core.urlresolvers
+import django.urls
 import django.views.generic
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
@@ -65,7 +65,7 @@ class Detail(DetailBase):
 class Permalink(django.views.generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         association = get_association_or_404(pk=kwargs.get('association_pk'))
-        return django.core.urlresolvers.reverse(
+        return django.urls.reverse(
                 'content', args=(association.entity.slug, association.slug))
 
 
@@ -90,7 +90,7 @@ class Create(base.PermissionMixin, generic.CreateView):
         if 'entity_slug' in self.kwargs:
             self.entity = shortcuts.get_object_or_404(
                     groups.Group, slug=self.kwargs['entity_slug'])
-        elif self.request.user.is_authenticated():
+        elif self.request.user.is_authenticated:
             self.entity = self.request.user.gestalt
         else:
             self.entity = None

@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 
 from core import tests
@@ -84,7 +84,10 @@ class AuthenticatedMemberSettings(AuthenticatedMemberMixin, TestCase):
         self.assertEqual(r.status_code, 200)
 
         # save form with changed values
-        r = self.client.post(settings_url, {'name': 'Changed Name', 'slug': 'changed-slug'})
+        r = self.client.post(settings_url, {
+                    'name': 'Changed Name',
+                    'slug': 'changed-slug',
+                    'date_founded': '2000-01-01'})
         self.group.refresh_from_db()
         self.assertRedirects(r, self.group.get_absolute_url())
         self.assertEqual(self.group.name, 'Changed Name')

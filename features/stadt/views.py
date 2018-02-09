@@ -1,8 +1,12 @@
 import django
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 import core
 from features import gestalten, groups
+from features.content import views as content
 from features.groups.models import Group
 
 
@@ -39,13 +43,21 @@ class Entity(core.views.PermissionMixin, django.views.generic.View):
         return self.view.has_permission()
 
 
-class Imprint(core.views.PageMixin, django.views.generic.TemplateView):
-    permission_required = 'entities.view_imprint'
-    template_name = 'entities/imprint.html'
-    title = 'Impressum'
+class Index(content.List):
+    template_name = 'stadt/index.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['intro_text'] = settings.STADTGESTALTEN_INTRO_TEXT
+        kwargs['feed_url'] = self.request.build_absolute_uri(reverse('feed'))
+        kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
+        return super().get_context_data(**kwargs)
 
 
 class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
-    permission_required = 'entities.view_imprint'
+    permission_required = 'stadt.view_privacy'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'
+
+    def get_context_data(self, **kwargs):
+        kwargs['HAS_PIWIK'] = settings.HAS_PIWIK
+        return super().get_context_data(**kwargs)

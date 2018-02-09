@@ -4,7 +4,7 @@ import django.utils.timezone
 import django.views.generic
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse
 from django.views import generic
 from django_ical.views import ICalFeed
@@ -173,7 +173,7 @@ class GroupCalendarExport(CalendarExport):
         return self.get_group()
 
     def has_private_access(self):
-        if self.request.user and self.request.user.is_authenticated():
+        if self.request.user and self.request.user.is_authenticated:
             return is_member_of(self.request.user, self.get_group())
         else:
             return False

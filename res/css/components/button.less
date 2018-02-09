@@ -74,7 +74,7 @@
         background-color: #ddd;
 
         &.btn-addon-ok:after {
-            background-color: @brand-primary;
+            background-color: @color-primary;
         }
     }
 
@@ -109,7 +109,7 @@
     }
 
     &[aria-pressed="true"] {
-        color: @brand-primary;
+        color: @color-primary;
     }
 
     i {
@@ -124,7 +124,9 @@
     padding: 0;
     margin: 0;
     display: inline-block;
-    color: @brand-primary;
+    color: @color-primary;
+    font-weight: normal;
+    text-decoration: underline;
 
     &:hover,
     &:active,
@@ -139,7 +141,7 @@
 
 .btn-link {
     background-color: transparent;
-    color: @brand-primary;
+    color: @color-primary;
 
     &:hover,
     &:active,
@@ -163,13 +165,13 @@
 }
 
 .btn-primary {
-    background: @brand-primary;
+    background: @color-primary;
     color: white;
 
     &:hover,
     &:active,
     &:focus {
-        background: lighten(@brand-primary, 10%);
+        background: @color-primary-dark;
     }
 
     &.btn-addon-ok:after {
@@ -333,26 +335,46 @@
 }
 
 .btn-ch {
-    @color: @brand-secondary;
+    @width: 200px;
+    @height: 3rem;
 
-    width: 200px;
-    height: 3rem;
+    width: @width;
+    height: @height;
     border-radius: 0;
     position: relative;
-    overflow: visible;
     display: flex;
     align-items: center;
     justify-content: space-around;
     border: none;
     color: white;
-    background: url(../../img/button/triangle.svg) repeat 0 -96px transparent;
     right: -.5rem;
+    overflow: hidden;
+    clip-path: polygon(0 100%, @height 0%, 100% 0, 100% 100%);
 
-    &:hover {
-        text-decoration: underline;
+    &:after {
+        content: ' ';
+        position: absolute;
+        right: 0; top: 100%;
+        background: @color-primary;
+        width: 100%;
+        height: @width;
+        transform: rotate(45deg) translateY(-100%);
+        transform-origin: 0 0;
+        z-index: 1;
+        pointer-events: none;
+        transition: background-color .2s;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        &:after {
+            background: @color-primary-dark;
+        }
     }
 
     .btn-label {
+        // recreate the optical effect that the button label is centered
         transform: translateX(14.4px);
     }
 }

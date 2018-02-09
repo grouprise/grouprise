@@ -54,9 +54,10 @@ class Vote(core.models.Model):
     class Meta:
         unique_together = (('option', 'voter'), ('option', 'anonymous'))
 
-    option = models.ForeignKey('Option')
+    option = models.ForeignKey('Option', on_delete=models.CASCADE)
 
-    voter = models.ForeignKey('gestalten.Gestalt', null=True, related_name='votes')
+    voter = models.ForeignKey(
+            'gestalten.Gestalt', null=True, related_name='votes', on_delete=models.PROTECT)
     anonymous = models.CharField(max_length=63, blank=True, null=True)
 
     time_updated = models.DateTimeField(auto_now=True)

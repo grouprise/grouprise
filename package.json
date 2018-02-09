@@ -2,7 +2,7 @@
   "name": "stadtgestalten",
   "title": "Stadtgestalten",
   "description": "Stadtgestalten ist eine Plattform um lokale Vernetzung zu fördern",
-  "version": "2.0.10",
+  "version": "2.1.4",
   "license": "AGPL-3.0",
   "engines": {
     "node": ">=6.4.0"
@@ -44,6 +44,7 @@
     "modernizr-loader": "^1.0.1",
     "postcss": "^6.0.6",
     "postcss-banner": ">=1",
+    "postcss-custom-properties": "^6.2.0",
     "postcss-loader": "^2.0.8",
     "standard": "^10.0.2",
     "svgo": "^0.7.2",
@@ -56,7 +57,7 @@
     "webpack-pwa-manifest": "^3.3.2"
   },
   "dependencies": {
-    "animejs": "^2.0.10",
+    "animejs": "^2.1.4",
     "autosize": "^4.0.0",
     "axios": "^0.16.2",
     "babel-runtime": "^6.20.0",

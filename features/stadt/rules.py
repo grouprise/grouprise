@@ -1,3 +1,3 @@
-import rules
+from rules import add_perm, always_allow
 
-rules.add_perm('entities.view_imprint', rules.always_allow)
+add_perm('stadt.view_privacy', always_allow)

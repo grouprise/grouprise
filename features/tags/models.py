@@ -17,7 +17,7 @@ class Tag(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return django.core.urlresolvers.reverse('tag', args=(self.slug,))
+        return django.urls.reverse('tag', args=(self.slug,))
 
 
 class Tagged(models.Model):
@@ -25,11 +25,11 @@ class Tagged(models.Model):
         ordering = ('tag__name',)
         unique_together = ('tag', 'tagged_id', 'tagged_type',)
 
-    tag = models.ForeignKey('Tag', related_name='tagged')
+    tag = models.ForeignKey('Tag', related_name='tagged', on_delete=models.CASCADE)
 
     tagged = contenttypes.GenericForeignKey('tagged_type', 'tagged_id')
     tagged_id = models.PositiveIntegerField()
-    tagged_type = models.ForeignKey('contenttypes.ContentType')
+    tagged_type = models.ForeignKey('contenttypes.ContentType', on_delete=models.CASCADE)
 
-    def __repr__(self):
+    def __str__(self):
         return "%s was tagged with '%s'" % (str(self.tagged), str(self.tag))

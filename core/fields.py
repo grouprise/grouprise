@@ -92,7 +92,7 @@ class CurrentGestalt(Field):
     null = False
 
     def clean(self, form):
-        if not self.view.request.user.is_authenticated() and not self.null:
+        if not self.view.request.user.is_authenticated and not self.null:
             try:
                 gestalt = entities_models.Gestalt.objects.get(
                         user__email=form.cleaned_data.get(self.get_name()))
@@ -105,7 +105,7 @@ class CurrentGestalt(Field):
                 pass
 
     def get_data(self, form_data):
-        if self.view.request.user.is_authenticated():
+        if self.view.request.user.is_authenticated:
             return self.view.request.user.gestalt
         elif not self.null:
             return entities_models.Gestalt.get_or_create(form_data)
@@ -113,12 +113,12 @@ class CurrentGestalt(Field):
             return None
 
     def get_form_field(self):
-        if not self.view.request.user.is_authenticated() and not self.null:
+        if not self.view.request.user.is_authenticated and not self.null:
             return forms.EmailField(label='E-Mail-Adresse')
         return None
 
     def get_layout(self):
-        if not self.view.request.user.is_authenticated() and not self.null:
+        if not self.view.request.user.is_authenticated and not self.null:
             return super().get_layout()
         return None
 

@@ -1,5 +1,5 @@
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django_mailbox.models import Message
 from django_mailbox.signals import message_received
 

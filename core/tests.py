@@ -1,8 +1,8 @@
-import django.core.urlresolvers
-from django import test
+import django.urls
+from django import test, urls
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
-from django.core import mail, urlresolvers
+from django.core import mail
 
 import logging
 
@@ -15,7 +15,7 @@ HTTP_OK = 'ok'
 
 
 def get_url(url, *args):
-    return django.core.urlresolvers.reverse(url, args=args)
+    return django.urls.reverse(url, args=args)
 
 
 class Test(test.TestCase):
@@ -43,12 +43,12 @@ class Test(test.TestCase):
 
     def assertLogin(self, url=None, url_name=None, url_args=[], method='get'):
         if url is None:
-            url = django.core.urlresolvers.reverse(url_name, args=url_args)
+            url = django.urls.reverse(url_name, args=url_args)
         response = getattr(self.client, method)(url)
         self.assertRedirects(response, self.get_login_url(url))
 
     def assertForbiddenOrLogin(self, response, next_url):
-        if auth.get_user(self.client).is_authenticated():
+        if auth.get_user(self.client).is_authenticated:
             self.assertEqual(response.status_code, 403)
         else:
             self.assertRedirects(response, self.get_login_url(next_url))
@@ -109,7 +109,7 @@ class Test(test.TestCase):
         return 'href="{}"'.format(url)
 
     def get_login_url(self, next_url):
-        return '{}?next={}'.format(urlresolvers.reverse('login'), next_url)
+        return '{}?next={}'.format(urls.reverse('login'), next_url)
 
     def get_response(self, method, url):
         return getattr(self.client, method)(url)
@@ -124,7 +124,7 @@ class Test(test.TestCase):
             args = key
         else:
             args = [key]
-        return urlresolvers.reverse(
+        return urls.reverse(
                 '{}'.format(url), args=args)
 
     def request(self, method, **kwargs):

@@ -54,7 +54,6 @@ class TagGroup(core.views.PermissionMixin, django.views.generic.CreateView):
         return self.tag.get_absolute_url()
 
     def get_tag(self):
-        try:
-            return models.Tag.objects.get(slug=self.kwargs.get('slug'))
-        except models.Tag.DoesNotExist:
-            return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
+        slug = self.kwargs.get('slug')
+        tag, created = models.Tag.objects.get_or_create(slug=slug, defaults={'name': slug})
+        return tag

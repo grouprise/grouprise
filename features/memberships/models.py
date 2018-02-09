@@ -9,10 +9,12 @@ class Membership(models.Model):
         unique_together = ('group', 'member')
 
     created_by = models.ForeignKey(
-            'gestalten.Gestalt', related_name='memberships_created')
+            'gestalten.Gestalt', related_name='memberships_created', on_delete=models.PROTECT)
     date_joined = models.DateField(auto_now_add=True)
-    group = models.ForeignKey('groups.Group', related_name='memberships')
-    member = models.ForeignKey('gestalten.Gestalt', related_name='memberships')
+    group = models.ForeignKey(
+            'groups.Group', related_name='memberships', on_delete=models.CASCADE)
+    member = models.ForeignKey(
+            'gestalten.Gestalt', related_name='memberships', on_delete=models.CASCADE)
 
     objects = models.Manager.from_queryset(querysets.MembershipQuerySet)()
 
@@ -24,7 +26,8 @@ class Membership(models.Model):
 
 
 class Application(models.Model):
-    group = models.ForeignKey('groups.Group', related_name='applications')
+    group = models.ForeignKey(
+            'groups.Group', related_name='applications', on_delete=models.CASCADE)
 
     contributions = contenttypes.GenericRelation(
             'contributions.Contribution',

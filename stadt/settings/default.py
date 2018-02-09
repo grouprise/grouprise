@@ -59,7 +59,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'features.gestalten.middleware.GestaltAppConfigMiddleware',
@@ -175,6 +174,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/stadt/media/'
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 
 # Email
 # https://docs.djangoproject.com/en/1.9/topics/email/
@@ -218,6 +219,10 @@ MAX_FILE_SIZE = 5 * 1024 * 1024
 STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
 
 STADTGESTALTEN_SHOW_HEADER = True
+
+HAS_PIWIK = True
+
+STADTGESTALTEN_INTRO_TEXT = ''
 
 
 # Authentication

@@ -13,11 +13,14 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "stadt.settings")
 
-# If this environment variable is set, then a file containing a profile dump is stored for the
-# processing of every single request.
-if os.environ.get("PROFILING_DIRECTORY"):
+application = get_wsgi_application()
+
+ENABLE_SENTRY = os.environ.get("SENTRY_ENABLE", "false") == "true"
+if ENABLE_SENTRY:
+    from raven.contrib.django.raven_compat.middleware.wsgi import Sentry
+    application = Sentry(application)
+
+PROFILING_DIR = os.environ.get("PROFILING_DIRECTORY", False)
+if PROFILING_DIR:
     from werkzeug.contrib.profiler import ProfilerMiddleware
-    application = ProfilerMiddleware(
-        get_wsgi_application(), profile_dir=os.environ["PROFILING_DIRECTORY"])
-else:
-    application = get_wsgi_application()
+    application = ProfilerMiddleware(application, profile_dir=PROFILING_DIR)

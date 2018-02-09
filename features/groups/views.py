@@ -2,6 +2,7 @@ import django
 import django_filters
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, UpdateView
+from django.urls import reverse
 from django_filters import views as filters_views
 
 import core
@@ -81,6 +82,8 @@ class Detail(
         intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
         if intro_gallery:
             intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
+        kwargs['feed_url'] = self.request.build_absolute_uri(
+                reverse('group-feed', args=(self.object.pk,)))
         return super().get_context_data(
                 associations=associations,
                 filter=filterset,

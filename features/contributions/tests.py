@@ -1,6 +1,6 @@
 import django
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
 import features.articles.tests

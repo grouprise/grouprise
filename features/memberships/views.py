@@ -1,7 +1,7 @@
 import django
 from django import db, http, shortcuts
 from django.contrib import messages
-from django.core import urlresolvers
+from django import urls
 
 import core
 from core import fields, views
@@ -85,7 +85,7 @@ class Join(MembershipMixin, views.Create):
     template_name = 'memberships/join.html'
 
     def handle_no_permission(self):
-        if self.request.user.is_authenticated() and self.related_object.members.filter(
+        if self.request.user.is_authenticated and self.related_object.members.filter(
                 pk=self.request.user.gestalt.pk).exists():
             django.contrib.messages.info(self.request, 'Du bist bereits Mitglied der Gruppe.')
             return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
@@ -124,7 +124,7 @@ class MemberAdd(MembershipMixin, views.Create):
             return http.HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return urlresolvers.reverse('members', args=(self.related_object.pk,))
+        return urls.reverse('members', args=(self.related_object.pk,))
 
 
 class Resign(MembershipMixin, utils_views.Delete):

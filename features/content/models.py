@@ -1,5 +1,5 @@
 import django.contrib.contenttypes.models
-import django.core.urlresolvers
+import django.urls
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from django.db.models import Q
@@ -13,7 +13,7 @@ class Content(core.models.Model):
     is_conversation = False
 
     title = models.CharField(max_length=255)
-    image = models.ForeignKey('images.Image', blank=True, null=True)
+    image = models.ForeignKey('images.Image', blank=True, null=True, on_delete=models.SET_NULL)
 
     place = models.CharField(blank=True, max_length=255)
 
@@ -59,7 +59,7 @@ class Content(core.models.Model):
         return 'content.{}'.format(self.id)
 
     def get_url_for(self, association):
-        return django.core.urlresolvers.reverse(
+        return django.urls.reverse(
                 'content', args=[association.entity.slug, association.slug])
 
     @property
@@ -84,8 +84,9 @@ class Content(core.models.Model):
 
 
 class Version(models.Model):
-    content = models.ForeignKey('Content', related_name='versions')
+    content = models.ForeignKey('Content', related_name='versions', on_delete=models.CASCADE)
 
-    author = models.ForeignKey('gestalten.Gestalt', related_name='versions')
+    author = models.ForeignKey(
+            'gestalten.Gestalt', related_name='versions', on_delete=models.PROTECT)
     text = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)

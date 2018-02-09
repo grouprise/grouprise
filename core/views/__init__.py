@@ -10,7 +10,8 @@ from core import forms
 from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.messages import views as messages_views
-from django.core import exceptions, urlresolvers
+from django.core import exceptions
+from django import urls
 from django.utils import six
 from django.views import generic
 from django.views.generic import edit as edit_views
@@ -151,11 +152,11 @@ class NavigationMixin:
         title = str(instance)
         try:
             if isinstance(instance, six.string_types):
-                url = urlresolvers.reverse(instance)
-                title = urlresolvers.resolve(url).func.view_class.title
+                url = urls.reverse(instance)
+                title = urls.resolve(url).func.view_class.title
             else:
                 url = instance.get_absolute_url()
-        except (AttributeError, urlresolvers.NoReverseMatch):
+        except (AttributeError, urls.NoReverseMatch):
             url = None
         return title, url
 

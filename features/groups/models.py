@@ -3,10 +3,10 @@ import datetime
 import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core import urlresolvers
+from django import urls
 from django.db import models
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFit, SmartResize, Transpose
+from imagekit.processors import ResizeToFit, Transpose
 
 import core.models
 from core import colors
@@ -20,10 +20,8 @@ class Group(core.models.Model):
     date_created = models.DateField(
             auto_now_add=True)
     gestalt_created = models.ForeignKey(
-            'gestalten.Gestalt',
-            null=True,
-            blank=True,
-            related_name='+')
+            'gestalten.Gestalt', null=True, blank=True, related_name='+',
+            on_delete=models.SET_NULL)
     name = models.CharField(
             'Name',
             max_length=255)
@@ -39,14 +37,14 @@ class Group(core.models.Model):
             blank=True, help_text='Der Avatar ist ein kleines quadratisches Vorschaubild, '
             'an welchem sich die Gruppe leicht erkennen lässt.')
     avatar_64 = ImageSpecField(
-            source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
+            source='avatar', processors=[Transpose(), ResizeToFit(64, 64)], format='PNG')
     avatar_256 = ImageSpecField(
-            source='avatar', processors=[Transpose(), SmartResize(256, 256)], format='PNG')
+            source='avatar', processors=[Transpose(), ResizeToFit(256, 256)], format='PNG')
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
     date_founded = models.DateField(
-            'Gruppe gegründet', blank=True, default=datetime.date.today,
+            'Gruppe gegründet', default=datetime.date.today,
             help_text='Ungefähres Datum der tatsächlichen Gruppengründung')
     description = models.TextField(
             'Kurzbeschreibung',
@@ -92,7 +90,7 @@ class Group(core.models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return urlresolvers.reverse(
+        return urls.reverse(
                 'entity', args=[type(self).objects.get(pk=self.pk).slug])
 
     def get_cover_url(self):
