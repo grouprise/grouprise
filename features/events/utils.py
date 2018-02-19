@@ -6,6 +6,8 @@ def get_requested_time(request):
     month, year = query.get('month', None), query.get('year', None)
 
     if month and year:
-        return timezone.datetime(year=int(year), month=int(month), day=1)
-    else:
-        return None
+        try:
+            return timezone.datetime(year=int(year), month=int(month), day=1)
+        except ValueError:
+            pass
+    return None
