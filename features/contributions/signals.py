@@ -117,6 +117,16 @@ def process_incoming_message(sender, message, **args):
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
+    def process_message(address):
+        try:
+            process_reply(address)
+        except core.models.PermissionToken.DoesNotExist:
+            if address == settings.STADTGESTALTEN_BOT_EMAIL:
+                for to_address in message.to_addresses:
+                    process_initial(to_address)
+            else:
+                process_initial(address)
+
     delivered_to = message.get_email_object()['Delivered-To']
     if not delivered_to:
         logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
@@ -126,14 +136,7 @@ def process_incoming_message(sender, message, **args):
         address = address.rstrip('>')
         if not is_autoresponse(message):
             try:
-                try:
-                    process_reply(address)
-                except core.models.PermissionToken.DoesNotExist:
-                    if address == settings.STADTGESTALTEN_BOT_EMAIL:
-                        for to_address in message.to_addresses:
-                            process_initial(to_address)
-                    else:
-                        process_initial(address)
+                process_message(address)
             except (
                     groups.Group.DoesNotExist, ValueError,
                     django.core.exceptions.PermissionDenied) as e:
