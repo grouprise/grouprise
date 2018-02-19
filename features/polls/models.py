@@ -5,9 +5,8 @@ import core.models
 from features.content.models import Content
 
 
+# FIXME: inherit from content.Content when django bug #28988 is fixed
 class Poll(core.models.Model):
-    content = models.OneToOneField(to='content2.Content', related_name='poll')
-
     condorcet = models.BooleanField(default=False)
 
 
