@@ -5,7 +5,9 @@ import core.models
 from features.content.models import Content
 
 
-class Poll(Content):
+class Poll(core.models.Model):
+    content = models.OneToOneField(to='content2.Content', related_name='poll')
+
     condorcet = models.BooleanField(default=False)
 
 
