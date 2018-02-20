@@ -2,10 +2,10 @@
   <div class="poll-editor">
     <tabs :storage="pollTypeStorage">
       <tab id="simple" name="Einfache Umfrage" v-if="!pollTypeStatic || pollType === 'simple'">
-        <simple-editor v-model="answers" />
+        <simple-editor v-model="answers" v-if="pollType === 'simple'" />
       </tab>
       <tab id="event" name="Terminumfrage" v-if="!pollTypeStatic || pollType === 'event'">
-        <appointment-editor v-model="answers" />
+        <appointment-editor v-model="answers" v-if="pollType === 'event'" />
       </tab>
     </tabs>
   </div>
