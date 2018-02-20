@@ -17,10 +17,11 @@ def permission(path):
 class GestaltSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='__str__', read_only=True)
     initials = serializers.CharField(source='get_initials', read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
         model = models.Gestalt
-        fields = ('id', 'name', 'initials', 'about', 'avatar', 'avatar_color')
+        fields = ('id', 'name', 'initials', 'about', 'avatar', 'avatar_color', 'url')
 
 
 class GestaltSettingSerializer(serializers.ModelSerializer):
