@@ -19,6 +19,7 @@ import Configurator from './components/core/configurator.vue'
 import Input from './components/core/input.vue'
 import User from './components/core/user.vue'
 import UserCurrent from './components/core/user-current.vue'
+import ChartPie from './components/core/chart-pie.vue'
 
 // custom global vue filters
 import { fallback, truncatewords } from './components/core/filters.js'
@@ -38,3 +39,4 @@ Vue.component('sg-switch', Switch)
 Vue.component('sg-configurator', Configurator)
 Vue.component('sg-user', User)
 Vue.component('sg-user-current', UserCurrent)
+Vue.component('sg-chart-pie', ChartPie)
