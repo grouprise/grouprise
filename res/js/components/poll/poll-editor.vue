@@ -1,5 +1,5 @@
 <template>
-  <div class="poll-editor">
+  <div class="poll poll-editor">
     <tabs :storage="pollTypeStorage">
       <tab id="simple" name="Einfache Umfrage" v-if="!pollTypeStatic || pollType === 'simple'">
         <simple-editor v-model="answers" v-if="pollType === 'simple'" />

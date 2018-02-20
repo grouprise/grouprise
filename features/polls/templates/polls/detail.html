@@ -11,8 +11,13 @@
 
 {% block content_text %}
     {{ block.super }}
+    {% has_perm 'polls.vote' user association as can_vote %}
 
-    <form method="post" action="{% url 'vote' association.entity.slug association.slug %}" class="form-overflow">
+    <form method="post" action="{% url 'vote' association.entity.slug association.slug %}" class="form-overflow"
+          data-component="poll"
+          data-poll-id="{{ object.container.poll.id }}"
+          data-poll-type="{% if association.container.poll.condorcet %}rank{% else %}select{% endif %}"
+          data-poll-can-vote="{% if can_vote %}true{% else %}false{% endif %}">
         {% csrf_token %}
         {{ vote_form.votes.management_form }}
         <table class="table table-poll table-striped">
@@ -55,7 +60,9 @@
                             {{ voter }}
                         {% endif %}
                         {% get votes voter as vvs %}
-                        <div class="content-mute">{% time vvs.latest.time_updated %}</div>
+                        {%  if vvs.latest.time_updated %}
+                            <div class="content-mute">{% time vvs.latest.time_updated %}</div>
+                        {% endif %}
                     </td>
                     {% for option in options %}
                         <td class="{% cycle 'table-column-highlight' '' %} {% if option == winner %}table-column-favorite{% endif %}">
@@ -77,7 +84,6 @@
                 </tr>
                 {% endfor %}
 
-                {% has_perm 'polls.vote' user association as can_vote %}
                 {% if can_vote %}
                     <tr>
                         <td>
@@ -123,13 +129,4 @@
             {% endif %}
         </table>
     </form>
-    {% if association.container.poll.condorcet %}
-        <h2>Auswertung</h2>
-        <ul>
-            <li>Gewinner: {{ winner }}</li>
-            <li>Kandidaten: {{ candidates }}</li>
-            <li>Paare: {{ pairs }}</li>
-            <li>Stärkste Paare: {{ strong_pairs }}</li>
-        </ul>
-    {% endif %}
 {% endblock %}

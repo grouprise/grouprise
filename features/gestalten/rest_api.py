@@ -24,6 +24,21 @@ class GestaltSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'initials', 'about', 'avatar', 'avatar_color', 'url')
 
 
+class GestaltOrAnonSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False, allow_null=True)
+    name = serializers.CharField(required=False, allow_null=True)
+
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+        if 'id' in data and data['id'] is not None:
+            return models.Gestalt.objects.get(pk=data['id'])
+        # todo validate name if no valid id was provided
+        return data
+
+    class Meta:
+        fields = ('id', 'name')
+
+
 class GestaltSettingSerializer(serializers.ModelSerializer):
     def get_fields(self):
         fields = super().get_fields()

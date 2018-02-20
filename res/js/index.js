@@ -34,6 +34,7 @@ import quote from './transforms/quote'
 import masonry from './transforms/masonry'
 import galleryEditor from './transforms/gallery-editor'
 import imagePicker from './transforms/image-picker'
+import poll from './transforms/poll'
 import pollEditor from './transforms/poll-editor'
 import groupSearch from './transforms/group-search'
 import menu from './transforms/menu'
@@ -74,6 +75,7 @@ function init (searchIn = document) {
   component('grouplink', grouplink, opts)
   component('image-picker', imagePicker, opts)
   component('group-search', groupSearch, opts)
+  component('poll', poll, opts)
   component('poll-editor', pollEditor, opts)
   component('content-order', contentOrder, opts)
 
