@@ -21,7 +21,7 @@
     <footer class="poll-footer" v-if="poll && canVote">
       <keep-alive>
         <sg-user-current :anonymousEdit="true" :anonymousLogin="true" v-model="user"
-                         @edit="$emit('vote')" />
+                         @edit="!isVoting && $emit('vote')" />
       </keep-alive>
       <slot name="footer" :canSubmitVote="user && user.name" />
     </footer>
