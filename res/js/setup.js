@@ -3,7 +3,6 @@ import 'matches-selector-polyfill/dist/matches-selector-polyfill'
 import 'es6-promise/auto'
 import 'modernizr'
 import Vue from 'vue'
-import { $ } from 'luett'
 
 // custom global vue components
 import FilePicker from './components/core/file-picker.vue'
@@ -31,8 +30,3 @@ Vue.component('sg-datetime', DateTime)
 Vue.component('sg-number-spinner', NumberSpinner)
 Vue.component('sg-switch', Switch)
 Vue.component('sg-configurator', Configurator)
-
-// app configuration
-window.app = {
-  conf: JSON.parse($('#app-configuration').textContent)
-}
