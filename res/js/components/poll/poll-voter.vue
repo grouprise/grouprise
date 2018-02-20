@@ -1,6 +1,7 @@
 <template>
   <div class="poll" :class="{ 'poll-voting': isVoting, 'poll-loading': !poll }">
     <header class="poll-header">
+      <i class="poll-header-icon fa fa-lightbulb-o" v-if="isVoting"></i>
       <slot name="header">
         <div class="poll-info">
           {{ headerText }}
