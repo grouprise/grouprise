@@ -1,3 +1,5 @@
+import enum
+
 from django.db import models
 from django.utils import timezone
 
@@ -5,8 +7,17 @@ import core.models
 from features.content.models import Content
 
 
+class VoteType(enum.Enum):
+    SIMPLE = 'simple'
+    RANK = 'rank'
+
+
 class Poll(Content):
     condorcet = models.BooleanField(default=False)
+
+    @property
+    def vote_type(self):
+        return VoteType.RANK if self.condorcet else VoteType.SIMPLE
 
 
 class Option(core.models.Model):
