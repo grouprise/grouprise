@@ -104,12 +104,13 @@
           return this.$refs.poll.requestUserName()
         }
 
+        const voteOrder = this.voteOrder
+        this.voteOrder = null
         this.isVoting = false
         await this.$refs.poll.vote({
-          ranking: this.voteOrder
-        }).then(() => {
-          this.voteOrder = null
-        }, () => {
+          ranking: voteOrder
+        }).then(null, () => {
+          this.voteOrder = voteOrder
           this.isVoting = true
         })
       }
