@@ -6,7 +6,6 @@ from django.utils import timezone
 from py3votecore.schulze_method import SchulzeMethod
 
 import core.models
-from features.content.models import Content
 
 
 class VoteType(enum.Enum):
@@ -124,7 +123,8 @@ def resolve_vote(poll):
     return votes
 
 
-class Poll(Content):
+# FIXME: inherit from content.Content when django bug #28988 is fixed
+class Poll(core.models.Model):
     condorcet = models.BooleanField(default=False)
 
     @property

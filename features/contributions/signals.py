@@ -3,6 +3,8 @@ import logging
 import django.conf
 import django.db.models.signals
 import django_mailbox.signals
+from django.conf import settings
+from django.db.models.functions import Lower
 from django.dispatch import receiver
 
 import core.models
@@ -25,12 +27,15 @@ def contribution_created(sender, instance, **kwargs):
 
 
 def get_sender(message):
+
     try:
-        gestalt = gestalten.Gestalt.objects.get(user__email=message.from_address[0])
+        gestalt = gestalten.Gestalt.objects.annotate(email=Lower('user__email')).get(
+                email=message.from_address[0].lower())
     except gestalten.Gestalt.DoesNotExist:
         try:
-            gestalt = gestalten.Gestalt.objects.get(
-                    user__emailaddress__email=message.from_address[0])
+            gestalt = gestalten.Gestalt.objects.annotate(
+                    email=Lower('user__emailaddress__email')).get(
+                            email=message.from_address[0].lower())
         except gestalten.Gestalt.DoesNotExist:
             gestalt = None
     return gestalt
@@ -112,6 +117,16 @@ def process_incoming_message(sender, message, **args):
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
+    def process_message(address):
+        try:
+            process_reply(address)
+        except core.models.PermissionToken.DoesNotExist:
+            if address == settings.STADTGESTALTEN_BOT_EMAIL:
+                for to_address in message.to_addresses:
+                    process_initial(to_address)
+            else:
+                process_initial(address)
+
     delivered_to = message.get_email_object()['Delivered-To']
     if not delivered_to:
         logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
@@ -121,20 +136,17 @@ def process_incoming_message(sender, message, **args):
         address = address.rstrip('>')
         if not is_autoresponse(message):
             try:
-                process_reply(address)
-            except core.models.PermissionToken.DoesNotExist:
-                try:
-                    process_initial(address)
-                except (
-                        groups.Group.DoesNotExist, ValueError,
-                        django.core.exceptions.PermissionDenied) as e:
-                    logger.error('Could not process receiver {} in message {}'.format(
-                        address, message.id))
-                    django.core.mail.send_mail(
-                            'Re: {}'.format(message.subject),
-                            'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
-                            from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
-                            recipient_list=[message.from_header],
-                            fail_silently=True)
+                process_message(address)
+            except (
+                    groups.Group.DoesNotExist, ValueError,
+                    django.core.exceptions.PermissionDenied) as e:
+                logger.error('Could not process receiver {} in message {}'.format(
+                    address, message.id))
+                django.core.mail.send_mail(
+                        'Re: {}'.format(message.subject),
+                        'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
+                        from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[message.from_header],
+                        fail_silently=True)
         else:
             logger.warning('Ignored message {} as autoresponse'.format(message.id))

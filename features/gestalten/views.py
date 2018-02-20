@@ -103,7 +103,8 @@ class UpdateEmail(PermissionMixin, views.EmailView):
     @property
     def success_url(self):
         group = Group.objects.filter(slug=self.request.GET.get('group')).first()
-        return '{}?group={}'.format(reverse('email-settings'), group.slug)
+        slug = group.slug if group else ''
+        return '{}?group={}'.format(reverse('email-settings'), slug)
 
 
 class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):

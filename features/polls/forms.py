@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 
 from features.content import forms as content
+from features.content.models import Content
 from . import models
 
 
@@ -22,13 +23,18 @@ class OptionMixin:
         return super().is_valid() and self.options.is_valid()
 
     def save_content_relations(self, commit):
+        # FIXME: remove when django bug #28988 is fixed
+        self.instance.container.poll = models.Poll.objects.create()
+        self.instance.container.save()
+
         for form in self.options.forms:
             form.instance.poll = self.instance.container.poll
         self.options.save(commit)
 
 
 class Create(OptionMixin, content.Create):
-    container_class = models.Poll
+    # FIXME: replace by models.Poll when django bug #28988 is fixed
+    container_class = Content
 
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
     poll_type = forms.ChoiceField(
