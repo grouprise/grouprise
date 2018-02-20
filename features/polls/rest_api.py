@@ -51,9 +51,9 @@ class PollSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         vote_data = models.resolve_vote(instance)
         representation = super().to_representation(instance)
+        voter_serializer = VoterSerializer()
 
         if 'ranking' in vote_data:
-            voter_serializer = VoterSerializer()
             representation.update({
                 'options_winner': getattr(vote_data['winner'], 'id', None),
                 'options_ranking': [option.id for option in vote_data['ranking']],
@@ -67,6 +67,29 @@ class PollSerializer(serializers.ModelSerializer):
                     ) for voter, options in vote_data['votes'].items()
                 ]
             })
+        else:
+            representation.update({
+                'options_winner': getattr(vote_data['winner'], 'id', None),
+                'options_ranking': [
+                    option.id for option, counts in
+                    sorted(vote_data['vote_count'].items(),
+                           key=lambda x: x[1].score, reverse=True)
+                ],
+                'vote_counts': [
+                    dict(option=option.id, score=counts.score, counts=counts.serialize())
+                    for option, counts in vote_data['vote_count'].items()
+                ],
+                'votes': [
+                    dict(
+                        voter=voter_serializer.to_representation(voter),
+                        endorsements=[
+                            dict(option=option.id, endorsement=vote.simplevote.endorse)
+                            for option, vote in votes.items()
+                            if isinstance(option, models.Option)
+                        ]
+                    ) for voter, votes in vote_data['votes'].items()
+                ]
+            })
 
         return representation
 
@@ -75,10 +98,16 @@ class PollSerializer(serializers.ModelSerializer):
         fields = ('id', 'options', )
 
 
+class EndorsementsSerializer(serializers.Serializer):
+    option = serializers.PrimaryKeyRelatedField(queryset=models.Option.objects)
+    endorsement = serializers.NullBooleanField()
+
+
 class PollVoteSerializer(serializers.Serializer):
     gestalt = GestaltOrAnonSerializer()
     ranking = serializers.PrimaryKeyRelatedField(many=True, required=False,
                                                  queryset=models.Option.objects)
+    endorsements = EndorsementsSerializer(many=True, required=False)
 
 
 # todo check user permissions
@@ -110,8 +139,9 @@ def vote(request, pk):
             with create_vote(models.CondorcetVote, option) as condorcet_vote:
                 condorcet_vote.rank = num_options - ranking
     elif poll.vote_type is models.VoteType.SIMPLE:
-        # todo implement simple votes
-        pass
+        for vote in payload['endorsements']:
+            with create_vote(models.SimpleVote, vote['option']) as simple_vote:
+                simple_vote.endorse = vote['endorsement']
 
     return Response(status=200)
 

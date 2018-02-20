@@ -73,29 +73,43 @@ def _resolve_condorcet_vote(options, votes):
 
 
 def _resolve_simple_vote(votes):
+    class VoteCount:
+        def __init__(self) -> None:
+            self.yes = 0
+            self.no = 0
+            self.maybe = 0
+
+        def __add__(self, endorse):
+            if endorse is None:
+                self.maybe += 1
+            elif endorse:
+                self.yes += 1
+            else:
+                self.no += 1
+            return self
+
+        @property
+        def score(self):
+            return self.yes + self.maybe * .33334
+
+        def serialize(self):
+            return {key: getattr(self, key) for key in ['yes', 'no', 'maybe']}
+
     def get_winner(vote_count: dict):
         result = []
         for option, votes in vote_count.items():
             result.append(
-                (option, votes['yes'] + votes['maybe'] * .33334)
+                (option, votes.score)
             )
         try:
             return sorted(result, key=lambda item: item[1], reverse=True)[0][0]
         except IndexError:
             return None
 
-    def vote_key(endorse):
-        if endorse is None:
-            return 'maybe'
-        elif endorse:
-            return 'yes'
-        else:
-            return 'no'
-
     votes_dict = collections.defaultdict(dict)
-    vote_count = collections.defaultdict(lambda: dict(yes=0, no=0, maybe=0))
+    vote_count = collections.defaultdict(lambda: VoteCount())
     for vote in votes:
-        vote_count[vote.option][vote_key(vote.simplevote.endorse)] += 1
+        vote_count[vote.option] += vote.simplevote.endorse
         if vote.voter:
             votes_dict[vote.voter][vote.option] = vote
             votes_dict[vote.voter]['latest'] = vote
