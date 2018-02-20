@@ -4,6 +4,9 @@ import 'es6-promise/auto'
 import 'modernizr'
 import Vue from 'vue'
 
+// third-party vue plugins / components
+import draggable from 'vuedraggable'
+
 // custom global vue components
 import FilePicker from './components/core/file-picker.vue'
 import ImagePicker from './components/image/image-picker.vue'
@@ -21,6 +24,7 @@ import { fallback, truncatewords } from './components/core/filters.js'
 // vue setup
 Vue.filter('default', fallback)
 Vue.filter('truncatewords', truncatewords)
+Vue.component('draggable', draggable)
 Vue.component('sg-file-picker', FilePicker)
 Vue.component('sg-image-picker', ImagePicker)
 Vue.component('sg-input', Input)
