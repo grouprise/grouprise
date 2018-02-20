@@ -51,7 +51,7 @@
           ? 'Lade Abstimmungsdaten...'
           : numVotes === 0
             ? 'Bisher hat noch keine Person ihre Stimme abgegeben. Sei die erste!'
-            : `Es haben bisher ${numVotes > 1 ? `${numVotes} Personen` : 'eine Person'} ihre Stimme abgegeben. ${canVote ? 'Sei die nächste!' : 'Du hast bereits abgestimmt.'}`
+            : `Es ${numVotes === 1 ? 'hat' : 'haben'} bisher ${numVotes > 1 ? `${numVotes} Personen` : 'eine Person'} ihre Stimme abgegeben. ${canVote ? 'Sei die nächste!' : 'Du hast bereits abgestimmt.'}`
       }
     },
     inject: ['controller'],
