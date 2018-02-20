@@ -13,6 +13,9 @@ class VoteType(enum.Enum):
     SIMPLE = 'simple'
     RANK = 'rank'
 
+    def __str__(self):
+        return str(self.value)
+
 
 def _resolve_condorcet_vote(options, votes):
     def _resolve_pair_order(winner, strong_pairs):

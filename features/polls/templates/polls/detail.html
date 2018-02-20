@@ -16,7 +16,7 @@
     <form method="post" action="{% url 'vote' association.entity.slug association.slug %}" class="form-overflow"
           data-component="poll"
           data-poll-id="{{ object.container.poll.id }}"
-          data-poll-type="{% if association.container.poll.condorcet %}rank{% else %}select{% endif %}"
+          data-poll-type="{{ association.container.poll.vote_type }}"
           data-poll-can-vote="{% if can_vote %}true{% else %}false{% endif %}">
         {% csrf_token %}
         {{ vote_form.votes.management_form }}
