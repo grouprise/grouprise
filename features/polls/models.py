@@ -31,6 +31,19 @@ class Option(core.models.Model):
             return self.eventoption.__str__()
         return super().__str__()
 
+    # todo le, gt, and lt were necessary for evaluation with vote-core but seem wrong
+    def __le__(self, other):
+        return False
+
+    def __gt__(self, other):
+        return False
+
+    def __lt__(self, other):
+        return False
+
+    class Meta:
+        ordering = ('id', )
+
 
 class SimpleOption(Option):
     title = models.CharField(max_length=255)
@@ -62,16 +75,15 @@ class EventOption(Option):
 
 
 class Vote(core.models.Model):
-    class Meta:
-        unique_together = (('option', 'voter'), ('option', 'anonymous'))
-
     option = models.ForeignKey('Option', on_delete=models.CASCADE)
-
     voter = models.ForeignKey(
             'gestalten.Gestalt', null=True, related_name='votes', on_delete=models.PROTECT)
     anonymous = models.CharField(max_length=63, blank=True, null=True)
-
     time_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (('option', 'voter'), ('option', 'anonymous'))
+        ordering = ('time_updated', )
 
 
 class SimpleVote(Vote):
@@ -79,4 +91,5 @@ class SimpleVote(Vote):
 
 
 class CondorcetVote(Vote):
+    # higher rank == higher priority
     rank = models.SmallIntegerField()
