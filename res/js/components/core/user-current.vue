@@ -11,21 +11,13 @@
 <script>
   import { memoize, get } from 'lodash'
   import { gestalt } from '../../adapters/api'
+  import { createInitials } from '../../util/strings'
   import randomColor from 'random-color'
 
   const getCurrentUser = memoize(() => {
     const userId = get(window.app.conf, 'gestalt.id')
     return userId ? gestalt.get(userId) : 'anonymous'
   })
-
-  function createInitials (name, _default = '?') {
-    if (!name) return _default
-    return name
-      .split(' ')
-      .map(x => x.substr(0, 1).toUpperCase())
-      .join('')
-      .substr(0, 4)
-  }
 
   export default {
     props: {

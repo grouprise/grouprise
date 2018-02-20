@@ -55,15 +55,11 @@
 </template>
 
 <script>
-  import { flow, sortBy, map, indexOf } from 'lodash'
   import move from 'lodash-move'
+
   import PollVoter from './poll-voter.vue'
   import PollVoterAnswer from './poll-voter-answer.vue'
-
-  function rankedIndexOf (collection, value) {
-    const index = indexOf(collection, value)
-    return 1 + (index === -1 ? collection.length : index)
-  }
+  import { rankedIndexOf, rankOptions } from './poll-helpers'
 
   export default {
     components: { PollVoter, PollVoterAnswer },
@@ -83,30 +79,10 @@
       rankedOptions: {
         get () {
           const { options, options_winner: winner, options_ranking: ranking, votes } = this.poll
-          return flow([
-            options => sortBy(options, [option => rankedIndexOf(this.voteOrder || ranking, option.id)]),
-            options => map(options, option => {
-              return {
-                ...option,
-                isWinner: option.id === winner,
-                voters: votes
-                  .filter(vote => rankedIndexOf(vote.ranking, option.id) === 1)
-                  .map(vote => vote.voter)
-                  .map(voter => {
-                    return typeof voter !== 'string'
-                      ? voter
-                      : {
-                        id: null,
-                        name: voter,
-                        initials: voter.substr(0, 1),
-                        about: null,
-                        avatar: null,
-                        avatar_color: null
-                      }
-                  })
-              }
-            })
-          ])(options)
+          return rankOptions(
+            { options, winner, ranking: this.voteOrder || ranking, votes },
+            ({vote, option}) => rankedIndexOf(vote.ranking, option.id) === 1
+          )
         },
         set (rankedOptions) {
           this.voteOrder = rankedOptions.map(option => option.id)
