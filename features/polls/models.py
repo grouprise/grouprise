@@ -4,6 +4,7 @@ import enum
 from django.db import models
 from django.utils import timezone
 from py3votecore.schulze_method import SchulzeMethod
+from py3votecore.tie_breaker import TieBreaker
 
 import core.models
 
@@ -13,7 +14,7 @@ class VoteType(enum.Enum):
     RANK = 'rank'
 
 
-def _resolve_condorcet_vote(votes):
+def _resolve_condorcet_vote(options, votes):
     def _resolve_pair_order(winner, strong_pairs):
         rankings = strong_pairs.copy()
         ordered_pairs = sorted(rankings.keys(), key=lambda pair: rankings[pair])
@@ -56,7 +57,8 @@ def _resolve_condorcet_vote(votes):
             votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
 
     vote_data = [{'ballot': b} for b in votes_dict.values()]
-    result = SchulzeMethod(vote_data).as_dict() if vote_data else {}
+    tie_breaker = TieBreaker(list(options))
+    result = SchulzeMethod(vote_data, tie_breaker=tie_breaker).as_dict() if vote_data else {}
     winner = result.get('winner', None)
 
     data = {
@@ -120,7 +122,7 @@ def resolve_vote(poll):
     _votes = Vote.objects.filter(option__poll=poll).all()
 
     if poll.condorcet:
-        votes = _resolve_condorcet_vote(_votes)
+        votes = _resolve_condorcet_vote(poll.options.all(), _votes)
     else:
         votes = _resolve_simple_vote(_votes)
 
