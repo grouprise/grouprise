@@ -1,7 +1,9 @@
+import collections
 import enum
 
 from django.db import models
 from django.utils import timezone
+from py3votecore.schulze_method import SchulzeMethod
 
 import core.models
 from features.content.models import Content
@@ -10,6 +12,116 @@ from features.content.models import Content
 class VoteType(enum.Enum):
     SIMPLE = 'simple'
     RANK = 'rank'
+
+
+def _resolve_condorcet_vote(votes):
+    def _resolve_pair_order(strong_pairs):
+        rankings = strong_pairs.copy()
+        ordered_pairs = sorted(rankings.keys(), key=lambda pair: rankings[pair])
+        result = []
+
+        def _get_highest_ranking(option=None, ignore_options=None):
+            ignore_options = ignore_options or []
+
+            if not ordered_pairs:
+                return None
+
+            if option:
+                for pair in ordered_pairs:
+                    if pair[0] == option and pair[1] not in ignore_options:
+                        return pair[1]
+                return None
+            else:
+                return ordered_pairs[0][0]
+
+        while True:
+            try:
+                last_option = result[-1]
+            except IndexError:
+                last_option = None
+            next_option = _get_highest_ranking(last_option, result)
+            if not next_option:
+                break
+            result.append(next_option)
+
+        return result
+
+    votes_dict = collections.defaultdict(dict)
+    for vote in votes:
+        if vote.voter:
+            votes_dict[vote.voter][vote.option] = vote.condorcetvote.rank
+        else:
+            votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
+
+    vote_data = [{'ballot': b} for b in votes_dict.values()]
+    result = SchulzeMethod(vote_data).as_dict() if vote_data else {}
+
+    data = {
+        'votes': votes_dict,
+        'winner': result.get('winner', None),
+        'ranking': _resolve_pair_order(result.get('strong_pairs', {}))
+    }
+    return data
+
+
+def _resolve_simple_vote(votes):
+    def get_winner(vote_count: dict):
+        result = []
+        for option, votes in vote_count.items():
+            result.append(
+                (option, votes['yes'] + votes['maybe'] * .33334)
+            )
+        try:
+            return sorted(result, key=lambda item: item[1], reverse=True)[0][0]
+        except IndexError:
+            return None
+
+    def vote_key(endorse):
+        if endorse is None:
+            return 'maybe'
+        elif endorse:
+            return 'yes'
+        else:
+            return 'no'
+
+    votes_dict = collections.defaultdict(dict)
+    vote_count = collections.defaultdict(lambda: dict(yes=0, no=0, maybe=0))
+    for vote in votes:
+        vote_count[vote.option][vote_key(vote.simplevote.endorse)] += 1
+        if vote.voter:
+            votes_dict[vote.voter][vote.option] = vote
+            votes_dict[vote.voter]['latest'] = vote
+        else:
+            votes_dict[vote.anonymous][vote.option] = vote
+            votes_dict[vote.anonymous]['latest'] = vote
+    return {
+        'votes': votes_dict,
+        'vote_count': vote_count,
+        'winner': get_winner(vote_count)
+    }
+
+
+def resolve_voters(poll):
+    _votes = Vote.objects.filter(option__poll=poll).all()
+
+    voters = []
+    for vote in _votes:
+        if vote.voter and vote.voter not in voters:
+            voters.append(vote.voter)
+        elif vote.anonymous and vote.anonymous not in voters:
+            voters.append(vote.anonymous)
+    return voters
+
+
+def resolve_vote(poll):
+    _votes = Vote.objects.filter(option__poll=poll).all()
+
+    if poll.condorcet:
+        votes = _resolve_condorcet_vote(_votes)
+    else:
+        votes = _resolve_simple_vote(_votes)
+
+    return votes
 
 
 class Poll(Content):

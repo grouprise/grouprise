@@ -1,7 +1,4 @@
-import collections
-
 import django
-from py3votecore.schulze_method import SchulzeMethod
 
 import core
 import features
@@ -18,83 +15,20 @@ class Detail(features.content.views.DetailBase):
     template_name = 'polls/detail.html'
 
     def get_context_data(self, **kwargs):
-        # options
-        kwargs['options'] = self.object.container.poll.options.order_by('id')
+        poll = self.object.container.poll
 
-        # votes
-        votes = models.Vote.objects.filter(
-                option__poll=self.object.container.poll).order_by('time_updated')
-        if self.object.container.poll.condorcet:
-            kwargs.update(self.get_condorcet_votes(votes))
-        else:
-            kwargs.update(self.get_simple_votes(votes))
-
-        # voters
-        voters = []
-        for vote in votes.order_by('-time_updated'):
-            if vote.voter and vote.voter not in voters:
-                voters.append(vote.voter)
-            elif vote.anonymous and vote.anonymous not in voters:
-                voters.append(vote.anonymous)
-        kwargs['voters'] = voters[::-1]
+        # options, voters and vote result based on vote type
+        kwargs['options'] = poll.options.all()
+        kwargs['voters'] = models.resolve_voters(poll)
+        kwargs.update(models.resolve_vote(poll))
 
         # vote form
-        vote_form = getattr(self, 'vote_form', forms.Vote(poll=self.object.container.poll))
+        vote_form = getattr(self, 'vote_form', forms.Vote(poll=poll))
         vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
         kwargs['vote_form'] = vote_form
         kwargs['vote_forms'] = vote_forms
 
         return super().get_context_data(**kwargs)
-
-    def get_condorcet_votes(self, votes):
-        votes_dict = collections.defaultdict(dict)
-        for vote in votes:
-            if vote.voter:
-                votes_dict[vote.voter][vote.option] = vote.condorcetvote.rank
-            else:
-                votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
-        if votes_dict:
-            data = SchulzeMethod([{'ballot': b} for b in votes_dict.values()]).as_dict()
-        else:
-            data = {}
-        data['votes'] = votes_dict
-        return data
-
-    def get_simple_votes(self, votes):
-        def get_winner(vote_count: dict):
-            result = []
-            for option, votes in vote_count.items():
-                result.append(
-                    (option, votes['yes'] + votes['maybe'] * .33334)
-                )
-            try:
-                return sorted(result, key=lambda item: item[1], reverse=True)[0][0]
-            except IndexError:
-                return None
-
-        def vote_key(endorse):
-            if endorse is None:
-                return 'maybe'
-            elif endorse:
-                return 'yes'
-            else:
-                return 'no'
-
-        votes_dict = collections.defaultdict(dict)
-        vote_count = collections.defaultdict(lambda: dict(yes=0, no=0, maybe=0))
-        for vote in votes:
-            vote_count[vote.option][vote_key(vote.simplevote.endorse)] += 1
-            if vote.voter:
-                votes_dict[vote.voter][vote.option] = vote
-                votes_dict[vote.voter]['latest'] = vote
-            else:
-                votes_dict[vote.anonymous][vote.option] = vote
-                votes_dict[vote.anonymous]['latest'] = vote
-        return {
-                'votes': votes_dict,
-                'vote_count': vote_count,
-                'winner': get_winner(vote_count)
-                }
 
 
 class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
