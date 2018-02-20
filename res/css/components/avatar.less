@@ -79,6 +79,15 @@
     }
 }
 
+.avatar-circle {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar-inline {
+    display: inline-flex;
+}
+
 .avatar,
 .avatar-size-64x64 {
     .avatar-size(64px);
@@ -101,19 +110,34 @@
 }
 
 .avatars {
-    margin: -.3rem;
+    margin: 0;
     padding: 0;
     font-size: 0;
+
+    .avatar {
+        line-height: 1.5;
+    }
+
+    .avatar:not(:last-child),
+    > li:not(:last-child) .avatar {
+        margin-right: .5em;
+    }
 
     > li {
         display: inline-block;
         vertical-align: top;
-        margin: .3rem;
     }
 
     a {
         text-decoration: none;
     }
+}
+
+.avatars-nowrap {
+    white-space: nowrap;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .avatar-edit-inline {
