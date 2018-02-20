@@ -14,10 +14,13 @@ class VoteType(enum.Enum):
 
 
 def _resolve_condorcet_vote(votes):
-    def _resolve_pair_order(strong_pairs):
+    def _resolve_pair_order(winner, strong_pairs):
         rankings = strong_pairs.copy()
         ordered_pairs = sorted(rankings.keys(), key=lambda pair: rankings[pair])
         result = []
+
+        if winner is not None:
+            result.append(winner)
 
         def _get_highest_ranking(option=None, ignore_options=None):
             ignore_options = ignore_options or []
@@ -54,11 +57,12 @@ def _resolve_condorcet_vote(votes):
 
     vote_data = [{'ballot': b} for b in votes_dict.values()]
     result = SchulzeMethod(vote_data).as_dict() if vote_data else {}
+    winner = result.get('winner', None)
 
     data = {
         'votes': votes_dict,
-        'winner': result.get('winner', None),
-        'ranking': _resolve_pair_order(result.get('strong_pairs', {}))
+        'winner': winner,
+        'ranking': _resolve_pair_order(winner, result.get('strong_pairs', {}))
     }
     return data
 
