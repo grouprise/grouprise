@@ -5,7 +5,7 @@ export default api => {
   const get = choices => {
     const ids = choices.map(option => option.value).join(',')
 
-    return api.get({id: ids})
+    return api.list({id: ids})
       .then(response => Promise.resolve(response.data))
       .then(data => Promise.resolve(choices.map(choice => {
         return Object.assign({}, choice, find(data, entity => entity.id === parseInt(choice.value, 10)))

@@ -10,7 +10,7 @@ const cache = {}
 function get (ref) {
   return cache[ref]
     ? Promise.resolve(cache[ref])
-    : api.single(ref).then(group => {
+    : api.get(ref).then(group => {
       cache[ref] = group
       return group
     })
