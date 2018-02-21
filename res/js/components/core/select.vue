@@ -59,7 +59,7 @@
   }
 
   export default {
-    name: 'select',
+    name: 'choice',
     mixins: [onClickOutside],
     props: {
       id: {
