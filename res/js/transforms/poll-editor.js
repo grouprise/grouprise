@@ -10,12 +10,10 @@ import { createDisplayControl, createContainerAdapter } from '../util/dom'
 function createPollTypeAdapter (el) {
   const pollTypeEl = $('[data-poll-type]', el)
   const pollTypeSwitchEl = $('[data-poll-type-switch]', el)
-  const pollTypeGroupEl = pollTypeSwitchEl ? closest(pollTypeSwitchEl, '.form-group') : null
   const pollType = valueSubmissionAdapter(createDomAdapter(pollTypeEl), pollTypeSwitchEl)
   return {
     isStatic: pollTypeEl.type === 'hidden',
-    ...pollType,
-    ...createDisplayControl(pollTypeGroupEl)
+    ...pollType
   }
 }
 
@@ -23,6 +21,7 @@ export default el => {
   const formEl = closest(el, 'form')
   const pollTypeAdapter = createPollTypeAdapter(formEl)
   const containerAdapter = createContainerAdapter(el)
+  const pollSettings = createDisplayControl($('[data-poll-settings]', formEl))
   const formsetAdapter = createFormsetAdapter(el, { name: 'form' })
   const answers = createAnswerTransformer(pollTypeAdapter, formsetAdapter)
   const state = {
@@ -49,7 +48,7 @@ export default el => {
       })
     },
     created () {
-      pollTypeAdapter.hide()
+      pollSettings.hide()
       containerAdapter.replacedEl.hide()
     }
   })
@@ -61,7 +60,7 @@ export default el => {
   return {
     remove () {
       vue.$destroy()
-      pollTypeAdapter.show()
+      pollSettings.show()
       containerAdapter.replacedEl.show()
       containerAdapter.destroy()
       submitListener.destroy()
