@@ -19,6 +19,7 @@ function createPollTypeAdapter (el) {
 
 export default el => {
   const formEl = closest(el, 'form')
+  const voteTypeAdapter = createDomAdapter($('[data-poll-vote-type]', formEl))
   const pollTypeAdapter = createPollTypeAdapter(formEl)
   const containerAdapter = createContainerAdapter(el)
   const pollSettings = createDisplayControl($('[data-poll-settings]', formEl))
@@ -34,16 +35,9 @@ export default el => {
     render (h) {
       return h(PollEditor, {
         props: {
-          pollType: pollTypeAdapter.get().value,
-          pollTypeStatic: pollTypeAdapter.isStatic,
+          pollType: pollTypeAdapter,
+          voteType: voteTypeAdapter,
           answers: this.answers
-        },
-        on: {
-          switchPollType (id) {
-            if (!pollTypeAdapter.isStatic) {
-              pollTypeAdapter.set({ value: id })
-            }
-          }
         }
       })
     },

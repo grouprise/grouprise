@@ -45,7 +45,7 @@ class Create(OptionMixin, content.Create):
             label='Art der Abstimmmöglichkeiten',
             choices=[('simple', 'Ja/Nein/Vielleicht'),
                      ('condorcet', 'Stimmen ordnen (rangbasiert)')],
-            initial='simple', widget=forms.RadioSelect)
+            initial='simple', widget=forms.Select({'data-poll-vote-type': ''}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,6 +81,7 @@ class Create(OptionMixin, content.Create):
 
 class Update(OptionMixin, content.Update):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
+    poll_type = forms.CharField(widget=forms.HiddenInput({'data-poll-type': ''}))
     poll_type = forms.CharField(widget=forms.HiddenInput({'data-poll-type': ''}))
 
     def __init__(self, *args, **kwargs):
