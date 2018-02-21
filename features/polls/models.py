@@ -1,4 +1,5 @@
 import collections
+import copy
 import enum
 
 from django.db import models
@@ -18,39 +19,31 @@ class VoteType(enum.Enum):
 
 
 def _resolve_condorcet_vote(options, votes):
-    def _resolve_pair_order(winner, strong_pairs):
-        rankings = strong_pairs.copy()
-        ordered_pairs = sorted(rankings.keys(), key=lambda pair: rankings[pair])
-        result = []
 
-        if winner is not None:
-            result.append(winner)
 
-        def _get_highest_ranking(option=None, ignore_options=None):
-            ignore_options = ignore_options or []
+    def get_ranked_winners(vote_data, tie_breaker, excluded_candidate=None):
+        """ recursively calculate subsequent winners by taking out the current winner in each round
 
-            if not ordered_pairs:
-                return None
-
-            if option:
-                for pair in ordered_pairs:
-                    if pair[0] == option and pair[1] not in ignore_options:
-                        return pair[1]
-                return None
-            else:
-                return ordered_pairs[0][0]
-
-        while True:
-            try:
-                last_option = result[-1]
-            except IndexError:
-                last_option = None
-            next_option = _get_highest_ranking(last_option, result)
-            if not next_option:
-                break
-            result.append(next_option)
-
-        return result
+        BEWARE: the only goal of rank-based vote resolution is the calculation of a fair winner.
+        This method is not usable for creating a linear ranking (the input data is too complex for
+        that). The result of the calculation below is deterministic, but it is not fair.
+        The weighted graph is probably a much better (non-linear) visualization of the result.
+        """
+        if vote_data:
+            # remove excluded candiate from voting data
+            reduced_votes = []
+            for ballot in vote_data:
+                ballot = copy.deepcopy(ballot)
+                ballot['ballot'].pop(excluded_candidate, None)
+                # only add non-empty ballots
+                if ballot['ballot']:
+                    reduced_votes.append(ballot)
+            if reduced_votes:
+                winner = SchulzeMethod(reduced_votes, tie_breaker=tie_breaker).winner
+                if winner is not None:
+                    yield winner
+                    yield from get_ranked_winners(reduced_votes, tie_breaker,
+                                                  excluded_candidate=winner)
 
     votes_dict = collections.defaultdict(dict)
     for vote in votes:
@@ -61,13 +54,28 @@ def _resolve_condorcet_vote(options, votes):
 
     vote_data = [{'ballot': b} for b in votes_dict.values()]
     tie_breaker = TieBreaker(list(options))
-    result = SchulzeMethod(vote_data, tie_breaker=tie_breaker).as_dict() if vote_data else {}
-    winner = result.get('winner', None)
+    if vote_data:
+        result = SchulzeMethod(vote_data, tie_breaker=tie_breaker)
+        result_dict = result.as_dict()
+        winner = result_dict.get('winner', None)
+        # "tied_winners": all candidates that reached a tie with the winner (including the winner).
+        # This attribute is undefined if no one tied with the winner.
+        # This tie is just a "technical tie" of the Condorcet Method: it does not mean, that the
+        # tied candidates are equally suitable for being a winner.
+        # E.g. for [("C", "A", "B"), ("A", "B", "C")] the winner is "A" (winning against B and tied
+        # with C). "C" is tied with the winner, but it did not win against "B" - thus it is less
+        # eligible for winning.
+        tied_winners = result_dict.get('tied_winners', [])
+        ranking = [winner]
+        ranking.extend(get_ranked_winners(vote_data, tie_breaker, excluded_candidate=winner))
+    else:
+        winner = None
+        ranking = []
 
     data = {
         'votes': votes_dict,
         'winner': winner,
-        'ranking': _resolve_pair_order(winner, result.get('strong_pairs', {}))
+        'ranking': ranking,
     }
     return data
 
