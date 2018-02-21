@@ -83,6 +83,33 @@
         background-color: @color-text-default;
         color: white;
     }
+
+    &[aria-pressed] {
+        position: relative;
+        overflow: visible;
+        border: 2px solid transparent;
+
+        &[aria-pressed="true"] {
+            border-color: @color-primary;
+
+            &::after {
+                @size: 1.75em;
+                .fa-icon();
+                content: @fa-var-check;
+                position: absolute;
+                right: (@size / -2);
+                top: (@size / -2);
+                width: @size;
+                height: @size;
+                border-radius: 50%;
+                background-color: @color-primary;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
 }
 
 .btn-danger {
