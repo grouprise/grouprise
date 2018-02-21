@@ -1,6 +1,7 @@
 import collections
 import copy
 import enum
+import subprocess
 
 from django.db import models
 from django.utils import timezone
@@ -18,9 +19,36 @@ class VoteType(enum.Enum):
         return str(self.value)
 
 
+def _graph_to_svg(graph, winner, tied_winners=None):
+    """ convert a graph (see pygraph.classes.digraph) to an SVG visualization
+
+    This operation requires the external "dot" executable (package "graphviz").
+    The winner and (optional) candidates that reached a tie with the winner are marked with
+    separate colors.
+    """
+    # TODO: move this late import to the top of the module, if we want to use this feature
+    import pygraph.readwrite.dot
+    # The color can be given as "#RGBA" or by name.
+    fill_colors = {"winner": "#C00000C0",
+                   "tied_winners": "#00C000C0",
+                   "others": "#0000C0C0"}
+    # add background colors to all nodes
+    for node_name in graph.nodes():
+        graph.add_node_attribute(node_name, ("style", "filled"))
+        if node_name == winner:
+            color = fill_colors["winner"]
+        elif tied_winners and (node_name in tied_winners):
+            color = fill_colors["tied_winners"]
+        else:
+            color = fill_colors["others"]
+        graph.add_node_attribute(node_name, ("fillcolor", color))
+    dot_graph = pygraph.readwrite.dot.write(graph, weighted=True)
+    proc = subprocess.Popen(["dot", "-Tsvg"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    stdout, stderr = proc.communicate(dot_graph.encode("utf-8"))
+    return stdout.decode("utf-8")
+
+
 def _resolve_condorcet_vote(options, votes):
-
-
     def get_ranked_winners(vote_data, tie_breaker, excluded_candidate=None):
         """ recursively calculate subsequent winners by taking out the current winner in each round
 
@@ -68,14 +96,17 @@ def _resolve_condorcet_vote(options, votes):
         tied_winners = result_dict.get('tied_winners', [])
         ranking = [winner]
         ranking.extend(get_ranked_winners(vote_data, tie_breaker, excluded_candidate=winner))
+        graph_svg = _graph_to_svg(result.graph, winner, tied_winners)
     else:
         winner = None
         ranking = []
+        graph_svg = None
 
     data = {
         'votes': votes_dict,
         'winner': winner,
         'ranking': ranking,
+        'graph_svg': graph_svg,
     }
     return data
 
