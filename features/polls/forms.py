@@ -24,7 +24,7 @@ class OptionMixin:
 
     def save_content_relations(self, commit):
         # FIXME: remove when django bug #28988 is fixed
-        self.instance.container.poll = models.Poll.objects.create()
+        self.instance.container.poll = models.WorkaroundPoll.objects.create()
         self.instance.container.save()
 
         for form in self.options.forms:
