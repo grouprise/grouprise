@@ -87,15 +87,15 @@ class Update(OptionMixin, content.Update):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            models.Option.objects.filter(poll=self.instance.container).first().eventoption
+            models.Option.objects.filter(poll=self.instance.container.poll).first().eventoption
             self.options = EventOptionFormSet(
                     data=kwargs.get('data'),
-                    queryset=models.EventOption.objects.filter(poll=self.instance.container))
+                    queryset=models.EventOption.objects.filter(poll=self.instance.container.poll))
             self.fields['poll_type'].initial = 'event'
         except ObjectDoesNotExist:
             self.options = SimpleOptionFormSet(
                     data=kwargs.get('data'),
-                    queryset=models.SimpleOption.objects.filter(poll=self.instance.container))
+                    queryset=models.SimpleOption.objects.filter(poll=self.instance.container.poll))
             self.fields['poll_type'].initial = 'simple'
         self.options.extra = 0
 

@@ -116,8 +116,8 @@ class PollVoteSerializer(serializers.Serializer):
 @permission_classes((permissions.AllowAny, ))
 def vote(request, pk):
     try:
-        poll = models.Poll.objects.get(pk=pk)
-    except models.Poll.DoesNotExist:
+        poll = models.WorkaroundPoll.objects.get(pk=pk)
+    except models.WorkaroundPoll.DoesNotExist:
         raise Http404()
 
     payload = PollVoteSerializer().to_internal_value(request.data)
