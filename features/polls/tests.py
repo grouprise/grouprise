@@ -12,6 +12,7 @@ def get_post_data():
     return {
             'title': 'Test',
             'text': 'Test',
+            'vote_type': 'simple',
             'poll_type': 'simple',
             'form-TOTAL_FORMS': '5',
             'form-INITIAL_FORMS': '0',

@@ -94,7 +94,7 @@ class PollSerializer(serializers.ModelSerializer):
         return representation
 
     class Meta:
-        model = models.Poll
+        model = models.WorkaroundPoll
         fields = ('id', 'options', )
 
 
@@ -151,7 +151,7 @@ def vote(request, pk):
 class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = PollSerializer
     filter_fields = ('id', )
-    queryset = models.Poll.objects.all()
+    queryset = models.WorkaroundPoll.objects.all()
 
 
 @api.register

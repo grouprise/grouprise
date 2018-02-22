@@ -115,7 +115,7 @@ def resolve_vote(poll):
 
 
 # FIXME: inherit from content.Content when django bug #28988 is fixed
-class Poll(core.models.Model):
+class WorkaroundPoll(core.models.Model):
     condorcet = models.BooleanField(default=False)
 
     @property
@@ -125,7 +125,7 @@ class Poll(core.models.Model):
 
 class Option(core.models.Model):
     poll = models.ForeignKey(
-            'Poll', related_name='options', on_delete=models.CASCADE, null=True)
+            'WorkaroundPoll', related_name='options', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         if hasattr(self, 'simpleoption'):
