@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
 from rest_framework import viewsets, mixins, serializers, permissions
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.response import Response
@@ -17,7 +18,7 @@ class OptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Option
-        fields = ('id', 'title', )
+        fields = ('id', 'title',)
 
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -34,7 +35,7 @@ class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Vote
-        fields = ('id', 'option', 'voter', )
+        fields = ('id', 'option', 'voter',)
 
 
 class VoterSerializer(serializers.ModelSerializer):
@@ -95,7 +96,7 @@ class PollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.WorkaroundPoll
-        fields = ('id', 'options', )
+        fields = ('id', 'options',)
 
 
 class EndorsementsSerializer(serializers.Serializer):
@@ -110,10 +111,8 @@ class PollVoteSerializer(serializers.Serializer):
     endorsements = EndorsementsSerializer(many=True, required=False)
 
 
-# todo check user permissions
-# todo check if user is allowed to vote
-@api_view(('POST', ))
-@permission_classes((permissions.AllowAny, ))
+@api_view(('POST',))
+@permission_classes((permissions.AllowAny,))
 def vote(request, pk):
     try:
         poll = models.WorkaroundPoll.objects.get(pk=pk)
@@ -121,6 +120,17 @@ def vote(request, pk):
         raise Http404()
 
     payload = PollVoteSerializer().to_internal_value(request.data)
+
+    can_vote = request.user.has_perm('polls.vote', poll.content.associations.first())
+    can_anon_vote = not request.user.is_anonymous or models.Vote.objects \
+        .filter(option__in=poll.options.all(), anonymous=payload['gestalt']['name']) \
+        .count() == 0
+
+    if not (can_vote and can_anon_vote):
+        if can_anon_vote:
+            raise PermissionDenied('VOTE_ERR_ANON_VOTED')
+        else:
+            raise PermissionDenied('VOTE_ERR_GESTALT_VOTED')
 
     @contextmanager
     def create_vote(base_model, option: models.Option):
@@ -146,11 +156,10 @@ def vote(request, pk):
     return Response(status=200)
 
 
-# todo check user permissions
-@permission_classes((permissions.AllowAny, ))
+@permission_classes((permissions.AllowAny,))
 class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = PollSerializer
-    filter_fields = ('id', )
+    filter_fields = ('id',)
     queryset = models.WorkaroundPoll.objects.all()
 
 
