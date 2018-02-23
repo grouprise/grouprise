@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RenameField(
             model_name='option',
-            old_name='poll_new',
+            old_name='poll_new1',
             new_name='poll',
         ),
         migrations.DeleteModel(
