@@ -1,6 +1,6 @@
 {% extends 'content/created.txt' %}{% block content %}Datei online ansehen und kommentieren:
 {% url 'content-permalink' association.pk as path %}{{ path|full_url }}
 
-Datei {{ content.versions.last.file.get }}
+Datei {{ object.versions.last.file.get }}
 
-{{ content.versions.last.text }}{% endblock %}
+{{ object.versions.last.text }}{% endblock %}
