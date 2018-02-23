@@ -134,15 +134,9 @@ class Option(core.models.Model):
             return self.eventoption.__str__()
         return super().__str__()
 
-    # todo le, gt, and lt were necessary for evaluation with vote-core but seem wrong
-    def __le__(self, other):
-        return False
-
-    def __gt__(self, other):
-        return False
-
     def __lt__(self, other):
-        return False
+        # we don’t really have an order, but now that you ask
+        return self.pk <= other.pk
 
     class Meta:
         ordering = ('id', )
