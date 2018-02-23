@@ -14,7 +14,7 @@ def move_polls_to_workaround(apps, schema_editor):
         poll.poll_new = wp
         poll.save()
         for option in poll.options.all():
-            option.poll_new = wp
+            option.poll_new1 = wp
             option.save()
 
 
