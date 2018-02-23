@@ -3,8 +3,7 @@ import enum
 
 from django.db import models
 from django.utils import timezone
-from py3votecore.schulze_method import SchulzeMethod
-from py3votecore.tie_breaker import TieBreaker
+from schulze import compute_ranks, convert
 
 import core.models
 
@@ -17,41 +16,7 @@ class VoteType(enum.Enum):
         return str(self.value)
 
 
-def _resolve_condorcet_vote(options, votes):
-    def _resolve_pair_order(winner, strong_pairs):
-        rankings = strong_pairs.copy()
-        ordered_pairs = sorted(rankings.keys(), key=lambda pair: rankings[pair])
-        result = []
-
-        if winner is not None:
-            result.append(winner)
-
-        def _get_highest_ranking(option=None, ignore_options=None):
-            ignore_options = ignore_options or []
-
-            if not ordered_pairs:
-                return None
-
-            if option:
-                for pair in ordered_pairs:
-                    if pair[0] == option and pair[1] not in ignore_options:
-                        return pair[1]
-                return None
-            else:
-                return ordered_pairs[0][0]
-
-        while True:
-            try:
-                last_option = result[-1]
-            except IndexError:
-                last_option = None
-            next_option = _get_highest_ranking(last_option, result)
-            if not next_option:
-                break
-            result.append(next_option)
-
-        return result
-
+def _resolve_condorcet_vote(votes):
     votes_dict = collections.defaultdict(dict)
     for vote in votes:
         if vote.voter:
@@ -59,15 +24,18 @@ def _resolve_condorcet_vote(options, votes):
         else:
             votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
 
-    vote_data = [{'ballot': b} for b in votes_dict.values()]
-    tie_breaker = TieBreaker(list(options))
-    result = SchulzeMethod(vote_data, tie_breaker=tie_breaker).as_dict() if vote_data else {}
-    winner = result.get('winner', None)
+    if votes_dict:
+        candidates, ballots = convert.convert_rated_candidates(votes_dict.values())
+        ranking = convert.flatten(compute_ranks(candidates, ballots))
+        winner = ranking[0]
+    else:
+        ranking = []
+        winner = None
 
     data = {
         'votes': votes_dict,
         'winner': winner,
-        'ranking': _resolve_pair_order(winner, result.get('strong_pairs', {}))
+        'ranking': ranking
     }
     return data
 
@@ -139,7 +107,7 @@ def resolve_vote(poll):
     _votes = Vote.objects.filter(option__poll=poll).all()
 
     if poll.condorcet:
-        votes = _resolve_condorcet_vote(poll.options.all(), _votes)
+        votes = _resolve_condorcet_vote(_votes)
     else:
         votes = _resolve_simple_vote(_votes)
 
