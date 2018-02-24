@@ -8,8 +8,8 @@
         </div>
         <div class="poll-header-actions">
           <div class="spinner" v-if="!poll"></div>
-          <button type="button" class="btn btn-primary btn-sm" @click="$emit('vote')"
-                  v-if="poll && canVote">
+          <button type="button" class="btn btn-primary btn-sm" @click="notifyVote"
+                  v-if="poll && allowVote">
             Jetzt abstimmen
           </button>
         </div>
@@ -18,10 +18,10 @@
     <div class="poll-body" v-if="poll">
       <slot />
     </div>
-    <footer class="poll-footer" v-if="poll && canVote">
+    <footer class="poll-footer" v-if="poll && allowVote">
       <keep-alive>
         <sg-user-current :anonymousEdit="true" :anonymousLogin="true" v-model="user"
-                         @edit="!isVoting && $emit('vote')" />
+                         @edit="notifyVote" />
       </keep-alive>
       <slot name="footer" :canSubmitVote="user && user.name" />
     </footer>
@@ -41,28 +41,42 @@
     },
     data () {
       return {
-        user: null
+        user: null,
+        hasGestaltVoted: false
       }
     },
     computed: {
+      allowVote () {
+        return this.canVote && !this.hasGestaltVoted
+      },
       headerText () {
-        const { poll, canVote } = this
+        const { poll, allowVote } = this
         const numVotes = poll ? poll.votes.length : null
         return poll === null
           ? 'Lade Abstimmungsdaten...'
           : numVotes === 0
             ? 'Bisher hat noch keine Person ihre Stimme abgegeben. Sei die erste!'
-            : `Es ${numVotes === 1 ? 'hat' : 'haben'} bisher ${numVotes > 1 ? `${numVotes} Personen` : 'eine Person'} ihre Stimme abgegeben. ${canVote ? 'Sei die nächste!' : 'Du hast bereits abgestimmt.'}`
+            : `Es ${numVotes === 1 ? 'hat' : 'haben'} bisher ${numVotes > 1 ? `${numVotes} Personen` : 'eine Person'} ihre Stimme abgegeben. ${allowVote ? 'Sei die nächste!' : 'Du hast bereits abgestimmt.'}`
       }
     },
     inject: ['controller'],
     methods: {
+      notifyVote () {
+        if (!this.isVoting && this.allowVote) {
+          this.$emit('vote')
+        }
+      },
       async vote (data) {
         const user = this.user
         return poll.vote(this.poll.id, {...data, gestalt: this.user})
           .then(
             () => {
-              this.username = null
+              // if we have a non-anon user we set the hasVoted flag
+              // anon-users may vote multiple times as multiple people might use the
+              // same computer + browser session for it
+              if (this.user.id !== null) {
+                this.hasGestaltVoted = true
+              }
               return this.controller.refreshPoll()
             },
             err => {
