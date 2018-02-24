@@ -5,9 +5,9 @@
     <template slot="header" v-if="isVoting">
       <div class="poll-info">
         Du stimmst ab, indem du Antworten einzeln bewertest.
-        <span class="content-nobreak"><i class="fa fa-thumbs-up"></i> für <em>Ja</em></span>,
-        <span class="content-nobreak"><i class="fa fa-thumbs-down"></i> für <em>Nein</em></span>,
-        <span class="content-nobreak"><i class="fa fa-circle"></i> für <em>Vielleicht</em></span>.
+        <span class="content-nobreak"><i :class="icons.yes"></i> für <em>Ja</em></span>,
+        <span class="content-nobreak"><i :class="icons.no"></i> für <em>Nein</em></span>,
+        <span class="content-nobreak"><i :class="icons.maybe"></i> für <em>Vielleicht</em></span>.
       </div>
     </template>
 
@@ -33,19 +33,19 @@
                     title="Vorschlag unterstützen"
                     :aria-pressed="endorsements[option.id] === true ? 'true' : 'false'"
                     @click="endorsements[option.id] = true">
-              <i class="fa fa-thumbs-up"></i>
+              <i :class="icons.yes"></i>
             </button>
             <button type="button" class="btn btn-default poll-btn poll-endorse-maybe"
                     title="Ist mir egal"
                     :aria-pressed="endorsements[option.id] === null ? 'true' : 'false'"
                     @click="endorsements[option.id] = null">
-              <i class="fa fa-circle"></i>
+              <i :class="icons.maybe"></i>
             </button>
             <button type="button" class="btn btn-default poll-btn poll-endorse-no"
                     title="Vorschlag ablehnen"
                     :aria-pressed="endorsements[option.id] === false ? 'true' : 'false'"
                     @click="endorsements[option.id] = false">
-              <i class="fa fa-thumbs-down"></i>
+              <i :class="icons.no"></i>
             </button>
           </div>
         </poll-voter-answer>
@@ -70,7 +70,12 @@
     mixins: [pollVoterMixin],
     data () {
       return {
-        endorsements: null
+        endorsements: null,
+        icons: {
+          yes: 'fa fa-thumbs-up',
+          no: 'fa fa-thumbs-down',
+          maybe: 'fa fa-question'
+        }
       }
     },
     computed: {
