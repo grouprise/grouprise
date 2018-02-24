@@ -29,7 +29,7 @@
                           v-if="optionRatings[option.id]" />
           </div>
           <div slot="actions" v-if="isVoting">
-            <button type="button" class="btn btn-default poll-endorse-yes"
+            <button type="button" class="btn btn-default poll-btn poll-endorse-yes"
                     title="Vorschlag unterstützen"
                     :aria-pressed="endorsements[option.id] === true ? 'true' : 'false'"
                     @click="endorsements[option.id] = true">
