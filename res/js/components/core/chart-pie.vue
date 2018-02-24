@@ -53,5 +53,17 @@
 </script>
 
 <documentation>
-  helpful article: https://hackernoon.com/a-simple-pie-chart-in-svg-dbdd653b6936
+  <p>Helpful articles:</p>
+  <ol>
+    <li>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths">
+        A simple pie chart in SVG
+      </a>
+    </li>
+    <li>
+      <a href="https://hackernoon.com/a-simple-pie-chart-in-svg-dbdd653b6936">
+        MDN Paths Tutorial
+      </a>
+    </li>
+  </ol>
 </documentation>
