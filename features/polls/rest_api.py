@@ -143,7 +143,7 @@ def vote(request, pk):
         yield new_vote
         new_vote.save()
 
-    if poll.vote_type is models.VoteType.RANK:
+    if poll.vote_type is models.VoteType.CONDORCET:
         num_options = len(payload['ranking'])
         for (ranking, option) in enumerate(payload['ranking']):
             with create_vote(models.CondorcetVote, option) as condorcet_vote:

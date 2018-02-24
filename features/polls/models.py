@@ -10,7 +10,7 @@ import core.models
 
 class VoteType(enum.Enum):
     SIMPLE = 'simple'
-    RANK = 'rank'
+    CONDORCET = 'condorcet'
 
     def __str__(self):
         return str(self.value)
@@ -120,7 +120,7 @@ class WorkaroundPoll(core.models.Model):
 
     @property
     def vote_type(self):
-        return VoteType.RANK if self.condorcet else VoteType.SIMPLE
+        return VoteType.CONDORCET if self.condorcet else VoteType.SIMPLE
 
 
 class Option(core.models.Model):

@@ -4,7 +4,7 @@
 
 <script>
   import { poll } from '../../adapters/api'
-  import VoterRank from './poll-voter-rank.vue'
+  import VoterCondorcet from './poll-voter-condorcet.vue'
   import VoterSimple from './poll-voter-simple.vue'
 
   export default {
@@ -22,7 +22,7 @@
       voter () {
         switch (this.type) {
           case 'simple': return VoterSimple
-          case 'rank': return VoterRank
+          case 'condorcet': return VoterCondorcet
         }
       }
     },

@@ -1,5 +1,5 @@
 <template>
-  <poll-voter class="poll-rank" :poll="poll" :canVote="canVote" :isVoting="isVoting"
+  <poll-voter class="poll-condorcet" :poll="poll" :canVote="canVote" :isVoting="isVoting"
               @vote="startVote" ref="poll">
     <!-- custom poll header during vote -->
     <template slot="header" v-if="isVoting">
@@ -21,11 +21,9 @@
       <!-- simple poll answer list when not voting -->
       <div class="poll-answers"  v-if="!isVoting">
         <poll-voter-answer :option="option" :data-index="index + 1"
-                           v-show="showAllOptions || index < showThreshold"
+                           v-show="!optionsShorted || index < showThreshold"
                            v-for="(option, index) in rankedOptions" :key="option.id" />
-        <div class="btn-toolbar btn-toolbar-centered"
-             v-if="!showAllOptions && rankedOptions.length > showThreshold"
-             @click="showAllOptions = true">
+        <div class="btn-toolbar btn-toolbar-centered" v-if="optionsShorted" @click="showAllOptions = true">
           <button type="button" class="btn btn-sm btn-default">Restliche Optionen zeigen</button>
         </div>
       </div>
@@ -59,20 +57,14 @@
 
   import PollVoter from './poll-voter.vue'
   import PollVoterAnswer from './poll-voter-answer.vue'
-  import { rankedIndexOf, rankOptions } from './poll-helpers'
+  import { rankedIndexOf, rankOptions, pollVoterMixin } from './poll-helpers'
 
   export default {
     components: { PollVoter, PollVoterAnswer },
-    props: {
-      poll: Object,
-      canVote: Boolean
-    },
+    mixins: [pollVoterMixin],
     data () {
       return {
-        isVoting: false,
-        voteOrder: null,
-        showAllOptions: false,
-        showThreshold: 5
+        voteOrder: null
       }
     },
     computed: {
