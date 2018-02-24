@@ -82,20 +82,22 @@ class Create(OptionMixin, content.Create):
 class Update(OptionMixin, content.Update):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
     poll_type = forms.CharField(widget=forms.HiddenInput({'data-poll-type': ''}))
-    poll_type = forms.CharField(widget=forms.HiddenInput({'data-poll-type': ''}))
+    vote_type = forms.CharField(widget=forms.HiddenInput({'data-poll-vote-type': ''}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        poll = self.instance.container.poll
+        self.fields['vote_type'].initial = str(poll.vote_type)
         try:
-            models.Option.objects.filter(poll=self.instance.container.poll).first().eventoption
+            models.Option.objects.filter(poll=poll).first().eventoption
             self.options = EventOptionFormSet(
                     data=kwargs.get('data'),
-                    queryset=models.EventOption.objects.filter(poll=self.instance.container.poll))
+                    queryset=models.EventOption.objects.filter(poll=poll))
             self.fields['poll_type'].initial = 'event'
         except ObjectDoesNotExist:
             self.options = SimpleOptionFormSet(
                     data=kwargs.get('data'),
-                    queryset=models.SimpleOption.objects.filter(poll=self.instance.container.poll))
+                    queryset=models.SimpleOption.objects.filter(poll=poll))
             self.fields['poll_type'].initial = 'simple'
         self.options.extra = 0
 
