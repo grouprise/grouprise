@@ -29,6 +29,7 @@
 </template>
 
 <script>
+  import { get } from 'lodash'
   import { poll } from '../../adapters/api'
   import { danger, success } from '../../util/notify'
 
@@ -59,10 +60,23 @@
       async vote (data) {
         const user = this.user
         return poll.vote(this.poll.id, {...data, gestalt: this.user})
-          .then(() => {
-            this.username = null
-            return this.controller.refreshPoll()
-          })
+          .then(
+            () => {
+              this.username = null
+              return this.controller.refreshPoll()
+            },
+            err => {
+              const status = get(err, 'response.status', 500)
+              if (status === 403) {
+                danger(`Deine Stimme konnte nicht gezählt werden. Vielleicht hat schon jemand
+                mit diesem Namen abgestimmt?`)
+              } else {
+                danger(`Ups... da ist was schief gelaufen. Du kannst es gerne noch einmal probieren
+          oder es später noch einmal probieren.`)
+              }
+              throw err
+            }
+          )
           .then(() => success(`Deine Stimme wurde gezählt ${user.name}. Danke!`))
       },
       requestUserName () {
