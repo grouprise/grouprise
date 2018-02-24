@@ -25,7 +25,8 @@
                            v-show="!optionsShorted || index < showThreshold"
                            v-for="(option, index) in rankedOptions" :key="option.id">
           <div slot="actions" v-if="!isVoting">
-            <sg-chart-pie :data="optionRatings[option.id]" size="2.5rem" />
+            <sg-chart-pie :data="optionRatings[option.id]" size="2.5rem"
+                          v-if="optionRatings[option.id]" />
           </div>
           <div slot="actions" v-if="isVoting">
             <button type="button" class="btn btn-default poll-endorse-yes"
@@ -83,6 +84,10 @@
       optionRatings () {
         return this.poll.options.reduce((result, option) => {
           const stats = this.poll.vote_counts.find(x => x.option === option.id)
+
+          // return early if no one has answered the poll yet
+          if (!stats) return result
+
           const total = sum(values(stats.counts))
           const r = (count, type, title) => ({
             percentage: count / total * 100,
