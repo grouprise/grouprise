@@ -22,7 +22,7 @@
     <template v-if="poll">
       <div class="poll-answers">
         <poll-voter-answer :option="option"
-                           v-show="showAllOptions || index < showThreshold"
+                           v-show="!optionsShorted || index < showThreshold"
                            v-for="(option, index) in rankedOptions" :key="option.id">
           <div slot="actions" v-if="!isVoting">
             <sg-chart-pie :data="optionRatings[option.id]" size="2.5rem" />
@@ -49,9 +49,7 @@
           </div>
         </poll-voter-answer>
 
-        <div class="btn-toolbar btn-toolbar-centered"
-             v-if="!showAllOptions && rankedOptions.length > showThreshold"
-             @click="showAllOptions = true">
+        <div class="btn-toolbar btn-toolbar-centered" v-if="optionsShorted" @click="showAllOptions = true">
           <button type="button" class="btn btn-sm btn-default">Restliche Optionen zeigen</button>
         </div>
       </div>
@@ -64,19 +62,13 @@
 
   import PollVoter from './poll-voter.vue'
   import PollVoterAnswer from './poll-voter-answer.vue'
-  import { rankOptions } from './poll-helpers'
+  import { rankOptions, pollVoterMixin } from './poll-helpers'
 
   export default {
     components: { PollVoter, PollVoterAnswer },
-    props: {
-      poll: Object,
-      canVote: Boolean
-    },
+    mixins: [pollVoterMixin],
     data () {
       return {
-        isVoting: false,
-        showAllOptions: false,
-        showThreshold: 5,
         endorsements: null
       }
     },

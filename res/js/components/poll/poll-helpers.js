@@ -32,3 +32,24 @@ export function rankOptions ({options, ranking, winner, votes}, validOptionVote)
     })
   ])(options)
 }
+
+export const pollVoterMixin = {
+  props: {
+    poll: Object,
+    canVote: Boolean
+  },
+  data () {
+    return {
+      isVoting: false,
+      showAllOptions: false,
+      showThreshold: 5
+    }
+  },
+  computed: {
+    optionsShorted () {
+      return !this.isVoting &&
+        !this.showAllOptions &&
+        this.rankedOptions.length > this.showThreshold
+    }
+  }
+}
