@@ -22,7 +22,8 @@
   function calculateArc (start, end) {
     const [startX, startY] = getCoordinatesForPercent(start)
     const [endX, endY] = getCoordinatesForPercent(end)
-    return `M ${startX} ${startY} A 1 1 0 0 1 ${endX} ${endY} L 0 0`
+    const largeArcFlag = end - start > 50 ? 1 : 0
+    return `M ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} L 0 0`
   }
 
   export default {
