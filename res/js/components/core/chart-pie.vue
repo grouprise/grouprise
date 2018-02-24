@@ -29,11 +29,14 @@
   export default {
     props: {
       data: Array,
-      size: String
+      size: {
+        type: String,
+        default: '3rem'
+      }
     },
     computed: {
       style () {
-        const size = this.size ? this.size : '3rem'
+        const { size } = this
         return {
           width: size,
           height: size
