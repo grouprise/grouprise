@@ -14,22 +14,6 @@ class Create(features.content.views.Create):
 class Detail(features.content.views.DetailBase):
     template_name = 'polls/detail.html'
 
-    def get_context_data(self, **kwargs):
-        poll = self.object.container.poll
-
-        # options, voters and vote result based on vote type
-        kwargs['options'] = poll.options.all()
-        kwargs['voters'] = models.resolve_voters(poll)
-        kwargs.update(models.resolve_vote(poll))
-
-        # vote form
-        vote_form = getattr(self, 'vote_form', forms.Vote(poll=poll))
-        vote_forms = {f.instance.option: f for f in vote_form.votes.forms}
-        kwargs['vote_form'] = vote_form
-        kwargs['vote_forms'] = vote_forms
-
-        return super().get_context_data(**kwargs)
-
 
 class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'polls.vote'
