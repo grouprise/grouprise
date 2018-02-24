@@ -70,14 +70,14 @@
             name: 'Meiste Stimmen',
             icon: 'fa-thumbs-up',
             description: `Es wird mit Ja, Nein und Vielleicht abgestimmt. Der Vorschlag mit
-            den meisten Ja-Stimmen gewinnt.`
+            den meisten Ja-Stimmen gewinnt. Super für Termine und klare Entscheidungen.`
           },
           {
             value: 'condorcet',
-            name: 'Konsens (Condorcet)',
+            name: 'Größte Gemeinsamkeit (Condorcet)',
             icon: 'fa-commenting-o',
             description: `Antworten werden nach Vorliebe geordnet. Vorschläge mit dem größten
-          Konsens gewinnen.`
+          Konsens gewinnen. Gut bei Richtungsentscheidungen oder für Stimmungsbilder.`
           }
         ]
       }
