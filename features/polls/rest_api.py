@@ -31,6 +31,14 @@ class VoterSerializer(serializers.ModelSerializer):
 
 class PollSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True, read_only=True)
+    last_voted = serializers.SerializerMethodField()
+
+    def get_last_voted(self, instance: models.WorkaroundPoll):
+        last_vote = models.Vote.objects\
+            .filter(option__poll=instance)\
+            .order_by('time_updated')\
+            .last()
+        return last_vote.time_updated if last_vote else None
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -79,7 +87,7 @@ class PollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.WorkaroundPoll
-        fields = ('id', 'options',)
+        fields = ('id', 'options', 'last_voted',)
 
 
 class EndorsementsSerializer(serializers.Serializer):

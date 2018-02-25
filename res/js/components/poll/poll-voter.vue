@@ -4,7 +4,10 @@
       <i class="poll-header-icon fa fa-lightbulb-o" v-if="isVoting"></i>
       <slot name="header">
         <div class="poll-info">
-          {{ headerText }}
+          <div>{{ headerText }}</div>
+          <small class="content-mute" v-if="lastVoted">
+            Letztes Votum {{ lastVoted.from(new Date()) }}
+          </small>
         </div>
         <div class="poll-header-actions">
           <div class="spinner" v-if="!poll"></div>
@@ -30,6 +33,7 @@
 
 <script>
   import { get } from 'lodash'
+  import moment from 'moment'
   import { poll } from '../../adapters/api'
   import { danger, success } from '../../util/notify'
 
@@ -46,6 +50,11 @@
       }
     },
     computed: {
+      lastVoted () {
+        return this.poll && this.poll.last_voted
+          ? moment(this.poll.last_voted)
+          : null
+      },
       allowVote () {
         return this.canVote && !this.hasGestaltVoted
       },
