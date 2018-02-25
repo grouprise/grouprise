@@ -1,9 +1,7 @@
 <template>
   <div class="content-meta">
     <div class="content-meta-avatar">
-      <div class="avatar avatar-size-48-48" style="color: inherit">
-        <i class="fa" style="font-size: 2.25rem" :class="choice.icon"></i>
-      </div>
+      <span class="btn-radio-state-indicator"></span>
     </div>
     <div class="content-meta-info">
       <div class="content-meta-author">{{ choice.name }}</div>

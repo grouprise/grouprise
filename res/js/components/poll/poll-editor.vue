@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div v-if="this.voteType.getType() !== 'hidden'">
+    <div v-if="this.voteType.getType() !== 'hidden'" style="margin: 2rem 0 -1rem 0">
       <label id="vote-type-label" class="control-label">
         Wie wird abgestimmt?
       </label>
       <div class="row">
         <div class="col-md-6" v-for="choice in voteTypes">
           <div class="form-group" aria-labelledby="vote-type-label">
-            <div class="btn btn-default btn-state"
+            <div class="btn btn-plane"
                  :aria-pressed="myVoteType === choice.value ? 'true' : 'false'"
                  @click="myVoteType = choice.value">
               <poll-vote-type :choice="choice" />
