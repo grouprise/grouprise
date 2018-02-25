@@ -1,7 +1,7 @@
 .poll {
     margin: 2rem 0;
     background-color: #f5f5f5;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
 }
 
 .poll-header {
@@ -44,7 +44,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
-    border-top: 2px solid #eaeaea;
+    border-top: @component-border-width solid #eaeaea;
 
     .content-meta {
         max-width: 360px;
@@ -142,7 +142,7 @@
         content: attr(data-index);
         width: 2.5em;
         height: 2.5em;
-        border: 2px solid #eaeaea;
+        border: @component-border-width solid #eaeaea;
         border-radius: 50%;
         font-weight: bold;
         display: flex;

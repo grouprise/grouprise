@@ -1,6 +1,6 @@
 .gallery-header {
     padding: 1rem;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    border-bottom: @component-border-width solid rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
@@ -95,9 +95,9 @@
 
 .gallery-progress {
     position: absolute;
-    bottom: -2px;
+    bottom: -@component-border-width;
     left: 0;
-    height: 2px;
+    height: @component-border-width;
     background-color: @brand-success;
     transition: transform .2s;
     transform-origin: 0;

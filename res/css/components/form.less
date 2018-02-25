@@ -1,5 +1,5 @@
 .form-control {
-    border-width: 2px;
+    border-width: @input-border-width;
     box-shadow: none !important;
     border-color: @gray-light;
     height: auto;
@@ -15,7 +15,7 @@
 }
 
 .input-group-addon {
-    border-width: 2px;
+    border-width: 2@input-border-width;
 }
 
 .form-inline {
@@ -40,7 +40,7 @@ label {
     margin: 4rem auto 0;
     background-color: #f2f2f2;
     padding: 4rem 2rem 2rem;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
     position: relative;
     max-width: 100%;
 
@@ -55,7 +55,7 @@ label {
         transform: translateX(-50%);
         background: url("../../img/logos/logo_large.svg");
         background-size: contain;
-        border-radius: 2px;
+        border-radius: @border-radius-base;
     }
 
     #div_id_password + div {
@@ -78,7 +78,7 @@ label {
         background-color: @brand-danger;
         color: white;
         padding: .3em .5em;
-        border-radius: 0 0 2px 2px;
+        border-radius: 0 0 @border-radius-base @border-radius-base;
     }
 
     .account-actions {
@@ -112,9 +112,9 @@ label {
     .form-control {
         font-size: 1rem;
         background-color: white;
-        border-radius: 2px;
+        border-radius: @border-radius-base;
         transition: border-color .2s;
-        border: 2px solid @color-text-ultralight;
+        border: @input-border-width solid @gray-light;
     }
 
     .form-group {
@@ -134,7 +134,7 @@ label {
         &.has-error {
             margin-bottom: 3rem;
             border-color: @brand-danger !important;
-            border-radius: 2px 2px 0 2px;
+            border-radius: @border-radius-base @border-radius-base 0 @border-radius-base;
         }
 
         &.input-type-search {
@@ -204,7 +204,7 @@ label {
 
         .no-js .has-error & {
             border-color: @brand-danger;
-            border-radius: 2px 2px 0 2px;
+            border-radius: @border-radius-base @border-radius-base 0 @border-radius-base;
         }
 
         .js & {
@@ -292,7 +292,7 @@ label {
     }
 
     label {
-        border-radius: 2px;;
+        border-radius: @border-radius-base;
         background-color: rgba(0, 0, 0, .05);
         padding: .5em;
         cursor: pointer;
