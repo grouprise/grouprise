@@ -21,23 +21,6 @@ class OptionSerializer(serializers.ModelSerializer):
         fields = ('id', 'title',)
 
 
-class VoteSerializer(serializers.ModelSerializer):
-    option = serializers.PrimaryKeyRelatedField(read_only=True)
-    voter = serializers.SerializerMethodField()
-
-    def get_voter(self, vote: models.Vote):
-        if vote.voter:
-            return GestaltSerializer(data=vote.voter)
-        elif vote.anonymous:
-            return vote.anonymous
-        else:
-            return None
-
-    class Meta:
-        model = models.Vote
-        fields = ('id', 'option', 'voter',)
-
-
 class VoterSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         if type(instance) is str:
