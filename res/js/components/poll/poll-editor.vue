@@ -80,7 +80,7 @@
             name: 'Größte Gemeinsamkeit (Condorcet)',
             icon: 'fa-commenting-o',
             description: `Antworten werden nach Vorliebe geordnet. Vorschläge mit dem größten
-          Konsens gewinnen. Gut bei Richtungsentscheidungen oder für Stimmungsbilder.`
+          Konsens gewinnen. Gut für Richtungsentscheidungen und Stimmungsbilder.`
           }
         ]
       }
