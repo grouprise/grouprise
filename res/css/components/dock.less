@@ -65,6 +65,19 @@
         .dock-screen(1200px, 1170px);
     }
 
+    &.dock-fullwidth {
+        max-width: none;
+        left: 0; right: 0;
+        margin-top: 0;
+        border-top: 1px solid @gray-light;
+
+        .on-handhelds({
+            .container {
+                padding: 0;
+            }
+        })
+    }
+
     .dock-inner {
         .dock-header,
         .dock-content {
