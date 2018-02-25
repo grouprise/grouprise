@@ -78,6 +78,9 @@ class LayoutMixin:
         if hasattr(self, 'inline') and self.inline:
             h.field_template = 'bootstrap3/layout/inline_field.html'
             h.form_class = 'form-inline'
+        if hasattr(self, 'search') and self.search:
+            h.field_template = 'bootstrap3/layout/inline_field.html'
+            h.form_class = 'form-search'
         return h
 
     def get_layout(self):

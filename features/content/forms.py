@@ -10,6 +10,8 @@ from features.images.models import Image
 
 
 class Create(forms.ModelForm):
+    container_class = models.Content
+
     class Meta:
         model = associations.Association
         fields = ('pinned', 'public')
@@ -60,13 +62,17 @@ class Create(forms.ModelForm):
                         'entity_type': self.instance.entity_type,
                         'slug': core.text.slugify(self.cleaned_data['title']),
                         })
-            self.instance.container = models.Content.objects.create(
+            container = self.container_class.objects.create(
                     title=self.cleaned_data['title'],
                     image=self.cleaned_data.get('image'),
                     place=self.cleaned_data.get('place', ''),
                     time=self.cleaned_data.get('time'),
                     until_time=self.cleaned_data.get('until_time'),
                     all_day=self.cleaned_data.get('all_day', False))
+            if not hasattr(container, 'content_ptr'):
+                self.instance.container = container
+            else:
+                self.instance.container = container.content_ptr
             self.instance.container.versions.create(
                     author=self.author, text=self.cleaned_data['text'])
             self.save_content_relations(commit)

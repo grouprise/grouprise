@@ -6,7 +6,7 @@ db.sqlite3*
 media/
 node_modules
 static/
-whoosh_index
+xapian_index
 res/img/backdrops
 stadt/settings/local.py
 *.swp

@@ -3,9 +3,14 @@ import decorator from './_decorator'
 export default decorator((req, opts) => {
   const endpoint = opts.url('gestalten/')
 
-  const get = (params = {}) => {
+  const list = (params = {}) => {
     return req.get(endpoint, {params})
   }
 
-  return {get}
+  const get = id => {
+    return req.get(`${endpoint}${id}/`)
+      .then(res => res.data)
+  }
+
+  return {list, get}
 })

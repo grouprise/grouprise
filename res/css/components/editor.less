@@ -4,11 +4,11 @@
 
     &.editor-container-ready {
         transition: border-color .2s;
-        border: 2px solid @input-border;
+        border: @input-border-width solid @input-border;
         border-radius: @border-radius-base;
 
         &.editor-container-active {
-            border-color: @input-border-focus;
+            border-color: @color-primary;
         }
 
         .control-label {
@@ -49,7 +49,7 @@
         align-items: center;
         justify-content: center;
         border-color: transparent !important;
-        border-radius: 2px;
+        border-radius: @border-radius-base;
         width: 2rem;
         height: 2rem;
 
@@ -79,7 +79,7 @@
         overflow-x: hidden;
         background-color: #eaeaea;
         padding: 3px;
-        border-radius: 2px 2px 2px 0;
+        border-radius: @border-radius-base @border-radius-base @border-radius-base 0;
     }
 
     .tabbed-tabs {

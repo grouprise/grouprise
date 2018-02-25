@@ -2,10 +2,10 @@
 
 -- 
 Nachricht online lesen und beantworten:
-{% if association %}{% url 'content-permalink' association.pk as path %}{% else %}{% url 'content-permalink' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}#{% ref object %}
+{% if association %}{% url 'conversation' association.pk as path %}{% else %}{% url 'conversation' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}#{% ref object %}
 {% if contribution %}
 Du erhältst diese Benachrichtigung, weil Du Dich an dem Gespräch {{ object.container.subject }} beteiligt hast.
-{% url 'content-permalink' object.container.associations.first.pk as path %}{{ path|full_url }}#{% ref contribution %}
+{% url 'conversation' object.container.associations.first.pk as path %}{{ path|full_url }}#{% ref contribution %}
 {% elif subscription %}
 Du erhältst diese Benachrichtigung weil Du {% if membership %}Mitglied der Gruppe {{ membership.group }} bist und die Gruppe{% else %}die Gruppe {{ subscription.subscribed_to }}{% endif %} abonniert hast.
 {{ subscription.subscribed_to.get_absolute_url|full_url }}{% endif %}

@@ -34,8 +34,7 @@ class Group:
         s = 0
         if isinstance(instance, groups.Group):
             num_members = instance.memberships.count()
-            num_subscribers = subscriptions.Subscription.objects.filter(
-                    subscribed_to=instance).count()
+            num_subscribers = subscriptions.Subscription.objects.filter(group=instance).count()
             for only_public, num_gestalten in ((False, num_members), (True, num_subscribers)):
                 ps = 0
                 group_versions = content.Version.objects.filter(

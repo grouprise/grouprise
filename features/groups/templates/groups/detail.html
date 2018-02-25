@@ -3,8 +3,7 @@
 {% block meta %}{% include "groups/_meta.html" %}{% endblock %}
 
 {% block meta_feed %}
-    <link rel="alternate" type="application/rss+xml" title="{{ group }}"
-        href="{% url 'group-feed' group.pk %}">
+    <link rel="alternate" type="application/rss+xml" title="{{ group }}" href="{{ feed_url }}">
 {% endblock %}
 
 {% block title %}{{ group }} - {{ block.super }}{% endblock %}

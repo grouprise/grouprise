@@ -4,14 +4,14 @@
 
 .configurator-label {
     background-color: white;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
     transition: border-color .2s;
-    border: 2px solid @gray-light;
+    border: @component-border-width solid @gray-light;
     padding: .5rem 1rem;
     cursor: text;
 
     &:focus {
-        border-color: @brand-primary;
+        border-color: @color-primary;
         outline: none;
     }
 }
@@ -23,7 +23,7 @@
     top: 100%;
     left: 0;
     margin-top: .5rem;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
     width: 560px;
     .material-shadow(3);
 
@@ -67,5 +67,5 @@
 
 .configurator-footer {
     padding: .5rem 1rem;
-    border-top: 2px solid @color-divider-light;
+    border-top: @component-border-width solid @color-divider-light;
 }

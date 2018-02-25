@@ -16,35 +16,47 @@
 }
 
 .tabbed-tabs,
-.tabs-component-tabs{
+.tabs-component-tabs {
     display: flex;
+    position: relative;
+    padding: 0 1rem;
+
+    &::after {
+        content: ' ';
+        height: @component-border-width;
+        position: absolute;
+        display: block;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: @gray-light;
+        z-index: 150;
+    }
 }
 
 .tabbed-tab,
 .tabs-component-tab-a {
-    display: block;
-    padding: .3em .8em;
-    background-color: #eaeaea;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: @color-text-default;
-    cursor: pointer;
-    border-radius: 0 0 2px 2px;
-    font-weight: 500;
-    margin-right: .3em;
-    transition: background-color .2s, color .2s;
+    &:extend(.btn all);
+    background-color: @gray-lighter;
+    color: @color-text-ultralight;
+    border-radius: @border-radius-base @border-radius-base 0 0;
+    border: @component-border-width solid transparent;
+    margin-right: .5rem;
 
     &:hover,
-    &:focus,
-    &:active {
-        background-color: darken(#eaeaea, 5%);
+    &:active,
+    &:focus {
+        color: @color-text-light;
     }
-}
 
-.tabbed-tab-current,
-.tabs-component-tab-a[aria-selected='true'] {
-    color: @brand-primary;
-    background-color: #eaeaea !important;
+    .tabbed-tab.tabbed-tab-current &,
+    .tabs-component-tab.is-active & {
+        background-color: #f9f9f9;
+        color: @color-text-light;
+        z-index: 200;
+        border-color: @gray-light;
+        border-bottom-color: transparent;
+    }
 }
 
 .tabbed-content,

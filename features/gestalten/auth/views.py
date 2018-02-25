@@ -41,7 +41,7 @@ class PasswordReset(utils_views.ActionMixin, views.PasswordResetView):
 
     def get_context_data(self, **kwargs):
         kwargs['login_url'] = allauth.account.utils.passthrough_next_redirect_url(
-                self.request, django.core.urlresolvers.reverse('login'),
+                self.request, django.urls.reverse('login'),
                 self.redirect_field_name)
         return django.views.generic.FormView.get_context_data(self, **kwargs)
 

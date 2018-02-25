@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from . import views, rest_api
 
 urlpatterns = [
     url(
@@ -17,4 +17,5 @@ urlpatterns = [
         r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/vote/$',
         views.Vote.as_view(),
         name='vote'),
+    url(r'^stadt/api/polls/(?P<pk>[^/.]+)/vote', rest_api.vote, name='polls-vote'),
 ]

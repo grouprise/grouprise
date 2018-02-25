@@ -1,3 +1,4 @@
+from crispy_forms import layout
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
 
@@ -8,8 +9,11 @@ from . import models
 
 class GroupFilter(core.forms.FormMixin, forms.Form):
     name = forms.CharField()
-    inline = True
-    layout = ('name', core.forms.Submit('Gruppen filtern', field_classes='btn btn-default'))
+    search = True
+    layout = (
+        layout.Field('name', placeholder='z.B. Foodcoop'),
+        core.forms.Submit('Gruppen suchen', field_classes='btn btn-default')
+    )
     method = 'GET'
 
 

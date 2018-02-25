@@ -11,7 +11,12 @@
 }
 
 .sg-active {
-    color: @brand-primary;
+    color: @color-primary;
+}
+
+
+.sg-info:after {
+    content: @fa-var-info-circle;
 }
 
 .sg-camera {
@@ -385,4 +390,14 @@
     &:after {
         content: @fa-var-puzzle-piece;
     }
+}
+
+.sg-search {
+    &:after {
+        content: @fa-var-search;
+    }
+}
+
+.sg-password:after {
+    content: @fa-var-key;
 }

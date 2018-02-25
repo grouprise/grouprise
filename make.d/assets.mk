@@ -10,6 +10,7 @@ BIN_FONTDUMP = $(DIR_NODE_BIN)/fontdump
 
 DEPS_ASSETS = $(shell find "$(DIR_RES)" -type f)
 DEPS_FONTS = $(shell find "$(DIR_FONTS)" -type f)
+DEPS_WEBPACK = $(shell find "webpack" -type f)
 
 # intermediate build files
 BUILD_FONT_GOOGLE = $(DIR_BUILD)/fonts/google
@@ -34,7 +35,7 @@ $(STATIC_FONT_GOOGLE): $(DIR_NODE)
 	rsync -a --exclude "*.css" "$(BUILD_FONT_GOOGLE)/" "$(STATIC_FONT_GOOGLE)"
 	touch "$(STATIC_FONT_GOOGLE)"
 
-$(DIR_STATIC): $(STATIC_FONT_GOOGLE) $(DEPS_ASSETS)
+$(DIR_STATIC): $(STATIC_FONT_GOOGLE) $(DEPS_ASSETS) $(DEPS_WEBPACK)
 	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK) --bail
 	touch "$(DIR_STATIC)"
 

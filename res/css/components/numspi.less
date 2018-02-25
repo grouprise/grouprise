@@ -32,8 +32,8 @@
     width: 4rem;
     min-width: 0;
     border: solid @gray-lighter;
-    border-width: 0 2px;
-    border-radius: 2px;
+    border-width: 0 @input-border-width;
+    border-radius: @border-radius-base;
     -moz-appearance:textfield;
 
     &::-webkit-inner-spin-button,
@@ -44,8 +44,8 @@
 }
 
 .numspi-ctl {
-    border: 2px solid @gray-light;
-    border-radius: 2px;
+    border: @input-border-width solid @gray-light;
+    border-radius: @border-radius-base;
     position: relative;
     display: flex;
     align-items: stretch;

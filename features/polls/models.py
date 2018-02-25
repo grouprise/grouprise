@@ -1,12 +1,131 @@
+import collections
+import enum
+
 from django.db import models
 from django.utils import timezone
+from schulze import compute_ranks, convert
 
 import core.models
 
 
+class VoteType(enum.Enum):
+    SIMPLE = 'simple'
+    CONDORCET = 'condorcet'
+
+    def __str__(self):
+        return str(self.value)
+
+
+def _resolve_condorcet_vote(votes):
+    votes_dict = collections.defaultdict(dict)
+    for vote in votes:
+        if vote.voter:
+            votes_dict[vote.voter][vote.option] = vote.condorcetvote.rank
+        else:
+            votes_dict[vote.anonymous][vote.option] = vote.condorcetvote.rank
+
+    if votes_dict:
+        candidates, ballots = convert.convert_rated_candidates(votes_dict.values())
+        ranking = convert.flatten(compute_ranks(candidates, ballots))
+        winner = ranking[0]
+    else:
+        ranking = []
+        winner = None
+
+    data = {
+        'votes': votes_dict,
+        'winner': winner,
+        'ranking': ranking
+    }
+    return data
+
+
+def _resolve_simple_vote(votes):
+    class VoteCount:
+        def __init__(self) -> None:
+            self.yes = 0
+            self.no = 0
+            self.maybe = 0
+
+        def __add__(self, endorse):
+            if endorse is None:
+                self.maybe += 1
+            elif endorse:
+                self.yes += 1
+            else:
+                self.no += 1
+            return self
+
+        @property
+        def score(self):
+            return self.yes + self.maybe * .33334
+
+        def serialize(self):
+            return {key: getattr(self, key) for key in ['yes', 'no', 'maybe']}
+
+    def get_winner(vote_count: dict):
+        result = []
+        for option, votes in vote_count.items():
+            result.append(
+                (option, votes.score)
+            )
+        try:
+            return sorted(result, key=lambda item: item[1], reverse=True)[0][0]
+        except IndexError:
+            return None
+
+    votes_dict = collections.defaultdict(dict)
+    vote_count = collections.defaultdict(lambda: VoteCount())
+    for vote in votes:
+        vote_count[vote.option] += vote.simplevote.endorse
+        if vote.voter:
+            votes_dict[vote.voter][vote.option] = vote
+            votes_dict[vote.voter]['latest'] = vote
+        else:
+            votes_dict[vote.anonymous][vote.option] = vote
+            votes_dict[vote.anonymous]['latest'] = vote
+    return {
+        'votes': votes_dict,
+        'vote_count': vote_count,
+        'winner': get_winner(vote_count)
+    }
+
+
+def resolve_voters(poll):
+    _votes = Vote.objects.filter(option__poll=poll).all()
+
+    voters = []
+    for vote in _votes:
+        if vote.voter and vote.voter not in voters:
+            voters.append(vote.voter)
+        elif vote.anonymous and vote.anonymous not in voters:
+            voters.append(vote.anonymous)
+    return voters
+
+
+def resolve_vote(poll):
+    _votes = Vote.objects.filter(option__poll=poll).all()
+
+    if poll.condorcet:
+        votes = _resolve_condorcet_vote(_votes)
+    else:
+        votes = _resolve_simple_vote(_votes)
+
+    return votes
+
+
+# FIXME: inherit from content.Content when django bug #28988 is fixed
+class WorkaroundPoll(core.models.Model):
+    condorcet = models.BooleanField(default=False)
+
+    @property
+    def vote_type(self):
+        return VoteType.CONDORCET if self.condorcet else VoteType.SIMPLE
+
+
 class Option(core.models.Model):
     poll = models.ForeignKey(
-            'content2.Content', related_name='options', on_delete=models.CASCADE)
+            'WorkaroundPoll', related_name='options', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         if hasattr(self, 'simpleoption'):
@@ -14,6 +133,13 @@ class Option(core.models.Model):
         elif hasattr(self, 'eventoption'):
             return self.eventoption.__str__()
         return super().__str__()
+
+    def __lt__(self, other):
+        # we don’t really have an order, but now that you ask
+        return self.pk <= other.pk
+
+    class Meta:
+        ordering = ('id', )
 
 
 class SimpleOption(Option):
@@ -46,15 +172,21 @@ class EventOption(Option):
 
 
 class Vote(core.models.Model):
-    class Meta:
-        unique_together = (('option', 'voter'), ('option', 'anonymous'))
-
     option = models.ForeignKey('Option', on_delete=models.CASCADE)
-
     voter = models.ForeignKey(
             'gestalten.Gestalt', null=True, related_name='votes', on_delete=models.PROTECT)
     anonymous = models.CharField(max_length=63, blank=True, null=True)
-
     time_updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = (('option', 'voter'), ('option', 'anonymous'))
+        ordering = ('time_updated', )
+
+
+class SimpleVote(Vote):
     endorse = models.NullBooleanField(default=False)
+
+
+class CondorcetVote(Vote):
+    # higher rank == higher priority
+    rank = models.SmallIntegerField()

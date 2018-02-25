@@ -83,13 +83,17 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
   // prevent users from accidentally leaving the page when
   // they’ve changed the content of the editor
   let editorHasChanged = false
+  let formDuringSubmit = false
   const changeListener = on(codemirrorEvents, 'change', () => {
     editorHasChanged = true
+  })
+  const submitListener = on(form, 'submit', () => {
+    formDuringSubmit = true
   })
   const beforeUnloadListener = on(window, 'beforeunload', event => {
     const message = 'Du hast Änderungen am Inhalt vorgenommen. Bist du sicher, dass du die ' +
       'Seite verlassen willst?'
-    if (editorHasChanged) {
+    if (editorHasChanged && !formDuringSubmit) {
       event.returnValue = message
       return message
     }
@@ -139,6 +143,7 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
       scrollListener.destroy()
       focusListener.destroy()
       changeListener.destroy()
+      submitListener.destroy()
       beforeUnloadListener.destroy()
     }
   }

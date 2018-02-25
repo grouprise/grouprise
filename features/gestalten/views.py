@@ -24,7 +24,7 @@ class Create(utils_views.ActionMixin, views.SignupView):
 
     def get_context_data(self, **kwargs):
         kwargs['login_url'] = allauth.account.utils.passthrough_next_redirect_url(
-                self.request, django.core.urlresolvers.reverse('login'),
+                self.request, django.urls.reverse('login'),
                 self.redirect_field_name)
         return django.views.generic.FormView.get_context_data(self, **kwargs)
 
@@ -103,7 +103,8 @@ class UpdateEmail(PermissionMixin, views.EmailView):
     @property
     def success_url(self):
         group = Group.objects.filter(slug=self.request.GET.get('group')).first()
-        return '{}?group={}'.format(reverse('email-settings'), group.slug)
+        slug = group.slug if group else ''
+        return '{}?group={}'.format(reverse('email-settings'), slug)
 
 
 class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):

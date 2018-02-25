@@ -1,5 +1,5 @@
 .form-control {
-    border-width: 2px;
+    border-width: @input-border-width;
     box-shadow: none !important;
     border-color: @gray-light;
     height: auto;
@@ -8,14 +8,60 @@
     .input-changed &:invalid {
         border-color: @brand-danger;
     }
+
+    &:focus {
+        border-color: @color-primary;
+    }
+}
+
+.form-search {
+    display: flex;
+    align-items: center;
+
+    &:not(:only-child) {
+        margin-bottom: 4rem;
+    }
+
+    > :first-child {
+        width: 100%;
+        flex: 1;
+        min-width: 0;
+        margin: 0 1rem 0 0;
+    }
+
+    .form-control {
+        border-width: 0 0 1px 0;
+        font-size: 2rem;
+    }
+
+    .btn {
+        border-radius: 500px;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+        min-width: 160px;
+
+        .on-handhelds({
+            min-width: 0;
+        })
+    }
+
+    // a little hack for auto-generated search fields
+    // that create a dedicated label for the input field
+    label[for] {
+        &:extend(.sr-only);
+    }
 }
 
 .input-group-addon {
-    border-width: 2px;
+    border-width: 2@input-border-width;
 }
 
 .form-inline {
     margin-bottom: 2rem;
+}
+
+.form-inline-text {
+    display: inline;
 }
 
 label {
@@ -32,7 +78,7 @@ label {
     margin: 4rem auto 0;
     background-color: #f2f2f2;
     padding: 4rem 2rem 2rem;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
     position: relative;
     max-width: 100%;
 
@@ -47,7 +93,7 @@ label {
         transform: translateX(-50%);
         background: url("../../img/logos/logo_large.svg");
         background-size: contain;
-        border-radius: 2px;
+        border-radius: @border-radius-base;
     }
 
     #div_id_password + div {
@@ -70,7 +116,7 @@ label {
         background-color: @brand-danger;
         color: white;
         padding: .3em .5em;
-        border-radius: 0 0 2px 2px;
+        border-radius: 0 0 @border-radius-base @border-radius-base;
     }
 
     .account-actions {
@@ -104,15 +150,15 @@ label {
     .form-control {
         font-size: 1rem;
         background-color: white;
-        border-radius: 2px;
+        border-radius: @border-radius-base;
         transition: border-color .2s;
-        border: 2px solid @color-text-ultralight;
+        border: @input-border-width solid @gray-light;
     }
 
     .form-group {
         margin-bottom: 1rem;
         position: relative;
-        padding: 0 1rem;
+        padding: 0 .75rem;
 
         .no-js & {
             border: none;
@@ -120,13 +166,13 @@ label {
         }
 
         &.input-focused {
-            border-color: @brand-primary !important;
+            border-color: @color-primary !important;
         }
 
         &.has-error {
             margin-bottom: 3rem;
             border-color: @brand-danger !important;
-            border-radius: 2px 2px 0 2px;
+            border-radius: @border-radius-base @border-radius-base 0 @border-radius-base;
         }
 
         &.input-type-search {
@@ -196,17 +242,17 @@ label {
 
         .no-js .has-error & {
             border-color: @brand-danger;
-            border-radius: 2px 2px 0 2px;
+            border-radius: @border-radius-base @border-radius-base 0 @border-radius-base;
         }
 
         .js & {
-            padding: 1.5625rem 0 .625rem;
+            padding: 1.35rem 0 .1rem;
             border: 0 none !important;
         }
 
         &:focus {
             outline: none;
-            border-color: @brand-primary;
+            border-color: @color-primary;
         }
     }
 
@@ -243,7 +289,7 @@ label {
     .js .form-modern .input-filled &,
     .js .form-modern .input-focused & {
         animation: shrink-control-label .35s ease-out forwards;
-        top: .225rem !important;
+        top: -.05rem !important;
     }
 
     .js .form-modern .input-empty.input-type-textarea & {
@@ -284,7 +330,7 @@ label {
     }
 
     label {
-        border-radius: 2px;;
+        border-radius: @border-radius-base;
         background-color: rgba(0, 0, 0, .05);
         padding: .5em;
         cursor: pointer;
@@ -301,7 +347,7 @@ label {
     }
     100% {
         transform: scale(0.8) translateY(2px);
-        color: @brand-primary;
+        color: @color-primary;
     }
 }
 

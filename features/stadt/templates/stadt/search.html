@@ -1,0 +1,41 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Suche - {{ block.super }}{% endblock %}
+{% block heading_title %}
+    {% include 'core/_heading.html' with title='Beiträge' icon='sg-search' %}
+{% endblock %}
+
+{% block content %}
+    <form class="form-search" action="{% url 'search' %}">
+        <label class="form-search-wrap">
+            <span class="sr-only">Suche</span>
+            <input type="search" name="q" class="form-control" placeholder="Suche"
+                   value="{{ request.GET.q }}" autofocus>
+        </label>
+        <button class="btn btn-primary">
+            Suchen
+        </button>
+    </form>
+
+    <div class="content-list">
+        {% if object_list %}
+            <ol class="content-preview-list">
+                {% for result in object_list %}
+                    <li>
+                        {% include 'associations/_preview.html' with association=result.object %}
+                    </li>
+                {% endfor %}
+            </ol>
+            {% pagination 'Weitere Beiträge' %}
+        {% else %}
+            <div class="alert alert-flex alert-default">
+                <div class="alert-image">
+                    <i class="fa fa-3x fa-meh-o"></i>
+                </div>
+                <div>
+                    <p>Leider haben wir keine passenden Beiträge für deine Suchanfrage gefunden.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

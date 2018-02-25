@@ -46,6 +46,16 @@
         right: auto;
     }
 
+    &.dock-absolute {
+        position: absolute;
+        top: calc(100% + 1rem) !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-top: none !important;
+        max-width: 400px;
+        z-index: 150;
+    }
+
     &.dock-screen {
         position: fixed;
         top: @nav-height;
@@ -53,6 +63,19 @@
         .dock-screen(768px, 750px);
         .dock-screen(992px, 970px);
         .dock-screen(1200px, 1170px);
+    }
+
+    &.dock-fullwidth {
+        max-width: none;
+        left: 0; right: 0;
+        margin-top: 0;
+        border-top: 1px solid @gray-light;
+
+        .on-handhelds({
+            .container {
+                padding: 0;
+            }
+        })
     }
 
     .dock-inner {
@@ -182,31 +205,18 @@
 .dock-header-link,
 .dock-session {
     &:extend(.btn all);
-    &:extend(.btn-link all);
+    &:extend(.btn-default all);
     color: @color-text-default;
     white-space: nowrap;
-    font-size: .75rem;
-    padding-right: 0;
-    padding-left: 0;
+    font-size: .9rem;
     margin-left: 2rem;
     overflow: visible;
     display: flex;
     align-items: center;
     flex: none;
 
-    &:hover,
-    &:focus,
-    &:active {
-        text-decoration: none;
-
-        span {
-            text-decoration: underline;
-        }
-    }
-
     i {
-        color: @brand-primary;
-        font-size: 1.75rem;
+        font-size: 1.25rem;
         margin-right: .75rem;
     }
 }

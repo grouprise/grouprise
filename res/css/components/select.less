@@ -11,8 +11,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 2px solid @gray-light;
-    border-radius: 2px;
+    border: @input-border-width solid @gray-light;
+    border-radius: @border-radius-base;
     padding: .5rem 1rem;
     transition: border-color .2s;
     cursor: pointer;
@@ -25,12 +25,12 @@
     .select-open &,
     &:focus {
         outline: none;
-        border-color: @brand-primary;
+        border-color: @color-primary;
     }
 }
 
 .select-decorator {
-    border-left: 2px solid @color-text-ultralight;
+    border-left: @input-border-width solid @color-text-ultralight;
     min-width: 4rem;
     color: @color-text-extralight;
     padding: .5rem 1rem .5rem 1.5rem;
@@ -54,7 +54,7 @@
 
 .select-dismiss:hover i,
 .select-current:hover .select-caret i {
-    color: @brand-primary;
+    color: @color-primary;
 }
 
 .select-caret {
@@ -88,8 +88,8 @@
     left: 0;
     right: 0;
     background-color: white;
-    z-index: 20;
-    border-radius: 2px;
+    z-index: 220;
+    border-radius: @border-radius-base;
     display: flex;
     flex-direction: column;
     .material-shadow(3);
@@ -119,7 +119,7 @@
 .select-search-input {
     display: block;
     border: none;
-    border-bottom: 2px solid @color-text-extralight;
+    border-bottom: @input-border-width solid @color-text-extralight;
     background-color: transparent;
     padding: .625rem .5rem;
     transition: border-color .2s;
@@ -127,7 +127,7 @@
 
     &:focus {
         outline: none;
-        border-color: @brand-primary;
+        border-color: @color-primary;
     }
 }
 
@@ -137,7 +137,7 @@
     line-height: 1;
     justify-content: center;
     align-items: center;
-    background-color: @brand-primary;
+    background-color: @color-primary;
     text-align: center;
     padding: .4rem .5rem;
     margin-left: 1rem;
@@ -167,7 +167,7 @@
         &:active {
             outline: none;
             background-color: @gray-lighter;
-            border-radius: 2px;
+            border-radius: @border-radius-base;
         }
     }
 

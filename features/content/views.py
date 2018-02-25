@@ -65,7 +65,7 @@ class Detail(DetailBase):
 class Permalink(django.views.generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         association = get_association_or_404(pk=kwargs.get('association_pk'))
-        return django.core.urlresolvers.reverse(
+        return django.urls.reverse(
                 'content', args=(association.entity.slug, association.slug))
 
 

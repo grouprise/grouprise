@@ -1,5 +1,5 @@
-@font-family-default: "Roboto", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Geneva", "Verdana", sans-serif;
-@font-family-headline: "Roboto Slab", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Geneva", "Verdana", sans-serif;
+@font-family-default: var(--font-default);
+@font-family-headline: var(--font-accent);
 
 @font-size-large: 1.3rem;
 @font-size-base: 1rem;
@@ -36,7 +36,12 @@
 @gray-lighter: #f2f2f2;
 @gray-light: #dadada;
 
+@color-primary: var(--color-primary, @brand-primary);
+@color-secondary: var(--color-secondary, @brand-secondary);
+@color-primary-dark: var(--color-primary-dark, @brand-primary-dark);
+
 @brand-primary: #2a62ac;
+@brand-primary-dark: darken(@brand-primary, 10%);
 @brand-secondary: #f6ed69;
 @brand-success: #31b893;
 @brand-danger: #d66882;
@@ -45,10 +50,13 @@
 @state-success-text: @brand-success;
 @state-danger-text: @brand-danger;
 
-@input-border: @gray-light;
-@input-border-focus: @brand-primary;
-
 @nav-height: 60px;
 
+@component-border-width: 1px;
 @component-bg-default: #f2f2f2;
 @component-bg-light: white;
+
+
+@input-border: @gray-light;
+@input-border-focus: @brand-primary;
+@input-border-width: @component-border-width;

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'features.stadt',
     'features.subscriptions',
     'features.tags',
+    'haystack',
     'imagekit',
     'mailer',
     'rest_framework',
@@ -185,6 +186,7 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 DEFAULT_FROM_EMAIL = 'noreply@localhost'
 DEFAULT_REPLY_TO_EMAIL = 'stadtgestalten+{reply_key}@localhost'
 FROM_EMAIL_WITH_SLUG = 'noreply+{slug}@localhost'
+STADTGESTALTEN_BOT_EMAIL = 'stadtgestalten-bot@localhost'
 
 EMAIL_BACKEND = 'mailer.backend.DbBackend'
 MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -221,6 +223,8 @@ STADTGESTALTEN_LOGO_URL = 'stadt/img/logos/logo_text.svg'
 STADTGESTALTEN_SHOW_HEADER = True
 
 HAS_PIWIK = True
+
+STADTGESTALTEN_INTRO_TEXT = ''
 
 
 # Authentication
@@ -303,3 +307,17 @@ TAGS_TAGGABLE = (
                                  and hasattr(c.contribution, 'text')),
     },
 )
+
+
+# Search engine
+# https://django-haystack.readthedocs.io/
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'xapian_backend.XapianEngine',
+        'PATH': os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'xapian_index'),
+    },
+}
+
+HAYSTACK_XAPIAN_LANGUAGE = 'german2'

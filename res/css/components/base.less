@@ -19,6 +19,13 @@
     @media (max-width: 1199px) {
         font-size: @font-size-small;
     }
+
+    --color-primary: @brand-primary;
+    --color-primary-dark: @brand-primary-dark;
+    --color-secondary: @brand-secondary;
+
+    --font-default: "Roboto", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Geneva", "Verdana", sans-serif;
+    --font-accent: "Roboto Slab", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Geneva", "Verdana", sans-serif;
 }
 
 .fireworks {
@@ -41,7 +48,7 @@ h1, h2, h3, h4, h5 {
 }
 
 a {
-    color: @brand-primary;
+    color: @color-primary;
 }
 
 p {
@@ -157,7 +164,7 @@ pre {
     background-color: @gray-lighter;
     border-radius: 2px;
     padding: 1rem;
-    color: @brand-primary;
+    color: @color-primary;
 }
 
 .sidebar {

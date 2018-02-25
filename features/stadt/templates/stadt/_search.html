@@ -1,0 +1,32 @@
+<input type="checkbox" id="menu-search" class="dropdown-state" data-search-state data-menu-group="main">
+<label for="menu-search" class="nav-menu-item nav-menu-item-square nav-state-toggle"
+       aria-label="Zeige Suche an" tabindex="0"
+       data-component="openable" data-openable-target="#menu-search-dropdown">
+    <span class="nav-tab-icon">
+        <i class="sg sg-search"></i>
+    </span>
+    <span>
+        <i class="sg sg-search"></i>
+    </span>
+</label>
+<div class="dock dock-screen dock-fullwidth dock-light dock-menu" id="menu-search-dropdown" data-dropdown>
+    <div class="dock-inner">
+        <span class="dock-decoration"></span>
+        <div class="dock-content">
+            <div class="dock-content-inner">
+                <div class="container">
+                    <form class="form-search" action="{% url 'search' %}">
+                        <label class="form-search-wrap">
+                            <span class="sr-only">Suche</span>
+                            <input type="search" name="q" class="form-control form-control-search"
+                                   placeholder="Deine Suchbegriffe…" data-search-input>
+                        </label>
+                        <button class="btn btn-primary">
+                            <span class="btn-label">Suchen</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

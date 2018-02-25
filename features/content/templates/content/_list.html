@@ -1,17 +1,7 @@
 <ol class="content-preview-list">
     {% for association in associations %}
         <li>
-            {% if association.container.is_poll %}
-                {% include 'polls/_preview.html' %}
-            {% elif association.container.is_gallery %}
-                {% include 'galleries/_preview.html' %}
-            {% elif association.container.is_file %}
-                {% include 'files/_preview.html' %}
-            {% elif association.container.is_event %}
-                {% include 'events/_preview.html' %}
-            {% else %}
-                {% include 'articles/_preview.html' %}
-            {% endif %}
+            {% include 'associations/_preview.html' %}
         </li>
     {% endfor %}
 </ol>

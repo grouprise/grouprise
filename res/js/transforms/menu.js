@@ -5,7 +5,25 @@ import { fromPairs, mapValues, includes } from 'lodash'
 const menuGroupAttr = attr('data-menu-group')
 const body = $('body')
 
+function createSearch (el) {
+  const searchState = $('[data-search-state]', el)
+  const searchInput = $('[data-search-input]', el)
+
+  const stateListener = on(searchState, 'change', () => {
+    if (searchState.checked) {
+      searchInput.focus()
+    }
+  })
+
+  return {
+    destroy () {
+      stateListener.destroy()
+    }
+  }
+}
+
 export default el => {
+  const search = createSearch(el)
   const switchState = $('[data-menu-switch]', el)
   const firstSubMenu = menuGroupAttr.$(el)
   const states = fromPairs(menuGroupAttr.$$(el).map(i => [i.id, i]))
@@ -31,6 +49,7 @@ export default el => {
     remove () {
       keydownListener.destroy()
       switchListener.destroy()
+      search.destroy()
     }
   }
 }

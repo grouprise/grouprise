@@ -42,10 +42,9 @@
                     {% if can_subscribe %}
                         <li>
                             {% if user.is_authenticated %}
-                                <form action="{% url 'group-subscribe' group.pk %}"
-                                      method="post" class="nav-menu-item">
+                                <form action="{% url 'group-subscribe' group.pk %}" method="post">
                                     {% csrf_token %}
-                                    <button>
+                                    <button class="nav-menu-item">
                                         <i class="sg sg-fw sg-subscription"></i>
                                         <span class="nav-menu-item-label">Abonnieren</span>
                                     </button>
@@ -101,43 +100,56 @@
                     {% has_perm 'content.group_create' user group as can_create %}
                     {% if can_create %}
                         <li>
-                            <a href="{% url 'create-group-article' group.slug %}" class="nav-menu-item">
-                                <i class="sg sg-fw sg-article"></i>
-                                <span class="nav-menu-item-label">Artikel schreiben</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'create-group-event' group.slug %}" class="nav-menu-item">
-                                <i class="sg sg-fw sg-event"></i>
-                                <span class="nav-menu-item-label">Veranstaltung eintragen</span>
-                            </a>
+                            <input class="dropdown-state" id="menu-group-create" type="checkbox">
+                            <label for="menu-group-create" class="nav-menu-item nav-state-toggle"
+                                   tabindex="0" data-component="openable"
+                                   data-openable-target="#menu-group-create-dropdown">
+                                <i class="sg sg-fw sg-add"></i>
+                                <span class="nav-menu-item-label">Beitrag schreiben</span>
+                                <i class="caret"></i>
+                            </label>
+                            <ol class="nav-vertical" id="menu-group-create-dropdown"
+                                data-dropdown="static">
+                                <li>
+                                    <a href="{% url 'create-group-article' group.slug %}" class="nav-menu-item">
+                                        <i class="sg sg-fw sg-article"></i>
+                                        <span class="nav-menu-item-label">Artikel schreiben</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'create-group-event' group.slug %}" class="nav-menu-item">
+                                        <i class="sg sg-fw sg-event"></i>
+                                        <span class="nav-menu-item-label">Veranstaltung eintragen</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'content' about_group.slug 'tools' %}" class="nav-menu-item">
+                                        <i class="sg sg-fw sg-tools"></i>
+                                        <span class="nav-menu-item-label">Weitere Möglichkeiten</span>
+                                    </a>
+                                </li>
+                            </ol>
                         </li>
                     {% endif %}
-                    <li>
-                        <a href="{% url 'content' about_group.slug 'tools' %}" class="nav-menu-item">
-                            <i class="sg sg-fw sg-tools"></i>
-                            <span class="nav-menu-item-label">Weitere Möglichkeiten</span>
-                        </a>
-                    </li>
                     
                     {# SETTINGS #}
-                    <li>
-                        {% load rules %}
-                        {% has_perm 'groups.change' user group as can_change_group %}
-                        {% has_perm 'groups.change_subscriptions_memberships' user group as can_edit_subscription_settings %}
-                        {% if can_change_group %}
-                            {% url 'group-settings' as settings_url %}
-                        {% elif can_edit_subscription_settings %}
-                            {% url 'subscriptions-memberships-settings' as settings_url %}
-                        {% endif %}
-                        {% if settings_url %}
+                    {% load rules %}
+                    {% has_perm 'groups.change' user group as can_change_group %}
+                    {% has_perm 'groups.change_subscriptions_memberships' user group as can_edit_subscription_settings %}
+                    {% if can_change_group %}
+                        {% url 'group-settings' as settings_url %}
+                    {% elif can_edit_subscription_settings %}
+                        {% url 'subscriptions-memberships-settings' as settings_url %}
+                    {% endif %}
+                    {% if settings_url %}
+                        <li>
                             <a href="{{ settings_url }}?group={{ group.slug }}"
                                class="nav-menu-item">
                                 <i class="sg sg-fw sg-settings"></i>
                                 <span class="nav-menu-item-label">Einstellungen</span>
                             </a>
-                        {% endif %}
-                    </li>
+                        </li>
+                    {% endif %}
                 </ol>
             </div>
         </div>
