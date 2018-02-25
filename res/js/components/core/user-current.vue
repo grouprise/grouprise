@@ -40,7 +40,7 @@
         return this.userModel === 'anonymous' && this.anonymousEdit
       },
       displayLogin () {
-        return this.userModel === 'anonymous' && this.anonymousLogin
+        return this.userModel === 'anonymous' && this.anonymousLogin && !this.username
       },
       user () {
         return this.userModel === 'anonymous'
