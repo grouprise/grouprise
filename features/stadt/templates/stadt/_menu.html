@@ -2,9 +2,6 @@
 
 {% block menu_items %}
     <li>
-        {% include 'stadt/_search.html' %}
-    </li>
-    <li>
         {% include 'core/menu/_menu_groups.html' %}
     </li>
     <li>
@@ -17,5 +14,12 @@
     {% endif %}
     <li>
         {% include 'gestalten/_menu.html' %}
+    </li>
+    <!--
+        the first menu opened on mobile depends on dom order,
+        so search comes last but is ordered last
+        -->
+    <li style="order: -1">
+        {% include 'stadt/_search.html' %}
     </li>
 {% endblock %}

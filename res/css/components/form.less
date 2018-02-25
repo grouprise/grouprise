@@ -14,6 +14,44 @@
     }
 }
 
+.form-search {
+    display: flex;
+    align-items: center;
+
+    &:not(:only-child) {
+        margin-bottom: 4rem;
+    }
+
+    > :first-child {
+        width: 100%;
+        flex: 1;
+        min-width: 0;
+        margin: 0 1rem 0 0;
+    }
+
+    .form-control {
+        border-width: 0 0 1px 0;
+        font-size: 2rem;
+    }
+
+    .btn {
+        border-radius: 500px;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+        min-width: 160px;
+
+        .on-handhelds({
+            min-width: 0;
+        })
+    }
+
+    // a little hack for auto-generated search fields
+    // that create a dedicated label for the input field
+    label[for] {
+        &:extend(.sr-only);
+    }
+}
+
 .input-group-addon {
     border-width: 2@input-border-width;
 }

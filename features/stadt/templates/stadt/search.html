@@ -6,6 +6,17 @@
 {% endblock %}
 
 {% block content %}
+    <form class="form-search" action="{% url 'search' %}">
+        <label class="form-search-wrap">
+            <span class="sr-only">Suche</span>
+            <input type="search" name="q" class="form-control" placeholder="Suche"
+                   value="{{ request.GET.q }}" autofocus>
+        </label>
+        <button class="btn btn-primary">
+            Suchen
+        </button>
+    </form>
+
     <div class="content-list">
         {% if object_list %}
             <ol class="content-preview-list">
@@ -17,7 +28,14 @@
             </ol>
             {% pagination 'Weitere Beiträge' %}
         {% else %}
-            <p>Nichts gefunden.</p>
+            <div class="alert alert-flex alert-default">
+                <div class="alert-image">
+                    <i class="fa fa-3x fa-meh-o"></i>
+                </div>
+                <div>
+                    <p>Leider haben wir keine passenden Beiträge für deine Suchanfrage gefunden.</p>
+                </div>
+            </div>
         {% endif %}
     </div>
 {% endblock %}
