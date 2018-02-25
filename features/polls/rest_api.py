@@ -33,11 +33,11 @@ class PollSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True, read_only=True)
 
     def to_representation(self, instance):
-        vote_data = models.resolve_vote(instance)
         representation = super().to_representation(instance)
+        vote_data = models.resolve_vote(instance)
         voter_serializer = VoterSerializer()
 
-        if 'ranking' in vote_data:
+        if instance.vote_type is models.VoteType.CONDORCET:
             representation.update({
                 'options_winner': getattr(vote_data['winner'], 'id', None),
                 'options_ranking': [option.id for option in vote_data['ranking']],
@@ -51,7 +51,7 @@ class PollSerializer(serializers.ModelSerializer):
                     ) for voter, options in vote_data['votes'].items()
                 ]
             })
-        else:
+        elif instance.vote_type is models.VoteType.SIMPLE:
             representation.update({
                 'options_winner': getattr(vote_data['winner'], 'id', None),
                 'options_ranking': [
