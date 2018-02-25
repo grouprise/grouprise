@@ -125,6 +125,41 @@
     }
 }
 
+// use in buttons or elements that provide an
+// aria-pressed or aria-selected attribute to indicate
+// if the component is currently active
+.btn-radio-state-indicator {
+    @size: 1.5em;
+    width: @size;
+    height: @size;
+    background: white;
+    display: inline-flex;
+    align-self: center;
+    justify-content: center;
+    margin: 0 auto;
+    border-radius: 50%;
+    top: .075em;
+    font-size: 1.25rem;
+    position: relative;
+    border: @input-border-width solid @gray-light;
+
+
+    &::after {
+        @i-size: (@size / 5 * 3);
+        font-family: 'FontAwesome';
+        content: @fa-var-check;
+        color: transparent;
+        transition: color .2s;
+        display: inline-flex;
+        align-items: center;
+
+        [aria-pressed='true'] &,
+        [aria-selected='true'] & {
+            color: @color-primary;
+        }
+    }
+}
+
 .btn-danger {
     &:extend(.btn-default all);
 
