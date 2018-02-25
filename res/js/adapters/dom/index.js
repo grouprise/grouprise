@@ -2,6 +2,7 @@ import { $ } from 'luett'
 
 export function inputAdapter (el) {
   return {
+    getType: () => el.type.toLowerCase(),
     get () {
       return {
         value: el.value,
@@ -20,6 +21,7 @@ export function inputAdapter (el) {
 
 export function selectAdapter (el) {
   return {
+    getType: () => 'select',
     emptyOption: '',
     get () {
       return {
@@ -48,6 +50,7 @@ export function selectAdapter (el) {
 
 export function valueSubmissionAdapter (inputAdapter, submit) {
   const iface = {
+    getType: () => inputAdapter.getType(),
     get: (...args) => inputAdapter.get(...args),
     set: (valueObj, ...args) => {
       const currentValue = iface.get().value

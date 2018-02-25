@@ -17,10 +17,26 @@ def permission(path):
 class GestaltSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='__str__', read_only=True)
     initials = serializers.CharField(source='get_initials', read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
         model = models.Gestalt
-        fields = ('id', 'name', 'initials', 'about', 'avatar', 'avatar_color')
+        fields = ('id', 'name', 'initials', 'about', 'avatar', 'avatar_color', 'url')
+
+
+class GestaltOrAnonSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False, allow_null=True)
+    name = serializers.CharField(required=False, allow_null=True)
+
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+        if 'id' in data and data['id'] is not None:
+            return models.Gestalt.objects.get(pk=data['id'])
+        # todo validate name if no valid id was provided
+        return data
+
+    class Meta:
+        fields = ('id', 'name')
 
 
 class GestaltSettingSerializer(serializers.ModelSerializer):

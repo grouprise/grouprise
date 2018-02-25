@@ -109,9 +109,9 @@
             {% has_perm 'subscriptions.create' user group as can_subscribe %}
             {% if can_subscribe %}
                 {% if user.is_authenticated %}
-                    <form action="{% url 'group-subscribe' group.pk %}" method="post">
+                    <form action="{% url 'group-subscribe' group.pk %}" method="post" class="form-inline-text">
                         {% csrf_token %}
-                        <button class="btn btn-link"
+                        <button class="btn btn-text"
                                 title="Bei neuen Beiträgen benachrichtigt werden">
                             Gruppe abonnieren
                         </button>

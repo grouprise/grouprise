@@ -1,7 +1,7 @@
 <template>
     <div class="select" :id="componentId.wrapper" :class="selectClasses" @keydown.esc="closeFinder" v-on-click-outside="dismissSelect">
         <div class="select-current" @click.prevent="toggleFinder()" @keydown="typeSelect" tabindex="0" ref="current">
-            <slot name="current-choice">
+            <slot name="current-choice" :choice="currentChoice">
                 <component :is="renderer" :choice="currentChoice" v-if="currentChoice"></component>
             </slot>
             <slot name="no-result">
@@ -30,7 +30,7 @@
                     ref="choices" v-if="availableChoices.length > 0">
                     <li v-for="(choice, index) in availableChoices" :data-value="choice.value" @click="select(choice)"
                         @keydown.enter="select(choice)" tabindex="0">
-                        <slot name="choice">
+                        <slot name="choice" :choice="choice" :index="index">
                             <component :is="renderer" :choice="choice" :index="index"></component>
                         </slot>
                     </li>
@@ -59,7 +59,7 @@
   }
 
   export default {
-    name: 'select',
+    name: 'choice',
     mixins: [onClickOutside],
     props: {
       id: {

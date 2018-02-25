@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 
 from features.content import forms as content
+from features.content.models import Content
 from . import models
 
 
@@ -22,17 +23,29 @@ class OptionMixin:
         return super().is_valid() and self.options.is_valid()
 
     def save_content_relations(self, commit):
+        # FIXME: remove when django bug #28988 is fixed
+        self.instance.container.poll = models.WorkaroundPoll.objects.create()
+        self.instance.container.save()
+
         for form in self.options.forms:
-            form.instance.poll = self.instance.container
+            form.instance.poll = self.instance.container.poll
         self.options.save(commit)
 
 
 class Create(OptionMixin, content.Create):
+    # FIXME: replace by models.Poll when django bug #28988 is fixed
+    container_class = Content
+
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
     poll_type = forms.ChoiceField(
-            label='Art der Umfrage',
-            choices=[('simple', 'einfach'), ('event', 'Datum / Zeit')],
+            label='Art der Antwortmöglichkeiten',
+            choices=[('simple', 'einfacher Text'), ('event', 'Datum / Zeit')],
             initial='simple', widget=forms.Select({'data-poll-type': ''}))
+    vote_type = forms.ChoiceField(
+            label='Art der Abstimmmöglichkeiten',
+            choices=[('simple', 'Ja/Nein/Vielleicht'),
+                     ('condorcet', 'Stimmen ordnen (rangbasiert)')],
+            initial='simple', widget=forms.Select({'data-poll-vote-type': ''}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,28 +71,33 @@ class Create(OptionMixin, content.Create):
         return False if self.is_type_change else super().is_valid()
 
     def save(self, commit=True):
-        super().save(commit)
+        association = super().save(commit)
+        association.container.poll.condorcet = self.cleaned_data['vote_type'] == 'condorcet'
+        association.container.poll.save()
         if commit:
             self.send_post_create()
-        return self.instance
+        return association
 
 
 class Update(OptionMixin, content.Update):
     text = forms.CharField(label='Beschreibung / Frage', widget=forms.Textarea({'rows': 2}))
     poll_type = forms.CharField(widget=forms.HiddenInput({'data-poll-type': ''}))
+    vote_type = forms.CharField(widget=forms.HiddenInput({'data-poll-vote-type': ''}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        poll = self.instance.container.poll
+        self.fields['vote_type'].initial = str(poll.vote_type)
         try:
-            models.Option.objects.filter(poll=self.instance.container).first().eventoption
+            models.Option.objects.filter(poll=poll).first().eventoption
             self.options = EventOptionFormSet(
                     data=kwargs.get('data'),
-                    queryset=models.EventOption.objects.filter(poll=self.instance.container))
+                    queryset=models.EventOption.objects.filter(poll=poll))
             self.fields['poll_type'].initial = 'event'
         except ObjectDoesNotExist:
             self.options = SimpleOptionFormSet(
                     data=kwargs.get('data'),
-                    queryset=models.SimpleOption.objects.filter(poll=self.instance.container))
+                    queryset=models.SimpleOption.objects.filter(poll=poll))
             self.fields['poll_type'].initial = 'simple'
         self.options.extra = 0
 
@@ -93,15 +111,19 @@ class Update(OptionMixin, content.Update):
             return super().get_initial_for_field(field, field_name)
 
 
-VoteFormSet = forms.modelformset_factory(
-        models.Vote, fields=('endorse',), labels={'endorse': 'Zustimmung'},
+SimpleVoteFormSet = forms.modelformset_factory(
+        models.SimpleVote, fields=('endorse',), labels={'endorse': 'Zustimmung'},
         widgets={'endorse': forms.RadioSelect(
             choices=[(True, 'Ja'), (False, 'Nein'), (None, 'Vielleicht')])})
 
 
+CondorcetVoteFormSet = forms.modelformset_factory(
+        models.CondorcetVote, fields=('rank',), labels={'rank': 'Rang / Platz'})
+
+
 class Vote(forms.ModelForm):
     class Meta:
-        model = models.Vote
+        model = models.SimpleVote
         fields = ('anonymous',)
         labels = {'anonymous': 'Name/Alias'}
 
@@ -115,14 +137,19 @@ class Vote(forms.ModelForm):
 
         self.poll = poll
         options = poll.options.all()
-        self.votes = VoteFormSet(data=kwargs.get('data'), queryset=models.Vote.objects.none())
+        if self.poll.condorcet:
+            self.votes = CondorcetVoteFormSet(
+                    data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
+        else:
+            self.votes = SimpleVoteFormSet(
+                    data=kwargs.get('data'), queryset=models.SimpleVote.objects.none())
         self.votes.extra = len(options)
         for i, form in enumerate(self.votes.forms):
             form.instance.option = options[i]
 
     def clean_anonymous(self):
         anon = self.cleaned_data['anonymous']
-        if models.Vote.objects.filter(option__poll=self.poll, anonymous=anon).exists():
+        if models.SimpleVote.objects.filter(option__poll=self.poll, anonymous=anon).exists():
             raise django.forms.ValidationError('%s hat bereits abgestimmt.' % anon)
         return anon
 

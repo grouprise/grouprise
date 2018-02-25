@@ -12,6 +12,9 @@ from features.groups import models as groups
 class Content(core.models.Model):
     is_conversation = False
 
+    # FIXME: remove when django bug #28988 is fixed
+    poll = models.OneToOneField('polls.WorkaroundPoll', null=True, related_name='content')
+
     title = models.CharField(max_length=255)
     image = models.ForeignKey('images.Image', blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -76,7 +79,9 @@ class Content(core.models.Model):
 
     @property
     def is_poll(self):
-        return self.options.count() > 0
+        # FIXME: change when django bug #28988 has been fixed
+        # return hasattr(self, 'poll')
+        return self.poll is not None
 
     @property
     def subject(self):

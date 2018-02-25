@@ -58,7 +58,7 @@
 
           const token = this.searchToken = axios.CancelToken.source()
           this.results = []
-          group.get({ name: value }, {
+          group.list({ name: value }, {
             cancelToken: token.token
           }).then(
             res => {

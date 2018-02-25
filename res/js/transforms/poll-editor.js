@@ -10,19 +10,19 @@ import { createDisplayControl, createContainerAdapter } from '../util/dom'
 function createPollTypeAdapter (el) {
   const pollTypeEl = $('[data-poll-type]', el)
   const pollTypeSwitchEl = $('[data-poll-type-switch]', el)
-  const pollTypeGroupEl = pollTypeSwitchEl ? closest(pollTypeSwitchEl, '.form-group') : null
   const pollType = valueSubmissionAdapter(createDomAdapter(pollTypeEl), pollTypeSwitchEl)
   return {
     isStatic: pollTypeEl.type === 'hidden',
-    ...pollType,
-    ...createDisplayControl(pollTypeGroupEl)
+    ...pollType
   }
 }
 
 export default el => {
   const formEl = closest(el, 'form')
+  const voteTypeAdapter = createDomAdapter($('[data-poll-vote-type]', formEl))
   const pollTypeAdapter = createPollTypeAdapter(formEl)
   const containerAdapter = createContainerAdapter(el)
+  const pollSettings = createDisplayControl($('[data-poll-settings]', formEl))
   const formsetAdapter = createFormsetAdapter(el, { name: 'form' })
   const answers = createAnswerTransformer(pollTypeAdapter, formsetAdapter)
   const state = {
@@ -35,21 +35,14 @@ export default el => {
     render (h) {
       return h(PollEditor, {
         props: {
-          pollType: pollTypeAdapter.get().value,
-          pollTypeStatic: pollTypeAdapter.isStatic,
+          pollType: pollTypeAdapter,
+          voteType: voteTypeAdapter,
           answers: this.answers
-        },
-        on: {
-          switchPollType (id) {
-            if (!pollTypeAdapter.isStatic) {
-              pollTypeAdapter.set({ value: id })
-            }
-          }
         }
       })
     },
     created () {
-      pollTypeAdapter.hide()
+      pollSettings.hide()
       containerAdapter.replacedEl.hide()
     }
   })
@@ -61,7 +54,7 @@ export default el => {
   return {
     remove () {
       vue.$destroy()
-      pollTypeAdapter.show()
+      pollSettings.show()
       containerAdapter.replacedEl.show()
       containerAdapter.destroy()
       submitListener.destroy()

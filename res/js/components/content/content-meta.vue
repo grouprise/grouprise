@@ -20,7 +20,13 @@
     },
     computed: {
       tags () {
-        return (this.choice.tags || []).map(tag => `#${tag.name}`).join(', ')
+        const maxTags = 7
+        const tags = (this.choice.tags || []).map(tag => `#${tag.name}`)
+        return (
+          tags.length > maxTags
+            ? tags.slice(0, maxTags).concat('...')
+            : tags
+        ).join(', ')
       }
     }
   }

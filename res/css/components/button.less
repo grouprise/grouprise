@@ -2,7 +2,7 @@
     display: inline-block;
     padding: 0.75em 1em;
     border: none;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
     min-width: 3.5rem;
     text-align: center;
     text-decoration: none;
@@ -10,13 +10,14 @@
     z-index: 2;
     overflow: hidden;
     cursor: pointer;
-    transition: color .1s, background-color .2s, transform .2s;
+    transition: color .2s, background-color .2s, transform .2s;
     vertical-align: middle;
     font-weight: 500;
     margin: 0;
     font-family: @font-family-default;
     user-select: none;
     touch-action: manipulation;
+    min-height: 2.25em;
 
     + & {
         margin-left: 1em;
@@ -28,7 +29,7 @@
         z-index: 100;
     }
 
-    i {
+    i:not(:only-child) {
         margin-right: .25em;
     }
 }
@@ -84,6 +85,81 @@
     }
 }
 
+// use where you would normally use a default button
+// but the size of the button is unusually large
+.btn-plane {
+    background-color: #f5f5f5;
+
+    &:hover,
+    &:focus {
+        background-color: #eaeaea;
+    }
+}
+
+.btn-state {
+    &[aria-pressed] {
+        position: relative;
+        overflow: visible;
+        border: @input-border-width solid transparent;
+
+        &[aria-pressed="true"] {
+            border-color: @color-primary;
+
+            &::after {
+                @size: 1.75em;
+                .fa-icon();
+                content: @fa-var-check;
+                position: absolute;
+                right: (@size / -2);
+                top: (@size / -2);
+                width: @size;
+                height: @size;
+                border-radius: 50%;
+                background-color: @color-primary;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+// use in buttons or elements that provide an
+// aria-pressed or aria-selected attribute to indicate
+// if the component is currently active
+.btn-radio-state-indicator {
+    @size: 1.5em;
+    width: @size;
+    height: @size;
+    background: white;
+    display: inline-flex;
+    align-self: center;
+    justify-content: center;
+    margin: 0 auto;
+    border-radius: 50%;
+    top: .075em;
+    font-size: 1.25rem;
+    position: relative;
+    border: @input-border-width solid @gray-light;
+
+
+    &::after {
+        @i-size: (@size / 5 * 3);
+        font-family: 'FontAwesome';
+        content: @fa-var-check;
+        color: transparent;
+        transition: color .2s;
+        display: inline-flex;
+        align-items: center;
+
+        [aria-pressed='true'] &,
+        [aria-selected='true'] & {
+            color: @color-primary;
+        }
+    }
+}
+
 .btn-danger {
     &:extend(.btn-default all);
 
@@ -125,6 +201,8 @@
     margin: 0;
     display: inline-block;
     color: @color-primary;
+    font-weight: normal;
+    text-decoration: underline;
 
     &:hover,
     &:active,
@@ -180,7 +258,7 @@
 
 .btn-dialog {
     background-color: @gray-lightest;
-    border-radius: 2px;
+    border-radius: @border-radius-base;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -258,17 +336,17 @@
     }
 
     > :first-child ~ * {
-        margin-left: -2px;
+        margin-left: -@input-border-width;
     }
 
     > :first-child {
-        border-top-left-radius: 2px;
-        border-bottom-left-radius: 2px;
+        border-top-left-radius: @border-radius-base;
+        border-bottom-left-radius: @border-radius-base;
     }
 
     > :last-child {
-        border-top-right-radius: 2px;
-        border-bottom-right-radius: 2px;
+        border-top-right-radius: @border-radius-base;
+        border-bottom-right-radius: @border-radius-base;
     }
 }
 
@@ -294,7 +372,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        text-indent: 2px;
+        text-indent: @input-border-width;
         transition: background-color .2s, color .1s;
     }
 }
@@ -308,7 +386,7 @@
         height: 1rem;
         position: absolute;
         display: inline-block;
-        border: 2px solid;
+        border: @input-border-width solid;
         top: 50%;
         margin-left: -1.5rem;
         transform: translateY(-50%);
@@ -395,7 +473,7 @@
     .content-header & {
         width: 2em;
         height: 2em;
-        border-radius: 2px;
+        border-radius: @border-radius-base;
         background: white;
         top: 0;
     }

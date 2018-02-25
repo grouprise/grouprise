@@ -6,7 +6,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django import urls
 from django.db import models
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFit, SmartResize, Transpose
+from imagekit.processors import ResizeToFit, Transpose
 
 import core.models
 from core import colors
@@ -37,9 +37,9 @@ class Group(core.models.Model):
             blank=True, help_text='Der Avatar ist ein kleines quadratisches Vorschaubild, '
             'an welchem sich die Gruppe leicht erkennen lässt.')
     avatar_64 = ImageSpecField(
-            source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
+            source='avatar', processors=[Transpose(), ResizeToFit(64, 64)], format='PNG')
     avatar_256 = ImageSpecField(
-            source='avatar', processors=[Transpose(), SmartResize(256, 256)], format='PNG')
+            source='avatar', processors=[Transpose(), ResizeToFit(256, 256)], format='PNG')
     avatar_color = models.CharField(
             max_length=7,
             default=colors.get_random_color)
@@ -95,8 +95,8 @@ class Group(core.models.Model):
 
     def get_cover_url(self):
         url = None
-        intro_gallery = self.associations.filter_galleries().filter(pinned=True, public=True) \
-            .order_content_by_time_created().first()
+        intro_gallery = self.associations.exclude_deleted().filter_galleries() \
+            .filter(pinned=True, public=True).order_content_by_time_created().first()
         if intro_gallery:
             url = intro_gallery.container.gallery_images.first().image.preview_group.url
         return url
