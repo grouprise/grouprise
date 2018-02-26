@@ -1,5 +1,6 @@
 import { includes } from 'lodash'
 import { on, $, getAttr } from 'luett'
+import stroll from 'stroll.js'
 import getInputSelection from 'get-input-selection'
 
 const DOMParser = window.DOMParser
@@ -37,6 +38,7 @@ function citeSink (el, opts) {
   const { bus } = opts.conf
 
   const citeListener = bus.on(EVENT_CITE, data => {
+    stroll(el, { allowInvalidPositions: true })
     const { end: position } = getInputSelection(el)
     const pre = el.value.substr(0, position)
     const post = el.value.substr(position)
