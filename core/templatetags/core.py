@@ -1,6 +1,7 @@
-import os
 import html
 import json
+import os
+import random
 
 import bleach as python_bleach
 
@@ -40,6 +41,14 @@ def get(d, *args):
         except AttributeError:
             pass
     return d
+
+
+@register.simple_tag(name='random')
+def random_item(_list):
+    try:
+        return random.choice(_list)
+    except IndexError:
+        return None
 
 
 @register.filter
