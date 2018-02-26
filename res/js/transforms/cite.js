@@ -18,11 +18,12 @@ function citeSource (el, opts) {
     event.preventDefault()
 
     const target = $(`${event.target.getAttribute('href')} .media-body`)
+    const id = getAttr(target, 'data-id')
     const author = getAttr(target, 'data-author')
     const permalink = getAttr(target, 'data-permalink')
     const text = decode(JSON.parse($('[data-original-content]', target).textContent))
     const formattedText = (text + (author ? `\n — [${author}](${permalink})` : '')).replace(/^/gm, '> ')
-    const data = { author, permalink, text, formattedText }
+    const data = { id, author, permalink, text, formattedText }
 
     bus.emit(EVENT_CITE, data)
   })
@@ -53,8 +54,24 @@ function citeSink (el, opts) {
   }
 }
 
+function citeInReplyTo (el, opts) {
+  const { bus } = opts.conf
+
+  const citeListener = bus.on(EVENT_CITE, data => {
+    el.value = data.id
+  })
+
+  return {
+    remove () {
+      citeListener.destroy()
+    }
+  }
+}
+
 export default (el, opts) => {
   return includes(opts.types, 'sink')
     ? citeSink(el, opts)
+    : includes(opts.types, 'in-reply-to')
+    ? citeInReplyTo(el, opts)
     : citeSource(el, opts)
 }

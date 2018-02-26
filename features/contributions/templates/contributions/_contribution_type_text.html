@@ -4,7 +4,9 @@
         {% block media_content %}
             <div class="media-body"
                  {% block media_content_attrs %}
-                 data-author="{{ contribution.author }}" data-permalink="{{ permalink_url }}#{% ref contribution %}"
+                 data-author="{{ contribution.author }}"
+                 data-permalink="{{ permalink_url }}#{% ref contribution %}"
+                 data-id="{{ contribution.id }}"
                  {% endblock %}>
                 {% block media_body %}
                     {% markdown contribution.contribution.text heading_baselevel=3 %}

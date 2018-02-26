@@ -16,6 +16,8 @@ class Text(forms.ModelForm):
         contributions = kwargs.pop('contributions')
         super().__init__(*args, **kwargs)
         self.fields['in_reply_to'].queryset = contributions
+        self.fields['in_reply_to'].widget = forms.HiddenInput(
+            {'data-component': 'cite cite-in-reply-to'})
 
     def save(self, commit=True):
         contribution = super().save(False)

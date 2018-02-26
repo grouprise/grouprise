@@ -3,7 +3,7 @@
 {% block media_body %}
     <form method="post">
         {% csrf_token %}
-        {{ form.in_reply_to.as_hidden }}
+        {{ form.in_reply_to }}
         {% field form.text hide_label=True %}
         <button class="btn btn-primary">{{ submit_label }}</button>
     </form>
