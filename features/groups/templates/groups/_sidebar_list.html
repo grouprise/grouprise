@@ -9,13 +9,11 @@
             </h2>
         </header>
         <div class="box-content">
-            <ul class="avatars">
+            <div class="avatars avatars-grouped">
                 {% for group in groups %}
-                    <li>
-                        {% include 'groups/_avatar.html' with group=group link=True %}
-                    </li>
+                    {% include 'groups/_avatar.html' with group=group link=True %}
                 {% endfor %}
-            </ul>
+            </div>
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{% url 'group-index' %}" class="btn btn-link">

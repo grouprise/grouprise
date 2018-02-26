@@ -140,6 +140,40 @@
     overflow: hidden;
 }
 
+.avatars-grouped {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0 -.25rem -.5rem -2.5rem;
+    flex-wrap: wrap;
+
+    .avatar {
+        margin: 0 .25rem .5rem .25rem;
+    }
+
+    &::after {
+        content: ' ';
+        flex: auto;
+    }
+
+    @supports not (display: grid) {
+        & {
+            display: grid;
+            // todo: this rule is specific to 64px avatars, maybe there’s something dynamic?
+            grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+            grid-gap: .5rem;
+            grid-auto-flow: dense;
+            margin: 0;
+
+            .avatar-wrap {
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+            }
+        }
+    }
+}
+
 .avatar-edit-inline {
     position: relative;
     display: inline-block;
