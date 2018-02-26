@@ -7,7 +7,11 @@
     white-space: nowrap;
     border-radius: 2px;
 
-    &:empty {
+    &:not(.breadcrumb-visible):empty {
+        display: none;
+    }
+
+    &.breadcrumb-visible:empty {
         visibility: hidden;
     }
 
