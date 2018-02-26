@@ -4,6 +4,7 @@ build/
 dist/
 db.sqlite3*
 media/
+media-*/
 node_modules
 static/
 xapian_index
