@@ -86,10 +86,13 @@ def process_incoming_message(sender, message, **args):
         sender = get_sender(message)
         if key.gestalt != sender:
             raise django.core.exceptions.PermissionDenied(
-                    'Du darfst nicht auf eine Benachrichtigung antworten, die an eine andere '
-                    'E-Mail-Adresse zugestellt wurde. Bitte melde Dich auf der Website an und '
-                    'beantworte die Nachricht dort. (Oder antworte unter der E-Mail-Adresse, '
-                    'an die die Benachrichtigung gesendet wurde.)')
+                    'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
+                    'beantworten. Du hast folgende Möglichkeiten:\n'
+                    '* Melde Dich auf der Website an und beantworte die Nachricht dort.\n'
+                    '* Antworte unter der E-Mail-Adresse, an die die Benachrichtigung '
+                    'gesendet wurde.\n'
+                    '* Füge die E-Mail-Adresse, unter der Du antworten möchtest, Deinem '
+                    'Benutzerkonto hinzu.')
         if type(key.target) == Content:
             container = key.target
         else:
@@ -137,11 +140,12 @@ def process_incoming_message(sender, message, **args):
         if not is_autoresponse(message):
             try:
                 process_message(address)
-            except (
-                    groups.Group.DoesNotExist, ValueError,
-                    django.core.exceptions.PermissionDenied) as e:
-                logger.error('Could not process receiver {} in message {}'.format(
-                    address, message.id))
+            except ValueError as e:
+                logger.error('Could not process receiver {} in message {}. {}'.format(
+                    address, message.id, e))
+            except (groups.Group.DoesNotExist, django.core.exceptions.PermissionDenied) as e:
+                logger.warning('Could not process receiver {} in message {}. {}'.format(
+                    address, message.id, e))
                 django.core.mail.send_mail(
                         'Re: {}'.format(message.subject),
                         'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
