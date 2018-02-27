@@ -315,8 +315,7 @@ TAGS_TAGGABLE = (
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'xapian_backend.XapianEngine',
-        'PATH': os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'xapian_index'),
+        'PATH': os.path.join(DATA_DIR, 'xapian_index'),
     },
 }
 
