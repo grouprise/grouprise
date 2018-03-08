@@ -1,4 +1,5 @@
 import datetime
+from math import log
 
 import django.conf
 import django.utils.timezone
@@ -57,5 +58,6 @@ class Group:
                 for qs in (group_versions, group_comments, group_conversations):
                     for group_authored in qs:
                         ps += (group_authored.time_created - THRESHOLD).days
-                s += ps * num_gestalten
+                if num_gestalten > 0:
+                    s += ps * log(num_gestalten) * (10 if only_public else 1)
         return s
