@@ -66,7 +66,10 @@ def process_incoming_message(sender, message, **args):
     DOMAIN = django.conf.settings.DEFAULT_REPLY_TO_EMAIL.split('@')[1]
 
     def create_contribution(container, gestalt, message, in_reply_to=None):
-        t = models.Text.objects.create(text=message.text)
+        text = message.text.strip()
+        if text == '':
+            text = message.html
+        t = models.Text.objects.create(text=text)
         contribution = models.Contribution.objects.create(
                 author=gestalt,
                 container=container,
