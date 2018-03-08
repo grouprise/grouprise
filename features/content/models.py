@@ -13,7 +13,8 @@ class Content(core.models.Model):
     is_conversation = False
 
     # FIXME: remove when django bug #28988 is fixed
-    poll = models.OneToOneField('polls.WorkaroundPoll', null=True, related_name='content')
+    poll = models.OneToOneField(
+            'polls.WorkaroundPoll', null=True, blank=True, related_name='content')
 
     title = models.CharField(max_length=255)
     image = models.ForeignKey('images.Image', blank=True, null=True, on_delete=models.SET_NULL)
