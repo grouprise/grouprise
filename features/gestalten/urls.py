@@ -41,7 +41,7 @@ urlpatterns = [
     url(
         r'^stadt/settings/password/$',
         views.UpdatePassword.as_view(),
-        name='password-settings'),
+        name='account_change_password'),
 
     url(
         r'^stadt/password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$',

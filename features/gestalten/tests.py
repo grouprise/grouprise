@@ -78,7 +78,7 @@ class AuthenticatedSettings(AuthenticatedMixin, TestCase):
     def test_other_settings(self):
         image_settings_url = reverse('image-settings')
         email_settings_url = reverse('email-settings')
-        password_settings_url = reverse('password-settings')
+        password_settings_url = reverse('account_change_password')
 
         r = self.client.get(reverse('settings'))
         self.assertContains(r, 'href="{}'.format(image_settings_url))
