@@ -230,7 +230,7 @@ STADTGESTALTEN_INTRO_TEXT = ''
 # Authentication
 # http://django-allauth.readthedocs.org/
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'account_login'
 
 LOGIN_REDIRECT_URL = 'index'
 

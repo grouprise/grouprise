@@ -109,7 +109,7 @@ class Test(test.TestCase):
         return 'href="{}"'.format(url)
 
     def get_login_url(self, next_url):
-        return '{}?next={}'.format(urls.reverse('login'), next_url)
+        return '{}?next={}'.format(urls.reverse('account_login'), next_url)
 
     def get_response(self, method, url):
         return getattr(self.client, method)(url)

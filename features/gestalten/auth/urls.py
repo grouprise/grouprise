@@ -8,7 +8,7 @@ urlpatterns = [
     url(
         r'^stadt/login/$',
         views.Login.as_view(),
-        name='login'),
+        name='account_login'),
 
     url(r'^stadt/logout/$', views.Logout.as_view(), name='account_logout'),
 
