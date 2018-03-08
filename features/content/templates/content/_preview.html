@@ -1,4 +1,4 @@
-<article class="content-preview">
+<article class="content-preview{% if not association.public %} content-internal{% endif %}">
     {% if not hide_meta %}
     <header class="content-preview-header">
         {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}

@@ -1,5 +1,5 @@
 {% with c=association.container %}
-    <a href="{% url 'conversation' association.pk %}" class="thread-preview">
+    <a href="{% url 'conversation' association.pk %}" class="thread-preview content-internal">
         <div class="thread-preview-image">
             {% if group_avatar and association.entity.is_group %}
                 {% include 'groups/_avatar.html' with group=association.entity link=False size=64 %}
