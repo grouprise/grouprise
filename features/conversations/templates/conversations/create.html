@@ -25,5 +25,15 @@
 {% endblock %}
 
 {% block content %}
-    {% crispy form %}
+    <form method="post">
+        {% csrf_token %}
+        {% if form.author %}
+            {% field form.author %}
+        {% endif %}
+        {% field form.subject %}
+        {% field form.text %}
+        <button class="btn btn-primary" data-publish-submit>
+            Nachricht senden
+        </button>
+    </form>
 {% endblock %}

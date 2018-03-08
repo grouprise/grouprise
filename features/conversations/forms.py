@@ -1,4 +1,3 @@
-from crispy_forms import helper, layout
 from django import forms
 
 import features
@@ -11,7 +10,8 @@ from . import models
 class Create(forms.ModelForm):
     author = forms.EmailField(label='E-Mail-Adresse')
     subject = forms.CharField(label='Thema', max_length=255)
-    text = forms.CharField(label='Nachricht', widget=forms.Textarea)
+    text = forms.CharField(label='Nachricht', widget=forms.Textarea(
+        {'rows': 5, 'data-component': 'keysubmit autosize'}))
 
     class Meta:
         model = associations.Association
@@ -21,17 +21,8 @@ class Create(forms.ModelForm):
         self.has_author = kwargs.pop('has_author')
         self.contribution = kwargs.pop('contribution')
         super().__init__(*args, **kwargs)
-        self.helper = helper.FormHelper()
-        self.helper.layout = layout.Layout(
-                'subject',
-                layout.Field('text', rows=5, **{
-                    'data-component': 'keysubmit autosize'
-                }),
-                layout.Submit('create', 'Nachricht senden'))
         if self.has_author:
             del self.fields['author']
-        else:
-            self.helper.layout.insert(0, 'author')
 
     def clean(self):
         if 'author' in self.cleaned_data:
