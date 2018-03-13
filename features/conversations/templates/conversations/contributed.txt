@@ -3,8 +3,11 @@
 -- 
 Nachricht online lesen und beantworten:
 {% if association %}{% url 'conversation' association.pk as path %}{% else %}{% url 'conversation' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}#{% ref object %}
+{% load rules %}{% has_perm 'contributions.reply_to_author' recipient.user object as can_reply_to_author %}{% if can_reply_to_author %}
+Nur an {{ object.author }} antworten:
+{% if association %}{% url 'reply-to-author' association.pk object.pk as path %}{% else %}{% url 'reply-to-author' object.container.associations.first.pk object.pk as path %}{% endif %}{{ path|full_url }}{% endif %}
 {% if contribution %}
-Du erhältst diese Benachrichtigung, weil Du Dich an dem Gespräch {{ object.container.subject }} beteiligt hast.
+Du erhältst diese Benachrichtigung, weil Du Dich an diesem Gespräch beteiligt hast.
 {% url 'conversation' object.container.associations.first.pk as path %}{{ path|full_url }}#{% ref contribution %}
 {% elif subscription %}
 Du erhältst diese Benachrichtigung weil Du {% if membership %}Mitglied der Gruppe {{ membership.group }} bist und die Gruppe{% else %}die Gruppe {{ subscription.subscribed_to }}{% endif %} abonniert hast.

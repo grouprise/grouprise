@@ -9,7 +9,7 @@ import features
 from core.views import base
 from features.associations import models as associations
 from features.associations.views import get_association_or_404
-from features.contributions import views as contributions
+from features.contributions import view_mixins as contributions
 from features.files import forms as files
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten

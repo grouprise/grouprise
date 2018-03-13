@@ -97,7 +97,7 @@
                         <ul class="dropdown"
                             id="reply-{{ contribution.contribution.id }}-dropdown"
                             data-dropdown>
-                            <li><a href="#">Antworten an {{ contribution.author }}</a></li>
+                            <li><a href="{% url 'reply-to-author' association.pk contribution.id %}">Antworten an {{ contribution.author }}</a></li>
                         </ul>
                     </span>
                 {% endif %}

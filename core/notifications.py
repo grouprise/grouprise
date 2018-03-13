@@ -46,6 +46,7 @@ class Notification:
 
     def get_context_data(self, **kwargs):
         kwargs['object'] = self.object
+        kwargs['recipient'] = self.recipient
         kwargs['site'] = self.site
         kwargs['url'] = self.url
         kwargs.update(self.kwargs)

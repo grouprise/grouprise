@@ -7,7 +7,7 @@ from django.views import generic
 
 import core.views
 import features.contributions.forms
-import features.contributions.views
+import features.contributions.view_mixins
 from features.gestalten.models import Gestalt
 from features.associations import models as associations
 from features.groups import models as groups
@@ -16,7 +16,7 @@ from . import forms
 
 
 class Conversation(
-        features.contributions.views.ContributionFormMixin,
+        features.contributions.view_mixins.ContributionFormMixin,
         core.views.PermissionMixin,
         generic.DetailView):
 
