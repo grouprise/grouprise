@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 import core
-import features
 from core.templatetags.core import ref
 from features.associations.models import Association
 from features.associations.views import AssociationMixin
