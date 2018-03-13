@@ -79,6 +79,28 @@
                 <a class="js" data-component="cite" href="#{% ref contribution %}">
                     Antworten
                 </a>
+                {% has_perm 'contributions.reply_to_author' user contribution as can_reply_to_author %}
+                {% if can_reply_to_author %}
+                    <span class="dropdown-container">
+                        <input class="dropdown-state"
+                               id="reply-{{ contribution.contribution.id }}"
+                               type="checkbox">
+                        <label for="reply-{{ contribution.contribution.id }}"
+                               class="btn btn-link btn-sm btn-novspace"
+                               data-component="openable"
+                               data-openable-target="#reply-{{ contribution.contribution.id }}-dropdown">
+                            <span class="btn-label">
+                                <span class="caret"></span>
+                            </span>
+                        </label>
+
+                        <ul class="dropdown"
+                            id="reply-{{ contribution.contribution.id }}-dropdown"
+                            data-dropdown>
+                            <li><a href="#">Antworten an {{ contribution.author }}</a></li>
+                        </ul>
+                    </span>
+                {% endif %}
             {% endif %}
         </div>
     {% endblock %}
