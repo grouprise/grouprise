@@ -1,7 +1,7 @@
 Beitrag mit Kommentaren online lesen und kommentieren:
 {% if association %}{% url 'content-permalink' association.pk as path %}{% else %}{% url 'content-permalink' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}#{% ref object %}
 
-{{ text }}
+{{ text|striptags }}
 
 -- 
 {% if contribution %}Du erhältst diese Benachrichtigung, weil Du den Beitrag {{ object.container.subject }} kommentiert hast.
