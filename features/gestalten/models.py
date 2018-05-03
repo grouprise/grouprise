@@ -73,6 +73,28 @@ class Gestalt(core.models.Model):
     def get_contact_url(self):
         return urls.reverse('create-gestalt-conversation', args=(self.pk,))
 
+    def get_data(self):
+        '''
+        Return all data directly related to this gestalt. May be used e.g. in conjunction with
+        deleting users.
+        '''
+        data = {}
+        data['gestalt'] = self
+        data['user'] = self.user
+        
+        #data['groups_created'] = ?
+        data['memberships'] = self.memberships
+        data['subscriptions'] = self.subscriptions
+        data['tokens'] = self.permissiontoken_set
+        data['settings'] = self.gestaltsetting_set
+        
+        data['associations'] = self.associations
+        data['contributions'] = self.contributions
+        data['images'] = self.images
+        data['versions'] = self.versions
+        data['votes'] = self.votes
+        return data
+
     def get_profile_url(self):
         return urls.reverse(
                 'entity', args=[type(self).objects.get(pk=self.pk).user.username])
