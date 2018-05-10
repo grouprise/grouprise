@@ -25,7 +25,7 @@ def contribution_created(sender, instance, **kwargs):
     notifications.ContributionCreated.send_all(instance)
 
 
-def get_sender(message):
+def get_sender_gestalt(message):
 
     try:
         gestalt = gestalten.Gestalt.objects.annotate(email=Lower('user__email')).get(
@@ -85,7 +85,7 @@ def process_incoming_message(sender, message, **args):
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         key = core.models.PermissionToken.objects.get(secret_key=token)
-        sender = get_sender(message)
+        sender = get_sender_gestalt(message)
         if key.gestalt != sender:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
@@ -107,7 +107,7 @@ def process_incoming_message(sender, message, **args):
         local, domain = address.split('@')
         if domain != DOMAIN:
             raise ValueError('Domain does not match.')
-        gestalt = get_sender(message)
+        gestalt = get_sender_gestalt(message)
         group = groups.Group.objects.get(slug=local)
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
