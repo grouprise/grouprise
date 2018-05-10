@@ -1,6 +1,5 @@
 import logging
 
-import django.conf
 import django.db.models.signals
 import django_mailbox.signals
 from django.conf import settings
@@ -61,9 +60,9 @@ def is_autoresponse(msg):
 
 @receiver(django_mailbox.signals.message_received)
 def process_incoming_message(sender, message, **args):
-    token_beg = len(django.conf.settings.DEFAULT_REPLY_TO_EMAIL.split('{')[0])
-    token_end = len(django.conf.settings.DEFAULT_REPLY_TO_EMAIL.rsplit('}')[1])
-    DOMAIN = django.conf.settings.DEFAULT_REPLY_TO_EMAIL.split('@')[1]
+    token_beg = len(settings.DEFAULT_REPLY_TO_EMAIL.split('{')[0])
+    token_end = len(settings.DEFAULT_REPLY_TO_EMAIL.rsplit('}')[1])
+    DOMAIN = settings.DEFAULT_REPLY_TO_EMAIL.split('@')[1]
 
     def create_contribution(container, gestalt, message, in_reply_to=None):
         text = message.text.strip()
@@ -153,7 +152,7 @@ def process_incoming_message(sender, message, **args):
                 django.core.mail.send_mail(
                         'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', ''),
                         'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
-                        from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[message.from_header],
                         fail_silently=True)
         else:
