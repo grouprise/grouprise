@@ -1,4 +1,9 @@
+import contextlib
+import tempfile
+import os
+
 import django
+from django.conf import settings
 from django.core import mail
 from django.urls import reverse
 from django_mailbox import models as mailbox_models, signals as mailbox_signals
@@ -9,6 +14,19 @@ from features.associations import models as associations
 from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
 from . import models
+
+
+@contextlib.contextmanager
+def get_temporary_media_file(content=None, suffix=None):
+    file_handle, filename = tempfile.mkstemp(dir=settings.MEDIA_ROOT, suffix=suffix)
+    if content is not None:
+        os.write(file_handle, content)
+    os.close(file_handle)
+    yield filename
+    try:
+        os.unlink(filename)
+    except OSError:
+        pass
 
 
 class ContributionMixin(features.articles.tests.ArticleMixin):
@@ -85,6 +103,33 @@ class ConversationReplyByEmail(
         self.assertExists(
                 models.Contribution, conversation=text_a.conversation.get(),
                 text__text='Text B')
+
+
+class ConversationAttachments(memberships.MemberMixin, tests.Test):
+
+    def test_conversation_initiate_with_attachments(self):
+        with get_temporary_media_file(content=b"foo") as filename1, \
+                get_temporary_media_file(content=b"bar") as filename2:
+            box = mailbox_models.Mailbox.objects.create()
+            msg = mailbox_models.Message.objects.create(
+                    mailbox=box,
+                    from_header=self.gestalt.user.email,
+                    body='Delivered-To: {}@localhost\n\nText B'.format(self.group.slug),
+            )
+            mailbox_models.MessageAttachment.objects.create(
+                message=msg, headers="Content-Type: text/plain",
+                document=os.path.basename(filename1))
+            # this file should be ignore (based on its content type)
+            mailbox_models.MessageAttachment.objects.create(
+                message=msg, headers="Content-Type: application/pgp-signature",
+                document=os.path.basename(filename2))
+            # send signal like getmail would
+            mailbox_signals.message_received.send(self, message=msg)
+            contribution = self.assertExists(
+                    models.Contribution, conversation__associations__group=self.group,
+                    text__text='Text B')
+            # only the non-signature attachement should be visible
+            self.assertEqual(contribution.attachments.count(), 1)
 
 
 class Delete(ContributionMixin, django.test.TestCase):
