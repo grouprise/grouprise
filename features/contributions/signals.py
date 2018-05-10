@@ -60,11 +60,38 @@ def is_autoresponse(msg):
 
 @receiver(django_mailbox.signals.message_received)
 def process_incoming_message(sender, message, **args):
-    token_beg = len(settings.DEFAULT_REPLY_TO_EMAIL.split('{')[0])
-    token_end = len(settings.DEFAULT_REPLY_TO_EMAIL.rsplit('}')[1])
-    DOMAIN = settings.DEFAULT_REPLY_TO_EMAIL.split('@')[1]
 
-    def create_contribution(container, gestalt, message, in_reply_to=None):
+    # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
+    delivered_to = message.get_email_object()['Delivered-To']
+    if not delivered_to:
+        logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
+        return
+    processor = ContributionMailProcessor(settings.STADTGESTALTEN_BOT_EMAIL,
+                                          settings.DEFAULT_REPLY_TO_EMAIL,
+                                          settings.DEFAULT_FROM_EMAIL)
+    for address in [delivered_to]:
+        address = address.lstrip('<')
+        address = address.rstrip('>')
+        processor.process_message_for_recipient(message, address)
+
+
+class ContributionMailProcessor:
+    """ process an incoming contribution mail
+
+    Recipient and content checks are conducted during processing.
+    """
+
+    def __init__(self, bot_address, default_reply_to_address, response_from_address):
+        self.bot_address = bot_address
+        self._reply_domain = default_reply_to_address.split('@')[1]
+        self._token_prefix_length = len(default_reply_to_address.split('{')[0])
+        self._token_suffix_length = len(default_reply_to_address.rsplit('}')[1])
+        self.response_from_address = response_from_address
+
+    def parse_auth_token(self, address):
+        return address[self._token_prefix_length:-self._token_suffix_length]
+
+    def _create_contribution(self, message, container, gestalt, in_reply_to=None):
         text = message.text.strip()
         if text == '':
             text = message.html
@@ -77,16 +104,16 @@ def process_incoming_message(sender, message, **args):
         files.File.objects.create_from_message(message, attached_to=contribution)
         return contribution
 
-    def process_reply(address):
-        token = address[token_beg:-token_end]
+    def parse_authentication_token(self, recipient):
         try:
-            in_reply_to_text = models.Contribution.objects.get_by_message_id(
-                    message.get_email_object().get('In-Reply-To'))
-        except models.Contribution.DoesNotExist:
-            in_reply_to_text = None
-        key = core.models.PermissionToken.objects.get(secret_key=token)
+            token = self.parse_auth_token(recipient)
+            return core.models.PermissionToken.objects.get(secret_key=token)
+        except core.models.PermissionToken.DoesNotExist:
+            return None
+
+    def _process_authenticated_reply(self, message, auth_token):
         sender = get_sender_gestalt(message)
-        if key.gestalt != sender:
+        if auth_token.gestalt != sender:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
                     'beantworten. Du hast folgende Möglichkeiten:\n'
@@ -95,24 +122,29 @@ def process_incoming_message(sender, message, **args):
                     'gesendet wurde.\n'
                     '* Füge die E-Mail-Adresse, unter der Du antworten möchtest, Deinem '
                     'Benutzerkonto hinzu.')
-        if type(key.target) == Content:
-            container = key.target
+        if type(auth_token.target) == Content:
+            container = auth_token.target
         else:
-            container = key.target.container
-        contribution = create_contribution(
-                container, key.gestalt, message, in_reply_to=in_reply_to_text)
+            container = auth_token.target.container
+        try:
+            in_reply_to_text = models.Contribution.objects.get_by_message_id(
+                    message.get_email_object().get('In-Reply-To'))
+        except models.Contribution.DoesNotExist:
+            in_reply_to_text = None
+        contribution = self._create_contribution(message, container, auth_token.gestalt,
+                                                 in_reply_to=in_reply_to_text)
         post_create.send(sender=None, instance=contribution)
 
-    def process_initial(address):
-        local, domain = address.split('@')
-        if domain != DOMAIN:
+    def _process_initial_thread_contribution(self, message, recipient):
+        local, domain = recipient.split('@')
+        if domain != self._reply_domain:
             raise ValueError('Domain does not match.')
         gestalt = get_sender_gestalt(message)
         group = groups.Group.objects.get(slug=local)
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)
-            contribution = create_contribution(conversation, gestalt, message)
+            contribution = self._create_contribution(message, conversation, gestalt)
             associations.Association.objects.create(
                     entity_type=group.content_type, entity_id=group.id,
                     container_type=conversation.content_type, container_id=conversation.id)
@@ -122,37 +154,31 @@ def process_incoming_message(sender, message, **args):
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
-    def process_message(address):
-        try:
-            process_reply(address)
-        except core.models.PermissionToken.DoesNotExist:
-            if address == settings.STADTGESTALTEN_BOT_EMAIL:
+    def _process_message(self, message, recipient):
+        auth_token = self.parse_authentication_token(recipient)
+        if auth_token is None:
+            if recipient == self.bot_address:
                 for to_address in message.to_addresses:
-                    process_initial(to_address)
+                    self._process_initial_thread_contribution(message, to_address)
             else:
-                process_initial(address)
+                self._process_initial_thread_contribution(message, recipient)
+        else:
+            self._process_authenticated_reply(message, auth_token)
 
-    # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
-    delivered_to = message.get_email_object()['Delivered-To']
-    if not delivered_to:
-        logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
-        return
-    for address in [delivered_to]:
-        address = address.lstrip('<')
-        address = address.rstrip('>')
+    def process_message_for_recipient(self, message, recipient):
         if not is_autoresponse(message):
             try:
-                process_message(address)
+                self._process_message(message, recipient)
             except ValueError as e:
                 logger.error('Could not process receiver {} in message {}. {}'.format(
-                    address, message.id, e))
+                    recipient, message.id, e))
             except (groups.Group.DoesNotExist, django.core.exceptions.PermissionDenied) as e:
                 logger.warning('Could not process receiver {} in message {}. {}'.format(
-                    address, message.id, e))
+                    recipient, message.id, e))
                 django.core.mail.send_mail(
                         'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', ''),
                         'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
-                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        from_email=self.response_from_address,
                         recipient_list=[message.from_header],
                         fail_silently=True)
         else:
