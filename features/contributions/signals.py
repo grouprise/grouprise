@@ -25,34 +25,32 @@ def contribution_created(sender, instance, **kwargs):
     notifications.ContributionCreated.send_all(instance)
 
 
-def get_sender_gestalt(message):
+def get_sender_gestalt(from_address):
 
     try:
         gestalt = gestalten.Gestalt.objects.annotate(email=Lower('user__email')).get(
-                email=message.from_address[0].lower())
+                email=from_address.lower())
     except gestalten.Gestalt.DoesNotExist:
         try:
             gestalt = gestalten.Gestalt.objects.annotate(
                     email=Lower('user__emailaddress__email')).get(
-                            email=message.from_address[0].lower())
+                            email=from_address.lower())
         except gestalten.Gestalt.DoesNotExist:
             gestalt = None
     return gestalt
 
 
-def is_autoresponse(msg):
-    email = msg.get_email_object()
-
+def is_autoresponse(email_obj):
     # RFC 3834 (https://tools.ietf.org/html/rfc3834#section-5)
-    if email.get('Auto-Submitted') == 'no':
+    if email_obj.get('Auto-Submitted') == 'no':
         return False
-    elif email.get('Auto-Submitted'):
+    elif email_obj.get('Auto-Submitted'):
         return True
 
     # non-standard fields (https://tools.ietf.org/html/rfc3834#section-3.1.8)
-    if email.get('Precedence') == 'bulk':
+    if email_obj.get('Precedence') == 'bulk':
         return True
-    if email.get('X-AUTORESPONDER'):
+    if email_obj.get('X-AUTORESPONDER'):
         return True
 
     return False
@@ -112,7 +110,7 @@ class ContributionMailProcessor:
             return None
 
     def _process_authenticated_reply(self, message, auth_token):
-        sender = get_sender_gestalt(message)
+        sender = get_sender_gestalt(message.from_address[0])
         if auth_token.gestalt != sender:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
@@ -139,7 +137,7 @@ class ContributionMailProcessor:
         local, domain = recipient.split('@')
         if domain != self._reply_domain:
             raise ValueError('Domain does not match.')
-        gestalt = get_sender_gestalt(message)
+        gestalt = get_sender_gestalt(message.from_address[0])
         group = groups.Group.objects.get(slug=local)
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
@@ -166,7 +164,7 @@ class ContributionMailProcessor:
             self._process_authenticated_reply(message, auth_token)
 
     def process_message_for_recipient(self, message, recipient):
-        if not is_autoresponse(message):
+        if not is_autoresponse(message.get_email_object()):
             try:
                 self._process_message(message, recipient)
             except ValueError as e:
