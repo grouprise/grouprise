@@ -1,8 +1,9 @@
 from os import path
-import re
+from typing import List
 
 import django
 from django.db import models
+from features.contributions.signals import ParsedMailAttachment
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
@@ -10,15 +11,17 @@ import core
 from features.contributions import models as contributions
 
 
-EXCLUDE_RE = r'Content-Type: application/pgp-signature'
+IGNORE_CONTENT_TYPES = {'application/pgp-signature'}
 
 
 class FileManager(models.Manager):
-    def create_from_message(self, message, attached_to):
-        for attachment in message.attachments.all():
-            if re.search(EXCLUDE_RE, attachment.headers):
+    def create_from_message_attachments(self, attachments: List[ParsedMailAttachment],
+                                        attached_to):
+        for attachment in attachments:
+            if attachment.content_type in IGNORE_CONTENT_TYPES:
                 continue
-            f = self.create(file=attachment.document, filename=attachment.get_filename())
+            file_source = attachment.model_obj if attachment.data is None else attachment.data
+            f = self.create(file=file_source, filename=attachment.filename)
             contributions.Contribution.objects.create(
                     container_id=attached_to.container_id,
                     container_type=attached_to.container_type,

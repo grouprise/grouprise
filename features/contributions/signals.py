@@ -1,3 +1,5 @@
+import collections
+import email.parser
 import logging
 
 import django.db.models.signals
@@ -64,13 +66,44 @@ def process_incoming_message(sender, message, **args):
     if not delivered_to:
         logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
         return
+    parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
     processor = ContributionMailProcessor(settings.STADTGESTALTEN_BOT_EMAIL,
                                           settings.DEFAULT_REPLY_TO_EMAIL,
                                           settings.DEFAULT_FROM_EMAIL)
     for address in [delivered_to]:
         address = address.lstrip('<')
         address = address.rstrip('>')
-        processor.process_message_for_recipient(message, address)
+        processor.process_message_for_recipient(parsed_message, address)
+
+
+ParsedMailAttachment = collections.namedtuple('ParsedMailAttachment',
+                                              ('content_type', 'filename', 'data', 'model_obj'))
+
+
+class ParsedMailMessage(collections.namedtuple(
+        'ParsedMail',
+        ('subject', 'content', 'to_addresses', 'from_address', 'email_obj', 'id', 'attachments'))):
+    """ neutral mail message container to be used processing a ContributionMailProcessor
+
+    The different sources (e.g. django_mailbox or LMTP) should produce instances of this class.
+    """
+
+    @classmethod
+    def from_django_mailbox_message(cls, message):
+        # we ignore multiple "From:" addresses
+        from_address = message.from_address[0]
+        # parse the content type from the attachments
+        attachments = []
+        header_parser = email.parser.HeaderParser()
+        for attachment in message.attachments.all():
+            attachment_header = header_parser.parsestr(attachment.headers)
+            parsed_attachment = ParsedMailAttachment(attachment_header.get_content_type(),
+                                                     attachment_header.get_filename(), None,
+                                                     attachment.document)
+            attachments.append(parsed_attachment)
+        text_content = message.text or message.html
+        return cls(message.subject, text_content, message.to_addresses, from_address,
+                   message.get_email_object(), message.id, tuple(attachments))
 
 
 class ContributionMailProcessor:
@@ -90,16 +123,14 @@ class ContributionMailProcessor:
         return address[self._token_prefix_length:-self._token_suffix_length]
 
     def _create_contribution(self, message, container, gestalt, in_reply_to=None):
-        text = message.text.strip()
-        if text == '':
-            text = message.html
-        t = models.Text.objects.create(text=text)
+        t = models.Text.objects.create(text=message.content)
         contribution = models.Contribution.objects.create(
                 author=gestalt,
                 container=container,
                 in_reply_to=in_reply_to,
                 contribution=t)
-        files.File.objects.create_from_message(message, attached_to=contribution)
+        files.File.objects.create_from_message_attachments(message.attachments,
+                                                           attached_to=contribution)
         return contribution
 
     def parse_authentication_token(self, recipient):
@@ -110,7 +141,7 @@ class ContributionMailProcessor:
             return None
 
     def _process_authenticated_reply(self, message, auth_token):
-        sender = get_sender_gestalt(message.from_address[0])
+        sender = get_sender_gestalt(message.from_address)
         if auth_token.gestalt != sender:
             raise django.core.exceptions.PermissionDenied(
                     'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
@@ -126,7 +157,7 @@ class ContributionMailProcessor:
             container = auth_token.target.container
         try:
             in_reply_to_text = models.Contribution.objects.get_by_message_id(
-                    message.get_email_object().get('In-Reply-To'))
+                    message.email_obj.get('In-Reply-To'))
         except models.Contribution.DoesNotExist:
             in_reply_to_text = None
         contribution = self._create_contribution(message, container, auth_token.gestalt,
@@ -137,7 +168,7 @@ class ContributionMailProcessor:
         local, domain = recipient.split('@')
         if domain != self._reply_domain:
             raise ValueError('Domain does not match.')
-        gestalt = get_sender_gestalt(message.from_address[0])
+        gestalt = get_sender_gestalt(message.from_address)
         group = groups.Group.objects.get(slug=local)
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
@@ -164,7 +195,7 @@ class ContributionMailProcessor:
             self._process_authenticated_reply(message, auth_token)
 
     def process_message_for_recipient(self, message, recipient):
-        if not is_autoresponse(message.get_email_object()):
+        if not is_autoresponse(message.email_obj):
             try:
                 self._process_message(message, recipient)
             except ValueError as e:
@@ -177,7 +208,7 @@ class ContributionMailProcessor:
                         'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', ''),
                         'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
                         from_email=self.response_from_address,
-                        recipient_list=[message.from_header],
+                        recipient_list=[message.from_address],
                         fail_silently=True)
         else:
             logger.warning('Ignored message {} as autoresponse'.format(message.id))
