@@ -7,6 +7,7 @@ import django_mailbox.signals
 from django.conf import settings
 from django.db.models.functions import Lower
 from django.dispatch import receiver
+import html2text
 
 import core.models
 from features.associations import models as associations
@@ -101,7 +102,10 @@ class ParsedMailMessage(collections.namedtuple(
                                                      attachment_header.get_filename(), None,
                                                      attachment.document)
             attachments.append(parsed_attachment)
-        text_content = message.text or message.html
+        if message.text:
+            text_content = message.text
+        else:
+            text_content = html2text.html2text(message.html or "")
         return cls(message.subject, text_content, message.to_addresses, from_address,
                    message.get_email_object(), message.id, tuple(attachments))
 

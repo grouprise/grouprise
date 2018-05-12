@@ -11,6 +11,7 @@ django-mailer               # NOT IN DEBIAN
 djangorestframework         # debian: python-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: flake8
+html2text                   # debian: python3-html2text
 markdown                    # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
 pillow                      # debian: python-pil
