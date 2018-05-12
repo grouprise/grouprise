@@ -120,6 +120,30 @@ class ParsedMailMessage(collections.namedtuple(
                    message.to_addresses, from_address, message.get_email_object(), message.id,
                    tuple(attachments))
 
+    @classmethod
+    def from_email_object(cls, email_obj, from_address=None):
+        """ convert an email.message.EmailMessage into a ParsedMailMessage """
+        if from_address is None:
+            from_address = email_obj.get('From')
+        if email_obj.is_multipart():
+            body_part = email_obj.get_body(preferencelist=('html', 'text'))
+            attachments = tuple(
+                ParsedMailAttachment(part.get_content_type(), part.get_filename(),
+                                     part.get_payload(decode=True), None)
+                for part in email_obj.iter_attachments())
+        else:
+            body_part = email_obj
+            attachments = ()
+        # parse and convert the body_part (containing the text or html message)
+        content = body_part.get_payload(decode=True).decode()
+        if body_part.get_content_type() == "text/html":
+            text_content = html2text.html2text(content)
+        else:
+            text_content = content
+        return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content,
+                   email_obj.get_all('To'), from_address, email_obj,
+                   email_obj.get('Message-ID'), attachments)
+
 
 class ContributionMailProcessor:
     """ process an incoming contribution mail
@@ -135,6 +159,16 @@ class ContributionMailProcessor:
             suffix=re.escape(default_reply_to_address.split('}', 1)[1])))
         self.response_from_address = response_from_address
         self._ignore_log_message_emitted = False
+
+    def is_mail_domain(self, domain):
+        return domain == self._reply_domain
+
+    def is_valid_groupname(self, group_name):
+        try:
+            groups.Group.objects.get(slug=group_name)
+            return True
+        except groups.Group.DoesNotExist:
+            return False
 
     def parse_authentication_token_text(self, address):
         """ parse a potential authentication token from a recipient address without checking it """
