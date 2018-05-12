@@ -28,6 +28,10 @@ def contribution_created(sender, instance, **kwargs):
     notifications.ContributionCreated.send_all(instance)
 
 
+class MailProcessingFailure(Exception):
+    """ processing failures that should be reported """
+
+
 def get_sender_gestalt(from_address):
 
     try:
@@ -74,7 +78,10 @@ def process_incoming_message(sender, message, **args):
     for address in [delivered_to]:
         address = address.lstrip('<')
         address = address.rstrip('>')
-        processor.process_message_for_recipient(parsed_message, address)
+        try:
+            processor.process_message_for_recipient(parsed_message, address)
+        except MailProcessingFailure as exc:
+            processor.send_error_mail_response(parsed_message, str(exc), fail_silently=True)
 
 
 ParsedMailAttachment = collections.namedtuple('ParsedMailAttachment',
@@ -147,7 +154,8 @@ class ContributionMailProcessor:
     def _process_authenticated_reply(self, message, auth_token):
         sender = get_sender_gestalt(message.from_address)
         if auth_token.gestalt != sender:
-            raise django.core.exceptions.PermissionDenied(
+            logger.warning('Rejected message <%s>: authentication mismatch', message.id)
+            raise MailProcessingFailure(
                     'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
                     'beantworten. Du hast folgende Möglichkeiten:\n'
                     '* Melde Dich auf der Website an und beantworte die Nachricht dort.\n'
@@ -171,9 +179,20 @@ class ContributionMailProcessor:
     def _process_initial_thread_contribution(self, message, recipient):
         local, domain = recipient.split('@')
         if domain != self._reply_domain:
-            raise ValueError('Domain does not match.')
+            error_text = 'Unknown target mail domain: {} instead of {}.'.format(domain,
+                                                                                self._reply_domain)
+            logger.error('Could not process receiver %s in message %s. %s',
+                         recipient, message.id, error_text)
+            # This message could be part of a delivery failure response, but it should never happen
+            # with a properly configured mail server (this traffic would be misdirected).
+            raise MailProcessingFailure(error_text)
         gestalt = get_sender_gestalt(message.from_address)
-        group = groups.Group.objects.get(slug=local)
+        try:
+            group = groups.Group.objects.get(slug=local)
+        except groups.Group.DoesNotExist:
+            raise MailProcessingFailure(
+                'Es gibt keine Gruppe mit dem Namen "{}". Somit war deine Email nicht zustellbar.'
+                .format(local))
         if gestalt and gestalt.user.has_perm(
                 'conversations.create_group_conversation_by_email', group):
             conversation = conversations.Conversation.objects.create(subject=message.subject)
@@ -183,7 +202,9 @@ class ContributionMailProcessor:
                     container_type=conversation.content_type, container_id=conversation.id)
             post_create.send(sender=None, instance=contribution)
         else:
-            raise django.core.exceptions.PermissionDenied(
+            logger.warning('Rejected message (%s) for <%s>: sender lacks permission',
+                           message.id, recipient)
+            raise MailProcessingFailure(
                     'Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte '
                     'verwende die Schaltfläche auf der Webseite.')
 
@@ -199,20 +220,20 @@ class ContributionMailProcessor:
             self._process_authenticated_reply(message, auth_token)
 
     def process_message_for_recipient(self, message, recipient):
+        """ handle the incoming message and create a contribution, if all checks succeed
+
+        Raises MailProcessingFailure in case of problems.
+        """
         if not is_autoresponse(message.email_obj):
-            try:
-                self._process_message(message, recipient)
-            except ValueError as e:
-                logger.error('Could not process receiver {} in message {}. {}'.format(
-                    recipient, message.id, e))
-            except (groups.Group.DoesNotExist, django.core.exceptions.PermissionDenied) as e:
-                logger.warning('Could not process receiver {} in message {}. {}'.format(
-                    recipient, message.id, e))
-                django.core.mail.send_mail(
-                        'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', ''),
-                        'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
-                        from_email=self.response_from_address,
-                        recipient_list=[message.from_address],
-                        fail_silently=True)
+            self._process_message(message, recipient)
         else:
             logger.warning('Ignored message {} as autoresponse'.format(message.id))
+
+    def send_error_mail_response(self, message, error_message, recipient=None,
+                                 fail_silently=False):
+        if recipient is None:
+            recipient = message.from_address
+        subject = 'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', '')
+        text = 'Konnte die Nachricht nicht verarbeiten.\n{}'.format(error_message)
+        django.core.mail.send_mail(subject, text, from_email=self.response_from_address,
+                                   recipient_list=[recipient], fail_silently=fail_silently)
