@@ -21,6 +21,11 @@ from . import models, notifications
 
 logger = logging.getLogger(__name__)
 
+
+# a message containing exactly the following subject will raise a ValueError (for the unittests)
+MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST = 'ijoo9zee7Cheisoochae2Ophie4ohx9ahyai3ux1Quae0Phu'
+
+
 post_create = django.dispatch.Signal(providing_args=['instance'])
 
 
@@ -173,6 +178,8 @@ class ContributionMailProcessor:
     Recipient and content checks are conducted during processing.
     """
 
+    PROCESSING_FAILURE_TEXT = 'Konnte die Nachricht nicht verarbeiten.'
+
     def __init__(self, bot_address, default_reply_to_address, response_from_address):
         self.bot_address = bot_address
         self._reply_domain = default_reply_to_address.split('@')[1]
@@ -290,7 +297,11 @@ class ContributionMailProcessor:
 
         Raises MailProcessingFailure in case of problems.
         """
-        if is_autoresponse(message.email_obj):
+        if message.subject == MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST:
+            # for unittests
+            raise ValueError('Magic Test Subject discovered: {}'
+                             .format(MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST.swapcase()))
+        elif is_autoresponse(message.email_obj):
             if not self._ignore_log_message_emitted:
                 logger.warning('Ignored message {} as autoresponse'.format(message.id))
                 self._ignore_log_message_emitted = True
@@ -303,6 +314,6 @@ class ContributionMailProcessor:
         if recipient is None:
             recipient = message.from_address
         subject = 'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', '')
-        text = 'Konnte die Nachricht nicht verarbeiten.\n{}'.format(error_message)
+        text = '\n'.join((self.PROCESSING_FAILURE_TEXT, error_message))
         django.core.mail.send_mail(subject, text, from_email=self.response_from_address,
                                    recipient_list=[recipient], fail_silently=fail_silently)
