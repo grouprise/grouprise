@@ -129,6 +129,7 @@ class ContributionMailProcessor:
         self._token_prefix_length = len(default_reply_to_address.split('{')[0])
         self._token_suffix_length = len(default_reply_to_address.rsplit('}')[1])
         self.response_from_address = response_from_address
+        self._ignore_log_message_emitted = False
 
     def parse_auth_token(self, address):
         return address[self._token_prefix_length:-self._token_suffix_length]
@@ -224,10 +225,13 @@ class ContributionMailProcessor:
 
         Raises MailProcessingFailure in case of problems.
         """
-        if not is_autoresponse(message.email_obj):
-            self._process_message(message, recipient)
+        if is_autoresponse(message.email_obj):
+            if not self._ignore_log_message_emitted:
+                logger.warning('Ignored message {} as autoresponse'.format(message.id))
+                self._ignore_log_message_emitted = True
+            # no response is emitted
         else:
-            logger.warning('Ignored message {} as autoresponse'.format(message.id))
+            self._process_message(message, recipient)
 
     def send_error_mail_response(self, message, error_message, recipient=None,
                                  fail_silently=False):
