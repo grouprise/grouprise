@@ -1,6 +1,7 @@
 import collections
 import email.parser
 import logging
+import re
 
 import django.db.models.signals
 import django_mailbox.signals
@@ -129,13 +130,16 @@ class ContributionMailProcessor:
     def __init__(self, bot_address, default_reply_to_address, response_from_address):
         self.bot_address = bot_address
         self._reply_domain = default_reply_to_address.split('@')[1]
-        self._token_prefix_length = len(default_reply_to_address.split('{')[0])
-        self._token_suffix_length = len(default_reply_to_address.rsplit('}')[1])
+        self.auth_token_regex = re.compile(r'^{prefix}([^@]+){suffix}$'.format(
+            prefix=re.escape(default_reply_to_address.split('{')[0]),
+            suffix=re.escape(default_reply_to_address.split('}', 1)[1])))
         self.response_from_address = response_from_address
         self._ignore_log_message_emitted = False
 
-    def parse_auth_token(self, address):
-        return address[self._token_prefix_length:-self._token_suffix_length]
+    def parse_authentication_token_text(self, address):
+        """ parse a potential authentication token from a recipient address without checking it """
+        match = self.auth_token_regex.match(address)
+        return match.groups()[0] if match else None
 
     def _create_contribution(self, message, container, gestalt, in_reply_to=None):
         t = models.Text.objects.create(text=message.content)
@@ -148,14 +152,15 @@ class ContributionMailProcessor:
                                                            attached_to=contribution)
         return contribution
 
-    def parse_authentication_token(self, recipient):
+    def _process_authenticated_reply(self, message, auth_token_text):
         try:
-            token = self.parse_auth_token(recipient)
-            return core.models.PermissionToken.objects.get(secret_key=token)
+            auth_token = core.models.PermissionToken.objects.get(secret_key=auth_token_text)
         except core.models.PermissionToken.DoesNotExist:
-            return None
-
-    def _process_authenticated_reply(self, message, auth_token):
+            raise MailProcessingFailure(
+                    'Das Ziel für deine Nachricht ist ungültig. Ist die dazugehörige Unterhaltung '
+                    'eventuell bereits zu alt? Nach ein paar Jahren verfallen die '
+                    'Antwort-Adressen für alte Beiträge automatisch. Bitte verwende die '
+                    'Schaltfläche auf der Webseite um auf alte Beiträge zu antworten.')
         sender = get_sender_gestalt(message.from_address)
         if auth_token.gestalt != sender:
             logger.warning('Rejected message <%s>: authentication mismatch', message.id)
@@ -213,15 +218,16 @@ class ContributionMailProcessor:
                     'verwende die Schaltfläche auf der Webseite.')
 
     def _process_message(self, message, recipient):
-        auth_token = self.parse_authentication_token(recipient)
-        if auth_token is None:
+        auth_token_text = self.parse_authentication_token_text(recipient)
+        if auth_token_text is None:
+            # TODO: under which circumstances could this condition be true?
             if recipient == self.bot_address:
                 for to_address in message.to_addresses:
                     self._process_initial_thread_contribution(message, to_address)
             else:
                 self._process_initial_thread_contribution(message, recipient)
         else:
-            self._process_authenticated_reply(message, auth_token)
+            self._process_authenticated_reply(message, auth_token_text)
 
     def process_message_for_recipient(self, message, recipient):
         """ handle the incoming message and create a contribution, if all checks succeed
