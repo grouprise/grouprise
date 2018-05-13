@@ -96,6 +96,8 @@ class ParsedMailMessage(collections.namedtuple(
     The different sources (e.g. django_mailbox or LMTP) should produce instances of this class.
     """
 
+    MISSING_SUBJECT_DEFAULT = 'Namenlose Nachricht'
+
     @classmethod
     def from_django_mailbox_message(cls, message):
         # we ignore multiple "From:" addresses
@@ -113,8 +115,9 @@ class ParsedMailMessage(collections.namedtuple(
             text_content = message.text
         else:
             text_content = html2text.html2text(message.html or "")
-        return cls(message.subject, text_content, message.to_addresses, from_address,
-                   message.get_email_object(), message.id, tuple(attachments))
+        return cls(message.subject or cls.MISSING_SUBJECT_DEFAULT, text_content,
+                   message.to_addresses, from_address, message.get_email_object(), message.id,
+                   tuple(attachments))
 
 
 class ContributionMailProcessor:
