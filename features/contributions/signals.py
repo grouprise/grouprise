@@ -98,6 +98,30 @@ class ParsedMailMessage(collections.namedtuple(
     """
 
     MISSING_SUBJECT_DEFAULT = 'Namenlose Nachricht'
+    SIGNATURE_TEXT_MARKER = '\n-- \n'
+
+    @classmethod
+    def get_processed_content(cls, content, is_html):
+        # handle None gracefully
+        if not content:
+            content = ''
+        # unify line splits
+        content = content.replace('\r\n', '\n')
+        if is_html:
+            # convert html to markdown
+            content = html2text.html2text(content)
+        else:
+            # text may contain an embedded signature - remove it
+            signature_position = content.find(cls.SIGNATURE_TEXT_MARKER)
+            if signature_position > 0:
+                content = content[:signature_position]
+        # strip needs to happen after operations involving linebreaks (e.g. the signature)
+        # We can strip all whitespace at the end.
+        content = content.rstrip()
+        # At the beginning we want to keep whitespace (except for empty lines), since the text
+        # could start with a markdown item list ('  * foo\n  * bar').
+        content = content.lstrip('\n')
+        return content
 
     @classmethod
     def from_django_mailbox_message(cls, message):
@@ -112,11 +136,8 @@ class ParsedMailMessage(collections.namedtuple(
                                                      attachment_header.get_filename(), None,
                                                      attachment.document)
             attachments.append(parsed_attachment)
-        if message.text:
-            text_content = message.text
-        else:
-            text_content = html2text.html2text(message.html or "")
-        return cls(message.subject or cls.MISSING_SUBJECT_DEFAULT, text_content.strip(),
+        text_content = cls.get_processed_content(message.html or message.text, bool(message.html))
+        return cls(message.subject or cls.MISSING_SUBJECT_DEFAULT, text_content,
                    message.to_addresses, from_address, message.get_email_object(), message.id,
                    tuple(attachments))
 
@@ -138,12 +159,10 @@ class ParsedMailMessage(collections.namedtuple(
             attachments = ()
         # parse and convert the body_part (containing the text or html message)
         data = body_part.get_payload(decode=True)
-        content = data.decode().strip() if data else ""
-        if body_part.get_content_type() == "text/html":
-            text_content = html2text.html2text(content)
-        else:
-            text_content = content
-        return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content.strip(),
+        content = data.decode().strip() if data else ''
+        text_content = cls.get_processed_content(content,
+                                                 body_part.get_content_type() == 'text/html')
+        return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content,
                    email_obj.get_all('To'), from_address, email_obj,
                    email_obj.get('Message-ID'), attachments)
 
