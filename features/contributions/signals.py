@@ -116,7 +116,7 @@ class ParsedMailMessage(collections.namedtuple(
             text_content = message.text
         else:
             text_content = html2text.html2text(message.html or "")
-        return cls(message.subject or cls.MISSING_SUBJECT_DEFAULT, text_content,
+        return cls(message.subject or cls.MISSING_SUBJECT_DEFAULT, text_content.strip(),
                    message.to_addresses, from_address, message.get_email_object(), message.id,
                    tuple(attachments))
 
@@ -127,6 +127,8 @@ class ParsedMailMessage(collections.namedtuple(
             from_address = email_obj.get('From')
         if email_obj.is_multipart():
             body_part = email_obj.get_body(preferencelist=('html', 'text'))
+            if body_part is None:
+                body_part = email_obj
             attachments = tuple(
                 ParsedMailAttachment(part.get_content_type(), part.get_filename(),
                                      part.get_payload(decode=True), None)
@@ -135,12 +137,13 @@ class ParsedMailMessage(collections.namedtuple(
             body_part = email_obj
             attachments = ()
         # parse and convert the body_part (containing the text or html message)
-        content = body_part.get_payload(decode=True).decode()
+        data = body_part.get_payload(decode=True)
+        content = data.decode().strip() if data else ""
         if body_part.get_content_type() == "text/html":
             text_content = html2text.html2text(content)
         else:
             text_content = content
-        return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content,
+        return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content.strip(),
                    email_obj.get_all('To'), from_address, email_obj,
                    email_obj.get('Message-ID'), attachments)
 
