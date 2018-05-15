@@ -92,13 +92,13 @@ class Gestalt(core.models.Model):
         data = {}
         data['gestalt'] = self
         data['user'] = self.user
-        
-        #data['groups_created'] = ?
+
+        # data['groups_created'] = ?
         data['memberships'] = self.memberships
         data['subscriptions'] = self.subscriptions
         data['tokens'] = self.permissiontoken_set
         data['settings'] = self.gestaltsetting_set
-        
+
         data['associations'] = self.associations
         data['contributions'] = self.contributions
         data['images'] = self.images

@@ -28,8 +28,10 @@
             <li>{{ view.data.votes.count }} Stimmen in Umfragen</li>
         </ul>
 
-        <p>Solltest Du damit nicht einverstanden sein, führe diesen Schritt bitte nicht aus sondern
-        <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns stattdessen eine Nachricht</a>.</p>
+        {% if about_group %}
+            <p>Solltest Du damit nicht einverstanden sein, führe diesen Schritt bitte nicht aus sondern
+            <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns stattdessen eine Nachricht</a>.</p>
+        {% endif %}
 
         <button class="btn btn-danger">
             Benutzerkonto löschen

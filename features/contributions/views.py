@@ -2,7 +2,6 @@ import django.views.generic.edit
 from django.utils.timezone import now
 
 import core
-import features
 from features.associations.views import AssociationMixin
 from . import models
 
