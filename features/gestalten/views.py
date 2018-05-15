@@ -5,7 +5,7 @@ from allauth.account import views as allauth_views
 from crispy_forms import layout
 from django.urls import reverse
 from django.views import generic
-from django.views.generic import edit as edit_views, UpdateView
+from django.views.generic import edit as edit_views, DeleteView, UpdateView
 
 import core
 from core import views as utils_views
@@ -30,6 +30,16 @@ class Create(utils_views.ActionMixin, views.SignupView):
 
     def get_success_url(self):
         return views.LoginView.get_success_url(self)
+
+
+class Delete(PermissionMixin, DeleteView):
+    permission_required = 'gestalten.delete'
+    template_name = 'gestalten/delete.html'
+
+    def get_object(self):
+        gestalt = self.request.user.gestalt
+        self.data = gestalt.get_data()
+        return gestalt
 
 
 class Detail(

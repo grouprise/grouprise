@@ -1,0 +1,38 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Benutzerkonto löschen - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'gestalt' %}{% endblock %}
+
+{% block heading_title_text %}Einstellungen{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <p><strong>Möchtest Du Dein Benutzerkonto wirklich löschen?</strong></p>
+
+        <p><strong>Folgende Daten werden unwiderruflich gelöscht:</strong></p>
+
+        <ul>
+            <li>Benutzerkonto und Profil mit allen Einstellungen und E-Mail-Adressen</li>
+            <li>{{ view.data.subscriptions.count }} Abonnements von Gruppen</li>
+            <li>{{ view.data.memberships.count }} Mitgliedschaften in Gruppen</li>
+        </ul>
+
+        <p><strong>Folgende Daten werden unwiderruflich als <em>Unbekannte Gestalt</em> markiert:</strong></p>
+
+        <ul>
+            <li>{{ view.data.versions.count }} Beitragsversionen</li>
+            <li>{{ view.data.contributions.count }} Kommentare und Nachrichten</li>
+            <li>{{ view.data.images.count }} Bilder</li>
+            <li>{{ view.data.votes.count }} Stimmen in Umfragen</li>
+        </ul>
+
+        <p>Solltest Du damit nicht einverstanden sein, führe diesen Schritt bitte nicht aus sondern
+        <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns stattdessen eine Nachricht</a>.</p>
+
+        <button class="btn btn-danger">
+            Benutzerkonto löschen
+        </button>
+    </form>
+{% endblock %}
