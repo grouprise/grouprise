@@ -50,13 +50,13 @@ def get_sender_gestalt(from_address):
 
 def is_autoresponse(email_obj):
     # RFC 3834 (https://tools.ietf.org/html/rfc3834#section-5)
-    if email_obj.get('Auto-Submitted') == 'no':
+    if email_obj.get('Auto-Submitted', '').lower() == 'no':
         return False
     elif email_obj.get('Auto-Submitted'):
         return True
 
     # non-standard fields (https://tools.ietf.org/html/rfc3834#section-3.1.8)
-    if email_obj.get('Precedence') == 'bulk':
+    if email_obj.get('Precedence', '').lower() == 'bulk':
         return True
     if email_obj.get('X-AUTORESPONDER'):
         return True
@@ -160,8 +160,8 @@ class ParsedMailMessage(collections.namedtuple(
         # parse and convert the body_part (containing the text or html message)
         data = body_part.get_payload(decode=True)
         content = data.decode().strip() if data else ''
-        text_content = cls.get_processed_content(content,
-                                                 body_part.get_content_type() == 'text/html')
+        text_content = cls.get_processed_content(
+            content, body_part.get_content_type().lower() == 'text/html')
         return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content,
                    email_obj.get_all('To'), from_address, email_obj,
                    email_obj.get('Message-ID'), attachments)
@@ -178,16 +178,16 @@ class ContributionMailProcessor:
         self._reply_domain = default_reply_to_address.split('@')[1]
         self.auth_token_regex = re.compile(r'^{prefix}([^@]+){suffix}$'.format(
             prefix=re.escape(default_reply_to_address.split('{')[0]),
-            suffix=re.escape(default_reply_to_address.split('}', 1)[1])))
+            suffix=re.escape(default_reply_to_address.split('}', 1)[1])), re.IGNORECASE)
         self.response_from_address = response_from_address
         self._ignore_log_message_emitted = False
 
     def is_mail_domain(self, domain):
-        return domain == self._reply_domain
+        return domain.lower() == self._reply_domain.lower()
 
     def is_valid_groupname(self, group_name):
         try:
-            groups.Group.objects.get(slug=group_name)
+            groups.Group.objects.get(slug=group_name.lower())
             return True
         except groups.Group.DoesNotExist:
             return False
@@ -243,7 +243,7 @@ class ContributionMailProcessor:
 
     def _process_initial_thread_contribution(self, message, recipient):
         local, domain = recipient.split('@')
-        if domain != self._reply_domain:
+        if not self.is_mail_domain(domain):
             error_text = 'Unknown target mail domain: {} instead of {}.'.format(domain,
                                                                                 self._reply_domain)
             logger.error('Could not process receiver %s in message %s. %s',
@@ -277,7 +277,7 @@ class ContributionMailProcessor:
         auth_token_text = self.parse_authentication_token_text(recipient)
         if auth_token_text is None:
             # TODO: under which circumstances could this condition be true?
-            if recipient == self.bot_address:
+            if recipient.lower() == self.bot_address.lower():
                 for to_address in message.to_addresses:
                     self._process_initial_thread_contribution(message, to_address)
             else:
