@@ -3,6 +3,7 @@ import django
 from allauth.account import views
 from allauth.account import views as allauth_views
 from crispy_forms import layout
+from django.conf import settings
 from django.urls import reverse
 from django.views import generic
 from django.views.generic import edit as edit_views, DeleteView, UpdateView
@@ -35,11 +36,22 @@ class Create(utils_views.ActionMixin, views.SignupView):
 class Delete(PermissionMixin, DeleteView):
     permission_required = 'gestalten.delete'
     template_name = 'gestalten/delete.html'
+    success_url = '/'
+
+    def delete(self, request, *args, **kwargs):
+        unknown_gestalt = models.Gestalt.objects.get(id=settings.GROUPRISE_UNKNOWN_GESTALT_ID)
+        self.data['associations'].update(entity_id=unknown_gestalt.id)
+        self.data['contributions'].update(author=unknown_gestalt)
+        self.data['images'].update(creator=unknown_gestalt)
+        self.data['memberships_created'].update(created_by=unknown_gestalt)
+        self.data['versions'].update(author=unknown_gestalt)
+        self.data['votes'].update(voter=unknown_gestalt)
+        return super().delete(request, *args, **kwargs)
 
     def get_object(self):
-        gestalt = self.request.user.gestalt
-        self.data = gestalt.get_data()
-        return gestalt
+        user = self.request.user
+        self.data = user.gestalt.get_data()
+        return user
 
 
 class Detail(

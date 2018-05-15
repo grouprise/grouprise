@@ -91,6 +91,7 @@ class Gestalt(core.models.Model):
         data['associations'] = self.associations
         data['contributions'] = self.contributions
         data['images'] = self.images
+        data['memberships_created'] = self.memberships_created
         data['versions'] = self.versions
         data['votes'] = self.votes
         return data
