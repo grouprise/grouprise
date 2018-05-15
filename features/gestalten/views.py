@@ -38,20 +38,10 @@ class Delete(PermissionMixin, DeleteView):
     template_name = 'gestalten/delete.html'
     success_url = '/'
 
-    def delete(self, request, *args, **kwargs):
-        unknown_gestalt = models.Gestalt.objects.get(id=settings.GROUPRISE_UNKNOWN_GESTALT_ID)
-        self.data['associations'].update(entity_id=unknown_gestalt.id)
-        self.data['contributions'].update(author=unknown_gestalt)
-        self.data['images'].update(creator=unknown_gestalt)
-        self.data['memberships_created'].update(created_by=unknown_gestalt)
-        self.data['versions'].update(author=unknown_gestalt)
-        self.data['votes'].update(voter=unknown_gestalt)
-        return super().delete(request, *args, **kwargs)
-
     def get_object(self):
-        user = self.request.user
-        self.data = user.gestalt.get_data()
-        return user
+        gestalt = self.request.user.gestalt
+        self.data = gestalt.get_data()
+        return gestalt
 
 
 class Detail(

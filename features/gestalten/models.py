@@ -64,6 +64,17 @@ class Gestalt(core.models.Model):
     def can_login(self):
         return self.user.has_usable_password()
 
+    def delete(self, *args, **kwargs):
+        data = self.get_data()
+        unknown_gestalt = Gestalt.objects.get(id=settings.GROUPRISE_UNKNOWN_GESTALT_ID)
+        data['associations'].update(entity_id=unknown_gestalt.id)
+        data['contributions'].update(author=unknown_gestalt)
+        data['images'].update(creator=unknown_gestalt)
+        data['memberships_created'].update(created_by=unknown_gestalt)
+        data['versions'].update(author=unknown_gestalt)
+        data['votes'].update(voter=unknown_gestalt)
+        self.user.delete()
+
     def get_absolute_url(self):
         if self.public:
             return self.get_profile_url()
