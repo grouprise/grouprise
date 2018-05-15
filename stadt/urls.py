@@ -6,7 +6,6 @@ urlpatterns = [
     urls.url(r'^stadt/admin/', admin.site.urls),
     urls.url(r'^stadt/api/', urls.include('core.api_urls')),
 
-    urls.url(r'^stadt/', urls.include('features.associations.urls')),
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
     urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
@@ -26,5 +25,6 @@ urlpatterns = [
     urls.url(r'^', urls.include('features.tags.urls')),
 
     # matches */*/
+    urls.url(r'^', urls.include('features.associations.urls')),
     urls.url(r'^', urls.include('features.content.urls')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

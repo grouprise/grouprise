@@ -2,6 +2,8 @@ from django.contrib import auth
 from django.urls import reverse
 from django.test import TestCase
 
+from . import models
+
 
 class GestaltMixin:
     @classmethod
@@ -62,6 +64,10 @@ class Settings(TestCase):
 
 
 class AuthenticatedSettings(AuthenticatedMixin, TestCase):
+    def setUp(self):
+        auth.get_user_model().objects.create(email='unknown@example.org', username='unknown')
+        super().setUp()
+
     def test_authenticated_settings(self):
         # general settings accessible
         r = self.client.get('/')
@@ -90,3 +96,14 @@ class AuthenticatedSettings(AuthenticatedMixin, TestCase):
         self.assertEqual(r.status_code, 200)
         r = self.client.get(password_settings_url)
         self.assertEqual(r.status_code, 302)
+
+    def test_delete(self):
+        delete_url = reverse('delete-gestalt')
+
+        r = self.client.get(reverse('settings'))
+        self.assertContains(r, 'href="{}'.format(delete_url))
+        r = self.client.get(delete_url)
+        self.assertEqual(r.status_code, 200)
+        r = self.client.post(delete_url)
+        self.assertRedirects(r, '/')
+        self.assertFalse(models.Gestalt.objects.filter(pk=self.gestalt.pk).exists())

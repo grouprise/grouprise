@@ -226,6 +226,8 @@ HAS_PIWIK = True
 
 STADTGESTALTEN_INTRO_TEXT = ''
 
+GROUPRISE_UNKNOWN_GESTALT_ID = 1
+
 
 # Authentication
 # http://django-allauth.readthedocs.org/

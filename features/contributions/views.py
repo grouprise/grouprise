@@ -2,7 +2,7 @@ import django.views.generic.edit
 from django.utils.timezone import now
 
 import core
-import features
+from features.associations.views import AssociationMixin
 from . import models
 
 
@@ -47,9 +47,7 @@ class ContributionFormMixin(django.views.generic.edit.FormMixin):
         return self.object.get_absolute_url()
 
 
-class Delete(
-        features.associations.views.AssociationMixin, core.views.PermissionMixin,
-        django.views.generic.UpdateView):
+class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.UpdateView):
     permission_required = 'contributions.delete'
     model = models.Contribution
     fields = []

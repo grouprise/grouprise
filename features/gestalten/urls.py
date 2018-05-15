@@ -25,6 +25,11 @@ urlpatterns = [
         name='settings'),
 
     url(
+        r'^stadt/settings/gestalt/delete/$',
+        views.Delete.as_view(),
+        name='delete-gestalt'),
+
+    url(
         r'^stadt/settings/images/$',
         views.UpdateImages.as_view(),
         name='image-settings'),
