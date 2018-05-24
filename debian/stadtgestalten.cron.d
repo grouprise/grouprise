@@ -15,4 +15,4 @@
 9,29,49 * * * * root    cd /tmp && chronic sh -c "stadtctl retry_deferred 2>&1 | tee -a /var/log/stadtgestalten/mailer-stadtgestalten.log"
 
 # update search index
-*/5 * * * * root        chronic stadtctl update_index
+*/5 * * * * root        chronic stadtctl update_index --remove

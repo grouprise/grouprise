@@ -36,7 +36,8 @@ class Contribution(core.models.Model):
     author = models.ForeignKey(
             'gestalten.Gestalt', related_name='contributions', on_delete=models.PROTECT)
     attached_to = models.ForeignKey(
-            'Contribution', null=True, related_name='attachments', on_delete=models.SET_NULL)
+            'Contribution', null=True, related_name='attachments', on_delete=models.SET_NULL,
+            blank=True)
     deleted = models.DateTimeField(null=True, blank=True)
     in_reply_to = models.ForeignKey(
             'Contribution', null=True, blank=True, related_name='replies',

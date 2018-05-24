@@ -1,4 +1,4 @@
-{{ text }}
+{{ text|striptags }}
 
 -- 
 Nachricht online lesen und beantworten:

@@ -133,6 +133,7 @@ def process_incoming_message(sender, message, **args):
             else:
                 process_initial(address)
 
+    # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
     delivered_to = message.get_email_object()['Delivered-To']
     if not delivered_to:
         logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
@@ -150,7 +151,7 @@ def process_incoming_message(sender, message, **args):
                 logger.warning('Could not process receiver {} in message {}. {}'.format(
                     address, message.id, e))
                 django.core.mail.send_mail(
-                        'Re: {}'.format(message.subject),
+                        'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', ''),
                         'Konnte die Nachricht nicht verarbeiten. {}'.format(e),
                         from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[message.from_header],
