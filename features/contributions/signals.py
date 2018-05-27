@@ -223,18 +223,18 @@ class ContributionMailProcessor:
                     'Das Ziel für deine Nachricht ist ungültig. Ist die dazugehörige Unterhaltung '
                     'eventuell bereits zu alt? Nach ein paar Jahren verfallen die '
                     'Antwort-Adressen für alte Beiträge automatisch. Bitte verwende die '
-                    'Schaltfläche auf der Webseite um auf alte Beiträge zu antworten.')
+                    'Schaltfläche auf der Webseite, um auf alte Beiträge zu antworten.')
         sender = get_sender_gestalt(message.from_address)
         if auth_token.gestalt != sender:
             logger.warning('Rejected message <%s>: authentication mismatch', message.id)
             raise MailProcessingFailure(
-                    'Du darfst diese Benachrichtigung nicht unter dieser E-Mail-Adresse '
-                    'beantworten. Du hast folgende Möglichkeiten:\n'
+                    'Mit der E-Mail-Adresse <{}> ist es dir nicht erlaubt, diese Antwort '
+                    'einzusenden. Du hast nun folgende Möglichkeiten:\n'
                     '* Melde Dich auf der Website an und beantworte die Nachricht dort.\n'
                     '* Antworte unter der E-Mail-Adresse, an die die Benachrichtigung '
                     'gesendet wurde.\n'
-                    '* Füge die E-Mail-Adresse, unter der Du antworten möchtest, Deinem '
-                    'Benutzerkonto hinzu.')
+                    '* Füge zusätzliche E-Mail-Adressen, unter denen Du antworten möchtest, '
+                    'Deinem Benutzerkonto hinzu.'.format(message.from_address))
         if type(auth_token.target) == Content:
             container = auth_token.target
         else:
