@@ -21,9 +21,8 @@ from features.contributions.signals import (ContributionMailProcessor, MailProce
 logger = logging.getLogger(__name__)
 
 
-# TODO: the error mail target should be taken from the settings?
 # internal error mails are sent to the postmaster
-POSTMASTER_ADDRESS = 'postmaster@systemausfall.org'
+POSTMASTER_ADDRESS = settings.GROUPRISE_POSTMASTER_EMAIL
 
 
 class Command(django.core.management.base.BaseCommand):
