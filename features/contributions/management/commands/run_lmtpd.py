@@ -2,6 +2,7 @@ import asyncio
 import email.parser
 import email.policy
 import functools
+import logging
 import random
 import signal
 import smtplib
@@ -17,6 +18,8 @@ from django.conf import settings
 from features.contributions.signals import (ContributionMailProcessor, MailProcessingFailure,
                                             ParsedMailMessage)
 
+logger = logging.getLogger(__name__)
+
 
 # TODO: the error mail target should be taken from the settings?
 # internal error mails are sent to the postmaster
@@ -30,7 +33,10 @@ class Command(django.core.management.base.BaseCommand):
 
     def handle(self, host=None, port=None, **options):
         def message_writer(text, style=None):
-            self.stderr.write(style(text))
+            if style == self.style.ERROR:
+                logger.error(text)
+            else:
+                self.stderr.write(style(text))
         success_writer = functools.partial(message_writer, style=self.style.SUCCESS)
         error_writer = functools.partial(message_writer, style=self.style.ERROR)
         lmtp_daemon = ContributionLMTPD(success_writer, error_writer)
@@ -50,7 +56,7 @@ class ContributionLMTPD:
         else:
             self._success_writer = success_writer
         if error_writer is None:
-            self._error_writer = functools.partial(print, file=sys.stderr)
+            self._error_writer = functools.partial(logger.error)
         else:
             self._error_writer = error_writer
         processor = ContributionMailProcessor(settings.STADTGESTALTEN_BOT_EMAIL,
@@ -144,7 +150,7 @@ class AsyncLMTPClient:
             failed_recipients = tuple(failures.keys())
         except SMTPRecipientsRefused as exc:
             if not hide_error_messages:
-                print('Failed to submit message: {}'.format(exc), file=sys.stderr)
+                logger.error('Failed to submit message: {}'.format(exc))
             # all deliveries failed
             failed_recipients = recipients
         await self.smtp_client.quit()
