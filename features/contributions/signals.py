@@ -194,7 +194,7 @@ class ContributionMailProcessor:
 
     def is_valid_groupname(self, group_name):
         try:
-            groups.Group.objects.get(slug=group_name.lower())
+            groups.Group.objects.get(slug__iexact=group_name.lower())
             return True
         except groups.Group.DoesNotExist:
             return False
