@@ -15,8 +15,8 @@ from aiosmtplib.smtp import SMTP
 import django
 from django.conf import settings
 
-from features.contributions.signals import (ContributionMailProcessor, MailProcessingFailure,
-                                            ParsedMailMessage)
+from features.imports.signals import (
+        ContributionMailProcessor, MailProcessingFailure, ParsedMailMessage)
 
 logger = logging.getLogger(__name__)
 

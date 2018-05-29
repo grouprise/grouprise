@@ -12,13 +12,13 @@ from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
 from core import tests
 from features.associations import models as associations
-from features.contributions.management.commands.run_lmtpd import (
+from features.contributions import models
+from features.imports.management.commands.run_lmtpd import (
     ContributionLMTPD, POSTMASTER_ADDRESS)
-from features.contributions.signals import (
+from features.imports.signals import (
     ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST)
 from features.gestalten import tests as gestalten
 from features.memberships import test_mixins as memberships
-from . import models
 
 
 @contextlib.contextmanager
@@ -258,7 +258,7 @@ class ContentFormatting(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
 class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjectLMTPMixin,
                                  tests.Test):
 
-    def test_content_reply_by_email(self):
+    def test_content_reply_by_email_lmtp(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
             self.client.post(reverse('create-group-article', args=(self.group.slug,)),
                              {'title': 'Test', 'text': 'Test'})
@@ -273,7 +273,7 @@ class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjec
 
 class ContentReplyByEmailViaDjangoMailbox(memberships.AuthenticatedMemberMixin, tests.Test):
 
-    def test_content_reply_by_email(self):
+    def test_content_reply_by_email_mailbox(self):
         # create article
         self.client.post(
                 reverse('create-group-article', args=(self.group.slug,)),
@@ -317,7 +317,7 @@ class ConversationInitiateByEmailViaDjangoMailbox(memberships.MemberMixin, tests
 class ConversationReplyByEmailViaLMTP(gestalten.AuthenticatedMixin, gestalten.OtherGestaltMixin,
                                       MailInjectLMTPMixin, tests.Test):
 
-    def test_texts_reply_by_email(self):
+    def test_texts_reply_by_email_lmtp(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
             self.client.post(self.get_url('create-gestalt-conversation', self.other_gestalt.pk),
                              {'subject': 'Subject A', 'text': 'Text A'})
@@ -361,7 +361,7 @@ class ConversationReplyByEmailViaLMTP(gestalten.AuthenticatedMixin, gestalten.Ot
 class ConversationReplyByEmailViaDjangoMailbox(gestalten.AuthenticatedMixin,
                                                gestalten.OtherGestaltMixin, tests.Test):
 
-    def test_texts_reply_by_email(self):
+    def test_texts_reply_by_email_mailbox(self):
         # send message to other_gestalt via web interface
         self.client.post(
                 self.get_url('create-gestalt-conversation', self.other_gestalt.pk),

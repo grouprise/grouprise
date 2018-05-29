@@ -6,7 +6,7 @@ from typing import List
 import django
 from django.db import models
 import django.core.files
-from features.contributions.signals import ParsedMailAttachment
+from features.imports.signals import ParsedMailAttachment
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
