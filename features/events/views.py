@@ -128,7 +128,7 @@ class BaseCalendarFeed(ICalFeed):
         return item.content.first().title
 
     def item_description(self, item):
-        return item.content.first().subject
+        return item.content.first().versions.last().text
 
     def item_location(self, item):
         return item.content.first().place
