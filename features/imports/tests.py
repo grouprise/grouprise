@@ -114,11 +114,9 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         self.assertInvalidRecipient('foo.org')
         self.assertInvalidRecipient('foo@example.org')
         self.assertInvalidRecipient(self.group_address.split('@')[0] + 'example.org')
+        self.assertInvalidRecipient(settings.STADTGESTALTEN_BOT_EMAIL)
         self.assertValidRecipient(self.group_address)
         self.assertValidRecipient(self.group_address.swapcase())
-        # TODO: the code in ContributionMailProcessor._process_message currently allows the
-        #       bot address. Research, what this should do and enable or remove the test below.
-        # self.assertValidRecipient(settings.STADTGESTALTEN_BOT_EMAIL)
         self.assertValidRecipient(settings.DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
         self.assertInvalidRecipient(
             settings.DEFAULT_REPLY_TO_EMAIL.replace('+{', '-{').format(reply_key='foo'))

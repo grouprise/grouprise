@@ -68,13 +68,22 @@ def process_incoming_message(sender, message, **args):
     # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
     delivered_to = message.get_email_object()['Delivered-To']
     if not delivered_to:
+        # The "Delivered-To" header is missing, if the mail server delivers the mail to more than
+        # one recipient on the server. Otherwise this could cause a privacy breach for BCC
+        # recipients.
         logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
         return
     parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
-    processor = ContributionMailProcessor(settings.STADTGESTALTEN_BOT_EMAIL,
-                                          settings.DEFAULT_REPLY_TO_EMAIL,
+    processor = ContributionMailProcessor(settings.DEFAULT_REPLY_TO_EMAIL,
                                           settings.DEFAULT_FROM_EMAIL)
-    for address in [delivered_to]:
+    if delivered_to.lower() == settings.STADTGESTALTEN_BOT_EMAIL.lower():
+        # Mailbox-based delivery uses the bot mail address as a catch-all address for the existing
+        # groups. Thus we cannot trust the "Delivered-To" header, but we need to parse the "To"
+        # headers instead.
+        recipients = parsed_message.to_addresses
+    else:
+        recipients = [delivered_to]
+    for address in recipients:
         address = address.lstrip('<')
         address = address.rstrip('>')
         try:
@@ -173,8 +182,7 @@ class ContributionMailProcessor:
 
     PROCESSING_FAILURE_TEXT = 'Konnte die Nachricht nicht verarbeiten.'
 
-    def __init__(self, bot_address, default_reply_to_address, response_from_address):
-        self.bot_address = bot_address
+    def __init__(self, default_reply_to_address, response_from_address):
         self._reply_domain = default_reply_to_address.split('@')[1]
         self.auth_token_regex = re.compile(r'^{prefix}([^@]+){suffix}$'.format(
             prefix=re.escape(default_reply_to_address.split('{')[0]),
@@ -276,12 +284,7 @@ class ContributionMailProcessor:
     def _process_message(self, message, recipient):
         auth_token_text = self.parse_authentication_token_text(recipient)
         if auth_token_text is None:
-            # TODO: under which circumstances could this condition be true?
-            if recipient.lower() == self.bot_address.lower():
-                for to_address in message.to_addresses:
-                    self._process_initial_thread_contribution(message, to_address)
-            else:
-                self._process_initial_thread_contribution(message, recipient)
+            self._process_initial_thread_contribution(message, recipient)
         else:
             self._process_authenticated_reply(message, auth_token_text)
 

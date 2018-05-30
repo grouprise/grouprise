@@ -58,8 +58,7 @@ class ContributionLMTPD:
             self._error_writer = functools.partial(logger.error)
         else:
             self._error_writer = error_writer
-        processor = ContributionMailProcessor(settings.STADTGESTALTEN_BOT_EMAIL,
-                                              settings.DEFAULT_REPLY_TO_EMAIL,
+        processor = ContributionMailProcessor(settings.DEFAULT_REPLY_TO_EMAIL,
                                               settings.DEFAULT_FROM_EMAIL)
         self._handler = ContributionHandler(processor, self._success_writer, self._error_writer)
 
