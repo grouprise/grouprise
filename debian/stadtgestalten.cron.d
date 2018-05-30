@@ -1,5 +1,8 @@
-# process incoming mails (disabled by default because we use LMTP daemon since grouprise 2.3)
-# */3 * * * * root        chronic sh -c 'stadtctl getmail 2>&1 | grep -vE "^(INFO:|WARNING:django_mailbox.models:.*content-transfer-encoding)"'
+# process incoming mails
+# The LMTP daemon (since grouprise 2.3) is supposed to handle incoming mail in the future.
+# This requires changes of the SMTP server setup. We will start with single recipient groups, until
+# all traffic is handled by LMTP.
+*/3 * * * * root        chronic sh -c 'stadtctl getmail 2>&1 | grep -vE "^(INFO:|WARNING:django_mailbox.models:.*content-transfer-encoding)"'
 
 # calculate scores for groups and users
 23  * * * * root        chronic stadtctl update_scores
