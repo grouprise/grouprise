@@ -15,6 +15,13 @@
         <p>Ich möchte benachrichtigt werden, wenn die Gruppe <em>{{ view.group }}</em> neue Beiträge veröffentlicht.</p>
         <div>
             {% if form.subscriber %}
+                <div class="disclaimer content-block">
+                    <p>
+                    Deine E-Mail-Adresse wird dauerhaft gespeichert, um Dir Benachrichtigungen zu schicken.
+                    </p>
+                    <p>Um die E-Mail-Adresse später zu löschen, <a href="{% url 'account_signup' %}">leg ein Benutzerkonto unter der E-Mail-Adresse an</a> und lösche es anschließend oder <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns eine Nachricht</a>.
+                    </p>
+                </div>
                 {% load auth %}
                 {% login_or_field form.subscriber as help_text %}
                 {% include 'core/_field.html' with field=form.subscriber help_text=help_text %}
