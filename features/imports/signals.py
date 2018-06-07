@@ -6,7 +6,6 @@ import re
 import django.db.models.signals
 import django_mailbox.signals
 from django.conf import settings
-from django.db.models.functions import Lower
 from django.dispatch import receiver
 import html2text
 
@@ -17,7 +16,7 @@ from features.contributions import models
 from features.contributions.signals import post_create
 from features.conversations import models as conversations
 from features.files import models as files
-from features.gestalten import models as gestalten
+from features.gestalten.models import Gestalt
 from features.groups import models as groups
 
 logger = logging.getLogger(__name__)
@@ -32,18 +31,10 @@ class MailProcessingFailure(Exception):
 
 
 def get_sender_gestalt(from_address):
-
     try:
-        gestalt = gestalten.Gestalt.objects.annotate(email=Lower('user__email')).get(
-                email=from_address.lower())
-    except gestalten.Gestalt.DoesNotExist:
-        try:
-            gestalt = gestalten.Gestalt.objects.annotate(
-                    email=Lower('user__emailaddress__email')).get(
-                            email=from_address.lower())
-        except gestalten.Gestalt.DoesNotExist:
-            gestalt = None
-    return gestalt
+        return Gestalt.objects.get_by_email(from_address)
+    except Gestalt.DoesNotExist:
+        return None
 
 
 def is_autoresponse(email_obj):

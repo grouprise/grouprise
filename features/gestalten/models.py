@@ -13,11 +13,17 @@ from core import colors
 
 
 class GestaltQuerySet(models.QuerySet):
+    def get_by_email(self, email):
+        try:
+            return self.get(user__email__iexact=email)
+        except self.model.DoesNotExist:
+            return self.get(user__emailaddress__email__iexact=email)
+
     def get_or_create_by_email(self, email):
         try:
             created = False
-            user = auth.get_user_model().objects.get(emailaddress__email=email)
-        except auth.get_user_model().DoesNotExist:
+            user = self.get_by_email(email).user
+        except self.model.DoesNotExist:
             user, created = auth.get_user_model().objects.get_or_create(
                     email=email)
         if created:
