@@ -61,6 +61,13 @@ class GroupUnsubscribe(PermissionMixin, DeleteView):
     model = Subscription
     template_name = 'subscriptions/delete.html'
 
+    def delete(self, *args, **kwargs):
+        success(
+                self.request,
+                'Du erhältst zukünftig keine Benachrichtigungen mehr für Beiträge dieser '
+                'Gruppe.')
+        return super().delete(*args, **kwargs)
+
     def get_object(self):
         return self.gestalt.subscriptions.filter(
                 subscribed_to_type=self.group.content_type, subscribed_to_id=self.group.id)
@@ -75,13 +82,6 @@ class GroupUnsubscribe(PermissionMixin, DeleteView):
 
 
 class GroupUnsubscribeConfirm(GroupUnsubscribe):
-    def delete(self, *args, **kwargs):
-        success(
-                self.request,
-                'Dein Abonnement wurde gekündigt. Du erhältst zukünftig keine '
-                'Benachrichtigungen mehr für diese Gruppe.')
-        return super().delete(*args, **kwargs)
-
     def get_permission_object(self):
         token = get_object_or_404(
                 PermissionToken, feature_key='group-unsubscribe',
