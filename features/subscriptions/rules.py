@@ -11,3 +11,5 @@ def is_subscribed(user, model):
 add_perm('subscriptions.create', ~is_authenticated | (is_authenticated & ~is_subscribed))
 
 add_perm('subscriptions.delete', is_authenticated & is_subscribed)
+
+add_perm('subscriptions.delete_request', ~is_authenticated)

@@ -3,7 +3,7 @@ from django.contrib.messages import info
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import CreateView, DeleteView
+from django.views.generic import CreateView, DeleteView, FormView
 
 from core.views import PermissionMixin
 from features.groups.models import Group
@@ -61,6 +61,24 @@ class GroupUnsubscribe(PermissionMixin, DeleteView):
     def get_object(self):
         return self.request.user.gestalt.subscriptions.filter(
                 subscribed_to_type=self.group.content_type, subscribed_to_id=self.group.id)
+
+    def get_permission_object(self):
+        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        return self.group
+
+    def get_success_url(self):
+        return self.group.get_absolute_url()
+
+
+class GroupUnsubscribeRequest(PermissionMixin, FormView):
+    permission_required = 'subscriptions.delete_request'
+    form_class = forms.UnsubscribeRequest
+    template_name = 'subscriptions/delete_request.html'
+
+    def form_valid(self, form):
+
+        info(self.request, 'Es wurde eine E-Mail an die angebene Adresse versendet.')
+        return super().form_valid(form)
 
     def get_permission_object(self):
         self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))

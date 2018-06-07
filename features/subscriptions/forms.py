@@ -15,3 +15,7 @@ class Subscribe(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if hasattr(self.instance, 'subscriber'):
             del self.fields['subscriber']
+
+
+class UnsubscribeRequest(forms.Form):
+    subscriber = forms.EmailField(label='E-Mail-Adresse')

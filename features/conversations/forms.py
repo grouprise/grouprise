@@ -51,7 +51,7 @@ class Create(forms.ModelForm):
         self.contribution.contribution = contributions_models.Text.objects.create(
                 text=self.cleaned_data['text'])
         if 'author' in self.cleaned_data:
-            self.contribution.author = gestalten.Gestalt.get_or_create(
+            self.contribution.author = gestalten.Gestalt.objects.get_or_create_by_email(
                     self.cleaned_data['author'])
         self.contribution.save()
 
