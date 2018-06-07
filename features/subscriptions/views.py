@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from django.contrib.messages import info
+from django.contrib.messages import success, info
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -59,12 +59,14 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
 class GroupUnsubscribe(PermissionMixin, DeleteView):
     permission_required = 'subscriptions.delete'
     model = Subscription
+    template_name = 'subscriptions/delete.html'
 
     def get_object(self):
-        return self.request.user.gestalt.subscriptions.filter(
+        return self.gestalt.subscriptions.filter(
                 subscribed_to_type=self.group.content_type, subscribed_to_id=self.group.id)
 
     def get_permission_object(self):
+        self.gestalt = self.request.user.gestalt if self.request.user.is_authenticated else None
         self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
         return self.group
 
@@ -72,8 +74,26 @@ class GroupUnsubscribe(PermissionMixin, DeleteView):
         return self.group.get_absolute_url()
 
 
-class GroupUnsubscribeConfirm(PermissionMixin, DeleteView):
-    pass
+class GroupUnsubscribeConfirm(GroupUnsubscribe):
+    def delete(self, *args, **kwargs):
+        success(
+                self.request,
+                'Dein Abonnement wurde gekündigt. Du erhältst zukünftig keine '
+                'Benachrichtigungen mehr für diese Gruppe.')
+        return super().delete(*args, **kwargs)
+
+    def get_permission_object(self):
+        token = get_object_or_404(
+                PermissionToken, feature_key='group-unsubscribe',
+                secret_key=self.kwargs.get('secret_key'))
+        self.gestalt = token.gestalt
+        self.group = token.target
+        return self.group
+
+    def has_permission(self):
+        obj = self.get_permission_object()
+        perms = self.get_permission_required()
+        return self.gestalt.user.has_perms(perms, obj)
 
 
 class GroupUnsubscribeRequest(PermissionMixin, FormView):
