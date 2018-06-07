@@ -6,10 +6,11 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DeleteView, FormView
 
 from core.views import PermissionMixin
+from features.gestalten.models import Gestalt
 from features.groups.models import Group
 from features.subscriptions.models import Subscription
 from features.subscriptions.rules import is_subscribed
-from . import forms
+from . import forms, notifications
 
 
 class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
@@ -76,7 +77,12 @@ class GroupUnsubscribeRequest(PermissionMixin, FormView):
     template_name = 'subscriptions/delete_request.html'
 
     def form_valid(self, form):
-
+        email = form.cleaned_data['subscriber']
+        try:
+            subscriber = self.group.subscribers.get_by_email(email)
+            notifications.Subscriber(self.group).send(subscriber)
+        except Gestalt.DoesNotExist:
+            notifications.NoSubscriber(self.group).send(email)
         info(self.request, 'Es wurde eine E-Mail an die angebene Adresse versendet.')
         return super().form_valid(form)
 

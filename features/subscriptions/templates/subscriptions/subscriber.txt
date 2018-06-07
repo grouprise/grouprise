@@ -1,0 +1,4 @@
+Jemand hat Deine E-Mail-Adresse auf {{ site.name }} angegeben.
+
+Wenn Du Dein Abonnement der Gruppe {{ object }} kündigen möchtest, bestätige dies bitte, indem Du dem folgenden Verweis folgst:
+...
