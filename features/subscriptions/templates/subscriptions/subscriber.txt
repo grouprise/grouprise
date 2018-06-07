@@ -1,4 +1,4 @@
-Jemand hat Deine E-Mail-Adresse auf {{ site.name }} angegeben.
+Jemand hat Deine E-Mail-Adresse auf {{ site.name }} angegeben. Wenn Du es nicht warst, kannst Du diese Nachricht gefahrlos ignorieren.
 
 Wenn Du Dein Abonnement der Gruppe {{ object }} kündigen möchtest, bestätige dies bitte, indem Du dem folgenden Verweis folgst:
-...
+{% url 'group-unsubscribe-confirm' token.secret_key as url %}{{ url|full_url }}

@@ -27,3 +27,7 @@ class NoSubscriber(Notification):
 
 class Subscriber(Notification):
     subject = 'Abonnement'
+
+    def get_context_data(self, **kwargs):
+        kwargs['token'] = self.token
+        return super().get_context_data(**kwargs)

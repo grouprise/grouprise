@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DeleteView, FormView
 
+from core.models import PermissionToken
 from core.views import PermissionMixin
 from features.gestalten.models import Gestalt
 from features.groups.models import Group
@@ -71,6 +72,10 @@ class GroupUnsubscribe(PermissionMixin, DeleteView):
         return self.group.get_absolute_url()
 
 
+class GroupUnsubscribeConfirm(PermissionMixin, DeleteView):
+    pass
+
+
 class GroupUnsubscribeRequest(PermissionMixin, FormView):
     permission_required = 'subscriptions.delete_request'
     form_class = forms.UnsubscribeRequest
@@ -80,7 +85,10 @@ class GroupUnsubscribeRequest(PermissionMixin, FormView):
         email = form.cleaned_data['subscriber']
         try:
             subscriber = self.group.subscribers.get_by_email(email)
-            notifications.Subscriber(self.group).send(subscriber)
+            notification = notifications.Subscriber(self.group)
+            notification.token = PermissionToken.objects.create(
+                    gestalt=subscriber, target=self.group, feature_key='group-unsubscribe')
+            notification.send(subscriber)
         except Gestalt.DoesNotExist:
             notifications.NoSubscriber(self.group).send(email)
         info(self.request, 'Es wurde eine E-Mail an die angebene Adresse versendet.')

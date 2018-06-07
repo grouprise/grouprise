@@ -18,4 +18,9 @@ urlpatterns = [
         views.GroupUnsubscribeRequest.as_view(),
         name='group-unsubscribe-request',
     ),
+    url(
+        r'^stadt/unsubscribe/confirm/(?P<secret_key>[a-z0-9]+)/$',
+        views.GroupUnsubscribeConfirm.as_view(),
+        name='group-unsubscribe-confirm',
+    ),
 ]
