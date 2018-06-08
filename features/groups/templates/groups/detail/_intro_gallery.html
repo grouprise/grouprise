@@ -16,7 +16,7 @@
             <i class="fa fa-5x fa-image"></i><br />
             <p>Diese Gruppe war bisher nicht motiviert eine Introgalerie anzulegen.</p>
             {% load rules %}
-            {% has_perm 'memberships.join_group' user group as can_join %}
+            {% has_perm 'memberships.join' user group as can_join %}
             {% if can_join %}
                 <p>Wenn Du in der Gruppe aktiv bist, kannst Du ihr
                 <a href="{% url 'join' group.pk %}">beitreten</a> und ein Bild 

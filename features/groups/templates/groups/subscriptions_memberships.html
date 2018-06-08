@@ -43,7 +43,7 @@
         <h2>Mitgliedschaft</h2>
         {% load memberships rules %}
         {% has_perm 'memberships.try_to_join' user group as can_join %}
-        {% has_perm 'memberships.delete_membership' user user.gestalt|membership:group as can_resign %}
+        {% has_perm 'memberships.delete' user group as can_resign %}
         {% if can_resign %}
             <a href="{% url 'resign' group.pk %}" class="btn btn-default btn-addon-ok">
                 <i class="sg sg-group"></i> Beigetreten
