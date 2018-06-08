@@ -82,12 +82,16 @@ class GroupUnsubscribe(PermissionMixin, DeleteView):
 
 
 class GroupUnsubscribeConfirm(GroupUnsubscribe):
+    def delete(self, *args, **kwargs):
+        self.token.delete()
+        return super().delete(*args, **kwargs)
+
     def get_permission_object(self):
-        token = get_object_or_404(
+        self.token = get_object_or_404(
                 PermissionToken, feature_key='group-unsubscribe',
                 secret_key=self.kwargs.get('secret_key'))
-        self.gestalt = token.gestalt
-        self.group = token.target
+        self.gestalt = self.token.gestalt
+        self.group = self.token.target
         return self.group
 
     def has_permission(self):

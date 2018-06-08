@@ -2,8 +2,9 @@ import django
 from django import db, http, shortcuts, urls
 from django.contrib import messages
 from django.contrib.messages import info, success
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
-from django.views.generic import DeleteView, FormView
+from django.views.generic import CreateView, DeleteView, FormView
 
 import core
 from core import fields, views
@@ -78,24 +79,75 @@ class MembershipMixin(groups_views.Mixin):
         return self.get_group()
 
 
-class Join(MembershipMixin, views.Create):
-    action = 'Beitreten *'
-    data_field_classes = (
-            fields.current_gestalt('created_by'),
-            fields.related_object('group'),
-            fields.current_gestalt('member'))
-    description = (
-            'Der Gruppe <em>{{ group }}</em> auf {{ site.name }} beitreten *')
-    permission_required = 'memberships.join_group'
+class Join(PermissionMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'memberships.join'
+    model = models.Membership
+    fields = []
     template_name = 'memberships/join.html'
+    success_message = 'Du bist nun Mitglied der Gruppe.'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.model(
+                created_by=self.gestalt, group=self.group, member=self.gestalt)
+        return kwargs
+
+    def get_permission_object(self):
+        self.gestalt = self.request.user.gestalt if self.request.user.is_authenticated else None
+        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        return self.group
+
+    def get_success_url(self):
+        return self.group.get_absolute_url()
 
     def handle_no_permission(self):
-        if self.request.user.is_authenticated and self.related_object.members.filter(
-                pk=self.request.user.gestalt.pk).exists():
+        if self.gestalt and self.gestalt.user.is_authenticated and self.group.members.filter(
+                pk=self.gestalt.pk).exists():
             django.contrib.messages.info(self.request, 'Du bist bereits Mitglied der Gruppe.')
-            return django.http.HttpResponseRedirect(self.related_object.get_absolute_url())
+            return django.http.HttpResponseRedirect(self.group.get_absolute_url())
         else:
             return super().handle_no_permission()
+
+
+class JoinConfirm(Join):
+    def form_valid(self, form):
+        self.token.delete()
+        return super().form_valid(form)
+
+    def get_permission_object(self):
+        self.token = get_object_or_404(
+                PermissionToken, feature_key='group-join',
+                secret_key=self.kwargs.get('secret_key'))
+        self.gestalt = self.token.gestalt
+        self.group = self.token.target
+        return self.group
+
+    def has_permission(self):
+        obj = self.get_permission_object()
+        perms = self.get_permission_required()
+        return self.gestalt.user.has_perms(perms, obj)
+
+
+class JoinRequest(PermissionMixin, FormView):
+    permission_required = 'memberships.join_request'
+    form_class = forms.Request
+    template_name = 'memberships/join_request.html'
+
+    def form_valid(self, form):
+        gestalt = Gestalt.objects.get_or_create_by_email(form.cleaned_data['member'])
+        notification = notifications.Join(self.group)
+        notification.token = PermissionToken.objects.create(
+                gestalt=gestalt, target=self.group, feature_key='group-join')
+        notification.send(gestalt)
+        info(self.request, 'Es wurde eine E-Mail an die angebene Adresse versendet.')
+        return super().form_valid(form)
+
+    def get_permission_object(self):
+        self.group = get_object_or_404(Group, slug=self.kwargs.get('group_slug'))
+        return self.group
+
+    def get_success_url(self):
+        return self.group.get_absolute_url()
 
 
 class Members(gestalten_views.List):
@@ -153,12 +205,16 @@ class Resign(PermissionMixin, DeleteView):
 
 
 class ResignConfirm(Resign):
+    def delete(self, *args, **kwargs):
+        self.token.delete()
+        return super().delete(*args, **kwargs)
+
     def get_permission_object(self):
-        token = get_object_or_404(
+        self.token = get_object_or_404(
                 PermissionToken, feature_key='group-resign',
                 secret_key=self.kwargs.get('secret_key'))
-        self.gestalt = token.gestalt
-        self.group = token.target
+        self.gestalt = self.token.gestalt
+        self.group = self.token.target
         return self.group
 
     def has_permission(self):
@@ -169,14 +225,14 @@ class ResignConfirm(Resign):
 
 class ResignRequest(PermissionMixin, FormView):
     permission_required = 'memberships.delete_request'
-    form_class = forms.ResignRequest
+    form_class = forms.Request
     template_name = 'memberships/delete_request.html'
 
     def form_valid(self, form):
         email = form.cleaned_data['member']
         try:
             member = self.group.members.get_by_email(email)
-            notification = notifications.Member(self.group)
+            notification = notifications.Resign(self.group)
             notification.token = PermissionToken.objects.create(
                     gestalt=member, target=self.group, feature_key='group-resign')
             notification.send(member)

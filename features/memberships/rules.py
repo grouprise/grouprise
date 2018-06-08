@@ -8,11 +8,9 @@ from features.memberships.predicates import is_member_of
 from . import predicates as memberships
 
 
-rules.add_perm(
-        'memberships.join_group',
-        rules.is_authenticated
-        & ~ memberships.is_member_of
-        & ~ groups.is_closed)
+add_perm('memberships.join', is_authenticated & ~is_closed & ~is_member_of)
+
+add_perm('memberships.join_request', ~is_authenticated & ~is_closed)
 
 add_perm(
         'memberships.try_to_join',

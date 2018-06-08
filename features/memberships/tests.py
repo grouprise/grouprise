@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.test import TestCase
 
 from core.models import PermissionToken
-from features.gestalten.models import Gestalt
 from features.memberships.test_mixins import MemberMixin
 from . import models
 
@@ -12,9 +11,33 @@ TEST_EMAIL = 'test.membership@test.local'
 
 class Membership(MemberMixin, TestCase):
     def test_memberships(self):
-        # force membership of TEST_EMAIL
-        gestalt = Gestalt.objects.get_or_create_by_email(TEST_EMAIL)
-        self.group.memberships.create(member=gestalt, created_by=gestalt)
+        # join form renders ok
+        join_request_url = reverse('join-request', args=(self.group.slug,))
+        r = self.client.get(join_request_url)
+        self.assertEquals(r.status_code, 200)
+
+        # join succeeds with email address
+        r = self.client.post(join_request_url, {'member': TEST_EMAIL})
+        self.assertRedirects(r, self.group.get_absolute_url())
+
+        # email with link to join confirmation is sent
+        token = PermissionToken.objects.get(feature_key='group-join')
+        join_confirm_url = reverse('join-confirm', args=(token.secret_key,))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertTrue(join_confirm_url in mail.outbox[0].body)
+
+        # join confirmation page renders ok
+        r = self.client.get(join_confirm_url)
+        self.assertEquals(r.status_code, 200)
+
+        # join confirmation creates membership
+        num_memberships = models.Membership.objects.count()
+        r = self.client.post(join_confirm_url)
+        self.assertRedirects(r, self.group.get_absolute_url())
+        self.assertEqual(models.Membership.objects.count(), num_memberships+1)
+
+        # cleanup
+        mail.outbox = []
 
         # member gets notified on group content
         self.client.force_login(self.gestalt.user)

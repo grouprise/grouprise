@@ -20,5 +20,5 @@ class Apply(forms.ModelForm):
         return application
 
 
-class ResignRequest(forms.Form):
+class Request(forms.Form):
     member = forms.EmailField(label='E-Mail-Adresse')

@@ -7,7 +7,6 @@ urlpatterns = [
     urls.url(r'^stadt/api/', urls.include('core.api_urls')),
 
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
-    urls.url(r'^stadt/', urls.include('features.memberships.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
 
     urls.url(r'^', urls.include('core.urls')),
@@ -19,6 +18,7 @@ urlpatterns = [
     urls.url(r'^', urls.include('features.gestalten.urls')),
     urls.url(r'^', urls.include('features.gestalten.auth.urls')),
     urls.url(r'^', urls.include('features.groups.urls')),
+    urls.url(r'^', urls.include('features.memberships.urls')),
     urls.url(r'^', urls.include('features.polls.urls')),
     urls.url(r'^', urls.include('features.stadt.urls')),
     urls.url(r'^', urls.include('features.subscriptions.urls')),
