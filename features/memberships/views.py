@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import DeleteView, FormView
 
 import core
-from core import fields, views, views as utils_views
+from core import fields, views
 from core.models import PermissionToken
 from core.views import PermissionMixin
 from features.associations import models as associations

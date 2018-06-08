@@ -4,7 +4,7 @@ from rules import add_perm, is_authenticated
 
 from features.groups import rules as groups
 from features.groups.rules import is_closed
-from features.memberships.predicates import is_member, is_member_of
+from features.memberships.predicates import is_member_of
 from . import predicates as memberships
 
 
