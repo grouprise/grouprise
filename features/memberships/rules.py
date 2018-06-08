@@ -4,7 +4,7 @@ from rules import add_perm, is_authenticated
 
 from features.groups import rules as groups
 from features.groups.rules import is_closed
-from features.memberships.predicates import is_member_of
+from features.memberships.predicates import is_member, is_member_of
 from . import predicates as memberships
 
 
@@ -24,10 +24,9 @@ rules.add_perm(
         & groups.is_closed
         & memberships.is_member_of)
 
-rules.add_perm(
-        'memberships.delete_membership',
-        rules.is_authenticated
-        & memberships.is_member)
+add_perm('memberships.delete', is_authenticated & is_member_of)
+
+add_perm('memberships.delete_request', ~is_authenticated)
 
 rules.add_perm(
         'memberships.view_list',

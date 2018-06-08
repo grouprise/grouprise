@@ -1,0 +1,3 @@
+Jemand hat Deine E-Mail-Adresse auf {{ site.name }} angegeben.
+
+Für Deine E-Mail-Adresse existiert keine Mitgliedschaft in der Gruppe '{{ object }}'.
