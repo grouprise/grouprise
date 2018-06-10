@@ -1,29 +1,42 @@
-.sg {
-    .fa();
+.sg-xl {
+    font-size: 1.5rem;
 }
 
-.sg-2x {
-    .fa-2x();
+.sg-2x,
+.sg-xxl {
+    font-size: 2rem;
 }
 
-.sg-fw {
-    .fa-fw();
+.sg-3x {
+    font-size: 3rem;
+}
+
+.sg-4x {
+    font-size: 4rem;
+}
+
+.sg-5x {
+    font-size: 5rem;
 }
 
 .sg-active {
-    color: @color-primary;
+    color: @color-primary !important;
 }
 
-.sg-icon(@selector, @font-awesome-name) {
-    .sg-@{selector}::after {
-        content: @font-awesome-name;
+.sg-icon(@selector, @font-awesome-var, @position: after, @extensions: false) {
+    .sg-@{selector} when (@extensions) {
+        @extensions();
+    }
+
+    .sg-@{selector}:@{position} {
+        content: @font-awesome-var;
     }
 }
 
 .sg-icon(camera, @fa-var-camera);
 .sg-icon(add, @fa-var-plus);
 .sg-icon(address, @fa-var-map-marker);
-.sg-icon(info, @fa-var-info-circle);
+.sg-icon(info, @fa-var-info-circle, before);
 .sg-icon(home, @fa-var-home);
 .sg-icon(author, @fa-var-user);
 .sg-icon(group, @fa-var-users);
@@ -32,17 +45,6 @@
 .sg-icon(closed, @fa-var-user-secret);
 .sg-icon(comments, @fa-var-comments-o);
 .sg-icon(conversations, @fa-var-comments-o);
-.sg-icon(article, @fa-var-file-text-o);
-.sg-icon(content-type-article, @fa-var-file-text-o);
-.sg-icon(event, @fa-var-calendar-o);
-.sg-icon(content-type-event, @fa-var-calendar-o);
-.sg-icon(gallery, @fa-var-picture-o);
-.sg-icon(content-type-gallery, @fa-var-picture-o);
-.sg-icon(conversations, @fa-var-comments-o);
-.sg-icon(gestalt, @fa-var-user);
-.sg-icon(content-type-gestalt, @fa-var-user);
-.sg-icon(poll, @fa-var-thumbs-o-up);
-.sg-icon(content-type-poll, @fa-var-thumbs-o-up);
 .sg-icon(edit, @fa-var-pencil);
 .sg-icon(pen, @fa-var-pencil);
 .sg-icon(foundation, @fa-var-flag);
@@ -82,10 +84,66 @@
 .sg-icon(time, @fa-var-clock-o);
 .sg-icon(copy, @fa-var-clipboard);
 .sg-icon(download, @fa-var-download);
-.sg-icon(preview, @fa-var-eye);
 .sg-icon(remove, @fa-var-trash-o);
 .sg-icon(attachment, @fa-var-paperclip);
 .sg-icon(winner, @fa-var-star);
 .sg-icon(tools, @fa-var-puzzle-piece);
 .sg-icon(search, @fa-var-search);
 .sg-icon(password, @fa-var-key);
+.sg-icon(privacy-public, @fa-var-globe);
+.sg-icon(privacy-private, @fa-var-lock);
+.sg-icon(claim, @fa-var-bullhorn);
+.sg-icon(no-results, @fa-var-meh-o);
+.sg-icon(facebook, @fa-var-facebook);
+.sg-icon(image, @fa-var-image);
+
+// utility icons
+.sg-icon(increase, @fa-var-plus);
+.sg-icon(decrease, @fa-var-minus);
+.sg-icon(order-up, @fa-var-chevron-up);
+.sg-icon(order-down, @fa-var-chevron-down);
+.sg-icon(sortorder-publication, @fa-var-list-ol);
+.sg-icon(sortorder-upcoming, @fa-var-calendar-o);
+
+// editor icons
+.sg-icon(editor-bold, @fa-var-bold);
+.sg-icon(editor-italic, @fa-var-italic);
+.sg-icon(editor-undo, @fa-var-undo);
+.sg-icon(editor-redo, @fa-var-repeat);
+.sg-icon(editor-quote, @fa-var-quote-left);
+.sg-icon(editor-ul, @fa-var-list-ul);
+.sg-icon(editor-ol, @fa-var-list-ol);
+.sg-icon(editor-h1, @fa-var-header, before);
+.sg-icon(editor-h2, @fa-var-header, before);
+.sg-icon(editor-link, @fa-var-link);
+.sg-icon(editor-image, @fa-var-image);
+.sg-icon(editor-preview, @fa-var-eye, after);
+.sg.active { &:extend(.sg-active); } // editor icon states
+
+// poll icons
+.sg-icon(poll-info, @fa-var-lightbulb-o);
+.sg-icon(poll-favorite, @fa-var-heart);
+.sg-icon(poll-vote-yes, @fa-var-thumbs-up);
+.sg-icon(poll-vote-maybe, @fa-var-question);
+.sg-icon(poll-vote-no, @fa-var-thumbs-down);
+.sg-icon(poll-votetype-simple, @fa-var-thumbs-up);
+.sg-icon(poll-votetype-condorcet, @fa-var-commenting-o);
+
+// content type icons
+.sg-icon(content-type-article, @fa-var-file-text-o);
+.sg-icon(content-type-event, @fa-var-calendar-o);
+.sg-icon(content-type-gallery, @fa-var-picture-o);
+.sg-icon(content-type-gestalt, @fa-var-user);
+.sg-icon(content-type-poll, @fa-var-thumbs-o-up);
+.sg-icon(article, @fa-var-file-text-o);
+.sg-icon(event, @fa-var-calendar-o);
+.sg-icon(gallery, @fa-var-picture-o);
+.sg-icon(conversations, @fa-var-comments-o);
+.sg-icon(gestalt, @fa-var-user);
+.sg-icon(poll, @fa-var-thumbs-o-up);
+
+// intro icons
+.sg-icon(intro-group, @fa-var-users);
+.sg-icon(intro-local, @fa-var-anchor);
+.sg-icon(intro-privacy, @fa-var-heart);
+.sg-icon(intro-participate, @fa-var-road);

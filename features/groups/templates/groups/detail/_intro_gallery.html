@@ -13,7 +13,7 @@
         </div>
     {% else %}
         <div class="disclaimer">
-            <i class="fa fa-5x fa-image"></i><br />
+            <i class="sg sg-5x sg-image"></i><br />
             <p>Diese Gruppe war bisher nicht motiviert eine Introgalerie anzulegen.</p>
             {% load rules %}
             {% has_perm 'memberships.join_group' user group as can_join %}
@@ -31,11 +31,11 @@
     <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
         {% if intro_gallery %}
             <a class="btn btn-backdrop btn-ts" href="{{ intro_gallery.get_absolute_url }}" title="Introgalerie anzeigen">
-                <i class="fa fa-2x fa-camera"></i>
+                <i class="sg sg-2x sg-camera"></i>
             </a>
         {% else %}
         <a class="btn btn-backdrop btn-ts" href="{% url 'create-group-gallery' group.slug %}?pinned=1&amp;public=1&amp;text=Introgalerie%20der%20Gruppe%20%40{{ group.slug|urlencode }}&amp;title={{ group|urlencode }}" title="Introgalerie anlegen">
-                <i class="fa fa-2x fa-camera"></i>
+                <i class="sg sg-2x sg-camera"></i>
             </a>
         {% endif %}
     </div>

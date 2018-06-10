@@ -71,14 +71,14 @@
           {
             value: 'simple',
             name: 'Meiste Stimmen',
-            icon: 'fa-thumbs-up',
+            icon: 'poll-votetype-simple',
             description: `Es wird mit Ja, Nein und Vielleicht abgestimmt. Der Vorschlag mit
             den meisten Ja-Stimmen gewinnt. Super für Termine und klare Entscheidungen.`
           },
           {
             value: 'condorcet',
             name: 'Größte Gemeinsamkeit (Condorcet)',
-            icon: 'fa-commenting-o',
+            icon: 'poll-votetype-condorcet',
             description: `Antworten werden nach Vorliebe geordnet. Vorschläge mit dem größten
           Konsens gewinnen. Gut für Richtungsentscheidungen und Stimmungsbilder.`
           }

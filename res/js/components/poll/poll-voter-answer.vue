@@ -4,7 +4,7 @@
       <strong class="poll-answer-name">{{ option.title }}</strong>
       <figure class="poll-answer-voters" v-if="option.voters.length > 0">
         <figcaption>
-          <i class="fa fa-heart" title="Favorisiert von"></i>
+          <i class="sg sg-poll-favorite" title="Favorisiert von"></i>
         </figcaption>
         <ul class="avatars avatars-nowrap">
           <li v-for="voter in option.voters">

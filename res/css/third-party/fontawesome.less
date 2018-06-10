@@ -1,2 +1,15 @@
-// import fontawesome completely
-@import "../../../node_modules/font-awesome/less/font-awesome";
+@fa-base-path: "../../../node_modules/font-awesome/less";
+
+// includes all less variables and overwrite what’s necessary
+@import "@{fa-base-path}/variables.less";
+@fa-css-prefix: sg;
+
+// includes the font
+@import "@{fa-base-path}/path.less";
+// defines the base class
+@import "@{fa-base-path}/core.less";
+// defines the fixed-width class
+@import "@{fa-base-path}/fixed-width.less";
+// includes pulse and spin animations
+@import "@{fa-base-path}/animated.less";
+

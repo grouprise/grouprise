@@ -108,8 +108,8 @@
             border-color: @color-primary;
 
             &::after {
+                .sg();
                 @size: 1.75em;
-                .fa-icon();
                 content: @fa-var-check;
                 position: absolute;
                 right: (@size / -2);
@@ -353,7 +353,7 @@
 }
 
 .btn-more {
-    &:extend(.sg);
+    .sg();
 
     &::after {
         content: @fa-var-ellipsis-h;
@@ -365,7 +365,7 @@
     padding-right: 3.25em;
 
     &:after {
-        .fa-icon();
+        .sg();
         content: @fa-var-check;
         width: 2.5em;
         text-align: center;

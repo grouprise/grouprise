@@ -68,6 +68,18 @@
     .editor-container:not(.editor-container-active) & {
         transform: none !important;
     }
+
+    .sg-editor-hx::after {
+        font-family: @font-family-default;
+        font-size: .65em;
+        vertical-align: text-bottom;
+        position: relative;
+        top: 2px;
+    }
+
+    .sg-editor-h2::after {
+        content: '2';
+    }
 }
 
 .editor-images {

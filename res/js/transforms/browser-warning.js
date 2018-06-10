@@ -26,7 +26,7 @@ export default (el) => {
             <div class="disclaimer disclaimer-info">
                         
                 <button class="btn-text btn-text-light pull-right">
-                    <i class="fa fa-times"></i>
+                    <i class="sg sg-close"></i>
                 </button>
                 
                 <div class="container">
