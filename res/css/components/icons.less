@@ -23,8 +23,8 @@
     color: @color-primary !important;
 }
 
-.sg-icon(@selector, @font-awesome-var, @position: after, @extensions: false) {
-    .sg-@{selector} when (@extensions) {
+.sg-icon(@selector, @font-awesome-var, @position: after, @extensions: true) {
+    .sg-@{selector} when not (@extensions = true) {
         @extensions();
     }
 
