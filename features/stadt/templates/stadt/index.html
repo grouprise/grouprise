@@ -8,7 +8,7 @@
     {% if STADTGESTALTEN_SHOW_HEADER %}
         {% load dismissible %}
         {% dismissible 'stadtgestalten-intro' %}
-            <header class="content-header">
+            <header class="content-section-header">
                 {% include 'core/_heading.html' with title=about_group.name %}
                 {% dismiss 'stadtgestalten-intro' %}
             </header>
