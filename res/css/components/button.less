@@ -353,10 +353,10 @@
 }
 
 .btn-more {
-    .sg-dots();
+    &:extend(.sg);
 
-    &:after {
-        .sg();
+    &::after {
+        content: @fa-var-ellipsis-h;
         transform: translateY(1px);
     }
 }
