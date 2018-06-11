@@ -1,3 +1,5 @@
+# DEPRECATED CODE - DO NOT USE!
+
 from django import forms
 from features.gestalten import models as entities_models
 import functools
@@ -81,7 +83,7 @@ class EmailGestalt(Email):
     has_data = True
 
     def get_data(self, form_data):
-        return entities_models.Gestalt.get_or_create(form_data)
+        return entities_models.Gestalt.objects.get_or_create_by_email(form_data)
 
 
 email_gestalt = functools.partial(fieldclass_factory, EmailGestalt)
@@ -108,7 +110,7 @@ class CurrentGestalt(Field):
         if self.view.request.user.is_authenticated:
             return self.view.request.user.gestalt
         elif not self.null:
-            return entities_models.Gestalt.get_or_create(form_data)
+            return entities_models.Gestalt.objects.get_or_create_by_email(form_data)
         else:
             return None
 

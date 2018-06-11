@@ -12,6 +12,27 @@ import core
 from core import colors
 
 
+class GestaltQuerySet(models.QuerySet):
+    def get_by_email(self, email):
+        try:
+            return self.get(user__email__iexact=email)
+        except self.model.DoesNotExist:
+            return self.get(user__emailaddress__email__iexact=email)
+
+    def get_or_create_by_email(self, email):
+        try:
+            created = False
+            user = self.get_by_email(email).user
+        except self.model.DoesNotExist:
+            user, created = auth.get_user_model().objects.get_or_create(
+                    email=email)
+        if created:
+            allauth_adapter.get_adapter().populate_username(None, user)
+            user.set_unusable_password()
+            user.save()
+        return user.gestalt
+
+
 class Gestalt(core.models.Model):
     is_group = False
 
@@ -36,6 +57,8 @@ class Gestalt(core.models.Model):
             'associations.Association', content_type_field='entity_type',
             object_id_field='entity_id', related_query_name='gestalt')
 
+    objects = models.Manager.from_queryset(GestaltQuerySet)()
+
     @property
     def name(self):
         return ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
@@ -43,20 +66,6 @@ class Gestalt(core.models.Model):
     @property
     def slug(self):
         return self.user.username
-
-    @staticmethod
-    def get_or_create(email):
-        try:
-            created = False
-            user = auth.get_user_model().objects.get(emailaddress__email=email)
-        except auth.get_user_model().DoesNotExist:
-            user, created = auth.get_user_model().objects.get_or_create(
-                    email=email)
-        if created:
-            allauth_adapter.get_adapter().populate_username(None, user)
-            user.set_unusable_password()
-            user.save()
-        return user.gestalt
 
     def __str__(self):
         return self.name or self.slug

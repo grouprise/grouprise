@@ -1,3 +1,6 @@
+from core.notifications import Notification
+
+
 def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):
     def update_attributes(key, **kwargs):
         attributes = recipients_dict.setdefault(key, {})
@@ -13,3 +16,18 @@ def update_recipients(recipients_dict, association=None, subscriptions=[], contr
         update_attributes(contribution.author, contribution=contribution)
     if association and not association.entity.is_group:
         update_attributes(association.entity, association=association)
+
+
+class NoSubscriber(Notification):
+    subject = 'Abonnement'
+
+    def get_formatted_recipient(self):
+        return '<{}>'.format(self.recipient)
+
+
+class Subscriber(Notification):
+    subject = 'Abonnement'
+
+    def get_context_data(self, **kwargs):
+        kwargs['token'] = self.token
+        return super().get_context_data(**kwargs)

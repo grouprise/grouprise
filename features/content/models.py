@@ -14,7 +14,8 @@ class Content(core.models.Model):
 
     # FIXME: remove when django bug #28988 is fixed
     poll = models.OneToOneField(
-            'polls.WorkaroundPoll', null=True, blank=True, related_name='content')
+            'polls.WorkaroundPoll', null=True, blank=True, related_name='content',
+            on_delete=models.CASCADE)
 
     title = models.CharField(max_length=255)
     image = models.ForeignKey('images.Image', blank=True, null=True, on_delete=models.SET_NULL)

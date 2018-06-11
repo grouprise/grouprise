@@ -18,3 +18,7 @@ class Apply(forms.ModelForm):
         if commit:
             self.contribution.save()
         return application
+
+
+class Request(forms.Form):
+    member = forms.EmailField(label='E-Mail-Adresse')

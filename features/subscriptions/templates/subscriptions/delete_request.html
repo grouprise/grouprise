@@ -1,0 +1,18 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Abonnement - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'group' view.group %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb view.group 'Abonnement' %}{% endblock %}
+{% block heading_title_text %}Abonnenment{% endblock %}
+
+{% block sidebar %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.group %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% include 'core/_field.html' with field=form.subscriber %}
+        <button class="btn btn-primary">Abonnement kündigen</button>
+    </form>
+{% endblock %}

@@ -22,7 +22,7 @@ class Command(django.core.management.base.BaseCommand):
             creator = Gestalt.objects.get(user__username=options['creator_username'])
             emails = re.findall(EMAIL_RE, (open(options['emails_filename']).read()))
             for email in emails:
-                gestalt = Gestalt.get_or_create(email)
+                gestalt = Gestalt.objects.get_or_create_by_email(email)
                 try:
                     group.memberships.create(member=gestalt, created_by=creator)
                     num_new_members += 1

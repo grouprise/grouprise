@@ -1,0 +1,4 @@
+Jemand hat Deine E-Mail-Adresse auf {{ site.name }} angegeben. Wenn Du es nicht warst, kannst Du diese Nachricht gefahrlos ignorieren.
+
+Wenn Du Deine Mitgliedschaft in der Gruppe '{{ object }}' beenden möchtest, bestätige dies bitte, indem Du diesem Verweis folgst:
+{% url 'resign-confirm' token.secret_key as url %}{{ url|full_url }}

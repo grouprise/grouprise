@@ -1,0 +1,25 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Mitgliedschaft - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'group' view.group %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb view.group 'Mitgliedschaft' %}{% endblock %}
+{% block heading_title_text %}Mitgliedschaft{% endblock %}
+
+{% block sidebar %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.group %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="disclaimer content-block">
+            <p>
+            Deine E-Mail-Adresse wird dauerhaft gespeichert, um Dir Benachrichtigungen zu schicken.
+            </p>
+            <p>Um die E-Mail-Adresse später zu löschen, <a href="{% url 'account_signup' %}">leg ein Benutzerkonto unter der E-Mail-Adresse an</a> und lösche es anschließend oder <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns eine Nachricht</a>.
+            </p>
+        </div>
+        {% include 'core/_field.html' with field=form.member %}
+        <button class="btn btn-primary">Der Gruppe beitreten</button>
+    </form>
+{% endblock %}

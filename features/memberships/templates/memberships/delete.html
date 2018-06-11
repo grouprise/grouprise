@@ -12,8 +12,7 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <p>Möchtest Du der Gruppe <em>{{ view.group }}</em> auf {{ site.name }} beitreten? *</p>
-        <button class="btn btn-primary">Der Gruppe beitreten *</button>
+        <p>Möchtest Du Deine Mitgliedschaft in der Gruppe <em>{{ view.group }}</em> beenden?</p>
+        <button class="btn btn-primary">Mitgliedschaft beenden</button>
     </form>
-    <p><small>* Falls Du in der <em>echten Welt</em> noch nicht Mitglied in der Gruppe bist und es werden möchtest, sprich bitte die anderen Gruppenmitglieder an.</small></p>
 {% endblock %}
