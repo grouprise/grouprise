@@ -188,17 +188,27 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
                                 features.gestalten.tests.OtherGestaltMixin,
                                 tests.Test):
 
+    def get_calendar_export_url(self, is_public):
+        data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
+        if is_public:
+            url_regex = re.compile(r'>(?P<url>[^<]+/public.ics[^<]*)<')
+        else:
+            url_regex = re.compile(r'>(?P<url>[^<]+/private.ics[^<]+)<')
+        match = url_regex.search(data.content.decode('utf8'))
+        self.assertTrue(match)
+        calendar_export_url = match.groupdict()['url']
+        if is_public:
+            self.assertNotIn("token", calendar_export_url)
+        else:
+            self.assertIn("token", calendar_export_url)
+        return calendar_export_url
+
     def test_access_private_calendar(self):
         """ test the (in)accessibility of a private calendar of a group for a logged in member """
-        data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
-        private_url_regex = re.compile(r'>(?P<url>[^<]+/private.ics[^<]+)<')
-        match = private_url_regex.search(data.content.decode('utf8'))
-        self.assertTrue(match)
-        private_url = match.groupdict()['url']
-        self.assertTrue("token" in private_url)
+        private_url = self.get_calendar_export_url(False)
         # verify access via the private URL
         data = self.client.get(private_url)
-        self.assertTrue('BEGIN:VCALENDAR' in data.content.decode('utf8'))
+        self.assertIn('BEGIN:VCALENDAR', data.content.decode('utf8'))
         # verify rejected access with a wrong private URL
         data = self.client.get(private_url + 'foo')
         self.assertEqual(data.status_code, 401)
@@ -218,13 +228,9 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
 
     def test_access_public_calendar(self):
         """ test the accessibility of a public calendar of a group for a logged in member """
-        data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
-        public_url_regex = re.compile(r'>(?P<url>[^<]+/public.ics[^<]*)<')
-        match = public_url_regex.search(data.content.decode('utf8'))
-        self.assertTrue(match)
-        public_url = match.groupdict()['url']
+        public_url = self.get_calendar_export_url(True)
         data = self.client.get(public_url)
-        self.assertTrue('BEGIN:VCALENDAR' in data.content.decode('utf8'))
+        self.assertIn('BEGIN:VCALENDAR', data.content.decode('utf8'))
 
 
 class GroupCalendarExportNonMember(memberships.MemberMixin,
