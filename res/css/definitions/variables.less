@@ -60,3 +60,18 @@
 @input-border: @gray-light;
 @input-border-focus: @brand-primary;
 @input-border-width: @component-border-width;
+
+@ruleset-calendar-icon: {
+    position: relative;
+
+    &[data-day]::before {
+        content: attr(data-day);
+        font-family: var(--font-default);
+        font-size: .5em;
+        font-weight: bold;
+        position: absolute;
+        left: 50%;
+        top: 67%;
+        transform: translate(-50%, -50%);
+    }
+};

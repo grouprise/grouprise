@@ -3,8 +3,8 @@
 {% block menu %}{% menu 'event' association.entity %}{% endblock %}
 
 {% block content_type %}
-    <i class="sg sg-content-type-event"></i>
     <span>{% if not association.public %}Interne {% endif %}Veranstaltung</span>
+    <i class="sg sg-content-type-event" data-day="{{ association.container.time|date:'d' }}"></i>
 {% endblock %}
 
 {% block user_content_header %}
