@@ -2,7 +2,7 @@ BIN_NODE_SYSTEM = $(shell hash nodejs 2>/dev/null && echo nodejs || hash node 2>
 BIN_NODE ?= $(DIR_BUILD)/node/bin/node
 BIN_NODE_PKG ?= $(DIR_BUILD)/node/bin/npm
 
-NODE_VERSION = $(shell hash "$(BIN_NODE_SYSTEM)" && "$(BIN_NODE_SYSTEM)" -v || echo "v0.0.0")
+NODE_VERSION = $(shell hash "$(BIN_NODE_SYSTEM)" 2>/dev/null && "$(BIN_NODE_SYSTEM)" -v || echo "v0.0.0")
 NODE_VERSION_MIN = v8.9.1
 NODE_URL_X86 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x86.tar.xz
 NODE_URL_X64 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x64.tar.xz

@@ -25,5 +25,5 @@ requests                    # debian: python3-requests
 rules                       # debian (buster): python3-django-rules
 translitcodec               # NOT IN DEBIAN
 xapian-haystack             # debian (buster): python3-xapian-haystack
-# xapian-haystack also requires the xapian python bindings that you’ll find
+# xapian-haystack also requires the xapian python bindings that you'll find
 # as "python3-xapian" in Debian/Ubuntu and "python-xapian" in ArchLinux
