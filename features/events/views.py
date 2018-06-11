@@ -107,28 +107,63 @@ class BaseCalendarFeed(ICalFeed):
                 return authenticated_gestalt.user
         return None
 
+    # the following methods describe ICAL properties
+    # See http://django-ical.readthedocs.io/en/latest/usage.html#property-reference-and-extensions
+    def product_id(self):
+        return 'stadtgestalten'
+
+    def timezone(self):
+        return django.utils.timezone.get_default_timezone_name()
+
     def items(self):
         return self.get_queryset().order_by('-content__time')
+
+    def item_class(self, item):
+        if item.content.first().associations.first().public:
+            return 'PUBLIC'
+        else:
+            return 'PRIVATE'
 
     def item_title(self, item):
         return item.content.first().title
 
     def item_description(self, item):
-        return item.content.first().subject
+        return item.content.first().versions.last().text
 
     def item_location(self, item):
         return item.content.first().place
 
     def item_start_datetime(self, item):
-        return item.content.first().time
+        tz = django.utils.timezone.get_default_timezone()
+        return item.content.first().time.astimezone(tz)
+
+    def item_end_datetime(self, item):
+        tz = django.utils.timezone.get_default_timezone()
+        return item.content.first().until_time.astimezone(tz)
 
 
 class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
+
+    def title(self):
+        site_name = sites_models.Site.objects.get_current().name
+        group = self.get_group()
+        if group is None:
+            return None
+        else:
+            return '{} ({})'.format(group.name, site_name)
 
     def items(self):
         filter_dict = {'group': self.get_group(),
                        'public': (self.kwargs['domain'] == "public")}
         return super().items().filter(**filter_dict)
+
+    def item_guid(self, item):
+        domain = sites_models.Site.objects.get_current().domain
+        group = self.get_group()
+        if group is None:
+            return None
+        else:
+            return '{}.{}@{}'.format(group.name, item.id, domain)
 
     def get_calendar_owner(self):
         return self.get_group()

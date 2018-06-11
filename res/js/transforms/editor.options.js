@@ -45,84 +45,84 @@ export default (el, SimpleMDE) => ({
     {
       name: 'undo',
       action: SimpleMDE.undo,
-      className: 'fa fa-undo no-disable',
+      className: 'sg sg-editor-undo no-disable',
       title: 'Rückgängig'
     },
     {
       name: 'redo',
       action: SimpleMDE.redo,
-      className: 'fa fa-repeat no-disable',
+      className: 'sg sg-editor-redo no-disable',
       title: 'Wiederholen'
     },
     '|',
     {
       name: 'italic',
       action: SimpleMDE.toggleItalic,
-      className: 'fa fa-italic',
+      className: 'sg sg-editor-italic',
       title: 'Kursiv'
     },
     {
       name: 'bold',
       action: SimpleMDE.toggleBold,
-      className: 'fa fa-bold',
+      className: 'sg sg-editor-bold',
       title: 'Fett'
     },
     '|',
     {
       name: 'blockquote',
       action: SimpleMDE.toggleBlockquote,
-      className: 'fa fa-quote-left',
+      className: 'sg sg-editor-quote',
       title: 'Zitat'
 
     },
     {
       name: 'unordered-list',
       action: SimpleMDE.toggleUnorderedList,
-      className: 'fa fa-list-ul',
+      className: 'sg sg-editor-ul',
       title: 'Einfache Liste'
     },
     {
       name: 'ordered-list',
       action: SimpleMDE.toggleOrderedList,
-      className: 'fa fa-list-ol',
+      className: 'sg sg-editor-ol',
       title: 'Nummerierte Liste'
     },
     '|',
     {
       name: 'heading-1',
       action: SimpleMDE.toggleHeading1,
-      className: 'fa fa-header',
+      className: 'sg sg-editor-h1',
       title: 'Überschrift'
     },
     {
       name: 'heading-2',
       action: SimpleMDE.toggleHeading2,
-      className: 'fa fa-header fa-header-x fa-header-2',
+      className: 'sg sg-editor-h2 sg-editor-hx',
       title: 'Unterüberschrift'
     },
     '|',
     {
       name: 'link',
       action: SimpleMDE.drawLink,
-      className: 'fa fa-link',
+      className: 'sg sg-editor-link',
       title: 'Link/Verweis'
     },
     {
       name: 'image',
-      className: 'fa fa-picture-o',
+      className: 'sg sg-editor-image',
       title: 'Bild'
     },
     '|',
     {
       name: 'preview',
       action: SimpleMDE.togglePreview,
-      className: 'sg sg-preview no-disable',
+      className: 'sg sg-editor-preview no-disable',
       title: 'Vorschau'
     },
     {
       name: 'guide',
       action: '/stadt/markdown',
-      className: 'fa fa-question-circle',
+      className: 'sg sg-info',
       title: 'Möglichkeiten der Textauszeichnung'
     }
   ]

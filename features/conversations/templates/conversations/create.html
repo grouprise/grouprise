@@ -28,6 +28,13 @@
     <form method="post">
         {% csrf_token %}
         {% if form.author %}
+            <div class="disclaimer content-block">
+                <p>
+                Deine E-Mail-Adresse wird zusammen mit Deiner Nachricht dauerhaft gespeichert. Du erhältst Benachrichtungen für Antworten auf Deine Nachricht.
+                </p>
+                <p>Um die E-Mail-Adresse später zu löschen, <a href="{% url 'account_signup' %}">leg ein Benutzerkonto unter der E-Mail-Adresse an</a> und lösche es anschließend oder <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns eine Nachricht</a>.
+                </p>
+            </div>
             {% field form.author %}
         {% endif %}
         {% field form.subject %}

@@ -2,7 +2,7 @@
 
 {% has_perm 'conversations.create_group_conversation' user group as can_create_message %}
 
-<header class="content-header">
+<header class="content-section-header">
     <h2 class="content-classification">Gespräche</h2>
     <span class="decoration-icon sg-comments" role="presentation"></span>
     {% if can_create_message %}

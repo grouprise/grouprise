@@ -1,0 +1,18 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Mitgliedschaft - {{ block.super }}{% endblock %}
+{% block menu %}{% menu 'group' view.group %}{% endblock %}
+{% block breadcrumb %}{% breadcrumb view.group 'Mitgliedschaft' %}{% endblock %}
+{% block heading_title_text %}Mitgliedschaft{% endblock %}
+
+{% block sidebar %}
+    {% include 'associations/_sidebar_entity.html' with entity=view.group %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% include 'core/_field.html' with field=form.member %}
+        <button class="btn btn-primary">Mitgliedschaft beenden</button>
+    </form>
+{% endblock %}

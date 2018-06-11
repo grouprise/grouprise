@@ -1,5 +1,28 @@
-from core import notifications
+from core.notifications import Notification
 
 
-class MembershipCreated(notifications.Notification):
-    subject = 'Stadtgestalten: In Gruppe aufgenommen'
+class MembershipRequest(Notification):
+    subject = 'Mitgliedschaft'
+
+    def get_context_data(self, **kwargs):
+        kwargs['token'] = self.token
+        return super().get_context_data(**kwargs)
+
+
+class Join(MembershipRequest):
+    pass
+
+
+class MembershipCreated(Notification):
+    subject = 'Mitgliedschaft'
+
+
+class NoMember(Notification):
+    subject = 'Mitgliedschaft'
+
+    def get_formatted_recipient(self):
+        return '<{}>'.format(self.recipient)
+
+
+class Resign(MembershipRequest):
+    pass

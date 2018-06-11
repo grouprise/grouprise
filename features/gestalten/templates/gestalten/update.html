@@ -22,4 +22,15 @@
 
         <button class="btn btn-primary">Einstellungen speichern</button>
     </form>
+
+    <div class="section section-publish section-article" data-component="publish">
+        <h2>Gefahrenbereich</h2>
+        <div class="row">
+            <div class="col-md-5">
+                <a href="{% url 'delete-gestalt' %}" class="btn btn-danger btn-sm btn-block">
+                    Benutzerkonto löschen
+                </a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

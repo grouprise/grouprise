@@ -25,7 +25,7 @@ class GestaltByEmailField(forms.EmailField):
 
     def clean(self, value):
         value = super().clean(value)
-        gestalt = models.Gestalt.get_or_create(value)
+        gestalt = models.Gestalt.objects.get_or_create_by_email(value)
         if gestalt.can_login():
             raise ValidationError(self.error_messages['login'], code='login')
         return gestalt

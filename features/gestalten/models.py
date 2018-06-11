@@ -12,6 +12,27 @@ import core
 from core import colors
 
 
+class GestaltQuerySet(models.QuerySet):
+    def get_by_email(self, email):
+        try:
+            return self.get(user__email__iexact=email)
+        except self.model.DoesNotExist:
+            return self.get(user__emailaddress__email__iexact=email)
+
+    def get_or_create_by_email(self, email):
+        try:
+            created = False
+            user = self.get_by_email(email).user
+        except self.model.DoesNotExist:
+            user, created = auth.get_user_model().objects.get_or_create(
+                    email=email)
+        if created:
+            allauth_adapter.get_adapter().populate_username(None, user)
+            user.set_unusable_password()
+            user.save()
+        return user.gestalt
+
+
 class Gestalt(core.models.Model):
     is_group = False
 
@@ -36,6 +57,8 @@ class Gestalt(core.models.Model):
             'associations.Association', content_type_field='entity_type',
             object_id_field='entity_id', related_query_name='gestalt')
 
+    objects = models.Manager.from_queryset(GestaltQuerySet)()
+
     @property
     def name(self):
         return ' '.join(filter(None, [self.user.first_name, self.user.last_name]))
@@ -44,25 +67,22 @@ class Gestalt(core.models.Model):
     def slug(self):
         return self.user.username
 
-    @staticmethod
-    def get_or_create(email):
-        try:
-            created = False
-            user = auth.get_user_model().objects.get(emailaddress__email=email)
-        except auth.get_user_model().DoesNotExist:
-            user, created = auth.get_user_model().objects.get_or_create(
-                    email=email)
-        if created:
-            allauth_adapter.get_adapter().populate_username(None, user)
-            user.set_unusable_password()
-            user.save()
-        return user.gestalt
-
     def __str__(self):
         return self.name or self.slug
 
     def can_login(self):
         return self.user.has_usable_password()
+
+    def delete(self, *args, **kwargs):
+        data = self.get_data()
+        unknown_gestalt = Gestalt.objects.get(id=settings.GROUPRISE_UNKNOWN_GESTALT_ID)
+        data['associations'].update(entity_id=unknown_gestalt.id)
+        data['contributions'].update(author=unknown_gestalt)
+        data['images'].update(creator=unknown_gestalt)
+        data['memberships_created'].update(created_by=unknown_gestalt)
+        data['versions'].update(author=unknown_gestalt)
+        data['votes'].update(voter=unknown_gestalt)
+        self.user.delete()
 
     def get_absolute_url(self):
         if self.public:
@@ -72,6 +92,29 @@ class Gestalt(core.models.Model):
 
     def get_contact_url(self):
         return urls.reverse('create-gestalt-conversation', args=(self.pk,))
+
+    def get_data(self):
+        '''
+        Return all data directly related to this gestalt. May be used e.g. in conjunction with
+        deleting users.
+        '''
+        data = {}
+        data['gestalt'] = self
+        data['user'] = self.user
+
+        # data['groups_created'] = ?
+        data['memberships'] = self.memberships
+        data['subscriptions'] = self.subscriptions
+        data['tokens'] = self.permissiontoken_set
+        data['settings'] = self.gestaltsetting_set
+
+        data['associations'] = self.associations
+        data['contributions'] = self.contributions
+        data['images'] = self.images
+        data['memberships_created'] = self.memberships_created
+        data['versions'] = self.versions
+        data['votes'] = self.votes
+        return data
 
     def get_profile_url(self):
         return urls.reverse(

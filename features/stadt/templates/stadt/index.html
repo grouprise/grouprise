@@ -8,7 +8,7 @@
     {% if STADTGESTALTEN_SHOW_HEADER %}
         {% load dismissible %}
         {% dismissible 'stadtgestalten-intro' %}
-            <header class="content-header">
+            <header class="content-section-header">
                 {% include 'core/_heading.html' with title=about_group.name %}
                 {% dismiss 'stadtgestalten-intro' %}
             </header>
@@ -20,7 +20,7 @@
                     <label class="action" for="sg-help-group">
                         <span class="action-inner">
                             <span class="action-icon">
-                                <i class="fa fa-users"></i>
+                                <i class="sg sg-intro-group"></i>
                             </span>
                             <span class="action-description">
                                 Deine Gruppe jetzt!
@@ -32,7 +32,7 @@
                     <label class="action" for="sg-help-local">
                         <span class="action-inner">
                             <span class="action-icon">
-                                <i class="fa fa-anchor"></i>
+                                <i class="sg sg-intro-local"></i>
                             </span>
                             <span class="action-description">
                                 Für {{ town_name }}
@@ -44,7 +44,7 @@
                     <label class="action" for="sg-help-privacy">
                         <span class="action-inner">
                             <span class="action-icon">
-                                <i class="fa fa-heart"></i>
+                                <i class="sg sg-intro-privacy"></i>
                             </span>
                             <span class="action-description">
                                 Ohne Schabernack
@@ -56,7 +56,7 @@
                     <label class="action" for="sg-help-participate">
                         <span class="action-inner">
                             <span class="action-icon">
-                                <i class="fa fa-road"></i>
+                                <i class="sg sg-intro-participate"></i>
                             </span>
                             <span class="action-description">
                                 Du bestimmst!

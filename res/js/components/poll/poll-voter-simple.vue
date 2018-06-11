@@ -72,9 +72,9 @@
       return {
         endorsements: null,
         icons: {
-          yes: 'fa fa-thumbs-up',
-          no: 'fa fa-thumbs-down',
-          maybe: 'fa fa-question'
+          yes: 'sg sg-poll-vote-yes',
+          no: 'sg sg-poll-vote-no',
+          maybe: 'sg sg-poll-vote-maybe'
         }
       }
     },

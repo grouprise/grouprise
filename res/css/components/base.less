@@ -28,13 +28,6 @@
     --font-accent: "Roboto Slab", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Geneva", "Verdana", sans-serif;
 }
 
-.fireworks {
-    position: fixed;
-    top: 0; bottom: 0; left: 0; right: 0;
-    pointer-events: none;
-    z-index: 10000;
-}
-
 body {
     z-index: 1;
     position: relative;
@@ -167,10 +160,8 @@ pre {
     color: @color-primary;
 }
 
-.sidebar {
-    .on-small-devices({
-        display: none;
-    });
+kbd {
+    font-family: 'Roboto Mono', monospace;
 }
 
 // force all inputs on iOS devices to a font-size of 16px,

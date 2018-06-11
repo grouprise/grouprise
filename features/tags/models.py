@@ -11,7 +11,7 @@ class Tag(models.Model):
 
     @classmethod
     def slugify(cls, name):
-        return slugify(name)
+        return slugify(name)[:50]
 
     def __str__(self):
         return self.name

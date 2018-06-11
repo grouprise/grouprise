@@ -23,13 +23,14 @@
 
 {% block content %}
     <article class="content">
-        <header class="content-teaser">
+        <header class="content-header">
             {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
             <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
                 {% block content_type %}
-                    <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
+                    <span>Beitrag</span>
                 {% endblock %}
             </span>
+            {% include 'content/_content_visibility.html' %}
         </header>
         
         <div class="content-body">
@@ -45,7 +46,7 @@
         <div class="clearfix"></div>
 
         <footer class="content-footer">
-            <h2 class="content-header">
+            <h2 class="content-section-header">
                 <span class="content-classification">Kommentare</span>
                 <span class="decoration-icon sg-comments" role="presentation"></span>
             </h2>

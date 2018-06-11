@@ -4,7 +4,7 @@
     <div class="controls">
       <sg-configurator id="event-time" @save="propagate" @show="configure">
         <span slot="label">{{ label }}</span>
-        <i slot="icon" class="fa fa-clock-o"></i>
+        <i slot="icon" class="sg sg-time"></i>
         <span slot="title">
           Wann findet die Veranstaltung statt?
         </span>

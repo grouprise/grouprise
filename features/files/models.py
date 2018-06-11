@@ -1,8 +1,12 @@
-from os import path
-import re
+import io
+import os
+import tempfile
+from typing import List
 
 import django
 from django.db import models
+import django.core.files
+from features.imports.signals import ParsedMailAttachment
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
@@ -10,15 +14,44 @@ import core
 from features.contributions import models as contributions
 
 
-EXCLUDE_RE = r'Content-Type: application/pgp-signature'
+IGNORE_CONTENT_TYPES = {'application/pgp-signature'}
+
+
+def get_unique_storage_filename(name_template: str, base_dir: str,
+                                default_prefix: str='attachment-') -> str:
+    """ determine a suitable name for a file to be stored in a directory
+
+    The file may not overwrite an existing file and it should keep its original extension.
+    """
+    temp_kwargs = {'dir': base_dir, 'prefix': default_prefix, 'delete': False}
+    if name_template:
+        basename, extension = os.path.splitext(os.path.basename(name_template))
+        if extension:
+            temp_kwargs['suffix'] = '.' + extension
+        if basename:
+            temp_kwargs['prefix'] = basename + '-'
+    storage_file = tempfile.NamedTemporaryFile(**temp_kwargs)
+    storage_file.close()
+    return storage_file.name
 
 
 class FileManager(models.Manager):
-    def create_from_message(self, message, attached_to):
-        for attachment in message.attachments.all():
-            if re.search(EXCLUDE_RE, attachment.headers):
+    def create_from_message_attachments(self, attachments: List[ParsedMailAttachment],
+                                        attached_to):
+        for attachment in attachments:
+            if attachment.content_type in IGNORE_CONTENT_TYPES:
                 continue
-            f = self.create(file=attachment.document, filename=attachment.get_filename())
+
+            if attachment.data is not None:
+                # create the file and reference it
+                filename = get_unique_storage_filename(attachment.filename,
+                                                       File.file.field.storage.base_location)
+                f = self.create()
+                f.file.save(os.path.basename(filename),
+                            django.core.files.File(io.BytesIO(attachment.data)))
+            else:
+                file_source = attachment.model_obj
+                f = self.create(file=file_source, filename=attachment.filename)
             contributions.Contribution.objects.create(
                     container_id=attached_to.container_id,
                     container_type=attached_to.container_type,
@@ -54,7 +87,7 @@ class File(core.models.Model):
 
     @property
     def display_name(self):
-        return self.filename or path.basename(self.file.name)
+        return self.filename or os.path.basename(self.file.name)
 
     def __str__(self):
         return self.display_name
@@ -63,13 +96,13 @@ class File(core.models.Model):
         return self.file.url
 
     def is_image(self):
-        root, ext = path.splitext(self.file.name.lower())
+        root, ext = os.path.splitext(self.file.name.lower())
         return ext in ('.svg', '.apng', '.png', '.gif', '.jpg', '.jpeg')
 
     def is_video(self):
-        root, ext = path.splitext(self.file.name.lower())
+        root, ext = os.path.splitext(self.file.name.lower())
         return ext in ('.mp4', '.ogg', '.webm')
 
     def is_audio(self):
-        root, ext = path.splitext(self.file.name.lower())
+        root, ext = os.path.splitext(self.file.name.lower())
         return ext in ('.opus', '.ogg', '.aac', '.mp3', '.flac', '.m4a')

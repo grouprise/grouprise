@@ -37,12 +37,12 @@
               <button type="button" class="btn btn-default btn-sm" :disabled="index === 0"
                       title="Diese Option weiter nach oben sortieren"
                       @click="_moveOption(option.id, -1)">
-                <i class="fa fa-chevron-up"></i>
+                <i class="sg sg-order-up"></i>
               </button>
               <button type="button" class="btn btn-default btn-sm" :disabled="index + 1 === rankedOptions.length"
                       title="Diese Option weiter nach unten sortieren"
                       @click="_moveOption(option.id, +1)">
-                <i class="fa fa-chevron-down"></i>
+                <i class="sg sg-order-down"></i>
               </button>
             </div>
           </poll-voter-answer>

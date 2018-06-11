@@ -3,11 +3,11 @@
     <div class="numspi-inner">
       <div class="numspi-ctl">
         <button type="button" class="numspi-btn" @click="modifyValue(-1)" :disabled="!allowDecrement">
-          <i class="fa fa-minus"></i>
+          <i class="sg sg-decrease"></i>
         </button>
         <input class="numspi-input" type="number" :min="min" :max="max" :step="step" v-model.number="currentValue" :id="id">
         <button type="button" class="numspi-btn" @click="modifyValue(1)" :disabled="!allowIncrement">
-          <i class="fa fa-plus"></i>
+          <i class="sg sg-increase"></i>
         </button>
       </div>
     </div>

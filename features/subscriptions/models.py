@@ -16,3 +16,6 @@ class Subscription(models.Model):
     # subscriber
     subscriber = models.ForeignKey(
             'gestalten.Gestalt', on_delete=models.CASCADE, related_name='subscriptions')
+
+    def __str__(self):
+        return '{} - {}'.format(self.subscribed_to, self.subscriber)

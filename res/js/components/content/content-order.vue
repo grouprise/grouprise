@@ -5,7 +5,7 @@
     <template v-for="action in actions">
       <button type="button" class="btn btn-icon btn-sm" :aria-pressed="action.pressed"
               :title="action.title" @click="select(action.value)">
-        <i class="fa" :class="`fa-${action.icon}`"></i>
+        <i class="sg" :class="`sg-${action.icon}`"></i>
       </button>
     </template>
   </div>
@@ -20,13 +20,13 @@
       actions () {
         return [
           {
-            icon: 'list-ol',
+            icon: 'sortorder-publication',
             value: 'all',
             pressed: this.value === 'all' ? 'true' : 'false',
             title: 'Alle Beiträge sortiert nach Veröffentlichungszeit'
           },
           {
-            icon: 'calendar-o',
+            icon: 'sortorder-upcoming',
             value: 'events',
             pressed: this.value === 'events' ? 'true' : 'false',
             title: 'Kommende Veranstaltungen sortiert nach Veranstaltungsdatum'

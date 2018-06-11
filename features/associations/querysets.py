@@ -15,13 +15,13 @@ class Association(models.QuerySet):
         query = models.Q(public=True)
         # authenticated users can view associations for entities they are members in
         if user.is_authenticated:
-            GESTALT_TYPE = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
-            GROUP_TYPE = contenttypes.ContentType.objects.get_for_model(groups.Group)
+            gestalt_type = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
+            group_type = contenttypes.ContentType.objects.get_for_model(groups.Group)
             gestalt_groups = groups.Group.objects.filter(memberships__member=user.gestalt)
             query |= (
-                    (models.Q(entity_type=GROUP_TYPE)
+                    (models.Q(entity_type=group_type)
                         & models.Q(entity_id__in=gestalt_groups))
-                    | (models.Q(entity_type=GESTALT_TYPE)
+                    | (models.Q(entity_type=gestalt_type)
                         & models.Q(entity_id=user.gestalt.id))
                     )
             # if given a container we can allow access to associations for which the user

@@ -18,7 +18,7 @@
             {% if can_edit %}
                 <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
                     <a href="{% url 'image-settings' %}" class="btn btn-backdrop btn-ts" title="Hintergrundbild ändern">
-                        <i class="fa fa-2x fa-camera"></i>
+                        <i class="sg sg-2x sg-camera"></i>
                     </a>
                 </div>
             {% endif %}
@@ -78,7 +78,7 @@
                             <button type="button" class="btn-text hide-no-js" data-component="clipboard"
                                     data-clipboard-text="{{ site.domain }}/gestalt/{{ gestalt.user.username }}"
                                     title="URL zu dieser Gestalt kopieren">
-                                <i class="fa fa-clipboard"></i>
+                                <i class="sg sg-copy"></i>
                             </button>
                         </dd>
                     </dl>
@@ -112,7 +112,7 @@
 {% endblock %}
 
 {% block heading %}
-    <div class="content-header">
+    <div class="content-section-header">
         <h2 class="content-classification">Beiträge</h2>
         {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">

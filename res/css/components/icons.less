@@ -1,403 +1,149 @@
-.sg {
-    .fa();
+.sg-xl {
+    font-size: 1.5rem;
 }
 
-.sg-2x {
-    .fa-2x();
+.sg-2x,
+.sg-xxl {
+    font-size: 2rem;
 }
 
-.sg-fw {
-    .fa-fw();
+.sg-3x {
+    font-size: 3rem;
+}
+
+.sg-4x {
+    font-size: 4rem;
+}
+
+.sg-5x {
+    font-size: 5rem;
 }
 
 .sg-active {
-    color: @color-primary;
+    color: @color-primary !important;
 }
 
+.sg-icon(@selector, @font-awesome-var, @position: after, @extensions: true) {
+    .sg-@{selector} when not (@extensions = true) {
+        @extensions();
+    }
 
-.sg-info:after {
-    content: @fa-var-info-circle;
-}
-
-.sg-camera {
-    &:after {
-        content: @fa-var-camera;
+    .sg-@{selector}:@{position} {
+        content: @font-awesome-var;
     }
 }
 
-.sg-address {
-    &:after {
-        content: @fa-var-map-marker;
-    }
-}
+.sg-icon(camera, @fa-var-camera);
+.sg-icon(add, @fa-var-plus);
+.sg-icon(address, @fa-var-map-marker);
+.sg-icon(info, @fa-var-info-circle, before);
+.sg-icon(home, @fa-var-home);
+.sg-icon(author, @fa-var-user);
+.sg-icon(group, @fa-var-users);
+.sg-icon(back, ~'@{fa-var-chevron-left} @{fa-var-chevron-left}');
+.sg-icon(calendar, @fa-var-calendar);
+.sg-icon(closed, @fa-var-user-secret);
+.sg-icon(comments, @fa-var-comments-o);
+.sg-icon(conversations, @fa-var-comments-o);
+.sg-icon(edit, @fa-var-pencil);
+.sg-icon(pen, @fa-var-pencil);
+.sg-icon(foundation, @fa-var-flag);
+.sg-icon(group, @fa-var-users);
+.sg-icon(images, @fa-var-picture-o);
+.sg-icon(improve, @fa-var-comments-o);
+.sg-icon(join, @fa-var-user-plus);
+.sg-icon(link, @fa-var-link);
+.sg-icon(list, @fa-var-list);
+.sg-icon(logo, @fa-var-shield);
+.sg-icon(members, @fa-var-users);
+.sg-icon(members-add, @fa-var-user-plus);
+.sg-icon(menu, @fa-var-bars);
+.sg-icon(message, @fa-var-envelope);
+.sg-icon(next, @fa-var-chevron-right);
+.sg-icon(prev, @fa-var-chevron-left);
+.sg-icon(private, @fa-var-user-secret);
+.sg-icon(resign, @fa-var-user-times);
+.sg-icon(url, @fa-var-globe);
+.sg-icon(pin, @fa-var-thumb-tack);
+.sg-icon(marker, @fa-var-map-marker);
+.sg-icon(dots, @fa-var-ellipsis-h);
+.sg-icon(question, @fa-var-question-circle);
+.sg-icon(settings, @fa-var-cog);
+.sg-icon(subscription, @fa-var-rss);
+.sg-icon(video, @fa-var-play);
+.sg-icon(share, @fa-var-share-alt);
+.sg-icon(recommend, @fa-var-share);
+.sg-icon(logout, @fa-var-power-off);
+.sg-icon(login, @fa-var-sign-in);
+.sg-icon(fullscreen, @fa-var-arrows-alt);
+.sg-icon(left, @fa-var-chevron-left);
+.sg-icon(right, @fa-var-chevron-right);
+.sg-icon(close, @fa-var-times);
+.sg-icon(zoom, @fa-var-search);
+.sg-icon(tags, @fa-var-tags);
+.sg-icon(time, @fa-var-clock-o);
+.sg-icon(copy, @fa-var-clipboard);
+.sg-icon(download, @fa-var-download);
+.sg-icon(remove, @fa-var-trash-o);
+.sg-icon(attachment, @fa-var-paperclip);
+.sg-icon(winner, @fa-var-star);
+.sg-icon(tools, @fa-var-puzzle-piece);
+.sg-icon(search, @fa-var-search);
+.sg-icon(password, @fa-var-key);
+.sg-icon(privacy-public, @fa-var-globe);
+.sg-icon(privacy-private, @fa-var-lock);
+.sg-icon(claim, @fa-var-bullhorn);
+.sg-icon(no-results, @fa-var-meh-o);
+.sg-icon(facebook, @fa-var-facebook);
+.sg-icon(image, @fa-var-image);
 
-.sg-home {
-    &:after {
-        content: @fa-var-home;
-    }
-}
+// utility icons
+.sg-icon(increase, @fa-var-plus);
+.sg-icon(decrease, @fa-var-minus);
+.sg-icon(order-up, @fa-var-chevron-up);
+.sg-icon(order-down, @fa-var-chevron-down);
+.sg-icon(sortorder-publication, @fa-var-list-ol);
+.sg-icon(sortorder-upcoming, @fa-var-calendar-o);
 
-.sg-author {
-    &:after {
-        content: @fa-var-user;
-    }
-}
+// editor icons
+.sg-icon(editor-bold, @fa-var-bold);
+.sg-icon(editor-italic, @fa-var-italic);
+.sg-icon(editor-undo, @fa-var-undo);
+.sg-icon(editor-redo, @fa-var-repeat);
+.sg-icon(editor-quote, @fa-var-quote-left);
+.sg-icon(editor-ul, @fa-var-list-ul);
+.sg-icon(editor-ol, @fa-var-list-ol);
+.sg-icon(editor-h1, @fa-var-header, before);
+.sg-icon(editor-h2, @fa-var-header, before);
+.sg-icon(editor-link, @fa-var-link);
+.sg-icon(editor-image, @fa-var-image);
+.sg-icon(editor-preview, @fa-var-eye, after);
+.sg.active { &:extend(.sg-active); } // editor icon states
 
-.sg-group {
-    &:after {
-        content: @fa-var-users;
-    }
-}
+// poll icons
+.sg-icon(poll-info, @fa-var-lightbulb-o);
+.sg-icon(poll-favorite, @fa-var-heart);
+.sg-icon(poll-vote-yes, @fa-var-thumbs-up);
+.sg-icon(poll-vote-maybe, @fa-var-question);
+.sg-icon(poll-vote-no, @fa-var-thumbs-down);
+.sg-icon(poll-votetype-simple, @fa-var-thumbs-up);
+.sg-icon(poll-votetype-condorcet, @fa-var-commenting-o);
 
-.sg-back {
-    &:after {
-        content: @fa-var-chevron-left @fa-var-chevron-left;
-    }
-}
+// content type icons
+.sg-icon(content-type-article, @fa-var-file-text-o);
+.sg-icon(content-type-event, @fa-var-calendar-o, @extensions: @ruleset-calendar-icon);
+.sg-icon(content-type-gallery, @fa-var-picture-o);
+.sg-icon(content-type-gestalt, @fa-var-user);
+.sg-icon(content-type-poll, @fa-var-thumbs-o-up);
+.sg-icon(article, @fa-var-file-text-o);
+.sg-icon(event, @fa-var-calendar-o, @extensions: @ruleset-calendar-icon);
+.sg-icon(gallery, @fa-var-picture-o);
+.sg-icon(conversations, @fa-var-comments-o);
+.sg-icon(gestalt, @fa-var-user);
+.sg-icon(poll, @fa-var-thumbs-o-up);
 
-.sg-calendar {
-    &:after {
-        content: @fa-var-calendar;
-    }
-}
-
-.sg-closed {
-    &:after {
-        content: @fa-var-user-secret;
-    }
-}
-
-.sg-comments,
-.sg-conversations {
-    &:after {
-        content: @fa-var-comments-o;
-    }
-}
-
-.sg-article,
-.sg-content-type-article {
-    &:after {
-        content: @fa-var-file-text-o;
-    }
-}
-
-.sg-event,
-.sg-content-type-event {
-    &:after {
-        content: @fa-var-calendar-o;
-    }
-}
-
-.sg-file,
-.sg-content-type-file {
-    &:after {
-        content: @fa-var-file-o;
-    }
-}
-
-.sg-gallery,
-.sg-content-type-gallery {
-    &:after {
-        content: @fa-var-picture-o;
-    }
-}
-
-.sg-content-type-conversation {
-    &:after {
-        content: @fa-var-comments-o;
-    }
-}
-
-.sg-content-type-gestalt {
-    &:after {
-        content: @fa-var-user;
-    }
-}
-
-.sg-content-type-poll,
-.sg-poll {
-    &:after {
-        content: @fa-var-thumbs-o-up;
-    }
-}
-
-.sg-edit,
-.sg-pen {
-    &:after {
-        content: @fa-var-pencil;
-    }
-}
-
-.sg-foundation {
-    &:after {
-        content: @fa-var-flag;
-    }
-}
-
-.sg-gestalt {
-    &:after {
-        content: @fa-var-user;
-    }
-}
-
-.sg-group {
-    &:after {
-        content: @fa-var-users;
-    }
-}
-
-.sg-images {
-    &:after {
-        content: @fa-var-picture-o;
-    }
-}
-
-.sg-improve {
-    &:after {
-        content: @fa-var-commenting-o;
-    }
-}
-
-.sg-join {
-    &:after {
-        content: @fa-var-user-plus;
-    }
-}
-
-.sg-link {
-    &:after {
-        content: @fa-var-link;
-    }
-}
-
-.sg-list {
-    &:after {
-        content: @fa-var-list;
-    }
-}
-
-.sg-logo {
-    &:after {
-        content: @fa-var-shield;
-    }
-}
-
-.sg-members {
-    &:after {
-        content: @fa-var-users;
-    }
-}
-
-.sg-members-add {
-    &:after {
-        content: @fa-var-user-plus;
-    }
-}
-
-.sg-menu {
-    &:after {
-        content: @fa-var-bars;
-    }
-}
-
-.sg-message {
-    &:after {
-        content: @fa-var-envelope;
-    }
-}
-
-.sg-next {
-    &:after {
-        content: @fa-var-chevron-right;
-    }
-}
-
-.sg-prev {
-    &:after {
-        content: @fa-var-chevron-left;
-    }
-}
-
-.sg-private {
-    &:after {
-        content: @fa-var-user-secret;
-    }
-}
-
-.sg-resign {
-    &:after {
-        content: @fa-var-user-times;
-    }
-}
-
-.sg-url {
-    &:after {
-        content: @fa-var-globe;
-    }
-}
-
-.sg-pin {
-    &:after {
-        content: @fa-var-thumb-tack;
-    }
-}
-
-.sg-marker {
-    &:after {
-        content: @fa-var-map-marker;
-    }
-}
-
-.sg-dots {
-    &:after {
-        content: @fa-var-ellipsis-h;
-    }
-}
-
-.sg-question {
-    &:after {
-        content: @fa-var-question-circle;
-    }
-}
-
-.sg-settings {
-    &:after {
-        content: @fa-var-cog;
-    }
-}
-
-.sg-subscription {
-    &:after {
-        content: @fa-var-rss;
-    }
-}
-
-.sg-video {
-    &:after {
-        content: @fa-var-play;
-    }
-}
-
-.sg-add {
-    &:after {
-        content: @fa-var-plus;
-    }
-}
-
-.sg-share {
-    &:after {
-        content: @fa-var-share-alt;
-    }
-}
-
-.sg-recommend {
-    &:after {
-        content: @fa-var-share;
-    }
-}
-
-.sg-logout {
-    &:after {
-        content: @fa-var-power-off;
-    }
-}
-
-.sg-login {
-    &:after {
-        content: @fa-var-sign-in;
-    }
-}
-
-.sg-fullscreen {
-    &:after {
-        content: @fa-var-arrows-alt;
-    }
-}
-
-.sg-left {
-    &:after {
-        content: @fa-var-chevron-left;
-    }
-}
-
-.sg-right {
-    &:after {
-        content: @fa-var-chevron-right;
-    }
-}
-
-.sg-close {
-    &:after {
-        content: @fa-var-times;
-    }
-}
-
-.sg-zoom {
-    &:after {
-        content: @fa-var-search;
-    }
-}
-
-.sg-tags {
-    &:after {
-        content: @fa-var-tags;
-    }
-}
-
-.sg-time {
-    &:after {
-        content: @fa-var-clock-o;
-    }
-}
-
-.sg-copy {
-    &:after {
-        content: @fa-var-clipboard;
-    }
-}
-
-.sg-download {
-    &:after {
-        content: @fa-var-download;
-    }
-}
-
-.sg-preview {
-    &:after {
-        content: @fa-var-eye;
-    }
-}
-
-.sg-remove {
-    &:after {
-        content: @fa-var-trash-o;
-    }
-}
-
-.sg-attachment {
-    &:after {
-        content: @fa-var-paperclip;
-    }
-}
-
-.sg-winner {
-    &:after {
-        content: @fa-var-star;
-    }
-}
-
-.sg-tools {
-    &:after {
-        content: @fa-var-puzzle-piece;
-    }
-}
-
-.sg-search {
-    &:after {
-        content: @fa-var-search;
-    }
-}
-
-.sg-password:after {
-    content: @fa-var-key;
-}
+// intro icons
+.sg-icon(intro-group, @fa-var-users);
+.sg-icon(intro-local, @fa-var-anchor);
+.sg-icon(intro-privacy, @fa-var-heart);
+.sg-icon(intro-participate, @fa-var-road);
