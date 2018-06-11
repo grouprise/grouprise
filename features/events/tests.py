@@ -188,6 +188,14 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
                                 features.gestalten.tests.OtherGestaltMixin,
                                 tests.Test):
 
+    def create_group_event(self, **kwargs):
+        count_before = associations.Association.objects.count()
+        self.client.post(self.get_url('create-group-event', self.group.slug),
+                         _get_adjusted_event_args(**kwargs))
+        count_after = associations.Association.objects.count()
+        # verify that exactly one item was added
+        self.assertEqual(count_before + 1, count_after, "Failed to create item: {}".format(kwargs))
+
     def get_calendar_export_url(self, is_public):
         data = self.client.get(self.get_url('group-events-export', (self.group.slug, )))
         if is_public:
@@ -202,6 +210,24 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
         else:
             self.assertIn("token", calendar_export_url)
         return calendar_export_url
+
+    def test_private_public_calendar_content(self):
+        """ verify that private and public events are only available in their calendars """
+        # create a private and a public event
+        self.create_group_event(title='Private Event', public=False)
+        self.create_group_event(title='Public Event', public=True)
+        # verify the content of the private calendar
+        calendar_url = self.get_calendar_export_url(False)
+        data = self.client.get(calendar_url).content.decode('utf8')
+        self.assertIn('BEGIN:VCALENDAR', data)
+        self.assertIn('Private Event', data)
+        self.assertNotIn('Public Event', data)
+        # verify the content of the public calendar
+        calendar_url = self.get_calendar_export_url(True)
+        data = self.client.get(calendar_url).content.decode('utf8')
+        self.assertIn('BEGIN:VCALENDAR', data)
+        self.assertNotIn('Private Event', data)
+        self.assertIn('Public Event', data)
 
     def test_access_private_calendar(self):
         """ test the (in)accessibility of a private calendar of a group for a logged in member """
