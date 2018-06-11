@@ -1,8 +1,8 @@
 {% extends 'content/_preview.html' %}
 
 {% block content_type %}
-    <span>{% if not association.public %}Interne {% endif %}Veranstaltung</span>
     <i class="sg sg-content-type-event" data-day="{{ association.container.time|date:'d' }}"></i>
+    <span>Veranstaltung</span>
 {% endblock %}
 
 {% block content_preview_image %}

@@ -1,12 +1,15 @@
-<article class="content-preview{% if not association.public %} content-internal{% endif %}">
+<article class="content-preview">
     {% if not hide_meta %}
-    <header class="content-preview-header">
+    <header class="content-header">
         {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
-        <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
-            {% block content_type %}
-                <span>{% if not association.public %}Interner {% endif %}Beitrag</span>
-            {% endblock %}
-        </span>
+        <div class="flex-row">
+            <span class="content-type">
+                {% block content_type %}
+                    <span>Beitrag</span>
+                {% endblock %}
+            </span>
+            {% include 'content/_content_visibility.html' %}
+        </div>
     </header>
     {% endif %}
 
@@ -28,6 +31,7 @@
             </div>
         </div>
     </a>
-
-    <a href="{{ association.get_absolute_url }}" class="read-more">Zum Beitrag &hellip;</a>
+    <footer class="content-preview-footer">
+        <a href="{{ association.get_absolute_url }}" class="read-more">Zum Beitrag &hellip;</a>
+    </footer>
 </article>

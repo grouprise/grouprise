@@ -1,0 +1,15 @@
+{% if user.is_authenticated %}
+    {% if association.public %}
+        <span class="btn has-state has-square-icon has-hover-title is-unresponsive" data-state="inactive">
+            <i class="sg sg-xl sg-privacy-public"></i>
+            <span class="btn-htitle" data-position="right"
+                  title="Dieser Beitrag kann von allen Menschen gesehen werden, die diese Seite besuchen."></span>
+        </span>
+    {% else %}
+        <span class="btn has-state has-square-icon has-hover-title is-unresponsive" data-state="active">
+            <i class="sg sg-xl sg-privacy-private"></i>
+            <span class="btn-htitle" data-position="right"
+                  title="Du kannst diesen Beitrag sehen, weil du Mitglied der Gruppe „{{ association.entity }}“ bist."></span>
+        </span>
+    {% endif %}
+{% endif %}
