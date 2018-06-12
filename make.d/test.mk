@@ -43,3 +43,10 @@ test_py: virtualenv_check
 .PHONY: test_js
 test_js: $(DIR_NODE) lint_js
 	$(RUN_NODE) "$(BIN_NODE_PKG)" run test
+
+.PHONY: report-python-coverage
+coverage_py: virtualenv_check
+	STADTGESTALTEN_PRESET=test python -m coverage run -m manage test
+	python -m coverage report
+	python -m coverage html --directory="$(DIR_BUILD)/coverage-report"
+	@echo "Coverage Report Location: file://$(realpath $(DIR_BUILD))/coverage-report/index.html"
