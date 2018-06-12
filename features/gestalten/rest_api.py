@@ -35,6 +35,12 @@ class GestaltOrAnonSerializer(serializers.Serializer):
         # todo validate name if no valid id was provided
         return data
 
+    def run_validators(self, value):
+        """ the 'run_validators' method of serializers.Serializer seems to expect a dict """
+        if not isinstance(value, dict):
+            value = {'id': value.id, 'name': value.name}
+        return super().run_validators(value)
+
     class Meta:
         fields = ('id', 'name')
 
