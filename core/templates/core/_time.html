@@ -1,3 +1,3 @@
-<time data-component="time time-from" datetime="{{ time|date:'c' }}" title="{{ time|date:'d. m. Y H:i' }}">{% spaceless %}
+<time data-component="time time-from" datetime="{{ time|date:'c' }}" title="{% if all_day %}{{ time|date:'d. m. Y' }}{% else %}{{ time|date:'d. m. Y H:i' }}{% endif %}">{% spaceless %}
     {{ time|date:'d. m. Y H:i' }}
 {% endspaceless %}</time>{{ suffix }}

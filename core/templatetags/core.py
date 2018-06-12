@@ -97,8 +97,8 @@ def link(model, title=None):
 
 
 @register.inclusion_tag('core/_time.html')
-def time(time, suffix=''):
-    return {'suffix': suffix, 'time': time}
+def time(time, all_day=False, suffix=''):
+    return {'all_day': all_day, 'suffix': suffix, 'time': time}
 
 
 @register.inclusion_tag('core/_pagination.html', takes_context=True)

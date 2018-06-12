@@ -16,7 +16,7 @@
                     {% for association in upcoming %}
                         <li>
                             <div class="event-preview">
-                                {% time association.container.time suffix=':' %}
+                                {% time association.container.time suffix=':' all_day=association.container.all_day %}
                                 <a href="{{ association.get_absolute_url }}">{{ association.container.title }}</a>
                                 {% if show_group and association.entity.is_group %}
                                     &middot;
