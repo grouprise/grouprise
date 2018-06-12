@@ -258,6 +258,15 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
         data = self.client.get(public_url)
         self.assertIn('BEGIN:VCALENDAR', data.content.decode('utf8'))
 
+    def test_unusual_event_export(self):
+        """ verify that incomplete and unusual events can be exported """
+        # "all_day" is not enabled by default
+        self.create_group_event(title='All Day Event', all_day=True)
+        calendar_url = self.get_calendar_export_url(False)
+        data = self.client.get(calendar_url).content.decode('utf8')
+        self.assertIn('BEGIN:VCALENDAR', data)
+        self.assertIn('All Day Event', data)
+
 
 class GroupCalendarExportNonMember(memberships.MemberMixin,
                                    features.gestalten.tests.OtherAuthenticatedMixin,
