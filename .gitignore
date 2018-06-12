@@ -13,6 +13,7 @@ stadt/settings/local.py
 *.swp
 *.pyc
 *.log
+.coverage
 
 # debian shizzle
 makefilet
