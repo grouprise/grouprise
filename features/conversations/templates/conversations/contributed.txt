@@ -10,5 +10,5 @@ Nur an {{ object.author }} antworten:
 Du erhältst diese Benachrichtigung, weil Du Dich an diesem Gespräch beteiligt hast.
 {% url 'conversation' object.container.associations.first.pk as path %}{{ path|full_url }}#{% ref contribution %}
 {% elif subscription and membership %}
-Du erhältst diese Benachrichtigung weil Du Mitglied der Gruppe '{{ membership.group }}' bist und die Gruppe abonniert hast. Zum Verlassen der Gruppe folge bitte diesem Verweis:
+Du erhältst diese Benachrichtigung weil Du Mitglied der Gruppe '{{ membership.group }}' bist und die Gruppe abonniert hast. Gruppe verlassen:
 {% if membership.member.can_login %}{% url 'resign' membership.group.pk as resign_url %}{% else %}{% url 'resign-request' membership.group.pk as resign_url %}{% endif %}{{ resign_url|full_url }}{% endif %}

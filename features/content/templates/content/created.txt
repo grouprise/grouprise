@@ -1,5 +1,5 @@
 {% block content %}{% endblock %}
 {% block footer %}{% if subscription %}
 -- 
-Du erhältst diese Benachrichtigung, weil Du {% if membership %}Mitglied der Gruppe '{{ membership.group }}' bist und die Gruppe{% else %}die Gruppe '{{ subscription.subscribed_to }}'{% endif %} abonniert hast. Zum {% if membership %}Verlassen der Gruppe{% else %}Abbestellen der Benachrichtigungen{% endif %} folge bitte diesem Verweis:
+Du erhältst diese Benachrichtigung, weil Du {% if membership %}Mitglied der Gruppe '{{ membership.group }}' bist und die Gruppe{% else %}die Gruppe '{{ subscription.subscribed_to }}'{% endif %} abonniert hast. {% if membership %}Gruppe verlassen{% else %}Benachrichtigungen abbestellen{% endif %}:
 {% if membership %}{% if membership.member.can_login %}{% url 'resign' membership.group.pk as resign_url %}{% else %}{% url 'resign-request' membership.group.pk as resign_url %}{% endif %}{{ resign_url|full_url }}{% else %}{% if subscription.subscriber.can_login %}{% url 'group-unsubscribe' subscription.subscribed_to.pk as unsub_url %}{% else %}{% url 'group-unsubscribe-request' subscription.subscribed_to.pk as unsub_url %}{% endif %}{{ unsub_url|full_url }}{% endif %}{% endif %}{% endblock %}
