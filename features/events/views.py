@@ -138,8 +138,12 @@ class BaseCalendarFeed(ICalFeed):
         return item.content.first().time.astimezone(tz)
 
     def item_end_datetime(self, item):
-        tz = django.utils.timezone.get_default_timezone()
-        return item.content.first().until_time.astimezone(tz)
+        end_time = item.content.first().until_time
+        if end_time is None:
+            return None
+        else:
+            tz = django.utils.timezone.get_default_timezone()
+            return end_time.astimezone(tz)
 
 
 class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):

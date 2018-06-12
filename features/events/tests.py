@@ -260,11 +260,14 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
 
     def test_unusual_event_export(self):
         """ verify that incomplete and unusual events can be exported """
+        # "until_time" is the only optional event attribute
+        self.create_group_event(title='Missing End Time', missing_keys={'until_time'})
         # "all_day" is not enabled by default
         self.create_group_event(title='All Day Event', all_day=True)
         calendar_url = self.get_calendar_export_url(False)
         data = self.client.get(calendar_url).content.decode('utf8')
         self.assertIn('BEGIN:VCALENDAR', data)
+        self.assertIn('Missing End Time', data)
         self.assertIn('All Day Event', data)
 
 
