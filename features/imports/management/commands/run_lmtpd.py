@@ -92,7 +92,7 @@ class ContributionLMTPD:
             with ContributionLMTPD() as lmtp_client:
                 failed_recipients = lmtp_client.sendmail(from_address, recipients, data)
         """
-        host = 'localhost'
+        host = '127.0.0.1'
         port = random.randint(16384, 32767)
 
         loop = asyncio.get_event_loop()
