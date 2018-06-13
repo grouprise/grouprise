@@ -22,11 +22,16 @@
                 </a>
             </div>
         {% endif %}
-
+        
         <header class="conversation-header">
-            <h1 class="content-title">
+            <h1 class="conversation-title">
                 {{ association.container.subject }}
             </h1>
+            <span class="content-type">
+                <i class="sg sg-conversations"></i>
+                <span>Gespräch</span>
+            </span>
+            {% include 'conversations/_visibility.html' %}
         </header>
 
         <div class="conversation-body">

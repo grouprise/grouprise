@@ -1,0 +1,12 @@
+<span class="btn has-state has-square-icon has-hover-title is-unresponsive" data-state="active">
+    <i class="sg sg-xl sg-privacy-private"></i>
+        <span class="btn-htitle" data-position="right"
+            {% if user.gestalt in association.container.get_authors %}
+              title="Du kannst dieses Gespräch sehen, weil Du Dich daran beteiligt hast."
+            {% elif association.entity.is_group %}
+              title="Du kannst dieses Gespräch sehen, weil Du Mitglied der Gruppe „{{ association.entity }}“ bist."
+            {% else %}
+              title="Du kannst dieses Gespräch sehen, weil Du die Empfängerin bist."
+            {% endif %}
+              ></span>
+</span>
