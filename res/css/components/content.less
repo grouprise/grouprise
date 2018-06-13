@@ -160,6 +160,7 @@
         color: @color-text-default;
         text-decoration: none;
         margin-top: .5rem;
+        margin-bottom: 0;
     }
 
     &:after {
@@ -370,4 +371,9 @@
 .content-mute {
     font-size: @font-size-small;
     color: @color-text-extralight;
+}
+
+.content-preview-header {
+    &:extend(.flex-row all);
+    margin-bottom: 0.75rem;
 }

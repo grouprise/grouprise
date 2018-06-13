@@ -23,9 +23,14 @@
                 {% endif %}
             {% endblock %}
             <div class="content-preview-text">
-                <h3 class="content-title">
-                    {{ association.container.title }}
-                </h3>
+                <div class="content-preview-header">
+                    <h3 class="content-title">
+                        {{ association.container.title }}
+                    </h3>
+                    {% if hide_meta %}
+                        {% include 'content/_content_visibility.html' %}
+                    {% endif %}
+                </div>
 
                 {% markdown association.container.versions.last.text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
             </div>
