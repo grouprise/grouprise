@@ -22,7 +22,10 @@
             </span>
         </div>
         <div class="thread-preview-meta">
-            {% time c.contributions.first.time_created %}
+            <div>
+                {% time c.contributions.first.time_created %}
+                {% include 'conversations/_visibility.html' with small=True %}
+            </div>
             {% include 'conversations/_contributors.html' with contributors=c.get_authors max_shown=10 %}
         </div>
     </a>
