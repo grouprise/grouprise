@@ -1,16 +1,19 @@
-import django
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.sites.models import Site
+from django.contrib.syndication.views import Feed
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 
-from features.associations import models as associations
-from features.groups import models as groups
+from features.associations.models import Association
+from features.groups.models import Group
 
 
-class Index(django.contrib.syndication.views.Feed):
-    link = django.urls.reverse_lazy('index')
+class IndexFeed(Feed):
+    link = reverse_lazy('index')
     description_template = 'feeds/detail.html'
 
     def items(self):
-        return associations.Association.objects.ordered_user_content(
-                django.contrib.auth.models.AnonymousUser())
+        return Association.objects.ordered_user_content(AnonymousUser())[:10]
 
     def item_title(self, item):
         return str(item)
@@ -19,15 +22,15 @@ class Index(django.contrib.syndication.views.Feed):
         return item.container.versions.first().time_created
 
     def title(self):
-        return django.contrib.sites.models.Site.objects.get_current().name
+        return Site.objects.get_current().name
 
 
-class Group(Index):
+class GroupFeed(IndexFeed):
     def get_object(self, request, group_pk):
-        return django.shortcuts.get_object_or_404(groups.Group, pk=group_pk)
+        return get_object_or_404(Group, pk=group_pk)
 
     def items(self, obj):
-        return super().items().filter(group=obj)
+        return Association.objects.filter(group=obj).ordered_user_content(AnonymousUser())[:10]
 
     def link(self, obj):
         return obj.get_absolute_url()
