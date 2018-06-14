@@ -177,9 +177,9 @@ def bleach(text, disable_tags=tuple(), except_for=tuple()):
 @register.simple_tag
 def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
-        plain_preview=False, preset=None):
+        plain_preview=False, preset=None, plain=False):
     def wrap(result):
-        if plain_preview:
+        if plain or plain_preview:
             return result
         else:
             script = """
