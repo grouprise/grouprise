@@ -94,7 +94,10 @@ class Update(PermissionMixin, UpdateView):
                 }
 
     def get_object(self):
-        return self.request.user.gestalt
+        if self.request.user.is_authenticated:
+            return self.request.user.gestalt
+        else:
+            return None
 
     def get_success_url(self):
         return self.object.get_profile_url()
