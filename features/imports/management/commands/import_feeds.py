@@ -1,5 +1,6 @@
 import datetime
 import re
+import ssl
 import time
 
 import django
@@ -12,6 +13,10 @@ from features.content import models as content
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 from features.imports import models
+
+
+if hasattr(ssl, '_create_unverified_context'):
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 
 class Command(django.core.management.base.BaseCommand):
