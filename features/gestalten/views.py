@@ -150,7 +150,10 @@ class UpdateImages(PermissionMixin, UpdateView):
         return super().get_context_data(**kwargs)
 
     def get_object(self):
-        return self.request.user.gestalt
+        if self.request.user.is_authenticated:
+            return self.request.user.gestalt
+        else:
+            return None
 
 
 class UpdatePassword(PermissionMixin, allauth_views.PasswordChangeView):
