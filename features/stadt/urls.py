@@ -9,12 +9,12 @@ urlpatterns = [
         name='index'),
 
     url(
-        r'^stadt/feed.xml$',
+        r'^stadt/feed/$',
         feeds.IndexFeed(),
         name='feed'),
 
     url(
-        r'^stadt/groups/(?P<group_pk>[0-9]+)/feed.xml$',
+        r'^stadt/groups/(?P<group_pk>[0-9]+)/feed/$',
         feeds.GroupFeed(),
         name='group-feed'),
 
