@@ -57,11 +57,16 @@ class Calendar(python_calendar.LocaleHTMLCalendar):
 @register.inclusion_tag('events/_calendar.html', takes_context=True)
 def calendar(context, associations, size='preview', component_id=None):
     request = context.get('request')
+    try:
+        month = int(request.GET.get('month', 0))
+        year = int(request.GET.get('year', 0))
+    except ValueError:
+        pass
     around = django.utils.timezone.now()
     around = around.replace(
             day=1,
-            month=int(request.GET.get('month', around.month)),
-            year=int(request.GET.get('year', around.year)))
+            month=month or around.month,
+            year=year or around.year)
     event_associations = associations.filter_events()
     calendar_associations = event_associations.filter(
             content__time__gt=around-datetime.timedelta(weeks=6),
