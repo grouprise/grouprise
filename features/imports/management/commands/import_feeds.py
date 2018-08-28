@@ -10,6 +10,7 @@ import requests
 import core
 from features.associations import models as associations
 from features.content import models as content
+from features.content.signals import post_create
 from features.gestalten import models as gestalten
 from features.groups import models as groups
 from features.imports import models
@@ -71,6 +72,7 @@ class Command(django.core.management.base.BaseCommand):
                                         container_type=c.content_type, container_id=c.id,
                                         public=True, slug=slug)
                                 models.Imported.objects.create(key=key)
+                                post_create.send(sender=self.__class__, instance=c)
             except (requests.exceptions.ChunkedEncodingError,
                     requests.exceptions.ConnectionError):
                 pass
