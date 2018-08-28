@@ -53,6 +53,10 @@ def is_autoresponse(email_obj):
     return False
 
 
+def sanitize_subject(subject):
+    return subject.replace('\n', ' ').replace('\r', '')
+
+
 @receiver(django_mailbox.signals.message_received)
 def process_incoming_message(sender, message, **args):
 
@@ -125,6 +129,8 @@ class ParsedMailMessage(collections.namedtuple(
     def from_django_mailbox_message(cls, message):
         # we ignore multiple "From:" addresses
         from_address = message.from_address[0]
+        # make sure a subject exists and is valid
+        subject = sanitize_subject(message.subject or cls.MISSING_SUBJECT_DEFAULT)
         # parse the content type from the attachments
         attachments = []
         header_parser = email.parser.HeaderParser()
@@ -135,9 +141,8 @@ class ParsedMailMessage(collections.namedtuple(
                                                      attachment.document)
             attachments.append(parsed_attachment)
         text_content = cls.get_processed_content(message.html or message.text, bool(message.html))
-        return cls(message.subject or cls.MISSING_SUBJECT_DEFAULT, text_content,
-                   message.to_addresses, from_address, message.get_email_object(), message.id,
-                   tuple(attachments))
+        return cls(subject, text_content, message.to_addresses, from_address,
+                   message.get_email_object(), message.id, tuple(attachments))
 
     @classmethod
     def from_email_object(cls, email_obj, from_address=None):
@@ -300,7 +305,7 @@ class ContributionMailProcessor:
                                  fail_silently=False):
         if recipient is None:
             recipient = message.from_address
-        subject = 'Re: {}'.format(message.subject).replace('\n', ' ').replace('\r', '')
+        subject = sanitize_subject('Re: {}'.format(message.subject))
         text = '\n'.join((self.PROCESSING_FAILURE_TEXT, error_message))
         django.core.mail.send_mail(subject, text, from_email=self.response_from_address,
                                    recipient_list=[recipient], fail_silently=fail_silently)
