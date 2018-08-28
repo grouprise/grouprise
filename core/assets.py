@@ -89,22 +89,22 @@ class JavaScriptAsset(Asset):
 
 
 class JavaScriptReference(JavaScriptAsset):
-    def __init__(self, src, defer, async, stage):
+    def __init__(self, src, is_defer, is_async, stage):
         super().__init__(stage)
         self.src = src
         self.is_absolute = _is_absolute(src)
-        self.defer = defer
-        self.async = async
+        self.is_defer = is_defer
+        self.is_async = is_async
 
     @cached_property
     def clean_src(self):
         return _clean_source(self.src)
 
     def create_tag(self):
-        return '<script src="{src}"{async}{defer}></script>'.format(
+        return '<script src="{src}"{is_async}{is_defer}></script>'.format(
             src=self.clean_src,
-            async=(' async' if self.async else ''),
-            defer=(' defer' if self.defer else '')
+            is_async=(' async' if self.is_async else ''),
+            is_defer=(' defer' if self.is_defer else '')
         )
 
     @cached_property
@@ -211,8 +211,8 @@ def add_csp_directive(directive, value):
     _CSP_DIRECTIVES.append(CSPDirectiveItem(directive, value))
 
 
-def add_javascript_reference(src, defer=True, async=True, stage='late'):
-    _ASSETS.append(JavaScriptReference(src, defer, async, stage))
+def add_javascript_reference(src, is_defer=True, is_async=True, stage='late'):
+    _ASSETS.append(JavaScriptReference(src, is_defer, is_async, stage))
 
 
 def add_javascript_inline(content, stage='late'):
