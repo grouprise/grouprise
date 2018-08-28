@@ -59,9 +59,12 @@ def calendar(context, associations, size='preview', component_id=None):
     request = context.get('request')
     try:
         month = int(request.GET.get('month', 0))
+    except ValueError:
+        month = None
+    try:
         year = int(request.GET.get('year', 0))
     except ValueError:
-        pass
+        year = None
     around = django.utils.timezone.now()
     around = around.replace(
             day=1,
