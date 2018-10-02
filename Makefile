@@ -12,3 +12,4 @@ include make.d/nodejs.mk
 include make.d/assets.mk
 include make.d/test.mk
 include make.d/dist.mk
+include make.d/dev.mk
