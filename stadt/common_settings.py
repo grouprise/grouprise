@@ -94,7 +94,6 @@ TEMPLATES = [
                 'core.context_processors.site',
                 # grouprise features
                 'features.groups.context_processors.groups',
-                'features.memberships.context_processors.my_memberships',
                 'features.stadt.context_processors.page_meta',
             ],
         },

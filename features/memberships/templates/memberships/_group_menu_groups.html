@@ -1,6 +1,0 @@
-
-{% for membership in my_memberships %}
-    <a href="{{ membership.group.get_absolute_url }}">{{ membership.group }}</a>
-{% empty %}
-    <a href="{% url 'group-index' %}">Gruppe finden</a>
-{% endfor %}
