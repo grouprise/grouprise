@@ -207,6 +207,10 @@ def markdown(
             return "<div>{}{}</div>".format(script, result)
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel, marker='[INHALT]'), )
+    # TODO this needs careful optimization
+    #      for every content preview we’re rendering the whole content
+    #      to html, then strip html tags and finally truncate the
+    #      result just in order to get some partially formatted text
     result = python_markdown.markdown(text, extensions=extensions)
     if preset == 'linkonly':
         result = bleach(result, disable_tags='all', except_for=('a',))
