@@ -2,7 +2,7 @@
 {% load rules %}
 
 {% block title %}Mitglieder - {{ block.super }}{% endblock %}
-{% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block menu %}{% menu 'group' view.group %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.group 'Mitglieder' %}{% endblock %}
 {% block heading_title %}{% with title='Mitglieder' %}{{ block.super }}{% endwith %}{% endblock %}
 
