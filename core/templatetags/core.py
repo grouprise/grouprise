@@ -198,7 +198,7 @@ def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
         plain_preview=False, preset=None, plain=False):
     def wrap(result):
-        if plain or plain_preview:
+        if plain or plain_preview or truncate:
             return result
         else:
             script = """
