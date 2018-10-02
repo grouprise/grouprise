@@ -59,10 +59,12 @@ def calendar(context, associations, size='preview', component_id=None):
     request = context.get('request')
     try:
         month = int(request.GET.get('month', 0))
+        month = max(1, min(month, 12))
     except ValueError:
         month = None
     try:
         year = int(request.GET.get('year', 0))
+        year = max(2000, year)
     except ValueError:
         year = None
     around = django.utils.timezone.now()
