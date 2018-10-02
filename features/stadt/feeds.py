@@ -13,7 +13,7 @@ class IndexFeed(Feed):
     description_template = 'feeds/detail.html'
 
     def items(self):
-        return Association.objects.ordered_user_content(AnonymousUser())[:10]
+        return Association.objects.ordered_user_content(AnonymousUser()).filter_articles()[:10]
 
     def item_title(self, item):
         return str(item)
@@ -30,7 +30,8 @@ class GroupFeed(IndexFeed):
         return get_object_or_404(Group, pk=group_pk)
 
     def items(self, obj):
-        return Association.objects.filter(group=obj).ordered_user_content(AnonymousUser())[:10]
+        return Association.objects.filter(group=obj).ordered_user_content(AnonymousUser()) \
+                .filter_articles()[:10]
 
     def link(self, obj):
         return obj.get_absolute_url()
