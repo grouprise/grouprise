@@ -1,4 +1,3 @@
-import django
 import django.contrib.contenttypes.models
 from allauth.account import adapter as allauth_adapter
 from django.conf import settings
