@@ -18,8 +18,7 @@ def validate_file_size(image):
 
 
 class ImageFilter(django_filters.rest_framework.FilterSet):
-    id = django_filters.Filter(name='id', lookup_expr='in',
-                               widget=django_filters.widgets.CSVWidget)
+    id = django_filters.Filter(lookup_expr='in', widget=django_filters.widgets.CSVWidget)
 
     class Meta:
         model = models.Image
