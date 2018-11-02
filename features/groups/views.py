@@ -3,11 +3,10 @@ import django_filters
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, UpdateView
 from django.urls import reverse
-from django_filters import views as filters_views
+from django_filters.views import FilterView
 
 import core
 from core import fields, views
-from core.views import base
 from core.views import PermissionMixin
 from features.associations import models as associations
 from features.associations.filters import ContentFilterSet
@@ -97,10 +96,11 @@ class Detail(
         return self.object
 
 
-class List(base.PermissionMixin, filters_views.FilterView):
+class List(PermissionMixin, FilterView):
     permission_required = 'groups.view_list'
     filterset_class = filters.Group
     paginate_by = 10
+    strict = False
 
     def get_content(self):
         return associations.Association.objects.filter_group_containers().can_view(
