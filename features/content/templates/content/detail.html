@@ -21,6 +21,13 @@
     </div>
 {% endblock %}
 
+{% block sidebar %}
+    {{ block.super }}
+    {% if association.container.image %}
+        {% include 'content/_sidebar_image.html' with image=association.container.image %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <article class="content">
         <header class="content-header">
