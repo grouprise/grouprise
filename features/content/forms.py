@@ -116,8 +116,6 @@ class Update(forms.ModelForm):
         self.fields['image'].queryset = Image.objects.filter(q)
         if not self.instance.entity.is_group:
             del self.fields['pinned']
-        if self.instance.public:
-            del self.fields['public']
         if not self.initial['time']:
             del self.fields['place']
             del self.fields['time']
