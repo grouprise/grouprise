@@ -95,7 +95,7 @@ class AuthenticatedSettings(AuthenticatedMixin, TestCase):
         r = self.client.get(email_settings_url)
         self.assertEqual(r.status_code, 200)
         r = self.client.get(password_settings_url)
-        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r.status_code, 200)
 
     def test_delete(self):
         delete_url = reverse('delete-gestalt')

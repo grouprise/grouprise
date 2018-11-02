@@ -218,7 +218,7 @@ class ContributionHandler:
         message = parser.parsebytes(envelope.content)
         try:
             parsed_message = ParsedMailMessage.from_email_object(message, envelope.mail_from)
-        except Exception as exc:
+        except Exception:
             err_msg = ''.join(traceback.format_exception(*sys.exc_info()))
             self._error_writer('Failed to parse Message:\n{}'.format(err_msg))
             django.core.mail.send_mail(
