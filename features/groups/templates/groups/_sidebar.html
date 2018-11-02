@@ -1,16 +1,14 @@
-<div class="box box-striped">
-    <div class="box-inner">
-        <header class="box-header">
-            <h2 class="box-title">
-                <i class="sg sg-group"></i>
-                Gruppe
-            </h2>
-        </header>
-        <div class="box-content">
-            {% include "groups/_preview.html" with group=group link=False %}
-        </div>
-        <div class="btn-toolbar btn-toolbar-right">
-            <a href="{{ group.get_absolute_url }}" class="btn btn-link">Zur Gruppenseite</a>
-        </div>
-    </div>
-</div>
+{% extends 'core/_sidebar.html' %}
+
+{% block title %}
+    <i class="sg sg-group"></i>
+    Gruppe
+{% endblock %}
+
+{% block content %}
+    {% include "groups/_preview.html" with group=group link=False %}
+{% endblock %}
+
+{% block toolbar %}
+    <a href="{{ group.get_absolute_url }}" class="btn btn-link">Zur Gruppenseite</a>
+{% endblock %}
