@@ -203,11 +203,14 @@ class ContributionMailProcessor:
 
     def _create_contribution(self, message, container, gestalt, in_reply_to=None):
         t = models.Text.objects.create(text=message.content)
+        # comments for content sent in via email are always internal by default
+        public = container.is_conversation
         contribution = models.Contribution.objects.create(
                 author=gestalt,
                 container=container,
                 in_reply_to=in_reply_to,
-                contribution=t)
+                contribution=t,
+                public=public)
         files.File.objects.create_from_message_attachments(message.attachments,
                                                            attached_to=contribution)
         return contribution
