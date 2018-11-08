@@ -91,9 +91,13 @@ def include_assets(stage):
     ]))
 
 
-@register.inclusion_tag('core/_link.html')
-def link(model, title=None):
-    return {'model': model, 'title': title}
+@register.inclusion_tag('core/_link.html', takes_context=True)
+def link(context, model, title=None):
+    if hasattr(model, 'get_absolute_url_for_user'):
+        url = model.get_absolute_url_for_user(context.get('user'))
+    else:
+        url = model.get_absolute_url()
+    return {'model': model, 'title': title, 'url': url}
 
 
 @register.inclusion_tag('core/_time.html')
@@ -107,12 +111,14 @@ def pagination(context, label):
     return context
 
 
-@register.inclusion_tag('core/_breadcrumb.html')
-def breadcrumb(*args):
+@register.inclusion_tag('core/_breadcrumb.html', takes_context=True)
+def breadcrumb(context, *args):
     crumbs = []
     for arg in args[:-1]:
         if isinstance(arg, str):
             crumbs.append((arg, None))
+        elif hasattr(arg, 'get_absolute_url_for_user'):
+            crumbs.append((str(arg), arg.get_absolute_url_for_user(context.get('user'))))
         else:
             crumbs.append((str(arg), arg.get_absolute_url()))
     crumbs.append((str(args[-1]), None))
@@ -259,11 +265,8 @@ def override(override, overridden):
 
 
 @register.filter
-def url_for(gestalt, user):
-    if user.has_perm('entities.view_gestalt', gestalt):
-        return gestalt.get_profile_url()
-    else:
-        return gestalt.get_contact_url()
+def url_for_user(model, user):
+    return model.get_absolute_url_for_user(user)
 
 
 @register.simple_tag(takes_context=True)
