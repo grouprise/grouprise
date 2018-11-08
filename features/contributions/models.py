@@ -43,6 +43,7 @@ class Contribution(core.models.Model):
             'Contribution', null=True, blank=True, related_name='replies',
             on_delete=models.SET_NULL)
     time_created = models.DateTimeField(auto_now_add=True)
+    public = models.BooleanField(default=True)
 
     objects = ContributionManager.from_queryset(ContributionQuerySet)()
 
