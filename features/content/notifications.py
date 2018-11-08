@@ -29,7 +29,7 @@ class ContentCreated(core.notifications.Notification):
 
     def get_list_id(self):
         if self.group:
-            return '{} <{}.{}>'.format(str(self.group), self.group.slug, self.site.domain)
+            return '<{}.{}>'.format(self.group.slug, self.site.domain)
         return super().get_list_id()
 
     def get_message(self):
