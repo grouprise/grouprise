@@ -90,6 +90,12 @@ class Gestalt(core.models.Model):
         else:
             return self.get_contact_url()
 
+    def get_absolute_url_for_user(self, user):
+        if user and user.has_perm('gestalten.view', self):
+            return self.get_profile_url()
+        else:
+            return self.get_contact_url()
+
     def get_contact_url(self):
         return urls.reverse('create-gestalt-conversation', args=(self.pk,))
 

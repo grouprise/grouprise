@@ -23,7 +23,7 @@
 {% endkwacro %}
 
 {% if link %}
-    <a href="{{ gestalt.get_absolute_url }}" class="profile">
+    <a href="{{ gestalt|url_for_user:user }}" class="profile">
         {% usekwacro preview %}
     </a>
 {% else %}
