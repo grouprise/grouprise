@@ -1,5 +1,6 @@
 from rules import add_perm, is_authenticated, predicate
 
+from features.content.rules import is_member_of_associated_group
 from features.conversations.rules import can_view
 
 
@@ -30,3 +31,5 @@ def is_multi_user_contribution(user, contribution):
 add_perm('contributions.delete', ~is_conversation & is_authenticated & is_creator)
 
 add_perm('contributions.reply_to_author', is_multi_user_contribution & can_access)
+
+add_perm('contributions.view_internal', is_authenticated & is_member_of_associated_group)
