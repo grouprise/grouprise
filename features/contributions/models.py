@@ -17,9 +17,17 @@ class ContributionManager(models.Manager):
         return super().get_queryset().exclude_deleted()
 
 
+class PublicContributionManager(ContributionManager):
+    def get_queryset(self):
+        return super().get_queryset().filter_public()
+
+
 class ContributionQuerySet(models.QuerySet):
     def exclude_deleted(self):
         return self.exclude(deleted__isnull=False)
+
+    def filter_public(self):
+        return self.filter(public=True)
 
 
 class Contribution(core.models.Model):
@@ -45,7 +53,8 @@ class Contribution(core.models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     public = models.BooleanField(default=True)
 
-    objects = ContributionManager.from_queryset(ContributionQuerySet)()
+    objects = PublicContributionManager.from_queryset(ContributionQuerySet)()
+    objects_with_internal = ContributionManager.from_queryset(ContributionQuerySet)()
 
     class Meta:
         ordering = ('time_created',)

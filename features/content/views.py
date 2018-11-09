@@ -2,6 +2,7 @@ import django.urls
 import django.views.generic
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
+from django.db.models import Q
 from django.views import generic
 
 import core.views
@@ -10,6 +11,7 @@ from core.views import base
 from features.associations import models as associations
 from features.associations.views import get_association_or_404
 from features.contributions import view_mixins as contributions
+from features.contributions.models import Contribution
 from features.files import forms as files
 from features.galleries import forms as galleries
 from features.gestalten import models as gestalten
@@ -35,6 +37,15 @@ class DetailBase(features.associations.views.AssociationMixin,
     template_name = 'articles/detail.html'
 
     form_class = features.contributions.forms.Text
+
+    def get_contributions(self):
+        user = self.request.user
+        gestalt = user.gestalt if user.is_authenticated else None
+        content = self.object.container
+        qs = Contribution.objects_with_internal.filter(content=content)
+        if not user.has_perm('contributions.view_internal', content):
+            qs = qs.filter(Q(public=True) | Q(author=gestalt))
+        return qs
 
     def get_object(self, queryset=None):
         return self.get_association()

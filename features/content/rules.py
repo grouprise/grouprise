@@ -12,6 +12,14 @@ def can_view(user, association):
             .filter(pk=association.pk).exists()
 
 
+@rules.predicate
+def is_member_of_associated_group(user, content):
+    for group in content.get_associated_groups():
+        if memberships.is_member_of(user, group):
+            return True
+    return False
+
+
 rules.add_perm(
         'content.list',
         rules.always_allow)
