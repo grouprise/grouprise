@@ -87,7 +87,7 @@
             </h2>
             <div class="conversation" data-component="conversation" id="{% ref association.container %}">
                 <ol class="medias">
-                    {% for comment in association.container.contributions.all %}
+                    {% for comment in view.get_contributions %}
                         {% url 'content-permalink' association.pk as permalink_url %}
                         {% include 'contributions/_contribution.html' with contribution=comment permalink_url=permalink_url %}
                     {% endfor %}
