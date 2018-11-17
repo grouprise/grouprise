@@ -1,6 +1,7 @@
 import django.contrib.contenttypes.models
 import django.urls
 from django.contrib.contenttypes import fields as contenttypes
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Q
 
@@ -89,6 +90,23 @@ class Content(core.models.Model):
     def subject(self):
         return self.title
 
+    def get_latest_association(self):
+        # FIXME: Probably not a good solution to take the first group here
+        ct_group = ContentType.objects.get_for_model(groups.Group)
+        return self.associations.filter(entity_type=ct_group).first()
+
+    def get_absolute_url(self):
+        association = self.get_latest_association()
+        if association:
+            return self.get_url_for(association)
+        else:
+            return None
+
+
+class VersionManager(models.Manager):
+    def latest(self):
+        return self.order_by('-time_created').first()
+
 
 class Version(models.Model):
     content = models.ForeignKey('Content', related_name='versions', on_delete=models.CASCADE)
@@ -97,3 +115,5 @@ class Version(models.Model):
             'gestalten.Gestalt', related_name='versions', on_delete=models.PROTECT)
     text = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)
+
+    objects = VersionManager()
