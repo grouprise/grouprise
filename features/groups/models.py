@@ -19,6 +19,7 @@ class Group(core.models.Model):
 
     date_created = models.DateField(
             auto_now_add=True)
+    time_modified = models.DateTimeField(auto_now=True)
     gestalt_created = models.ForeignKey(
             'gestalten.Gestalt', null=True, blank=True, related_name='+',
             on_delete=models.SET_NULL)
