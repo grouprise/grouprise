@@ -1,3 +1,6 @@
+import re
+
+import bleach
 import django
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -73,8 +76,8 @@ class Search(PermissionMixin, ListView):
     template_name = 'stadt/search.html'
 
     def get_queryset(self):
-        query_string = self.request.GET.get('q', '').strip()
-        if query_string:
-            return SearchQuerySet().filter(content=AutoQuery(query_string))
+        self.query_string = re.sub('[^\w ]', '', self.request.GET.get('q', ''))
+        if self.query_string:
+            return SearchQuerySet().filter(content=AutoQuery(self.query_string))
         else:
             return EmptySearchQuerySet()
