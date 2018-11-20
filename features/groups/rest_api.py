@@ -66,21 +66,15 @@ class TransitionConnectGroupSerializer(TransitionConnectGroupListSerializer):
     locations = serializers.SerializerMethodField()
 
     def get_categories(self, obj: models.Group):
-        # TODO: we don’t have categories for groups yet, only tags. should we deliver those?
         return []
 
     def get_admins(self, obj: models.Group):
-        # TODO: should we consider members admins and if so, are we happy to provide
-        #       their mail-address to the outside world?
         return []
 
     def get_slogan(self, obj: models.Group):
-        # TODO: groups don’t have slogans
         return None
 
     def get_locations(self, obj: models.Group):
-        # TODO: groups only have a single address, but we don’t support a description
-        #       or any kind of geo-data for them
         address = ', '.join(obj.address.replace('\r', '').split('\n')) \
             if obj.address else None
         return [{
