@@ -1,8 +1,9 @@
+from django.urls import reverse
 from rest_framework import viewsets, serializers, permissions
 from rest_framework.decorators import permission_classes
 
-from features.content.models import Content
 from core import api
+from features.associations.models import Association
 
 
 class EventListSerializer(serializers.HyperlinkedModelSerializer):
@@ -10,17 +11,14 @@ class EventListSerializer(serializers.HyperlinkedModelSerializer):
     permalink = serializers.SerializerMethodField()
 
     def get_timestamp(self, obj):
-        latest_version = obj.versions.latest()
-        if latest_version:
-            return int(latest_version.time_created.timestamp())
-        else:
-            return None
+        return int(obj.container.versions.last().time_created.timestamp())
 
     def get_permalink(self, obj):
-        return self.context['request'].build_absolute_uri(obj.get_absolute_url())
+        return self.context['request'].build_absolute_uri(
+                reverse('content-permalink', args=(obj.pk,)))
 
     class Meta(object):
-        model = Content
+        model = Association
         fields = ('id', 'permalink', 'timestamp')
 
 
@@ -29,35 +27,33 @@ class EventRetrieveSerializer(EventListSerializer):
     iCal = serializers.SerializerMethodField()
 
     def get_orgId(self, obj):
-        return obj.get_latest_association().container.id
+        return obj.entity.id
 
     def get_iCal(self, obj):
         ical = "BEGIN:VEVENT\n"
-        ical += "UID:%s\n" % obj.id
-        latest_version = obj.versions.latest()
-        if latest_version:
-            author = latest_version.author.user
-            ical += 'ORGANIZER;CN="%s":MAILTO:%s\n' % (author.get_full_name(), author.email)
-        ical += "LOCATION:%s\n" % obj.place
-        ical += "SUMMARY:%s\n" % obj.title
+        ical += "UID:%s\n" % obj.container.id
+        ical += "LOCATION:%s\n" % obj.container.place
+        ical += "SUMMARY:%s\n" % obj.container.title
         ical += "CATEGORIES:\n"
-        # FIXME: Get description
-        ical += "DESCRIPTION:%s\n" % ""
-        ical += "DTSTART:%s\n" % obj.time.strftime('%Y%m%dT%H%m%sZ')
-        ical += "DTEND:%s\n" % obj.until_time.strftime('%Y%m%dT%H%m%sZ')
-        if latest_version:
-            ical += "DTSTAMP:%s\n" % latest_version.time_created.strftime('%Y%m%dT%H%m%sZ')
+        ical += "DESCRIPTION:%s\n" % obj.container.versions.last().text
+        ical += "DTSTART:%s\n" % obj.container.time.strftime('%Y%m%dT%H%m%sZ')
+        until_time = obj.container.until_time
+        if until_time:
+            ical += "DTEND:%s\n" % until_time.strftime('%Y%m%dT%H%m%sZ')
+        ical += "DTSTAMP:%s\n" % obj.container.versions.last().time_created \
+                .strftime('%Y%m%dT%H%m%sZ')
         ical += "END:VEVENT\n"
         return ical
 
     class Meta:
-        model = Content
+        model = Association
         fields = ('id', 'permalink', 'timestamp', 'orgId', 'iCal')
 
 
 @permission_classes((permissions.AllowAny, ))
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Content.objects.filter(time__isnull=False)
+    queryset = Association.objects.exclude_deleted().filter_events().filter(public=True) \
+            .filter_group_containers()
 
     def get_serializer_class(self):
         if self.action == 'list':
