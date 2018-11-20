@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
+    <form method="post" data-component="publish">
         {% csrf_token %}
         {% if form.author %}
             <div class="disclaimer content-block">
