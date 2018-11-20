@@ -267,6 +267,8 @@ class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjec
             reply_to = get_new_mails()[0].extra_headers['Reply-To']
             self.inject_mail(self.gestalt.user.email, [reply_to],
                              data=self.assemble_mail_data({}, body="Text B"))
+            self.assertFalse(models.Contribution.objectsi.filter(
+                content=a.content.get(), text__text='Text B').exists())
             self.assertTrue(models.Contribution.objects_with_internal.filter(
                 content=a.content.get(), text__text='Text B').exists())
 
@@ -287,6 +289,8 @@ class ContentReplyByEmailViaDjangoMailbox(memberships.AuthenticatedMemberMixin, 
                 body='Delivered-To: {}\n\nText B'.format(reply_to))
         # send signal like getmail would
         mailbox_signals.message_received.send(self, message=msg)
+        self.assertFalse(models.Contribution.objects.filter(
+            content=a.content.get(), text__text='Text B').exists())
         self.assertTrue(models.Contribution.objects_with_internal.filter(
             content=a.content.get(), text__text='Text B').exists())
 
