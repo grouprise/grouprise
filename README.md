@@ -1,6 +1,6 @@
-# Stadtgestalten
+# grouprise
 
-Stadtgestalten is a platform destined to encourage and enable social action and solidarity in the context of your city. Bildet Banden!
+grouprise is a platform destined to encourage and enable social action and solidarity in the context of your city. Bildet Banden!
 
 ## Quick Setup
 
