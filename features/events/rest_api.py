@@ -67,6 +67,6 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         return EventRetrieveSerializer
 
 
-@api.register
+@api.register_tc
 def load(router):
     router.register(r'event', EventViewSet, 'event')

@@ -110,4 +110,8 @@ class TransitionGroupSet(viewsets.ReadOnlyModelViewSet):
 @api.register
 def load(router):
     router.register(r'groups', GroupSet, 'group')
+
+
+@api.register_tc
+def load_tc(router):
     router.register(r'organisation', TransitionGroupSet, 'organisation')
