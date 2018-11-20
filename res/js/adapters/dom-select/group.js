@@ -6,11 +6,14 @@ export default api => {
     const ids = choices.map(option => option.value).join(',')
 
     return api.list({id: ids})
-      .then(response => Promise.resolve(response.data))
-      .then(data => Promise.resolve(choices.map(choice => {
-        return Object.assign({}, choice, find(data, entity => entity.id === parseInt(choice.value, 10)))
-      })))
-      .then(choices => Promise.resolve({choices, defaultChoice: null}))
+      .then(response => response.data)
+      .then(data =>
+        choices.map(choice => ({
+          ...choice,
+          ...find(data, entity => entity.id === parseInt(choice.value, 10))
+        }))
+      )
+      .then(choices => ({choices, defaultChoice: null}))
   }
 
   const filter = (term, choice, defaultFilter) => {
