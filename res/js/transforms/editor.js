@@ -77,7 +77,10 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
   // create focusListener to move the toolbar into the current scrollPosition
   // whenever the editor is focused
   const focusListener = on(codemirrorEvents, ['focus', 'blur'], () => {
-    containerEl.classList.toggle('editor-container-active', editor.codemirror.hasFocus())
+    window.setTimeout(() => {
+      containerEl.classList.toggle('editor-container-active',
+        editor.codemirror.hasFocus() || containerEl.contains(document.activeElement))
+    }, 0)
   })
 
   // prevent users from accidentally leaving the page when
