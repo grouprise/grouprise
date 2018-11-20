@@ -10,7 +10,7 @@
         <label class="form-search-wrap">
             <span class="sr-only">Suche</span>
             <input type="search" name="q" class="form-control" placeholder="Suche"
-                   value="{{ request.GET.q }}" autofocus>
+                   value="{{ view.query_string }}" autofocus>
         </label>
         <button class="btn btn-primary">
             Suchen
