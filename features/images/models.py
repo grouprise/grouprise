@@ -20,6 +20,10 @@ class Image(models.Model):
             source='file', processors=[Transpose(), ResizeToFit(554)], format='JPEG')
     sidebar = ImageSpecField(
             source='file', processors=[Transpose(), ResizeToFit(313)], format='JPEG')
+    facebook_meta = ImageSpecField(
+            source='file', processors=[Transpose(), ResizeToFit(800)])
+    twitter_meta = ImageSpecField(
+            source='file', processors=[Transpose(), SmartResize(600, 300)])
 
     def __str__(self):
         return '{} ({})'.format(self.file, self.creator)[2:]
