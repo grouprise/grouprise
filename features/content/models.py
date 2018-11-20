@@ -91,6 +91,9 @@ class Content(core.models.Model):
 
 
 class Version(models.Model):
+    class Meta:
+        ordering = ('time_created',)
+
     content = models.ForeignKey('Content', related_name='versions', on_delete=models.CASCADE)
 
     author = models.ForeignKey(
