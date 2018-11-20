@@ -243,6 +243,16 @@
 
 .content-preview-body-content {
     display: flex;
+
+    &:after {
+        content: " ";
+        display: table;
+        clear: both;
+    }
+
+    .on-small-devices({
+        display: block;
+    })
 }
 
 .content-image {
@@ -255,6 +265,8 @@
 
     .on-small-devices({
         width: 100px;
+        float: left;
+        margin: 0 1rem 1rem 0;
     });
 }
 
