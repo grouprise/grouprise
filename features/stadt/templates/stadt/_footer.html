@@ -22,7 +22,7 @@
                     <li><a href="{% url 'abuse' request.path %}">Missbrauch melden</a></li>
                 </ul>
             </li>
-            <li>
+            <li class="hidden-xs">
                 <ul>
                     <li><a href="{% url 'group-index' %}">Alle Gruppen</a></li>
                     <li class="separator"></li>
@@ -32,7 +32,7 @@
                     <li><a href="{% url 'gestalten' %}">Öffentliche Gestalten</a></li>
                 </ul>
             </li>
-            <li>
+            <li class="hidden-xs">
                 <ul>
                     {% if user.is_authenticated %}
                         <li><a href="{{ user.gestalt|url_for_user:user }}">Deine Seite</a></li>
