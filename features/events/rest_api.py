@@ -52,7 +52,8 @@ class EventRetrieveSerializer(EventListSerializer):
 
 @permission_classes((permissions.AllowAny, ))
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Association.objects.exclude_deleted().filter_events().filter(public=True) \
+    def get_queryset(self):
+        return Association.objects.exclude_deleted().filter_events().filter(public=True) \
             .filter_group_containers()
 
     def get_serializer_class(self):
