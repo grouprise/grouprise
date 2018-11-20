@@ -192,13 +192,15 @@ class StyleInline(StyleAsset):
 
 
 class Meta(Asset):
-    def __init__(self, name, content):
+    def __init__(self, name, content, is_property=False):
         super().__init__(stage='early')
         self.name = name
         self.content = content
+        self.is_property = is_property
 
     def create_tag(self):
-        return '<meta name="{name}" content="{content}">'.format(
+        return '<meta {key}="{name}" content="{content}">'.format(
+            key='property' if self.is_property else 'name',
             name=self.name, content=self.content
         )
 
@@ -231,8 +233,8 @@ def add_link(href, rel, **attributes):
     _ASSETS.append(Link(href, rel, **attributes))
 
 
-def add_meta(name, content):
-    _ASSETS.append(Meta(name, content))
+def add_meta(name, content, is_property=False):
+    _ASSETS.append(Meta(name, content, is_property))
 
 
 def get_assets(stage):
