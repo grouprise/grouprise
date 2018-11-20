@@ -1,30 +1,29 @@
-import { find, matches } from 'lodash'
+export default (gestaltApi, gestaltId, groupChoices) => {
+  const gestaltQuery = gestaltApi.get(gestaltId).catch(() => null)
 
-export default (gestaltApi, gestaltId, groupAdapter) => {
-  const gestalten = gestaltApi.get()
-    .then(response => Promise.resolve(response.data), () => null)
+  const get = async choices => {
+    const groups = await groupChoices.get(choices)
+    const gestalt = await gestaltQuery
+    const result = {choices: groups.choices}
 
-  const get = choices => {
-    return Promise.all([groupAdapter.get(choices), gestalten])
-      .then(data => {
-        const [groups, gestalten] = data
-        const result = {choices: groups.choices}
-        const gestalt = find(gestalten, matches({id: gestaltId}))
+    if (gestalt) {
+      gestalt.value = ''
+      gestalt.text = gestalt.name
+      gestalt.label = gestalt.name
+      result.defaultChoice = gestalt
+    }
 
-        if (gestalt) {
-          gestalt.value = ''
-          gestalt.text = gestalt.name
-          gestalt.label = gestalt.name
-          result.defaultChoice = gestalt
-        }
-
-        return Promise.resolve(result)
-      })
+    return result
   }
 
-  const texts = Object.assign({}, groupAdapter.texts, {
+  const texts = {
+    ...groupChoices.texts,
     noSelection: 'Du selbst'
-  })
+  }
 
-  return Object.assign({}, groupAdapter, {texts, get})
+  return {
+    ...groupChoices,
+    texts,
+    get
+  }
 }
