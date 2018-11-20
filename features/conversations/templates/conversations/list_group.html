@@ -2,7 +2,7 @@
 {% load rules %}
 
 {% block title %}Gespräche - {{ site.name }}{% endblock %}
-{% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block menu %}{% menu 'group' view.group %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.group 'Gespräche' %}{% endblock %}
 
 {% block heading_title %}

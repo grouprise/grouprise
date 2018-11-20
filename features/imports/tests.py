@@ -52,7 +52,8 @@ class MailInjectLMTPMixin:
             message.set_payload(body)
         return message.as_bytes()
 
-    def inject_mail(self, from_address, recipients, data: bytes=None, filename: str=None) -> None:
+    def inject_mail(
+            self, from_address, recipients, data: bytes = None, filename: str = None) -> None:
         # either data or filename needs to be specified
         assert (data is None and filename is not None) or (data is not None and filename is None)
         if data is None:

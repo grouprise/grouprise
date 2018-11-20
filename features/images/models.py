@@ -18,6 +18,8 @@ class Image(models.Model):
             source='file', processors=[Transpose(), SmartResize(366, 120)], format='PNG')
     intro = ImageSpecField(
             source='file', processors=[Transpose(), ResizeToFit(554)], format='JPEG')
+    sidebar = ImageSpecField(
+            source='file', processors=[Transpose(), ResizeToFit(313)], format='JPEG')
 
     def __str__(self):
         return '{} ({})'.format(self.file, self.creator)[2:]

@@ -18,7 +18,7 @@ IGNORE_CONTENT_TYPES = {'application/pgp-signature'}
 
 
 def get_unique_storage_filename(name_template: str, base_dir: str,
-                                default_prefix: str='attachment-') -> str:
+                                default_prefix: str = 'attachment-') -> str:
     """ determine a suitable name for a file to be stored in a directory
 
     The file may not overwrite an existing file and it should keep its original extension.

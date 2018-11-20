@@ -11,7 +11,7 @@
 {% endkwacro %}
 
 {% if link %}
-    <a class="avatar-wrap profile-avatar" href="{{ gestalt.get_absolute_url }}">
+    <a class="avatar-wrap profile-avatar" href="{{ gestalt|url_for_user:user }}">
         {% usekwacro avatar %}
     </a>
 {% else %}

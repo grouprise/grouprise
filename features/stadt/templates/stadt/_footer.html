@@ -36,7 +36,7 @@
             <li>
                 <ul>
                     {% if user.is_authenticated %}
-                        <li><a href="{{ user.gestalt|url_for:user }}">Deine Seite</a></li>
+                        <li><a href="{{ user.gestalt|url_for_user:user }}">Deine Seite</a></li>
                         <li><a href="{% url 'conversations' %}">Deine Gespräche</a></li>
                         <li class="separator"></li>
                         <li><a href="{% url 'settings' %}">Einstellungen</a></li>
