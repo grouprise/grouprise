@@ -1,8 +1,13 @@
-from django.conf.urls import url
+from django.urls import include, path
 
-import core.views.markdown
+from core import api
+from core.views import Error
+from core.views.markdown import Markdown
 
 urlpatterns = [
-    url(r'^stadt/error/$', core.views.Error.as_view()),
-    url(r'^stadt/markdown/$', core.views.markdown.Markdown.as_view(), name='markdown'),
+    path('stadt/api/', include(api.router.urls)),
+    path('stadt/api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('stadt/error/', Error.as_view()),
+    path('stadt/markdown/', Markdown.as_view(), name='markdown'),
+    path('stadt/tc-api/', include(api.tc_router.urls)),
 ]

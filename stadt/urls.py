@@ -4,7 +4,6 @@ from django.contrib import admin
 
 urlpatterns = [
     urls.url(r'^stadt/admin/', admin.site.urls),
-    urls.url(r'^stadt/api/', urls.include('core.api_urls')),
 
     urls.url(r'^stadt/', urls.include('features.conversations.urls')),
     urls.url(r'^stadt/', urls.include('features.sharing.urls')),
