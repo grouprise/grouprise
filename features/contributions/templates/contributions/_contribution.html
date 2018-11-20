@@ -1,5 +1,5 @@
 {% if not contribution.attached_to or not contribution.contribution.file %}
-    <li>
+    <li id="{% ref contribution %}" class="anchor">
         {% if contribution.contribution.file %}
             {% include 'contributions/_contribution_type_file.html' %}
         {% elif contribution.contribution.group %}

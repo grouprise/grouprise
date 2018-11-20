@@ -5,6 +5,12 @@
     > li {
         display: block;
         margin-bottom: (@padding-large-vertical * 1.5);
+
+        &.anchor {
+            margin-bottom: 0;
+            padding-top: calc(@nav-height + @padding-large-vertical * 1.5);
+            margin-top: -@nav-height;
+        }
     }
 }
 
