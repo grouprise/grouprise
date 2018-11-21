@@ -16,7 +16,7 @@ html2text                   # debian: python3-html2text
 markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
 pillow                      # debian: python-pil
-pymdown-extensions          # NOT IN DEBIAN
+pymdown-extensions<6        # NOT IN DEBIAN
 aiosmtplib                  # NOT IN DEBIAN
 schulze                     # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
