@@ -65,7 +65,7 @@ class BasicAuthUserResolver:
         auth = BasicAuthentication()
         try:
             result = auth.authenticate(request)
-        except (exceptions.NotAuthenticated, exceptions.AuthenticationFailed) as exc:
+        except (exceptions.NotAuthenticated, exceptions.AuthenticationFailed):
             return None
         if result is None:
             return None
