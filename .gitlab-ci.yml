@@ -22,8 +22,8 @@ make_deb_package:
         - triggers
         - schedules
     script:
-        - make dist-deb-packages-directory
+        - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
     artifacts:
         paths:
-            - build/debian/export/stadtgestalten.deb
+            - build/debian
         expire_in: 1w
