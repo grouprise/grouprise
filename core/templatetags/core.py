@@ -75,12 +75,13 @@ def nolinebreaks(value):
 @register.filter
 def html2text(html, preset='mail'):
     text_maker = python_html2text.HTML2Text()
+    text_maker.body_width = 0
     if preset == 'mail':
         text_maker.inline_links = False
         text_maker.links_each_paragraph = True
         text_maker.use_automatic_links = True
     elif preset == 'import':
-        pass
+        text_maker.escape_snob = True
     return text_maker.handle(html).rstrip()
 
 

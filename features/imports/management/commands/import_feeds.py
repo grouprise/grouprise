@@ -8,6 +8,7 @@ import feedparser
 import requests
 
 import core
+from core.templatetags.core import html2text
 from features.associations import models as associations
 from features.content import models as content
 from features.content.signals import post_create
@@ -47,7 +48,7 @@ class Command(django.core.management.base.BaseCommand):
                         key = entry.get('id', entry.get('link'))
                         if key and not models.Imported.objects.filter(key=key).exists():
                             title = entry.get('title')
-                            text = entry.get('summary')
+                            text = html2text(entry.get('summary'), preset='import')
                             if title and text:
                                 c = content.Content.objects.create(title=title)
                                 link = entry.get('link')
