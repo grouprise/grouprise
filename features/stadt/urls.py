@@ -1,6 +1,8 @@
+from django.urls import path
 from django.conf.urls import url
 
 from . import feeds, views
+from features.stadt.views import Help
 
 urlpatterns = [
     url(
@@ -17,6 +19,8 @@ urlpatterns = [
         r'^stadt/groups/(?P<group_pk>[0-9]+)/feed/$',
         feeds.GroupFeed(),
         name='group-feed'),
+
+    path('stadt/help/', Help.as_view(), name='help'),
 
     url(
         r'^stadt/privacy/$',

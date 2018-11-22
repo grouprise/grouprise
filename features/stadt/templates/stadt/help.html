@@ -1,0 +1,89 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Hilfe - {{ block.super }}{% endblock %}
+
+{% block content_header %}
+    {% if STADTGESTALTEN_SHOW_HEADER %}
+        <header class="content-section-header">
+            {% include 'core/_heading.html' with title=about_group.name %}
+        </header>
+        {% if intro_text %}
+            <p>{{ intro_text }}</p>
+        {% endif %}
+        {% include 'stadt/_index_header.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block heading_title %}
+    <h1 class="content-classification">Hilfe</h1>
+    <span class="decoration-icon sg-question" role="presentation"></span>
+{% endblock %}
+
+{% block content %}
+    {% if about_text %}
+        <article class="help-content-preview">
+            <a href="{{ about_text.get_absolute_url }}" class="content-preview-body">
+                <div class="content-preview-body-content">
+                    <div class="help-content-image">
+                        <img src="{{ about_text.container.image.preview_content.url }}">
+                    </div>
+                    <div class="content-preview-text">
+                        <div class="content-preview-header">
+                            <h3 class="content-title">Über {{ about_group }}</h3>
+                        </div>
+                        <p>Finde heraus, worum es hier geht.</p>
+                    </div>
+                </div>
+            </a>
+        </article>
+    {% endif %}
+    {% if tools_text %}
+        <article class="help-content-preview">
+            <a href="{{ tools_text.get_absolute_url }}" class="content-preview-body">
+                <div class="content-preview-body-content">
+                    <div class="help-content-image">
+                        <img src="{{ tools_text.container.image.preview_content.url }}">
+                    </div>
+                    <div class="content-preview-text">
+                        <div class="content-preview-header">
+                            <h3 class="content-title">Werkzeuge im Detail</h3>
+                        </div>
+                        <p>Lies nach, welche Funktionen es gibt.</p>
+                    </div>
+                </div>
+            </a>
+        </article>
+    {% endif %}
+    <article class="help-content-preview">
+        <a href="{% url 'markdown' %}" class="content-preview-body">
+            <div class="content-preview-body-content">
+                <div class="help-content-image">
+                    <img src="">
+                </div>
+                <div class="content-preview-text">
+                    <div class="content-preview-header">
+                        <h3 class="content-title">Textformatierung</h3>
+                    </div>
+                    <p>So kannst Du Deine Texte gestalten.</p>
+                </div>
+            </div>
+        </a>
+    </article>
+
+    <header class="content-section-header">
+        {% include 'core/_heading.html' with title='Kontakt' icon='sg-message' %}
+    </header>
+
+    <p>Du findest Dich noch nicht zurecht oder hast Verbesserungsvorschläge? Schreib uns, wir helfen Dir gerne. Wir können auch telefonieren oder vorbeikommen.</p>
+
+    {% include 'conversations/_create_form.html' %}
+
+    <header class="content-section-header">
+        {% include 'core/_heading.html' with title='Mehr' icon='sg-more' %}
+    </header>
+    <ul>
+        <li>SG-Gruppe</li>
+        <li>Impressum</li>
+        <li>Datenschutz</li>
+    </ul>
+{% endblock %}

@@ -13,6 +13,7 @@ import core
 from core.views import PermissionMixin
 from features import gestalten, groups
 from features.content import views as content
+from features.conversations.views import CreateGroupConversation
 from features.groups.models import Group
 
 
@@ -47,6 +48,31 @@ class Entity(core.views.PermissionMixin, django.views.generic.View):
     def has_permission(self):
         self.view = self.get_view()
         return self.view.has_permission()
+
+
+class Help(CreateGroupConversation):
+    template_name = 'stadt/help.html'
+
+    def get_context_data(self, **kwargs):
+        intro = self.entity.associations.ordered_user_content(self.request.user) \
+                .filter(pinned=True).order_by('time_created')
+        intro_gallery = intro.filter_galleries().filter(public=True).first()
+        if intro_gallery:
+            intro = intro.exclude(pk=intro_gallery.pk)
+        about_text = intro.first()
+        tools_text = self.entity.associations.ordered_user_content(self.request.user) \
+            .filter(slug='tools').first()
+        if about_text:
+            kwargs['about_text'] = about_text
+            if tools_text and tools_text != about_text:
+                kwargs['tools_text'] = tools_text
+        kwargs['intro_text'] = settings.STADTGESTALTEN_INTRO_TEXT
+        kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
+        return super().get_context_data(**kwargs)
+
+    def get_object(self):
+        self.entity = Group.objects.get(id=settings.ABOUT_GROUP_ID)
+        return self.entity
 
 
 class Index(content.List):
