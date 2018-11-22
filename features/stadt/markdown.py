@@ -4,6 +4,7 @@ from django.db.models import Q
 from markdown import Extension, util, inlinepatterns
 
 from core.markdown import ExtendedLinkPattern, markdown_extensions
+from core.templatetags.core import full_url
 from features.associations import models as associations
 from features.gestalten.models import Gestalt
 from features.groups.models import Group
@@ -47,10 +48,11 @@ class EntityLinkExtension:
 
         if match:
             entity, slug, name = get_entity(match)
+            entity_url = full_url(entity.get_absolute_url())
             if entity and entity.is_group:
-                return 'group://%d@%s' % (entity.id, entity.get_absolute_url())
+                return 'group://%d@%s' % (entity.id, entity_url)
             elif entity:
-                return 'gestalt://%d@%s' % (entity.id, entity.get_absolute_url())
+                return 'gestalt://%d@%s' % (entity.id, entity_url)
             else:
                 return self.ENTITY_NONE
 
@@ -87,7 +89,7 @@ class ContentReferencePattern(inlinepatterns.ReferencePattern):
         entity, slug, name = get_entity(m, 1)
         if entity:
             return set_entity_attrs(
-                self.makeTag(entity.get_absolute_url(), str(entity), name),
+                self.makeTag(full_url(entity.get_absolute_url()), str(entity), name),
                 entity.id,
                 entity.is_group
             )
