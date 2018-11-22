@@ -1,7 +1,7 @@
 Beitrag mit Kommentaren online lesen und kommentieren:
 {% if association %}{% url 'content-permalink' association.pk as path %}{% else %}{% url 'content-permalink' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}#{% ref object %}
 
-{{ text|striptags }}
+{% markdown text as html %}{{ html|html2text:'mail' }}
 
 -- 
 {% load rules %}{% has_perm 'contributions.reply_to_author' recipient.user object as can_reply_to_author %}{% if can_reply_to_author %}Nur an {{ object.author }} antworten:

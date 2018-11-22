@@ -4,4 +4,4 @@
 Veranstaltung {% load events %}{% event_time object %}
 Ort: {{ object.place }}
 
-{{ object.versions.last.text }}{% endblock %}
+{% markdown object.versions.last.text as html %}{{ html|html2text:'mail' }}{% endblock %}

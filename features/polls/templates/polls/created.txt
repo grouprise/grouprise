@@ -1,7 +1,7 @@
 {% extends 'content/created.txt' %}{% block content %}Umfrage online ansehen und abstimmen oder kommentieren:
 {% url 'content-permalink' association.pk as path %}{{ path|full_url }}
 
-{{ object.versions.last.text }}
+{% markdown object.versions.last.text as html %}{{ html|html2text:'mail' }}
 
 Antwortmöglichkeiten der Umfrage:{% for option in object.poll.options.all %}
 * {{ option|nolinebreaks }}{% endfor %}{% endblock %}
