@@ -3,4 +3,4 @@
 
 Galerie mit {{ object.gallery_images.count }} Bild{{ object.gallery_images.count|pluralize:'ern' }}
 
-{{ object.versions.last.text }}{% endblock %}
+{% markdown object.versions.last.text as html %}{{ html|html2text:'mail' }}{% endblock %}

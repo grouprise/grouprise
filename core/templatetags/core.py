@@ -4,7 +4,8 @@ import os
 import random
 
 import bleach as python_bleach
-
+import html2text as python_html2text
+import markdown as python_markdown
 from core import fragments, markdown as core_markdown
 from core.views import app_config
 from django import apps, template
@@ -14,7 +15,6 @@ from django.template import defaultfilters
 from django.template.base import FilterExpression
 from django.template.loader import get_template
 from django.utils import html as django_html, safestring
-import markdown as python_markdown
 from markdown.extensions import toc
 from core.assets import get_assets
 
@@ -70,6 +70,18 @@ def startswith(value: str, search):
 @register.filter
 def nolinebreaks(value):
     return ' '.join(str(value).split('\n'))
+
+
+@register.filter
+def html2text(html, preset='mail'):
+    text_maker = python_html2text.HTML2Text()
+    if preset == 'mail':
+        text_maker.inline_links = False
+        text_maker.links_each_paragraph = True
+        text_maker.use_automatic_links = True
+    elif preset == 'import':
+        pass
+    return text_maker.handle(html).rstrip()
 
 
 @register.simple_tag(takes_context=True)

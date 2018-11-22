@@ -1,4 +1,4 @@
-{{ text|striptags }}
+{% markdown text as html %}{{ html|html2text:'mail' }}
 
 -- 
 Nachricht online lesen und beantworten:

@@ -3,4 +3,4 @@
 
 Datei {{ object.versions.last.file.get }}
 
-{{ object.versions.last.text }}{% endblock %}
+{% markdown object.versions.last.text as html %}{{ html|html2text:'mail' }}{% endblock %}
