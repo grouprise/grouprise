@@ -1,13 +1,3 @@
-.page-meta {
-    font-size: 0.85em;
-    color: @color-text-extralight;
-    text-align: right;
-
-    .on-handhelds({
-        display: none;
-    });
-}
-
 .page-footer {
     &:extend(.decoration-striped);
     margin: 4rem 0 0;
@@ -71,4 +61,28 @@
         display: block;
         margin: 0 -15px;
     });
+}
+
+.page-info {
+    display: flex;
+    align-items: center;
+    text-align: right;
+    color: @color-text-extralight;
+
+    .on-handhelds({
+        display: none;
+    });
+}
+
+.page-meta {
+    font-size: 0.85em;
+}
+
+.page-help {
+    font-size: 2em;
+    margin-left: .75rem;
+
+    a {
+        color: @color-text-extralight;
+    }
 }
