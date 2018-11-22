@@ -9,10 +9,9 @@ from core import api
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):
-    id = django_filters.Filter(name='id', lookup_expr='in',
-                               widget=django_filters.widgets.CSVWidget)
-    name = django_filters.CharFilter(name='name', lookup_expr='icontains')
-    slug = django_filters.CharFilter(name='slug', lookup_expr='iexact')
+    id = django_filters.Filter(lookup_expr='in', widget=django_filters.widgets.CSVWidget)
+    name = django_filters.CharFilter(lookup_expr='icontains')
+    slug = django_filters.CharFilter(lookup_expr='iexact')
 
     class Meta:
         model = models.Group
