@@ -3,6 +3,8 @@
 {% block title %}{% if title %}{{ title }} - {% endif %}{{ site.name }}{% endblock %}
 
 {% block body %}
+    {% block campaign %}{% endblock %}
+
     <div class="wrap wrap-nav">
         {% block menu %}{% endblock %}
     </div>
