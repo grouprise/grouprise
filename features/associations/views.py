@@ -49,4 +49,4 @@ class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.
         return self.get_association()
 
     def get_success_url(self):
-        return self.object.entity.get_absolute_url()
+        return self.object.entity.get_profile_url()

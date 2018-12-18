@@ -91,6 +91,9 @@ class Group(core.models.Model):
         return self.name
 
     def get_absolute_url(self):
+        return self.get_profile_url()
+
+    def get_profile_url(self):
         return urls.reverse(
                 'entity', args=[type(self).objects.get(pk=self.pk).slug])
 
