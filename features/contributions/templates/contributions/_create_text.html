@@ -6,6 +6,19 @@
         {{ form.in_reply_to }}
         {% field form.text hide_label=True %}
         <button class="btn btn-primary">{{ submit_label }}</button>
+        <span class="media-instruction">
+            Post wird
+            <strong>{% if not association.public %}nicht {% endif %}öffentlich</strong> sein.
+            Benachrichtigungen werden an 
+            {% if association.entity.is_group %}Mitglieder der Gruppe{% endif %}
+            @{{ association.entity.slug }}
+            {% if association.entity.is_group %}
+            und alle Beteiligten
+            {% elif association.entity.user == user %}
+            und @{{ association.container.contributions.first.author }}
+            {% endif %}
+            versendet.
+        </span>
     </form>
 {% endblock %}
 

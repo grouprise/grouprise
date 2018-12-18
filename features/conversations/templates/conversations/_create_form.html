@@ -15,4 +15,12 @@
     <button class="btn btn-primary" data-publish-submit>
         Nachricht senden
     </button>
+    <span class="media-instruction">
+        Gespräch wird <strong>nicht öffentlich</strong> sein. 
+        {% if view.entity %}
+            Benachrichtigungen werden nur an
+            {% if view.entity.is_group %}Mitglieder der Gruppe{% endif %}
+            @{{ view.entity.slug }} versendet.
+        {% endif %}
+    </span>
 </form>

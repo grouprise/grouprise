@@ -14,7 +14,8 @@ class Association(core.models.Model):
     public = models.BooleanField(
             'Öffentlich', default=False,
             help_text='Öffentliche Beiträge sind auch für Besucherinnen sichtbar, die nicht '
-            'Mitglied der Gruppe sind')
+            'Mitglied der Gruppe sind. Benachrichtigungen werden an Mitglieder und '
+            'Abonnentinnen versendet.')
     slug = models.SlugField(
             'Kurzname', default=None, null=True,
             help_text='Der Kurzname wird beispielsweise in der Webadresse des Beitrags '
