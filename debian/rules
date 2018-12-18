@@ -3,7 +3,7 @@
 export DH_VIRTUALENV_INSTALL_ROOT=/usr/share/stadtgestalten
 
 %:
-	dh $@ --with python-virtualenv --upgrade-pip --python /usr/bin/python3 --use-system-packages \
+	dh $@ --with python-virtualenv,systemd --upgrade-pip --python /usr/bin/python3 --use-system-packages \
 		--skip-install --install-suffix .virtualenv
 
 override_dh_install:
