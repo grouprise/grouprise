@@ -16,7 +16,7 @@ class Detail(core.views.PermissionMixin, django.views.generic.ListView):
     def get_queryset(self):
         self.tag = self.get_tag()
         self.groups = groups.Group.objects.filter(tags__tag=self.tag)
-        self.tagged_only = int(self.request.GET.get('tagged', 0))
+        self.tagged_only = core.text.intify(self.request.GET.get('tagged'), 0)
         tagged_query = Q(content__taggeds__tag=self.tag)
         qs = super().get_queryset().ordered_user_content(self.request.user)
         if self.tagged_only:
