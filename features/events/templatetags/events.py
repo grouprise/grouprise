@@ -115,7 +115,7 @@ def event_time(context, event):
 @register.inclusion_tag('events/_sidebar_calendar.html', takes_context=True)
 def sidebar_calendar(
         context, associations, group=None, preview_length=5, show_group=True,
-        hide_buttons=False, component_id=None):
+        hide_buttons=False, component_id=None, site_calendar=False):
     user = context['user']
     group = context.get('group')
     upcoming = associations\
@@ -138,6 +138,9 @@ def sidebar_calendar(
         actions.append(('Alle Veranstaltungen', url))
     if group:
         url = reverse('group-events-export', args=(group.slug,))
+        actions.append(('Kalender exportieren', url))
+    if site_calendar:
+        url = reverse('export-site-events')
         actions.append(('Kalender exportieren', url))
 
     context.update({

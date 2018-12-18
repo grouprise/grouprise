@@ -14,6 +14,16 @@ urlpatterns = [
         name='create-event'),
 
     url(
+        r'^stadt/events/export$',
+        views.SiteCalendarExport.as_view(),
+        name='export-site-events'),
+
+    url(
+        r'^stadt/events/public.ics$',
+        views.SiteCalendarFeed(),
+        name='site-events-feed'),
+
+    url(
         r'^stadt/events/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
         views.Day.as_view(),
         name='day-events'),

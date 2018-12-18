@@ -88,16 +88,16 @@ class BaseCalendarFeed(ICalFeed):
         self.assemble_content_filter_dict(filter_dict)
         if user is None:
             if filter_dict['public']:
-                return associations.Association.objects.filter_events().filter(**filter_dict)
+                return associations.Association.objects.filter_upcoming().filter(**filter_dict)
             else:
                 # non-public items cannot be accessed without being authorized
                 raise PermissionDenied
         else:
-            return associations.Association.objects.filter_events().can_view(user).filter(
+            return associations.Association.objects.filter_upcoming().can_view(user).filter(
                     **filter_dict)
 
     def assemble_content_filter_dict(self, filter_dict):
-        filter_dict['public'] = (self.kwargs['domain'] == 'public')
+        filter_dict['public'] = (self.kwargs.get('domain', 'public') == 'public')
 
     def get_authorized_user(self):
         authenticated_gestalt = self.user_resolver.resolve_user(self.request,
@@ -177,6 +177,14 @@ class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
                 and is_member_of(authenticated_gestalt.user, self.get_group()))
 
 
+class SiteCalendarFeed(BaseCalendarFeed):
+    def get_calendar_owner(self):
+        return None
+
+    def title(self):
+        return sites_models.Site.objects.get_current().name
+
+
 class CalendarExport(utils_views.PageMixin, generic.DetailView):
     sidebar = tuple()
     template_name = 'events/export.html'
@@ -216,6 +224,19 @@ class GroupCalendarExport(CalendarExport):
             return is_member_of(self.request.user, self.get_group())
         else:
             return False
+
+
+class SiteCalendarExport(utils_views.PageMixin, generic.TemplateView):
+    permission_required = 'stadt.view_index'
+    title = 'Exportmöglichkeiten für Kalender'
+    feed_route = 'site-events-feed'
+    template_name = 'events/export.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['public_export_url'] = self.request.build_absolute_uri(
+            reverse(self.feed_route))
+        return context
 
 
 class GestaltCalendarFeed(BaseCalendarFeed):

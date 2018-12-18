@@ -4,6 +4,13 @@
     <link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ feed_url }}">
 {% endblock %}
 
+{% block sidebar %}
+    {% load events %}
+    {% sidebar_calendar paginator.object_list component_id='content-calendar' site_calendar=True %}
+    {% load groups %}
+    {% sidebar_groups user %}
+{% endblock %}
+
 {% block content_header %}
     {% if STADTGESTALTEN_SHOW_HEADER %}
         {% load dismissible %}
