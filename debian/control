@@ -13,7 +13,7 @@ Architecture: all
 Depends: python3-html2text, python3-pil, python3-requests, python3-six,
  python3-xapian ${misc:Depends}, ${python3:Depends}, moreutils
 Recommends: ghostscript, python3-psycopg2, uwsgi, uwsgi-plugin-python3,
- uwsgi-plugin-router-access, ${misc:Recommends}
+ uwsgi-plugin-router-access, redis-server, ${misc:Recommends}
 Suggests: sqlite3, postgresql-client-common
 Description: Web platform that enables social action and solidarity
   Stadtgestalten is a web-based platform providing tools for groups and

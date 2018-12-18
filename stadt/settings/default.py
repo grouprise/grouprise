@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.forms',
     'django_filters',
     'django_mailbox',
+    'huey.contrib.djhuey',
     'features.articles',
     'features.associations',
     'features.contributions',

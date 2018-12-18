@@ -6,3 +6,6 @@ DATABASES = {
     }
 }
 GROUPRISE_UNKNOWN_GESTALT_ID = 1
+HUEY = {
+    'always_eager': True,
+}
