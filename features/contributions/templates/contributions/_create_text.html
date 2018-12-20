@@ -5,10 +5,11 @@
         {% csrf_token %}
         {{ form.in_reply_to }}
         {% field form.text hide_label=True %}
-        <button class="btn btn-primary">{{ submit_label }}</button>
-        <span class="media-instruction">
-            Post wird
-            <strong>{% if not association.public %}nicht {% endif %}öffentlich</strong> sein.
+        <span class="btn has-state has-square-icon has-hover-title is-unresponsive float-right"
+              data-state="{% if association.public %}in{% endif %}active">
+            <i class="sg sg-xl sg-privacy-{% if association.public %}public{% else %}private{% endif %}"></i>
+            <span class="btn-htitle" data-position="right" title="
+            Post wird {% if not association.public %}nicht {% endif %}öffentlich sein.
             Benachrichtigungen werden an 
             {% if association.entity.is_group %}Mitglieder der Gruppe{% endif %}
             @{{ association.entity.slug }}
@@ -17,8 +18,10 @@
             {% elif association.entity.user == user %}
             und @{{ association.container.contributions.first.author }}
             {% endif %}
-            versendet.
+            versendet.">
+            </span>
         </span>
+        <button class="btn btn-primary">{{ submit_label }}</button>
     </form>
 {% endblock %}
 

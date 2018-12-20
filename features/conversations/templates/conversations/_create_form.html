@@ -12,15 +12,19 @@
     {% endif %}
     {% field form.subject %}
     {% field form.text %}
-    <button class="btn btn-primary" data-publish-submit>
-        Nachricht senden
-    </button>
-    <span class="media-instruction">
-        Gespräch wird <strong>nicht öffentlich</strong> sein. 
+    <span class="btn has-state has-square-icon has-hover-title is-unresponsive float-right"
+          data-state="active">
+        <i class="sg sg-xl sg-privacy-private"></i>
+        <span class="btn-htitle" data-position="right" title="
+        Gespräch wird nicht öffentlich sein. 
         {% if view.entity %}
             Benachrichtigungen werden nur an
             {% if view.entity.is_group %}Mitglieder der Gruppe{% endif %}
             @{{ view.entity.slug }} versendet.
-        {% endif %}
+        {% endif %}">
+        </span>
     </span>
+    <button class="btn btn-primary" data-publish-submit>
+        Nachricht senden
+    </button>
 </form>
