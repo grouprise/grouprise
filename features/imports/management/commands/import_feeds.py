@@ -45,7 +45,9 @@ class Command(django.core.management.base.BaseCommand):
                         continue
                     feed = feedparser.parse(feed_url)
                     for entry in feed.entries:
-                        key = entry.get('id', entry.get('link'))
+                        key = entry.get('id')
+                        if not key:
+                            key = entry.get('link')
                         if key and not models.Imported.objects.filter(key=key).exists():
                             title = entry.get('title')
                             text = html2text(entry.get('summary'), preset='import')
