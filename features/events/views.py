@@ -181,6 +181,13 @@ class SiteCalendarFeed(BaseCalendarFeed):
     def get_calendar_owner(self):
         return None
 
+    def item_title(self, item):
+        entity = item.content.first().associations.first().entity
+        if entity.is_group:
+            return '[{}] {}'.format(entity.slug, item.content.first().title)
+        else:
+            return super().item_title(item)
+
     def title(self):
         return sites_models.Site.objects.get_current().name
 
