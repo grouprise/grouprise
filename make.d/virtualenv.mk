@@ -4,6 +4,7 @@
 DIR_VIRTUALENV := $(shell echo "import sys; hasattr(sys, 'real_prefix') or sys.exit(1)" | python3 && \
 	echo "$$(dirname "$$(dirname "$$(which python)")")" || echo "$${VIRTUAL_ENV:-"$(DIR_BUILD)/venv"}")
 BIN_ACTIVATE = $(DIR_VIRTUALENV)/bin/activate
+STAMP_VIRTUALENV = $(DIR_BUILD)/.stamp_virtualenv
 
 $(BIN_ACTIVATE):
 	virtualenv -p python3 "$(DIR_VIRTUALENV)"
@@ -20,12 +21,15 @@ virtualenv_check:
 		exit 1; \
 	)
 
-.PHONY: virtualenv_update
-virtualenv_update: requirements.txt
+$(STAMP_VIRTUALENV): requirements.txt
 	pip install --upgrade pip
 	pip install --upgrade -r requirements.txt
 	find "$(DIR_VIRTUALENV)" -name no-global-site-packages.txt -delete
-	touch "$(DIR_VIRTUALENV)"
+	mkdir -p "$(dir $(STAMP_VIRTUALENV))"
+	touch "$(STAMP_VIRTUALENV)"
+
+.PHONY: virtualenv_update
+virtualenv_update: $(STAMP_VIRTUALENV)
 
 .PHONY: virtualenv_create
 virtualenv_create: $(BIN_ACTIVATE)
