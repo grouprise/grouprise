@@ -22,8 +22,8 @@ virtualenv_check:
 	)
 
 $(STAMP_VIRTUALENV): requirements.txt
-	pip install --upgrade pip
-	pip install --upgrade -r requirements.txt
+	pip3 install --upgrade pip
+	pip3 install --upgrade -r requirements.txt
 	find "$(DIR_VIRTUALENV)" -name no-global-site-packages.txt -delete
 	mkdir -p "$(dir $(STAMP_VIRTUALENV))"
 	touch "$(STAMP_VIRTUALENV)"
