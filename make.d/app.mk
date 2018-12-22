@@ -17,11 +17,9 @@ ABOUT_GROUP_ID = 1
 endef
 export APP_SETUP_CONFIG
 
+
 $(CONFIG_APP_SETUP): $(MAKEFILES)
 	echo "$$APP_SETUP_CONFIG" > "$(CONFIG_APP_SETUP)"
-
-.PHONY: app_setup_config
-app_setup_config: $(CONFIG_APP_SETUP)
 
 .PHONY: app_migrate
 app_migrate: virtualenv_check
