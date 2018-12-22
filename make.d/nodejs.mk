@@ -12,24 +12,15 @@ NODE_DEST = $(DIR_BUILD)/node
 
 RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BUILD))" node
 
-assets_node_download:
-	rm -rf "$(NODE_DEST)"
-	mkdir -p "$(NODE_TMP)" "$(NODE_DEST)"
-	wget -O - "$(NODE_URL)" | tar xJ -C "$(NODE_TMP)" -f -
-	rsync -a "$(NODE_TMP)/$$(basename -s ".tar.xz" "$(NODE_URL)")/" "$(NODE_DEST)"
-	rm -rf "$(NODE_TMP)"
-
-assets_node_system:
-	rm -rf "$(NODE_DEST)"
-	mkdir -p "$(NODE_DEST)/bin"
-	ln -s "$$(which "$(BIN_NODE_SYSTEM)")" "$(NODE_DEST)/bin/node"
-	ln -s "$$(which npm)" "$(NODE_DEST)/bin/npm"
 
 $(BIN_NODE):
+	rm -rf "$(NODE_DEST)"
+	mkdir -p "$(NODE_DEST)/bin"
 	@if [  "$(NODE_VERSION)" = $$(printf '%s\n' "$(NODE_VERSION)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
 		echo >&2 "Local nodejs version is too old (before $(NODE_VERSION_MIN)). Downloading from server ..."; \
-		$(MAKE) assets_node_download; \
+		wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_DEST)" --strip-components=1 -f -; \
 	else \
 		echo >&2 "Local nodejs version is sufficient. Symlinking executables ..."; \
-		$(MAKE) assets_node_system; \
+		ln -s "$$(which "$(BIN_NODE_SYSTEM)")" "$(NODE_DEST)/bin/node"; \
+		ln -s "$$(which npm)" "$(NODE_DEST)/bin/npm"; \
 	fi
