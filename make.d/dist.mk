@@ -5,15 +5,18 @@ PYTHON_INSTALL_ARGS = --root "$(DESTDIR)" \
 	--install-scripts="/$(DIR_INSTALL_ROOT)" \
 	--install-data="/$(DIR_INSTALL_ROOT)"
 
-.PHONY: clean
-clean:
+.PHONY: clean-grouprise
+clean-grouprise:
 	$(RM) -r node_modules
 	$(RM) -r static
 	$(RM) -r $(DIR_BUILD)
 
-.PHONY: build
-build: assets app_collect_static
+clean: clean-grouprise
 
-.PHONY: install
-install: build
-	echo "KEEP THIS ECHO or the build order for install targets will change!"
+.PHONY: build-grouprise
+build-grouprise: assets app_migrate app_collect_static
+build: build-grouprise
+
+.PHONY: install-grouprise
+install-grouprise: build-grouprise
+install: install-grouprise
