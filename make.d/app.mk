@@ -26,20 +26,20 @@ $(CONFIG_APP_SETUP): $(MAKEFILES)
 	echo "$$APP_SETUP_CONFIG" > "$(CONFIG_APP_SETUP)"
 
 .PHONY: app_migrate
-app_migrate: virtualenv_check
-	$(PYTHON_BIN) manage.py migrate
+app_migrate: virtualenv_check app_local_settings
+	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" manage.py migrate )
 
 .PHONY: app_run
-app_run: virtualenv_check
-	STADTGESTALTEN_PRESET=development $(PYTHON_BIN) manage.py runserver
+app_run: app_migrate app_collect_static
+	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=development "$(PYTHON_BIN)" manage.py runserver )
 
 .PHONY: app_collect_static
-app_collect_static: virtualenv_check assets
-	STADTGESTALTEN_PRESET=packaging python manage.py collectstatic --no-input
+app_collect_static: virtualenv_check app_local_settings assets
+	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=packaging "$(PYTHON_BIN)" manage.py collectstatic --no-input )
 
 .PHONY: app_local_settings
 app_local_settings: $(CONFIG_APP_SETUP)
 
 .PHONY: app_setup
-app_setup: $(CONFIG_APP_SETUP) $(BIN_ACTIVATE)
-	( . "$(BIN_ACTIVATE)" && $(MAKE) virtualenv_update app_migrate app_collect_static app_run )
+app_setup: app_migrate app_collect_static
+	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=development $(PYTHON_BIN) manage.py runserver )

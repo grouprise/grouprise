@@ -27,7 +27,7 @@ lint_packages:
 test: lint test_js test_py
 
 .PHONY: test_py
-test_py: virtualenv_check
+test_py: $(ACTIVATE_VIRTUALENV) virtualenv_check
 	@# check for duplicate test method names that may overwrite each other
 	@duplicate_function_names=$$(find . -mindepth 2 -type f -name tests.py -not \( $(LINT_PKG_IGNORE_GLOBAL) \) \
 			| xargs grep -h "def test_" \
@@ -44,15 +44,15 @@ test_py: virtualenv_check
 	# asset metadata and JavaScript & CSS file references, we simply make sure that the file
 	# exists during the test run. The content itself is of no relevance to the python-tests.
 	touch core/templates/core/_assets.html
-	STADTGESTALTEN_PRESET=test python manage.py test
+	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=test "$(PYTHON_BIN)" manage.py test )
 
 .PHONY: test_js
 test_js: $(DIR_NODE) lint_js
 	$(RUN_NODE) "$(BIN_NODE_PKG)" run test
 
 .PHONY: report-python-coverage
-coverage_py: virtualenv_check
-	STADTGESTALTEN_PRESET=test python -m coverage run -m manage test
-	python -m coverage report
-	python -m coverage html --directory="$(DIR_BUILD)/coverage-report"
+coverage_py: $(ACTIVATE_VIRTUALENV) virtualenv_check
+	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=test "$(PYTHON_BIN)" -m coverage run -m manage test )
+	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage report )
+	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage html --directory="$(DIR_BUILD)/coverage-report" )
 	@echo "Coverage Report Location: file://$(realpath $(DIR_BUILD))/coverage-report/index.html"
