@@ -22,14 +22,14 @@ assets_node_download:
 assets_node_system:
 	rm -rf "$(NODE_DEST)"
 	mkdir -p "$(NODE_DEST)/bin"
-	ln -s "$$(which $(BIN_NODE_SYSTEM))" "$(NODE_DEST)/bin/node"
+	ln -s "$$(which "$(BIN_NODE_SYSTEM)")" "$(NODE_DEST)/bin/node"
 	ln -s "$$(which npm)" "$(NODE_DEST)/bin/npm"
 
 $(BIN_NODE):
-	@if [  "$(NODE_VERSION)" = $$(echo -e "$(NODE_VERSION)\n$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
-		echo "nodejs version is too old. downloading from server..."; \
+	@if [  "$(NODE_VERSION)" = $$(printf '%s\n' "$(NODE_VERSION)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
+		echo >&2 "Local nodejs version is too old (before $(NODE_VERSION_MIN)). Downloading from server ..."; \
 		$(MAKE) assets_node_download; \
 	else \
-		echo "system nodejs version is sufficient. linking system files..."; \
+		echo >&2 "Local nodejs version is sufficient. Symlinking executables ..."; \
 		$(MAKE) assets_node_system; \
 	fi
