@@ -3,7 +3,7 @@
 set -eu
 
 EXEC_USER=stadtgestalten
-EXEC_BASE=/usr/share/stadtgestalten
+EXEC_BASE=/usr/share/grouprise
 
 if [ "$(id -nu)" = "$EXEC_USER" ]; then
     . "$EXEC_BASE/.virtualenv/bin/activate"

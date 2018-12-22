@@ -1,19 +1,91 @@
 #!/usr/bin/make -f
 
-export DH_VIRTUALENV_INSTALL_ROOT=/usr/share/stadtgestalten
+# The packaging of grouprise is a bit tricky:
+#   * dependencies need to be packaged in a virtualenv, since a few packages are missing in Debian
+#   * grouprise's build system is more focussed on "make" instead of setuptools
+#
+# In order to achieve the packaging of dependencies, we use "dh-virtualenv".
+# It features the creation of a virtualenv during the build process and copies these files to
+# configurable locations.
+# In order to use the make-based targets, we need to override some debhelper targets (e.g.
+# "dh_auto_build" and "dh_auto_clean".
+#
+# Probably we could simplify the packaging in the future by removing dh-virtualenv and simply using
+# the virtualenv handling of grouprise's make recipes.  This would reduce the pain of overriding
+# specific targets.
+
+export DH_VIRTUALENV_INSTALL_ROOT = /usr/share/grouprise
+export DH_VIRTUALENV_INSTALL_SUFFIX = .virtualenv
+# system-site-packages: we want to use psycopg2; all other implicit dependencies (Django) should
+#     be available in the build system
+export DH_VIRTUALENV_ARGUMENTS = --python /usr/bin/python3
+# dh_virtualenv uses the "build" directory for its files - thus we move the grouprise build
+# directory somewhere else.
+export DIR_BUILD = build-debian
+# let dh-virtualenv handle the virtual environment - otherwise the virtualenv is empty
+export DISABLE_CUSTOM_VIRTUALENV = 1
+# use the virtualenv created via "dh_virtualenv" for all operations (e.g. "make build")
+export ACTIVATE_VIRTUALENV = build/usr/share/grouprise/.virtualenv/bin/activate
+
+export DH_VERBOSE = 1
 
 %:
-	dh $@ --with python-virtualenv --upgrade-pip --python /usr/bin/python3 --use-system-packages \
-		--skip-install --install-suffix .virtualenv
+	dh $@ --buildsystem=dh_virtualenv
 
+# the "grouprise" data (e.g. assets) are not built by "dh-virtualenv"
+override_dh_auto_build:
+	dh_auto_build
+	$(MAKE) build-grouprise
+
+# "dh-virtualenv" does not call "make clean", but instead focusses on the python-based operations
+override_dh_auto_clean:
+	dh_auto_clean
+	$(MAKE) clean
+
+# distribute the directories among the packages
 override_dh_install:
-	@# dh-virtualenv disabled dh_auto_install by default, because it normally executes
-	@# `setup.py install` and considers that a full installation (which may likely be fine).
-	@# As we skip dh-virtualenvs install step in order to prepare the package for installation in
-	@# `/usr/share/stadtgestalten` we sill want to run auto_install to call `make install`
-	dh_auto_install
 	dh_install
+	# remove compiled python modules
+	find debian/tmp/usr/share/grouprise/ -type f -name "*.pyc" -delete
+	find debian/tmp/usr/share/grouprise/ -type d -name "__pycache__" -delete
+	# remove modules that are only used during build time
+	for module in distutils pip pkg_resources setuptools wheel; do \
+	    $(RM) -r debian/tmp/usr/share/grouprise/.virtualenv/lib/python*/site-packages/$$module/; \
+	    $(RM) -r debian/tmp/usr/share/grouprise/.virtualenv/lib/python*/site-packages/$$module-*.dist-info/; \
+	done
+	# remove links to modules of the standard library
+	$(RM) -r debian/tmp/usr/share/grouprise/.virtualenv/lib/python*/*.py
+	# the "wheels" data is not necessary
+	$(RM) -r debian/tmp/usr/share/grouprise/.virtualenv/share
+	# move all remaining directories into their packages
+	mkdir -p debian/grouprise-data/usr/share/grouprise
+	mv debian/tmp/usr/share/grouprise/.virtualenv/static \
+		debian/grouprise-data/usr/share/grouprise/
+	mv debian/tmp/usr/share/grouprise/.virtualenv/offline-website \
+		debian/grouprise-data/usr/share/grouprise/
+	mkdir -p debian/grouprise/usr/share/grouprise
+	mv debian/tmp/usr/share/grouprise/.virtualenv/manage.py \
+		debian/grouprise/usr/share/grouprise/
+	for item in stadt core features stadtgestalten-*.dist-info; do \
+		mv debian/tmp/usr/share/grouprise/.virtualenv/lib/python*/site-packages/$$item \
+			debian/grouprise/usr/share/grouprise/; \
+	done
+	mkdir -p debian/grouprise-dependencies/usr/share/grouprise
+	mv debian/tmp/usr/share/grouprise/.virtualenv \
+		debian/grouprise-dependencies/usr/share/grouprise/
+	# verify that the debian/tmp directory is empty (only dh-exec cruft stays around)
+	cd debian/tmp && rmdir --parents usr/share/grouprise
+	# verify that some modules are part of the package
+	for module in aiosmtplib django_ical django_mailbox huey mdx_unimoji schulze randomcolor; do \
+		find debian/grouprise-dependencies/usr/share/grouprise/.virtualenv/lib/python*/site-packages/ \
+				-maxdepth 1 -mindepth 1 -type d -name "$$module" \
+			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; }; done
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod 640 debian/stadtgestalten/etc/stadtgestalten/settings.py
+	chmod 640 debian/grouprise/etc/stadtgestalten/settings.py
+
+# the tests fail with:
+#     django.db.utils.OperationalError: no such table: main.auth_user__old
+override_dh_auto_test:
+	true
