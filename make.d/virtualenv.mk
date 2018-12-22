@@ -7,7 +7,7 @@ BIN_ACTIVATE = $(DIR_VIRTUALENV)/bin/activate
 STAMP_VIRTUALENV = $(DIR_BUILD)/.stamp_virtualenv
 
 $(BIN_ACTIVATE):
-	virtualenv -p python3 "$(DIR_VIRTUALENV)"
+	virtualenv -p python3 --system-site-packages "$(DIR_VIRTUALENV)"
 
 .PHONY: virtualenv_check
 virtualenv_check:
@@ -24,7 +24,6 @@ virtualenv_check:
 $(STAMP_VIRTUALENV): requirements.txt
 	pip3 install --upgrade pip
 	pip3 install --upgrade -r requirements.txt
-	find "$(DIR_VIRTUALENV)" -name no-global-site-packages.txt -delete
 	mkdir -p "$(dir $(STAMP_VIRTUALENV))"
 	touch "$(STAMP_VIRTUALENV)"
 
