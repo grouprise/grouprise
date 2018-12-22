@@ -14,11 +14,13 @@ Build-Depends:
  wget,
 Standards-Version: 3.9.6
 
-Package: stadtgestalten
+Package: grouprise
 Architecture: all
 # python3-requests: for django-allauth
 # python3-six: for django-mailbox
-Depends: ${misc:Depends}, ${python3:Depends},
+Depends: ${misc:Depends}
+ grouprise-data,
+ grouprise-dependencies,
  moreutils,
  python3-html2text,
  python3-pil,
@@ -28,13 +30,34 @@ Depends: ${misc:Depends}, ${python3:Depends},
 Recommends: ${misc:Recommends},
  ghostscript,
  python3-psycopg2,
+ redis-server,
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
- redis-server,
 Suggests:
  postgresql-client-common,
  sqlite3,
 Description: Web platform that enables social action and solidarity
-  Stadtgestalten is a web-based platform providing tools for groups and
-  initiatives in a local context.
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package contains the configuration, services and code for running
+ grouprise.
+
+Package: grouprise-data
+Architecture: all
+Depends: ${misc:Depends}
+Description: data for the grouprise web application
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package contains CSS and javascript assets of the web application.
+
+Package: grouprise-dependencies
+Architecture: all
+Depends: ${misc:Depends}
+Description: Web platform that enables social action and solidarity
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package contains the dependencies for running grouprise.
