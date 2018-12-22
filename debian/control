@@ -2,19 +2,39 @@ Source: stadtgestalten
 Section: python
 Priority: optional
 Maintainer: Stadtgestalten Maintainers <wir@stadtgestalten.org>
-Build-Depends: debhelper (>= 9), dh-exec, dh-python, dh-virtualenv, wget,
- python3-flake8, python3-all, python3-setuptools, nodejs
+Build-Depends:
+ debhelper (>= 9),
+ dh-exec,
+ dh-python,
+ dh-virtualenv,
+ nodejs,
+ python3-all,
+ python3-flake8,
+ python3-setuptools,
+ wget,
 Standards-Version: 3.9.6
 
 Package: stadtgestalten
 Architecture: all
 # python3-requests: for django-allauth
 # python3-six: for django-mailbox
-Depends: python3-html2text, python3-pil, python3-requests, python3-six,
- python3-xapian, ${misc:Depends}, ${python3:Depends}, moreutils
-Recommends: ghostscript, python3-psycopg2, uwsgi, uwsgi-plugin-python3,
- uwsgi-plugin-router-access, redis-server, ${misc:Recommends}
-Suggests: sqlite3, postgresql-client-common
+Depends: ${misc:Depends}, ${python3:Depends},
+ moreutils,
+ python3-html2text,
+ python3-pil,
+ python3-requests,
+ python3-six,
+ python3-xapian,
+Recommends: ${misc:Recommends},
+ ghostscript,
+ python3-psycopg2,
+ uwsgi,
+ uwsgi-plugin-python3,
+ uwsgi-plugin-router-access,
+ redis-server,
+Suggests:
+ postgresql-client-common,
+ sqlite3,
 Description: Web platform that enables social action and solidarity
   Stadtgestalten is a web-based platform providing tools for groups and
   initiatives in a local context.
