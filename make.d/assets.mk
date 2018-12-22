@@ -16,9 +16,10 @@ DEPS_WEBPACK = $(shell find "webpack" -type f)
 BUILD_FONT_GOOGLE = $(DIR_BUILD)/fonts/google
 
 # static output files
-DIR_STATIC_FONT = $(DIR_BUILD)/static/fonts
+DIR_STATIC_FONT = $(DIR_STATIC)/fonts
 DIR_STATIC_FONT_GOOGLE = $(DIR_STATIC_FONT)/google
 STAMP_STATIC_FONT_GOOGLE = $(DIR_BUILD)/.static_font_google
+STAMP_STATIC_WEBPACK = $(DIR_BUILD)/.static_webpack
 
 URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:300,400,400i,500,700
 
@@ -41,15 +42,16 @@ $(STAMP_STATIC_FONT_GOOGLE): $(DIR_NODE)
 		"$(BUILD_FONT_GOOGLE)"/*.woff2
 	touch "$(STAMP_STATIC_FONT_GOOGLE)"
 
-$(DIR_STATIC): $(STAMP_STATIC_FONT_GOOGLE) $(DEPS_ASSETS) $(DEPS_WEBPACK)
+$(STAMP_STATIC_WEBPACK): $(STAMP_STATIC_FONT_GOOGLE) $(DEPS_ASSETS) $(DEPS_WEBPACK)
+	mkdir -p "$(DIR_STATIC)"
 	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK) --bail
-	touch "$(DIR_STATIC)"
+	touch "$(STAMP_STATIC_WEBPACK)"
 
 .PHONY: assets_fonts
 assets_fonts: $(STAMP_STATIC_FONT_GOOGLE)
 
 .PHONY: assets_webpack
-assets_webpack: $(DIR_STATIC)
+assets_webpack: $(STAMP_STATIC_WEBPACK)
 
 .PHONY: assets
 assets: assets_fonts assets_webpack
