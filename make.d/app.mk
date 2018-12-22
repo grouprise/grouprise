@@ -39,7 +39,3 @@ app_collect_static: virtualenv_check app_local_settings assets
 
 .PHONY: app_local_settings
 app_local_settings: $(CONFIG_APP_SETUP)
-
-.PHONY: app_setup
-app_setup: app_migrate app_collect_static
-	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=development $(PYTHON_BIN) manage.py runserver )

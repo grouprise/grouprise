@@ -5,7 +5,6 @@ help-grouprise:
 	@echo "    app_local_settings  - generate a local django configuration file"
 	@echo "    app_migrate         - run django migrations for a local setup"
 	@echo "    app_run             - run django server locally"
-	@echo "    app_setup           - run django in a local virtualenv setup"
 	@echo "    assets              - build assets (fonts and webpack)"
 	@echo "    assets_fonts        - build font assets"
 	@echo "    assets_webpack      - build webpack assets"

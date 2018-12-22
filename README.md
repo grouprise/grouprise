@@ -9,7 +9,7 @@ You may want to install the latest [snapshot build](https://git.hack-hro.de/stad
 
 ### For developers
 1. You will need [yarn](https://yarnpkg.com/lang/en/), [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see the Dependencies Section
-2. Run `make app_setup` and wait until you see something like `Starting development server at http://127.0.0.1:8000/`
+2. Run `make app_run` and wait until you see something like `Starting development server at http://127.0.0.1:8000/`
 3. Visit http://127.0.0.1:8000/
 
 ## Dependencies
