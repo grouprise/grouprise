@@ -1,4 +1,5 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const { buildDir } = require('../env')
 
 const extractText = new ExtractTextPlugin({
   filename: '[contenthash].css'
@@ -29,7 +30,10 @@ extractText.lessConfig = {
           noIeCompat: true,
           compress: false,
           outputSourceFiles: true,
-          sourceMapFileInline: true
+          sourceMapFileInline: true,
+          globalVars: {
+            'build-root': buildDir
+          }
         }
       }
     ]
