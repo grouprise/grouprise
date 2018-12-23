@@ -32,7 +32,7 @@ extractText.lessConfig = {
           outputSourceFiles: true,
           sourceMapFileInline: true,
           globalVars: {
-            'build-root': buildDir
+            'build-root': `'${buildDir}'`
           }
         }
       }
