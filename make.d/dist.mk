@@ -1,4 +1,5 @@
 DIR_INSTALL_ROOT ?= usr/share/stadtgestalten
+DIR_INSTALL_STATIC ?= $(DIR_INSTALL_ROOT)/static
 
 PYTHON_INSTALL_ARGS = --root "$(DESTDIR)" \
 	--install-lib="/$(DIR_INSTALL_ROOT)" \
@@ -19,4 +20,7 @@ build: build-grouprise
 
 .PHONY: install-grouprise
 install-grouprise: build-grouprise
+	mkdir -p "$(DIR_INSTALL_STATIC)"
+	cp -r --target-directory="$(DIR_INSTALL_STATIC)/" "$(DIR_STATIC)"/*
+
 install: install-grouprise
