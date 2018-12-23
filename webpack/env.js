@@ -6,8 +6,8 @@ const nodeEnv = has(process.env, 'NODE_ENV') ? process.env.NODE_ENV : 'developme
 const isDebug = nodeEnv !== 'production'
 
 const baseDir = path.join(__dirname, '..')
-const buildDir = path.join(baseDir, 'build')
-const publicDir = path.join(baseDir, 'build/static')
+const buildDir = process.env.DIR_BUILD || path.join(baseDir, 'build')
+const publicDir = path.join(buildDir, 'static')
 const staticDir = path.join(publicDir, '')
 const resDir = path.join(baseDir, 'res')
 const templateDir = path.join(baseDir, 'res/templates')
