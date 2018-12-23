@@ -10,7 +10,7 @@ NODE_URL = $(shell [ "$$(uname -m)" = "x86_64" ] && echo "$(NODE_URL_X64)" || ec
 NODE_TMP = $(DIR_BUILD)/node_tmp
 NODE_DEST = $(DIR_BUILD)/node
 
-RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" node
+RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BUILD))" node
 
 assets_node_download:
 	rm -rf "$(NODE_DEST)"
