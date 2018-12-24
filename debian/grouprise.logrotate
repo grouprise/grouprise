@@ -5,5 +5,5 @@
         delaycompress
         missingok
         notifempty
-        create 0640 stadtgestalten adm
+        create 0640 grouprise adm
 }

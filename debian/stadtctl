@@ -2,7 +2,7 @@
 
 set -eu
 
-EXEC_USER=stadtgestalten
+EXEC_USER=grouprise
 EXEC_BASE=/usr/share/grouprise
 
 if [ "$(id -nu)" = "$EXEC_USER" ]; then
