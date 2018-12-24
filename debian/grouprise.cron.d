@@ -11,8 +11,8 @@
 46  * * * * root        chronic stadtctl import_feeds
 
 # send mails with django-mailer
-*   * * * * root        cd /tmp && chronic sh -c "stadtctl send_mail 2>&1 | tee -a /var/log/stadtgestalten/mailer-stadtgestalten.log"
-9,29,49 * * * * root    cd /tmp && chronic sh -c "stadtctl retry_deferred 2>&1 | tee -a /var/log/stadtgestalten/mailer-stadtgestalten.log"
+*   * * * * root        cd /tmp && chronic sh -c "stadtctl send_mail 2>&1 | tee -a /var/log/grouprise/mailer-grouprise.log"
+9,29,49 * * * * root    cd /tmp && chronic sh -c "stadtctl retry_deferred 2>&1 | tee -a /var/log/grouprise/mailer-grouprise.log"
 
 # update search index
 */5 * * * * root        chronic stadtctl update_index --remove
