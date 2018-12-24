@@ -1,7 +1,7 @@
-Source: stadtgestalten
+Source: grouprise
 Section: python
 Priority: optional
-Maintainer: Stadtgestalten Maintainers <wir@stadtgestalten.org>
+Maintainer: grouprise Maintainers <mail@grouprise.org>
 Build-Depends:
  debhelper (>= 9),
  dh-exec,
