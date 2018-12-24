@@ -13,7 +13,7 @@ if [ "$1" = "remove" ]; then
 elif [ "$1" = "purge" ]; then
     rm -rf "$DIR_ETC"
     rm -rf "$DIR_HOME"
-    rm -f "/etc/uwsgi/conf-available/$PKG_USER.ini" "/etc/uwsgi/conf-enabled/$PKG_USER.ini"
+    rm -f "/etc/uwsgi/conf-available/grouprise.ini" "/etc/uwsgi/conf-enabled/grouprise.ini"
 fi
 
 set +eu
