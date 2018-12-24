@@ -3,7 +3,7 @@
 set -eu
 
 PKG_USER="stadtgestalten"
-DIR_ETC="/etc/$PKG_USER"
+DIR_ETC="/etc/grouprise"
 
 if [ -f "/etc/uwsgi/apps-enabled/$PKG_USER.ini" ]; then
     touch "$DIR_ETC/maintenance_mode"
