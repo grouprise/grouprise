@@ -1,5 +1,5 @@
 #!/usr/bin/dh-exec
-debian/root/etc/uwsgi/apps-available/stadtgestalten.ini => /etc/uwsgi/apps-available/stadtgestalten.ini
-debian/root/etc/stadtgestalten/settings.py => /etc/stadtgestalten/settings.py
-debian/root/usr/bin/stadtctl => /usr/bin/stadtctl
-debian/root/var/backups/stadtgestalten/README => /var/backups/stadtgestalten/README
+debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/stadtgestalten.ini
+debian/grouprise.settings.py => /etc/stadtgestalten/settings.py
+debian/stadtctl => /usr/bin/stadtctl
+debian/README.backups => /var/backups/stadtgestalten/README
