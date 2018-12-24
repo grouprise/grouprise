@@ -4,7 +4,7 @@ set -eu
 
 PKG_USER="stadtgestalten"
 DIR_ETC="/etc/grouprise"
-DIR_HOME="/var/lib/$PKG_USER"
+DIR_HOME="/var/lib/stadtgestalten"
 
 if [ "$1" = "configure" ]; then
     if ! getent passwd "$PKG_USER" >/dev/null; then
