@@ -3,7 +3,7 @@
 set -eu
 
 PKG_USER="stadtgestalten"
-DIR_ETC="/etc/$PKG_USER"
+DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/$PKG_USER"
 
 if [ "$1" = "configure" ]; then
@@ -14,7 +14,7 @@ if [ "$1" = "configure" ]; then
 
     if [ -f "/etc/uwsgi/apps-enabled/$PKG_USER.ini" ]; then
         if /usr/bin/stadtctl migrate --no-input >/dev/null; then
-            rm -f "/etc/$PKG_USER/maintenance_mode"
+            rm -f "$DIR_ETC/maintenance_mode"
         else
             echo "error while executing $PKG_USER migrations. maintenance mode still active" >&2
         fi

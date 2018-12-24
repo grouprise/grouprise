@@ -3,7 +3,7 @@
 set -eu
 
 PKG_USER="stadtgestalten"
-DIR_ETC="/etc/$PKG_USER"
+DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/$PKG_USER"
 
 if [ "$1" = "remove" ]; then
