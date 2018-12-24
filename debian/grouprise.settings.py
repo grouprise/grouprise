@@ -1,5 +1,5 @@
-# this is the local stadtgestalten configuration
-# you may override any options that stadtgestalten provides in its default settings.py file.
+# this is the local grouprise configuration
+# you may override any options that grouprise provides in its default settings.py file.
 # this file is imported once the default settings.py was loaded
 from stadt.settings.default import *
 
