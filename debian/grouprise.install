@@ -2,4 +2,4 @@
 debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/stadtgestalten.ini
 debian/grouprise.settings.py => /etc/grouprise/settings.py
 debian/stadtctl => /usr/bin/stadtctl
-debian/README.backups => /var/backups/stadtgestalten/README
+debian/README.backups => /var/backups/grouprise/README
