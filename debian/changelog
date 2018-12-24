@@ -1,3 +1,10 @@
+grouprise (2.4.0-2) unstable; urgency=medium
+
+  * rename source package
+  * rename and split binary package
+
+ -- Lars Kruse <devel@sumpfralle.de>  Mon, 24 Dec 2018 03:02:08 +0100
+
 stadtgestalten (2.4.0-1) unstable; urgency=medium
 
   [ stadt@humbug ]
