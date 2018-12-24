@@ -12,7 +12,7 @@ if [ "$1" = "configure" ]; then
             --home "$DIR_HOME" "$PKG_USER"
     fi
 
-    if [ -f "/etc/uwsgi/apps-enabled/$PKG_USER.ini" ]; then
+    if [ -f "/etc/uwsgi/apps-enabled/grouprise.ini" ]; then
         if /usr/bin/stadtctl migrate --no-input >/dev/null; then
             rm -f "$DIR_ETC/maintenance_mode"
         else

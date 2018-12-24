@@ -5,7 +5,7 @@ set -eu
 PKG_USER="stadtgestalten"
 DIR_ETC="/etc/grouprise"
 
-if [ -f "/etc/uwsgi/apps-enabled/$PKG_USER.ini" ]; then
+if [ -f "/etc/uwsgi/apps-enabled/grouprise.ini" ]; then
     touch "$DIR_ETC/maintenance_mode"
     /usr/bin/stadtctl database_dump --prefix preinst_auto
 fi
