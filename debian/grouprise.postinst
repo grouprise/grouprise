@@ -2,7 +2,7 @@
 
 set -eu
 
-PKG_USER="stadtgestalten"
+PKG_USER="grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/stadtgestalten"
 
