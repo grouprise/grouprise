@@ -1,4 +1,4 @@
-/var/log/stadtgestalten/*.log {
+/var/log/grouprise/*.log {
         daily
         rotate 5
         compress

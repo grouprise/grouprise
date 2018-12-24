@@ -23,8 +23,8 @@ if [ "$1" = "configure" ]; then
 
     chown "$PKG_USER:root" /var/backups/stadtgestalten
     chown "$PKG_USER:root" "$DIR_ETC/settings.py"
-    mkdir -p /var/log/stadtgestalten
-    chown "$PKG_USER:root" /var/log/stadtgestalten
+    mkdir -p /var/log/grouprise
+    chown "$PKG_USER:root" /var/log/grouprise
 fi
 
 set +eu
