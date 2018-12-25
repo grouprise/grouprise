@@ -5,10 +5,10 @@ grouprise is a platform destined to encourage and enable social action and solid
 ## Quick Setup
 
 ### For administrators
-You may want to install the latest [snapshot build](https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package) as a deb package. Please note that this is a rather dirty package (only amd64, containing a virtualenv with python3.5 - suitable for Debian stretch).
+You may want to install the latest [snapshot build](https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package) as a deb package. Please note that this is a rather dirty package (embedded dependencies; suitable for Debian Stretch).
 
 ### For developers
-1. You will need [yarn](https://yarnpkg.com/lang/en/), [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see the Dependencies Section
+1. You will need [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/) (downloaded automatically if unavailable), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see the Dependencies Section
 2. Run `make app_run` and wait until you see something like `Starting development server at http://127.0.0.1:8000/`
 3. Visit http://127.0.0.1:8000/
 
@@ -21,13 +21,13 @@ For `virtualenv`, `python3`, `flake8` and `pip` use apt:
 ```sh
 apt install make virtualenv python3 python3-flake8 python3-pip
 ```
-`node` is available as `nodejs` and `nodejs-legacy` (please install both), but you’ll have to have Debian Stretch to get a node version that is going to work. The nodejs people also offer pre-packaged up to date builds [here](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions).
-`yarn` is not yet available in Debian. Take a look at their [installation manual](https://yarnpkg.com/en/docs/install).
+
+`node` v8.12 or later is required.  If you do not have a suitable version installed, it will be automatically downloaded while using `make` (see `make.d/nodejs.mk`).
 
 ### Arch Linux
 Fortunately all of the required packages are available via pacman.
 ```sh
-pacman -Sy make nodejs yarn flake8 python python-virtualenv python-pip 
+pacman -Sy make nodejs flake8 python python-virtualenv python-pip 
 ```
 
 
@@ -53,7 +53,19 @@ The command above requires the locale 'de_DE.UTF8' in the system of the database
 
 ## Production deployment
 
-We recommend to use the provided debian package. It already comes with a UWSGI config.
+We recommend to use the provided debian package. It contains a UWSGI and an nginx configuration file.
+
+Necessary steps for running the software after package installation:
+
+* install nginx and UWSGI (being remmomendations of the grouprise package): `apt install nginx uwsgi uwsgi-plugin-python3`
+* enable the UWSGI service: `ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/`
+* start UWSGI: `service uwsgi start`
+* copy the nginx site example configuration: `cp /usr/share/doc/grouprise/examples/nginx.conf /etc/nginx/sites-available/grouprise`
+* set a suitable `server_name`: `edit /etc/nginx/sites-available/grouprise`
+    * or remove the `default` nginx site (if it is not in use) in order to let the `grouprise` site be picked irrespective of the requested hostname
+* enable the site: `ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/`
+* restart nginx: `service nginx restart`
+* visit the fresh grouprise instance: `http://localhost/` (or use a suitable hostname)
 
 ## Contributing
 

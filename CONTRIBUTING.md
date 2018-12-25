@@ -2,7 +2,22 @@
 
 ## yay! hello there!
 
-Nice to have you on board. Whenever you add new features try not to break any existing tests and add new ones whenever you can. You can use the make targets `lint`, `lint_js`, `lint_py` to lint your code and `test` for testing.
+Nice to have you on board. Whenever you add new features try not to break any existing tests and add new ones whenever you can.  You can use `make lint` to lint your code and `make test` for testing.
+
+
+## Build system
+
+A set of makefiles and the external helper library [makefilet](https://notabug.org/sumpfralle/makefilet) are responsible for building the necessary components.  Just try `make help` in order to get the list of available targets.
+
+The following `make` targets are probably of most interest:
+
+* `assets`: build the static assets (CSS, Javascript and media)
+* `app_run`: run a local instance from the current directory
+* `build`: build all relevant components
+* `clean`: remove all built components
+* `lint`: check the code for style violations and other issues
+* `test`: run the automated test suite
+
 
 ## Release Workflow
 
