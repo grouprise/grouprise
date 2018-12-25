@@ -24,10 +24,7 @@ STAMP_STATIC_WEBPACK = $(DIR_BUILD)/.static_webpack
 URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:300,400,400i,500,700
 
 $(DIR_NODE): $(BIN_NODE) package.json
-	@# in dh_auto_install yarn tries to create a cache folder in /usr/local/share/.cache
-	@# this has something to do with the environment dh_auto_install creates
-	@# so we call it with an empty environment to be on the safe side
-	env -i $(RUN_NODE) "$(BIN_NODE_PKG)" ci --no-progress
+	$(RUN_NODE) "$(BIN_NODE_PKG)" ci --no-progress
 	touch -c "$(DIR_NODE)"
 
 $(STAMP_STATIC_FONT_GOOGLE): $(DIR_NODE)
