@@ -12,13 +12,10 @@ if [ "$1" = "configure" ]; then
             --home "$DIR_HOME" "$PKG_USER"
     fi
 
-    if [ -f "/etc/uwsgi/apps-enabled/grouprise.ini" ]; then
-        if /usr/bin/stadtctl migrate --no-input >/dev/null; then
-            rm -f "$DIR_ETC/maintenance_mode"
-        else
-            echo "error while executing $PKG_USER migrations. maintenance mode still active" >&2
-        fi
-
+    if /usr/bin/stadtctl migrate --no-input >/dev/null; then
+        rm -f "$DIR_ETC/maintenance_mode"
+    else
+        echo "error while executing $PKG_USER migrations. maintenance mode still active (indicator file: $DIR_ETC/maintenance_mode)" >&2
     fi
 
     chown "$PKG_USER:root" /var/backups/grouprise
