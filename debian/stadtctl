@@ -3,11 +3,12 @@
 set -eu
 
 EXEC_USER=grouprise
-EXEC_BASE=/usr/share/grouprise
+MANAGE_BIN=/usr/share/grouprise/manage.py
+VIRTUALENV_DIR=/usr/share/grouprise/virtualenv
 
 if [ "$(id -nu)" = "$EXEC_USER" ]; then
-    . "$EXEC_BASE/.virtualenv/bin/activate"
-    python3 "$EXEC_BASE/manage.py" "$@"
+    . "$VIRTUALENV_DIR/bin/activate"
+    python3 "$MANAGE_BIN" "$@"
 elif [ "$(id -u)" = 0 ]; then
     su -s "$0" "$EXEC_USER" -- "$@"
 else
