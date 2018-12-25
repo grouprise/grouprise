@@ -71,10 +71,8 @@ override_dh_install:
 		mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/$$item \
 			debian/grouprise/usr/share/grouprise/grouprise/; \
 	done
-	mkdir -p debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin
-	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin/activate \
-		debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin/
-	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib \
+	mkdir -p debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)
+	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/* \
 		debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/
 	# remove remaining cruft from the installation
 	$(RM) -r debian/tmp/dh-exec.*
@@ -82,13 +80,14 @@ override_dh_install:
 	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/include
 	$(RM) debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/*.md
 	$(RM) debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/LICENSE
+	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*
 	# verify that the debian/tmp directory is empty
-	cd debian && rmdir --parents tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)
+	cd debian && rmdir --parents tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib
 	# verify that some modules are part of the package
 	for module in aiosmtplib django_ical django_mailbox huey mdx_unimoji schulze randomcolor; do \
 		find debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/ \
 				-maxdepth 1 -mindepth 1 -type d -name "$$module" \
-			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; }; done
+			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; break; }; done
 
 override_dh_fixperms:
 	dh_fixperms
