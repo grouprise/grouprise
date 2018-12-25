@@ -64,12 +64,12 @@ override_dh_install:
 		debian/grouprise-data/usr/share/grouprise/
 	mv debian/tmp/usr/share/grouprise/virtualenv/offline-website \
 		debian/grouprise-data/usr/share/grouprise/
-	mkdir -p debian/grouprise/usr/share/grouprise
+	mkdir -p debian/grouprise/usr/share/grouprise/grouprise
 	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/manage.py \
-		debian/grouprise/usr/share/grouprise/
+		debian/grouprise/usr/share/grouprise/grouprise/
 	for item in stadt core features stadtgestalten-*.dist-info; do \
 		mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/$$item \
-			debian/grouprise/usr/share/grouprise/; \
+			debian/grouprise/usr/share/grouprise/grouprise/; \
 	done
 	mkdir -p debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin
 	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin/activate \
