@@ -55,7 +55,8 @@ Description: data for the grouprise web application
 
 Package: grouprise-dependencies
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
+ python3-pil,
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.

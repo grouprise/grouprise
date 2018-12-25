@@ -48,8 +48,9 @@ override_dh_install:
 	# remove compiled python modules
 	find debian/tmp/usr/share/grouprise/ -type f -name "*.pyc" -delete
 	find debian/tmp/usr/share/grouprise/ -type d -name "__pycache__" -delete
-	# remove modules that are only used during build time
-	for module in distutils pip pkg_resources setuptools wheel; do \
+	# Remove modules that are only used during build time or binary modules, that are installed
+	# via Debian package dependencies.
+	for module in distutils PIL pip pkg_resources setuptools wheel; do \
 	    $(RM) -r debian/tmp/usr/share/grouprise/.virtualenv/lib/python*/site-packages/$$module/; \
 	    $(RM) -r debian/tmp/usr/share/grouprise/.virtualenv/lib/python*/site-packages/$$module-*.dist-info/; \
 	done
