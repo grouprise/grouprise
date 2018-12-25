@@ -12,10 +12,11 @@ ACTIVATE_VIRTUALENV ?= $(DIR_VIRTUALENV)/bin/activate
 virtualenv_check: virtualenv_update
 endif
 
+VIRTUALENV_CREATE_ARGUMENTS ?= --system-site-packages
 STAMP_VIRTUALENV = $(DIR_BUILD)/.stamp_virtualenv
 
 $(ACTIVATE_VIRTUALENV):
-	virtualenv -p python3 --system-site-packages "$(DIR_VIRTUALENV)"
+	virtualenv -p python3 $(VIRTUALENV_CREATE_ARGUMENTS) "$(DIR_VIRTUALENV)"
 
 .PHONY: virtualenv_check
 virtualenv_check: $(ACTIVATE_VIRTUALENV)

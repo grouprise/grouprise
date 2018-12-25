@@ -7,6 +7,10 @@
 # Everything is prepared and installed using "make".  Afterwards (during "override_dh_install")
 # some cruft is removed before the build result is installed (see debian/*.install).
 
+# Override the default value ("--system-site-packages") in order to prevent system-wide packages
+# from influencing the build (see make.d/virtualenv.mk).
+export VIRTUALENV_CREATE_ARGUMENTS =
+
 export DH_VERBOSE = 1
 
 %:
