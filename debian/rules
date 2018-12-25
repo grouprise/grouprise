@@ -29,17 +29,18 @@ override_dh_install:
 	done
 	# process the debian/*.install files
 	dh_install
-	# verify that some modules are part of the package
-	for module in aiosmtplib django_ical django_mailbox huey mdx_unimoji schulze randomcolor; do \
-		find debian/grouprise-dependencies/usr/share/grouprise/dependencies/ \
-				-maxdepth 1 -mindepth 1 -type d -name "$$module" \
-			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; break; }; done
 
 override_dh_fixperms:
 	dh_fixperms
 	chmod 640 debian/grouprise/etc/grouprise/settings.py
 
-# the tests fail with:
-#     django.db.utils.OperationalError: no such table: main.auth_user__old
 override_dh_auto_test:
-	true
+	# grouprise's tests fail with:
+	#     django.db.utils.OperationalError: no such table: main.auth_user__old
+	# Thus we skip the tests for now.
+	true dh_auto_test
+	# verify that at least some modules are part of the package
+	for module in aiosmtplib django_ical django_mailbox huey mdx_unimoji schulze randomcolor; do \
+		find debian/grouprise-dependencies/usr/share/grouprise/dependencies/ \
+				-maxdepth 1 -mindepth 1 -type d -name "$$module" \
+			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; break; }; done
