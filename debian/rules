@@ -4,88 +4,30 @@
 #   * dependencies need to be packaged in a virtualenv, since a few packages are missing in Debian
 #   * grouprise's build system is more focussed on "make" instead of setuptools
 #
-# In order to achieve the packaging of dependencies, we use "dh-virtualenv".
-# It features the creation of a virtualenv during the build process and copies these files to
-# configurable locations.
-# In order to use the make-based targets, we need to override some debhelper targets (e.g.
-# "dh_auto_build" and "dh_auto_clean".
-#
-# Probably we could simplify the packaging in the future by removing dh-virtualenv and simply using
-# the virtualenv handling of grouprise's make recipes.  This would reduce the pain of overriding
-# specific targets.
-
-export DH_VIRTUALENV_INSTALL_ROOT = /usr/share/grouprise
-export DH_VIRTUALENV_INSTALL_SUFFIX = virtualenv
-# system-site-packages: we want to use psycopg2; all other implicit dependencies (Django) should
-#     be available in the build system
-export DH_VIRTUALENV_ARGUMENTS = --python /usr/bin/python3
-# dh_virtualenv uses the "build" directory for its files - thus we move the grouprise build
-# directory somewhere else.
-export DIR_BUILD = build-debian
-# let dh-virtualenv handle the virtual environment - otherwise the virtualenv is empty
-export DISABLE_CUSTOM_VIRTUALENV = 1
-# use the virtualenv created via "dh_virtualenv" for all operations (e.g. "make build")
-export ACTIVATE_VIRTUALENV = build/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin/activate
+# Everything is prepared and installed using "make".  Afterwards (during "override_dh_install")
+# some cruft is removed before the build result is installed (see debian/*.install).
 
 export DH_VERBOSE = 1
 
 %:
-	dh $@ --buildsystem=dh_virtualenv
-
-# the "grouprise" data (e.g. assets) are not built by "dh-virtualenv"
-override_dh_auto_build:
-	dh_auto_build
-	$(MAKE) build-grouprise
-
-# "dh-virtualenv" does not call "make clean", but instead focusses on the python-based operations
-override_dh_auto_clean:
-	dh_auto_clean
-	$(MAKE) clean
+	dh $@
 
 # distribute the directories among the packages
 override_dh_install:
-	dh_install
 	# remove compiled python modules
-	find debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/ -type f -name "*.pyc" -delete
-	find debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/ -type d -name "__pycache__" -delete
+	find debian/tmp/ build/venv/lib -type f -name "*.pyc" -delete
+	find debian/tmp/ build/venv/lib -type d -name "__pycache__" -delete
 	# Remove modules that are only used during build time or binary modules, that are installed
 	# via Debian package dependencies.
 	for module in distutils PIL pip pkg_resources setuptools wheel; do \
-	    $(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/$$module/; \
-	    $(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/$$module-*.dist-info/; \
+	    $(RM) -r build/venv/lib/python*/site-packages/$$module/; \
+	    $(RM) -r build/venv/lib/python*/site-packages/$$module-*.dist-info/; \
 	done
-	# remove links to modules of the standard library
-	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/*.py
-	# the "wheels" data is not necessary
-	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/share
-	# move all remaining directories into their packages
-	mkdir -p debian/grouprise-data/usr/share/grouprise
-	mv debian/tmp/usr/share/grouprise/virtualenv/static \
-		debian/grouprise-data/usr/share/grouprise/
-	mv debian/tmp/usr/share/grouprise/virtualenv/offline-website \
-		debian/grouprise-data/usr/share/grouprise/
-	mkdir -p debian/grouprise/usr/share/grouprise/grouprise
-	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/manage.py \
-		debian/grouprise/usr/share/grouprise/grouprise/
-	for item in stadt core features stadtgestalten-*.dist-info; do \
-		mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/$$item \
-			debian/grouprise/usr/share/grouprise/grouprise/; \
-	done
-	mkdir -p debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)
-	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/* \
-		debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/
-	# remove remaining cruft from the installation
-	$(RM) -r debian/tmp/dh-exec.*
-	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin
-	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/include
-	$(RM) debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/*.md
-	$(RM) debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/LICENSE
-	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*
-	# verify that the debian/tmp directory is empty
-	cd debian && rmdir --parents tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib
+	# process the debian/*.install files
+	dh_install
 	# verify that some modules are part of the package
 	for module in aiosmtplib django_ical django_mailbox huey mdx_unimoji schulze randomcolor; do \
-		find debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/ \
+		find debian/grouprise-dependencies/usr/share/grouprise/dependencies/ \
 				-maxdepth 1 -mindepth 1 -type d -name "$$module" \
 			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; break; }; done
 

@@ -4,7 +4,7 @@ set -eu
 
 EXEC_USER=grouprise
 MANAGE_BIN=/usr/share/grouprise/grouprise/manage.py
-EXTRA_PYTHON_PATHS=/usr/share/grouprise/grouprise:/usr/share/grouprise/virtualenv
+EXTRA_PYTHON_PATHS=/usr/share/grouprise/grouprise:/usr/share/grouprise/dependencies
 
 if [ "$(id -nu)" = "$EXEC_USER" ]; then
     if [ -z "${PYTHONPATH:-}" ]; then
