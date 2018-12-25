@@ -71,11 +71,19 @@ override_dh_install:
 		mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/$$item \
 			debian/grouprise/usr/share/grouprise/; \
 	done
-	mkdir -p debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)
-	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX) \
-		debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/
-	# verify that the debian/tmp directory is empty (only dh-exec cruft stays around)
-	cd debian/tmp && rmdir --parents usr/share/grouprise
+	mkdir -p debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin
+	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin/activate \
+		debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin/
+	mv debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib \
+		debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/
+	# remove remaining cruft from the installation
+	$(RM) -r debian/tmp/dh-exec.*
+	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/bin
+	$(RM) -r debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/include
+	$(RM) debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/*.md
+	$(RM) debian/tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/LICENSE
+	# verify that the debian/tmp directory is empty
+	cd debian && rmdir --parents tmp/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)
 	# verify that some modules are part of the package
 	for module in aiosmtplib django_ical django_mailbox huey mdx_unimoji schulze randomcolor; do \
 		find debian/grouprise-dependencies/$(DH_VIRTUALENV_INSTALL_ROOT)/$(DH_VIRTUALENV_INSTALL_SUFFIX)/lib/python*/site-packages/ \
