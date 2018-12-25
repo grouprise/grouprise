@@ -3,7 +3,7 @@
 set -eu
 
 EXEC_USER=grouprise
-MANAGE_BIN=/usr/share/grouprise/manage.py
+MANAGE_BIN=/usr/share/grouprise/grouprise/manage.py
 VIRTUALENV_DIR=/usr/share/grouprise/virtualenv
 
 if [ "$(id -nu)" = "$EXEC_USER" ]; then
