@@ -1,7 +1,7 @@
 # this is the local grouprise configuration
 # you may override any options that grouprise provides in its default settings.py file.
 # this file is imported once the default settings.py was loaded
-from stadt.settings.default import *
+from stadt.settings.default import *  # noqa: F401, F403
 
 #################################################
 #
