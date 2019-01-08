@@ -17,7 +17,7 @@ Package: grouprise
 Architecture: all
 # python3-requests: for django-allauth
 # python3-six: for django-mailbox
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
  grouprise-data,
  grouprise-dependencies,
  moreutils,
