@@ -328,9 +328,4 @@ HAYSTACK_XAPIAN_LANGUAGE = 'german2'
 HUEY = {
     # TODO: set to true if grouprise-huey is not available
     'always_eager': False,
-    'backend_class': 'huey.RedisHuey',
-    'connection': {
-        'host': 'localhost',
-        'port': 6379,
-    },
 }
