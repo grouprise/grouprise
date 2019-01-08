@@ -19,7 +19,9 @@ stadt/settings/local.py
 makefilet
 .pybuild/
 debian/debhelper-build-stamp
-debian/stadtgestalten/
+debian/grouprise/
+debian/grouprise-data/
+debian/grouprise-dependencies/
 debian/*.debhelper
 debian/tmp
 debian/*.substvars
