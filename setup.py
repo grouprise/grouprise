@@ -29,10 +29,6 @@ def include_recursive(directory):
     return tuple(result.items())
 
 
-def get_root_packages():
-    return [pkg for pkg in find_packages() if '.' not in pkg]
-
-
 static_files = include_recursive('static')
 offline_website = include_recursive('offline-website')
 
