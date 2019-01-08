@@ -1,8 +1,6 @@
-stadtgestalten contributors (sorted alphabeticaly)
-==================================================
+grouprise contributors
+======================
 
-
-* **[Robert](https://stadtgestalten.org/stadt/gestalten/9/conversations/add/)**
 
 
 * **[Konrad Mohrfeldt](https://konradmohrfeldt.farbdev.org/)**
@@ -10,3 +8,7 @@ stadtgestalten contributors (sorted alphabeticaly)
   * frontend and other shiny things
 
 * **[Lars](https://stadtgestalten.org/stadt/gestalten/16/conversations/add/)**
+
+* **[Robert](mailto:robert@grouprise.org)**
+
+  * backend and other shiny things
