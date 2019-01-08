@@ -21,14 +21,14 @@ function submit (form) {
 }
 
 function setInactive (form) {
-  const btn = $('.btn', form)
+  const btn = $('[data-conversation-submit]', form)
   btn.disabled = true
   btn.classList.add('btn-progress')
   $('textarea', form).readOnly = true
 }
 
 function setActive (form) {
-  const btn = $('.btn', form)
+  const btn = $('[data-conversation-submit]', form)
   btn.disabled = false
   btn.classList.remove('btn-progress')
   $('textarea', form).readOnly = false
