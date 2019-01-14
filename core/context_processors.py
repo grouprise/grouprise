@@ -1,12 +1,11 @@
 import django
+from django.conf import settings as django_settings
 from django.contrib.sites import shortcuts
 
 
 def settings(request):
     return {
-        'STADTGESTALTEN_LOGO_URL': django.conf.settings.STADTGESTALTEN_LOGO_URL,
-        'STADTGESTALTEN_SHOW_HEADER': django.conf.settings.STADTGESTALTEN_SHOW_HEADER,
-        'STADTGESTALTEN_CLAIMS': getattr(django.conf.settings, 'STADTGESTALTEN_CLAIMS', [])
+        'STADTGESTALTEN_CLAIMS': django_settings.GROUPRISE.get('CLAIMS', [])
     }
 
 

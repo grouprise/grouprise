@@ -3,6 +3,7 @@ import os
 import django
 from django import forms
 
+from core.models import MAX_FILE_SIZE
 from features.content import forms as content
 
 
@@ -10,7 +11,7 @@ class Create(content.Create):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     file = forms.FileField(
             label='Datei', help_text='Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
-                django.conf.settings.MAX_FILE_SIZE // (1024 * 1024)))
+                MAX_FILE_SIZE))
 
     def save(self, commit=True):
         association = super().save(False)
@@ -27,7 +28,7 @@ class Update(content.Update):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     file = forms.FileField(
             label='Datei', help_text='Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
-                django.conf.settings.MAX_FILE_SIZE // (1024 * 1024)))
+                MAX_FILE_SIZE))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
