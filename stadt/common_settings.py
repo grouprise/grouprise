@@ -115,6 +115,8 @@ SITE_ID = 1
 
 STATIC_URL = '/stadt/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Media files (User uploaded files)
 # https://docs.djangoproject.com/en/stable/topics/files/

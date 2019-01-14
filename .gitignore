@@ -9,7 +9,7 @@ node_modules
 static/
 xapian_index
 res/img/backdrops
-stadt/settings/local.py
+stadt/settings.py
 *.swp
 *.pyc
 *.log
