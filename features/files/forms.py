@@ -1,6 +1,5 @@
 import os
 
-import django
 from django import forms
 
 from core.models import MAX_FILE_SIZE
