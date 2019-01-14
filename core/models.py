@@ -1,22 +1,25 @@
 import itertools
 
 import django.contrib.contenttypes.models
+from django.conf import settings
 from django.contrib.contenttypes import models as contenttypes_models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.utils import crypto
 
+MAX_FILE_SIZE = settings.GROUPRISE.get('UPLOAD_MAX_FILE_SIZE', 0)
+
 IMAGE_FIELD_HELP_TEXT = (
         'Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- '
         'oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
-            django.conf.settings.MAX_FILE_SIZE // (1024 * 1024)))
+            MAX_FILE_SIZE))
 
 PERMISSION_TOKEN_LENGTH = 15
 
 
 def validate_file_size(f):
     try:
-        if f._size > django.conf.settings.MAX_FILE_SIZE:
+        if f._size > MAX_FILE_SIZE * 1024 * 1024:
             raise django.forms.ValidationError('Die Datei ist zu groß.')
     except AttributeError:
         pass
