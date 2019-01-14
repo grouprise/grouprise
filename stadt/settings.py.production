@@ -1,6 +1,8 @@
 from stadt.common_settings import *
 
-SECRET_KEY = 'DEVELOPMENT'
+# Keep the key used in production secret. To generate a secret key you might use
+# https://www.miniwebtool.com/django-secret-key-generator/
+SECRET_KEY = ''
 
 DEBUG = True
 
