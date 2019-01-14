@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 # internal error mails are sent to the postmaster
-POSTMASTER_ADDRESS = settings.GROUPRISE_POSTMASTER_EMAIL
+POSTMASTER_ADDRESS = settings.GROUPRISE.get('POSTMASTER_EMAIL', 'postmaster@localhost')
 
 
 class Command(django.core.management.base.BaseCommand):

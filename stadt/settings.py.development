@@ -12,3 +12,5 @@ DATABASES = {
 }
 
 GROUPRISE = {}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

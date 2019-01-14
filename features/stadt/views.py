@@ -88,10 +88,6 @@ class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'
 
-    def get_context_data(self, **kwargs):
-        kwargs['HAS_PIWIK'] = settings.HAS_PIWIK
-        return super().get_context_data(**kwargs)
-
 
 class Search(PermissionMixin, ListView):
     permission_required = 'stadt.search'

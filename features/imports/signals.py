@@ -60,7 +60,6 @@ def sanitize_subject(subject):
 @receiver(django_mailbox.signals.message_received)
 def process_incoming_message(sender, message, **args):
 
-    # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
     delivered_to = message.get_email_object()['Delivered-To']
     if not delivered_to:
         # The "Delivered-To" header is missing, if the mail server delivers the mail to more than

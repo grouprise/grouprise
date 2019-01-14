@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'huey.contrib.djhuey',
     'haystack',
     'imagekit',
-    'mailer',
     'rest_framework',
     'rules',
 
@@ -83,7 +82,6 @@ TEMPLATES = [
             'builtins': ['core.templatetags.core'],
             'context_processors': [
                 # django core
-                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 # django contrib
                 'django.contrib.auth.context_processors.auth',
@@ -100,9 +98,25 @@ TEMPLATES = [
     },
 ]
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
 ROOT_URLCONF = 'stadt.urls'
 
 WSGI_APPLICATION = 'stadt.wsgi.application'
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/1.9/topics/i18n/
+
+LANGUAGE_CODE = 'de-de'
+
+TIME_ZONE = 'Europe/Berlin'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
 
 
 # Sites
@@ -139,6 +153,33 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+# Password validation
+# https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME':
+            'django.contrib.auth.password_validation'
+            '.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME':
+            'django.contrib.auth.password_validation'
+            '.MinimumLengthValidator',
+    },
+    {
+        'NAME':
+            'django.contrib.auth.password_validation'
+            '.CommonPasswordValidator',
+    },
+    {
+        'NAME':
+            'django.contrib.auth.password_validation'
+            '.NumericPasswordValidator',
+    },
+]
+
+
 # Authentication
 # http://django-allauth.readthedocs.org/
 
@@ -153,6 +194,8 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
 ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
@@ -176,6 +219,27 @@ HAYSTACK_CONNECTIONS = {
 }
 
 HAYSTACK_XAPIAN_LANGUAGE = 'german2'
+
+
+# Django Rest Framework
+# http://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'core.permissions.RulesPermissions',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
 
 
 # grouprise Tags (features.tags)
