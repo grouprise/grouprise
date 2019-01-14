@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'imagekit',
     'mailer',
     'rest_framework',
+    'rules',
 
     # contributed django apps
     'django.contrib.admin',
@@ -128,6 +129,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 FILE_UPLOAD_PERMISSIONS = 0o644
 
 
+# Authentication backends
+# https://docs.djangoproject.com/en/stable/topics/auth/customizing/#authentication-backends
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'rules.permissions.ObjectPermissionBackend',
+]
+
+
 # Authentication
 # http://django-allauth.readthedocs.org/
 
@@ -167,7 +178,7 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_XAPIAN_LANGUAGE = 'german2'
 
 
-# grouprise Tags
+# grouprise Tags (features.tags)
 
 GROUPRISE_TAGS_TAGGABLE = (
     {

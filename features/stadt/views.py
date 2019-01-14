@@ -66,7 +66,6 @@ class Help(CreateGroupConversation):
             kwargs['about_text'] = about_text
             if tools_text and tools_text != about_text:
                 kwargs['tools_text'] = tools_text
-        kwargs['intro_text'] = settings.STADTGESTALTEN_INTRO_TEXT
         kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
         return super().get_context_data(**kwargs)
 
@@ -79,7 +78,6 @@ class Index(content.List):
     template_name = 'stadt/index.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['intro_text'] = settings.STADTGESTALTEN_INTRO_TEXT
         kwargs['feed_url'] = self.request.build_absolute_uri(reverse('feed'))
         kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
         return super().get_context_data(**kwargs)
