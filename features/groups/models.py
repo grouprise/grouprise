@@ -1,9 +1,10 @@
 import datetime
 
 import django
+from django import urls
+from django.conf import settings
 from django.contrib.contenttypes import fields as contenttypes
 from django.contrib.contenttypes.fields import GenericRelation
-from django import urls
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
@@ -12,6 +13,12 @@ import core.models
 from core import colors
 from features.gestalten.models import Gestalt
 from features.stadt.models import EntitySlugField
+
+
+class GroupManager(models.Manager):
+    def operator_group(self):
+        operator_group_id = settings.GROUPRISE.get('OPERATOR_GROUP_ID', 1)
+        return self.get_queryset().filter(id=operator_group_id).first()
 
 
 class Group(core.models.Model):
@@ -86,6 +93,8 @@ class Group(core.models.Model):
     subscriptions = GenericRelation(
             'subscriptions.Subscription', content_type_field='subscribed_to_type',
             object_id_field='subscribed_to_id', related_query_name='group')
+
+    objects = GroupManager()
 
     def __str__(self):
         return self.name

@@ -1,7 +1,6 @@
 import re
 
 import django
-from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
@@ -70,7 +69,7 @@ class Help(CreateGroupConversation):
         return super().get_context_data(**kwargs)
 
     def get_object(self):
-        self.entity = Group.objects.get(id=settings.ABOUT_GROUP_ID)
+        self.entity = Group.objects.operator_group()
         return self.entity
 
 
