@@ -69,7 +69,9 @@ class Notification:
         sender = self.get_sender()
         name = '{} via '.format(sender) if sender else ''
         if sender:
-            email = settings.FROM_EMAIL_WITH_SLUG.format(slug=sender.slug)
+            email = settings.GROUPRISE \
+                    .get('DEFAULT_DISTINCT_FROM_EMAIL', 'noreply+{slug}@localhost') \
+                    .format(slug=sender.slug)
         else:
             email = settings.DEFAULT_FROM_EMAIL
         from_email = '{name}{site} <{email}>'.format(
