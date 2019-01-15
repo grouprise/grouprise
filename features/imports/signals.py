@@ -27,6 +27,11 @@ logger = logging.getLogger(__name__)
 MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST = 'ijoo9zee7Cheisoochae2Ophie4ohx9ahyai3ux1Quae0Phu'
 
 
+# mail address used in Delivered-To header in case of mailbox delivery
+MAILBOX_DELIVERED_TO_EMAIL = settings.GROUPRISE.get(
+        'MAILBOX_DELIVERED_TO_EMAIL', 'mailbox@localhost')
+
+
 class MailProcessingFailure(Exception):
     """ processing failures that should be reported """
 
@@ -71,7 +76,7 @@ def process_incoming_message(sender, message, **args):
     parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
     processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
                                           settings.DEFAULT_FROM_EMAIL)
-    if delivered_to.lower() == settings.STADTGESTALTEN_BOT_EMAIL.lower():
+    if delivered_to.lower() == MAILBOX_DELIVERED_TO_EMAIL.lower():
         # Mailbox-based delivery uses the bot mail address as a catch-all address for the existing
         # groups. Thus we cannot trust the "Delivered-To" header, but we need to parse the "To"
         # headers instead.
