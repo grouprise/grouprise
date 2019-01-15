@@ -10,6 +10,7 @@ from django.dispatch import receiver
 import html2text
 
 import core.models
+from core.notifications import DEFAULT_REPLY_TO_EMAIL
 from features.associations import models as associations
 from features.content.models import Content
 from features.contributions import models
@@ -68,7 +69,7 @@ def process_incoming_message(sender, message, **args):
         logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
         return
     parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
-    processor = ContributionMailProcessor(settings.DEFAULT_REPLY_TO_EMAIL,
+    processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
                                           settings.DEFAULT_FROM_EMAIL)
     if delivered_to.lower() == settings.STADTGESTALTEN_BOT_EMAIL.lower():
         # Mailbox-based delivery uses the bot mail address as a catch-all address for the existing

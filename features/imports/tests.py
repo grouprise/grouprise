@@ -11,6 +11,7 @@ from django.urls import reverse
 from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
 from core import tests
+from core.notifications import DEFAULT_REPLY_TO_EMAIL
 from features.associations import models as associations
 from features.contributions import models
 from features.imports.management.commands.run_lmtpd import (
@@ -118,9 +119,9 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         self.assertInvalidRecipient(settings.STADTGESTALTEN_BOT_EMAIL)
         self.assertValidRecipient(self.group_address)
         self.assertValidRecipient(self.group_address.swapcase())
-        self.assertValidRecipient(settings.DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
+        self.assertValidRecipient(DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
         self.assertInvalidRecipient(
-            settings.DEFAULT_REPLY_TO_EMAIL.replace('+{', '-{').format(reply_key='foo'))
+            DEFAULT_REPLY_TO_EMAIL.replace('+{', '-{').format(reply_key='foo'))
 
     def test_internal_error_mail_handling(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
