@@ -6,6 +6,7 @@ import time
 import django
 import feedparser
 import requests
+from django.conf import settings
 
 import core
 from core.templatetags.core import html2text
@@ -33,7 +34,7 @@ class Command(django.core.management.base.BaseCommand):
 
     def handle(self, *args, **options):
         author = gestalten.Gestalt.objects.get(
-            id=django.conf.settings.GROUPRISE_FEEDS_IMPORTER_GESTALT_ID)
+            id=settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID'))
         for group in groups.Group.objects.filter(url_import_feed=True):
             try:
                 r = requests.get(group.url, headers={'User-Agent': 'Stadtgestalten'})
