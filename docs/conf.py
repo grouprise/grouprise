@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'grouprise'
-copyright = '2019, Konrad, Lars, Robert'
-author = 'Konrad, Lars, Robert'
+copyright = '2019, grouprise contributors'
+author = 'grouprise contributors'
 
 # The short X.Y version
 version = ''
@@ -63,7 +63,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'releases']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -129,7 +129,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'grouprise.tex', 'grouprise Documentation',
-     'Konrad, Lars, Robert', 'manual'),
+     'grouprise contributors', 'manual'),
 ]
 
 
@@ -171,3 +171,12 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
+
+
+from recommonmark.parser import CommonMarkParser
+
+source_parsers = {
+            '.md': CommonMarkParser,
+            }
+
+source_suffix = ['.rst', '.md']

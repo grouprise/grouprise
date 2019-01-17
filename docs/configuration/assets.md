@@ -1,6 +1,6 @@
 # Asset Management
 
-stadtgestalten assets are compiled during build time but in order to support dynamic setups we provide you with some functions to add new assets or add metadata to the markup.
+grouprise assets are compiled during build time but in order to support dynamic setups we provide you with some functions to add new assets or add metadata to the markup.
 
 
 ## Function Reference
@@ -45,13 +45,13 @@ Add a `meta` element to the `head` with the provided `name` and `content` attrib
 
 ### add_csp_directive
 
-Adds a Content-Security-Policy directive with the provided `directive` (like `style-src`) and `value`. Note that stadtgestalten serves CSP via HTTP response headers so you won’t find any of the provided directives in the HTML output.  
+Adds a Content-Security-Policy directive with the provided `directive` (like `style-src`) and `value`. Note that grouprise serves CSP via HTTP response headers so you won’t find any of the provided directives in the HTML output.  
 
 
 ## Overriding Styles
 
 If you want to override styles or colors you can do that by adding
-a custom stylesheet. The easiest way to do this is to add the following line to your local configuration (or `/etc/stadtgestalten/settings.py`):
+a custom stylesheet. The easiest way to do this is to add the following line to your local configuration (or `/etc/grouprise/settings.py`):
 
 ```python
 from core.assets import add_style_reference
@@ -73,7 +73,7 @@ Note: Please refrain vom using the `add_style_inline` function from the `core.as
 
 ## Style Variables
 
-To ease the process of overriding styles, stadtgestalten supports CSS variables where applicable. CSS variables are a nice thing because with a single rule you can override a setting on the entire platform. Please mind that support for these type of variables is a browser feature and rather new, so you may still want to override individual styles depending on your target audience. 
+To ease the process of overriding styles, grouprise supports CSS variables where applicable. CSS variables are a nice thing because with a single rule you can override a setting on the entire platform. Please mind that support for these type of variables is a browser feature and rather new, so you may still want to override individual styles depending on your target audience. 
 
 ### Supported Variables
 
