@@ -4,8 +4,6 @@ from stadt.common_settings import *
 # https://www.miniwebtool.com/django-secret-key-generator/
 SECRET_KEY = ''
 
-DEBUG = True
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

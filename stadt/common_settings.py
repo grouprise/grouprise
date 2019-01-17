@@ -1,6 +1,9 @@
 import os
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 
 # Django Basics
