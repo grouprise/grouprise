@@ -10,4 +10,5 @@ grouprise
    :maxdepth: 2
    :caption: Contents:
 
+   configuration/options
    configuration/assets
