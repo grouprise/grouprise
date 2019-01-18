@@ -1,6 +1,6 @@
 [flake8]
 max-line-length = 99
-exclude = */migrations, node_modules, stadt/settings.py, build,
+exclude = */migrations, node_modules, stadt/settings.py, build, docs,
   .pybuild, debian/grouprise, debian/grouprise-dependencies, debian/tmp,
   gitlab-ci-build-venv
 ignore = E121,E123,E126,E226,E24,E704,W503,N802
