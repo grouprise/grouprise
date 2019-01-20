@@ -21,6 +21,8 @@ make_deb_package:
         - tags
         - triggers
         - schedules
+        - merge_requests
+        - web
     script:
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
     artifacts:
