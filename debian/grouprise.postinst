@@ -5,6 +5,7 @@ set -eu
 PKG_USER="grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
+DIR_LOGS="/var/log/grouprise"
 
 if [ "$1" = "configure" ]; then
     if ! getent passwd "$PKG_USER" >/dev/null; then
@@ -20,9 +21,8 @@ if [ "$1" = "configure" ]; then
         fi
     fi
 
-    chown "$PKG_USER:root" /var/backups/grouprise
-    mkdir -p /var/log/grouprise
-    chown "$PKG_USER:root" /var/log/grouprise
+    mkdir -p "$DIR_LOGS"
+    chown "$PKG_USER:root" "$DIR_LOGS"
 fi
 
 # manually trigger byte compilation (since we do not use dh_python3)

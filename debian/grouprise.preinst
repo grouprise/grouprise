@@ -4,6 +4,10 @@ set -eu
 
 PKG_USER="grouprise"
 DIR_ETC="/etc/grouprise"
+DIR_BACKUPS="/var/backups/grouprise"
+
+mkdir -p "$DIR_BACKUPS"
+chown "$PKG_USER:root" "$DIR_BACKUPS"
 
 if [ -f "/etc/uwsgi/apps-enabled/grouprise.ini" ]; then
     touch "$DIR_ETC/maintenance_mode"
