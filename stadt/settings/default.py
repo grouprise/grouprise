@@ -212,7 +212,7 @@ SCORE_PROCESSORS = [
     'features.stadt.scores.Group',
 ]
 
-BACKUP_PATH = '/var/backups/stadtgestalten'
+BACKUP_PATH = '/var/backups/grouprise'
 
 ENTITY_SLUG_BLACKLIST = [
         'all', 'alle', 'antwort', 'crew', 'facebook', 'gbr', 'info', 'kontakt', 'mail',
