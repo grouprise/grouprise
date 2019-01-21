@@ -64,7 +64,8 @@ class Command(BaseCommand):
         elif engine == 'postgresql':
             try:
                 check_call([
-                    'pg_dump', '--no-owner', '--no-privileges', '-f', file, create_psql_uri(db)
+                    'pg_dump', '--no-owner', '--no-privileges', '--no-password', '-f', file,
+                    create_psql_uri(db)
                 ])
             except FileNotFoundError as err:
                 raise CommandError('missing the pg_dump binary. please install it') from err
