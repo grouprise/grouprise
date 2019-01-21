@@ -1,5 +1,6 @@
-import os
+import getpass
 import datetime
+import os
 from subprocess import check_call, check_output
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -30,6 +31,13 @@ def create_psql_uri(db):
         uri += '{}:{}@'.format(user, password)
     elif user:
         uri += '{}@'.format(user)
+    elif host == 'localhost' and password is False:
+        if user is False or user == getpass.getuser():
+            # the database is on this host, no password was set
+            # and either no user was set or the command runs as the defined user
+            # this probably means that we postgres' username-matching
+            # authentication mechanism
+            return name
     uri += '{}/{}'.format(host, name)
     return uri
 
