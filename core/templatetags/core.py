@@ -6,7 +6,7 @@ import random
 import bleach as python_bleach
 import html2text as python_html2text
 import markdown as python_markdown
-from core import fragments, markdown as core_markdown
+from core import markdown as core_markdown
 from core.views import app_config
 from django import apps, template
 from django.conf import settings
@@ -165,16 +165,6 @@ def full_url(path):
 @register.simple_tag(name='app_config')
 def render_app_config():
     return safestring.mark_safe(app_config.serialize())
-
-
-@register.simple_tag(takes_context=True)
-def include_fragments(context, fragment_group):
-    result = ''
-    group = fragments.groups.get(fragment_group, [])
-    for key in group:
-        t = context.template.engine.get_template(fragments.fragments[key])
-        result += t.render(context)
-    return safestring.mark_safe(result)
 
 
 def bleach(text, disable_tags=tuple(), except_for=tuple()):

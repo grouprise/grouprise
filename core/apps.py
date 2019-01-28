@@ -5,7 +5,7 @@ class CoreConfig(AppConfig):
     name = 'core'
 
     def ready(self):
-        from django.utils import module_loading
+        from django.utils.module_loading import autodiscover_modules
 
-        for module_name in ['assets', 'fragments', 'markdown', 'rest_api', 'rules', 'signals']:
-            module_loading.autodiscover_modules(module_name)
+        for module_name in ['rules', 'signals']:
+            autodiscover_modules(module_name)
