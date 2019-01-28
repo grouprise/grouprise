@@ -11,6 +11,7 @@ from core.views import base
 from features.associations import models as associations
 from features.associations.views import get_association_or_404
 from features.contributions import view_mixins as contributions
+from features.contributions.forms import Text as ContributionForm
 from features.contributions.models import Contribution
 from features.files import forms as files
 from features.galleries import forms as galleries
@@ -36,7 +37,7 @@ class DetailBase(features.associations.views.AssociationMixin,
     model = associations.Association
     template_name = 'articles/detail.html'
 
-    form_class = features.contributions.forms.Text
+    form_class = ContributionForm
 
     def get_contributions(self):
         user = self.request.user
