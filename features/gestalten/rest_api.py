@@ -1,5 +1,4 @@
 from rest_framework import viewsets, serializers, permissions
-from core import api
 from . import models
 
 
@@ -72,9 +71,3 @@ class GestaltSettingSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return models.GestaltSetting.objects.filter(gestalt=self.kwargs['gestalt'])
-
-
-@api.register
-def load(router):
-    router.register(r'gestalten', GestaltSet, 'gestalt')
-    router.register(r'gestalten/(?P<gestalt>\d+)/settings', GestaltSettingSet, 'gestalt_setting')

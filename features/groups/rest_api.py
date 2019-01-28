@@ -5,7 +5,6 @@ import django_filters.widgets
 from . import models
 # todo howto resolve module without including tags here
 from features.tags.rest_api import FlattenedTagSerializer
-from core import api
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):
@@ -98,13 +97,3 @@ class TransitionGroupSet(viewsets.ReadOnlyModelViewSet):
         if self.action == 'list':
             return TransitionConnectGroupListSerializer
         return TransitionConnectGroupSerializer
-
-
-@api.register
-def load(router):
-    router.register(r'groups', GroupSet, 'group')
-
-
-@api.register_tc
-def load_tc(router):
-    router.register(r'organisation', TransitionGroupSet, 'organisation')

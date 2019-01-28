@@ -2,7 +2,6 @@ from django.urls import reverse
 from rest_framework import viewsets, serializers, permissions
 from rest_framework.decorators import permission_classes
 
-from core import api
 from features.associations.models import Association
 
 
@@ -62,8 +61,3 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return EventRetrieveSerializer
         return EventRetrieveSerializer
-
-
-@api.register_tc
-def load(router):
-    router.register(r'event', EventViewSet, 'event')
