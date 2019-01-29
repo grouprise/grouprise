@@ -16,7 +16,6 @@ from django.template.base import FilterExpression
 from django.template.loader import get_template
 from django.utils import html as django_html, safestring
 from markdown.extensions import toc
-from core.assets import get_assets
 
 register = template.Library()
 
@@ -95,13 +94,6 @@ def get_parameters(context, **kwargs):
     if params != request.GET and 'page' not in kwargs and 'page' in params:
         del params['page']
     return params.urlencode()
-
-
-@register.simple_tag
-def include_assets(stage):
-    return safestring.mark_safe('\n'.join([
-        asset.create_tag() for asset in get_assets(stage)
-    ]))
 
 
 @register.inclusion_tag('core/_link.html', takes_context=True)

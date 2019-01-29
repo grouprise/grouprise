@@ -72,8 +72,9 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # django-csp
+    'csp.middleware.CSPMiddleware',
     # grouprise
-    'core.assets.CSPMiddleware',
     'features.gestalten.middleware.GestaltAppConfigMiddleware',
 ]
 
@@ -242,6 +243,15 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
+
+
+# Django-CSP
+# https://django-csp.readthedocs.io/
+
+# sha256-Tli: allow the inline script defined in core/templates/core/base.html
+CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg='")
+
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 
 
 # grouprise Tags (features.tags)

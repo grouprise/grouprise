@@ -4,6 +4,7 @@ django                      # debian: python3-django
 django-allauth              # debian (buster): python3-django-allauth
 django-cachalot             # NOT IN DEBIAN
 django-crispy-forms         # debian: python3-django-crispy-forms
+django-csp                  # debian (buster): python3-django-csp
 django-filter               # debian: python3-django-filters
 django-haystack             # debian: python3-django-haystack
 django-ical                 # NOT IN DEBIAN
