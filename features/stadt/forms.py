@@ -2,6 +2,13 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_slug
 
+DEFAULT_ENTITY_SLUG_BLACKLIST = [
+        'all', 'grouprise', 'info', 'mail', 'noreply', 'postmaster', 'reply', 'stadt',
+        'webmaster', 'www']
+
+ENTITY_SLUG_BLACKLIST = settings.GROUPRISE.get(
+        'ENTITY_SLUG_BLACKLIST', DEFAULT_ENTITY_SLUG_BLACKLIST)
+
 
 def validate_entity_slug(slug, entity=None):
     from features.gestalten.models import Gestalt
@@ -11,7 +18,7 @@ def validate_entity_slug(slug, entity=None):
     validate_slug(slug)
 
     # validate by blacklist
-    if slug.lower() in settings.ENTITY_SLUG_BLACKLIST:
+    if slug.lower() in ENTITY_SLUG_BLACKLIST:
         raise ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')

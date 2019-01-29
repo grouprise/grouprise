@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls import url
 
-from . import feeds, views
+from features.content.views import Detail as AssociationDetailView
 from features.stadt.views import Help
+from . import feeds, views
 
 urlpatterns = [
     url(
@@ -33,4 +34,9 @@ urlpatterns = [
         r'^(?P<entity_slug>[\w-]+)/$',
         views.Entity.as_view(),
         name='entity'),
+
+    re_path(
+        r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/$',
+        AssociationDetailView.as_view(),
+        name='content'),
 ]

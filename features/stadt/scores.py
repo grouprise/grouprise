@@ -3,6 +3,7 @@ from math import log
 
 import django.conf
 import django.utils.timezone
+from django.conf import settings
 
 from features.content import models as content
 from features.contributions import models as contributions
@@ -11,7 +12,7 @@ from features.groups import models as groups
 from features.subscriptions import models as subscriptions
 
 THRESHOLD = django.utils.timezone.now() - datetime.timedelta(
-        days=django.conf.settings.SCORE_CONTENT_AGE)
+        days=settings.GROUPRISE.get('SCORE_CONTENT_AGE', 0))
 
 
 class Gestalt:

@@ -1,4 +1,3 @@
-import django
 import django.contrib.contenttypes.models
 from allauth.account import adapter as allauth_adapter
 from django.conf import settings
@@ -75,7 +74,7 @@ class Gestalt(core.models.Model):
 
     def delete(self, *args, **kwargs):
         data = self.get_data()
-        unknown_gestalt = Gestalt.objects.get(id=settings.GROUPRISE_UNKNOWN_GESTALT_ID)
+        unknown_gestalt = Gestalt.objects.get(id=settings.GROUPRISE.get('UNKNOWN_GESTALT_ID', 1))
         data['associations'].update(entity_id=unknown_gestalt.id)
         data['contributions'].update(author=unknown_gestalt)
         data['images'].update(creator=unknown_gestalt)

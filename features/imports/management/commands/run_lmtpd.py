@@ -15,6 +15,7 @@ from aiosmtplib.smtp import SMTP
 import django
 from django.conf import settings
 
+from core.notifications import DEFAULT_REPLY_TO_EMAIL
 from features.imports.signals import (
         ContributionMailProcessor, MailProcessingFailure, ParsedMailMessage)
 
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 # internal error mails are sent to the postmaster
-POSTMASTER_ADDRESS = settings.GROUPRISE_POSTMASTER_EMAIL
+POSTMASTER_ADDRESS = settings.GROUPRISE.get('POSTMASTER_EMAIL', 'postmaster@localhost')
 
 
 class Command(django.core.management.base.BaseCommand):
@@ -58,7 +59,7 @@ class ContributionLMTPD:
             self._error_writer = functools.partial(logger.error)
         else:
             self._error_writer = error_writer
-        processor = ContributionMailProcessor(settings.DEFAULT_REPLY_TO_EMAIL,
+        processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
                                               settings.DEFAULT_FROM_EMAIL)
         self._handler = ContributionHandler(processor, self._success_writer, self._error_writer)
 

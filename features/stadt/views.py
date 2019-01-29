@@ -1,7 +1,6 @@
 import re
 
 import django
-from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
@@ -66,12 +65,11 @@ class Help(CreateGroupConversation):
             kwargs['about_text'] = about_text
             if tools_text and tools_text != about_text:
                 kwargs['tools_text'] = tools_text
-        kwargs['intro_text'] = settings.STADTGESTALTEN_INTRO_TEXT
         kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
         return super().get_context_data(**kwargs)
 
     def get_object(self):
-        self.entity = Group.objects.get(id=settings.ABOUT_GROUP_ID)
+        self.entity = Group.objects.operator_group()
         return self.entity
 
 
@@ -79,7 +77,6 @@ class Index(content.List):
     template_name = 'stadt/index.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['intro_text'] = settings.STADTGESTALTEN_INTRO_TEXT
         kwargs['feed_url'] = self.request.build_absolute_uri(reverse('feed'))
         kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
         return super().get_context_data(**kwargs)
@@ -89,10 +86,6 @@ class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
     permission_required = 'stadt.view_privacy'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'
-
-    def get_context_data(self, **kwargs):
-        kwargs['HAS_PIWIK'] = settings.HAS_PIWIK
-        return super().get_context_data(**kwargs)
 
 
 class Search(PermissionMixin, ListView):

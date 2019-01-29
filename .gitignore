@@ -9,11 +9,12 @@ node_modules
 static/
 xapian_index
 res/img/backdrops
-stadt/settings/local.py
+stadt/settings.py
 *.swp
 *.pyc
 *.log
 .coverage
+docs/_build
 
 # debian shizzle
 makefilet

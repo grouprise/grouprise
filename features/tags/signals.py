@@ -2,9 +2,9 @@ import logging
 import re
 
 from django.apps import apps
+from django.conf import settings
 from django.contrib.contenttypes import models as contenttypes
 from django.db.models import signals
-from stadt.settings import TAGS_TAGGABLE
 from . import RE_TAG_REF
 from .models import Tag, Tagged
 
@@ -24,7 +24,7 @@ class Index:
     @classmethod
     def build(cls):
         cls.index = []
-        for conf in TAGS_TAGGABLE:
+        for conf in settings.GROUPRISE_TAGS_TAGGABLE:
             mconf = {}
             mconf.update(_DEFAULT_CONF)
             mconf.update(conf)

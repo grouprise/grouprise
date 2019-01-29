@@ -5,7 +5,6 @@ from rest_framework import viewsets, mixins, serializers, permissions
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.response import Response
 
-from core import api
 from features.gestalten.rest_api import GestaltSerializer, GestaltOrAnonSerializer
 from . import models
 
@@ -152,8 +151,3 @@ class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = PollSerializer
     filter_fields = ('id',)
     queryset = models.WorkaroundPoll.objects.all()
-
-
-@api.register
-def load(router):
-    router.register(r'polls', PollSet, 'polls')

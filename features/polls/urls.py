@@ -1,6 +1,10 @@
 from django.conf.urls import url
 
+from core.urls import api_router
+from features.polls.rest_api import PollSet
 from . import views, rest_api
+
+api_router.register(r'polls', PollSet, 'polls')
 
 urlpatterns = [
     url(

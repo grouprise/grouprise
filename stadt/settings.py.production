@@ -1,0 +1,67 @@
+from stadt.common_settings import *
+
+SECRET_KEY = ''
+
+ALLOWED_HOSTS = []
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'localhost',
+        'NAME': 'grouprise',
+        'USER': 'grouprise',
+        'PASSWORD': '',
+    }
+}
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
+
+ADMINS = []
+
+DEFAULT_FROM_EMAIL = 'noreply@localhost'
+
+SERVER_EMAIL = 'noreply@localhost'
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
+GROUPRISE = {
+    'CLAIMS': [],
+    'SCORE_CONTENT_AGE': 0,
+    'UPLOAD_MAX_FILE_SIZE': 0,
+    
+    # special users and groups
+    'FEED_IMPORTER_GESTALT_ID': 1,
+    'OPERATOR_GROUP_ID': 1,
+    'UNKNOWN_GESTALT_ID': 1,
+    
+    # email settings
+    'DEFAULT_DISTINCT_FROM_EMAIL': 'noreply+{slug}@localhost',
+    'DEFAULT_REPLY_TO_EMAIL': 'reply+{reply_key}@localhost',
+    'MAILBOX_DELIVERED_TO_EMAIL': 'mailbox@localhost',
+    'POSTMASTER_EMAIL': 'postmaster@localhost',
+
+    # 'ENTITY_SLUG_BLACKLIST': [
+    #     'all', 'grouprise', 'info', 'mail', 'noreply', 'postmaster', 'reply', 'stadt',
+    #     'webmaster', 'www'
+    # ]
+}
+
+# CSRF_COOKIE_SECURE = True
+
+# CSRF_COOKIE_HTTPONLY = False
+
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# SECURE_HSTS_SECONDS = 31536000
+
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# SECURE_BROWSER_XSS_FILTER = True
+
+# SECURE_SSL_REDIRECT = True
+
+# SESSION_COOKIE_SECURE = True
+
+# X_FRAME_OPTIONS = 'DENY'

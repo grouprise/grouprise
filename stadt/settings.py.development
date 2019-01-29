@@ -1,0 +1,20 @@
+from stadt.common_settings import *
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+    }
+}
+
+DEBUG = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+GROUPRISE = {}
+
+SECRET_KEY = 'DEVELOPMENT'
+
+if TESTING:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+    HUEY = {'always_eager': True}

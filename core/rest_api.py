@@ -1,7 +1,6 @@
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from core.templatetags import core
-from core import api
 
 _PRESETS = {
     'content': {
@@ -19,8 +18,3 @@ class MarkdownView(viewsets.ViewSet):
         return Response({
             'content': str(core.markdown(text, **preset))
         })
-
-
-@api.register
-def load(router):
-    router.register(r'content/markdown', MarkdownView, base_name='markdown')

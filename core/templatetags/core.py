@@ -6,7 +6,7 @@ import random
 import bleach as python_bleach
 import html2text as python_html2text
 import markdown as python_markdown
-from core import fragments, markdown as core_markdown
+from core import markdown as core_markdown
 from core.views import app_config
 from django import apps, template
 from django.conf import settings
@@ -16,7 +16,6 @@ from django.template.base import FilterExpression
 from django.template.loader import get_template
 from django.utils import html as django_html, safestring
 from markdown.extensions import toc
-from core.assets import get_assets
 
 register = template.Library()
 
@@ -97,13 +96,6 @@ def get_parameters(context, **kwargs):
     return params.urlencode()
 
 
-@register.simple_tag
-def include_assets(stage):
-    return safestring.mark_safe('\n'.join([
-        asset.create_tag() for asset in get_assets(stage)
-    ]))
-
-
 @register.inclusion_tag('core/_link.html', takes_context=True)
 def link(context, model, title=None):
     if hasattr(model, 'get_absolute_url_for_user'):
@@ -167,16 +159,6 @@ def render_app_config():
     return safestring.mark_safe(app_config.serialize())
 
 
-@register.simple_tag(takes_context=True)
-def include_fragments(context, fragment_group):
-    result = ''
-    group = fragments.groups.get(fragment_group, [])
-    for key in group:
-        t = context.template.engine.get_template(fragments.fragments[key])
-        result += t.render(context)
-    return safestring.mark_safe(result)
-
-
 def bleach(text, disable_tags=tuple(), except_for=tuple()):
     if disable_tags == "all":
         allowed_tags = set()
@@ -198,7 +180,7 @@ def markdown(
         text, heading_baselevel=1, filter_tags=True, truncate=False, disable_tags="",
         plain_preview=False, preset=None, plain=False):
     def wrap(result):
-        if plain or plain_preview:
+        if plain or plain_preview or truncate:
             return result
         else:
             script = """
@@ -207,6 +189,10 @@ def markdown(
             return "<div>{}{}</div>".format(script, result)
     extensions = tuple(core_markdown.markdown_extensions) + (
             toc.TocExtension(baselevel=heading_baselevel, marker='[INHALT]'), )
+    # TODO this needs careful optimization
+    #      for every content preview we’re rendering the whole content
+    #      to html, then strip html tags and finally truncate the
+    #      result just in order to get some partially formatted text
     result = python_markdown.markdown(text, extensions=extensions)
     if preset == 'linkonly':
         result = bleach(result, disable_tags='all', except_for=('a',))

@@ -1,5 +1,4 @@
 from django import shortcuts
-from django.conf import settings
 from django.contrib.messages import views as messages
 from django import urls
 from django.shortcuts import get_object_or_404
@@ -101,7 +100,7 @@ class CreateGroupConversation(CreateConversation):
 
 class CreateAbuseConversation(CreateGroupConversation):
     def get(self, *args, **kwargs):
-        kwargs['group_pk'] = settings.ABOUT_GROUP_ID
+        kwargs['group_pk'] = Group.objects.operator_group().pk
         return super().get(*args, **kwargs)
 
     def get_initial(self):
@@ -112,5 +111,5 @@ class CreateAbuseConversation(CreateGroupConversation):
                             self.request.build_absolute_uri(self.kwargs['path']))}
 
     def get_object(self):
-        self.kwargs['group_pk'] = settings.ABOUT_GROUP_ID
+        self.kwargs['group_pk'] = Group.objects.operator_group().pk
         return super().get_object()

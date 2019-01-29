@@ -2,11 +2,6 @@ from . import views
 from django.conf import urls
 
 urlpatterns = [
-    urls.url(
-        r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/$',
-        views.Detail.as_view(),
-        name='content'),
-
     # This route is used in the content/_meta.html template. If there is a change in how
     # generated urls for this route work the meta urls should be checked afterwards.
     urls.url(

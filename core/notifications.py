@@ -15,6 +15,9 @@ from core.templatetags.core import full_url as build_absolute_uri
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_REPLY_TO_EMAIL = settings.GROUPRISE.get(
+        'DEFAULT_REPLY_TO_EMAIL', 'reply+{reply_key}@localhost')
+
 
 class Notification:
     @classmethod
@@ -59,14 +62,16 @@ class Notification:
         return '{} <{}>'.format(self.recipient, self.recipient.user.email)
 
     def get_formatted_reply_address(self, token):
-        return '<{}>'.format(settings.DEFAULT_REPLY_TO_EMAIL.format(
+        return '<{}>'.format(DEFAULT_REPLY_TO_EMAIL.format(
                 reply_key=token.secret_key))
 
     def get_formatted_sender(self):
         sender = self.get_sender()
         name = '{} via '.format(sender) if sender else ''
         if sender:
-            email = settings.FROM_EMAIL_WITH_SLUG.format(slug=sender.slug)
+            email = settings.GROUPRISE \
+                    .get('DEFAULT_DISTINCT_FROM_EMAIL', 'noreply+{slug}@localhost') \
+                    .format(slug=sender.slug)
         else:
             email = settings.DEFAULT_FROM_EMAIL
         from_email = '{name}{site} <{email}>'.format(

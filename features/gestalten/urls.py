@@ -2,7 +2,12 @@ from allauth.account import views as allauth_views
 from allauth.socialaccount import views as socialaccount_views
 from django.conf.urls import url
 
+from core.urls import api_router
+from features.gestalten.rest_api import GestaltSet, GestaltSettingSet
 from . import views
+
+api_router.register(r'gestalten', GestaltSet, 'gestalt')
+api_router.register(r'gestalten/(?P<gestalt>\d+)/settings', GestaltSettingSet, 'gestalt_setting')
 
 urlpatterns = [
     url(

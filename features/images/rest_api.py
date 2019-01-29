@@ -6,7 +6,6 @@ import django_filters
 import django_filters.widgets
 
 import core
-from core import api
 from . import models
 
 
@@ -108,8 +107,3 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
                 image = self.get_object()
                 return image.creator == self.request.user
         return False
-
-
-@api.register
-def load(router):
-    router.register(r'images', ImageSet, 'image')
