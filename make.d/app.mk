@@ -1,29 +1,9 @@
-CONFIG_APP_SETUP = stadt/settings/local.py
-
-define APP_SETUP_CONFIG
-from stadt.settings.default import *
-from stadt.settings.development import *
-
-SECRET_KEY = '$(shell echo "$$HOME$$(date)" | md5sum | cut -c-20)'
-ALLOWED_HOSTS = ['stadtgestalten.org', 'localhost']
-ADMINS = [
-	('Admins', 'yourmailaddress@example.com'),
-]
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
-ABOUT_GROUP_ID = 1
-
-STATICFILES_DIRS = [
-    ('stadt', os.path.join(BASE_DIR, '$(DIR_BUILD)', 'static')),
-]
-
-# optional: user ID to be used as virtual "author" for articles imported via feeds
-#STADTGESTALTEN_FEEDS_IMPORTER_USER_ID = 1
-endef
-export APP_SETUP_CONFIG
+CONFIG_APP_SETUP = stadt/settings.py
+CONFIG_APP_SETUP_TEMPLATE = stadt/settings.py.development
 
 
 $(CONFIG_APP_SETUP): $(MAKEFILES)
-	echo "$$APP_SETUP_CONFIG" > "$(CONFIG_APP_SETUP)"
+	cp "$(CONFIG_APP_SETUP_TEMPLATE)" "$(CONFIG_APP_SETUP)"
 
 .PHONY: app_migrate
 app_migrate: virtualenv_check app_local_settings
