@@ -10,7 +10,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
 import core.models
-from core import colors
+from core.utils import get_random_color
 from features.gestalten.models import Gestalt
 from features.stadt.models import EntitySlugField
 
@@ -50,7 +50,7 @@ class Group(core.models.Model):
             source='avatar', processors=[Transpose(), ResizeToFit(256, 256)], format='PNG')
     avatar_color = models.CharField(
             max_length=7,
-            default=colors.get_random_color)
+            default=get_random_color)
     date_founded = models.DateField(
             'Gruppe gegründet', default=datetime.date.today,
             help_text='Ungefähres Datum der tatsächlichen Gruppengründung')

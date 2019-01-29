@@ -8,7 +8,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import SmartResize, Transpose
 
 import core
-from core import colors
+from core.utils import get_random_color
 
 
 class GestaltQuerySet(models.QuerySet):
@@ -39,7 +39,7 @@ class Gestalt(core.models.Model):
     avatar = core.models.ImageField(blank=True)
     avatar_64 = ImageSpecField(
             source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
-    avatar_color = models.CharField(max_length=7, default=colors.get_random_color)
+    avatar_color = models.CharField(max_length=7, default=get_random_color)
     background = core.models.ImageField('Hintergrundbild', blank=True)
     background_cover = ImageSpecField(
             source='background', processors=[Transpose(), SmartResize(1140, 456)],
