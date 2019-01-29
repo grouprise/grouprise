@@ -1,54 +1,36 @@
 # Asset Management
 
-grouprise assets are compiled during build time but in order to support dynamic setups we provide you with some functions to add new assets or add metadata to the markup.
+grouprise assets are compiled during build time. If you want to use additional assets you can add them via the theming mechanism (overriding templates). You should as well adjust the CSP directives.
 
 
-## Function Reference
+## Adjusting CSP directives
 
-All following subsections refer to functions in the `core.assets` module. Optional arguments usually refer to element specific attributes with the exception of `stage` that refers to assets and references that are in included in the `head` element (`early` stage) or at the end of the body element (`late` stage).
+If you add new assets (e.g. scripts oder styles) to your setup, you have to check your CSP setup. See the [Django-CSP documentation](https://django-csp.readthedocs.io/en/latest/configuration.html) for all options.
 
-### add_javascript_reference
+Local external assets are allowed by default. If you want to add assets from another host, add something to your config like:
 
-Add a `script` element referencing the provided url via the `src` attribute.
+```python
+CSP_DEFAULT_SRC += ("https://sub.example.org",)
 
-Optional arguments: `defer`, `async`, `stage`
+CSP_SCRIPT_SRC += ("https://sub.example.org",)
+```
 
-### add_javascript_inline
+You can also use inline scripts in local templates:
 
-Add a literal JavaScript string that is embedded as a `script` element.
+```python
+CSP_SCRIPT_SRC += ("'sha256-0123456789abdcef'",)
+```
 
-Optional arguments: `stage`
+Use [Sentry](https://sentry.io/) to track CSP errors:
 
-### add_style_reference
-
-Add a `link` element referencing the provided url via the `href` attribute.
-
-Optional arguments: `media`, `**kwargs` as link attributes
-
-### add_style_inline
-
-Add a literal CSS string that is embedded as a `style` element.
-
-NOTE: This breaks support for inline styles due to Content-Security-Policy restrictions. You will render some JavaScript components inoperable. These problems are likely to be subtle in nature and you’ll most likely won’t notice them immediately. You have been warned :).
-
-Optional arguments: `media`, `scoped`
-
-### add_link
-
-Add a `link` element to the `head` referencing the provided url via the `href` attribute.
-
-Optional arguments: `rel`, `**kwargs` as link attributes
-
-### add_meta
-
-Add a `meta` element to the `head` with the provided `name` and `content` attribute.
-
-### add_csp_directive
-
-Adds a Content-Security-Policy directive with the provided `directive` (like `style-src`) and `value`. Note that grouprise serves CSP via HTTP response headers so you won’t find any of the provided directives in the HTML output.  
+```python
+CSP_REPORT_URI = ("https://sentry.example.org/api/2/csp-report/?sentry_key=0123456789abcdef",)
+```
 
 
 ## Overriding Styles
+
+FIXME: Revise this section after adding theming support.
 
 If you want to override styles or colors you can do that by adding
 a custom stylesheet. The easiest way to do this is to add the following line to your local configuration (or `/etc/grouprise/settings.py`):
