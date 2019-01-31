@@ -83,7 +83,7 @@ class CreateConversation(
 class CreateGestaltConversation(CreateConversation):
     permission_required = 'conversations.create_gestalt_conversation'
 
-    def get_object(self):
+    def get_permission_object(self):
         if not hasattr(self, 'entity'):
             self.entity = get_object_or_404(Gestalt, pk=self.kwargs['gestalt_pk'])
         return self.entity
@@ -92,7 +92,7 @@ class CreateGestaltConversation(CreateConversation):
 class CreateGroupConversation(CreateConversation):
     permission_required = 'conversations.create_group_conversation'
 
-    def get_object(self):
+    def get_permission_object(self):
         if not hasattr(self, 'entity'):
             self.entity = get_object_or_404(Group, pk=self.kwargs['group_pk'])
         return self.entity
