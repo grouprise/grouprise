@@ -26,7 +26,7 @@ randomcolor                 # NOT IN DEBIAN
 raven                       # debian (buster): python3-raven
 redis                       # debian: python3-redis
 requests                    # debian: python3-requests
-rules<2.0.1                 # debian (buster): python3-django-rules
+rules                       # debian (buster): python3-django-rules
 translitcodec               # NOT IN DEBIAN
 xapian-haystack             # debian (buster): python3-xapian-haystack
 # xapian-haystack also requires the xapian python bindings that you'll find

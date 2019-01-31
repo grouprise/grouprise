@@ -2,16 +2,16 @@ import django
 import django_filters
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import CreateView, TemplateView, UpdateView
 from django.urls import reverse
 from django_filters.views import FilterView
 
 import core
-from core import fields, views
 from core.views import PermissionMixin
 from features.associations import models as associations
 from features.associations.filters import ContentFilterSet
 from features.groups import models as groups
+from features.groups.models import Group
 from . import filters, forms, models
 
 
@@ -48,19 +48,17 @@ class Mixin:
         return None
 
 
-class Create(views.Create):
+class Create(PermissionMixin, CreateView):
     permission_required = 'groups.create_group'
+    model = Group
+    fields = ('name',)
+    template_name = 'groups/create.html'
 
-    action = 'Gruppe anlegen'
-    menu = 'group'
-    # parent = 'group-index'
-    title = 'Neue Gruppe'
-
-    model = models.Group
-
-    data_field_classes = (
-            fields.current_gestalt('gestalt_created', null=True),
-            fields.model_field('name'))
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.user.is_authenticated:
+            kwargs['instance'] = Group(gestalt_created=self.request.user.gestalt)
+        return kwargs
 
 
 class Detail(
