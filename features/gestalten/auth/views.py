@@ -1,17 +1,14 @@
 import allauth
 import django
 from allauth.account import views
-from crispy_forms import layout
 from django.contrib import messages
 from django.views import generic
-from django.views.generic import edit as edit_views
 
-from core import views as utils_views
 from core.views import PermissionMixin
 from . import forms
 
 
-class Login(allauth.account.views.LoginView):
+class Login(PermissionMixin, allauth.account.views.LoginView):
     permission_required = 'gestalten.login'
     form_class = forms.Login
     template_name = 'auth/login.html'
@@ -24,11 +21,9 @@ class Login(allauth.account.views.LoginView):
         return False
 
 
-class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
-    action = 'Abmelden'
-    ignore_base_templates = True
-    layout = layout.HTML('<p>Möchtest Du Dich abmelden?</p>')
+class Logout(PermissionMixin, views.LogoutView):
     permission_required = 'account.logout'
+    template_name = 'auth/logout.html'
 
     def get_parent(self):
         return self.request.user.gestalt

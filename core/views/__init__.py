@@ -7,7 +7,6 @@ from .base import PermissionMixin, View  # NOQA
 from .edit import CreateView as Create, FormView as Form  # NOQA
 
 from core import forms
-from crispy_forms import layout
 from django import forms as django_forms, http
 from django.contrib.messages import views as messages_views
 from django.core import exceptions
@@ -84,8 +83,6 @@ class FormMixin:
             lay = self._fields
         else:
             lay = super().get_layout()
-        if hasattr(self, 'description'):
-            lay = (layout.HTML('<p>{}</p>'.format(self.description)),) + lay
         lay += (forms.Submit(self.get_action()),)
         return lay
 
@@ -264,10 +261,7 @@ class OldCreate(RelatedObjectMixin, ActionMixin, generic.CreateView):
 
     @staticmethod
     def get_field_name(field):
-        if isinstance(field, layout.Field):
-            return field.fields[0]
-        else:
-            return field
+        return field
 
     def get_fields(self):
         return [self.get_field_name(f) for f in self._fields]

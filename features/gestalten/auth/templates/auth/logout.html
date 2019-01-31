@@ -1,0 +1,12 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Benutzerkonto - {{ block.super }}{% endblock %}
+{% block heading_title_text %}Benutzerkonto{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p>Möchtest du dich abmelden?</p>
+        <button class="btn btn-primary">Abmelden</button>
+    </form>
+{% endblock %}

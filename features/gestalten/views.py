@@ -2,14 +2,12 @@ import allauth
 import django
 from allauth.account import views
 from allauth.account import views as allauth_views
-from crispy_forms import layout
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.views import generic
-from django.views.generic import edit as edit_views, DeleteView, UpdateView
+from django.views.generic import DeleteView, UpdateView
 
 import core
-from core import views as utils_views
 from core.views import base, PermissionMixin
 from features.associations import models as associations
 from features.groups.models import Group
@@ -121,13 +119,9 @@ class UpdateEmail(PermissionMixin, views.EmailView):
         return '{}?group={}'.format(reverse('email-settings'), slug)
 
 
-class UpdateEmailConfirm(utils_views.ActionMixin, edit_views.FormMixin, views.ConfirmEmailView):
-    action = 'E-Mail-Adresse bestätigen'
-    ignore_base_templates = True
-    layout = layout.HTML('<p>Ist <a href="mailto:{{ confirmation.email_address.email }}">'
-                         '{{ confirmation.email_address.email }}</a> eine E-Mail-Adresse des '
-                         'Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>')
+class UpdateEmailConfirm(PermissionMixin, views.ConfirmEmailView):
     permission_required = 'account.confirm'
+    template_name = 'gestalten/update_email_confirm.html'
 
     def get_context_data(self, **kwargs):
         # as FormMixin doesn't call get_context_data() on super() we have to call it explicitly

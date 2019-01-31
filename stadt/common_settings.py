@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
-    'crispy_forms',
     'django_filters',
     'django_mailbox',
     'huey.contrib.djhuey',

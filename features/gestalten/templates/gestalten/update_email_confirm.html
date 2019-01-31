@@ -1,0 +1,16 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Benutzerkonto - {{ block.super }}{% endblock %}
+{% block heading_title_text %}Benutzerkonto{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p>Ist 
+        <a href="mailto:{{ confirmation.email_address.email }}">
+            {{ confirmation.email_address.email }}
+        </a>
+        eine E-Mail-Adresse des Benutzers <em>{{ confirmation.email_address.user }}</em>?</p>
+        <button class="btn btn-primary">E-Mail-Adresse bestätigen</button>
+    </form>
+{% endblock %}
