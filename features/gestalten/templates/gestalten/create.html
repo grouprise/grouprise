@@ -1,0 +1,28 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Benutzerkonto - {{ block.super }}{% endblock %}
+{% block heading_title_text %}Benutzerkonto{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <p> Benutzerkonto schon vorhanden? <a href="{{ login_url }}">Melde dich an.</a></p>
+        
+        <div class="disclaimer content-block">
+            <p>Deine E-Mail Adresse wird nicht weitergegeben und auch nicht auf der Seite
+            angezeigt. Sie wird dazu verwendet dir Benachrichtungen zu schicken.</p>
+
+            <p>Deine E-Mail-Adresse wird dauerhaft gespeichert. Um sie später zu löschen,
+            lösche dein Benutzerkonto in den Einstellungen oder
+            <a href="{% url 'create-group-conversation' about_group.pk %}">
+                schreib uns eine Nachricht
+            </a>.
+        </div>
+
+        {% field form.email %}
+        {% field form.password1 %}
+        {% field form.password2 %}
+        <button class="btn btn-primary">Benutzerkonto anlegen</button>
+    </form>
+{% endblock %}

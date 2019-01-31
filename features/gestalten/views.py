@@ -16,12 +16,10 @@ from features.groups.models import Group
 from . import forms, models
 
 
-class Create(utils_views.ActionMixin, views.SignupView):
-    action = 'Registrieren'
-    form_class = forms.Create
-    ignore_base_templates = True
-    # parent = 'gestalt-index'
+class Create(views.SignupView):
     permission_required = 'account.signup'
+    form_class = forms.Create
+    template_name = 'gestalten/create.html'
 
     def get_context_data(self, **kwargs):
         kwargs['login_url'] = allauth.account.utils.passthrough_next_redirect_url(
