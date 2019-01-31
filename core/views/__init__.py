@@ -69,7 +69,7 @@ class GroupMixin:
         return None
 
 
-class FormMixin(forms.LayoutMixin):
+class FormMixin:
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         if not hasattr(form, 'helper'):

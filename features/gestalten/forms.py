@@ -3,7 +3,6 @@ from django import forms
 from django.contrib import auth
 from django.core.exceptions import ValidationError
 
-from core import forms as util_forms
 from features.gestalten import models
 from features.stadt.forms import validate_entity_slug
 
@@ -30,7 +29,7 @@ class GestaltByEmailField(forms.EmailField):
         return gestalt
 
 
-class Create(util_forms.FormMixin, allauth.account.forms.SignupForm):
+class Create(allauth.account.forms.SignupForm):
     password1 = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Kennwort (Wiederholung)', widget=forms.PasswordInput())
 
