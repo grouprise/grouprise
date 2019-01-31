@@ -1,5 +1,5 @@
 {% extends 'stadt/stadt.html' %}
-{% load crispy_forms_tags events rules dismissible %}
+{% load events rules dismissible %}
 
 {% block title %}Gruppen - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
@@ -25,7 +25,10 @@
             <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnent_innen werden in Auflistungen zuerst angezeigt.</p>
         </div>
     {% enddismissible %}
-    {% crispy filter.form %}
+    <form class="form-search" method="get">
+        {% field filter.form.name %}
+        <button class="btn btn-default">Gruppen suchen</button>
+    </form>
     <ol class="groups" data-component="masonry">
         {% for group in object_list %}
             <li>

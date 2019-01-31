@@ -1,21 +1,18 @@
-# Use with care. See
-# https://git.hack-hro.de/stadtgestalten/stadtgestalten/issues/468
-
 from crispy_forms import bootstrap, helper, layout
-from django import forms as django
+from django import forms
 
 
-class GroupSelect(django.Select):
-    template_name = 'core/widgets/group_select.html'
-
-
-class EditorTextarea(django.Textarea):
+class EditorTextarea(forms.Textarea):
     has_buttons = True
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context['widget']['editor'] = True
         return context
+
+
+class GroupSelect(forms.Select):
+    template_name = 'core/widgets/group_select.html'
 
 
 class StadtMixin:
@@ -48,11 +45,11 @@ class StadtMixin:
         return layout.Layout(*lay)
 
 
-class Form(StadtMixin, django.Form):
+class Form(StadtMixin, forms.Form):
     pass
 
 
-class ModelForm(StadtMixin, django.ModelForm):
+class ModelForm(StadtMixin, forms.ModelForm):
     def save(self, commit=True):
         for field in self.data_fields:
             field.save_data(self)

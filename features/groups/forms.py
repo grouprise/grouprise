@@ -8,16 +8,6 @@ from features.tags import models as tags
 from . import models
 
 
-class GroupFilter(core.forms.FormMixin, forms.Form):
-    name = forms.CharField()
-    search = True
-    layout = (
-        layout.Field('name', placeholder='z.B. Foodcoop'),
-        core.forms.Submit('Gruppen suchen', field_classes='btn btn-default')
-    )
-    method = 'GET'
-
-
 class Update(forms.ModelForm):
     tags = forms.CharField(
             label='Schlagworte', required=False, widget=forms.Textarea({'rows': 2}),
