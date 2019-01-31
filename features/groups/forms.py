@@ -1,6 +1,7 @@
 from crispy_forms import layout
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
+from django.contrib.sites.models import Site
 
 import core
 from features.tags import models as tags
@@ -36,6 +37,7 @@ class Update(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['tags'] = ', '.join(self.instance.tags.values_list('tag__name', flat=True))
+        self.slug_domain = '{}/'.format(Site.objects.get_current().domain)
 
     def save(self, commit=True):
         tagged_set = set(self.instance.tags.all())

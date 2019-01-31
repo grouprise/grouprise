@@ -1,7 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 {% load crispy_forms_tags events rules dismissible %}
 
-{% block title %}Gruppen - {{ site.name }}{% endblock %}
+{% block title %}Gruppen - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block heading_title %}<h1 class="content-classification">Gruppen</h1>{% endblock %}
 

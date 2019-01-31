@@ -1,7 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 {% load dismissible events groups rules %}
 
-{% block title %}Gestalten - {{ site.name }}{% endblock %}
+{% block title %}Gestalten - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='gestalt' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block heading_title %}<h1 class="content-classification">Gestalten</h1>{% endblock %}
 

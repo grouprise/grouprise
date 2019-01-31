@@ -39,7 +39,7 @@
             <h2>Einstellungen</h2>
             <div class="row">
                 <div class="col-md-6">
-                    {% field form.slug prefix=site.domain|add:'/' %}
+                    {% field form.slug prefix=form.slug_domain %}
                 </div>
                 <div class="col-md-6">
                     {% field_checkbox form.closed %}

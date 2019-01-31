@@ -92,7 +92,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # grouprise core
                 'core.context_processors.settings',
-                'core.context_processors.site',
                 # grouprise features
                 'features.groups.context_processors.groups',
                 'features.stadt.context_processors.page_meta',

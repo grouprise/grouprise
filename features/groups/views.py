@@ -1,5 +1,6 @@
 import django
 import django_filters
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, UpdateView
 from django.urls import reverse
@@ -90,6 +91,7 @@ class Detail(
                 intro_gallery=intro_gallery,
                 group=self.object,
                 object_list=filterset.qs,
+                site=get_current_site(self.request),
                 **kwargs)
 
     def get_object(self):

@@ -2,7 +2,7 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Gespräch - {{ site.name }}{% endblock %}
+{% block title %}Gespräch - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}
     {% if view.entity.is_group %}
         {% with group=view.entity menu='conversation' %}{{ block.super }}{% endwith %}

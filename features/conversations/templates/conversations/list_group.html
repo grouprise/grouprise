@@ -1,7 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 {% load rules %}
 
-{% block title %}Gespräche - {{ site.name }}{% endblock %}
+{% block title %}Gespräche - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% menu 'group' view.group %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.group 'Gespräche' %}{% endblock %}
 

@@ -138,7 +138,7 @@
         <dd class="selectable">
             {{ site.domain }}/<span class="selectable-token">{{ group.slug }}</span>
             <button type="button" class="btn-text hide-no-js" data-component="clipboard"
-                    data-clipboard-text="{{ site.domain }}/{{ group.slug }}"
+                    data-clipboard-text="{{ group.get_absolute_url|full_url }}"
                     title="URL zu dieser Gruppe kopieren">
                 <i class="sg sg-copy"></i>
             </button>

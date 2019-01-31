@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 
-{% block title %}{% if title %}{{ title }} - {% endif %}{{ site.name }}{% endblock %}
+{% block title %}{% if title %}{{ title }} - {% endif %}{{ GROUPRISE_SITE_NAME }}{% endblock %}
 
 {% block body %}
     {% block campaign %}{% endblock %}
@@ -41,7 +41,7 @@
                                         {% block heading_title %}
                                             <h1 class="content-classification">
                                                 {% block heading_title_text %}
-                                                    {{ title|default:site.name }}
+                                                    {{ title|default:GROUPRISE_SITE_NAME }}
                                                 {% endblock %}
                                             </h1>
                                         {% endblock %}

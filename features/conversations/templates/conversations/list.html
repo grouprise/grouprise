@@ -1,7 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 {% load dismissible events groups %}
 
-{% block title %}Gespräche - {{ site.name }}{% endblock %}
+{% block title %}Gespräche - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block heading_title %}
     {% include 'core/_heading.html' with title='Gespräche' icon='sg-comments' %}
