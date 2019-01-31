@@ -1,6 +1,6 @@
 <meta name="description" content="{{ group.description }}">
 
-<meta property="og:url" content="{{ http_origin }}{{ group.get_absolute_url }}">
+<meta property="og:url" content="{{ group.get_absolute_url|full_url }}">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="{{ group.name }}">
 <meta property="og:description" content="{{ group.description }}">
@@ -8,13 +8,13 @@
 <meta property="og:profile:username" content="{{ group.slug }}">
 
 <meta name="twitter:card" content="summary">
-<meta name="twitter:url" content="{{ http_origin }}{{ group.get_absolute_url }}">
+<meta name="twitter:url" content="{{ group.get_absolute_url|full_url }}">
 <meta name="twitter:title" content="{{ group.name }}">
 <meta name="twitter:description" content="{{ group.description }}">
 
 {% if group.avatar %}
-    <meta property="og:image" content="{{ http_origin }}{{ group.avatar_256.url }}">
-    <meta name="twitter:image" content="{{ http_origin }}{{ group.avatar_256.url }}">
+    <meta property="og:image" content="{{ group.avatar_256.url|full_url }}">
+    <meta name="twitter:image" content="{{ group.avatar_256.url|full_url }}">
 {% endif %}
 
 

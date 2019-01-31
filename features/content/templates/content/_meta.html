@@ -1,6 +1,8 @@
+{% url 'content-permalink' association.pk as permalink %}
+
 <meta name="description" content="{{ content.title }}">
 
-<meta property="og:url" content="{{ http_origin }}{% url 'content-permalink' association.pk %}">
+<meta property="og:url" content="{{ permalink|full_url }}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ content.title }}">
 <meta property="og:description" content="{% markdown content.versions.last.text plain_preview=50 %}">
@@ -9,12 +11,12 @@
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@stadtgestalten">
-<meta name="twitter:url" content="{{ http_origin }}{% url 'content-permalink' association.pk %}">
+<meta name="twitter:url" content="{{ permalink|full_url }}">
 <meta name="twitter:title" content="{{ content.title }}">
 <meta name="twitter:description" content="{% markdown content.versions.last.text plain_preview=50 %}">
 
 {% if content.image %}
-    <meta property="og:image" content="{{ http_origin }}{{ content.image.facebook_meta.url }}">
-    <meta name="twitter:image" content="{{ http_origin }}{{ content.image.twitter_meta.url }}">
+    <meta property="og:image" content="{{ content.image.facebook_meta.url|full_url }}">
+    <meta name="twitter:image" content="{{ content.image.twitter_meta.url|full_url }}">
 {% endif %}
 

@@ -1,10 +1,12 @@
 {% load staticfiles %}
+{% static "stadt/img/logos/logo_text_large.png" as image_url %}
+
 <meta name="description" content="{{ about_group.description }}">
 
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{{ site.name }}">
-<meta property="og:image" content="{{ http_origin }}{% static "stadt/img/logos/logo_text_large.png" %}">
+<meta property="og:image" content="{{ image_url|full_url }}">
 <meta property="og:description" content="{{ about_group.description }}">
 <meta property="og:locale" content="de_DE">
 
@@ -13,4 +15,4 @@
 <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
 <meta name="twitter:title" content="{{ site.name }}">
 <meta name="twitter:description" content="{{ about_group.description }}">
-<meta name="twitter:image" content="{{ http_origin }}{% static "stadt/img/logos/logo_text_large.png" %}">
+<meta name="twitter:image" content="{{ image_url|full_url }}">
