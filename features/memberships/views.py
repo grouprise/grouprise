@@ -1,21 +1,21 @@
 import django
 from django import db, http, shortcuts, urls
-from django.contrib import messages
 from django.contrib.messages import info, success
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DeleteView, FormView
 
 import core
-from core import fields, views
 from core.models import PermissionToken
 from core.views import PermissionMixin
 from features.associations import models as associations
 from features.contributions import models as contributions
 from features.gestalten import models as gestalten_models, views as gestalten_views
 from features.gestalten.models import Gestalt
-from features.groups import models as groups_models, views as groups_views
+from features.groups import models as groups_models
 from features.groups.models import Group
+from features.memberships.forms import CreateMembershipForm
+from features.memberships.models import Membership
 from . import forms, models, notifications
 
 
@@ -69,14 +69,6 @@ class AcceptApplication(core.views.PermissionMixin, django.views.generic.CreateV
                     ).get_absolute_url()
         except associations.Association.DoesNotExist:
             return self.application.group.get_absolute_url()
-
-
-class MembershipMixin(groups_views.Mixin):
-    model = models.Membership
-    title = 'Mitgliedschaft'
-
-    def get_related_object(self):
-        return self.get_group()
 
 
 class Join(PermissionMixin, SuccessMessageMixin, CreateView):
@@ -164,24 +156,30 @@ class Members(gestalten_views.List):
                 memberships__group=self.group).order_by('-score')
 
 
-class MemberAdd(MembershipMixin, views.Create):
-    action = 'Mitglied aufnehmen'
-    data_field_classes = (
-            fields.current_gestalt('created_by'),
-            fields.related_object('group'),
-            fields.email_gestalt('member'))
+class MemberAdd(PermissionMixin, CreateView):
     permission_required = 'memberships.create_membership'
+    form_class = CreateMembershipForm
+    template_name = 'memberships/create.html'
+
+    def get_form_kwargs(self):
+        membership = Membership(created_by=self.request.user.gestalt, group=self.group)
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = membership
+        return kwargs
+
+    def get_permission_object(self):
+        self.group = get_object_or_404(Group, pk=self.kwargs['group_pk'])
+        return self.group
 
     def form_valid(self, form):
         try:
             return super().form_valid(form)
         except db.IntegrityError:
-            messages.info(
-                    self.request, 'Die Gestalt ist bereits Mitglied.')
+            info(self.request, 'Die Gestalt ist bereits Mitglied.')
             return http.HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return urls.reverse('members', args=(self.related_object.pk,))
+        return urls.reverse('members', args=(self.group.pk,))
 
 
 class Resign(PermissionMixin, DeleteView):

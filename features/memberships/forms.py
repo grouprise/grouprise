@@ -1,5 +1,7 @@
 from django import forms
 
+from features.gestalten.models import Gestalt
+from features.memberships.models import Membership
 from . import models
 
 
@@ -18,6 +20,19 @@ class Apply(forms.ModelForm):
         if commit:
             self.contribution.save()
         return application
+
+
+class CreateMembershipForm(forms.ModelForm):
+    class Meta:
+        model = Membership
+        fields = []
+
+    member_email = forms.EmailField(label='E-Mail-Adresse')
+
+    def save(self, commit=True):
+        member = Gestalt.objects.get_or_create_by_email(self.cleaned_data['member_email'])
+        self.instance.member = member
+        return super().save(commit)
 
 
 class Request(forms.Form):

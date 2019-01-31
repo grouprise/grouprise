@@ -1,0 +1,12 @@
+{% extends 'stadt/stadt.html' %}
+
+{% block title %}Mitgliedschaft - {{ block.super }}{% endblock %}
+{% block heading_title_text %}Mitgliedschaft{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% field form.member_email %}
+        <button class="btn btn-primary">Als Mitglied aufnehmen</button>
+    </form>
+{% endblock %}
