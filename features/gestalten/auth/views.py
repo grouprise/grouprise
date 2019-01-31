@@ -33,11 +33,10 @@ class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
         return self.request.user.gestalt
 
 
-class PasswordReset(utils_views.ActionMixin, views.PasswordResetView):
-    action = 'Kennwort zurücksetzen'
-    form_class = forms.PasswordReset
-    ignore_base_templates = True
+class PasswordReset(views.PasswordResetView):
     permission_required = 'account.reset_password'
+    form_class = forms.PasswordReset
+    template_name = 'auth/password_reset.html'
 
     def get_context_data(self, **kwargs):
         kwargs['login_url'] = allauth.account.utils.passthrough_next_redirect_url(

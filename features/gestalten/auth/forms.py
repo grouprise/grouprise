@@ -1,12 +1,10 @@
 import allauth
-from crispy_forms import layout
 from django import forms
 
 import allauth.account
 import allauth.account.forms
 import allauth.account.adapter
 import allauth.account.utils
-from core import forms as util_forms
 
 
 class Login(allauth.account.forms.LoginForm):
@@ -26,15 +24,7 @@ class Login(allauth.account.forms.LoginForm):
                 }))
 
 
-class PasswordReset(util_forms.FormMixin, allauth.account.forms.ResetPasswordForm):
-    layout = (
-            layout.HTML('<p>Wenn Du Dein Kennwort vergessen hast, gib bitte Deine '
-                        'E-Mail-Adresse ein. Du erhältst dann eine Nachricht mit einem '
-                        'Verweis zum Zurücksetzen des Kennworts an diese Adresse.</p>'),
-            layout.Field('email', placeholder=''),
-            util_forms.Submit('Kennwort zurücksetzen')
-            )
-
+class PasswordReset(allauth.account.forms.ResetPasswordForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].label = 'E-Mail-Adresse'

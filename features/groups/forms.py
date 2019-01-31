@@ -1,9 +1,7 @@
-from crispy_forms import layout
 from django import forms
 from django.contrib.contenttypes import models as contenttypes
 from django.contrib.sites.models import Site
 
-import core
 from features.tags import models as tags
 from . import models
 
