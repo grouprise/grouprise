@@ -173,14 +173,13 @@ class UpdatePassword(PermissionMixin, allauth_views.PasswordChangeView):
         return self.request.user.gestalt.get_profile_url()
 
 
-class UpdatePasswordKey(utils_views.ActionMixin, views.PasswordResetFromKeyView):
-    action = 'Kennwort ändern'
-    form_class = forms.UpdatePasswordKey
+class UpdatePasswordKey(PermissionMixin, views.PasswordResetFromKeyView):
     permission_required = 'account.reset_password'
+    form_class = forms.UpdatePasswordKey
+    template_name = 'gestalten/password_update_key.html'
 
 
-class UpdatePasswordSet(utils_views.ActionMixin, views.PasswordSetView):
-    action = 'Kennwort setzen'
-    form_class = forms.UpdatePasswordSet
-    ignore_base_templates = True
+class UpdatePasswordSet(PermissionMixin, views.PasswordSetView):
     permission_required = 'account.set_password'
+    form_class = forms.UpdatePasswordSet
+    template_name = 'gestalten/password_set.html'

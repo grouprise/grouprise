@@ -1,13 +1,14 @@
 import allauth
 import django
-from django.views import generic
-
-from . import forms
 from allauth.account import views
 from crispy_forms import layout
 from django.contrib import messages
+from django.views import generic
 from django.views.generic import edit as edit_views
+
 from core import views as utils_views
+from core.views import PermissionMixin
+from . import forms
 
 
 class Login(allauth.account.views.LoginView):
@@ -33,7 +34,7 @@ class Logout(utils_views.ActionMixin, edit_views.FormMixin, views.LogoutView):
         return self.request.user.gestalt
 
 
-class PasswordReset(views.PasswordResetView):
+class PasswordReset(PermissionMixin, views.PasswordResetView):
     permission_required = 'account.reset_password'
     form_class = forms.PasswordReset
     template_name = 'auth/password_reset.html'

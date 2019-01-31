@@ -126,26 +126,14 @@ class UpdatePassword(allauth.account.forms.ChangePasswordForm):
         del self.fields['password2'].widget.attrs['placeholder']
 
 
-class UpdatePasswordSet(util_forms.FormMixin, allauth.account.forms.SetPasswordForm):
-    layout = (
-            layout.Field('password1', placeholder=''),
-            layout.Field('password2', placeholder=''),
-            util_forms.Submit('Kennwort setzen')
-            )
-
+class UpdatePasswordSet(allauth.account.forms.SetPasswordForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].label = 'Kennwort'
         self.fields['password2'].label = 'Kennwort (Wiederholung)'
 
 
-class UpdatePasswordKey(util_forms.FormMixin, allauth.account.forms.ResetPasswordKeyForm):
-    layout = (
-            layout.Field('password1', placeholder=''),
-            layout.Field('password2', placeholder=''),
-            util_forms.Submit('Kennwort ändern')
-            )
-
+class UpdatePasswordKey(allauth.account.forms.ResetPasswordKeyForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].label = 'Kennwort'
