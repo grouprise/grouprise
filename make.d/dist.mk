@@ -1,10 +1,10 @@
-DIR_INSTALL_ROOT ?= usr/share/stadtgestalten
-DIR_INSTALL_STATIC ?= $(DIR_INSTALL_ROOT)/static
+DIR_INSTALL_ROOT_RELATIVE ?= usr/share/stadtgestalten
+DIR_INSTALL_STATIC ?= $(DESTDIR)/$(DIR_INSTALL_ROOT_RELATIVE)/static
 
 PYTHON_INSTALL_ARGS = --root "$(DESTDIR)" \
-	--install-lib="/$(DIR_INSTALL_ROOT)" \
-	--install-scripts="/$(DIR_INSTALL_ROOT)" \
-	--install-data="/$(DIR_INSTALL_ROOT)"
+	--install-lib="/$(DIR_INSTALL_ROOT_RELATIVE)" \
+	--install-scripts="/$(DIR_INSTALL_ROOT_RELATIVE)" \
+	--install-data="/$(DIR_INSTALL_ROOT_RELATIVE)"
 
 .PHONY: clean-grouprise
 clean-grouprise:
