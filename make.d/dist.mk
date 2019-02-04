@@ -1,3 +1,4 @@
+DESTDIR ?= /
 DIR_INSTALL_ROOT_RELATIVE ?= usr/share/stadtgestalten
 DIR_INSTALL_STATIC ?= $(DESTDIR)/$(DIR_INSTALL_ROOT_RELATIVE)/static
 
