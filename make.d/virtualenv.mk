@@ -23,7 +23,7 @@ virtualenv_check: $(ACTIVATE_VIRTUALENV)
 	@# this should fail if dependencies are missing or no virtualenv is active
 	@( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=packaging python3 manage.py check >/dev/null ) || ( \
 		echo '' >&2; \
-		echo '» Some stadtgestalten dependencies are missing' >&2; \
+		echo '» Some grouprise dependencies are missing' >&2; \
 		echo '» You have two options:' >&2; \
 		echo '»  1. Install dependencies system-wide. See the requirements.txt file.' >&2; \
 		echo '»  2. Run "make virtualenv_update && . $(ACTIVATE_VIRTUALENV)".' >&2; \
