@@ -18,6 +18,7 @@ Architecture: all
 # python3-requests: for django-allauth
 # python3-six: for django-mailbox
 Depends: ${misc:Depends},
+ adduser,
  grouprise-data,
  grouprise-dependencies,
  moreutils,
