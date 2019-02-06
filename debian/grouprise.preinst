@@ -11,7 +11,7 @@ chown "$PKG_USER:root" "$DIR_BACKUPS"
 
 if [ -f "/etc/uwsgi/apps-enabled/grouprise.ini" ]; then
     touch "$DIR_ETC/maintenance_mode"
-    /usr/bin/stadtctl database_dump --prefix preinst_auto
+    stadtctl database_dump --prefix preinst_auto
 fi
 
 set +eu
