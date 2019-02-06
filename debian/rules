@@ -32,7 +32,7 @@ override_dh_install:
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod 640 debian/grouprise/etc/grouprise/settings.py
+	chmod 600 debian/grouprise/etc/grouprise/settings.py
 
 override_dh_auto_test:
 	# grouprise's tests fail with:
