@@ -30,7 +30,7 @@ virtualenv_check: $(ACTIVATE_VIRTUALENV)
 		exit 1; \
 	)
 
-$(STAMP_VIRTUALENV): requirements.txt
+$(STAMP_VIRTUALENV): requirements.txt $(ACTIVATE_VIRTUALENV)
 	( . "$(ACTIVATE_VIRTUALENV)" && pip3 install --upgrade pip )
 	( . "$(ACTIVATE_VIRTUALENV)" && pip3 install --upgrade -r requirements.txt )
 	mkdir -p "$(dir $(STAMP_VIRTUALENV))"
