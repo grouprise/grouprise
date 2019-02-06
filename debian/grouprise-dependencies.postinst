@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 
 # manually trigger byte compilation (since we do not use dh_python3)
 if which py3compile >/dev/null; then
