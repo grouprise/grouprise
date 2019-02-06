@@ -2,7 +2,7 @@ CONFIG_APP_SETUP = stadt/settings.py
 CONFIG_APP_SETUP_TEMPLATE = stadt/settings.py.development
 
 
-$(CONFIG_APP_SETUP): $(MAKEFILES)
+$(CONFIG_APP_SETUP): $(GROUPRISE_MAKEFILES)
 	cp "$(CONFIG_APP_SETUP_TEMPLATE)" "$(CONFIG_APP_SETUP)"
 
 .PHONY: app_migrate

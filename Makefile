@@ -1,7 +1,7 @@
 # load makefilet
 include make.d/makefilet-download-ondemand.mk
 
-MAKEFILES = Makefile $(wildcard make.d/*.mk)
+GROUPRISE_MAKEFILES = Makefile $(wildcard make.d/*.mk)
 
 # define default target
 .PHONY: default-target
