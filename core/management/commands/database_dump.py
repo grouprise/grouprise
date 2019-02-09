@@ -1,7 +1,7 @@
 import getpass
 import datetime
 import os
-from subprocess import check_call, check_output
+from subprocess import check_call, CalledProcessError
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
@@ -57,29 +57,32 @@ class Command(BaseCommand):
         output_file = options.get('output_file')
         db = settings.DATABASES['default']
         engine = db['ENGINE'].split('.')[-1]
-        file = create_filename(output_dir, prefix, output_file)
+        output_filename = create_filename(output_dir, prefix, output_file)
 
         if engine == 'sqlite3':
             try:
-                dump = check_output(['sqlite3', db['NAME'], '.dump'])
-                with open(file, 'wb') as dump_file:
-                    dump_file.write(dump)
+                output_file = open(output_filename, 'wb')
             except FileNotFoundError as err:
-                if err.filename == 'sqlite3':
+                raise CommandError('Failed to create dump output file: {}'
+                                   .format(output_filename)) from err
+            try:
+                check_call(['sqlite3', db['NAME'], '.dump'], stdout=output_file)
+            except (FileNotFoundError, CalledProcessError) as err:
+                output_file.close()
+                os.unlink(output_filename)
+                if isinstance(err, FileNotFoundError):
                     raise CommandError('missing the sqlite3 binary. please install it') from err
                 else:
-                    raise err
+                    raise CommandError('Failed to create database dump.') from err
         elif engine == 'postgresql':
             try:
-                check_call([
-                    'pg_dump', '--no-owner', '--no-privileges', '--no-password', '-f', file,
-                    create_psql_uri(db)
-                ])
+                check_call(['pg_dump', '--no-owner', '--no-privileges', '-f', output_filename,
+                            create_psql_uri(db)])
             except FileNotFoundError as err:
                 raise CommandError('missing the pg_dump binary. please install it') from err
         else:
             raise CommandError('database backup not supported with %s engine' % engine)
 
         self.stdout.write(
-            self.style.SUCCESS('Successfully created database backup in "%s"' % file)
+            self.style.SUCCESS('Successfully created database backup in "%s"' % output_filename)
         )
