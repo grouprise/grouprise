@@ -30,14 +30,13 @@ Depends: ${misc:Depends},
  python3-xapian,
 Recommends: ${misc:Recommends},
  ghostscript,
+ postgresql-client-common,
  python3-psycopg2,
  redis-server,
+ sqlite3,
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
-Suggests:
- postgresql-client-common,
- sqlite3,
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
