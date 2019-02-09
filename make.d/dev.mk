@@ -10,6 +10,7 @@ help-grouprise:
 	@echo "    assets_webpack      - build webpack assets"
 	@echo "    build-grouprise     - build all grouprise components"
 	@echo "    clean-grouprise     - delete all built grouprise components"
+	@echo "    doc                 - build documentation"
 	@echo "    install-grouprise   - install all grouprise components"
 	@echo "    tags                - generate tags file for grouprise code"
 	@echo

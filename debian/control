@@ -9,6 +9,7 @@ Build-Depends:
  nodejs,
  python3-all,
  python3-flake8,
+ python3-recommonmark,
  python3-setuptools,
  wget,
 Standards-Version: 3.9.6
