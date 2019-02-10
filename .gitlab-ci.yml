@@ -11,6 +11,8 @@ before_script:
 make_test:
     stage: test
     script:
+        # stadt.settings is required for the tests
+        - make app_local_settings
         - make lint
         - make test
 
