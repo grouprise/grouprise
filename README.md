@@ -22,12 +22,12 @@ For `virtualenv`, `python3`, `flake8` and `pip` use apt:
 apt install make virtualenv python3 python3-flake8 python3-pip
 ```
 
-`node` v8.12 or later is required.  If you do not have a suitable version installed, it will be automatically downloaded while using `make` (see `make.d/nodejs.mk`).
+Additionally `node` v8.12 or later and `npm` are required.  Both are available in Stretch-Backports and Buster.  If you do not have a suitable version installed, it will be automatically downloaded when running `make` (see `make.d/nodejs.mk`).
 
 ### Arch Linux
 Fortunately all of the required packages are available via pacman.
 ```sh
-pacman -Sy make nodejs flake8 python python-virtualenv python-pip 
+pacman -Sy make nodejs npm flake8 python python-virtualenv python-pip
 ```
 
 
