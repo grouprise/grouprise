@@ -11,6 +11,7 @@ before_script:
 make_test:
     stage: test
     script:
+        - make lint
         - make test
 
 # The latest built deb package is available under the following URL:
