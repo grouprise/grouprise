@@ -7,10 +7,10 @@ from django.conf import settings
 
 
 def create_filename(directory, prefix, filename=None):
-    return os.path.join(directory, '{prefix}{filename}'.format(**{
+    return os.path.abspath(os.path.join(directory, '{prefix}{filename}'.format(**{
         'prefix': '{}_'.format(prefix) if prefix else '',
         'filename': filename or datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '.sql'
-    }))
+    })))
 
 
 def d(dict, key, default=None):
@@ -77,7 +77,7 @@ class Command(BaseCommand):
         elif engine == 'postgresql':
             try:
                 check_call(['pg_dump', '--no-owner', '--no-privileges', '-f', output_filename,
-                            create_psql_uri(db)])
+                            create_psql_uri(db)], cwd="/")
             except FileNotFoundError as err:
                 raise CommandError('missing the pg_dump binary. please install it') from err
         else:
