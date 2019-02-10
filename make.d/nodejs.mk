@@ -17,6 +17,9 @@ $(BIN_NODE):
 	rm -rf "$(NODE_DEST)"
 	mkdir -p "$(NODE_DEST)/bin"
 	@if [  "$(NODE_VERSION)" = $$(printf '%s\n' "$(NODE_VERSION)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
+		if [ "$$(uname -s)" != "Linux" ]; then \
+			echo >&2 "NodeJS download for non-linux platforms is sadly not supported. Please install $(NODE_VERSION_MIN) or later manually."; \
+			exit 1; fi; \
 		echo >&2 "Local nodejs version is too old (before $(NODE_VERSION_MIN)). Downloading from server ..."; \
 		wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_DEST)" --strip-components=1 -f -; \
 	else \
