@@ -22,6 +22,6 @@ build: build-grouprise
 .PHONY: install-grouprise
 install-grouprise: build-grouprise
 	mkdir -p "$(DIR_INSTALL_STATIC)"
-	cp -r --target-directory="$(DIR_INSTALL_STATIC)/" "$(DIR_STATIC)"/*
+	cp -r "$(DIR_STATIC)"/* "$(DIR_INSTALL_STATIC)/"
 
 install: install-grouprise

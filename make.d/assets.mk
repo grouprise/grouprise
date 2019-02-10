@@ -31,12 +31,12 @@ $(STAMP_STATIC_FONT_GOOGLE): $(DIR_NODE)
 	mkdir -p "$(BUILD_FONT_GOOGLE)"
 	$(RUN_NODE) "$(BIN_FONTDUMP)" --target-directory "$(BUILD_FONT_GOOGLE)" --web-directory "." "$(URL_FONT_GOOGLE)"
 	mkdir -p "$(DIR_STATIC_FONT_GOOGLE)"
-	cp -a --target-directory "$(DIR_STATIC_FONT_GOOGLE)" \
-		"$(BUILD_FONT_GOOGLE)"/*.eot \
+	cp -a "$(BUILD_FONT_GOOGLE)"/*.eot \
 		"$(BUILD_FONT_GOOGLE)"/*.svg \
 		"$(BUILD_FONT_GOOGLE)"/*.ttf \
 		"$(BUILD_FONT_GOOGLE)"/*.woff \
-		"$(BUILD_FONT_GOOGLE)"/*.woff2
+		"$(BUILD_FONT_GOOGLE)"/*.woff2 \
+		"$(DIR_STATIC_FONT_GOOGLE)"
 	touch "$(STAMP_STATIC_FONT_GOOGLE)"
 
 $(STAMP_STATIC_WEBPACK): $(STAMP_STATIC_FONT_GOOGLE) $(DEPS_ASSETS) $(DEPS_WEBPACK)
