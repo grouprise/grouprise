@@ -16,7 +16,7 @@ VIRTUALENV_CREATE_ARGUMENTS ?= --system-site-packages
 STAMP_VIRTUALENV = $(DIR_BUILD)/.stamp_virtualenv
 
 $(ACTIVATE_VIRTUALENV):
-	virtualenv -p python3 $(VIRTUALENV_CREATE_ARGUMENTS) "$(DIR_VIRTUALENV)"
+	$(PYTHON_BIN) -m virtualenv -p python3 $(VIRTUALENV_CREATE_ARGUMENTS) "$(DIR_VIRTUALENV)"
 
 .PHONY: virtualenv_check
 virtualenv_check: $(ACTIVATE_VIRTUALENV)
@@ -31,8 +31,8 @@ virtualenv_check: $(ACTIVATE_VIRTUALENV)
 	)
 
 $(STAMP_VIRTUALENV): requirements.txt $(ACTIVATE_VIRTUALENV)
-	( . "$(ACTIVATE_VIRTUALENV)" && pip3 install --upgrade pip )
-	( . "$(ACTIVATE_VIRTUALENV)" && pip3 install --upgrade -r requirements.txt )
+	( . "$(ACTIVATE_VIRTUALENV)" && $(PYTHON_BIN) -m pip install --upgrade pip )
+	( . "$(ACTIVATE_VIRTUALENV)" && $(PYTHON_BIN) -m pip install --upgrade -r requirements.txt )
 	mkdir -p "$(dir $(STAMP_VIRTUALENV))"
 	touch "$(STAMP_VIRTUALENV)"
 
