@@ -1,3 +1,6 @@
+TAGS_SOURCE_DIRS = account content core entities features stadt utils
+
+
 .PHONY: help-grouprise
 help-grouprise:
 	@echo "Grouprise app targets:"
@@ -16,8 +19,3 @@ help-grouprise:
 	@echo
 
 help: help-grouprise
-
-
-.PHONY: tags
-tags:
-	ctags -R account/ content/ core/ entities/ features/ stadt utils/
