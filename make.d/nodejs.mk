@@ -27,3 +27,7 @@ $(BIN_NODE):
 		ln -s "$$(which "$(BIN_NODE_SYSTEM)")" "$(NODE_DEST)/bin/node"; \
 		ln -s "$$(which npm)" "$(NODE_DEST)/bin/npm"; \
 	fi
+
+$(BIN_NODE_PKG): $(BIN_NODE)
+	@# verify that "npm" (BIN_NODE_PKG) is given as full path: node will not search PATH for it
+	@[ -e "$(BIN_NODE_PKG)" ] || { echo >&2 "BIN_NODE_PKG must be a path (not an executable to be found via PATH)"; false; }
