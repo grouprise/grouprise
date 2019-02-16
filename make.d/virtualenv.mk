@@ -4,7 +4,7 @@ else
 # when using virtualenv sys.real_prefix is set and we use the path to the python
 # binary to determine the actual location of the virtualenv. In any other case
 # we fallback to the VIRTUAL_ENV variable or the `.venv` directory
-DIR_VIRTUALENV := $(shell echo "import sys; hasattr(sys, 'real_prefix') or sys.exit(1)" | python3 && \
+DIR_VIRTUALENV := $(shell echo "import sys; hasattr(sys, 'real_prefix') or sys.exit(1)" | "$(PYTHON_BIN)" && \
 	echo "$$(dirname "$$(dirname "$$(which python)")")" || echo "$${VIRTUAL_ENV:-"$(DIR_BUILD)/venv"}")
 ACTIVATE_VIRTUALENV ?= $(DIR_VIRTUALENV)/bin/activate
 
@@ -16,12 +16,12 @@ VIRTUALENV_CREATE_ARGUMENTS ?= --system-site-packages
 STAMP_VIRTUALENV = $(DIR_BUILD)/.stamp_virtualenv
 
 $(ACTIVATE_VIRTUALENV):
-	$(PYTHON_BIN) -m virtualenv -p python3 $(VIRTUALENV_CREATE_ARGUMENTS) "$(DIR_VIRTUALENV)"
+	"$(PYTHON_BIN)" -m virtualenv -p "$(PYTHON_BIN)" $(VIRTUALENV_CREATE_ARGUMENTS) "$(DIR_VIRTUALENV)"
 
 .PHONY: virtualenv_check
 virtualenv_check: $(ACTIVATE_VIRTUALENV)
 	@# this should fail if dependencies are missing or no virtualenv is active
-	@( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=packaging python3 manage.py check >/dev/null ) || ( \
+	@( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=packaging "$(PYTHON_BIN)" manage.py check >/dev/null ) || ( \
 		echo '' >&2; \
 		echo '» Some grouprise dependencies are missing' >&2; \
 		echo '» You have two options:' >&2; \
@@ -31,8 +31,8 @@ virtualenv_check: $(ACTIVATE_VIRTUALENV)
 	)
 
 $(STAMP_VIRTUALENV): requirements.txt $(ACTIVATE_VIRTUALENV)
-	( . "$(ACTIVATE_VIRTUALENV)" && $(PYTHON_BIN) -m pip install --upgrade pip )
-	( . "$(ACTIVATE_VIRTUALENV)" && $(PYTHON_BIN) -m pip install --upgrade -r requirements.txt )
+	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m pip install --upgrade pip )
+	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m pip install --upgrade -r requirements.txt )
 	mkdir -p "$(dir $(STAMP_VIRTUALENV))"
 	touch "$(STAMP_VIRTUALENV)"
 
