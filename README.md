@@ -16,6 +16,11 @@ You may want to install the latest [snapshot build](https://git.hack-hro.de/stad
 
 Depending on your distribution (we assume you’ll be using something like Linux here) the build dependencies of this project will be available via your package manager.
 
+Some additional dependencies will be downloaded during the build process:
+
+* pip (Python): `requirements.txt`
+* npm (NodeJS): `package.json`
+
 ### Debian
 For `virtualenv`, `python3`, `flake8` and `pip` use apt:
 ```sh
