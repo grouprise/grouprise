@@ -11,6 +11,7 @@ Build-Depends:
  python3-flake8,
  python3-recommonmark,
  python3-setuptools,
+ python3-sphinx,
  wget,
 Standards-Version: 3.9.6
 
@@ -53,6 +54,14 @@ Description: data for the grouprise web application
  initiatives in a local context.
  .
  This package contains CSS and javascript assets of the web application.
+
+Package: grouprise-doc
+Architecture: all
+Description: Web platform that enables social action and solidarity
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package contains documentation for development and administration.
 
 Package: grouprise-dependencies
 Architecture: all
