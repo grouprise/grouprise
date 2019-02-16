@@ -10,7 +10,7 @@ LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT
 lint: lint_js lint-python lint_packages
 
 .PHONY: lint_js
-lint_js: $(BIN_NODE_PKG)
+lint_js: $(DIR_NODE) $(BIN_NODE_PKG)
 	$(RUN_NODE) "$(BIN_NODE_PKG)" run lint
 
 .PHONY: lint_packages
@@ -50,7 +50,7 @@ test_py: $(ACTIVATE_VIRTUALENV) virtualenv_check
 	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=test "$(PYTHON_BIN)" manage.py test )
 
 .PHONY: test_js
-test_js: $(BIN_NODE_PKG) lint_js
+test_js: $(DIR_NODE) $(BIN_NODE_PKG) lint_js
 	$(RUN_NODE) "$(BIN_NODE_PKG)" run test
 
 .PHONY: report-python-coverage
