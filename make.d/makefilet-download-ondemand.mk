@@ -19,7 +19,7 @@ ifeq ($(DIR_MAKEFILET), )
 $(info Downloading 'makefilet' ...)
 $(shell mkdir -p "$(DIR_MAKEFILET_DOWNLOAD)" \
 	&& wget -q -O - "$(MAKEFILET_DOWNLOAD_URL)" \
-	| tar -xz -C "$(DIR_MAKEFILET_DOWNLOAD)" --strip-components=1)
+	| tar -xz -C "$(DIR_MAKEFILET_DOWNLOAD)" --strip-components=1 -f -)
 # last include attempt
 -include $(DIR_MAKEFILET_DOWNLOAD)/main.mk
 ifeq ($(DIR_MAKEFILET), )
