@@ -12,6 +12,9 @@
 #     * publish a release (increase version numbers, create tagged commit, ...)
 #     * create release artifacts (tar, deb, ...)
 
+# specify DESTDIR before makefilet sets its default
+DESTDIR ?= /
+
 # load makefilet
 include make.d/makefilet-download-ondemand.mk
 
