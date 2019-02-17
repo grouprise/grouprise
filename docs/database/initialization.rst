@@ -28,6 +28,6 @@ MySQL / MariaDB
 .. code-block:: sql
 
     CREATE USER grouprise IDENTIFIED BY 'some_secret_password';
-    CREATE DATABASE grouprise CHARACTER SET = 'utf8mb4' COLLATE = 'utf8mb4_general_ci';
+    CREATE DATABASE grouprise CHARACTER SET = 'utf8' COLLATE = 'utf8_general_ci';
     GRANT ALL PRIVILEGES ON grouprise.* TO grouprise;
     FLUSH PRIVILEGES;
