@@ -1,8 +1,8 @@
-from huey.contrib.djhuey import task
+from huey.contrib.djhuey import db_task
 
 from features.content.notifications import ContentCreated
 
 
-@task()
+@db_task()
 def send_content_notifications(instance):
     ContentCreated.send_all(instance)
