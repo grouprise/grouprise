@@ -23,6 +23,7 @@ debian/debhelper-build-stamp
 debian/grouprise/
 debian/grouprise-data/
 debian/grouprise-dependencies/
+debian/grouprise-doc/
 debian/*.debhelper
 debian/tmp
 debian/*.substvars
