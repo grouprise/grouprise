@@ -66,3 +66,6 @@ MySQL / MariaDB
             'PORT': '5432',
         }
     }
+
+In case of MySQL before v5.7: please read
+`Django hints for the setting 'sql_mode' <https://docs.djangoproject.com/en/dev/ref/databases/#mysql-sql-mode>`_.
