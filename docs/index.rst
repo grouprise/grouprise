@@ -9,3 +9,4 @@ grouprise Documentation
    configuration/options
    configuration/assets
    database/index
+   upgrading
