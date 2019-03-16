@@ -1,4 +1,4 @@
-image: stadtgestalten/build
+image: git-registry.hack-hro.de:443/stadtgestalten/stadtgestalten/build:latest
 
 before_script:
     # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
