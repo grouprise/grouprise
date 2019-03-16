@@ -3,7 +3,7 @@ image: git-registry.hack-hro.de:443/stadtgestalten/stadtgestalten/build:latest
 before_script:
     # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
     # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.
-    - virtualenv -p python3 "$CI_PROJECT_DIR/gitlab-ci-build-venv"
+    - virtualenv -p python3 --system-site-packages "$CI_PROJECT_DIR/gitlab-ci-build-venv"
     - source "$CI_PROJECT_DIR/gitlab-ci-build-venv/bin/activate"
     - pip install --upgrade pip
     - pip install --upgrade -r requirements.txt
