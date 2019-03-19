@@ -26,6 +26,10 @@ override_dh_install:
 	# process the debian/*.install files
 	dh_install
 
+override_dh_auto_build:
+	$(MAKE) virtualenv-update
+	dh_auto_build
+
 override_dh_fixperms:
 	dh_fixperms
 	chmod 600 debian/grouprise/etc/grouprise/settings.py
