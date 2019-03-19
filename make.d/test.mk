@@ -1,6 +1,3 @@
-# disable makefilet's reference to unittests
-PYTHON_TEST_ARGS = -m this
-
 LINT_PKG_IGNORE_GLOBAL = -path "./debian/*" -o -path "./build/*" -o -path "./.pybuild/*" -o -path "./scripts/*" \
 	-o -path "./.venv/*" -o -path "./gitlab-ci-build-venv/*" -o -path "./docs/*"
 LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT_PKG_IGNORE_GLOBAL) \) -print0 | \
@@ -27,10 +24,15 @@ lint_packages:
 	@echo "OK"
 
 .PHONY: test
-test: lint test_js test_py
+test: lint test_js
 
 .PHONY: test_py
-test_py: $(ACTIVATE_VIRTUALENV) virtualenv-check
+test_py: test-python
+
+test-python: test_py_prepare
+
+.PHONY: test_py_prepare
+test_py_prepare:
 	@# check for duplicate test method names that may overwrite each other
 	@duplicate_function_names=$$(find . -mindepth 2 -type f -name tests.py -not \( $(LINT_PKG_IGNORE_GLOBAL) \) \
 			| xargs grep -h "def test_" \
@@ -47,7 +49,6 @@ test_py: $(ACTIVATE_VIRTUALENV) virtualenv-check
 	# asset metadata and JavaScript & CSS file references, we simply make sure that the file
 	# exists during the test run. The content itself is of no relevance to the python-tests.
 	touch core/templates/core/_assets.html
-	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=test "$(PYTHON_BIN)" manage.py test )
 
 .PHONY: test_js
 test_js: $(DIR_NODE) $(BIN_NODE_PKG) lint_js
