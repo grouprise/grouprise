@@ -30,7 +30,7 @@ lint_packages:
 test: lint test_js test_py
 
 .PHONY: test_py
-test_py: $(ACTIVATE_VIRTUALENV) virtualenv_check
+test_py: $(ACTIVATE_VIRTUALENV) virtualenv-check
 	@# check for duplicate test method names that may overwrite each other
 	@duplicate_function_names=$$(find . -mindepth 2 -type f -name tests.py -not \( $(LINT_PKG_IGNORE_GLOBAL) \) \
 			| xargs grep -h "def test_" \
@@ -54,7 +54,7 @@ test_js: $(DIR_NODE) $(BIN_NODE_PKG) lint_js
 	$(RUN_NODE) "$(BIN_NODE_PKG)" run test
 
 .PHONY: report-python-coverage
-coverage_py: $(ACTIVATE_VIRTUALENV) virtualenv_check
+coverage_py: $(ACTIVATE_VIRTUALENV) virtualenv-check
 	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=test "$(PYTHON_BIN)" -m coverage run -m manage test )
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage report )
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage html --directory="$(DIR_BUILD)/coverage-report" )
