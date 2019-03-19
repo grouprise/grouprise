@@ -22,8 +22,8 @@ class EventListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EventRetrieveSerializer(EventListSerializer):
-    orgId = serializers.SerializerMethodField()
-    iCal = serializers.SerializerMethodField()
+    orgId = serializers.SerializerMethodField()  # noqa: N815
+    iCal = serializers.SerializerMethodField()  # noqa: N815
 
     def get_orgId(self, obj):
         return obj.entity.id
