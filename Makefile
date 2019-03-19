@@ -14,6 +14,7 @@
 
 # specify DESTDIR before makefilet sets its default
 DESTDIR ?= /
+ENABLE_BUILD_DOC ?= 0
 
 # load makefilet
 include make.d/makefilet-download-ondemand.mk

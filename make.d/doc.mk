@@ -6,7 +6,9 @@ doc:
 	$(MAKE) -C docs html "BUILDDIR=$(DIR_BUILD_DOC)"
 
 
+ifeq ($(ENABLE_BUILD_DOC),1)
 build: doc
+endif
 
 
 .PHONY: install-doc
