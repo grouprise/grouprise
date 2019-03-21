@@ -179,11 +179,15 @@
     }
 }
 
-.avatar-edit-inline {
+.avatar-noedit-inline {
     position: relative;
     display: inline-block;
     text-decoration: none;
     z-index: 10;
+}
+
+.avatar-edit-inline {
+    &:extend(.avatar-noedit-inline);
 
     &:after {
         .sg();
