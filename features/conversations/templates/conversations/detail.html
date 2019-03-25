@@ -4,6 +4,14 @@
 
 {% block menu %}{% menu 'conversation' association.entity %}{% endblock %}
 {% block heading_title %}{% with title='Gespräch' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block breadcrumb %}
+    {% if association.entity.is_group %}
+        {% url 'group-conversations' association.entity.pk as group_conversation_url %}
+        {% breadcrumb association.entity 'Gespräche'|link_to:group_conversation_url association.container %}
+    {% else %}
+        {% breadcrumb association.entity association.container %}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     {% has_perm 'conversations.reply' user association as can_reply %}

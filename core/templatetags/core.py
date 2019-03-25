@@ -2,6 +2,7 @@ import html
 import json
 import os
 import random
+from collections import namedtuple
 
 import bleach as python_bleach
 import html2text as python_html2text
@@ -17,6 +18,8 @@ from django.template.loader import get_template
 from django.utils import html as django_html, safestring
 from markdown.extensions import toc
 from core.assets import get_assets
+
+Link = namedtuple('Link', 'text url')
 
 register = template.Library()
 
@@ -70,6 +73,11 @@ def startswith(value: str, search):
 @register.filter
 def nolinebreaks(value):
     return ' '.join(str(value).split('\n'))
+
+
+@register.filter
+def link_to(text, url):
+    return Link(text=text, url=url)
 
 
 @register.filter
@@ -130,6 +138,8 @@ def breadcrumb(context, *args):
     for arg in args[:-1]:
         if isinstance(arg, str):
             crumbs.append((arg, None))
+        elif isinstance(arg, Link):
+            crumbs.append(arg)
         elif hasattr(arg, 'get_absolute_url_for_user'):
             crumbs.append((str(arg), arg.get_absolute_url_for_user(context.get('user'))))
         else:
