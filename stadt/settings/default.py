@@ -191,7 +191,7 @@ GROUPRISE_POSTMASTER_EMAIL = 'postmaster@localhost'
 
 EMAIL_BACKEND = 'mailer.backend.DbBackend'
 MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-SYNC_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SYNC_EMAIL_BACKEND = 'mailer.backend.DbBackend'
 ASYNC_EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 
