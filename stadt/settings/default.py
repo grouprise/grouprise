@@ -191,6 +191,7 @@ GROUPRISE_POSTMASTER_EMAIL = 'postmaster@localhost'
 
 EMAIL_BACKEND = 'mailer.backend.DbBackend'
 MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ASYNC_EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 
 # Sites
@@ -325,6 +326,5 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_XAPIAN_LANGUAGE = 'german2'
 
 HUEY = {
-    # TODO: set to true if grouprise-huey is not available
-    'always_eager': False,
+    'always_eager': True,
 }
