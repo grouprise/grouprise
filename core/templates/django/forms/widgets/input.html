@@ -1,1 +1,1 @@
-<input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %} class="form-control"{% include "django/forms/widgets/attrs.html" %} />
+<input class="form-control" type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|escape|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
