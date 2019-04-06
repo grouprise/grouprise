@@ -10,6 +10,7 @@ from django.dispatch import receiver
 import html2text
 
 import core.models
+from core.notifications import DEFAULT_REPLY_TO_EMAIL
 from features.associations import models as associations
 from features.content.models import Content
 from features.contributions import models
@@ -67,7 +68,7 @@ def process_incoming_message(sender, message, **args):
     # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
     delivered_to = message.get_email_object()['Delivered-To']
     parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
-    processor = ContributionMailProcessor(settings.DEFAULT_REPLY_TO_EMAIL,
+    processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
                                           settings.DEFAULT_FROM_EMAIL)
     if not delivered_to:
         # The "Delivered-To" header is missing, if the mail server delivers the mail to more than
