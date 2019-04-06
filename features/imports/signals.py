@@ -65,17 +65,19 @@ def sanitize_subject(subject):
 
 @receiver(django_mailbox.signals.message_received)
 def process_incoming_message(sender, message, **args):
-
+    # FIXME: use X-Stadtgestalten-to header (mailbox without domain)
     delivered_to = message.get_email_object()['Delivered-To']
+    parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
+    processor = ContributionMailProcessor(settings.DEFAULT_REPLY_TO_EMAIL,
+                                          settings.DEFAULT_FROM_EMAIL)
     if not delivered_to:
         # The "Delivered-To" header is missing, if the mail server delivers the mail to more than
         # one recipient on the server. Otherwise this could cause a privacy breach for BCC
         # recipients.
-        logger.error('Could not process message {}: no Delivered-To header'.format(message.id))
+        error_message = "Could not process message {}: no Delivered-To header".format(message.id)
+        logger.error(error_message)
+        processor.send_error_mail_response(parsed_message, error_message, fail_silently=True)
         return
-    parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
-    processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
-                                          settings.DEFAULT_FROM_EMAIL)
     if delivered_to.lower() == MAILBOX_DELIVERED_TO_EMAIL.lower():
         # Mailbox-based delivery uses the bot mail address as a catch-all address for the existing
         # groups. Thus we cannot trust the "Delivered-To" header, but we need to parse the "To"

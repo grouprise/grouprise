@@ -58,19 +58,10 @@ The command above requires the locale 'de_DE.UTF8' in the system of the database
 
 ## Production deployment
 
-We recommend to use the provided debian package. It contains a UWSGI and an nginx configuration file.
+We recommend to use the provided deb package. It contains an nginx and UWSGI configuration.
 
-Necessary steps for running the software after package installation:
+See also [DEPLOYMENT.md](./docs/deployment/DEPLOYMENT.md).
 
-* install nginx and UWSGI (being remmomendations of the grouprise package): `apt install nginx uwsgi uwsgi-plugin-python3`
-* enable the UWSGI service: `ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/`
-* start UWSGI: `service uwsgi start`
-* copy the nginx site example configuration: `cp /usr/share/doc/grouprise/examples/nginx.conf /etc/nginx/sites-available/grouprise`
-* set a suitable `server_name`: `edit /etc/nginx/sites-available/grouprise`
-    * or remove the `default` nginx site (if it is not in use) in order to let the `grouprise` site be picked irrespective of the requested hostname
-* enable the site: `ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/`
-* restart nginx: `service nginx restart`
-* visit the fresh grouprise instance: `http://localhost/` (or use a suitable hostname)
 
 ## Contributing
 

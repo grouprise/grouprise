@@ -8,6 +8,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
+from django.core.mail import get_connection
 from django.template import loader
 
 from core.models import PermissionToken
@@ -21,8 +22,9 @@ DEFAULT_REPLY_TO_EMAIL = settings.GROUPRISE.get(
 
 class Notification:
     @classmethod
-    def send_all(cls, instance):
+    def send_all(cls, instance, **extra_kwargs):
         for recipient, kwargs in cls.get_recipients(instance).items():
+            kwargs.update(extra_kwargs)
             cls(instance).send(recipient, **kwargs)
 
     def __init__(self, instance):
@@ -190,6 +192,12 @@ class Notification:
         # add attachments
         for file_name in self.get_attachments():
             message.attach_file(file_name)
+
+        # optional connection switch
+        if kwargs.get('use_sync_email_backend'):
+            message.connection = get_connection(settings.SYNC_EMAIL_BACKEND)
+        elif kwargs.get('use_async_email_backend'):
+            message.connection = get_connection(settings.ASYNC_EMAIL_BACKEND)
 
         # we don't expect errors when sending mails because we just pass mails to django-mailer
         message.send()

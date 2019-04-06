@@ -16,7 +16,7 @@ from . import models
 
 class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.UpdateView):
     permission_required = 'contributions.delete'
-    model = models.Contribution
+    queryset = models.Contribution.objects_with_internal
     fields = []
     template_name = 'contributions/delete.html'
 

@@ -9,7 +9,8 @@ DATABASES = {
 
 DEBUG = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SYNC_EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+ASYNC_EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 GROUPRISE = {}
 

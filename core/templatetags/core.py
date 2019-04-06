@@ -2,6 +2,7 @@ import html
 import json
 import os
 import random
+from collections import namedtuple
 
 import bleach as python_bleach
 import html2text as python_html2text
@@ -16,6 +17,8 @@ from django.template.base import FilterExpression
 from django.template.loader import get_template
 from django.utils import html as django_html, safestring
 from markdown.extensions import toc
+
+Link = namedtuple('Link', 'text url')
 
 register = template.Library()
 
@@ -72,6 +75,11 @@ def nolinebreaks(value):
 
 
 @register.filter
+def link_to(text, url):
+    return Link(text=text, url=url)
+
+
+@register.filter
 def html2text(html, preset='mail'):
     text_maker = python_html2text.HTML2Text()
     text_maker.body_width = 0
@@ -122,6 +130,8 @@ def breadcrumb(context, *args):
     for arg in args[:-1]:
         if isinstance(arg, str):
             crumbs.append((arg, None))
+        elif isinstance(arg, Link):
+            crumbs.append(arg)
         elif hasattr(arg, 'get_absolute_url_for_user'):
             crumbs.append((str(arg), arg.get_absolute_url_for_user(context.get('user'))))
         else:

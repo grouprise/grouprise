@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
     'django_filters',
     'django_mailbox',
     'huey.contrib.djhuey',
@@ -208,6 +207,10 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 ACCOUNT_USERNAME_VALIDATORS = 'features.gestalten.forms.username_validators'
 
+SYNC_EMAIL_BACKEND = 'mailer.backend.DbBackend'
+ASYNC_EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+HUEY = {'always_eager': True}
 
 # Haystack
 # https://django-haystack.readthedocs.io/

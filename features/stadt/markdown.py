@@ -48,11 +48,12 @@ class EntityLinkExtension:
 
         if match:
             entity, slug, name = get_entity(match)
-            entity_url = full_url(entity.get_absolute_url())
-            if entity and entity.is_group:
-                return 'group://%d@%s' % (entity.id, entity_url)
-            elif entity:
-                return 'gestalt://%d@%s' % (entity.id, entity_url)
+            if entity:
+                entity_url = full_url(entity.get_absolute_url())
+                if entity.is_group:
+                    return 'group://%d@%s' % (entity.id, entity_url)
+                else:
+                    return 'gestalt://%d@%s' % (entity.id, entity_url)
             else:
                 return self.ENTITY_NONE
 

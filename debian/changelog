@@ -4,6 +4,13 @@ grouprise (3.0.0~1-1) unstable; urgency=medium
 
  -- Lars Kruse <devel@sumpfralle.de>  Mon, 04 Feb 2019 04:37:10 +0100
 
+stadtgestalten (2.4.2-1) unstable; urgency=medium
+
+  [ stadt@humbug ]
+  * New upstream release
+
+ --  <stadt@humbug>  Mon, 25 Mar 2019 15:02:41 +0100
+
 stadtgestalten (2.4.1-1) unstable; urgency=medium
 
   [ robert@grouprise.org ]

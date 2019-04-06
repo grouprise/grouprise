@@ -26,9 +26,15 @@
 
         <div class="profile-header-data">
             <div class="profile-header-title">
-                <a href="{% url 'image-settings' %}" class="avatar-edit-inline">
-                    {% include 'gestalten/_avatar.html' with gestalt=gestalt link=False %}
-                </a>
+                {% if can_edit %}
+                    <a href="{% url 'image-settings' %}" class="avatar-edit-inline">
+                        {% include 'gestalten/_avatar.html' with gestalt=gestalt link=False %}
+                    </a>
+                {% else %}
+                    <span class="avatar-noedit-inline">
+                        {% include 'gestalten/_avatar.html' with gestalt=gestalt link=False %}
+                    </span>
+                {% endif %}
                 <h1>{{ gestalt }}</h1>
                 <span class="clearfix"></span>
             </div>
