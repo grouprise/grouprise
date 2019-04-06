@@ -10,7 +10,6 @@ from django.dispatch import receiver
 import html2text
 
 import core.models
-from core.notifications import DEFAULT_REPLY_TO_EMAIL
 from features.associations import models as associations
 from features.content.models import Content
 from features.contributions import models
