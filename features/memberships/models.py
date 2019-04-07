@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
@@ -10,7 +12,7 @@ class Membership(models.Model):
 
     created_by = models.ForeignKey(
             'gestalten.Gestalt', related_name='memberships_created', on_delete=models.PROTECT)
-    date_joined = models.DateField(auto_now_add=True)
+    date_joined = models.DateField(default=datetime.date.today)
     group = models.ForeignKey(
             'groups.Group', related_name='memberships', on_delete=models.CASCADE)
     member = models.ForeignKey(

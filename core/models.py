@@ -6,6 +6,7 @@ from django.contrib.contenttypes import models as contenttypes_models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.utils import crypto
+import django.utils.timezone
 
 MAX_FILE_SIZE = settings.GROUPRISE.get('UPLOAD_MAX_FILE_SIZE', 0)
 
@@ -96,7 +97,7 @@ class PermissionToken(models.Model):
     gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE)
     secret_key = models.CharField(
             max_length=PERMISSION_TOKEN_LENGTH, default=generate_token, unique=True)
-    time_created = models.DateTimeField(auto_now_add=True)
+    time_created = models.DateTimeField(default=django.utils.timezone.now)
     # Every feature (e.g. the calendar) defines its own unique string describing its permission
     # token (e.g. "calendar-read").
     feature_key = models.CharField(max_length=32)

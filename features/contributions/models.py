@@ -1,5 +1,6 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
+import django.utils.timezone
 
 import core.models
 
@@ -50,7 +51,7 @@ class Contribution(core.models.Model):
     in_reply_to = models.ForeignKey(
             'Contribution', null=True, blank=True, related_name='replies',
             on_delete=models.SET_NULL)
-    time_created = models.DateTimeField(auto_now_add=True)
+    time_created = models.DateTimeField(default=django.utils.timezone.now)
     public = models.BooleanField(default=True)
 
     objects = PublicContributionManager.from_queryset(ContributionQuerySet)()

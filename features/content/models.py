@@ -3,6 +3,7 @@ import django.urls
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from django.db.models import Q
+import django.utils.timezone
 
 import core.models
 from features.gestalten import models as gestalten
@@ -99,4 +100,4 @@ class Version(models.Model):
     author = models.ForeignKey(
             'gestalten.Gestalt', related_name='versions', on_delete=models.PROTECT)
     text = models.TextField()
-    time_created = models.DateTimeField(auto_now_add=True)
+    time_created = models.DateTimeField(default=django.utils.timezone.now)

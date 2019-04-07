@@ -24,8 +24,7 @@ class GroupManager(models.Manager):
 class Group(core.models.Model):
     is_group = True
 
-    date_created = models.DateField(
-            auto_now_add=True)
+    date_created = models.DateField(default=datetime.date.today)
     time_modified = models.DateTimeField(auto_now=True)
     gestalt_created = models.ForeignKey(
             'gestalten.Gestalt', null=True, blank=True, related_name='+',
