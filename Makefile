@@ -15,6 +15,8 @@
 # specify DESTDIR before makefilet sets its default
 DESTDIR ?= /
 ENABLE_BUILD_DOC ?= 0
+# we need access to the site packages in order to use "xapian"
+VIRTUALENV_CREATE_ARGUMENTS ?= --system-site-packages
 
 # load makefilet
 include make.d/makefilet-download-ondemand.mk

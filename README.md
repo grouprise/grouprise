@@ -24,7 +24,7 @@ Some additional dependencies will be downloaded during the build process:
 ### Debian
 For `virtualenv`, `python3`, `flake8` and `pip` use apt:
 ```sh
-apt install make virtualenv python3 python3-flake8 python3-pip python3-sphinx python3-recommonmark
+apt install make virtualenv python3 python3-flake8 python3-pip python3-sphinx python3-recommonmark python3-xapian
 ```
 
 Additionally `node` v8.12 or later and `npm` are required.  Both are available in Stretch-Backports and Buster.  If you do not have a suitable version installed, it will be automatically downloaded when running `make` (see `make.d/nodejs.mk`).
@@ -32,7 +32,7 @@ Additionally `node` v8.12 or later and `npm` are required.  Both are available i
 ### Arch Linux
 Fortunately all of the required packages are available via pacman.
 ```sh
-pacman -Sy make nodejs npm flake8 python python-virtualenv python-pip python-sphinx python-recommonmark
+pacman -Sy make nodejs npm flake8 python python-virtualenv python-pip python-sphinx python-recommonmark python-xapian
 ```
 
 
