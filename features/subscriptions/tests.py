@@ -38,7 +38,7 @@ class Subscription(MemberMixin, TestCase):
         for email_obj in mail.outbox:
             if email_obj.to[0].find(TEST_EMAIL) >= 0:
                 break
-        self.assertTrue(email_obj.to[0].find(TEST_EMAIL) >= 0)
+        self.assertIn(TEST_EMAIL, email_obj.to[0])
 
         # cleanup
         mail.outbox = []

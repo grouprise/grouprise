@@ -79,13 +79,13 @@ class Test(test.TestCase):
         self.assertTrue(content in self.get_latest_notification().extra_headers[header])
 
     def assertNotificationContains(self, text):
-        self.assertTrue(self.get_latest_notification().body.find(text) >= 0)
+        self.assertIn(text, self.get_latest_notification().body)
 
     def assertNoNotificationSent(self):
         self.assertEqual(len(mail.outbox), 0)
 
     def assertNotificationSent(self):
-        self.assertTrue(len(mail.outbox) > 0)
+        self.assertGreater(len(mail.outbox), 0)
 
     def assertNotificationsSent(self, num):
         self.assertEqual(len(mail.outbox), num)
