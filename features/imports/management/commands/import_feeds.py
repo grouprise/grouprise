@@ -37,7 +37,7 @@ class Command(django.core.management.base.BaseCommand):
             id=settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID'))
         for group in groups.Group.objects.filter(url_import_feed=True):
             try:
-                r = requests.get(group.url, headers={'User-Agent': 'Stadtgestalten'})
+                r = requests.get(group.url, headers={'User-Agent': 'grouprise'})
                 matches = re.findall(self.FEED_RE, r.text)
                 for i, match_groups in enumerate(matches):
                     feed_url = match_groups[0] or match_groups[1]
