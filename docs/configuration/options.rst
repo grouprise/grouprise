@@ -62,7 +62,8 @@ Special Users and Groups
 
 ``FEED_IMPORTER_GESTALT_ID``
   ID of the user (gestalt), which is set by the RSS feed importer as the author of imported
-  content. Defaults to ``1``.
+  content. Defaults to ``1``.  This user never receives any kind of notifications, thus it should
+  not be a real user account used by a human.
 
 ``OPERATOR_GROUP_ID``
   ID of the group which is treated as the operator group of the plattform. Defaults to ``1``.

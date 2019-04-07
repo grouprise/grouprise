@@ -24,8 +24,9 @@ class Notification:
     @classmethod
     def send_all(cls, instance, **extra_kwargs):
         for recipient, kwargs in cls.get_recipients(instance).items():
-            kwargs.update(extra_kwargs)
-            cls(instance).send(recipient, **kwargs)
+            if recipient.id != settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID'):
+                kwargs.update(extra_kwargs)
+                cls(instance).send(recipient, **kwargs)
 
     def __init__(self, instance):
         self.object = instance

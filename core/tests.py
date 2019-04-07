@@ -1,10 +1,13 @@
+import contextlib
+import logging
+
+from django.conf import settings
 import django.urls
 from django import test, urls
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
 from django.core import mail
 
-import logging
 
 HTTP_GET = 'get'
 HTTP_POST = 'post'
@@ -16,6 +19,24 @@ HTTP_OK = 'ok'
 
 def get_url(url, *args):
     return django.urls.reverse(url, args=args)
+
+
+@contextlib.contextmanager
+def temporary_settings_override(key, value):
+    """ provide a context for temporarily changing a setting in the GROUPRISE dictionary """
+    try:
+        original_value = settings.GROUPRISE[key]
+        is_missing = False
+    except KeyError:
+        is_missing = True
+    settings.GROUPRISE[key] = value
+    try:
+        yield
+    finally:
+        if is_missing:
+            del settings.GROUPRISE[key]
+        else:
+            settings.GROUPRISE[key] = original_value
 
 
 class Test(test.TestCase):
@@ -70,6 +91,9 @@ class Test(test.TestCase):
 
     def assertNotificationRecipient(self, gestalt):
         self.assertGreater(self._count_notifications_for_recipient(gestalt), 0)
+
+    def assertNotNotificationRecipient(self, gestalt):
+        self.assertEqual(self._count_notifications_for_recipient(gestalt), 0)
 
     def assertNotificationSenderAnonymous(self):
         self.assertTrue(self.get_latest_notification().from_email.startswith(

@@ -1,9 +1,9 @@
 import datetime
 
-from django.conf import settings
 import django.utils.timezone
 
 from core import tests
+from core.tests import temporary_settings_override
 from features.associations import models as associations
 from features.memberships.test_mixins import MemberMixin, OtherMemberMixin
 from ..management.commands.import_feeds import (
@@ -39,10 +39,6 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
         "content": "Some Content",
     }
 
-    def setUp(self):
-        super().setUp()
-        settings.GROUPRISE["FEED_IMPORTER_GESTALT_ID"] = self.other_gestalt.id
-
     def _get_now(self):
         tz = django.utils.timezone.get_current_timezone()
         return datetime.datetime.now(tz=tz)
@@ -75,3 +71,15 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
         self.assertEqual(associations.Association.objects.count(), 1)
         import_from_feed(self._get_feed_content(), self.gestalt, self.group)
         self.assertEqual(associations.Association.objects.count(), 1)
+
+    def test_notifications_all(self):
+        with temporary_settings_override("FEED_IMPORTER_GESTALT_ID", self.other_gestalt.id):
+            self.assertEqual(associations.Association.objects.count(), 0)
+            # send a "new" (recent date) feed entry: otherwise its notification is skipped
+            import_from_feed(self._get_feed_content(date=self._get_now()),
+                             self.gestalt, self.group)
+            self.assertEqual(associations.Association.objects.count(), 1)
+            self.assertNotificationRecipient(self.gestalt)
+            # the "other_gestalt" receives no notifications (see FEED_IMPORTER_GESTALT_ID)
+            self.assertNotNotificationRecipient(self.other_gestalt)
+            self.assertNotificationsSent(1)
