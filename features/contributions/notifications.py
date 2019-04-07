@@ -1,7 +1,9 @@
+import email.utils
 import os
 
 import django
 from django.urls import reverse
+import django.utils.timezone
 
 from core import notifications
 from core.templatetags.core import ref
@@ -41,6 +43,11 @@ class ContributionCreated(notifications.Notification):
             kwargs['text'] = 'Ich beantrage die Mitgliedschaft in der Gruppe {}.'.format(
                     self.object.contribution.group)
         return super().get_context_data(**kwargs)
+
+    def get_date(self):
+        tz = django.utils.timezone.get_current_timezone()
+        contribution_date = self.object.time_created.astimezone(tz=tz)
+        return email.utils.format_datetime(contribution_date)
 
     def get_group(self):
         if self.association and self.association.entity.is_group:
