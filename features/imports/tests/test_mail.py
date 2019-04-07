@@ -1,5 +1,7 @@
 import contextlib
+import datetime
 import email.message
+import email.utils
 import os
 import re
 import tempfile
@@ -8,6 +10,7 @@ from aiosmtplib.errors import SMTPDataError
 from django.conf import settings
 from django.core import mail
 from django.urls import reverse
+import django.utils.timezone
 from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
 from core import tests
@@ -254,6 +257,39 @@ class ContentFormatting(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         self.inject_mail(self.gestalt.user.email, [self.group_address], data=message.as_bytes())
         self.assertExists(models.Contribution, conversation__subject='With Signature',
                           text__text='foo\nbar')
+
+
+class ContentMetaDataViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
+
+    def test_mail_date(self):
+        """ verify that the notification uses the date of the incoming mail """
+        with self.fresh_outbox_mails_retriever() as get_new_mails:
+            self.inject_mail(self.gestalt.user.email, [self.group_address],
+                             data=b'Date: Mon, 20 Nov 1995 14:12:08 -0500\n\nfoo')
+            self.assertEqual(len(get_new_mails()), 1)
+            self.assertEqual(get_new_mails()[0].extra_headers['Date'],
+                             'Mon, 20 Nov 1995 20:12:08 +0100')
+
+
+class ContentMetaDataViaDjangoMailbox(memberships.AuthenticatedMemberMixin, tests.Test):
+
+    def test_mail_date(self):
+        """ verify that the notification uses the date of the incoming mail
+
+        TODO: sadly we cannot inject mails into django_mailbox at the moment.  Thus we cannot
+        influence the mail's date field.  As long as we cannot inject manually, this test is of no
+        real use, since it simply verifies that the outgoing notification has a current Date field.
+        """
+        posting_datetime = datetime.datetime.now(tz=django.utils.timezone.get_current_timezone())
+        self.client.post(
+                reverse('create-group-article', args=(self.group.slug,)),
+                {'title': 'Test', 'text': 'Test'})
+        self.assertNotificationSent()
+        parsed_datetime = email.utils.parsedate_to_datetime(mail.outbox[0].extra_headers['Date'])
+        delay = (parsed_datetime - posting_datetime).total_seconds()
+        self.assertLess(delay, 10)
+        # the create time seems to be rounded down - thus it may arrive slightly before "now"
+        self.assertGreater(delay, -1)
 
 
 class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjectLMTPMixin,

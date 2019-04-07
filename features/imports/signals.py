@@ -1,4 +1,5 @@
 import collections
+import datetime
 import email.parser
 import logging
 import re
@@ -7,6 +8,7 @@ import django.db.models.signals
 import django_mailbox.signals
 from django.conf import settings
 from django.dispatch import receiver
+import django.utils.timezone
 import html2text
 
 import core.models
@@ -99,8 +101,8 @@ ParsedMailAttachment = collections.namedtuple('ParsedMailAttachment',
 
 
 class ParsedMailMessage(collections.namedtuple(
-        'ParsedMail',
-        ('subject', 'content', 'to_addresses', 'from_address', 'email_obj', 'id', 'attachments'))):
+        'ParsedMail', ('subject', 'content', 'to_addresses', 'from_address', 'email_obj', 'id',
+                       'date', 'attachments'))):
     """ neutral mail message container to be used processing a ContributionMailProcessor
 
     The different sources (e.g. django_mailbox or LMTP) should produce instances of this class.
@@ -133,6 +135,25 @@ class ParsedMailMessage(collections.namedtuple(
         return content
 
     @classmethod
+    def parse_date(cls, date_text):
+        """ parse the date from a string according to RFC2822
+
+        In case of errors or an unset/empty string the current time is returned.
+        Results always refer to the current default timezone.
+        """
+        tz = django.utils.timezone.get_current_timezone()
+        now = datetime.datetime.now(tz=tz)
+        if date_text:
+            try:
+                parsed = email.utils.parsedate_to_datetime(date_text)
+            except ValueError as exc:
+                logger.warning('Failed to parse incoming message date: %s', exc)
+                return now
+            return parsed.astimezone(tz=tz)
+        else:
+            return now
+
+    @classmethod
     def from_django_mailbox_message(cls, message):
         # we ignore multiple "From:" addresses
         from_address = message.from_address[0]
@@ -148,8 +169,9 @@ class ParsedMailMessage(collections.namedtuple(
                                                      attachment.document)
             attachments.append(parsed_attachment)
         text_content = cls.get_processed_content(message.html or message.text, bool(message.html))
+        msg_date = cls.parse_date(message.get_email_object()['Date'])
         return cls(subject, text_content, message.to_addresses, from_address,
-                   message.get_email_object(), message.id, tuple(attachments))
+                   message.get_email_object(), message.id, msg_date, tuple(attachments))
 
     @classmethod
     def from_email_object(cls, email_obj, from_address=None):
@@ -174,7 +196,7 @@ class ParsedMailMessage(collections.namedtuple(
             content, body_part.get_content_type().lower() == 'text/html')
         return cls(email_obj.get('Subject') or cls.MISSING_SUBJECT_DEFAULT, text_content,
                    email_obj.get_all('To'), from_address, email_obj,
-                   email_obj.get('Message-ID'), attachments)
+                   email_obj.get('Message-ID'), cls.parse_date(email_obj.get('Date')), attachments)
 
 
 class ContributionMailProcessor:
@@ -217,7 +239,9 @@ class ContributionMailProcessor:
                 container=container,
                 in_reply_to=in_reply_to,
                 contribution=t,
-                public=public)
+                public=public,
+                time_created=message.date,
+        )
         files.File.objects.create_from_message_attachments(message.attachments,
                                                            attached_to=contribution)
         return contribution
