@@ -61,12 +61,15 @@ class Test(test.TestCase):
         response = getattr(self.client, method)(url, data)
         self.assertRedirects(response, other or url)
 
-    def assertNotificationRecipient(self, gestalt):
-        found = False
+    def _count_notifications_for_recipient(self, gestalt):
+        count = 0
         for notification in mail.outbox:
-            if notification.to[0].find(gestalt.user.email):
-                found = True
-        self.assertTrue(found)
+            if gestalt.user.email in notification.to[0]:
+                count += 1
+        return count
+
+    def assertNotificationRecipient(self, gestalt):
+        self.assertGreater(self._count_notifications_for_recipient(gestalt), 0)
 
     def assertNotificationSenderAnonymous(self):
         self.assertTrue(self.get_latest_notification().from_email.startswith(
