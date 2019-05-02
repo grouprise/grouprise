@@ -9,7 +9,7 @@ DATABASES = {
 
 DEBUG = True
 
-SYNC_EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = SYNC_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ASYNC_EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 GROUPRISE = {}
@@ -19,3 +19,4 @@ SECRET_KEY = 'DEVELOPMENT'
 if TESTING:
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
     HUEY = {'always_eager': True}
+    SYNC_EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
