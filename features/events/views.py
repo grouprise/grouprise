@@ -192,7 +192,7 @@ class SiteCalendarFeed(BaseCalendarFeed):
         return sites_models.Site.objects.get_current().name
 
 
-class CalendarExport(utils_views.PageMixin, generic.DetailView):
+class CalendarExport(generic.DetailView):
     sidebar = tuple()
     template_name = 'events/export.html'
 
@@ -228,12 +228,12 @@ class GroupCalendarExport(CalendarExport):
 
     def has_private_access(self):
         if self.request.user and self.request.user.is_authenticated:
-            return is_member_of(self.request.user, self.get_group())
+            return is_member_of(self.request.user, self.object)
         else:
             return False
 
 
-class SiteCalendarExport(utils_views.PageMixin, generic.TemplateView):
+class SiteCalendarExport(generic.TemplateView):
     permission_required = 'stadt.view_index'
     title = 'Exportmöglichkeiten für Kalender'
     feed_route = 'site-events-feed'
@@ -260,7 +260,7 @@ class GestaltCalendarFeed(BaseCalendarFeed):
         super().assemble_content_filter_dict(filter_dict)
 
 
-class GestaltCalendarExport(utils_views.PageMixin, generic.DetailView):
+class GestaltCalendarExport(generic.DetailView):
     model = gestalten.Gestalt
     slug_url_kwarg = 'gestalt_slug'
     sidebar = tuple()

@@ -8,7 +8,7 @@ from django.views import generic
 from django.views.generic import DeleteView, UpdateView
 
 import core
-from core.views import base, PermissionMixin
+from core.views import PermissionMixin
 from features.associations import models as associations
 from features.groups.models import Group
 from . import forms, models
@@ -61,7 +61,7 @@ class Detail(
         return self.object
 
 
-class List(base.PermissionMixin, generic.ListView):
+class List(PermissionMixin, generic.ListView):
     permission_required = 'gestalten.view_list'
     queryset = models.Gestalt.objects.filter(public=True)
     ordering = ['-score', '-user__date_joined']

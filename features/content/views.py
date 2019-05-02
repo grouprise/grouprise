@@ -7,7 +7,7 @@ from django.views import generic
 
 import core.views
 import features
-from core.views import base
+from core.views import PermissionMixin
 from features.associations import models as associations
 from features.associations.views import get_association_or_404
 from features.contributions import view_mixins as contributions
@@ -31,7 +31,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
 
 
 class DetailBase(features.associations.views.AssociationMixin,
-                 contributions.ContributionFormMixin, base.PermissionMixin, generic.DetailView):
+                 contributions.ContributionFormMixin, PermissionMixin, generic.DetailView):
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
     model = associations.Association
@@ -81,7 +81,7 @@ class Permalink(django.views.generic.RedirectView):
                 'content', args=(association.entity.slug, association.slug))
 
 
-class Create(base.PermissionMixin, generic.CreateView):
+class Create(PermissionMixin, generic.CreateView):
     permission_required = 'content.create'
     model = associations.Association
     form_class = forms.Create
@@ -115,7 +115,7 @@ class Create(base.PermissionMixin, generic.CreateView):
         return has_perm
 
 
-class Update(base.PermissionMixin, generic.UpdateView):
+class Update(PermissionMixin, generic.UpdateView):
     permission_required = 'content.change'
     model = associations.Association
     form_class = forms.Update

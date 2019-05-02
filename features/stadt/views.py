@@ -82,7 +82,7 @@ class Index(content.List):
         return super().get_context_data(**kwargs)
 
 
-class Privacy(core.views.PageMixin, django.views.generic.TemplateView):
+class Privacy(django.views.generic.TemplateView):
     permission_required = 'stadt.view_privacy'
     template_name = 'entities/privacy.html'
     title = 'Datenschutz'

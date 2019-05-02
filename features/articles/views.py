@@ -1,12 +1,12 @@
 from django.views import generic
 
-from core.views import base
 import features.content.views
+from core.views import PermissionMixin
 from features.associations import models as associations
 from . import forms
 
 
-class List(base.PermissionMixin, generic.ListView):
+class List(PermissionMixin, generic.ListView):
     permission_required = 'articles.view_list'
     model = associations.Association
     template_name = 'articles/list.html'
