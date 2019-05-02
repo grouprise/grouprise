@@ -3,6 +3,7 @@ from django import forms
 from django.db.models import Q
 
 import core.forms
+from core.utils import slugify
 from . import models, signals
 from features.associations import models as associations
 from features.groups import models as groups
@@ -60,7 +61,7 @@ class Create(forms.ModelForm):
                     associations.Association, {
                         'entity_id': self.instance.entity_id,
                         'entity_type': self.instance.entity_type,
-                        'slug': core.text.slugify(self.cleaned_data['title']),
+                        'slug': slugify(self.cleaned_data['title']),
                         })
             container = self.container_class.objects.create(
                     title=self.cleaned_data['title'],

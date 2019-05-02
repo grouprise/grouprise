@@ -10,6 +10,7 @@ from django.conf import settings
 
 import core
 from core.templatetags.core import html2text
+from core.utils import slugify
 from features.associations import models as associations
 from features.content import models as content
 from features.content.signals import post_create
@@ -66,7 +67,7 @@ def import_from_feed(feed_url, submitter, target_group):
                         associations.Association, {
                             'entity_id': target_group.id,
                             'entity_type': target_group.content_type,
-                            'slug': core.text.slugify(title),
+                            'slug': slugify(title),
                             })
                 associations.Association.objects.create(
                         entity_type=target_group.content_type, entity_id=target_group.id,

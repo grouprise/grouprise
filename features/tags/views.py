@@ -2,6 +2,7 @@ import django
 from django.db.models import Q
 
 import core
+from core.utils import intify
 from features.associations import models as associations
 from features.groups import models as groups
 from . import forms, models
@@ -16,7 +17,7 @@ class Detail(core.views.PermissionMixin, django.views.generic.ListView):
     def get_queryset(self):
         self.tag = self.get_tag()
         self.groups = groups.Group.objects.filter(tags__tag=self.tag)
-        self.tagged_only = core.text.intify(self.request.GET.get('tagged'), 0)
+        self.tagged_only = intify(self.request.GET.get('tagged'), 0)
         tagged_query = Q(content__taggeds__tag=self.tag)
         qs = super().get_queryset().ordered_user_content(self.request.user)
         if self.tagged_only:

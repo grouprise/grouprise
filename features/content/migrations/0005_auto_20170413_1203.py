@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 import core.models
-import core.text
 
 
 class Migration(migrations.Migration):
