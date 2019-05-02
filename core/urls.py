@@ -3,7 +3,7 @@ from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
 from core.rest_api import MarkdownView
-from core.views.markdown import Markdown
+from core.views import Markdown
 
 # Router for internal REST API providing data for frontend JavaScript functionality.
 api_router = SimpleRouter()

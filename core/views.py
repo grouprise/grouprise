@@ -1,5 +1,7 @@
 import json
 
+import django
+
 from rules.contrib.views import PermissionRequiredMixin
 
 
@@ -30,3 +32,7 @@ class AppConfig:
 
 
 app_config = AppConfig()
+
+
+class Markdown(django.views.generic.TemplateView):
+    template_name = 'core/markdown.html'
