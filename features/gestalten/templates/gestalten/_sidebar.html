@@ -10,7 +10,6 @@
             {% include "gestalten/_preview.html" with gestalt=gestalt link=False %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
-            {#{% include_features '_sidebar_author_actions.html' %}#}
             <a href="{{ gestalt|url_for_user:user }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
         </div>
     </div>

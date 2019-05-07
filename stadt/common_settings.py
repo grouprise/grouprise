@@ -81,7 +81,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
         'OPTIONS': {
-            'builtins': ['core.templatetags.core'],
+            'builtins': ['core.templatetags.defaultfilters', 'core.templatetags.defaulttags'],
             'context_processors': [
                 # django core
                 'django.template.context_processors.request',

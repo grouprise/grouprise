@@ -1,5 +1,0 @@
-{% load rules %}
-{% has_perm 'associations.create_content_group_membership' user group|connect:content.author as can_create %}
-{% if can_create %}
-<a href="{% url 'gestalt-member-create' group.pk gestalt.pk %}" class="btn btn-link">Als Mitglied aufnehmen</a>
-{% endif %}

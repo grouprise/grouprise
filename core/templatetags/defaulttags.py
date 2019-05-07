@@ -1,24 +1,19 @@
 import html
 import json
-import os
 import random
-from collections import namedtuple
 
 import bleach as python_bleach
-import html2text as python_html2text
 import markdown as python_markdown
 from core import markdown as core_markdown
 from core.views import app_config
-from django import apps, template
-from django.conf import settings
-from django.contrib.sites import models as sites_models
+from django import template
 from django.template import defaultfilters
 from django.template.base import FilterExpression
 from django.template.loader import get_template
 from django.utils import html as django_html, safestring
 from markdown.extensions import toc
 
-Link = namedtuple('Link', 'text url')
+from . import Link
 
 register = template.Library()
 
@@ -46,47 +41,9 @@ def random_item(_list):
         return None
 
 
-@register.filter
-def filename(value, include_ext=True):
-    base = os.path.basename(getattr(value, 'name', value))
-    return base if include_ext else os.path.splitext(base)[0]
-
-
-@register.filter
-def endswith(value: str, search):
-    return value.endswith(search)
-
-
-@register.filter
-def startswith(value: str, search):
-    return value.startswith(search)
-
-
-@register.filter
-def nolinebreaks(value):
-    return ' '.join(str(value).split('\n'))
-
-
-@register.filter
-def link_to(text, url):
-    return Link(text=text, url=url)
-
-
-@register.filter
-def html2text(html, preset='mail'):
-    text_maker = python_html2text.HTML2Text()
-    text_maker.body_width = 0
-    if preset == 'mail':
-        text_maker.inline_links = False
-        text_maker.links_each_paragraph = True
-        text_maker.use_automatic_links = True
-    elif preset == 'import':
-        text_maker.escape_snob = True
-    return text_maker.handle(html).rstrip()
-
-
 @register.simple_tag(takes_context=True)
 def get_parameters(context, **kwargs):
+    """Render parameters of current url."""
     request = context.get('request')
     params = request.GET.copy()
     for k in kwargs:
@@ -99,6 +56,7 @@ def get_parameters(context, **kwargs):
 
 @register.inclusion_tag('core/_link.html', takes_context=True)
 def link(context, model, title=None):
+    """Render a link to the given model."""
     if hasattr(model, 'get_absolute_url_for_user'):
         url = model.get_absolute_url_for_user(context.get('user'))
     else:
@@ -147,14 +105,6 @@ def ref(entity):
         return "%s-%d" % (type(entity).__name__.lower(), entity.id)
     except AttributeError:
         return ""
-
-
-@register.filter
-def full_url(path):
-    return '{proto}://{domain}{path}'.format(
-            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
-            domain=sites_models.Site.objects.get_current().domain,
-            path=path)
 
 
 @register.simple_tag(name='app_config')
@@ -239,48 +189,6 @@ class DropdownNode(template.Node):
         context['dropdown_label'] = self.label
         context['dropdown_items'] = self.nodelist.render(context)
         return context.template.engine.get_template('core/_dropdown.html').render(context)
-
-
-@register.filter
-def connect(val1, val2):
-    return val1, val2
-
-
-@register.filter
-def cuttrailing(s1, s2):
-    if s1.endswith(s2):
-        return s1[:-len(s2)]
-    return s1
-
-
-@register.filter
-def limit(indexable, count):
-    return indexable[:count]
-
-
-@register.filter
-def override(override, overridden):
-    if type(override) == type(overridden):
-        return override
-    else:
-        return overridden
-
-
-@register.filter
-def url_for_user(model, user):
-    return model.get_absolute_url_for_user(user)
-
-
-@register.simple_tag(takes_context=True)
-def include_features(context, template_name):
-    result = ''
-    for app in apps.apps.get_app_configs():
-        try:
-            t = context.template.engine.get_template('{}/{}'.format(app.label, template_name))
-            result += t.render(context)
-        except template.TemplateDoesNotExist:
-            pass
-    return safestring.mark_safe(result)
 
 
 def parse_token_args(args, filterval=lambda value: value):
