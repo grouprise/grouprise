@@ -65,10 +65,9 @@ class Help(CreateGroupConversation):
             kwargs['about_text'] = about_text
             if tools_text and tools_text != about_text:
                 kwargs['tools_text'] = tools_text
-        kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
         return super().get_context_data(**kwargs)
 
-    def get_object(self):
+    def get_permission_object(self):
         self.entity = Group.objects.operator_group()
         return self.entity
 
@@ -78,7 +77,6 @@ class Index(content.List):
 
     def get_context_data(self, **kwargs):
         kwargs['feed_url'] = self.request.build_absolute_uri(reverse('feed'))
-        kwargs['town_name'] = get_current_site(self.request).name.split()[-1]
         return super().get_context_data(**kwargs)
 
 

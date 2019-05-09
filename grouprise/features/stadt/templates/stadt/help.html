@@ -3,15 +3,7 @@
 {% block title %}Hilfe - {{ block.super }}{% endblock %}
 
 {% block content_header %}
-    {% if STADTGESTALTEN_SHOW_HEADER %}
-        <header class="content-section-header">
-            {% include 'core/_heading.html' with title=about_group.name %}
-        </header>
-        {% if intro_text %}
-            <p>{{ intro_text }}</p>
-        {% endif %}
-        {% include 'stadt/_index_header.html' %}
-    {% endif %}
+    {% include 'stadt/_index_header.html' %}
 {% endblock %}
 
 {% block heading_title %}
