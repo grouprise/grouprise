@@ -5,7 +5,7 @@
     </header>
     <div class="group-media-body">
       <h3>{{ group.name }}</h3>
-      <p>{{ group.description|default("Diese Gruppe hat noch keine Beschreibung auf Stadtgestalten hinterlegt.")|truncatewords(10) }}</p>
+      <p>{{ group.description|default("Diese Gruppe hat noch keine Beschreibung hinterlegt.")|truncatewords(10) }}</p>
     </div>
   </a>
 </template>

@@ -1,7 +1,7 @@
 {
-  "name": "stadtgestalten",
-  "title": "Stadtgestalten",
-  "description": "Stadtgestalten ist eine Plattform um lokale Vernetzung zu fördern",
+  "name": "grouprise",
+  "title": "grouprise",
+  "description": "grouprise is a platform that encourages and enables social action and solidarity",
   "license": "AGPL-3.0",
   "engines": {
     "node": ">=6.4.0"

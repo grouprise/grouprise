@@ -33,14 +33,14 @@ static_files = include_recursive('static')
 offline_website = include_recursive('offline-website')
 
 setup(
-    name='stadtgestalten',
+    name='grouprise',
     version=get_version(),
-    description='Stadtgestalten is a platform that encourages and enables '
+    description='grouprise is a platform that encourages and enables '
                 'social action and solidarity',
     long_description=get_readme(),
     url='https://git.hack-hro.de/stadtgestalten/stadtgestalten.git',
-    author='Stadtgestalten Maintainers',
-    author_email='wir@stadtgestalten.org',
+    author='grouprise Maintainers',
+    author_email='mail@grouprise.org',
     packages=find_packages(),
     include_package_data=True,
     classifiers=[

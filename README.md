@@ -50,8 +50,8 @@ For production deployment you should use a database server.
 
 The following statement creates a suitable database including proper collation settings:
 
-    CREATE USER stadtgestalten with password 'PUT RANDOM NOISE';
-    CREATE DATABASE stadtgestalten WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER stadtgestalten;
+    CREATE USER grouprise WITH PASSWORD 'put random noise';
+    CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER grouprise;
 
 The command above requires the locale 'de_DE.UTF8' in the system of the database server.
 

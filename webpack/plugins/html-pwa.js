@@ -25,7 +25,7 @@ module.exports = new WebpackPwaManifest({
     }
   ],
   ios: {
-    'apple-mobile-web-app-title': 'Stadtgestalten',
+    'apple-mobile-web-app-title': 'grouprise',
     'apple-mobile-web-app-status-bar-style': 'black'
   }
 })

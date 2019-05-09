@@ -31,7 +31,7 @@ export default (el) => {
                 
                 <div class="container">
                     <p>
-                        Entschuldige! Da wir Stadtgestalten als Projekt in unserer Freizeit entwickeln, können 
+                        Entschuldige! Da wir <a href="https://grouprise.org/">grouprise</a> als Projekt in unserer Freizeit entwickeln, können 
                         wir nicht so viel Rücksicht auf ältere Browser nehmen. Möglicherweise treten bei dir 
                         Probleme auf. <br>
                         Wir versuchen Firefox ab Version 45, Internet Explorer/Edge ab Version 11 und aktuelle
