@@ -1,6 +1,6 @@
 from django.utils.module_loading import autodiscover_modules
 
-default_app_config = 'core.apps.CoreConfig'
+default_app_config = 'grouprise.core.apps.CoreConfig'
 
 
 def autodiscover():

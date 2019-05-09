@@ -1,1 +1,1 @@
-default_app_config = 'features.associations.apps.AssociationsConfig'
+default_app_config = 'grouprise.features.associations.apps.AssociationsConfig'

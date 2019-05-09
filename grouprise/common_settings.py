@@ -11,28 +11,28 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 INSTALLED_APPS = [
     # grouprise features
-    'features.articles',
-    'features.associations',
-    'features.contributions',
-    'features.conversations',
-    'features.content',
-    'features.events',
-    'features.files',
-    'features.galleries',
-    'features.gestalten',
-    'features.gestalten.auth',
-    'features.groups',
-    'features.images',
-    'features.imports',
-    'features.memberships',
-    'features.polls',
-    'features.sharing',
-    'features.stadt',
-    'features.subscriptions',
-    'features.tags',
+    'grouprise.features.articles',
+    'grouprise.features.associations',
+    'grouprise.features.contributions',
+    'grouprise.features.conversations',
+    'grouprise.features.content',
+    'grouprise.features.events',
+    'grouprise.features.files',
+    'grouprise.features.galleries',
+    'grouprise.features.gestalten',
+    'grouprise.features.gestalten.auth',
+    'grouprise.features.groups',
+    'grouprise.features.images',
+    'grouprise.features.imports',
+    'grouprise.features.memberships',
+    'grouprise.features.polls',
+    'grouprise.features.sharing',
+    'grouprise.features.stadt',
+    'grouprise.features.subscriptions',
+    'grouprise.features.tags',
 
     # grouprise core
-    'core',
+    'grouprise.core',
 
     # third-party packages
     'allauth',
@@ -73,7 +73,7 @@ MIDDLEWARE = [
     # django-csp
     'csp.middleware.CSPMiddleware',
     # grouprise
-    'features.gestalten.middleware.GestaltAppConfigMiddleware',
+    'grouprise.features.gestalten.middleware.GestaltAppConfigMiddleware',
 ]
 
 TEMPLATES = [
@@ -91,8 +91,8 @@ TEMPLATES = [
                 # grouprise core
                 'core.context_processors.settings',
                 # grouprise features
-                'features.groups.context_processors.groups',
-                'features.stadt.context_processors.page_meta',
+                'grouprise.features.groups.context_processors.groups',
+                'grouprise.features.stadt.context_processors.page_meta',
             ],
         },
     },
@@ -100,9 +100,9 @@ TEMPLATES = [
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-ROOT_URLCONF = 'stadt.urls'
+ROOT_URLCONF = 'grouprise.urls'
 
-WSGI_APPLICATION = 'stadt.wsgi.application'
+WSGI_APPLICATION = 'grouprise.wsgi.application'
 
 
 # Internationalization
@@ -128,7 +128,7 @@ SITE_ID = 1
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/
 
-STATIC_URL = '/stadt/static/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -136,7 +136,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Media files (User uploaded files)
 # https://docs.djangoproject.com/en/stable/topics/files/
 
-MEDIA_URL = '/stadt/media/'
+MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -187,7 +187,7 @@ LOGIN_URL = 'account_login'
 
 LOGIN_REDIRECT_URL = 'index'
 
-ACCOUNT_ADAPTER = 'features.gestalten.adapters.AccountAdapter'
+ACCOUNT_ADAPTER = 'grouprise.features.gestalten.adapters.AccountAdapter'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
@@ -205,7 +205,7 @@ ACCOUNT_USER_DISPLAY = lambda u: u.gestalt    # noqa: E731
 
 ACCOUNT_USERNAME_REQUIRED = False
 
-ACCOUNT_USERNAME_VALIDATORS = 'features.gestalten.forms.username_validators'
+ACCOUNT_USERNAME_VALIDATORS = 'grouprise.features.gestalten.forms.username_validators'
 
 
 # Haystack

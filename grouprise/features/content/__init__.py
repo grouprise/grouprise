@@ -1,1 +1,1 @@
-default_app_config = 'features.content.apps.ContentConfig'
+default_app_config = 'grouprise.features.content.apps.ContentConfig'

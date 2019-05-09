@@ -1,2 +1,2 @@
-default_app_config = 'features.tags.apps.TagsConfig'
+default_app_config = 'grouprise.features.tags.apps.TagsConfig'
 RE_TAG_REF = r'(?:^|(?<=[\s(\"\/\']))#([\w_-]+)'

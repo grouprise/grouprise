@@ -1,1 +1,1 @@
-default_app_config = 'features.gestalten.auth.apps.Config'
+default_app_config = 'grouprise.features.gestalten.auth.apps.Config'
