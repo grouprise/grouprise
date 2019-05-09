@@ -81,7 +81,10 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
         'OPTIONS': {
-            'builtins': ['grouprise.core.templatetags.defaultfilters', 'grouprise.core.templatetags.defaulttags'],
+            'builtins': [
+                'grouprise.core.templatetags.defaultfilters',
+                'grouprise.core.templatetags.defaulttags'
+            ],
             'context_processors': [
                 # django core
                 'django.template.context_processors.request',

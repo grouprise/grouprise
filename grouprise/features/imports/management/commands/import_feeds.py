@@ -9,7 +9,7 @@ import requests
 from django.conf import settings
 
 import grouprise.core
-from grouprise.core.templatetags.core import html2text
+from grouprise.core.templatetags.defaultfilters import html2text
 from grouprise.core.utils import slugify
 from grouprise.features.associations import models as associations
 from grouprise.features.content import models as content

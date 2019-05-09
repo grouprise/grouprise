@@ -1,7 +1,8 @@
 import rules
 from rules import is_authenticated
 
-from grouprise.features.associations import models as associations_models, predicates as associations_rules
+from grouprise.features.associations import (
+        models as associations_models, predicates as associations_rules)
 from grouprise.features.gestalten.rules import is_self as is_gestalt
 from grouprise.features.memberships import predicates as memberships
 

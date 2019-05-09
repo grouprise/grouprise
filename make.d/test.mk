@@ -48,7 +48,7 @@ test_py_prepare:
 	# is resolved, which breaks a lot of our python-tests. As this template only includes
 	# asset metadata and JavaScript & CSS file references, we simply make sure that the file
 	# exists during the test run. The content itself is of no relevance to the python-tests.
-	touch core/templates/core/_assets.html
+	touch grouprise/core/templates/core/_assets.html
 
 .PHONY: test_js
 test_js: $(DIR_NODE) $(BIN_NODE_PKG) lint_js

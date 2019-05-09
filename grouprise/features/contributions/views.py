@@ -14,7 +14,8 @@ from grouprise.features.conversations.views import CreateGestaltConversation
 from . import models
 
 
-class Delete(AssociationMixin, grouprise.core.views.PermissionMixin, django.views.generic.UpdateView):
+class Delete(
+        AssociationMixin, grouprise.core.views.PermissionMixin, django.views.generic.UpdateView):
     permission_required = 'contributions.delete'
     queryset = models.Contribution.objects_with_internal
     fields = []

@@ -161,7 +161,8 @@ class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
 
 
 class TwoGestalten(
-        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
+        grouprise.core.tests.Test):
 
     def create_event(self, **kwargs):
         event_args = _get_adjusted_event_args(**kwargs)

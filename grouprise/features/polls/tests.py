@@ -226,7 +226,8 @@ class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
 
 
 class TwoGestalten(
-        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
+        grouprise.core.tests.Test):
     def create_poll(self, **kwargs):
         kwargs.update(get_post_data())
         self.client.post(self.get_url('create-group-poll', self.group.slug), kwargs)

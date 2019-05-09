@@ -248,7 +248,8 @@ class ContributionMailProcessor:
 
     def _process_authenticated_reply(self, message, auth_token_text):
         try:
-            auth_token = grouprise.core.models.PermissionToken.objects.get(secret_key=auth_token_text)
+            auth_token = grouprise.core.models.PermissionToken.objects.get(
+                    secret_key=auth_token_text)
         except grouprise.core.models.PermissionToken.DoesNotExist:
             raise MailProcessingFailure(
                     'Das Ziel für deine Nachricht ist ungültig. Ist die dazugehörige Unterhaltung '

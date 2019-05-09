@@ -32,7 +32,8 @@ class AssociationMixin:
                 entity_type=entity.content_type, entity_id=entity.id, slug=association_slug)
 
 
-class Delete(AssociationMixin, grouprise.core.views.PermissionMixin, django.views.generic.UpdateView):
+class Delete(
+        AssociationMixin, grouprise.core.views.PermissionMixin, django.views.generic.UpdateView):
     permission_required = 'associations.delete'
     model = models.Association
     fields = []

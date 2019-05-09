@@ -177,7 +177,8 @@ class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
 
 
 class TwoGestalten(
-        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
+        grouprise.core.tests.Test):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Group Article', 'text': 'Test'})
         self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
