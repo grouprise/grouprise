@@ -82,7 +82,7 @@ class Index(content.List):
 
 class Privacy(django.views.generic.TemplateView):
     permission_required = 'stadt.view_privacy'
-    template_name = 'entities/privacy.html'
+    template_name = 'stadt/privacy.html'
     title = 'Datenschutz'
 
 
