@@ -3,10 +3,12 @@
         <div class="nav-container" data-component="menu">
             <input type="checkbox" class="dropdown-state" id="menu-main-state" data-menu-switch>
 
-            <a class="nav-logo" href="{% url 'index' %}">
-                {% load staticfiles %}
-                <img src="{% static STADTGESTALTEN_LOGO_URL %}" alt="{{ GROUPRISE_SITE_NAME }}"/>
-            </a>
+            {% block logo %}
+                <a class="nav-logo" href="{% url 'index' %}">
+                    {% load staticfiles %}
+                    <img src="{% static 'stadt/img/logos/logo_text.svg' %}" alt="{{ GROUPRISE_SITE_NAME }}"/>
+                </a>
+            {% endblock %}
 
             <label for="menu-main-state" class="nav-state-toggle nav-switch" aria-label="Zeige Menü" data-component="openable" data-openable-target="#menu-main">
                 <span class="hamburger">
