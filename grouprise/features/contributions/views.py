@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 import grouprise.core
-from grouprise.core.templatetags.core import ref
+from grouprise.core.templatetags.defaulttags import ref
 from grouprise.features.associations.models import Association
 from grouprise.features.associations.views import AssociationMixin
 from grouprise.features.contributions.models import Contribution

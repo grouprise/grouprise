@@ -6,7 +6,7 @@ from django.urls import reverse
 import django.utils.timezone
 
 from grouprise.core import notifications
-from grouprise.core.templatetags.core import ref
+from grouprise.core.templatetags.defaulttags import ref
 from grouprise.features.contributions import models as contributions
 from grouprise.features.memberships import models as memberships
 from grouprise.features.subscriptions.notifications import update_recipients

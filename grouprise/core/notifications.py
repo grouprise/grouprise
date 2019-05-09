@@ -12,7 +12,7 @@ from django.core.mail import get_connection
 from django.template import loader
 
 from grouprise.core.models import PermissionToken
-from grouprise.core.templatetags.core import full_url as build_absolute_uri
+from grouprise.core.templatetags.defaultfilters import full_url as build_absolute_uri
 
 logger = logging.getLogger(__name__)
 
