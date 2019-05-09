@@ -1,10 +1,10 @@
 import django
 from django.urls import reverse
 
-import features.articles.tests
+import grouprise.features.articles.tests
 
 
-class Delete(features.articles.tests.ArticleMixin, django.test.TestCase):
+class Delete(grouprise.features.articles.tests.ArticleMixin, django.test.TestCase):
     def test_delete_association(self):
         delete_url = reverse(
                 'delete-association',

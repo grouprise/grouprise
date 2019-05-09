@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import datetime
 from django.db import migrations, models
-import features.groups.models
+import grouprise.features.groups.models
 
 
 class Migration(migrations.Migration):

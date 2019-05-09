@@ -9,18 +9,18 @@ from django.http import HttpResponse
 from django.views import generic
 from django_ical.views import ICalFeed
 
-import core.views
-import features.content.views
-import features.groups.views
-from features.associations import models as associations
-from features.gestalten import models as gestalten
-from features.gestalten.auth.resolvers import get_user_resolver
-from features.memberships.predicates import is_member_of
+import grouprise.core.views
+import grouprise.features.content.views
+import grouprise.features.groups.views
+from grouprise.features.associations import models as associations
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.gestalten.auth.resolvers import get_user_resolver
+from grouprise.features.memberships.predicates import is_member_of
 from .utils import get_requested_time
 from . import forms
 
 
-class List(core.views.PermissionMixin, django.views.generic.ListView):
+class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'events.view_list'
     model = associations.Association
     template_name = 'events/list.html'
@@ -37,7 +37,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
             .order_by('content__time')
 
 
-class Create(features.content.views.Create):
+class Create(grouprise.features.content.views.Create):
     form_class = forms.Create
     template_name = 'events/create.html'
 
@@ -145,7 +145,7 @@ class BaseCalendarFeed(ICalFeed):
             return end_time.astimezone(tz)
 
 
-class GroupCalendarFeed(BaseCalendarFeed, features.groups.views.Mixin):
+class GroupCalendarFeed(BaseCalendarFeed, grouprise.features.groups.views.Mixin):
 
     def title(self):
         site_name = sites_models.Site.objects.get_current().name
@@ -215,7 +215,7 @@ class CalendarExport(generic.DetailView):
 
 
 class GroupCalendarExport(CalendarExport):
-    model = features.groups.models.Group
+    model = grouprise.features.groups.models.Group
     slug_url_kwarg = 'group_slug'
     permission_required = 'groups.view'
     title = 'Exportmöglichkeiten für Gruppenkalender'

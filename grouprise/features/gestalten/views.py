@@ -7,10 +7,10 @@ from django.urls import reverse
 from django.views import generic
 from django.views.generic import DeleteView, UpdateView
 
-import core
-from core.views import PermissionMixin
-from features.associations import models as associations
-from features.groups.models import Group
+import grouprise.core
+from grouprise.core.views import PermissionMixin
+from grouprise.features.associations import models as associations
+from grouprise.features.groups.models import Group
 from . import forms, models
 
 
@@ -41,7 +41,7 @@ class Delete(PermissionMixin, DeleteView):
 
 
 class Detail(
-        core.views.PermissionMixin, django.views.generic.list.MultipleObjectMixin,
+        grouprise.core.views.PermissionMixin, django.views.generic.list.MultipleObjectMixin,
         django.views.generic.DetailView):
     permission_required = 'gestalten.view'
     model = models.Gestalt

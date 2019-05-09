@@ -7,8 +7,8 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import SmartResize, Transpose
 
-import core
-from core.utils import get_random_color
+import grouprise.core
+from grouprise.core.utils import get_random_color
 
 
 class GestaltQuerySet(models.QuerySet):
@@ -32,15 +32,15 @@ class GestaltQuerySet(models.QuerySet):
         return user.gestalt
 
 
-class Gestalt(core.models.Model):
+class Gestalt(grouprise.core.models.Model):
     is_group = False
 
     about = models.TextField('Selbstauskunft', blank=True)
-    avatar = core.models.ImageField(blank=True)
+    avatar = grouprise.core.models.ImageField(blank=True)
     avatar_64 = ImageSpecField(
             source='avatar', processors=[Transpose(), SmartResize(64, 64)], format='PNG')
     avatar_color = models.CharField(max_length=7, default=get_random_color)
-    background = core.models.ImageField('Hintergrundbild', blank=True)
+    background = grouprise.core.models.ImageField('Hintergrundbild', blank=True)
     background_cover = ImageSpecField(
             source='background', processors=[Transpose(), SmartResize(1140, 456)],
             format='JPEG')

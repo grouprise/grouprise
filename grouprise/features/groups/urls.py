@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from core.urls import api_router
-from features.groups.rest_api import GroupSet
+from grouprise.core.urls import api_router
+from grouprise.features.groups.rest_api import GroupSet
 from . import views
 
 api_router.register(r'groups', GroupSet, 'group')

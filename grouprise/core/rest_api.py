@@ -1,6 +1,6 @@
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
-from core.templatetags import core
+from grouprise.core.templatetags.defaulttags import markdown
 
 _PRESETS = {
     'content': {
@@ -16,5 +16,5 @@ class MarkdownView(viewsets.ViewSet):
         preset = _PRESETS[request.data.get('preset', 'content')]
         text = request.data.get('content')
         return Response({
-            'content': str(core.markdown(text, **preset))
+            'content': str(markdown(text, **preset))
         })

@@ -1,8 +1,8 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from features.events.rest_api import EventViewSet
-from features.groups.rest_api import TransitionGroupSet
+from grouprise.features.events.rest_api import EventViewSet
+from grouprise.features.groups.rest_api import TransitionGroupSet
 
 # Router for Transition Connect interface.
 # http://www.transition-connect.org/

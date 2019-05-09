@@ -5,12 +5,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DeleteView, FormView
 
-from core.models import PermissionToken
-from core.views import PermissionMixin
-from features.gestalten.models import Gestalt
-from features.groups.models import Group
-from features.subscriptions.models import Subscription
-from features.subscriptions.rules import is_subscribed
+from grouprise.core.models import PermissionToken
+from grouprise.core.views import PermissionMixin
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups.models import Group
+from grouprise.features.subscriptions.models import Subscription
+from grouprise.features.subscriptions.rules import is_subscribed
 from . import forms, notifications
 
 

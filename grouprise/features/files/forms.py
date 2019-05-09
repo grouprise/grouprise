@@ -2,8 +2,8 @@ import os
 
 from django import forms
 
-from core.models import MAX_FILE_SIZE
-from features.content import forms as content
+from grouprise.core.models import MAX_FILE_SIZE
+from grouprise.features.content import forms as content
 
 
 class Create(content.Create):

@@ -5,21 +5,21 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DeleteView, FormView
 
-import core
-from core.models import PermissionToken
-from core.views import PermissionMixin
-from features.associations import models as associations
-from features.contributions import models as contributions
-from features.gestalten import models as gestalten_models, views as gestalten_views
-from features.gestalten.models import Gestalt
-from features.groups import models as groups_models
-from features.groups.models import Group
-from features.memberships.forms import CreateMembershipForm
-from features.memberships.models import Membership
+import grouprise.core
+from grouprise.core.models import PermissionToken
+from grouprise.core.views import PermissionMixin
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models as contributions
+from grouprise.features.gestalten import models as gestalten_models, views as gestalten_views
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups import models as groups_models
+from grouprise.features.groups.models import Group
+from grouprise.features.memberships.forms import CreateMembershipForm
+from grouprise.features.memberships.models import Membership
 from . import forms, models, notifications
 
 
-class Apply(core.views.PermissionMixin, django.views.generic.CreateView):
+class Apply(grouprise.core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'memberships.apply'
     form_class = forms.Apply
     template_name = 'memberships/apply.html'
@@ -42,7 +42,7 @@ class Apply(core.views.PermissionMixin, django.views.generic.CreateView):
         return self.association.get_absolute_url()
 
 
-class AcceptApplication(core.views.PermissionMixin, django.views.generic.CreateView):
+class AcceptApplication(grouprise.core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'memberships.accept_application'
     model = models.Membership
     fields = []

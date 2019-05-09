@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-import core.models
+import grouprise.core.models
 
 
 class Migration(migrations.Migration):

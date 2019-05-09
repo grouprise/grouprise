@@ -2,15 +2,15 @@ from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
-import features.articles.tests
-from features.associations.models import Association
-from features.contributions.models import Contribution
-from features.conversations.models import Conversation
-from features.memberships.test_mixins import AuthenticatedMemberMixin
+import grouprise.features.articles.tests
+from grouprise.features.associations.models import Association
+from grouprise.features.contributions.models import Contribution
+from grouprise.features.conversations.models import Conversation
+from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 from . import models
 
 
-class ContributionMixin(features.articles.tests.ArticleMixin):
+class ContributionMixin(grouprise.features.articles.tests.ArticleMixin):
     def create_contribution(self):
         self.client.post(
                 reverse('content', args=[self.association.entity.slug, self.association.slug]),

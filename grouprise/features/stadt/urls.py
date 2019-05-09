@@ -1,8 +1,8 @@
 from django.urls import path, re_path
 from django.conf.urls import url
 
-from features.content.views import Detail as AssociationDetailView
-from features.stadt.views import Help
+from grouprise.features.content.views import Detail as AssociationDetailView
+from grouprise.features.stadt.views import Help
 from . import feeds, views
 
 urlpatterns = [

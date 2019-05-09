@@ -81,7 +81,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
         'OPTIONS': {
-            'builtins': ['core.templatetags.defaultfilters', 'core.templatetags.defaulttags'],
+            'builtins': ['grouprise.core.templatetags.defaultfilters', 'grouprise.core.templatetags.defaulttags'],
             'context_processors': [
                 # django core
                 'django.template.context_processors.request',
@@ -89,7 +89,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 # grouprise core
-                'core.context_processors.settings',
+                'grouprise.core.context_processors.settings',
                 # grouprise features
                 'grouprise.features.groups.context_processors.groups',
                 'grouprise.features.stadt.context_processors.page_meta',
@@ -226,7 +226,7 @@ HAYSTACK_XAPIAN_LANGUAGE = 'german2'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'core.permissions.RulesPermissions',
+        'grouprise.core.permissions.RulesPermissions',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -251,7 +251,7 @@ CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 
 
-# grouprise Tags (features.tags)
+# grouprise Tags (grouprise.features.tags)
 
 GROUPRISE_TAGS_TAGGABLE = (
     {

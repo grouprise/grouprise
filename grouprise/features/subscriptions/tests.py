@@ -4,10 +4,10 @@ from django.core import mail
 from django.urls import reverse
 from django.test import TestCase
 
-from core.models import PermissionToken
-from features.gestalten.tests import AuthenticatedMixin
-from features.groups.tests.mixins import GroupMixin
-from features.memberships.test_mixins import AuthenticatedMemberMixin, MemberMixin
+from grouprise.core.models import PermissionToken
+from grouprise.features.gestalten.tests import AuthenticatedMixin
+from grouprise.features.groups.tests.mixins import GroupMixin
+from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin, MemberMixin
 from . import models
 
 TEST_EMAIL = 'test.subscription@test.local'

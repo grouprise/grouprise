@@ -5,22 +5,22 @@ from django.contrib.contenttypes import models as contenttypes
 from django.db.models import Q
 from django.views import generic
 
-import core.views
-import features
-from core.views import PermissionMixin
-from features.associations import models as associations
-from features.associations.views import get_association_or_404
-from features.contributions import view_mixins as contributions
-from features.contributions.forms import Text as ContributionForm
-from features.contributions.models import Contribution
-from features.files import forms as files
-from features.galleries import forms as galleries
-from features.gestalten import models as gestalten
-from features.groups import models as groups
+import grouprise.core.views
+import grouprise.features
+from grouprise.core.views import PermissionMixin
+from grouprise.features.associations import models as associations
+from grouprise.features.associations.views import get_association_or_404
+from grouprise.features.contributions import view_mixins as contributions
+from grouprise.features.contributions.forms import Text as ContributionForm
+from grouprise.features.contributions.models import Contribution
+from grouprise.features.files import forms as files
+from grouprise.features.galleries import forms as galleries
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.groups import models as groups
 from . import forms
 
 
-class List(core.views.PermissionMixin, django.views.generic.ListView):
+class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'content.list'
     model = associations.Association
     paginate_by = 10
@@ -30,7 +30,7 @@ class List(core.views.PermissionMixin, django.views.generic.ListView):
         return super().get_queryset().ordered_user_content(self.request.user)
 
 
-class DetailBase(features.associations.views.AssociationMixin,
+class DetailBase(grouprise.features.associations.views.AssociationMixin,
                  contributions.ContributionFormMixin, PermissionMixin, generic.DetailView):
     permission_required = 'content.view'
     permission_required_post = 'content.comment'
@@ -69,7 +69,7 @@ class Detail(DetailBase):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.container.is_poll:
-            return features.polls.views.Detail(kwargs=kwargs, request=request).get(
+            return grouprise.features.polls.views.Detail(kwargs=kwargs, request=request).get(
                     request, *args, **kwargs)
         return super().get(request, *args, **kwargs)
 
@@ -122,7 +122,7 @@ class Update(PermissionMixin, generic.UpdateView):
 
     def get_form_class(self):
         if self.object.container.is_poll:
-            form_class = features.polls.forms.Update
+            form_class = grouprise.features.polls.forms.Update
         elif self.object.container.is_gallery:
             form_class = galleries.Update
         elif self.object.container.is_file:

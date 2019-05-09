@@ -2,7 +2,7 @@ from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 import django.utils.timezone
 
-import core.models
+import grouprise.core.models
 
 
 class ContributionManager(models.Manager):
@@ -31,7 +31,7 @@ class ContributionQuerySet(models.QuerySet):
         return self.filter(public=True)
 
 
-class Contribution(core.models.Model):
+class Contribution(grouprise.core.models.Model):
     container = contenttypes.GenericForeignKey('container_type', 'container_id')
     container_id = models.PositiveIntegerField()
     container_type = models.ForeignKey(

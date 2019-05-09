@@ -9,10 +9,10 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
-import core.models
-from core.utils import get_random_color
-from features.gestalten.models import Gestalt
-from features.stadt.models import EntitySlugField
+import grouprise.core.models
+from grouprise.core.utils import get_random_color
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.stadt.models import EntitySlugField
 
 
 class GroupManager(models.Manager):
@@ -21,7 +21,7 @@ class GroupManager(models.Manager):
         return self.get_queryset().filter(id=operator_group_id).first()
 
 
-class Group(core.models.Model):
+class Group(grouprise.core.models.Model):
     is_group = True
 
     date_created = models.DateField(default=datetime.date.today)
@@ -40,7 +40,7 @@ class Group(core.models.Model):
     address = models.TextField(
             'Anschrift',
             blank=True)
-    avatar = core.models.ImageField(
+    avatar = grouprise.core.models.ImageField(
             blank=True, help_text='Der Avatar ist ein kleines quadratisches Vorschaubild, '
             'an welchem sich die Gruppe leicht erkennen lässt.')
     avatar_64 = ImageSpecField(
@@ -59,7 +59,7 @@ class Group(core.models.Model):
             default='',
             max_length=200,
             help_text='Höchstens 200 Zeichen')
-    logo = core.models.ImageField(
+    logo = grouprise.core.models.ImageField(
             blank=True, help_text='Das Logo wird auf der Gruppenseite rechts angezeigt.')
     logo_sidebar = ImageSpecField(
             source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')

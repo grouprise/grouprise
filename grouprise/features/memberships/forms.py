@@ -1,7 +1,7 @@
 from django import forms
 
-from features.gestalten.models import Gestalt
-from features.memberships.models import Membership
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.memberships.models import Membership
 from . import models
 
 

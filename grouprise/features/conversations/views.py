@@ -4,19 +4,19 @@ from django import urls
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
-import core.views
-import features.contributions.forms
-import features.contributions.view_mixins
-from features.gestalten.models import Gestalt
-from features.associations import models as associations
-from features.groups import models as groups
-from features.groups.models import Group
+import grouprise.core.views
+import grouprise.features.contributions.forms
+import grouprise.features.contributions.view_mixins
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.associations import models as associations
+from grouprise.features.groups import models as groups
+from grouprise.features.groups.models import Group
 from . import forms
 
 
 class Conversation(
-        features.contributions.view_mixins.ContributionFormMixin,
-        core.views.PermissionMixin,
+        grouprise.features.contributions.view_mixins.ContributionFormMixin,
+        grouprise.core.views.PermissionMixin,
         generic.DetailView):
 
     permission_required = 'conversations.view'
@@ -25,10 +25,10 @@ class Conversation(
     pk_url_kwarg = 'association_pk'
     template_name = 'conversations/detail.html'
 
-    form_class = features.contributions.forms.Text
+    form_class = grouprise.features.contributions.forms.Text
 
 
-class Conversations(core.views.PermissionMixin, generic.ListView):
+class Conversations(grouprise.core.views.PermissionMixin, generic.ListView):
     model = associations.Association
     permission_required = 'conversations.list'
     template_name = 'conversations/list.html'
@@ -54,7 +54,7 @@ class GroupConversations(Conversations):
 
 
 class CreateConversation(
-        core.views.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
+        grouprise.core.views.PermissionMixin, messages.SuccessMessageMixin, generic.CreateView):
     model = associations.Association
     template_name = 'conversations/create.html'
 
@@ -64,7 +64,7 @@ class CreateConversation(
         kwargs = super().get_form_kwargs()
         kwargs['has_author'] = self.request.user.is_authenticated
         kwargs['instance'] = associations.Association(entity=self.entity)
-        kwargs['contribution'] = features.contributions.models.Contribution()
+        kwargs['contribution'] = grouprise.features.contributions.models.Contribution()
         if kwargs['has_author']:
             kwargs['contribution'].author = self.request.user.gestalt
         return kwargs

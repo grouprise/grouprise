@@ -11,8 +11,8 @@ ENTITY_SLUG_BLACKLIST = settings.GROUPRISE.get(
 
 
 def validate_entity_slug(slug, entity=None):
-    from features.gestalten.models import Gestalt
-    from features.groups.models import Group
+    from grouprise.features.gestalten.models import Gestalt
+    from grouprise.features.groups.models import Group
 
     # validate character set
     validate_slug(slug)

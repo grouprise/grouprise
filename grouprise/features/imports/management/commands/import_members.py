@@ -2,8 +2,8 @@ import re
 
 import django
 
-from features.gestalten.models import Gestalt
-from features.groups.models import Group
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups.models import Group
 
 
 EMAIL_RE = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-.]+'

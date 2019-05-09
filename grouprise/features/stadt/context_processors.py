@@ -1,7 +1,7 @@
-from features.content.models import Content
-from features.contributions.models import Contribution
-from features.gestalten.models import Gestalt
-from features.groups.models import Group
+from grouprise.features.content.models import Content
+from grouprise.features.contributions.models import Contribution
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups.models import Group
 
 
 def page_meta(request):

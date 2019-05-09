@@ -5,11 +5,11 @@ import django
 from django.urls import reverse
 import django.utils.timezone
 
-from core import notifications
-from core.templatetags.core import ref
-from features.contributions import models as contributions
-from features.memberships import models as memberships
-from features.subscriptions.notifications import update_recipients
+from grouprise.core import notifications
+from grouprise.core.templatetags.core import ref
+from grouprise.features.contributions import models as contributions
+from grouprise.features.memberships import models as memberships
+from grouprise.features.subscriptions.notifications import update_recipients
 
 
 class ContributionCreated(notifications.Notification):

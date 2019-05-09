@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from core.rest_api import MarkdownView
-from core.views import Markdown
+from grouprise.core.rest_api import MarkdownView
+from grouprise.core.views import Markdown
 
 # Router for internal REST API providing data for frontend JavaScript functionality.
 api_router = SimpleRouter()

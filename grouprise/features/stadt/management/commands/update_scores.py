@@ -1,12 +1,12 @@
 from django.core.management.base import BaseCommand
 
-import core.scores
-import features.gestalten.models
-import features.groups.models
+import grouprise.core.scores
+import grouprise.features.gestalten.models
+import grouprise.features.groups.models
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        core.scores.update(features.gestalten.models.Gestalt)
-        core.scores.update(features.groups.models.Group)
+        grouprise.core.scores.update(grouprise.features.gestalten.models.Gestalt)
+        grouprise.core.scores.update(grouprise.features.groups.models.Group)

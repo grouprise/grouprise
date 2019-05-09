@@ -7,11 +7,11 @@ import tempfile
 import django
 import django_mailbox
 
-import core.tests
-from features.associations import models as associations
-from features.files.models import get_unique_storage_filename
-from features.images import tests as images
-from features.memberships import test_mixins as memberships
+import grouprise.core.tests
+from grouprise.features.associations import models as associations
+from grouprise.features.files.models import get_unique_storage_filename
+from grouprise.features.images import tests as images
+from grouprise.features.memberships import test_mixins as memberships
 
 
 class GroupMessageMixin(memberships.MemberMixin):
@@ -34,14 +34,14 @@ class GroupMessageWithAttachmentMixin(GroupMessageMixin):
                 document='./test.png', headers='Content-Type: image/png')
 
 
-class SendFileByEmail(GroupMessageWithAttachmentMixin, core.tests.Test):
+class SendFileByEmail(GroupMessageWithAttachmentMixin, grouprise.core.tests.Test):
     def test_send_file_by_email(self):
         django_mailbox.signals.message_received.send(self, message=self.message)
         self.assertNotificationSent()
         self.assertEqual(len(django.core.mail.outbox[0].attachments), 1)
 
 
-class Guest(images.ImageMixin, memberships.MemberMixin, core.tests.Test):
+class Guest(images.ImageMixin, memberships.MemberMixin, grouprise.core.tests.Test):
     def create_group_file(self, **kwargs):
         self.client.force_login(self.gestalt.user)
         kwargs.update({'title': 'Group File', 'text': 'Test', 'file': self.image.file})
@@ -70,7 +70,7 @@ class Guest(images.ImageMixin, memberships.MemberMixin, core.tests.Test):
         self.assertLogin(url=self.get_group_file_url(), method='post')
 
 
-class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_group_file(self, **kwargs):
         kwargs.update({'title': 'Group File', 'text': 'Test', 'file': self.image.file})
         return self.client.post(self.get_url('create-group-file', self.group.slug), kwargs)
@@ -133,7 +133,7 @@ class FilenameGenerator(unittest.TestCase):
             self.assertNotIn('.', os.path.basename(filename))
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_files_404(self):
         r = self.client.get(self.get_url('create-group-file', 'non-existent'))
         self.assertEqual(r.status_code, 404)

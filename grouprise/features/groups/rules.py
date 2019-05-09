@@ -1,6 +1,6 @@
 from rules import add_perm, always_allow, is_authenticated, predicate
 
-from features.memberships import predicates as memberships
+from grouprise.features.memberships import predicates as memberships
 
 
 @predicate

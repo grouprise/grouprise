@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import features.stadt.forms
+import grouprise.features.stadt.forms
 
 
 class Migration(migrations.Migration):
@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='slug',
-            field=models.SlugField(blank=True, help_text='Wird auch als Kurzname verwendet', null=True, unique=True, validators=[features.stadt.forms.validate_entity_slug], verbose_name='Adresse der Gruppenseite'),
+            field=models.SlugField(blank=True, help_text='Wird auch als Kurzname verwendet', null=True, unique=True, validators=[grouprise.features.stadt.forms.validate_entity_slug], verbose_name='Adresse der Gruppenseite'),
         ),
     ]

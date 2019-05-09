@@ -1,4 +1,4 @@
-from core.views import app_config
+from grouprise.core.views import app_config
 
 
 class GestaltAppConfigMiddleware:

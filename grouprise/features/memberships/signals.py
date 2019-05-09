@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from features.groups import models as groups
+from grouprise.features.groups import models as groups
 from . import models, notifications
 
 

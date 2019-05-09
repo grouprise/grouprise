@@ -1,4 +1,4 @@
-from core.notifications import Notification
+from grouprise.core.notifications import Notification
 
 
 def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):

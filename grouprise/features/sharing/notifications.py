@@ -1,4 +1,4 @@
-from core import notifications
+from grouprise.core import notifications
 
 
 class GroupShare(notifications.Notification):

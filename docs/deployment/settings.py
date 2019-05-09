@@ -4,7 +4,7 @@
 import os
 import subprocess
 from stadt.settings.default import *
-from core.assets import add_javascript_reference, add_javascript_inline, add_csp_directive, add_meta
+from grouprise.core.assets import add_javascript_reference, add_javascript_inline, add_csp_directive, add_meta
 
 # see https://www.miniwebtool.com/django-secret-key-generator/
 SECRET_KEY = 'CHANGE THIS!'

@@ -2,7 +2,7 @@ import django.contrib
 from rest_framework import exceptions
 from rest_framework.authentication import BasicAuthentication
 
-from core.models import PermissionToken
+from grouprise.core.models import PermissionToken
 
 
 class PermissionTokenUserResolver:

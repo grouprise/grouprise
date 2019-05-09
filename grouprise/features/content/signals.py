@@ -3,8 +3,8 @@ from datetime import timedelta
 from django.dispatch import receiver, Signal
 from django.utils.timezone import now
 
-from features.content.notifications import ContentCreated
-from features.content.tasks import send_content_notifications
+from grouprise.features.content.notifications import ContentCreated
+from grouprise.features.content.tasks import send_content_notifications
 
 post_create = Signal(providing_args=['instance'])
 

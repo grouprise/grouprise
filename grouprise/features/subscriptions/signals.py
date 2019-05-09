@@ -2,8 +2,8 @@ from django.db.models.signals import post_delete, post_save
 from django.db.utils import IntegrityError
 from django.dispatch import receiver
 
-from features.memberships.models import Membership
-from features.subscriptions.models import Subscription
+from grouprise.features.memberships.models import Membership
+from grouprise.features.subscriptions.models import Subscription
 
 
 @receiver(post_save, sender=Membership)

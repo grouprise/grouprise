@@ -2,12 +2,12 @@ import re
 
 import django
 
-import core
-import features
-from core import tests
-from features.associations import models as associations
-from features.contributions import models as contributions
-from features.memberships import test_mixins as memberships
+import grouprise.core
+import grouprise.features
+from grouprise.core import tests
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models as contributions
+from grouprise.features.memberships import test_mixins as memberships
 
 
 def _get_adjusted_event_args(missing_keys=None, **kwargs):
@@ -24,7 +24,7 @@ def _get_adjusted_event_args(missing_keys=None, **kwargs):
     return event_args
 
 
-class Guest(memberships.MemberMixin, core.tests.Test):
+class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
 
     def create_event(self, **kwargs):
         self.client.force_login(self.gestalt.user)
@@ -89,7 +89,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.assertLogin(url=event_url, method='post')
 
 
-class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
+class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
 
     def create_event(self, **kwargs):
         return self.client.post(self.get_url('create-event'), _get_adjusted_event_args(**kwargs))
@@ -161,7 +161,7 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
 
 
 class TwoGestalten(
-        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
 
     def create_event(self, **kwargs):
         event_args = _get_adjusted_event_args(**kwargs)
@@ -185,7 +185,7 @@ class TwoGestalten(
 
 
 class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
-                                features.gestalten.tests.OtherGestaltMixin,
+                                grouprise.features.gestalten.tests.OtherGestaltMixin,
                                 tests.Test):
 
     def create_group_event(self, **kwargs):
@@ -272,7 +272,7 @@ class GroupCalendarExportMember(memberships.AuthenticatedMemberMixin,
 
 
 class GroupCalendarExportNonMember(memberships.MemberMixin,
-                                   features.gestalten.tests.OtherAuthenticatedMixin,
+                                   grouprise.features.gestalten.tests.OtherAuthenticatedMixin,
                                    tests.Test):
 
     def test_rejected_access_private_calendar(self):
@@ -284,7 +284,7 @@ class GroupCalendarExportNonMember(memberships.MemberMixin,
         self.assertIsNone(match)
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_events_404(self):
         r = self.client.get(django.urls.reverse('day-events', args=[1970, 1, 1]))
         self.assertEqual(r.status_code, 404)

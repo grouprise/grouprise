@@ -1,10 +1,10 @@
 from django.urls import reverse
 from django.test import TestCase
 
-from core import tests
-from features.gestalten import tests as gestalten
-from features.gestalten.tests import AuthenticatedMixin
-from features.memberships.test_mixins import AuthenticatedMemberMixin
+from grouprise.core import tests
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.gestalten.tests import AuthenticatedMixin
+from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 from .. import models
 from .mixins import GroupMixin
 

@@ -11,16 +11,16 @@ from django.dispatch import receiver
 import django.utils.timezone
 import html2text
 
-import core.models
-from core.notifications import DEFAULT_REPLY_TO_EMAIL
-from features.associations import models as associations
-from features.content.models import Content
-from features.contributions import models
-from features.contributions.signals import post_create
-from features.conversations import models as conversations
-from features.files import models as files
-from features.gestalten.models import Gestalt
-from features.groups import models as groups
+import grouprise.core.models
+from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
+from grouprise.features.associations import models as associations
+from grouprise.features.content.models import Content
+from grouprise.features.contributions import models
+from grouprise.features.contributions.signals import post_create
+from grouprise.features.conversations import models as conversations
+from grouprise.features.files import models as files
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups import models as groups
 
 logger = logging.getLogger(__name__)
 
@@ -248,8 +248,8 @@ class ContributionMailProcessor:
 
     def _process_authenticated_reply(self, message, auth_token_text):
         try:
-            auth_token = core.models.PermissionToken.objects.get(secret_key=auth_token_text)
-        except core.models.PermissionToken.DoesNotExist:
+            auth_token = grouprise.core.models.PermissionToken.objects.get(secret_key=auth_token_text)
+        except grouprise.core.models.PermissionToken.DoesNotExist:
             raise MailProcessingFailure(
                     'Das Ziel für deine Nachricht ist ungültig. Ist die dazugehörige Unterhaltung '
                     'eventuell bereits zu alt? Nach ein paar Jahren verfallen die '

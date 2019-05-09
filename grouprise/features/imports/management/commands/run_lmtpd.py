@@ -15,8 +15,8 @@ from aiosmtplib.smtp import SMTP
 import django
 from django.conf import settings
 
-from core.notifications import DEFAULT_REPLY_TO_EMAIL
-from features.imports.signals import (
+from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
+from grouprise.features.imports.signals import (
         ContributionMailProcessor, MailProcessingFailure, ParsedMailMessage)
 
 logger = logging.getLogger(__name__)

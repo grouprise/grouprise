@@ -1,8 +1,8 @@
-import core
-from core import tests
-from features.gestalten import tests as gestalten
-from features.groups import models as groups_models
-from features.groups.tests import mixins as groups
+import grouprise.core
+from grouprise.core import tests
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.groups import models as groups_models
+from grouprise.features.groups.tests import mixins as groups
 from . import models, test_memberships as memberships, test_mixins as mixins
 
 
@@ -90,7 +90,7 @@ class GestaltCreatesGroup(
     """
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_member_404(self):
         r = self.client.get(self.get_url('create-membership-application', 0))
         self.assertEqual(r.status_code, 404)
@@ -98,7 +98,7 @@ class TestUrls(core.tests.Test):
         self.assertEqual(r.status_code, 404)
 
 
-class AuthenticatedTestUrls(gestalten.AuthenticatedMixin, core.tests.Test):
+class AuthenticatedTestUrls(gestalten.AuthenticatedMixin, grouprise.core.tests.Test):
     def test_member_auth_404(self):
         # r = self.client.get(self.get_url('join', 0))
         # self.assertEqual(r.status_code, 404)
@@ -108,7 +108,7 @@ class AuthenticatedTestUrls(gestalten.AuthenticatedMixin, core.tests.Test):
         # self.assertEqual(r.status_code, 404)
 
 
-class MemberTestUrls(mixins.AuthenticatedMemberMixin, core.tests.Test):
+class MemberTestUrls(mixins.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def test_member_member_404(self):
         r = self.client.get(self.get_url('resign', 0))
         self.assertEqual(r.status_code, 404)

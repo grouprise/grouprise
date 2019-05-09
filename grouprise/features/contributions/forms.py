@@ -1,6 +1,6 @@
 from django import forms
 
-from features.contributions import models as contributions
+from grouprise.features.contributions import models as contributions
 from . import signals
 
 

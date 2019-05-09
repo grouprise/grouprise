@@ -1,21 +1,21 @@
 import django
 
-import core
-import features
+import grouprise.core
+import grouprise.features
 from . import forms, models
 
 
-class Create(features.content.views.Create):
+class Create(grouprise.features.content.views.Create):
     template_name = 'polls/create.html'
 
     form_class = forms.Create
 
 
-class Detail(features.content.views.DetailBase):
+class Detail(grouprise.features.content.views.DetailBase):
     template_name = 'polls/detail.html'
 
 
-class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
+class Vote(grouprise.core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'polls.vote'
     model = models.SimpleVote
     form_class = forms.Vote
@@ -31,7 +31,7 @@ class Vote(core.views.PermissionMixin, django.views.generic.CreateView):
 
     def get_association(self):
         return django.shortcuts.get_object_or_404(
-                features.associations.models.Association,
+                grouprise.features.associations.models.Association,
                 django.db.models.Q(group__slug=self.kwargs.get('entity_slug'))
                 | django.db.models.Q(gestalt__user__username=self.kwargs.get('entity_slug')),
                 slug=self.kwargs.get('association_slug'))

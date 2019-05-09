@@ -1,6 +1,6 @@
 from huey.contrib.djhuey import db_task
 
-from features.contributions.notifications import ContributionCreated
+from grouprise.features.contributions.notifications import ContributionCreated
 
 
 @db_task()

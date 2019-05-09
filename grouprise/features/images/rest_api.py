@@ -5,13 +5,13 @@ import django
 import django_filters
 import django_filters.widgets
 
-import core
+import grouprise.core
 from . import models
 
 
 def validate_file_size(image):
     try:
-        core.models.validate_file_size(image['file'])
+        grouprise.core.models.validate_file_size(image['file'])
     except django.forms.ValidationError as e:
         raise serializers.ValidationError(e)
 
@@ -68,12 +68,12 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
         # * images that they created themselves
         # * images part of a group gallery with user having membership in group
         # * images posted in a group as preview image with user having membership in group
-        from features.associations.models import Association
-        from features.content.models import Content
-        from features.groups.models import Group
-        from features.galleries.models import GalleryImage
+        from grouprise.features.associations.models import Association
+        from grouprise.features.content.models import Content
+        from grouprise.features.groups.models import Group
+        from grouprise.features.galleries.models import GalleryImage
         from django.contrib.contenttypes.models import ContentType
-        from features.memberships.models import Membership
+        from grouprise.features.memberships.models import Membership
         memberships = Membership.objects.filter(member=user.gestalt)
         groups = Group.objects.filter(memberships__in=memberships)
         associations = Association.objects.filter(

@@ -1,9 +1,9 @@
 from django import forms
 
-import features
-from features.gestalten import models as gestalten
-from features.associations import models as associations
-from features.contributions import models as contributions_models
+import grouprise.features
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models as contributions_models
 from . import models
 
 
@@ -56,7 +56,7 @@ class Create(forms.ModelForm):
         self.contribution.save()
 
         # send contribution creation signal
-        features.contributions.signals.post_create.send(
+        grouprise.features.contributions.signals.post_create.send(
                 sender=self.__class__, instance=self.contribution)
 
         return association

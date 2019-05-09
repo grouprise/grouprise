@@ -1,4 +1,4 @@
-from features.groups.models import Group
+from grouprise.features.groups.models import Group
 
 
 def groups(request):

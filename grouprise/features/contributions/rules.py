@@ -1,7 +1,7 @@
 from rules import add_perm, is_authenticated, predicate
 
-from features.content.rules import is_member_of_associated_group
-from features.conversations.rules import can_view
+from grouprise.features.content.rules import is_member_of_associated_group
+from grouprise.features.conversations.rules import can_view
 
 
 @predicate

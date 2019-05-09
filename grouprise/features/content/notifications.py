@@ -1,11 +1,11 @@
 from django.urls import reverse
 
-import core
-from features.groups.models import Group
-from features.subscriptions.notifications import update_recipients
+import grouprise.core
+from grouprise.features.groups.models import Group
+from grouprise.features.subscriptions.notifications import update_recipients
 
 
-class ContentCreated(core.notifications.Notification):
+class ContentCreated(grouprise.core.notifications.Notification):
     @classmethod
     def get_recipients(cls, content):
         recipients = {}

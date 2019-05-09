@@ -1,9 +1,9 @@
 import django
 
-import core.tests
+import grouprise.core.tests
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_content_404(self):
         r = self.client.get(django.urls.reverse(
             'content', args=['non-existent', 'non-existent']))

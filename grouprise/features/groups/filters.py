@@ -1,7 +1,7 @@
 import django_filters as filters
 from django import forms
 
-from features.groups import models
+from grouprise.features.groups import models
 
 
 class Group(filters.FilterSet):

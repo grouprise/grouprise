@@ -6,12 +6,12 @@ from typing import List
 import django
 from django.db import models
 import django.core.files
-from features.imports.signals import ParsedMailAttachment
+from grouprise.features.imports.signals import ParsedMailAttachment
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
-import core
-from features.contributions import models as contributions
+import grouprise.core
+from grouprise.features.contributions import models as contributions
 
 
 IGNORE_CONTENT_TYPES = {'application/pgp-signature'}
@@ -61,7 +61,7 @@ class FileManager(models.Manager):
                     attached_to=attached_to)
 
 
-class File(core.models.Model):
+class File(grouprise.core.models.Model):
     file = models.FileField()
     filename = models.CharField(max_length=255, blank=True, null=True)
 

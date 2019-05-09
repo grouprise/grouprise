@@ -1,11 +1,11 @@
-import core
-from features.associations import models as associations
-from features.contributions import models as contributions
-from features.images import tests as images
-from features.memberships import test_mixins as memberships
+import grouprise.core
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models as contributions
+from grouprise.features.images import tests as images
+from grouprise.features.memberships import test_mixins as memberships
 
 
-class Guest(images.ImageMixin, memberships.MemberMixin, core.tests.Test):
+class Guest(images.ImageMixin, memberships.MemberMixin, grouprise.core.tests.Test):
     def create_gallery(self, **kwargs):
         self.client.force_login(self.gestalt.user)
         kwargs.update({'title': 'Test', 'text': 'Test', 'images': [self.image.pk]})
@@ -68,7 +68,7 @@ class Guest(images.ImageMixin, memberships.MemberMixin, core.tests.Test):
         self.assertLogin(url=self.get_group_gallery_url(), method='post')
 
 
-class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_gallery(self, **kwargs):
         kwargs.update({'title': 'Test', 'text': 'Test', 'images': [self.image.pk]})
         return self.client.post(self.get_url('create-gallery'), kwargs)
@@ -135,7 +135,7 @@ class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, core.test
         self.assertExists(contributions.Contribution, text__text='Comment')
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_galleries_404(self):
         r = self.client.get(self.get_url('create-group-gallery', 'non-existent'))
         self.assertEqual(r.status_code, 404)

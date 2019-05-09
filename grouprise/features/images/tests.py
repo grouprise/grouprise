@@ -3,7 +3,7 @@ import shutil
 
 import django.conf
 
-from features.gestalten import tests as gestalten
+from grouprise.features.gestalten import tests as gestalten
 from . import models
 
 

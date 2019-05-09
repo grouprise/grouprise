@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 from schulze import compute_ranks, convert
 
-import core.models
+import grouprise.core.models
 
 
 class VoteType(enum.Enum):
@@ -115,7 +115,7 @@ def resolve_vote(poll):
 
 
 # FIXME: inherit from content.Content when django bug #28988 is fixed
-class WorkaroundPoll(core.models.Model):
+class WorkaroundPoll(grouprise.core.models.Model):
     condorcet = models.BooleanField(default=False)
 
     @property
@@ -123,7 +123,7 @@ class WorkaroundPoll(core.models.Model):
         return VoteType.CONDORCET if self.condorcet else VoteType.SIMPLE
 
 
-class Option(core.models.Model):
+class Option(grouprise.core.models.Model):
     poll = models.ForeignKey(
             'WorkaroundPoll', related_name='options', on_delete=models.CASCADE, null=True)
 
@@ -171,7 +171,7 @@ class EventOption(Option):
             )
 
 
-class Vote(core.models.Model):
+class Vote(grouprise.core.models.Model):
     option = models.ForeignKey('Option', on_delete=models.CASCADE)
     voter = models.ForeignKey(
             'gestalten.Gestalt', null=True, related_name='votes', on_delete=models.PROTECT)

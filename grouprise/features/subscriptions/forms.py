@@ -1,7 +1,7 @@
 from django import forms
 
-from features.gestalten.forms import GestaltByEmailField
-from features.subscriptions.models import Subscription
+from grouprise.features.gestalten.forms import GestaltByEmailField
+from grouprise.features.subscriptions.models import Subscription
 
 
 class Subscribe(forms.ModelForm):

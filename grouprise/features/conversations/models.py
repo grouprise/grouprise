@@ -2,12 +2,12 @@ import django.urls
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
-import core
-from features.gestalten import models as gestalten
-from features.groups import models as groups
+import grouprise.core
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.groups import models as groups
 
 
-class Conversation(core.models.Model):
+class Conversation(grouprise.core.models.Model):
     is_conversation = True
 
     subject = models.CharField(max_length=255)

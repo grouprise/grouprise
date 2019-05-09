@@ -4,7 +4,7 @@ from allauth.account import views
 from django.contrib import messages
 from django.views import generic
 
-from core.views import PermissionMixin
+from grouprise.core.views import PermissionMixin
 from . import forms
 
 

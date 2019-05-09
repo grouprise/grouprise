@@ -6,12 +6,12 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 from django.urls import reverse
 from django_filters.views import FilterView
 
-import core
-from core.views import PermissionMixin
-from features.associations import models as associations
-from features.associations.filters import ContentFilterSet
-from features.groups import models as groups
-from features.groups.models import Group
+import grouprise.core
+from grouprise.core.views import PermissionMixin
+from grouprise.features.associations import models as associations
+from grouprise.features.associations.filters import ContentFilterSet
+from grouprise.features.groups import models as groups
+from grouprise.features.groups.models import Group
 from . import filters, forms, models
 
 
@@ -62,7 +62,7 @@ class Create(PermissionMixin, CreateView):
 
 
 class Detail(
-        core.views.PermissionMixin, django_filters.views.FilterMixin,
+        grouprise.core.views.PermissionMixin, django_filters.views.FilterMixin,
         django.views.generic.list.MultipleObjectMixin, django.views.generic.DetailView):
     permission_required = 'groups.view'
     model = models.Group

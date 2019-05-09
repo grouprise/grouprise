@@ -8,15 +8,15 @@ import feedparser
 import requests
 from django.conf import settings
 
-import core
-from core.templatetags.core import html2text
-from core.utils import slugify
-from features.associations import models as associations
-from features.content import models as content
-from features.content.signals import post_create
-from features.gestalten import models as gestalten
-from features.groups import models as groups
-from features.imports import models
+import grouprise.core
+from grouprise.core.templatetags.core import html2text
+from grouprise.core.utils import slugify
+from grouprise.features.associations import models as associations
+from grouprise.features.content import models as content
+from grouprise.features.content.signals import post_create
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.groups import models as groups
+from grouprise.features.imports import models
 
 
 FEED_RE = (
@@ -63,7 +63,7 @@ def import_from_feed(feed_url, submitter, target_group):
                     tz = django.utils.timezone.get_current_timezone()
                     v.time_created = tz.localize(t)
                     v.save()
-                slug = core.models.get_unique_slug(
+                slug = grouprise.core.models.get_unique_slug(
                         associations.Association, {
                             'entity_id': target_group.id,
                             'entity_type': target_group.content_type,

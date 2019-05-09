@@ -1,6 +1,6 @@
 from . import models
-from features.gestalten import tests as gestalten
-from features.groups.tests.mixins import GroupMixin
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.groups.tests.mixins import GroupMixin
 
 
 class MemberMixin(gestalten.GestaltMixin, GroupMixin):

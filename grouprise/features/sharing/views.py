@@ -1,6 +1,6 @@
 from django.views.generic import FormView
 
-from core.views import PermissionMixin
+from grouprise.core.views import PermissionMixin
 from . import notifications
 
 
@@ -9,7 +9,7 @@ from . import notifications
 #
 #     def get_related_object(self):
 #         return django.shortcuts.get_object_or_404(
-#                 features.groups.models.Group, pk=self.kwargs.get('group_pk'))
+#                 grouprise.features.groups.models.Group, pk=self.kwargs.get('group_pk'))
 
 
 class GroupRecommend(PermissionMixin, FormView):

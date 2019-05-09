@@ -1,5 +1,5 @@
 from django import template
-from features.associations import models as associations
+from grouprise.features.associations import models as associations
 
 register = template.Library()
 

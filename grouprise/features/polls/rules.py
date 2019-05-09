@@ -1,6 +1,6 @@
 import rules
 
-from features.associations import predicates as associations
+from grouprise.features.associations import predicates as associations
 
 
 @rules.predicate

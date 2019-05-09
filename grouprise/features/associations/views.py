@@ -3,10 +3,10 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
-import core
-from features.associations.models import Association
-from features.gestalten.models import Gestalt
-from features.groups.models import Group
+import grouprise.core
+from grouprise.features.associations.models import Association
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups.models import Group
 from . import models
 
 
@@ -32,7 +32,7 @@ class AssociationMixin:
                 entity_type=entity.content_type, entity_id=entity.id, slug=association_slug)
 
 
-class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.UpdateView):
+class Delete(AssociationMixin, grouprise.core.views.PermissionMixin, django.views.generic.UpdateView):
     permission_required = 'associations.delete'
     model = models.Association
     fields = []

@@ -1,5 +1,5 @@
-from features.groups import rules as groups
-from features.memberships import predicates as memberships
+from grouprise.features.groups import rules as groups
+from grouprise.features.memberships import predicates as memberships
 import rules
 
 

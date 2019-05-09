@@ -1,8 +1,8 @@
 import django.db.models.signals
 from django.dispatch import receiver
 
-from features.contributions.notifications import ContributionCreated
-from features.contributions.tasks import send_contribution_notifications
+from grouprise.features.contributions.notifications import ContributionCreated
+from grouprise.features.contributions.tasks import send_contribution_notifications
 
 
 post_create = django.dispatch.Signal(providing_args=['instance'])

@@ -1,6 +1,6 @@
-from features.associations import models as associations
-from features.gestalten import rules as gestalten
-from features.memberships import predicates as memberships
+from grouprise.features.associations import models as associations
+from grouprise.features.gestalten import rules as gestalten
+from grouprise.features.memberships import predicates as memberships
 import rules
 
 

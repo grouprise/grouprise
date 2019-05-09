@@ -1,9 +1,9 @@
-# import core
-# from core import tests
-# from core.tests import get_url as u
-# from features.gestalten import tests as gestalten
-# from features.groups.tests import mixins as groups
-# from features.memberships import test_mixins as memberships
+# import grouprise.core
+# from grouprise.core import tests
+# from grouprise.core.tests import get_url as u
+# from grouprise.features.gestalten import tests as gestalten
+# from grouprise.features.groups.tests import mixins as groups
+# from grouprise.features.memberships import test_mixins as memberships
 #
 #
 # class GroupRecommend(gestalten.GestaltMixin, groups.GroupMixin, tests.Test):
@@ -25,7 +25,7 @@
 #         self.assertNotificationRecipient(self.gestalt)
 #
 #
-# class TestUrls(core.tests.Test):
+# class TestUrls(grouprise.core.tests.Test):
 #     def test_sharing_404(self):
 #         # r = self.client.get(self.get_url('member-invite', 0))
 #         # self.assertEqual(r.status_code, 404)

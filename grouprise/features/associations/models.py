@@ -1,11 +1,11 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
-import core.models
+import grouprise.core.models
 from . import querysets
 
 
-class Association(core.models.Model):
+class Association(grouprise.core.models.Model):
     pinned = models.BooleanField(
             'Im Intro der Gruppe anheften', default=False,
             help_text='Angeheftete Beiträge werden auf der Gruppenseite zuerst angezeigt. Sie '

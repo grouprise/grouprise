@@ -3,8 +3,8 @@ from django import forms
 from django.contrib import auth
 from django.core.exceptions import ValidationError
 
-from features.gestalten import models
-from features.stadt.forms import validate_entity_slug
+from grouprise.features.gestalten import models
+from grouprise.features.stadt.forms import validate_entity_slug
 
 username_validators = [validate_entity_slug]
 

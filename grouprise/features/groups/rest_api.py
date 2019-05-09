@@ -4,7 +4,7 @@ import django_filters.widgets
 
 from . import models
 # todo howto resolve module without including tags here
-from features.tags.rest_api import FlattenedTagSerializer
+from grouprise.features.tags.rest_api import FlattenedTagSerializer
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):

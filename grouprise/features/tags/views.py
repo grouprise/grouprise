@@ -1,14 +1,14 @@
 import django
 from django.db.models import Q
 
-import core
-from core.utils import intify
-from features.associations import models as associations
-from features.groups import models as groups
+import grouprise.core
+from grouprise.core.utils import intify
+from grouprise.features.associations import models as associations
+from grouprise.features.groups import models as groups
 from . import forms, models
 
 
-class Detail(core.views.PermissionMixin, django.views.generic.ListView):
+class Detail(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = 'tags.view'
     model = associations.Association
     paginate_by = 10
@@ -36,7 +36,7 @@ class Detail(core.views.PermissionMixin, django.views.generic.ListView):
             return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
 
 
-class TagGroup(core.views.PermissionMixin, django.views.generic.CreateView):
+class TagGroup(grouprise.core.views.PermissionMixin, django.views.generic.CreateView):
     permission_required = 'tags.tag_group'
     form_class = forms.TagGroup
     template_name = 'tags/tag_group.html'

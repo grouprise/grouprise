@@ -7,8 +7,8 @@ from collections import namedtuple
 import bleach as python_bleach
 import html2text as python_html2text
 import markdown as python_markdown
-from core import markdown as core_markdown
-from core.views import app_config
+from grouprise.core import markdown as core_markdown
+from grouprise.core.views import app_config
 from django import apps, template
 from django.conf import settings
 from django.contrib.sites import models as sites_models

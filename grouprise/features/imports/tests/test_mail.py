@@ -13,17 +13,17 @@ from django.urls import reverse
 import django.utils.timezone
 from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
-from core import tests
-from core.notifications import DEFAULT_REPLY_TO_EMAIL
-from features.associations import models as associations
-from features.contributions import models
-from features.imports.management.commands.run_lmtpd import (
+from grouprise.core import tests
+from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models
+from grouprise.features.imports.management.commands.run_lmtpd import (
     ContributionLMTPD, POSTMASTER_ADDRESS)
-from features.imports.signals import (
+from grouprise.features.imports.signals import (
     ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST,
     MAILBOX_DELIVERED_TO_EMAIL)
-from features.gestalten import tests as gestalten
-from features.memberships import test_mixins as memberships
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.memberships import test_mixins as memberships
 
 
 @contextlib.contextmanager

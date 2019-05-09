@@ -2,7 +2,7 @@ import django
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 
-from core.utils import slugify
+from grouprise.core.utils import slugify
 
 
 class Tag(models.Model):

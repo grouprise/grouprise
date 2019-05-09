@@ -8,15 +8,15 @@ from django.urls import reverse
 from haystack.inputs import AutoQuery
 from haystack.query import EmptySearchQuerySet, SearchQuerySet
 
-import core
-from core.views import PermissionMixin
-from features import gestalten, groups
-from features.content import views as content
-from features.conversations.views import CreateGroupConversation
-from features.groups.models import Group
+import grouprise.core
+from grouprise.core.views import PermissionMixin
+from grouprise.features import gestalten, groups
+from grouprise.features.content import views as content
+from grouprise.features.conversations.views import CreateGroupConversation
+from grouprise.features.groups.models import Group
 
 
-class Entity(core.views.PermissionMixin, django.views.generic.View):
+class Entity(grouprise.core.views.PermissionMixin, django.views.generic.View):
     def get(self, request, *args, **kwargs):
         context = self.view.get_context_data(object=self.view.object)
         return self.view.render_to_response(context)

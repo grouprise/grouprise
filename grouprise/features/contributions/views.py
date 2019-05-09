@@ -5,16 +5,16 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.timezone import now
 
-import core
-from core.templatetags.core import ref
-from features.associations.models import Association
-from features.associations.views import AssociationMixin
-from features.contributions.models import Contribution
-from features.conversations.views import CreateGestaltConversation
+import grouprise.core
+from grouprise.core.templatetags.core import ref
+from grouprise.features.associations.models import Association
+from grouprise.features.associations.views import AssociationMixin
+from grouprise.features.contributions.models import Contribution
+from grouprise.features.conversations.views import CreateGestaltConversation
 from . import models
 
 
-class Delete(AssociationMixin, core.views.PermissionMixin, django.views.generic.UpdateView):
+class Delete(AssociationMixin, grouprise.core.views.PermissionMixin, django.views.generic.UpdateView):
     permission_required = 'contributions.delete'
     queryset = models.Contribution.objects_with_internal
     fields = []

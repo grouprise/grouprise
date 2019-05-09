@@ -2,12 +2,12 @@ import django.db.transaction
 from django import forms
 from django.db.models import Q
 
-import core.forms
-from core.utils import slugify
+import grouprise.core.forms
+from grouprise.core.utils import slugify
 from . import models, signals
-from features.associations import models as associations
-from features.groups import models as groups
-from features.images.models import Image
+from grouprise.features.associations import models as associations
+from grouprise.features.groups import models as groups
+from grouprise.features.images.models import Image
 
 
 class Create(forms.ModelForm):
@@ -19,8 +19,8 @@ class Create(forms.ModelForm):
 
     group = forms.ModelChoiceField(
             label='Veröffentlichen als', queryset=groups.Group.objects.none(), required=False,
-            widget=core.forms.GroupSelect)
-    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea)
+            widget=grouprise.core.forms.GroupSelect)
+    text = forms.CharField(label='Text', widget=grouprise.core.forms.EditorTextarea)
     title = forms.CharField(label='Titel')
     image = forms.ModelChoiceField(
             label='Beitragsbild', queryset=None, required=False,
@@ -57,7 +57,7 @@ class Create(forms.ModelForm):
         with django.db.transaction.atomic():
             if not self.instance.entity.is_group and self.cleaned_data['group']:
                 self.instance.entity = self.cleaned_data['group']
-            self.instance.slug = core.models.get_unique_slug(
+            self.instance.slug = grouprise.core.models.get_unique_slug(
                     associations.Association, {
                         'entity_id': self.instance.entity_id,
                         'entity_type': self.instance.entity_type,
@@ -94,7 +94,7 @@ class Update(forms.ModelForm):
         fields = ('pinned', 'public', 'slug')
 
     title = forms.CharField(label='Titel')
-    text = forms.CharField(label='Text', widget=core.forms.EditorTextarea())
+    text = forms.CharField(label='Text', widget=grouprise.core.forms.EditorTextarea())
     image = forms.ModelChoiceField(
             label='Beitragsbild', queryset=None, required=False,
             widget=forms.Select(attrs={'data-component': 'image-picker'}),

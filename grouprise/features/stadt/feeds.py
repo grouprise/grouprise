@@ -4,8 +4,8 @@ from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 
-from features.associations.models import Association
-from features.groups.models import Group
+from grouprise.features.associations.models import Association
+from grouprise.features.groups.models import Group
 
 
 class IndexFeed(Feed):

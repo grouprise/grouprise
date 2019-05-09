@@ -3,11 +3,11 @@ import re
 from django.db.models import Q
 from markdown import Extension, util, inlinepatterns
 
-from core.markdown import ExtendedLinkPattern, markdown_extensions
-from core.templatetags.core import full_url
-from features.associations import models as associations
-from features.gestalten.models import Gestalt
-from features.groups.models import Group
+from grouprise.core.markdown import ExtendedLinkPattern, markdown_extensions
+from grouprise.core.templatetags.core import full_url
+from grouprise.features.associations import models as associations
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups.models import Group
 from . import RE_CONTENT_REF
 
 

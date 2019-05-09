@@ -4,8 +4,8 @@ import random
 
 import bleach as python_bleach
 import markdown as python_markdown
-from core import markdown as core_markdown
-from core.views import app_config
+from grouprise.core import markdown as core_markdown
+from grouprise.core.views import app_config
 from django import template
 from django.template import defaultfilters
 from django.template.base import FilterExpression

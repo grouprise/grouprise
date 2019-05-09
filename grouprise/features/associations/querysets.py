@@ -3,10 +3,10 @@ from django.contrib.contenttypes import models as contenttypes
 from django.db import models
 from django.db.models import Max, Min
 
-from features.content import models as content
-from features.conversations import models as conversations
-from features.gestalten import models as gestalten
-from features.groups import models as groups
+from grouprise.features.content import models as content
+from grouprise.features.conversations import models as conversations
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.groups import models as groups
 
 
 class Association(models.QuerySet):

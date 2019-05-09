@@ -1,7 +1,7 @@
-import features
+import grouprise.features
 
 
-class Create(features.content.forms.Create):
+class Create(grouprise.features.content.forms.Create):
     def save(self, commit=True):
         super().save(commit)
         if commit:

@@ -1,12 +1,12 @@
 import django
 from django.urls import reverse
 
-import core
-import core.tests
-from features.associations.models import Association
-from features.contributions import models as contributions
-from features.gestalten import tests as gestalten
-from features.memberships import test_mixins as memberships
+import grouprise.core
+import grouprise.core.tests
+from grouprise.features.associations.models import Association
+from grouprise.features.contributions import models as contributions
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.memberships import test_mixins as memberships
 
 
 class ArticleMixin(gestalten.AuthenticatedMixin):
@@ -34,7 +34,7 @@ class GroupArticleMixin(ArticleMixin):
         return Association.objects.get(content__title='Group Article')
 
 
-class Guest(memberships.MemberMixin, core.tests.Test):
+class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
     def create_article(self, **kwargs):
         self.client.force_login(self.gestalt.user)
         kwargs.update({'title': 'Test', 'text': 'Test'})
@@ -103,7 +103,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.assertLogin(url=self.get_group_article_url(), method='post')
 
 
-class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
+class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Test', 'text': 'Test'})
         return self.client.post(self.get_url('create-article'), kwargs)
@@ -177,7 +177,7 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
 
 
 class TwoGestalten(
-        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_article(self, **kwargs):
         kwargs.update({'title': 'Group Article', 'text': 'Test'})
         self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
@@ -198,7 +198,7 @@ class TwoGestalten(
         self.assertNotificationContains('Test')
 
 
-class GestaltAndArticle(ArticleMixin, core.tests.Test):
+class GestaltAndArticle(ArticleMixin, grouprise.core.tests.Test):
     def create_comment(self, **kwargs):
         kwargs.update({'text': 'Comment'})
         return self.client.post(self.get_content_url(), kwargs)
@@ -213,7 +213,7 @@ class GestaltAndArticle(ArticleMixin, core.tests.Test):
 
 class TwoGestaltenAndGroupArticle(
         GroupArticleMixin, memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
-        core.tests.Test):
+        grouprise.core.tests.Test):
     def create_comment(self, **kwargs):
         kwargs.update({'text': 'Comment'})
         return self.client.post(self.get_content_url(), kwargs)
@@ -224,7 +224,7 @@ class TwoGestaltenAndGroupArticle(
         self.assertNotificationRecipient(self.other_gestalt)
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_articles_404(self):
         r = self.client.get(self.get_url('create-group-article', 'non-existent'))
         self.assertEqual(r.status_code, 404)

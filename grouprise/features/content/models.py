@@ -5,12 +5,12 @@ from django.db import models
 from django.db.models import Q
 import django.utils.timezone
 
-import core.models
-from features.gestalten import models as gestalten
-from features.groups import models as groups
+import grouprise.core.models
+from grouprise.features.gestalten import models as gestalten
+from grouprise.features.groups import models as groups
 
 
-class Content(core.models.Model):
+class Content(grouprise.core.models.Model):
     is_conversation = False
 
     # FIXME: remove when django bug #28988 is fixed

@@ -1,9 +1,9 @@
 from django import forms
 from django.db.models import Q
 
-import core
-from features.content import forms as content
-from features.images import models as images
+import grouprise.core
+from grouprise.features.content import forms as content
+from grouprise.features.images import models as images
 
 
 class Create(content.Create):
@@ -11,7 +11,7 @@ class Create(content.Create):
     images = forms.ModelMultipleChoiceField(
         label='Bilder', queryset=None,
         widget=forms.SelectMultiple(attrs={'size': 10, 'data-component': 'gallery-editor'}),
-        help_text=core.models.IMAGE_FIELD_HELP_TEXT
+        help_text=grouprise.core.models.IMAGE_FIELD_HELP_TEXT
     )
 
     def __init__(self, **kwargs):
@@ -33,7 +33,7 @@ class Update(content.Update):
     images = forms.ModelMultipleChoiceField(
         label='Bilder', queryset=None,
         widget=forms.SelectMultiple(attrs={'size': 10, 'data-component': 'gallery-editor'}),
-        help_text=core.models.IMAGE_FIELD_HELP_TEXT
+        help_text=grouprise.core.models.IMAGE_FIELD_HELP_TEXT
     )
 
     def __init__(self, **kwargs):

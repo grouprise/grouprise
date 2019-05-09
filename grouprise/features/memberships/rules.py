@@ -2,9 +2,9 @@ import rules
 import rules.permissions
 from rules import add_perm, is_authenticated
 
-from features.groups import rules as groups
-from features.groups.rules import is_closed
-from features.memberships.predicates import is_member_of
+from grouprise.features.groups import rules as groups
+from grouprise.features.groups.rules import is_closed
+from grouprise.features.memberships.predicates import is_member_of
 from . import predicates as memberships
 
 

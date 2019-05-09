@@ -1,11 +1,11 @@
 import django.core.mail
 from django.urls import reverse
 
-import core.tests
-from features.associations import models as associations
-from features.contributions import models as contributions
-from features.gestalten import tests as gestalten
-from features.memberships import test_mixins as memberships
+import grouprise.core.tests
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models as contributions
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.memberships import test_mixins as memberships
 
 
 def get_post_data():
@@ -59,7 +59,7 @@ class GroupPollMixin(PollMixin):
         return associations.Association.objects.get(content__title='Test')
 
 
-class Guest(memberships.MemberMixin, core.tests.Test):
+class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
     def create_poll(self, **kwargs):
         self.client.force_login(self.gestalt.user)
         kwargs.update(get_post_data())
@@ -139,7 +139,7 @@ class Guest(memberships.MemberMixin, core.tests.Test):
         self.assertLogin(self.get_vote_url(), method='post')
 
 
-class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
+class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_poll(self, **kwargs):
         kwargs.update(get_post_data())
         return self.client.post(self.get_url('create-poll'), kwargs)
@@ -226,7 +226,7 @@ class Gestalt(memberships.AuthenticatedMemberMixin, core.tests.Test):
 
 
 class TwoGestalten(
-        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, core.tests.Test):
+        memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_poll(self, **kwargs):
         kwargs.update(get_post_data())
         self.client.post(self.get_url('create-group-poll', self.group.slug), kwargs)
@@ -245,7 +245,7 @@ class TwoGestalten(
         self.assertNotificationContains('Test')
 
 
-class GestaltAndPoll(PollMixin, core.tests.Test):
+class GestaltAndPoll(PollMixin, grouprise.core.tests.Test):
     def create_comment(self, **kwargs):
         kwargs.update({'text': 'Comment'})
         return self.client.post(self.get_content_url(), kwargs)
@@ -261,7 +261,7 @@ class GestaltAndPoll(PollMixin, core.tests.Test):
 
 class TwoGestaltenAndGroupPoll(
         GroupPollMixin, memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
-        core.tests.Test):
+        grouprise.core.tests.Test):
     def create_comment(self, **kwargs):
         kwargs.update({'text': 'Comment'})
         return self.client.post(self.get_content_url(), kwargs)

@@ -1,12 +1,12 @@
 from django.contrib.contenttypes import models as contenttypes
 
-import core
-from core import tests
-from features.associations import models as associations
-from features.contributions import models as contributions
-from features.gestalten import tests as gestalten
-from features.groups.tests import mixins as groups
-from features.memberships import test_mixins as memberships
+import grouprise.core
+from grouprise.core import tests
+from grouprise.features.associations import models as associations
+from grouprise.features.contributions import models as contributions
+from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.groups.tests import mixins as groups
+from grouprise.features.memberships import test_mixins as memberships
 from . import models
 
 
@@ -286,7 +286,7 @@ class TwoGroupMembers(
     '''
 
 
-class TestUrls(core.tests.Test):
+class TestUrls(grouprise.core.tests.Test):
     def test_404(self):
         r = self.client.get(self.get_url('conversation', 0))
         self.assertEqual(r.status_code, 404)

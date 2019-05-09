@@ -1,8 +1,8 @@
 from django.views import generic
 
-import features.content.views
-from core.views import PermissionMixin
-from features.associations import models as associations
+import grouprise.features.content.views
+from grouprise.core.views import PermissionMixin
+from grouprise.features.associations import models as associations
 from . import forms
 
 
@@ -19,7 +19,7 @@ class List(PermissionMixin, generic.ListView):
         return super().get_queryset().ordered_user_content(self.request.user).filter_articles()
 
 
-class Create(features.content.views.Create):
+class Create(grouprise.features.content.views.Create):
     form_class = forms.Create
     template_name = 'articles/create.html'
 

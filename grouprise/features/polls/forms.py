@@ -2,8 +2,8 @@ import django
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 
-from features.content import forms as content
-from features.content.models import Content
+from grouprise.features.content import forms as content
+from grouprise.features.content.models import Content
 from . import models
 
 
