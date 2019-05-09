@@ -1,7 +1,6 @@
 import re
 
 import django
-from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.urls import reverse

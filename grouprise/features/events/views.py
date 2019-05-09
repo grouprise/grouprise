@@ -3,6 +3,7 @@ import datetime
 import django.utils.timezone
 import django.views.generic
 from django.contrib.sites import models as sites_models
+from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
 from django.http import HttpResponse
@@ -109,7 +110,7 @@ class BaseCalendarFeed(ICalFeed):
     # the following methods describe ICAL properties
     # See http://django-ical.readthedocs.io/en/latest/usage.html#property-reference-and-extensions
     def product_id(self):
-        return 'stadtgestalten'
+        return 'PRODID:-//{}//grouprise//DE'.format(Site.objects.get_current().domain)
 
     def timezone(self):
         return django.utils.timezone.get_default_timezone_name()

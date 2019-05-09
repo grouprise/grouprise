@@ -6,7 +6,7 @@ class GroupShare(notifications.Notification):
         return '<{}>'.format(self.recipient)
 
     def get_subject(self):
-        return 'Stadtgestalten: {}'.format(str(self.object))
+        return 'Gruppe {}'.format(str(self.object))
 
 
 class GroupRecommend(GroupShare):
