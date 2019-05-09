@@ -9,7 +9,7 @@ node_modules
 static/
 xapian_index
 res/img/backdrops
-stadt/settings.py
+grouprise/settings.py
 *.swp
 *.pyc
 *.log
@@ -30,4 +30,4 @@ debian/*.substvars
 debian/files
 stadtgestalten.egg-info/
 /root/
-core/templates/core/_assets.html
+grouprise/core/templates/core/_assets.html
