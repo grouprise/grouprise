@@ -131,7 +131,7 @@ SITE_ID = 1
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/stadt/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -139,7 +139,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Media files (User uploaded files)
 # https://docs.djangoproject.com/en/stable/topics/files/
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/stadt/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
