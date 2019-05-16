@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='url_import_feed',
-            field=models.BooleanField(default=False, help_text='Öffentliche Beiträge der angegebenen Website automatisch auf Stadtgestalten veröffentlichen, wenn technisch möglich', verbose_name='Beiträge von Website übernehmen'),
+            field=models.BooleanField(default=False, help_text='Öffentliche Beiträge der angegebenen Website automatisch veröffentlichen, wenn technisch möglich', verbose_name='Beiträge von Website übernehmen'),
         ),
     ]
