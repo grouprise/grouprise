@@ -1,7 +1,2 @@
-import '../img/logos/logo_text_large.png'
-import '../img/logos/logo_large.png'
 import '../img/logos/logo_text.svg'
-import '../img/logos/logo_white.svg'
-import '../img/logos/gestadten/logo_text.svg'
-import '../img/logos/grouprise/grouprise.svg'
 import '../img/markdown.svg'

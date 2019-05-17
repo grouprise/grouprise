@@ -14,12 +14,12 @@ module.exports = new WebpackPwaManifest({
   orientation: 'portrait',
   icons: [
     {
-      src: path.join(imgDir, 'logos/logo_large.png'),
+      src: path.join(imgDir, 'logos/logo_large.svg'),
       sizes: [128, 144, 192, 256, 384, 512],
       ios: true
     },
     {
-      src: path.join(imgDir, 'logos/logo_small.png'),
+      src: path.join(imgDir, 'logos/logo_small.svg'),
       sizes: [32, 48, 64, 72, 96],
       ios: true
     }

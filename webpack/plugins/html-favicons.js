@@ -3,7 +3,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const { imgDir, pkg } = require('../env')
 
 module.exports = new FaviconsWebpackPlugin({
-  logo: path.join(imgDir, 'logos/logo_small.png'),
+  logo: path.join(imgDir, 'logos/logo_small.svg'),
   background: '#2a62ac',
   title: pkg.title,
   icons: {
