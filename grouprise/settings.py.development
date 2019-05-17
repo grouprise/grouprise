@@ -1,4 +1,4 @@
-from stadt.common_settings import *
+from grouprise.common_settings import *
 
 DATABASES = {
     'default': {
