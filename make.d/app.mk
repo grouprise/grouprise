@@ -1,5 +1,5 @@
-CONFIG_APP_SETUP = stadt/settings.py
-CONFIG_APP_SETUP_TEMPLATE = stadt/settings.py.development
+CONFIG_APP_SETUP = grouprise/settings.py
+CONFIG_APP_SETUP_TEMPLATE = grouprise/settings.py.development
 
 
 $(CONFIG_APP_SETUP): $(GROUPRISE_MAKEFILES)
