@@ -2,8 +2,7 @@ from rest_framework import viewsets, serializers, permissions
 from rest_framework.decorators import permission_classes
 import django_filters.widgets
 
-from . import models
-# todo howto resolve module without including tags here
+from grouprise.features.groups import models
 from grouprise.features.tags.rest_api import FlattenedTagSerializer
 
 
