@@ -61,6 +61,7 @@ def html2text(html, preset='mail'):
         text_maker.inline_links = False
         text_maker.links_each_paragraph = True
         text_maker.use_automatic_links = True
+        text_maker.ignore_images = True
     elif preset == 'import':
         text_maker.escape_snob = True
     return text_maker.handle(html).rstrip()
