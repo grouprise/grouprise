@@ -2,12 +2,13 @@ import django
 import django_filters
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
-from django.views.generic import CreateView, TemplateView, UpdateView
+from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
+from django.views.generic.list import MultipleObjectMixin
 from django.urls import reverse
 from django_filters.views import FilterView
 
 import grouprise.core
-from grouprise.core.views import PermissionMixin
+from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
 from grouprise.features.groups import models as groups
@@ -61,9 +62,7 @@ class Create(PermissionMixin, CreateView):
         return kwargs
 
 
-class Detail(
-        grouprise.core.views.PermissionMixin, django_filters.views.FilterMixin,
-        django.views.generic.list.MultipleObjectMixin, django.views.generic.DetailView):
+class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailView):
     permission_required = 'groups.view'
     model = models.Group
     filterset_class = ContentFilterSet
@@ -75,7 +74,6 @@ class Detail(
 
     def get_context_data(self, **kwargs):
         associations = self.get_queryset()
-        filterset = self.get_filterset(self.get_filterset_class())
         intro_associations = associations.filter(pinned=True).order_by('time_created')
         intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
         if intro_gallery:
@@ -84,11 +82,9 @@ class Detail(
                 reverse('group-feed', args=(self.object.pk,)))
         return super().get_context_data(
                 associations=associations,
-                filter=filterset,
                 intro_associations=intro_associations,
                 intro_gallery=intro_gallery,
                 group=self.object,
-                object_list=filterset.qs,
                 site=get_current_site(self.request),
                 **kwargs)
 

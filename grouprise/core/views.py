@@ -24,7 +24,7 @@ class TemplateFilterMixin(FilterMixin):
 
         return super().get_context_data(
                 filter=self.filterset, object_list=self.object_list,
-                show_filter=bool(self.object_list or self.filterset.is_bound))
+                show_filter=bool(self.object_list or self.filterset.is_bound), **kwargs)
 
 
 class AppConfig:
