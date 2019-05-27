@@ -1,4 +1,4 @@
-{% extends 'stadt/stadt.html' %}
+{% extends 'content/list.html' %}
 
 {% block title %}{{ view.tag }} - {{ block.super }}{% endblock %}
 {% block menu %}{% menu 'tag' %}{% endblock %}
@@ -37,31 +37,11 @@
     </ol>
 
     {# content #}
-    {% if view.tagged_only or object_list %}
-        {% if view.groups %}
-            <div class="content-section-header">
-                <h2 class="content-classification">Beiträge</h2>
-                <span class="decoration-icon sg-pen" role="presentation"></span>
-                {% if view.groups %}
-                    <div class="btn-toolbar">
-                        {% if view.tagged_only %}
-                            <a href="?{% get_parameters tagged=0 %}" class="btn btn-default btn-sm btn-addon-ok" title="zusätzlich Beiträge von Gruppen anzeigen, die mit diesem Schlagwort gekennzeichnet wurden">
-                                <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete angezeigt</span>
-                            </a>
-                        {% else %}
-                            <a href="?{% get_parameters tagged=1 %}" class="btn btn-default btn-sm" title="nur Beiträge anzeigen, die explizit mit diesem Schlagwort gekennzeichnet wurden">
-                                <span class="btn-label"><i class="sg sg-tags"></i> verschlagwortete anzeigen</span>
-                            </a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-        <div class="content-list">
-            <div class="content-block">
-                {% include 'content/_list.html' with associations=object_list %}
-            </div>
-            {% pagination 'Weitere Beiträge' %}
+    {% if view.groups and object_list or show_filter %}
+        <div class="content-section-header">
+            <h2 class="content-classification">Beiträge</h2>
+            <span class="decoration-icon sg-pen" role="presentation"></span>
         </div>
     {% endif %}
+    {{ block.super }}
 {% endblock %}

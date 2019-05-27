@@ -22,7 +22,9 @@ class TemplateFilterMixin(FilterMixin):
         else:
             self.object_list = self.filterset.queryset.none()
 
-        return super().get_context_data(filter=self.filterset, object_list=self.object_list)
+        return super().get_context_data(
+                filter=self.filterset, object_list=self.object_list,
+                show_filter=bool(self.object_list or self.filterset.is_bound))
 
 
 class AppConfig:

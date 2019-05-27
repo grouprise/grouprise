@@ -5,7 +5,7 @@ from django.views.generic import ListView
 import grouprise.core
 from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
-from grouprise.features.groups import models as groups
+from grouprise.features.groups.models import Group
 from grouprise.features.tags.filters import TagContentFilterSet
 from . import forms, models
 
@@ -24,11 +24,10 @@ class Detail(PermissionMixin, TemplateFilterMixin, ListView):
 
     def get_queryset(self):
         self.tag = self.get_tag()
-        self.groups = groups.Group.objects.filter(tags__tag=self.tag)
+        self.groups = Group.objects.filter(tags__tag=self.tag)
         tagged_content_query = Q(content__taggeds__tag=self.tag)
         tagged_group_content_query = (
-                Q(entity_type=groups.Group.content_type)
-                & Q(entity_id__in=self.groups))
+                Q(entity_type=Group.content_type) & Q(entity_id__in=self.groups))
         return super().get_queryset().ordered_user_content(self.request.user) \
             .filter(tagged_content_query | tagged_group_content_query)
 
