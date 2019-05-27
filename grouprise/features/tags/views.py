@@ -1,33 +1,36 @@
 import django
 from django.db.models import Q
+from django.views.generic import ListView
 
 import grouprise.core
-from grouprise.core.utils import intify
+from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.groups import models as groups
+from grouprise.features.tags.filters import TagContentFilterSet
 from . import forms, models
 
 
-class Detail(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
+class Detail(PermissionMixin, TemplateFilterMixin, ListView):
     permission_required = 'tags.view'
     model = associations.Association
+    filterset_class = TagContentFilterSet
     paginate_by = 10
     template_name = 'tags/detail.html'
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['tag'] = self.tag
+        return kwargs
 
     def get_queryset(self):
         self.tag = self.get_tag()
         self.groups = groups.Group.objects.filter(tags__tag=self.tag)
-        self.tagged_only = intify(self.request.GET.get('tagged'), 0)
-        tagged_query = Q(content__taggeds__tag=self.tag)
-        qs = super().get_queryset().ordered_user_content(self.request.user)
-        if self.tagged_only:
-            qs = qs.filter(tagged_query)
-        else:
-            group_tagged_query = (
-                    Q(entity_type=groups.Group.content_type)
-                    & Q(entity_id__in=self.groups))
-            qs = qs.filter(tagged_query | group_tagged_query)
-        return qs
+        tagged_content_query = Q(content__taggeds__tag=self.tag)
+        tagged_group_content_query = (
+                Q(entity_type=groups.Group.content_type)
+                & Q(entity_id__in=self.groups))
+        return super().get_queryset().ordered_user_content(self.request.user) \
+            .filter(tagged_content_query | tagged_group_content_query)
 
     def get_tag(self):
         try:
