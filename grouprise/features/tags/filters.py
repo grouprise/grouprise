@@ -1,6 +1,5 @@
 from django.forms.widgets import CheckboxInput
 from django_filters import BooleanFilter
-from django_filters.widgets import BooleanWidget
 
 from grouprise.features.associations.filters import ContentFilterSet
 
