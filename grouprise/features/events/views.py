@@ -16,6 +16,7 @@ import grouprise.features.groups.views
 from grouprise.features.associations import models as associations
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.gestalten.auth.resolvers import get_user_resolver
+from grouprise.features.groups.models import Group
 from grouprise.features.memberships.predicates import is_member_of
 from .utils import get_requested_time
 from . import forms
@@ -146,7 +147,31 @@ class BaseCalendarFeed(ICalFeed):
             return end_time.astimezone(tz)
 
 
-class GroupCalendarFeed(BaseCalendarFeed, grouprise.features.groups.views.Mixin):
+class GroupCalendarFeed(BaseCalendarFeed):
+
+    def get_group(self):
+        for attr in ('object', 'related_object'):
+            if hasattr(self, attr):
+                instance = getattr(self, attr)
+                if isinstance(instance, Group):
+                    return instance
+                if hasattr(instance, 'group'):
+                    return instance.group
+                if hasattr(instance, 'groups'):
+                    return instance.groups.first()
+        try:
+            if 'group_pk' in self.kwargs:
+                return Group.objects.get(
+                        pk=self.kwargs['group_pk'])
+            if 'group_slug' in self.kwargs:
+                return Group.objects.get(
+                        slug=self.kwargs['group_slug'])
+            if 'group' in self.request.GET:
+                return Group.objects.get(
+                        slug=self.request.GET['group'])
+        except Group.DoesNotExist:
+            pass
+        return None
 
     def title(self):
         site_name = sites_models.Site.objects.get_current().name

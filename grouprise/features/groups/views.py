@@ -1,52 +1,15 @@
-import django
-import django_filters
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
 from django.views.generic.list import MultipleObjectMixin
-from django.urls import reverse
 from django_filters.views import FilterView
 
-import grouprise.core
 from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
-from grouprise.features.groups import models as groups
+from grouprise.features.groups import filters, forms, models
 from grouprise.features.groups.models import Group
-from . import filters, forms, models
-
-
-class Mixin:
-    '''
-    Obsolete: Do not use in new code!
-    '''
-    def get_context_data(self, **kwargs):
-        kwargs['group'] = self.get_group()
-        return super().get_context_data(**kwargs)
-
-    def get_group(self):
-        for attr in ('object', 'related_object'):
-            if hasattr(self, attr):
-                instance = getattr(self, attr)
-                if isinstance(instance, models.Group):
-                    return instance
-                if hasattr(instance, 'group'):
-                    return instance.group
-                if hasattr(instance, 'groups'):
-                    return instance.groups.first()
-        try:
-            if 'group_pk' in self.kwargs:
-                return models.Group.objects.get(
-                        pk=self.kwargs['group_pk'])
-            if 'group_slug' in self.kwargs:
-                return models.Group.objects.get(
-                        slug=self.kwargs['group_slug'])
-            if 'group' in self.request.GET:
-                return models.Group.objects.get(
-                        slug=self.request.GET['group'])
-        except models.Group.DoesNotExist:
-            pass
-        return None
 
 
 class Create(PermissionMixin, CreateView):
@@ -103,7 +66,7 @@ class List(PermissionMixin, FilterView):
                 self.request.user)
 
     def get_queryset(self):
-        return groups.Group.objects.order_by('-score')
+        return models.Group.objects.order_by('-score')
 
 
 class Update(PermissionMixin, UpdateView):
