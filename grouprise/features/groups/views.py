@@ -9,7 +9,7 @@ from django_filters.views import FilterView
 import grouprise.core
 from grouprise.core.views import PermissionMixin
 from grouprise.features.associations import models as associations
-from grouprise.features.associations.filters import ContentFilterSet
+from grouprise.features.content.filters import ContentFilterSet
 from grouprise.features.groups import models as groups
 from grouprise.features.groups.models import Group
 from . import filters, forms, models

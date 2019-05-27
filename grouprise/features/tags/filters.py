@@ -1,7 +1,7 @@
 from django.forms.widgets import CheckboxInput
 from django_filters import BooleanFilter
 
-from grouprise.features.associations.filters import ContentFilterSet
+from grouprise.features.content.filters import ContentFilterSet
 
 
 class TagContentFilterSet(ContentFilterSet):
