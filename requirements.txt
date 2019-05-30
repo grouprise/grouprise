@@ -9,7 +9,7 @@ django-haystack             # debian: python3-django-haystack
 django-ical                 # NOT IN DEBIAN
 django-imagekit             # debian (buster): python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
-djangorestframework         # debian: python-djangorestframework
+djangorestframework         # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: flake8
 html2text                   # debian: python3-html2text
@@ -17,7 +17,7 @@ huey                        # NOT IN DEBIAN
 # incompatible change introduced in https://github.com/Python-Markdown/markdown/commit/d18c3d0acab
 markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
-pillow                      # debian: python-pil
+pillow                      # debian: python3-pil
 pymdown-extensions<6        # NOT IN DEBIAN
 aiosmtplib                  # NOT IN DEBIAN
 schulze                     # NOT IN DEBIAN
