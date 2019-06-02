@@ -14,7 +14,7 @@ Folgende Software wird benötigt:
 
 Ein passendes DBMS, wir empfehlen `postgresql` mit Python-Bindings (`python3-psycopg2`).
 
-Außerdem verwenden wir in dieser Anleitung eine Konfiguration mit UWSGI und Nginx:
+Außerdem verwenden wir in dieser Anleitung eine Konfiguration mit uWSGI und NGINX:
 
 * `uwsgi`
 * `uwsgi-plugin-python3`
@@ -75,16 +75,16 @@ python manage.py runserver 0.0.0.0:8000
 (Wenn du in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
 
 
-## UWSGI und Nginx einrichten
+## uWSGI und NGINX einrichten
 
-* install nginx and UWSGI (being remmomendations of the grouprise package): `apt install nginx uwsgi uwsgi-plugin-python3`
-* enable the UWSGI service: `ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/`
-* start UWSGI: `service uwsgi start`
-* copy the nginx site example configuration: `cp /usr/share/doc/grouprise/examples/nginx.conf /etc/nginx/sites-available/grouprise`
+* install NGINX and uWSGI (being recommendations of the grouprise package): `apt install nginx uwsgi uwsgi-plugin-python3`
+* enable the uWSGI service: `ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/`
+* start uWSGI: `service uwsgi start`
+* copy the NGINX site example configuration: `cp /usr/share/doc/grouprise/examples/nginx.conf /etc/nginx/sites-available/grouprise`
 * set a suitable `server_name`: `edit /etc/nginx/sites-available/grouprise`
-    * or remove the `default` nginx site (if it is not in use) in order to let the `grouprise` site be picked irrespective of the requested hostname
+    * or remove the `default` NGINX site (if it is not in use) in order to let the `grouprise` site be picked irrespective of the requested hostname
 * enable the site: `ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/`
-* restart nginx: `service nginx restart`
+* restart NGINX: `service nginx restart`
 * visit the fresh grouprise instance: `http://localhost/` (or use a suitable hostname)
 
 
