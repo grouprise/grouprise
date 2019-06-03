@@ -1,6 +1,7 @@
 #!/usr/bin/dh-exec
 debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/grouprise.ini
-debian/grouprise.settings.py => /etc/grouprise/settings.py
+grouprise/settings.py.production => /etc/grouprise/settings.py.dist
+debian/nginx-app-snippet.conf => /etc/nginx/snippets/grouprise.conf
 debian/stadtctl => /usr/bin/stadtctl
 debian/README.backups => /var/backups/grouprise/README
 debian/tmp/usr/share/grouprise/stadt /usr/share/grouprise/grouprise/

@@ -1,7 +1,14 @@
 from grouprise.common_settings import *
 
+# Set this to a long (at least 50 characters) and
+# random string containing letters, digits and special characters.
 SECRET_KEY = ''
 
+# This should contain the hosts under which you serve
+# the grouprise application. Usually it should not contain
+# more than one string.
+# If you serve your grouprise instance under the domain
+# stadtgestalten.org, this list should contain 'stadtgestalten.org'.
 ALLOWED_HOSTS = []
 
 DATABASES = {
@@ -28,12 +35,12 @@ GROUPRISE = {
     'CLAIMS': [],
     'SCORE_CONTENT_AGE': 0,
     'UPLOAD_MAX_FILE_SIZE': 0,
-    
+
     # special users and groups
     'FEED_IMPORTER_GESTALT_ID': 1,
     'OPERATOR_GROUP_ID': 1,
     'UNKNOWN_GESTALT_ID': 1,
-    
+
     # email settings
     'DEFAULT_DISTINCT_FROM_EMAIL': 'noreply+{slug}@localhost',
     'DEFAULT_REPLY_TO_EMAIL': 'reply+{reply_key}@localhost',
