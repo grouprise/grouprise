@@ -7,6 +7,7 @@ Build-Depends:
  dh-exec,
  dh-python,
  nodejs,
+ npm,
  python3-all,
  python3-flake8,
  python3-recommonmark,
