@@ -103,3 +103,7 @@ class SubscriptionsMemberships(PermissionMixin, TemplateView):
     def get_permission_object(self):
         self.group = super().get_permission_object()
         return self.group
+
+
+class RecommendView(PermissionMixin, DetailView):
+    pass

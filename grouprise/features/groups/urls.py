@@ -1,34 +1,20 @@
-from django.conf.urls import url
+from django.urls import path
 
 from grouprise.core.urls import api_router
 from grouprise.features.groups.rest_api import GroupSet
-from . import views
+from grouprise.features.groups.views import (
+        Create, ImageUpdate, List, RecommendView, SubscriptionsMemberships, Update)
 
 api_router.register(r'groups', GroupSet, 'group')
 
 urlpatterns = [
-    url(
-        r'^stadt/groups/$',
-        views.List.as_view(),
-        name='group-index'),
-
-    url(
-        r'^stadt/groups/add/$',
-        views.Create.as_view(),
-        name='group-create'),
-
-    url(
-        r'^stadt/settings/group/$',
-        views.Update.as_view(),
-        name='group-settings'),
-
-    url(
-        r'^stadt/settings/group/images/$',
-        views.ImageUpdate.as_view(),
-        name='group-image-settings'),
-
-    url(
-        r'^stadt/settings/group/subscriptions-memberships/$',
-        views.SubscriptionsMemberships.as_view(),
-        name='subscriptions-memberships-settings'),
+    path('stadt/groups', List.as_view(), name='group-index'),
+    path('stadt/groups/add', Create.as_view(), name='group-create'),
+    path('stadt/settings/group', Update.as_view(), name='group-settings'),
+    path('stadt/settings/group/images', ImageUpdate.as_view(), name='group-image-settings'),
+    path(
+        'stadt/settings/group/subscriptions-memberships', SubscriptionsMemberships.as_view(),
+        name='subscriptions-memberships-settings'
+    ),
+    path('<slug:group>/actions/recommend', RecommendView, name='recommend-group'),
 ]
