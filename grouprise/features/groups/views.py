@@ -1,7 +1,9 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
+from django.views.generic import CreateView, DetailView, TemplateView, UpdateView, View
+from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
 from django_filters.views import FilterView
 
@@ -106,4 +108,7 @@ class SubscriptionsMemberships(PermissionMixin, TemplateView):
 
 
 class RecommendView(PermissionMixin, DetailView):
-    pass
+    model = Group
+    slug_url_kwarg = 'group'
+    permission_required = 'groups.recommend'
+    template_name = 'groups/recommend.html'

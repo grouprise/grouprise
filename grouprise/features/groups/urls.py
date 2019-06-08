@@ -16,5 +16,5 @@ urlpatterns = [
         'stadt/settings/group/subscriptions-memberships', SubscriptionsMemberships.as_view(),
         name='subscriptions-memberships-settings'
     ),
-    path('<slug:group>/actions/recommend', RecommendView, name='recommend-group'),
+    path('<slug:group>/actions/recommend', RecommendView.as_view(), name='recommend-group'),
 ]

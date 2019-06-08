@@ -81,7 +81,7 @@
             {% elif can_create %}
             &middot; <a href="{% url 'member-create' group.pk %}">Aufnehmen</a>
             {% else %}
-            &middot; <a href="{% url 'group-recommend' group.pk %}">Weiterempfehlen</a>
+            &middot; <a href="{% url 'recommend-group' group.slug %}">Weiterempfehlen</a>
             {% endif %}
         </dd>
 
@@ -125,7 +125,7 @@
                     </a>
                 {% endif %}
             {% else %}
-                <a href="{% url 'group-recommend' group.pk %}">Weiterempfehlen</a>
+                <a href="{% url 'recommend-group' group.slug %}">Weiterempfehlen</a>
             {% endif %}
         </dd>
     </dl>

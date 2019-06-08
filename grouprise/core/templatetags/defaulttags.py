@@ -92,10 +92,9 @@ def breadcrumb(context, *args):
 
 
 @register.inclusion_tag('stadt/_menu.html', takes_context=True)
-def menu(context, active=None, entity=None):
+def menu(context, entity=None):
     if entity and entity.is_group:
         context['group'] = entity
-    context['menu'] = active
     return context
 
 

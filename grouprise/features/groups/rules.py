@@ -14,11 +14,8 @@ def is_group(user, entity):
 
 
 add_perm('groups.create_group', always_allow)
-
 add_perm('groups.view', always_allow)
-
 add_perm('groups.view_list', always_allow)
-
 add_perm('groups.change', is_authenticated & memberships.is_member_of)
-
 add_perm('groups.change_subscriptions_memberships', is_authenticated)
+add_perm('groups.recommend', always_allow)
