@@ -124,9 +124,9 @@ class RecommendView(PermissionMixin, SingleObjectMixin, FormView):
         group = self.object
         address = 'Hallo,'
         recommendation = 'ich empfehle dir die Gruppe \'{group}\' auf {platform}:\n{link}' \
-                .format(
-                        group=group, platform=Site.objects.get_current().name,
-                        link=self.request.build_absolute_uri(group.get_absolute_url()))
+            .format(
+                    group=group, platform=Site.objects.get_current().name,
+                    link=self.request.build_absolute_uri(group.get_absolute_url()))
         additional = 'Abonniere die Gruppe.'
         if not self.object.closed:
             additional += '\n\nTritt der Gruppe bei.'
