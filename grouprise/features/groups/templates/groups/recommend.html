@@ -4,3 +4,12 @@
 {% block menu %}{% menu object %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb object 'Weiterempfehlen' %}{% endblock %}
 {% block heading_title_text %}Empfehlen{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% field form.recipients %}
+        {% field form.text %}
+        <button class="btn btn-primary">Empfehlungen versenden</button>
+    </form>
+{% endblock %}

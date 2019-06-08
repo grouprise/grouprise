@@ -1,9 +1,10 @@
+from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView, TemplateView, UpdateView, View
-from django.views.generic.base import TemplateResponseMixin
+from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
 from django_filters.views import FilterView
 
@@ -11,6 +12,7 @@ from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
 from grouprise.features.groups import filters, forms, models
+from grouprise.features.groups.forms import RecommendForm
 from grouprise.features.groups.models import Group
 
 
@@ -107,8 +109,29 @@ class SubscriptionsMemberships(PermissionMixin, TemplateView):
         return self.group
 
 
-class RecommendView(PermissionMixin, DetailView):
+class RecommendView(PermissionMixin, SingleObjectMixin, FormView):
     model = Group
     slug_url_kwarg = 'group'
     permission_required = 'groups.recommend'
+    form_class = RecommendForm
     template_name = 'groups/recommend.html'
+
+    def get(self, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(*args, **kwargs)
+
+    def get_initial(self):
+        group = self.object
+        address = 'Hallo,'
+        recommendation = 'ich empfehle dir die Gruppe \'{group}\' auf {platform}:\n{link}' \
+                .format(
+                        group=group, platform=Site.objects.get_current().name,
+                        link=self.request.build_absolute_uri(group.get_absolute_url()))
+        additional = 'Abonniere die Gruppe.'
+        if not self.object.closed:
+            additional += '\n\nTritt der Gruppe bei.'
+        closing = 'Viele Grüße'
+        if self.request.user.is_authenticated:
+            closing += '\n{}'.format(self.request.user.gestalt)
+        return {'text': '{}\n\n{}\n\n{}\n\n{}'.format(
+            address, recommendation, additional, closing)}

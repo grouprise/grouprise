@@ -6,6 +6,15 @@ from grouprise.features.tags import models as tags
 from . import models
 
 
+class RecommendForm(forms.Form):
+    recipients = forms.CharField(
+        label='E-Mail-Adressen oder Gestalten', widget=forms.Textarea({'rows': 3}),
+        help_text='E-Mail-Adressen oder Gestalten (@kurzname) durch Komma oder Leerzeichen '
+        'getrennt'
+    )
+    text = forms.CharField(label='Empfehlungstext', widget=forms.Textarea({'rows': 12}))
+
+
 class Update(forms.ModelForm):
     tags = forms.CharField(
             label='Schlagworte', required=False, widget=forms.Textarea({'rows': 2}),
