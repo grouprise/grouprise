@@ -2,7 +2,7 @@
 
 {% load rules %}
 
-{% block menu %}{% menu 'conversation' association.entity %}{% endblock %}
+{% block menu %}{% menu association.entity %}{% endblock %}
 {% block heading_title %}{% with title='Gespräch' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block breadcrumb %}
     {% if association.entity.is_group %}

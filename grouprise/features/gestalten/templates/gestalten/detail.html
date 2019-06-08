@@ -2,7 +2,7 @@
 {% load events rules %}
 
 {% block title %}{{ gestalt }} - {{ block.super }}{% endblock %}
-{% block menu %}{% menu 'gestalt' %}{% endblock %}
+{% block menu %}{% menu %}{% endblock %}
 
 {% block header %}
     {% has_perm 'gestalten.change' user gestalt as can_edit %}

@@ -1,6 +1,6 @@
 {% extends 'content/create.html' %}
 
-{% block menu %}{% menu 'gallery' view.entity %}{% endblock %}
+{% block menu %}{% menu view.entity %}{% endblock %}
 
 {% block form_extra %}
     {% include 'core/_field.html' with field=form.images %}

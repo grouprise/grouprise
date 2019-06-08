@@ -1,7 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block title %}Beitrag löschen - {{ block.super }}{% endblock %}
-{% block menu %}{% menu 'content' association.entity %}{% endblock %}
+{% block menu %}{% menu association.entity %}{% endblock %}
 
 {% block breadcrumb %}
     {% breadcrumb association.entity association 'Beitrag löschen' %}
