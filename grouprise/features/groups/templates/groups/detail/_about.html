@@ -77,9 +77,11 @@
             {% if can_join %}
             &middot; <a href="{% url 'join' group.pk %}">Beitreten</a>
             {% elif can_invite %}
-            &middot; <a href="{% url 'member-invite' group.pk %}">Mitglied einladen</a>
+            &middot; <a href="{% url 'member-invite' group.pk %}">Einladen</a>
             {% elif can_create %}
-            &middot; <a href="{% url 'member-create' group.pk %}">Mitglied aufnehmen</a>
+            &middot; <a href="{% url 'member-create' group.pk %}">Aufnehmen</a>
+            {% else %}
+            &middot; <a href="{% url 'group-recommend' group.pk %}">Weiterempfehlen</a>
             {% endif %}
         </dd>
 
@@ -113,17 +115,17 @@
                         {% csrf_token %}
                         <button class="btn btn-text"
                                 title="Bei neuen Beiträgen benachrichtigt werden">
-                            Gruppe abonnieren
+                            Abonnieren
                         </button>
                     </form>
                 {% else %}
                     <a href="{% url 'group-subscribe' group.pk %}"
                        title="Bei neuen Beiträgen benachrichtigt werden">
-                        Gruppe abonnieren
+                        Abonnieren
                     </a>
                 {% endif %}
             {% else %}
-                <a href="{% url 'group-recommend' group.pk %}">Gruppe empfehlen</a>
+                <a href="{% url 'group-recommend' group.pk %}">Weiterempfehlen</a>
             {% endif %}
         </dd>
     </dl>
