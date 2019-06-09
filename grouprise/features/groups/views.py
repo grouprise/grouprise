@@ -1,3 +1,6 @@
+import re
+
+from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
@@ -146,7 +149,24 @@ class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, For
         return self.object.get_absolute_url()
 
     def get_recipients(self, data: str) -> list:
-        return [data]
+        email_pattern = re.compile(
+                r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', flags=re.IGNORECASE)
+        gestalt_pattern = re.compile(r'@([\w-]+)')
+        
+        # get a list of usernames
+        data_without_emails = email_pattern.sub('', data)
+        gestalten = gestalt_pattern.findall(data_without_emails)
+
+        # recipients are the explicitly given email addresses + the email addresses of the
+        # users given by username (@gestalt syntax)
+        # non-existing users are silently ignored
+        recipients = email_pattern.findall(data)
+        for username in gestalten:
+            try:
+                recipients.append(User.objects.get(username=username).email)
+            except User.DoesNotExist:
+                pass
+        return recipients
 
     def send_recommendations(self, recipients: list, text: str) -> None:
         for recipient in recipients:
