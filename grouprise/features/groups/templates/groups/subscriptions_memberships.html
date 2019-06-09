@@ -22,7 +22,7 @@
             </form>
         {% elif can_subscribe %}
             {% if user.is_authenticated %}
-                <form action="{% url 'group-subscribe' group.pk %}" method="post">
+                <form action="{% url 'group-subscribe' group.slug %}" method="post">
                     {% csrf_token %}
                     <button class="btn btn-primary">
                         <i class="sg sg-subscription"></i> Abonnieren
@@ -33,7 +33,7 @@
                     </span>
                 </form>
             {% else %}
-                <a href="{% url 'group-subscribe' group.pk %}" class="btn btn-primary">
+                <a href="{% url 'group-subscribe' group.slug %}" class="btn btn-primary">
                     <i class="sg sg-subscription"></i> Abonnieren
                 </a>
             {% endif %}
@@ -52,7 +52,7 @@
                 Du bist Mitglied der Gruppe <em>{{ group }}</em>.
             </span>
         {% elif can_join %}
-            <a href="{% url 'join' group.pk %}" class="btn btn-default">
+            <a href="{% url 'join' group.slug %}" class="btn btn-default">
                 <i class="sg sg-join"></i> Beitreten
             </a>
             <span class="help-block">

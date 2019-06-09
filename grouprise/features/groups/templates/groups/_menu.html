@@ -42,7 +42,7 @@
                     {% if can_subscribe %}
                         <li>
                             {% if user.is_authenticated %}
-                                <form action="{% url 'group-subscribe' group.pk %}" method="post">
+                                <form action="{% url 'group-subscribe' group.slug %}" method="post">
                                     {% csrf_token %}
                                     <button class="nav-menu-item">
                                         <i class="sg sg-fw sg-subscription"></i>
@@ -50,7 +50,7 @@
                                     </button>
                                 </form>
                             {% else %}
-                                <a href="{% url 'group-subscribe' group.pk %}"
+                                <a href="{% url 'group-subscribe' group.slug %}"
                                    class="nav-menu-item">
                                     <i class="sg sg-fw sg-subscription"></i>
                                     <span class="nav-menu-item-label">Abonnieren</span>
@@ -75,7 +75,7 @@
                     {% has_perm 'memberships.create_membership' user group as can_create_membership %}
                     {% if can_join %}
                         <li>
-                            <a href="{% url 'join' group.pk %}" class="nav-menu-item">
+                            <a href="{% url 'join' group.slug %}" class="nav-menu-item">
                                 <i class="sg sg-fw sg-join"></i>
                                 <span class="nav-menu-item-label">Beitreten</span>
                             </a>

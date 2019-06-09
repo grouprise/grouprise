@@ -55,7 +55,7 @@
                 {% if can_subscribe %}
                     <div class="content-subscribe">
                         {% if user.is_authenticated %}
-                            <form action="{% url 'group-subscribe' association.entity.pk %}"
+                            <form action="{% url 'group-subscribe' association.entity.slug %}"
                                 method="post">
                                 {% csrf_token %}
                                 <button class="btn btn-default btn-sm">
@@ -63,7 +63,7 @@
                                 </button>
                             </form>
                         {% else %}
-                            <a href="{% url 'group-subscribe' association.entity.pk %}"
+                            <a href="{% url 'group-subscribe' association.entity.slug %}"
                                 class="btn btn-default btn-sm">
                                 <i class="sg sg-subscription"></i> Gruppe abonnieren
                             </a>

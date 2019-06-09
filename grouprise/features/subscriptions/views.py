@@ -41,7 +41,7 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
         return instance
 
     def get_permission_object(self):
-        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        self.group = get_object_or_404(Group, slug=self.kwargs.get('group'))
         return self.group
 
     def get_success_url(self):

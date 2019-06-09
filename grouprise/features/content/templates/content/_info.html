@@ -27,7 +27,7 @@
                 {% has_perm 'subscriptions.create' user association.entity as can_subscribe %}
                 {% if can_subscribe %}
                     ·
-                    <a href="{% url 'group-subscribe' association.entity.pk %}" class="content-meta-author-action">Gruppe abonnieren</a>
+                    <a href="{% url 'group-subscribe' association.entity.slug %}" class="content-meta-author-action">Gruppe abonnieren</a>
                 {% endif %}
             {% endif %}
         </div>

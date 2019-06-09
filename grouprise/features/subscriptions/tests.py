@@ -15,7 +15,7 @@ TEST_EMAIL = 'test.subscription@test.local'
 
 class Subscription(MemberMixin, TestCase):
     def test_subscriptions(self):
-        subscribe_url = reverse('group-subscribe', args=(self.group.pk,))
+        subscribe_url = reverse('group-subscribe', args=(self.group.slug,))
 
         # group page contains subscribe link
         r = self.client.get(self.group.get_absolute_url())
@@ -75,7 +75,7 @@ class Subscription(MemberMixin, TestCase):
 
 class AuthenticatedSubscription(AuthenticatedMixin, GroupMixin, TestCase):
     def test_authenticated_subscriptions(self):
-        subscribe_url = reverse('group-subscribe', args=(self.group.pk,))
+        subscribe_url = reverse('group-subscribe', args=(self.group.slug,))
         unsubscribe_url = reverse('group-unsubscribe', args=(self.group.pk,))
 
         # group page contains subscribe form
