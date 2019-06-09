@@ -22,7 +22,6 @@ urlpatterns = [
     path('', include('grouprise.features.images.urls')),
     path('', include('grouprise.features.memberships.urls')),
     path('', include('grouprise.features.polls.urls')),
-    path('', include('grouprise.features.sharing.urls')),
     path('', include('grouprise.features.subscriptions.urls')),
     path('', include('grouprise.features.tags.urls')),
 
