@@ -1,13 +1,13 @@
 from django.conf.urls import url
+from django.urls import path
 
-from . import views
+from grouprise.features.subscriptions import views
+from grouprise.features.subscriptions.views import GroupSubscribe
 
 urlpatterns = [
-    url(
-        r'^stadt/groups/(?P<group_pk>[0-9]+)/subscribe/$',
-        views.GroupSubscribe.as_view(),
-        name='group-subscribe',
-    ),
+    path(
+        '<slug:group>/actions/subscribe', GroupSubscribe.as_view(),
+        name='group-subscribe'),
     url(
         r'^stadt/groups/(?P<group_pk>[0-9]+)/unsubscribe/$',
         views.GroupUnsubscribe.as_view(),

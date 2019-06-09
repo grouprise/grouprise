@@ -5,6 +5,10 @@
 {% block breadcrumb %}{% breadcrumb object 'Weiterempfehlen' %}{% endblock %}
 {% block heading_title_text %}Empfehlen{% endblock %}
 
+{% block sidebar %}
+    {% include 'groups/_sidebar.html' with group=object %}
+{% endblock %}
+
 {% block content %}
     <form method="post">
         {% csrf_token %}

@@ -1,12 +1,11 @@
-from . import views
 from django.conf import urls
+from django.urls import path
+
+from grouprise.features.memberships import views
+from grouprise.features.memberships.views import Join
 
 urlpatterns = [
-    urls.url(
-        r'^stadt/groups/(?P<group_pk>[0-9]+)/join/$',
-        views.Join.as_view(),
-        name='join'
-    ),
+    path('<slug:group>/actions/join', Join.as_view(), name='join'),
     urls.url(
         r'^stadt/groups/join/confirm/(?P<secret_key>[a-z0-9]+)/$',
         views.JoinConfirm.as_view(),

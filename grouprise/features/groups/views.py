@@ -1,6 +1,7 @@
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
@@ -121,17 +122,10 @@ class RecommendView(PermissionMixin, SingleObjectMixin, FormView):
         return super().get(*args, **kwargs)
 
     def get_initial(self):
-        group = self.object
-        address = 'Hallo,'
-        recommendation = 'ich empfehle dir die Gruppe \'{group}\' auf {platform}:\n{link}' \
-            .format(
-                    group=group, platform=Site.objects.get_current().name,
-                    link=self.request.build_absolute_uri(group.get_absolute_url()))
-        additional = 'Abonniere die Gruppe.'
-        if not self.object.closed:
-            additional += '\n\nTritt der Gruppe bei.'
-        closing = 'Viele Grüße'
-        if self.request.user.is_authenticated:
-            closing += '\n{}'.format(self.request.user.gestalt)
-        return {'text': '{}\n\n{}\n\n{}\n\n{}'.format(
-            address, recommendation, additional, closing)}
+        context = dict(
+            group=self.object,
+            site=Site.objects.get_current(),
+            user=self.request.user
+        )
+        template = get_template('groups/recommend.txt')
+        return dict(text=template.render(context).strip())

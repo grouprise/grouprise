@@ -86,7 +86,7 @@ class Join(PermissionMixin, SuccessMessageMixin, CreateView):
 
     def get_permission_object(self):
         self.gestalt = self.request.user.gestalt if self.request.user.is_authenticated else None
-        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        self.group = get_object_or_404(Group, slug=self.kwargs.get('group'))
         return self.group
 
     def get_success_url(self):

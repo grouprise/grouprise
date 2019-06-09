@@ -1,0 +1,13 @@
+Hallo,
+
+ich empfehle dir die Gruppe '{{ group }}' auf {{ site.name }}:
+{{ group.get_absolute_url|full_url }}
+
+Wenn dich die Beiträge der Gruppe interessieren, kannst du dich per E-Mail über neue Beiträge informieren lassen. Abonniere dafür die Gruppe:
+{% url 'group-subscribe' group.slug as subscribe_url %}{{ subscribe_url|full_url }}
+
+{% if not group.closed %}Wenn du in der Gruppe mitmachen möchtest, kannst du der Gruppe beitreten:
+{% url 'join' group.slug as join_url %}{{ join_url|full_url }}
+
+{% endif %}Viele Grüße{% if user.is_authenticated %}
+{{ user.gestalt }}{% endif %}
