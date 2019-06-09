@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'grouprise.features.imports',
     'grouprise.features.memberships',
     'grouprise.features.polls',
-    'grouprise.features.sharing',
     'grouprise.features.stadt',
     'grouprise.features.subscriptions',
     'grouprise.features.tags',
