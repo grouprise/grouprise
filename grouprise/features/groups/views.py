@@ -152,7 +152,7 @@ class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, For
         email_pattern = re.compile(
                 r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', flags=re.IGNORECASE)
         gestalt_pattern = re.compile(r'@([\w-]+)')
-        
+
         # get a list of usernames
         data_without_emails = email_pattern.sub('', data)
         gestalten = gestalt_pattern.findall(data_without_emails)
