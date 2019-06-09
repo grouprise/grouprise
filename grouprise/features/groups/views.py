@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
@@ -15,6 +16,7 @@ from grouprise.features.content.filters import ContentFilterSet
 from grouprise.features.groups import filters, forms, models
 from grouprise.features.groups.forms import RecommendForm
 from grouprise.features.groups.models import Group
+from grouprise.features.groups.notifications import RecommendNotification
 
 
 class Create(PermissionMixin, CreateView):
@@ -110,16 +112,21 @@ class SubscriptionsMemberships(PermissionMixin, TemplateView):
         return self.group
 
 
-class RecommendView(PermissionMixin, SingleObjectMixin, FormView):
+class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, FormView):
     model = Group
     slug_url_kwarg = 'group'
     permission_required = 'groups.recommend'
     form_class = RecommendForm
     template_name = 'groups/recommend.html'
+    success_message = 'Die Empfehlungen wurden versendet.'
 
     def get(self, *args, **kwargs):
         self.object = self.get_object()
         return super().get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        return super().post(*args, **kwargs)
 
     def get_initial(self):
         context = dict(
@@ -129,3 +136,18 @@ class RecommendView(PermissionMixin, SingleObjectMixin, FormView):
         )
         template = get_template('groups/recommend.txt')
         return dict(text=template.render(context).strip())
+
+    def form_valid(self, form):
+        recipients = self.get_recipients(form.cleaned_data['recipients'])
+        self.send_recommendations(recipients, form.cleaned_data['text'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def get_recipients(self, data: str) -> list:
+        return [data]
+
+    def send_recommendations(self, recipients: list, text: str) -> None:
+        for recipient in recipients:
+            RecommendNotification(text).send(recipient)
