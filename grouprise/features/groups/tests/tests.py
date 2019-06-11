@@ -4,9 +4,10 @@ from django.test import TestCase
 from grouprise.core import tests
 from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.gestalten.tests import AuthenticatedMixin
+from grouprise.features.groups import models
+from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
-from .. import models
-from .mixins import GroupMixin
+from grouprise.features.subscriptions.tests import AuthenticatedSubscriberMixin
 
 
 class HasSidebarAndGroupsLinks:
@@ -50,7 +51,8 @@ class CreateAuthenticated(
     """
 
 
-class Settings(GroupMixin, TestCase):
+class AnonymousGroup(GroupMixin, TestCase):
+
     def test_group_settings(self):
         settings_url = '{}?group={}'.format(reverse('group-settings'), self.group.slug)
 
@@ -60,8 +62,14 @@ class Settings(GroupMixin, TestCase):
         r = self.client.get(settings_url)
         self.assertEqual(r.status_code, 302)
 
+    def test_anon_recommend_link(self):
+        recommend_url = reverse('recommend-group', args=(self.group.slug,))
+        r = self.client.get(self.group.get_absolute_url())
+        self.assertNotContains(r, 'href="{}"'.format(recommend_url))
 
-class AuthenticatedSettings(AuthenticatedMixin, GroupMixin, TestCase):
+
+class AuthenticatedGroup(AuthenticatedMixin, GroupMixin, TestCase):
+
     def test_auth_group_settings(self):
         ms_settings_url = '{}?group={}'.format(
                 reverse('subscriptions-memberships-settings'), self.group.slug)
@@ -72,8 +80,26 @@ class AuthenticatedSettings(AuthenticatedMixin, GroupMixin, TestCase):
         r = self.client.get(ms_settings_url)
         self.assertEqual(r.status_code, 200)
 
+    def test_auth_recommend_link(self):
+        recommend_url = reverse('recommend-group', args=(self.group.slug,))
+        r = self.client.get(self.group.get_absolute_url())
+        self.assertNotContains(r, 'href="{}"'.format(recommend_url))
 
-class AuthenticatedMemberSettings(AuthenticatedMemberMixin, TestCase):
+
+class SubscriberGroup(AuthenticatedSubscriberMixin, TestCase):
+
+    def test_subscriber_recommend_link(self):
+        recommend_url = reverse('recommend-group', args=(self.group.slug,))
+        r = self.client.get(self.group.get_absolute_url())
+        self.assertContains(r, 'href="{}"'.format(recommend_url))
+
+
+class MemberGroup(AuthenticatedMemberMixin, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.group.refresh_from_db()
+
     def test_member_group_settings(self):
         settings_url = '{}?group={}'.format(reverse('group-settings'), self.group.slug)
 
@@ -103,3 +129,8 @@ class AuthenticatedMemberSettings(AuthenticatedMemberMixin, TestCase):
         self.assertContains(r, 'href="{}"'.format(image_settings_url))
         r = self.client.get(image_settings_url)
         self.assertEqual(r.status_code, 200)
+
+    def test_member_recommend_link(self):
+        recommend_url = reverse('recommend-group', args=(self.group.slug,))
+        r = self.client.get(self.group.get_absolute_url())
+        self.assertContains(r, 'href="{}"'.format(recommend_url))
