@@ -1,5 +1,6 @@
-from django.urls import reverse
+from django.core import mail
 from django.test import TestCase
+from django.urls import reverse
 
 from grouprise.core import tests
 from grouprise.features.gestalten import tests as gestalten
@@ -92,6 +93,25 @@ class SubscriberGroup(AuthenticatedSubscriberMixin, TestCase):
         recommend_url = reverse('recommend-group', args=(self.group.slug,))
         r = self.client.get(self.group.get_absolute_url())
         self.assertContains(r, 'href="{}"'.format(recommend_url))
+
+    def test_recommendation(self):
+        recommend_url = reverse('recommend-group', args=(self.group.slug,))
+        recommend_email = 'recommend@example.org'
+        recommendation_text = 'test recommendation text'
+
+        r = self.client.get(recommend_url)
+        self.assertEqual(r.status_code, 200)
+
+        r = self.client.post(recommend_url, dict(
+            recipients='foo @{}, <{}>'.format(self.gestalt.user.username, recommend_email),
+            text=recommendation_text))
+        self.assertRedirects(r, self.group.get_absolute_url())
+        self.assertEqual(len(mail.outbox), 2)
+        for email in mail.outbox:
+            self.assertEqual(email.body, recommendation_text)
+        # we expect one recipient per mail, stripping surrounding '<>' characters
+        recipients = [e.to[0][1:-1] for e in mail.outbox]
+        self.assertEqual(set(recipients), set([self.gestalt.user.email, recommend_email]))
 
 
 class MemberGroup(AuthenticatedMemberMixin, TestCase):
