@@ -198,7 +198,6 @@ class Notification:
         if kwargs.get('use_sync_email_backend'):
             message.connection = get_connection(settings.SYNC_EMAIL_BACKEND)
         elif kwargs.get('use_async_email_backend'):
-            raise RuntimeError('FAIL')
             message.connection = get_connection(settings.ASYNC_EMAIL_BACKEND)
 
         # we don't expect errors when sending mails because we just pass mails to django-mailer
