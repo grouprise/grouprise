@@ -253,6 +253,20 @@ CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 
 
+# grouprise Repeatable Tasks (grouprise.core)
+
+GROUPRISE_REPEATABLE_TASKS = [
+    {
+        'model': 'content2.Content',
+        'method': 'grouprise.features.content.tasks.send_content_notifications',
+    },
+    {
+        'model': 'contributions.Contribution',
+        'method': 'grouprise.features.contributions.tasks.send_contribution_notifications',
+    },
+]
+
+
 # grouprise Tags (grouprise.features.tags)
 
 GROUPRISE_TAGS_TAGGABLE = (
