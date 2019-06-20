@@ -1,3 +1,4 @@
+import html
 import os
 
 import html2text as python_html2text
@@ -54,7 +55,7 @@ def url_for_user(model, user):
 
 
 @register.filter
-def html2text(html, preset='mail'):
+def html2text(html_text, preset='mail'):
     text_maker = python_html2text.HTML2Text()
     text_maker.body_width = 0
     if preset == 'mail':
@@ -64,7 +65,7 @@ def html2text(html, preset='mail'):
         text_maker.ignore_images = True
     elif preset == 'import':
         text_maker.escape_snob = True
-    return text_maker.handle(html).rstrip()
+    return html.unescape(text_maker.handle(html_text)).rstrip()
 
 
 @register.filter
