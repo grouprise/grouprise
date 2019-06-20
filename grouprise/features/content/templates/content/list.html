@@ -39,7 +39,7 @@
         </div>
     {% endif %}
     {% endcomment %}
-    <div class="content-list">
+    <div class="content-list" data-component="content-list">
         {% include 'content/_list.html' with associations=object_list %}
         {% pagination 'Weitere Beiträge' %}
     </div>

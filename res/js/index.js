@@ -40,6 +40,7 @@ import groupSearch from './transforms/group-search'
 import menu from './transforms/menu'
 import dock from './transforms/dock'
 import contentOrder from './transforms/content-order'
+import contentList from './transforms/content-list'
 
 __webpack_nonce__ = 'value'  // eslint-disable-line
 
@@ -50,6 +51,7 @@ function init (searchIn = document) {
   const opts = { root: searchIn, conf: { bus, init, history } }
 
   // initialize components on load
+  component('content-list', contentList, opts)
   component('masonry', masonry, opts)
   component('date', date, opts)
   component('menu', menu, opts)
