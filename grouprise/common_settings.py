@@ -256,8 +256,11 @@ CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 # grouprise Repeatable Tasks (grouprise.core)
 
 GROUPRISE_REPEATABLE_TASKS = {
-    'content2.Content': 'grouprise.features.content.tasks.send_content_notifications',
-    'contributions.Contribution': 'grouprise.features.contributions.tasks.send_contribution_notifications',
+    'content2.Content':
+    'grouprise.features.content.notifications.send_content_notifications',
+
+    'contributions.Contribution':
+    'grouprise.features.contributions.notifications.send_contribution_notifications',
 }
 
 

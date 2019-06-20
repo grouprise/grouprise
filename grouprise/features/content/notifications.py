@@ -76,3 +76,7 @@ class ContentCreated(grouprise.core.notifications.Notification):
         if self.association:
             return reverse('content-permalink', args=(self.association.pk,))
         return super().get_url()
+
+
+def send_content_notifications(instance):
+    ContentCreated.send_all(instance)

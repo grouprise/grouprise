@@ -110,3 +110,7 @@ class ContributionCreated(notifications.Notification):
     def is_reply(self):
         return not (self.object.container.is_conversation
                     and self.object.container.contributions.first() == self.object)
+
+
+def send_contribution_notifications(instance):
+    ContributionCreated.send_all(instance)

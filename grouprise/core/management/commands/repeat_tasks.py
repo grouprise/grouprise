@@ -1,18 +1,13 @@
-from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.utils.module_loading import import_string
 
 from grouprise.core.models import RepeatableTask
+from grouprise.core.tasks import auto_task
 
 
 def repeat_tasks(task_queryset):
     for task in task_queryset:
-        obj = task.task_parameter
-        label = obj._meta.label
-        method_name = settings.GROUPRISE_REPEATABLE_TASKS[label]
-        task_method = import_string(method_name)
         try:
-            task_method(obj)
+            auto_task(task.task_parameter)
         finally:
             task.delete()
 
