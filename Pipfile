@@ -31,12 +31,13 @@ requests = "*"
 rules = "*"
 translitcodec = "*"
 xapian-haystack = "*"
-Django = "<2.2,>=2.0"
+Django = "*"
 django_csp = "*"
 Markdown = "<3"
 mdx_unimoji = "*"
 Pillow = "*"
-django-taggit = {git = "https://github.com/robwa/django-taggit.git",editable = true}
+django-taggit = {git = "https://github.com/jazzband/django-taggit.git"}
+psycopg2 = "*"
 
 [requires]
 python_version = "3.5"

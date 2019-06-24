@@ -1,6 +1,6 @@
 aiosmtpd                    # debian: python3-aiosmtpd
 bleach                      # debian: python3-bleach
-django>=2.0,<2.2            # debian: python3-django
+django                      # debian: python3-django
 django-allauth              # debian (buster): python3-django-allauth
 django-cachalot             # NOT IN DEBIAN
 django-csp                  # debian (buster): python3-django-csp
