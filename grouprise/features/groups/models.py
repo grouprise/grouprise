@@ -78,12 +78,6 @@ class Group(grouprise.core.models.Model):
 
     tags = TaggableManager(verbose_name='Schlagworte', blank=True)
 
-    old_tags = contenttypes.GenericRelation(
-            'tags.Tagged',
-            content_type_field='tagged_type',
-            object_id_field='tagged_id',
-            related_query_name='group')
-
     associations = django.contrib.contenttypes.fields.GenericRelation(
             'associations.Association', content_type_field='entity_type',
             object_id_field='entity_id', related_query_name='group')
