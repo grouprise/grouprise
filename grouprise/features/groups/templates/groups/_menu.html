@@ -24,7 +24,7 @@
                         {% endwith %}
                     </span>
                     {% for tag in group.tags.all %}
-                        <a href="{% url 'tag' tag.tag.slug %}">#{{ tag.tag }}</a>{% if not forloop.last %},{% endif %}
+                        <a href="{% url 'tag' tag.slug %}">#{{ tag }}</a>{% if not forloop.last %},{% endif %}
                     {% endfor %}
                 </p>
             </div>

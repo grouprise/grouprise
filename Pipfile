@@ -36,7 +36,7 @@ django_csp = "*"
 Markdown = "<3"
 mdx_unimoji = "*"
 Pillow = "*"
-django-taggit = "*"
+django-taggit = {git = "https://github.com/robwa/django-taggit.git",editable = true}
 
 [requires]
 python_version = "3.5"

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'imagekit',
     'rest_framework',
     'rules',
+    'taggit',
 
     # contributed django apps
     'django.contrib.admin',
@@ -262,6 +263,12 @@ GROUPRISE_REPEATABLE_TASKS = {
     'contributions.Contribution':
     'grouprise.features.contributions.notifications.send_contribution_notifications',
 }
+
+
+# django-taggit
+# https://django-taggit.readthedocs.io/
+
+TAGGIT_CASE_INSENSITIVE = True
 
 
 # grouprise Tags (grouprise.features.tags)

@@ -8,6 +8,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
+from taggit.managers import TaggableManager
 
 import grouprise.core.models
 from grouprise.core.utils import get_random_color
@@ -75,7 +76,9 @@ class Group(grouprise.core.models.Model):
             'Geschlossene Gruppe', default=False, help_text='In eine geschlossene Gruppe '
             'können nur Mitglieder neue Mitglieder aufnehmen.')
 
-    tags = contenttypes.GenericRelation(
+    tags = TaggableManager(verbose_name='Schlagworte', blank=True)
+
+    old_tags = contenttypes.GenericRelation(
             'tags.Tagged',
             content_type_field='tagged_type',
             object_id_field='tagged_id',
