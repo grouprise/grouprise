@@ -20,5 +20,5 @@ def is_long_standing_group_member(user, association):
     return membership.date_joined < date.today() - timedelta(weeks=1)
 
 
-add_perm('associations.delete', is_authenticated \
-                                & (is_creator | is_long_standing_group_member))
+add_perm('associations.delete',
+         is_authenticated & (is_creator | is_long_standing_group_member))
