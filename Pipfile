@@ -36,6 +36,7 @@ django_csp = "*"
 Markdown = "<3"
 mdx_unimoji = "*"
 Pillow = "*"
+django-taggit = "*"
 
 [requires]
 python_version = "3.5"
