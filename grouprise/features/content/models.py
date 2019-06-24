@@ -1,9 +1,10 @@
 import django.contrib.contenttypes.models
 import django.urls
+import django.utils.timezone
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
 from django.db.models import Q
-import django.utils.timezone
+from taggit.managers import TaggableManager
 
 import grouprise.core.models
 from grouprise.features.gestalten import models as gestalten
@@ -27,6 +28,8 @@ class Content(grouprise.core.models.Model):
     until_time = models.DateTimeField(blank=True, null=True)
     all_day = models.BooleanField(default=False)
 
+    tags = TaggableManager()
+
     associations = contenttypes.GenericRelation(
             'associations.Association',
             content_type_field='container_type',
@@ -37,12 +40,6 @@ class Content(grouprise.core.models.Model):
             'contributions.Contribution',
             content_type_field='container_type',
             object_id_field='container_id',
-            related_query_name='content')
-
-    taggeds = contenttypes.GenericRelation(
-            'tags.Tagged',
-            content_type_field='tagged_type',
-            object_id_field='tagged_id',
             related_query_name='content')
 
     def __str__(self):

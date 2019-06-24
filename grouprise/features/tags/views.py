@@ -1,6 +1,7 @@
 import django
 from django.db.models import Q
 from django.views.generic import ListView
+from taggit.models import Tag
 
 import grouprise.core
 from grouprise.core.views import PermissionMixin, TemplateFilterMixin
@@ -24,8 +25,8 @@ class Detail(PermissionMixin, TemplateFilterMixin, ListView):
 
     def get_queryset(self):
         self.tag = self.get_tag()
-        self.groups = Group.objects.filter(tags__tag=self.tag)
-        tagged_content_query = Q(content__taggeds__tag=self.tag)
+        self.groups = Group.objects.filter(tags__in=[self.tag])
+        tagged_content_query = Q(content__tags__in=[self.tag])
         tagged_group_content_query = (
                 Q(entity_type=Group.content_type) & Q(entity_id__in=self.groups))
         return super().get_queryset().ordered_user_content(self.request.user) \
@@ -33,9 +34,9 @@ class Detail(PermissionMixin, TemplateFilterMixin, ListView):
 
     def get_tag(self):
         try:
-            return models.Tag.objects.get(slug=self.kwargs.get('slug'))
-        except models.Tag.DoesNotExist:
-            return models.Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
+            return Tag.objects.get(slug=self.kwargs.get('slug'))
+        except Tag.DoesNotExist:
+            return Tag(name=self.kwargs.get('slug'), slug=self.kwargs.get('slug'))
 
 
 class TagGroup(grouprise.core.views.PermissionMixin, django.views.generic.CreateView):
@@ -58,5 +59,5 @@ class TagGroup(grouprise.core.views.PermissionMixin, django.views.generic.Create
 
     def get_tag(self):
         slug = self.kwargs.get('slug')
-        tag, created = models.Tag.objects.get_or_create(slug=slug, defaults={'name': slug})
+        tag, created = Tag.objects.get_or_create(slug=slug, defaults={'name': slug})
         return tag
