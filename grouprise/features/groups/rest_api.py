@@ -3,7 +3,7 @@ from rest_framework.decorators import permission_classes
 import django_filters.widgets
 
 from grouprise.features.groups import models
-from grouprise.features.tags.rest_api import FlattenedTagSerializer
+from grouprise.features.tags.rest_api import TagSerializer
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):
@@ -17,7 +17,7 @@ class GroupFilter(django_filters.rest_framework.FilterSet):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    tags = FlattenedTagSerializer(many=True)
+    tags = TagSerializer(many=True)
     initials = serializers.CharField(source='get_initials', read_only=True)
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     cover = serializers.SerializerMethodField()

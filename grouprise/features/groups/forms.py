@@ -3,7 +3,6 @@ from django.contrib.contenttypes import models as contenttypes
 from django.contrib.sites.models import Site
 from taggit.forms import TextareaTagWidget
 
-from grouprise.features.tags import models as tags
 from . import models
 
 

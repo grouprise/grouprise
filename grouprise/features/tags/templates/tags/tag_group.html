@@ -2,7 +2,10 @@
 
 {% block title %}Gruppe hinzufügen - {{ block.super }}{% endblock %}
 {% block menu %}{% menu %}{% endblock %}
-{% block breadcrumb %}{% breadcrumb 'Schlagworte' view.tag 'Gruppe hinzufügen' %}{% endblock %}
+{% block breadcrumb %}
+    {% url 'tag' view.tag.slug as tag_url %}
+    {% breadcrumb 'Schlagworte' view.tag|link_to:tag_url 'Gruppe hinzufügen' %}
+{% endblock %}
 
 {% block heading_title %}
     <h1 class="content-classification">#{{ view.tag.slug }}</h1>

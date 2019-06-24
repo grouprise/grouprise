@@ -5,14 +5,16 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.contenttypes import models as contenttypes
 from django.db.models import signals
-from . import RE_TAG_REF
-from .models import Tag, Tagged
+from taggit.models import Tag
+
+from grouprise.features.tags import RE_TAG_REF
+from grouprise.features.tags.utils import get_slug
 
 
 logger = logging.getLogger(__name__)
 
 _DEFAULT_CONF = {
-    'tag_self': True,
+    'tag_self': False,
     'constraint': lambda *args: True,
     'tag_related': []
 }
@@ -41,7 +43,7 @@ def build_tags(tag_names):
     tag_map = {}
     tags = []
     for tag_name in tag_names:
-        tag_map[Tag.slugify(tag_name)] = tag_name
+        tag_map[get_slug(tag_name)] = tag_name
     for slug, name in tag_map.items():
         tag = Tag.objects.get_or_create(slug=slug, defaults={'name': name})[0]
         tags.append(tag)
@@ -69,18 +71,17 @@ def tag_entities(sender, instance, *args, **kwargs):
         final_tags = build_tags(tags)
 
         tagged_models = []
+        print(conf)
         if conf['tag_self']:
+            print('SELF')
             tagged_models.append(instance)
         for related in conf['tag_related']:
+            print('RELATED')
             tagged_models.append(related(instance))
+        print(tagged_models)
 
-        for tag in final_tags:
-            for model in tagged_models:
-                tagged_type = contenttypes.ContentType.objects.get_for_model(model)
-                Tagged.objects.get_or_create(
-                    tag=tag, tagged_id=model.id,
-                    tagged_type=tagged_type
-                )
+        for model in tagged_models:
+            model.tags.add(*final_tags)
 
 
 signals.post_save.connect(tag_entities)
