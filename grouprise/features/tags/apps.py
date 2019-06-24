@@ -6,7 +6,7 @@ class TagsConfig(apps.AppConfig):
 
     def ready(self):
         # register markdown extensions
-        import grouprise.features.tags.markdown
+        import grouprise.features.tags.markdown  # noqa: F401
         # build tag configuration from settings
         from . import signals
         signals.Index.build()

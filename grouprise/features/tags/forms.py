@@ -1,9 +1,8 @@
 from django import forms
-from django.db.models.functions import Lower
 
 
 class TagGroup(forms.Form):
-    
+
     group = forms.ModelChoiceField(label='Gruppe', queryset=None)
 
     def __init__(self, **kwargs):

@@ -3,7 +3,6 @@ import re
 
 from django.apps import apps
 from django.conf import settings
-from django.contrib.contenttypes import models as contenttypes
 from django.db.models import signals
 from taggit.models import Tag
 
@@ -71,14 +70,10 @@ def tag_entities(sender, instance, *args, **kwargs):
         final_tags = build_tags(tags)
 
         tagged_models = []
-        print(conf)
         if conf['tag_self']:
-            print('SELF')
             tagged_models.append(instance)
         for related in conf['tag_related']:
-            print('RELATED')
             tagged_models.append(related(instance))
-        print(tagged_models)
 
         for model in tagged_models:
             model.tags.add(*final_tags)

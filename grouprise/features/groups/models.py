@@ -3,7 +3,6 @@ import datetime
 import django
 from django import urls
 from django.conf import settings
-from django.contrib.contenttypes import fields as contenttypes
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from imagekit.models import ImageSpecField

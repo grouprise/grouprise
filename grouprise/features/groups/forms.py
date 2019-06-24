@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.contenttypes import models as contenttypes
 from django.contrib.sites.models import Site
 from taggit.forms import TextareaTagWidget
 
@@ -18,7 +17,7 @@ class RecommendForm(forms.Form):
 class Update(forms.ModelForm):
     class Meta:
         fields = (
-                'address', 'closed', 'description', 'date_founded', 'name', 'slug', 'tags', 
+                'address', 'closed', 'description', 'date_founded', 'name', 'slug', 'tags',
                 'url', 'url_import_feed')
         model = models.Group
         widgets = {

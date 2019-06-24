@@ -25,7 +25,7 @@ class Test(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
 
     def test_tag_group_tags_group(self):
         self.client.post(u('tag-group', 'test'), data={'group': self.group.id})
-        self.assertTrue(self.group.tags.filter(tag__slug='test').exists())
+        self.assertTrue(self.group.tags.filter(slug='test').exists())
 
     def test_receive_conversation_contribution_with_tag_by_mail(self):
         # create incoming mail with tag (#302)

@@ -1,12 +1,10 @@
-import django
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django.urls import reverse
 from django.views.generic import FormView, ListView
 from taggit.models import Tag
 
-import grouprise.core
-from grouprise.core.views import PermissionMixin, TemplateFilterMixin
+from grouprise.core.views import PermissionMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.groups.models import Group
 from . import forms
