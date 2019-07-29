@@ -7,7 +7,12 @@
             {% include 'gestalten/_avatar.html' with gestalt=user.gestalt link=False size=24 %}
         </span>
         {% include 'gestalten/_avatar.html' with gestalt=user.gestalt link=False size=48 %}
-        <span class="nav-menu-item-label">{{ user.gestalt }}</span>
+        <span class="nav-menu-item-label">
+            {{ user.gestalt }}
+            {% if num_activity %}
+                ({{ num_activity }})
+            {% endif %}
+        </span>
         <i class="caret"></i>
     </label>
 {% else %}
@@ -42,7 +47,12 @@
                         <li>
                             <a href="{% url 'conversations' %}" class="nav-menu-item">
                                 <i class="sg sg-fw sg-conversations"></i>
-                                <span class="nav-menu-item-label">Gespräche</span>
+                                <span class="nav-menu-item-label">
+                                    Gespräche
+                                    {% if num_activity %}
+                                        ({{ num_activity }})
+                                    {% endif %}
+                                </span>
                             </a>
                         </li>
                         <li>

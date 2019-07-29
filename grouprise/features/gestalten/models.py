@@ -1,9 +1,10 @@
 import django.contrib.contenttypes.models
 from allauth.account import adapter as allauth_adapter
+from django import urls
 from django.conf import settings
 from django.contrib import auth
-from django import urls
 from django.db import models
+from django.utils.timezone import now
 from imagekit.models import ImageSpecField
 from imagekit.processors import SmartResize, Transpose
 
@@ -51,6 +52,7 @@ class Gestalt(grouprise.core.models.Model):
             )
     score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    activity_bookmark_time = models.DateTimeField(default=now)
 
     associations = django.contrib.contenttypes.fields.GenericRelation(
             'associations.Association', content_type_field='entity_type',
