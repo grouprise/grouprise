@@ -1,7 +1,9 @@
-from django import shortcuts
+from django import shortcuts, urls
 from django.contrib.messages import views as messages
-from django import urls
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.utils.timezone import now
 from django.views import generic
 
 import grouprise.core.views
@@ -39,6 +41,11 @@ class Conversations(grouprise.core.views.PermissionMixin, generic.ListView):
 
     def get_queryset(self):
         return super().get_queryset().ordered_user_conversations(self.request.user)
+
+    def post(self, *args, **kwargs):
+        self.request.user.gestalt.activity_bookmark_time = now()
+        self.request.user.gestalt.save()
+        return HttpResponseRedirect(reverse('conversations'))
 
 
 class GroupConversations(Conversations):

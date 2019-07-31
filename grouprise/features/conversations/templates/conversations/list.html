@@ -12,6 +12,15 @@
     {% sidebar_groups user %}
 {% endblock %}
 
+{% block heading_toolbar %}
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-ch">
+            <span class="btn-label">Alle gelesen</span>
+        </button>
+    </form>
+{% endblock %}
+
 {% block content %}
     {% load dismissible %}
     {% dismissible 'conversation-list-create' %}
