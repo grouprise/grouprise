@@ -12,6 +12,9 @@
                 {{ c.subject }}
             </div>
             <span class="thread-preview-stat">
+                {% if unread %}
+                    <strong>neue Aktivität,</strong>
+                {% endif %}
                 {% with num_replies=c.contributions.count|add:'-1' %}
                     {% if num_replies == 0 %}
                         <strong>noch keine Antwort</strong>

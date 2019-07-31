@@ -1,5 +1,4 @@
 {% extends 'stadt/stadt.html' %}
-{% load dismissible events groups %}
 
 {% block title %}Gespräche - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
@@ -8,11 +7,13 @@
 {% endblock %}
 
 {% block sidebar %}
+    {% load events groups %}
     {% sidebar_calendar view.get_content component_id='conversations-calendar' %}
     {% sidebar_groups user %}
 {% endblock %}
 
 {% block content %}
+    {% load dismissible %}
     {% dismissible 'conversation-list-create' %}
         <div class="disclaimer content-block">
             {% dismiss 'conversation-list-create' %}
@@ -29,7 +30,8 @@
     <ol class="thread-preview-list">
         {% for association in association_list %}
             <li>
-                {% include 'conversations/_preview.html' with group_avatar=True %}
+                {% load associations %}
+                {% include 'conversations/_preview.html' with group_avatar=True unread=association|unread:user.gestalt %}
             </li>
         {% endfor %}
     </ol>
