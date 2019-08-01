@@ -1,12 +1,11 @@
 from django import template
-from django.db.models import Max
 
+from grouprise.features.associations.models import Association
 
 register = template.Library()
 
 
 @register.filter
 def unread(association, gestalt):
-    last_activity = association.container.contributions.aggregate(Max('time_created'))
-    last_activity = last_activity['time_created__max']
-    return last_activity >= gestalt.activity_bookmark_time
+    return Association.objects.active_ordered_user_associations(gestalt.user) \
+            .filter(pk=association.pk).exists()

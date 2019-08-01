@@ -1,9 +1,9 @@
 {% extends 'stadt/stadt.html' %}
 
-{% block title %}Gespräche - {{ GROUPRISE_SITE_NAME }}{% endblock %}
+{% block title %}Gespräche - {{ block.super }}{% endblock %}
 {% block menu %}{% with menu='conversation' %}{{ block.super }}{% endwith %}{% endblock %}
 {% block heading_title %}
-    {% include 'core/_heading.html' with title='Gespräche' icon='sg-comments' %}
+    {% include 'core/_heading.html' with title='Aktivität' icon='sg-comments' %}
 {% endblock %}
 
 {% block sidebar %}

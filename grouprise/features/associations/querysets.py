@@ -92,3 +92,9 @@ class Association(models.QuerySet):
             Greatest('first_version', Coalesce('last_comment', 'first_version'))))
         qs = qs.order_by('-last_activity')
         return qs
+
+    def active_ordered_user_associations(self, user):
+        qs = self
+        qs = qs.ordered_user_associations(user)
+        qs = qs.filter(last_activity__gte=user.gestalt.activity_bookmark_time)
+        return qs
