@@ -6,12 +6,6 @@
     {% include 'core/_heading.html' with title='Aktivität' icon='sg-comments' %}
 {% endblock %}
 
-{% block sidebar %}
-    {% load events groups %}
-    {% sidebar_calendar view.get_content component_id='conversations-calendar' %}
-    {% sidebar_groups user %}
-{% endblock %}
-
 {% block heading_toolbar %}
     <form method="post">
         {% csrf_token %}
@@ -22,28 +16,14 @@
 {% endblock %}
 
 {% block content %}
-    {% load dismissible %}
-    {% dismissible 'conversation-list-create' %}
-        <div class="disclaimer content-block">
-            {% dismiss 'conversation-list-create' %}
-            {% if not user.is_authenticated %}
-            <p>Gespräche sind nicht öffentlich und daher nur für <a href="{% url 'account_login' %}?next={{ request.path }}">angemeldete Gestalten</a> sichtbar.</p>
-            {% endif %}
-            <p>Um ein neues Gespräch zu beginnen, wähle auf der Seite einer <a href="{% url 'group-index' %}">Gruppe</a> oder <a href="{% url 'gestalten' %}">Gestalt</a> die Schaltfläche <em>Nachricht schreiben</em> oder <em>Neues Gespräch</em>.</p>
-            {% if user.is_authenticated %}
-                <p>Außerdem kannst Du bei vielen Gestalten auf ihr <em>Symbol (Avatar)</em> klicken, um ein persönliches Gespräch mit ihnen zu beginnen.</p>
-            {% endif %}
-        </div>
-    {% enddismissible %}
-    
     <ol class="thread-preview-list">
         {% for association in association_list %}
             <li>
                 {% load associations %}
-                {% include 'conversations/_preview.html' with group_avatar=True unread=association|unread:user.gestalt %}
+                {% include 'associations/_activity_preview.html' with group_avatar=True unread=association|unread:user.gestalt %}
             </li>
         {% endfor %}
     </ol>
 
-    {% pagination 'Weitere Gespräche' %}
+    {% pagination 'Weitere Aktivität' %}
 {% endblock %}

@@ -41,9 +41,6 @@ class ActivityView(PermissionMixin, ListView):
     template_name = 'associations/list_activity.html'
     paginate_by = 10
 
-    def get_content(self):
-        return Association.objects.can_view(self.request.user)
-
     def get_queryset(self):
         return super().get_queryset().ordered_user_associations(self.request.user)
 

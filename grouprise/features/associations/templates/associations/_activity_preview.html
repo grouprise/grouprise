@@ -1,0 +1,39 @@
+{% if association.container.is_conversation %}
+    {% include 'conversations/_preview.html' with show_type=True %}
+{% else %}
+    {% with c=association.container %}
+    <a href="{% url 'content' association.entity.slug association.slug %}"
+        class="thread-preview{% if not association.public %} content-internal{% endif %}">
+            <div class="thread-preview-image">
+                {% if group_avatar and association.entity.is_group %}
+                    {% include 'groups/_avatar.html' with group=association.entity link=False size=64 %}
+                {% else %}
+                    {% include 'gestalten/_avatar.html' with gestalt=c.versions.first.author link=False size=64 %}
+                {% endif %}
+            </div>
+            <div class="thread-preview-body">
+                <div class="thread-preview-title">
+                    {{ c.subject }}
+                </div>
+                <span class="thread-preview-stat">
+                    {% if unread %}
+                        <strong>neue Aktivität,</strong>
+                    {% endif %}
+                    {% with num_comments=c.contributions.count %}
+                        Beitrag{% if num_comments > 0 %},{% endif %}
+                        {% if num_comments > 0 %}
+                            {{ num_comments }} Kommentar{{ num_comments|pluralize:'e' }}
+                        {% endif %}
+                    {% endwith %}
+                </span>
+            </div>
+            <div class="thread-preview-meta">
+                <div>
+                    {% time c.versions.first.time_created %}
+                    {% include 'content/_content_visibility.html' with small=True %}
+                </div>
+                {% include 'associations/_contributors.html' with contributors=c.get_authors max_shown=10 %}
+            </div>
+        </a>
+    {% endwith %}
+{% endif %}
