@@ -1,16 +1,16 @@
 from django import shortcuts, urls
 from django.contrib.messages import views as messages
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.utils.timezone import now
 from django.views import generic
+from django.views.generic import ListView
 
 import grouprise.core.views
 import grouprise.features.contributions.forms
 import grouprise.features.contributions.view_mixins
-from grouprise.features.gestalten.models import Gestalt
+from grouprise.core.views import PermissionMixin
 from grouprise.features.associations import models as associations
+from grouprise.features.associations.models import Association
+from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups import models as groups
 from grouprise.features.groups.models import Group
 from . import forms
@@ -30,34 +30,22 @@ class Conversation(
     form_class = grouprise.features.contributions.forms.Text
 
 
-class Conversations(grouprise.core.views.PermissionMixin, generic.ListView):
-    model = associations.Association
-    permission_required = 'conversations.list'
-    template_name = 'conversations/list.html'
+class GroupConversations(PermissionMixin, ListView):
+    permission_required = 'conversations.list_group'
+    model = Association
+    template_name = 'conversations/list_group.html'
     paginate_by = 10
 
     def get_content(self):
-        return associations.Association.objects.can_view(self.request.user)
-
-    def get_queryset(self):
-        return super().get_queryset().ordered_user_conversations(self.request.user)
-
-    def post(self, *args, **kwargs):
-        self.request.user.gestalt.activity_bookmark_time = now()
-        self.request.user.gestalt.save()
-        return HttpResponseRedirect(reverse('conversations'))
-
-
-class GroupConversations(Conversations):
-    permission_required = 'conversations.list_group'
-    template_name = 'conversations/list_group.html'
+        return Association.objects.can_view(self.request.user)
 
     def get_permission_object(self):
         self.group = shortcuts.get_object_or_404(groups.Group, pk=self.kwargs['group_pk'])
         return self.group
 
     def get_queryset(self):
-        return super().get_queryset().filter_group_containers().filter(entity_id=self.group.id)
+        return super().get_queryset().ordered_user_conversations(self.request.user) \
+                .filter_group_containers().filter(entity_id=self.group.id)
 
 
 class CreateConversation(

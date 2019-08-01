@@ -8,11 +8,6 @@ urlpatterns = [
         name='abuse'),
 
     urls.url(
-        r'^stadt/conversations/$',
-        views.Conversations.as_view(),
-        name='conversations'),
-
-    urls.url(
         r'^stadt/conversations/(?P<association_pk>[0-9]+)/$',
         views.Conversation.as_view(),
         name='conversation'),

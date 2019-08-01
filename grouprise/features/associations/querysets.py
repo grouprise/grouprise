@@ -2,6 +2,7 @@ import django.utils.timezone
 from django.contrib.contenttypes import models as contenttypes
 from django.db import models
 from django.db.models import Max, Min
+from django.db.models.functions import Coalesce, Greatest
 
 from grouprise.features.content import models as content
 from grouprise.features.conversations import models as conversations
@@ -77,5 +78,17 @@ class Association(models.QuerySet):
         qs = qs.can_view(user, container='conversation')
         qs = qs.filter(container_type=conversations.Conversation.content_type)
         qs = qs.annotate(last_activity=Max('conversation__contributions__time_created'))
+        qs = qs.order_by('-last_activity')
+        return qs
+
+    def ordered_user_associations(self, user):
+        qs = self
+        qs = qs.can_view(user, container='conversation')
+        qs = qs.annotate(last_answer=Max('conversation__contributions__time_created'))
+        qs = qs.annotate(last_comment=Max('content__contributions__time_created'))
+        qs = qs.annotate(first_version=Min('content__versions__time_created'))
+        qs = qs.annotate(last_activity=Coalesce(
+            'last_answer',
+            Greatest('first_version', Coalesce('last_comment', 'first_version'))))
         qs = qs.order_by('-last_activity')
         return qs

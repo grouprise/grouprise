@@ -25,10 +25,6 @@ rules.add_perm(
         memberships.is_member_of)
 
 rules.add_perm(
-        'conversations.list',
-        rules.always_allow)
-
-rules.add_perm(
         'conversations.list_group',
         memberships.is_member_of)
 
