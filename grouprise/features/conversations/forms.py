@@ -22,7 +22,7 @@ class Create(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.has_author = kwargs.pop('has_author')
         self.contribution = kwargs.pop('contribution')
-        self.with_membership_application = kwargs.pop('with_membership_application')
+        self.with_membership_application = kwargs.pop('with_membership_application', False)
         super().__init__(*args, **kwargs)
         if self.has_author:
             del self.fields['author']

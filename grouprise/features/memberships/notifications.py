@@ -20,6 +20,7 @@ class MembershipCreated(Notification):
     def get_recipients(cls, membership):
         return {gestalt: {} for gestalt in membership.group.members.all()}
 
+
 class NoMember(Notification):
     subject = 'Mitgliedschaft'
 
