@@ -61,6 +61,7 @@
         {% has_perm 'memberships.view_list' user group as can_list %}
         {% has_perm 'sharing.invite_member' user group as can_invite %}
         {% has_perm 'memberships.try_to_join' user group as can_join %}
+        {% has_perm 'conversations.create_group_conversation_with_membership_application' user group as can_apply %}
 
         <dt>
             <i class="sg sg-members"></i>
@@ -77,25 +78,23 @@
             {% if can_join %}
             &middot; <a href="{% url 'join' group.slug %}">Beitreten</a>
             {% elif can_invite %}
-            &middot; <a href="{% url 'member-invite' group.pk %}">Einladen</a>
+            &middot; <a href="{% url 'member-invite' group.pk %}">Mitglied einladen</a>
             {% elif can_create %}
-            &middot; <a href="{% url 'member-create' group.pk %}">Aufnehmen</a>
+            &middot; <a href="{% url 'member-create' group.pk %}">Mitglied aufnehmen</a>
+            {% elif can_apply %}
+            &middot; <a href="{% url 'create-group-conversation' group.pk %}?apply_for_membership=1">Mitgliedschaft beantragen</a>
             {% else %}
-            &middot; <a href="{% url 'recommend-group' group.slug %}">Weiterempfehlen</a>
+            &middot; <a href="{% url 'recommend-group' group.slug %}">Gruppe weiterempfehlen</a>
             {% endif %}
         </dd>
 
-        {% if group.closed %}
+        {% if group.closed and can_list %}
             <dt>
                 <i class="sg sg-closed"></i>
                 <span class="sr-only">Geschlossene Gruppe</span>
             </dt>
             <dd>
-                Geschlossene Gruppe{% if not can_list %}:
-                <span title="Im Verlauf des Gesprächs kannst Du die Mitgliedschaft beantragen.">
-                    <a href="{% url 'create-group-conversation' group.pk %}">Gespräch beginnen</a> 
-                    um Mitgliedschaft zu beantragen{% endif %}
-                </span>
+                Geschlossene Gruppe
             </dd>
         {% endif %}
 

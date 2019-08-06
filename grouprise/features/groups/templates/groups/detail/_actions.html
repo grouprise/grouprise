@@ -14,9 +14,14 @@
         {# MEMBERSHIP #}
         {% load rules %}
         {% has_perm 'memberships.try_to_join' user group as can_join %}
+        {% has_perm 'conversations.create_group_conversation_with_membership_application' user group as can_apply %}
         {% if can_join %}
             <a href="{% url 'join' group.slug %}" class="btn btn-default btn-sm" title="Der Gruppe beitreten">
                 <i class="sg sg-join"></i> Beitreten
+            </a>
+        {% elif can_apply %}
+            <a href="{% url 'create-group-conversation' group.pk %}?apply_for_membership=1" class="btn btn-default btn-sm" title="Mitgliedschaft beantragen">
+                <i class="sg sg-join"></i> Mitgliedschaft beantragen
             </a>
         {% endif %}
 

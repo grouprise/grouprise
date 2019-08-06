@@ -1,7 +1,7 @@
 from grouprise.features.associations import models as associations
 from grouprise.features.gestalten import rules as gestalten
 from grouprise.features.groups.rules import is_closed
-from grouprise.features.memberships import predicates as memberships
+from grouprise.features.memberships.predicates import is_member_of
 import rules
 
 
@@ -23,15 +23,15 @@ rules.add_perm(
 
 rules.add_perm(
         'conversations.create_group_conversation_by_email',
-        memberships.is_member_of)
+        is_member_of)
 
 rules.add_perm(
         'conversations.create_group_conversation_with_membership_application',
-        is_closed)
+        is_closed & ~is_member_of)
 
 rules.add_perm(
         'conversations.list_group',
-        memberships.is_member_of)
+        is_member_of)
 
 rules.add_perm(
         'conversations.reply',
