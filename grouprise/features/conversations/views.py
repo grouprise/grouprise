@@ -87,10 +87,21 @@ class CreateGestaltConversation(CreateConversation):
 class CreateGroupConversation(CreateConversation):
     permission_required = 'conversations.create_group_conversation'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['with_membership_application'] = self.with_membership_application
+        return kwargs
+
     def get_permission_object(self):
         if not hasattr(self, 'entity'):
             self.entity = get_object_or_404(Group, pk=self.kwargs['group_pk'])
         return self.entity
+
+    def get_permission_required(self):
+        self.with_membership_application = self.request.GET.get('apply_for_membership') == '1'
+        if self.with_membership_application:
+            return ('conversations.create_group_conversation_with_membership_application',)
+        return super().get_permission_required()
 
 
 class CreateAbuseConversation(CreateGroupConversation):

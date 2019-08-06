@@ -4,6 +4,8 @@ import grouprise.features
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions_models
+from grouprise.features.contributions.models import Contribution
+from grouprise.features.memberships.models import Application
 from . import models
 
 
@@ -20,6 +22,7 @@ class Create(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.has_author = kwargs.pop('has_author')
         self.contribution = kwargs.pop('contribution')
+        self.with_membership_application = kwargs.pop('with_membership_application')
         super().__init__(*args, **kwargs)
         if self.has_author:
             del self.fields['author']
@@ -55,8 +58,17 @@ class Create(forms.ModelForm):
                     self.cleaned_data['author'])
         self.contribution.save()
 
+        # create membership application for closed groups
+        if self.with_membership_application:
+            application = Application.objects.create(group=association.entity)
+            application_contribution = Contribution(author=self.contribution.author)
+            application_contribution.container = conversation
+            application_contribution.contribution = application
+            application_contribution.save()
+
         # send contribution creation signal
         grouprise.features.contributions.signals.post_create.send(
-                sender=self.__class__, instance=self.contribution)
+                sender=self.__class__, instance=self.contribution,
+                with_membership_application=application)
 
         return association

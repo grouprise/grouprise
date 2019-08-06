@@ -23,5 +23,10 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'conversations/_create_form.html' %}
+    {% if view.with_membership_application %}
+        <p>Die Gruppe '{{ view.entity }}' ist eine geschlossene Gruppe. Beschreibe bitte kurz,
+        warum du der Gruppe beitreten möchtest. Anschließend entscheiden die Gruppenmitglieder,
+        ob sie deiner Anfrage zustimmen.</p>
+    {% endif %}
+    {% include 'conversations/_create_form.html' with membership_application=view.with_membership_application %}
 {% endblock %}
