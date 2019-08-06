@@ -60,7 +60,8 @@ class Create(forms.ModelForm):
 
         # create membership application for closed groups
         if self.with_membership_application:
-            application = Application.objects.create(group=association.entity)
+            application = Application.objects.create(
+                    group=association.entity, attached_to=self.contribution)
             application_contribution = Contribution(author=self.contribution.author)
             application_contribution.container = conversation
             application_contribution.contribution = application
@@ -68,7 +69,6 @@ class Create(forms.ModelForm):
 
         # send contribution creation signal
         grouprise.features.contributions.signals.post_create.send(
-                sender=self.__class__, instance=self.contribution,
-                with_membership_application=application)
+                sender=self.__class__, instance=self.contribution)
 
         return association

@@ -16,6 +16,9 @@ class Join(MembershipRequest):
 class MembershipCreated(Notification):
     subject = 'Mitgliedschaft'
 
+    @classmethod
+    def get_recipients(cls, membership):
+        return {gestalt: {} for gestalt in membership.group.members.all()}
 
 class NoMember(Notification):
     subject = 'Mitgliedschaft'

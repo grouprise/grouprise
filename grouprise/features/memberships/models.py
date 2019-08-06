@@ -30,6 +30,9 @@ class Membership(models.Model):
 class Application(models.Model):
     group = models.ForeignKey(
             'groups.Group', related_name='applications', on_delete=models.CASCADE)
+    attached_to = models.ForeignKey(
+            'contributions.Contribution', null=True, related_name='attached_applications',
+            on_delete=models.SET_NULL, blank=True)
 
     contributions = contenttypes.GenericRelation(
             'contributions.Contribution',

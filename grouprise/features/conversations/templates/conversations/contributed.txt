@@ -1,4 +1,7 @@
-{% markdown text as html %}{{ html|html2text:'mail' }}
+{% if object.attached_applications.first %}{{ object.author }} beantragt mit dieser Nachricht die Mitgliedschaft in der Gruppe '{{ object.attached_applications.first.group }}':
+{% if association %}{% url 'conversation' association.pk as path %}{% else %}{% url 'conversation' object.container.associations.first.pk as path %}{% endif %}{{ path|full_url }}
+
+{% endif %}{% markdown text as html %}{{ html|html2text:'mail' }}
 
 -- 
 Nachricht online lesen und beantworten:
