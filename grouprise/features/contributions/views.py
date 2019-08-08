@@ -50,6 +50,6 @@ class ReplyToAuthor(CreateGestaltConversation):
         self.association = get_object_or_404(
                 Association, pk=self.kwargs.get('association_pk'))
         self.contribution = get_object_or_404(
-                Contribution, pk=self.kwargs.get('contribution_pk'))
+                Contribution.objects_with_internal, pk=self.kwargs.get('contribution_pk'))
         self.entity = self.contribution.author
         return self.contribution
