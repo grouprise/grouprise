@@ -12,7 +12,10 @@
             <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel schreiben</a></li>
             <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> Veranstaltung eintragen</a></li>
             <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> Bildergalerie anlegen</a></li>
+            {% comment %}
+            <!-- poll creation deactivated, see #654 -->
             <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> (Termin-)Umfrage beginnen</a></li>
+            {% endcomment %}
             {% if about_group %}
                 <li><a href="{% url 'content' about_group.slug 'tools' %}#8-werkzeuge-fur-andere-anwendungsfalle"><i class="sg sg-fw sg-tools"></i> Weitere Möglichkeiten</a></li>
             {% endif %}
