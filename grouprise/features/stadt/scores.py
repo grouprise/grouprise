@@ -11,13 +11,12 @@ from grouprise.features.gestalten import models as gestalten
 from grouprise.features.groups import models as groups
 from grouprise.features.subscriptions import models as subscriptions
 
-THRESHOLD = django.utils.timezone.now() - datetime.timedelta(
-        days=settings.GROUPRISE.get('SCORE_CONTENT_AGE', 0))
-
 
 class Gestalt:
     @classmethod
     def score(cls, instance):
+        THRESHOLD = django.utils.timezone.now() - datetime.timedelta(
+                days=settings.GROUPRISE.get('SCORE_CONTENT_AGE', 0))
         s = 0
         if isinstance(instance, gestalten.Gestalt):
             authored_versions = content.Version.objects.filter(
@@ -33,6 +32,8 @@ class Gestalt:
 class Group:
     @classmethod
     def score(cls, instance):
+        THRESHOLD = django.utils.timezone.now() - datetime.timedelta(
+                days=settings.GROUPRISE.get('SCORE_CONTENT_AGE', 0))
         s = 0
         if isinstance(instance, groups.Group):
             num_members = instance.memberships.count()
