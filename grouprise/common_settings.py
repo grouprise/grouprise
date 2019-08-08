@@ -255,6 +255,14 @@ CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 
 
+# grouprise Score Processors
+
+GROUPRISE_SCORE_PROCESSORS = (
+    'grouprise.features.stadt.scores.Gestalt',
+    'grouprise.features.stadt.scores.Group',
+)
+
+
 # grouprise Repeatable Tasks (grouprise.core)
 
 GROUPRISE_REPEATABLE_TASKS = {
