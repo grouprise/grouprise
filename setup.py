@@ -1,14 +1,19 @@
 import os
+import re
 from setuptools import setup, find_packages
 
 
 # parse dependencies from requirements.txt
 def get_requirements():
+    # replace git-based URLs (e.g. "git+https://github.com/jazzband/django-taggit.git")
+    git_http_regex = re.compile(r"^git\+https?://.*/(?P<name>[^/]+?)(?:\.git)?$")
     with open('requirements.txt') as f:
-        return [
-            line.split('#')[0].strip() for line in f.read().splitlines()
-            if not line.strip().startswith('#')
-        ]
+        for line in f.read().splitlines():
+            line = line.strip()
+            if not line.startswith('#'):
+                line = line.split('#')[0].strip()
+                line = git_http_regex.sub(r'\g<name>', line)
+                yield line
 
 
 def get_readme():
@@ -54,7 +59,7 @@ setup(
         'Environment :: Web Environment',
         'Topic :: Internet :: WWW/HTTP',
     ],
-    install_requires=get_requirements(),
+    install_requires=list(get_requirements()),
     data_files=(
         ('.', (
             'manage.py', 'README.md', 'LICENSE', 'CONTRIBUTORS.md', 'CONTRIBUTING.md',
