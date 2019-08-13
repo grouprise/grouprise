@@ -243,6 +243,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'VIEW_DESCRIPTION_FUNCTION': 'grouprise.features.rest_api.views.get_view_description',
 }
 
 
