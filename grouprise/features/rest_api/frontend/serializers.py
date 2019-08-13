@@ -4,6 +4,7 @@ from taggit.models import Tag
 
 from grouprise import core
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
+from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
 
 
@@ -57,6 +58,27 @@ class GestaltSettingSerializer(serializers.ModelSerializer):
         fields = ('id', 'gestalt', 'name', 'category', 'value')
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'name')
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True)
+    initials = serializers.CharField(source='get_initials', read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+    cover = serializers.SerializerMethodField()
+
+    def get_cover(self, obj: Group):
+        return obj.get_cover_url()
+
+    class Meta:
+        model = Group
+        fields = ('id', 'slug', 'name', 'initials', 'description', 'avatar',
+                  'avatar_color', 'tags', 'cover', 'url', )
+
+
 class ImageSerializer(serializers.ModelSerializer):
     title = serializers.CharField(source='file.name', read_only=True)
     path = serializers.CharField(source='file.url', read_only=True)
@@ -84,9 +106,3 @@ class ImageSerializer(serializers.ModelSerializer):
         repr = super().to_representation(instance)
         repr['preview'] = instance.preview_api.url
         return repr
-
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ('id', 'name')

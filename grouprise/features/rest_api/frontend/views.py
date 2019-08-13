@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from rest_framework import mixins, permissions, viewsets
+from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 
 from grouprise.core.templatetags.defaulttags import markdown
@@ -11,8 +12,9 @@ from grouprise.features.galleries.models import GalleryImage
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 from grouprise.features.images.models import Image
 from grouprise.features.memberships.models import Membership
-from .filters import ImageFilter
-from .serializers import GestaltSerializer, GestaltSettingSerializer, ImageSerializer
+from .filters import GroupFilter, ImageFilter
+from .serializers import GestaltSerializer, GestaltSettingSerializer, GroupSerializer, \
+        ImageSerializer
 
 _PRESETS = {
     'content': {
@@ -47,6 +49,14 @@ class GestaltSettingSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return GestaltSetting.objects.filter(gestalt=self.kwargs['gestalt'])
+
+
+@permission_classes((permissions.AllowAny, ))
+class GroupSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = GroupSerializer
+    filter_fields = ('id', 'name', 'slug', )
+    filter_class = GroupFilter
+    queryset = Group.objects.all()
 
 
 class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
