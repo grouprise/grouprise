@@ -1,9 +1,8 @@
 from rest_framework.routers import SimpleRouter
 
 from grouprise.features.groups.rest_api import GroupSet
-from grouprise.features.images.rest_api import ImageSet
 from grouprise.features.polls.rest_api import PollSet
-from grouprise.features.rest_api.frontend.views import GestaltSet, GestaltSettingSet, MarkdownView
+from .views import GestaltSet, GestaltSettingSet, ImageSet, MarkdownView
 
 router = SimpleRouter()
 

@@ -1,6 +1,17 @@
+import django
 from rest_framework import serializers
+from taggit.models import Tag
 
+from grouprise import core
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
+from grouprise.features.images.models import Image
+
+
+def validate_file_size(image):
+    try:
+        core.models.validate_file_size(image['file'])
+    except django.forms.ValidationError as e:
+        raise serializers.ValidationError(e)
 
 
 class GestaltSerializer(serializers.ModelSerializer):
@@ -44,3 +55,38 @@ class GestaltSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = GestaltSetting
         fields = ('id', 'gestalt', 'name', 'category', 'value')
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(source='file.name', read_only=True)
+    path = serializers.CharField(source='file.url', read_only=True)
+
+    class Meta:
+        model = Image
+        fields = ('id', 'file', 'title', 'creator', 'path')
+        validators = [validate_file_size]
+
+    def _get_gestalt(self):
+        try:
+            return self.context['request'].user.gestalt
+        except AttributeError:
+            return None
+
+    def create(self, validated_data):
+        validated_data.update({"creator": self._get_gestalt()})
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.update({"creator": self._get_gestalt()})
+        return super().update(instance, validated_data)
+
+    def to_representation(self, instance: Image):
+        repr = super().to_representation(instance)
+        repr['preview'] = instance.preview_api.url
+        return repr
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'name')

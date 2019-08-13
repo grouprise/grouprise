@@ -3,7 +3,7 @@ from rest_framework.decorators import permission_classes
 import django_filters.widgets
 
 from grouprise.features.groups import models
-from grouprise.features.tags.rest_api import TagSerializer
+from grouprise.features.rest_api.frontend.serializers import TagSerializer
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):
