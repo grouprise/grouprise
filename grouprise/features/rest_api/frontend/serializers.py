@@ -1,16 +1,6 @@
-from rest_framework import viewsets, serializers, permissions
-from . import models
+from rest_framework import serializers
 
-
-def permission(path):
-    class UserPermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            gestalt_id = request.resolver_match.kwargs.get('gestalt')
-            return request.user.gestalt.id == int(gestalt_id)
-
-        def has_object_permission(self, request, view, obj):
-            return request.user.gestalt == path(obj)
-    return UserPermission
+from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 
 
 class GestaltSerializer(serializers.ModelSerializer):
@@ -19,7 +9,7 @@ class GestaltSerializer(serializers.ModelSerializer):
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
-        model = models.Gestalt
+        model = Gestalt
         fields = ('id', 'name', 'initials', 'about', 'avatar', 'avatar_color', 'url')
 
 
@@ -30,7 +20,7 @@ class GestaltOrAnonSerializer(serializers.Serializer):
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
         if 'id' in data and data['id'] is not None:
-            return models.Gestalt.objects.get(pk=data['id'])
+            return Gestalt.objects.get(pk=data['id'])
         # todo validate name if no valid id was provided
         return data
 
@@ -48,26 +38,9 @@ class GestaltSettingSerializer(serializers.ModelSerializer):
     def get_fields(self):
         fields = super().get_fields()
         gestalt = self.context['view'].request.user.gestalt
-        fields['gestalt'].queryset = models.Gestalt.objects.filter(id=gestalt.id)
+        fields['gestalt'].queryset = Gestalt.objects.filter(id=gestalt.id)
         return fields
 
     class Meta:
-        model = models.GestaltSetting
+        model = GestaltSetting
         fields = ('id', 'gestalt', 'name', 'category', 'value')
-
-
-class GestaltSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = GestaltSerializer
-    permission_classes = (permissions.IsAuthenticated, )
-
-    def get_queryset(self):
-        user = self.request.user
-        return models.Gestalt.objects.filter(pk=user.gestalt.pk)
-
-
-class GestaltSettingSet(viewsets.ModelViewSet):
-    serializer_class = GestaltSettingSerializer
-    permission_classes = (permissions.IsAuthenticated, permission(lambda setting: setting.gestalt))
-
-    def get_queryset(self):
-        return models.GestaltSetting.objects.filter(gestalt=self.kwargs['gestalt'])

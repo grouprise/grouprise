@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
 
-from grouprise.core.urls import api
+from grouprise.features.rest_api.frontend.urls import api
 
 urlpatterns = [
     path('', include('grouprise.core.urls')),
