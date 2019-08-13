@@ -5,7 +5,7 @@ from rest_framework import viewsets, mixins, serializers, permissions
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.response import Response
 
-from grouprise.features.gestalten.rest_api import GestaltSerializer, GestaltOrAnonSerializer
+from grouprise.features.rest_api.frontend.serializers import GestaltSerializer, GestaltOrAnonSerializer
 from . import models
 
 

@@ -1,11 +1,7 @@
 from django.urls import path
 
-from grouprise.core.urls import api_router
-from grouprise.features.groups.rest_api import GroupSet
 from grouprise.features.groups.views import (
         Create, ImageUpdate, List, RecommendView, SubscriptionsMemberships, Update)
-
-api_router.register(r'groups', GroupSet, 'group')
 
 urlpatterns = [
     path('stadt/groups', List.as_view(), name='group-index'),

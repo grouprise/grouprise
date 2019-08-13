@@ -19,7 +19,6 @@ urlpatterns = [
     path('', include('grouprise.features.gestalten.urls')),
     path('', include('grouprise.features.gestalten.auth.urls')),
     path('', include('grouprise.features.groups.urls')),
-    path('', include('grouprise.features.images.urls')),
     path('', include('grouprise.features.memberships.urls')),
     path('', include('grouprise.features.polls.urls')),
     path('', include('grouprise.features.subscriptions.urls')),
