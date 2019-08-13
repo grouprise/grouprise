@@ -1,8 +1,7 @@
+from django.conf.urls import url
 from rest_framework.routers import SimpleRouter
 
-from grouprise.features.groups.rest_api import GroupSet
-from grouprise.features.polls.rest_api import PollSet
-from .views import GestaltSet, GestaltSettingSet, ImageSet, MarkdownView
+from .views import GestaltSet, GestaltSettingSet, GroupSet, ImageSet, MarkdownView, PollSet, vote
 
 router = SimpleRouter()
 
@@ -12,3 +11,7 @@ router.register(r'gestalten/(?P<gestalt>\d+)/settings', GestaltSettingSet, 'gest
 router.register(r'groups', GroupSet, 'group')
 router.register(r'images', ImageSet, 'image')
 router.register(r'polls', PollSet, 'polls')
+
+urlpatterns = [
+    url(r'^polls/(?P<pk>[^/.]+)/vote', vote, name='polls-vote'),
+]

@@ -6,6 +6,8 @@ from grouprise import core
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
+from grouprise.features.polls.models import Option, Vote, VoteType, WorkaroundPoll, \
+        resolve_vote
 
 
 def validate_file_size(image):
@@ -106,3 +108,95 @@ class ImageSerializer(serializers.ModelSerializer):
         repr = super().to_representation(instance)
         repr['preview'] = instance.preview_api.url
         return repr
+
+
+class OptionSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+
+    def get_title(self, instance: Option):
+        return str(instance)
+
+    class Meta:
+        model = Option
+        fields = ('id', 'title',)
+
+
+class VoterSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        if type(instance) is str:
+            return instance
+        else:
+            return GestaltSerializer().to_representation(instance)
+
+
+class PollSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True, read_only=True)
+    last_voted = serializers.SerializerMethodField()
+
+    def get_last_voted(self, instance: WorkaroundPoll):
+        last_vote = Vote.objects\
+            .filter(option__poll=instance)\
+            .order_by('time_updated')\
+            .last()
+        return last_vote.time_updated if last_vote else None
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        vote_data = resolve_vote(instance)
+        voter_serializer = VoterSerializer()
+
+        if instance.vote_type is VoteType.CONDORCET:
+            representation.update({
+                'options_winner': getattr(vote_data['winner'], 'id', None),
+                'options_ranking': [option.id for option in vote_data['ranking']],
+                'votes': [
+                    dict(
+                        voter=voter_serializer.to_representation(voter),
+                        ranking=[
+                            option.id for option in sorted(options.keys(),
+                                                           key=lambda o: options[o], reverse=True)
+                        ]
+                    ) for voter, options in vote_data['votes'].items()
+                ]
+            })
+        elif instance.vote_type is VoteType.SIMPLE:
+            representation.update({
+                'options_winner': getattr(vote_data['winner'], 'id', None),
+                'options_ranking': [
+                    option.id for option, counts in
+                    sorted(vote_data['vote_count'].items(),
+                           key=lambda x: x[1].score, reverse=True)
+                ],
+                'vote_counts': [
+                    dict(option=option.id, score=counts.score, counts=counts.serialize())
+                    for option, counts in vote_data['vote_count'].items()
+                ],
+                'votes': [
+                    dict(
+                        voter=voter_serializer.to_representation(voter),
+                        endorsements=[
+                            dict(option=option.id, endorsement=vote.simplevote.endorse)
+                            for option, vote in votes.items()
+                            if isinstance(option, Option)
+                        ]
+                    ) for voter, votes in vote_data['votes'].items()
+                ]
+            })
+
+        return representation
+
+    class Meta:
+        model = WorkaroundPoll
+        fields = ('id', 'options', 'last_voted',)
+
+
+class EndorsementsSerializer(serializers.Serializer):
+    option = serializers.PrimaryKeyRelatedField(queryset=Option.objects)
+    endorsement = serializers.NullBooleanField()
+
+
+class PollVoteSerializer(serializers.Serializer):
+    gestalt = GestaltOrAnonSerializer()
+    ranking = serializers.PrimaryKeyRelatedField(many=True, required=False,
+                                                 queryset=Option.objects)
+    endorsements = EndorsementsSerializer(many=True, required=False)
