@@ -1,8 +1,8 @@
 from django.urls import reverse
-from rest_framework import viewsets, serializers, permissions
-from rest_framework.decorators import permission_classes
+from rest_framework import serializers
 
 from grouprise.features.associations.models import Association
+from grouprise.features.groups.models import Group
 
 
 class EventListSerializer(serializers.HyperlinkedModelSerializer):
@@ -49,15 +49,50 @@ class EventRetrieveSerializer(EventListSerializer):
         fields = ('id', 'permalink', 'timestamp', 'orgId', 'iCal')
 
 
-@permission_classes((permissions.AllowAny, ))
-class EventViewSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        return Association.objects.exclude_deleted().filter_events().filter(public=True) \
-            .filter_group_containers()
+class GroupListSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True)
+    permalink = serializers.SerializerMethodField()
+    timestamp = serializers.SerializerMethodField()
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return EventListSerializer
-        if self.action == 'retrieve':
-            return EventRetrieveSerializer
-        return EventRetrieveSerializer
+    def get_permalink(self, obj: Group):
+        return self.context['request'].build_absolute_uri(obj.get_absolute_url())
+
+    def get_timestamp(self, obj: Group):
+        return int(obj.time_modified.timestamp())
+
+    class Meta:
+        model = Group
+        fields = ('id', 'permalink', 'timestamp')
+
+
+class GroupSerializer(GroupListSerializer):
+    website = serializers.CharField(source='url', read_only=True)
+    categories = serializers.SerializerMethodField()
+    admins = serializers.SerializerMethodField()
+    slogan = serializers.SerializerMethodField()
+    locations = serializers.SerializerMethodField()
+
+    def get_categories(self, obj: Group):
+        return []
+
+    def get_admins(self, obj: Group):
+        return []
+
+    def get_slogan(self, obj: Group):
+        return None
+
+    def get_locations(self, obj: Group):
+        address = ', '.join(obj.address.replace('\r', '').split('\n')) \
+            if obj.address else None
+        return [{
+            'address': address,
+            'description': None,
+            'geo': None
+        }]
+
+    class Meta:
+        model = Group
+        fields = (
+            'id', 'permalink', 'timestamp', 'name', 'description', 'admins',
+            'categories', 'website', 'slogan', 'locations'
+        )

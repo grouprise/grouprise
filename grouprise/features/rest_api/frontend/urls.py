@@ -1,4 +1,3 @@
-from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
 from grouprise.features.groups.rest_api import GroupSet
