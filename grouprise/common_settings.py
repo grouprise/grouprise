@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'cachalot',
     'django_filters',
     'django_mailbox',
     'huey.contrib.djhuey',
