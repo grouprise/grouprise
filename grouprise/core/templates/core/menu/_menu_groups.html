@@ -48,22 +48,6 @@
             <div class="dock-content">
                 <div class="dock-content-inner">
                     <ol class="tabbls">
-                        <li data-order="medium">
-                            <div class="tabbl">
-                                <header class="tabbl-header">
-                                    <span class="tabbl-title">Deine Gruppen</span>
-                                </header>
-                                <div class="tabbl-content">
-                                    <div class="tabbl-list">
-                                        {% for membership in user.gestalt|favorite_groups %}
-                                            <a href="{{ membership.group.get_absolute_url }}">
-                                                {{ membership.group }}
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
                         <li data-order="high">
                             <div class="tabbl tabbl-wide">
                                 <div class="tabbl-content">
