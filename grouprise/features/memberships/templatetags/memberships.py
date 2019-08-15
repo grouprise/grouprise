@@ -18,4 +18,4 @@ def membership(gestalt, group):
 
 @register.filter
 def favorite_groups(gestalt):
-    return gestalt.memberships.order_by_gestalt_activity(gestalt)
+    return gestalt.memberships.select_related('group').order_by_gestalt_activity(gestalt)
