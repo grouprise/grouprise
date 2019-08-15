@@ -61,6 +61,7 @@ class Association(models.QuerySet):
         qs = self
         qs = qs.can_view(user)
         qs = qs.filter(container_type=content.Content.content_type)
+        qs = qs.prefetch_related('container')
         return qs
 
     def order_content_by_time_created(self, ascending=True):
