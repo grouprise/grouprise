@@ -35,7 +35,7 @@
             <li class="hidden-xs">
                 <ul>
                     {% if user.is_authenticated %}
-                        <li><a href="{{ user.gestalt|url_for_user:user }}">Deine Seite</a></li>
+                        <li><a href="{{ user.gestalt.get_profile_url }}">Deine Seite</a></li>
                         <li><a href="{% url 'activity' %}">Dich betreffende Aktivität</a></li>
                         <li class="separator"></li>
                         <li><a href="{% url 'settings' %}">Einstellungen</a></li>

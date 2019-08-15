@@ -124,8 +124,7 @@ class Gestalt(grouprise.core.models.Model):
         return data
 
     def get_profile_url(self):
-        return urls.reverse(
-                'entity', args=[type(self).objects.get(pk=self.pk).user.username])
+        return urls.reverse('entity', args=[self.user.username])
 
     # FIXME: move to template filter
     def get_initials(self):
