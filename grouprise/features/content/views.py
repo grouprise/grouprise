@@ -27,7 +27,7 @@ class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
     template_name = 'content/list.html'
 
     def get_queryset(self):
-        return super().get_queryset().ordered_user_content(self.request.user)
+        return super().get_queryset().prefetch().ordered_user_content(self.request.user)
 
 
 class DetailBase(grouprise.features.associations.views.AssociationMixin,

@@ -61,7 +61,6 @@ class Association(models.QuerySet):
         qs = self
         qs = qs.can_view(user)
         qs = qs.filter(container_type=content.Content.content_type)
-        qs = qs.prefetch_related('container')
         return qs
 
     def order_content_by_time_created(self, ascending=True):
@@ -105,4 +104,13 @@ class Association(models.QuerySet):
         qs = self
         qs = qs.ordered_user_associations(user)
         qs = qs.filter(last_activity__gte=user.gestalt.activity_bookmark_time)
+        return qs
+
+    def prefetch(self):
+        qs = self
+        qs = qs.prefetch_related('entity')
+        qs = qs.prefetch_related('container')
+        qs = qs.prefetch_related('container__contributions')
+        qs = qs.prefetch_related('container__versions')
+        qs = qs.prefetch_related('container__gallery_images')
         return qs
