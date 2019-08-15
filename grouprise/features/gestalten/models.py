@@ -141,7 +141,8 @@ class GestaltSetting(models.Model):
     class Meta:
         unique_together = ('gestalt', 'category', 'name')
 
-    gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE)
+    gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE,
+            related_name='settings')
     category = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255)
     value = models.TextField()
