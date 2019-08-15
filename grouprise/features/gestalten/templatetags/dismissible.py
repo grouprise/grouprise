@@ -4,8 +4,6 @@ from django import template
 from django.db import models
 from django.template import Library, loader
 
-from ..models import GestaltSetting
-
 register = Library()
 
 

@@ -113,7 +113,7 @@ class Gestalt(grouprise.core.models.Model):
         data['memberships'] = self.memberships
         data['subscriptions'] = self.subscriptions
         data['tokens'] = self.permissiontoken_set
-        data['settings'] = self.gestaltsetting_set
+        data['settings'] = self.settings
 
         data['associations'] = self.associations
         data['contributions'] = self.contributions
@@ -141,7 +141,7 @@ class GestaltSetting(models.Model):
         unique_together = ('gestalt', 'category', 'name')
 
     gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE,
-            related_name='settings')
+                                related_name='settings')
     category = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255)
     value = models.TextField()
