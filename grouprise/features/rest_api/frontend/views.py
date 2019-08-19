@@ -6,6 +6,7 @@ from django.http import Http404
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from grouprise.core.templatetags.defaulttags import markdown
 from grouprise.features.associations.models import Association
@@ -18,8 +19,9 @@ from grouprise.features.memberships.models import Membership
 from grouprise.features.polls.models import CondorcetVote, Option, SimpleVote, Vote, \
         VoteType, WorkaroundPoll
 from .filters import GroupFilter, ImageFilter
-from .serializers import GestaltSerializer, GestaltSettingSerializer, GroupSerializer, \
-        ImageSerializer, PollSerializer, PollVoteSerializer
+from .serializers import ContentAssociationSerializer, GestaltSerializer, \
+        GestaltSettingSerializer, GroupSerializer, ImageSerializer, PollSerializer, \
+        PollVoteSerializer
 
 _PRESETS = {
     'content': {
@@ -37,6 +39,15 @@ def permission(path):
         def has_object_permission(self, request, view, obj):
             return request.user.gestalt == path(obj)
     return UserPermission
+
+
+class ContentAssociationViewSet(ReadOnlyModelViewSet):
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ContentAssociationSerializer
+
+    def get_queryset(self):
+        return Association.objects.prefetch().ordered_user_content(self.request.user)
 
 
 class GestaltSet(viewsets.ReadOnlyModelViewSet):

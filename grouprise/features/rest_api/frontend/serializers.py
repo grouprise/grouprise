@@ -1,8 +1,10 @@
 import django
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from taggit.models import Tag
 
 from grouprise import core
+from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
@@ -15,6 +17,16 @@ def validate_file_size(image):
         core.models.validate_file_size(image['file'])
     except django.forms.ValidationError as e:
         raise serializers.ValidationError(e)
+
+
+class ContentAssociationSerializer(ModelSerializer):
+
+    title = serializers.CharField(source='container.title')
+    url = serializers.URLField(source='get_absolute_url')
+
+    class Meta:
+        model = Association
+        fields = ('id', 'title', 'url')
 
 
 class GestaltSerializer(serializers.ModelSerializer):
