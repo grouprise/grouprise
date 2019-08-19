@@ -19,7 +19,7 @@ from grouprise.features.images.models import Image
 from grouprise.features.memberships.models import Membership
 from grouprise.features.polls.models import CondorcetVote, Option, SimpleVote, Vote, \
         VoteType, WorkaroundPoll
-from .filters import GroupFilter, ImageFilter
+from .filters import ContentFilterSet, GroupFilter, ImageFilter
 from .serializers import ContentAssociationSerializer, GestaltSerializer, \
         GestaltSettingSerializer, GroupSerializer, ImageSerializer, PollSerializer, \
         PollVoteSerializer
@@ -47,6 +47,7 @@ class ContentAssociationViewSet(ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ContentAssociationSerializer
     pagination_class = PageNumberPagination
+    filterset_class = ContentFilterSet
 
     def get_queryset(self):
         return Association.objects.prefetch().ordered_user_content(self.request.user)

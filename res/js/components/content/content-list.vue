@@ -1,5 +1,12 @@
 <template>
   <div class="content-list">
+    <div>
+      <select v-model="filters.type" v-on:change="updateFilters">
+        <option value="">Alle</option>
+        <option value="articles">Artikel</option>
+        <option value="events">Veranstaltungen</option>
+      </select>
+    </div>
     <ol class="content-preview-list">
       <li v-for="association in associations" :key="association.id">
         <content-preview :association="association"/>
@@ -19,22 +26,34 @@
     },
     data() {
       return {
+        filters: {
+          type: '',
+        },
         associations: [],
-        next_page_url: '/stadt/api/content',
+        nextPageURL: null,
       }
     },
     methods: {
-      loadMore() {
-        fetch(this.next_page_url)
+      load(url) {
+        fetch(url)
           .then(res => res.json())
           .then(paginator => {
             this.associations = this.associations.concat(paginator.results)
-            this.next_page_url = paginator.next
+            this.nextPageURL = paginator.next
           })
+      },
+      loadMore() {
+        this.load(this.nextPageURL)
+      },
+      updateFilters() {
+        let params = new URLSearchParams()
+        Object.entries(this.filters).forEach(([k, v]) => params.set(k, v))
+        this.associations = []
+        this.load('/stadt/api/content?' + params)
       },
     },
     created() {
-      this.loadMore()
+      this.updateFilters()
     }
   }
 </script>
