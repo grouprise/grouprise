@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ol>
+    <ol class="content-preview-list">
       <li v-for="association in associations" :key="association.id">
         <content-preview :association="association"/>
       </li>
@@ -17,14 +17,6 @@
     data() {
       return {
         associations: [
-          {
-            id: 1,
-            title: 'Erster Eintrag',
-          },
-          {
-            id: 2,
-            title: 'Zweiter Eintrag',
-          },
         ],
       }
     },
