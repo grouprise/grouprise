@@ -24,17 +24,17 @@
     components: {
       ContentPreview
     },
-    data() {
+    data () {
       return {
         filters: {
-          type: '',
+          type: ''
         },
         associations: [],
-        nextPageURL: null,
+        nextPageURL: null
       }
     },
     methods: {
-      load(url) {
+      load (url) {
         fetch(url)
           .then(res => res.json())
           .then(paginator => {
@@ -42,17 +42,17 @@
             this.nextPageURL = paginator.next
           })
       },
-      loadMore() {
+      loadMore () {
         this.load(this.nextPageURL)
       },
-      updateFilters() {
+      updateFilters () {
         let params = new URLSearchParams()
         Object.entries(this.filters).forEach(([k, v]) => params.set(k, v))
         this.associations = []
         this.load('/stadt/api/content?' + params)
-      },
+      }
     },
-    created() {
+    created () {
       this.updateFilters()
     }
   }

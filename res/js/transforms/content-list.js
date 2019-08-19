@@ -11,7 +11,7 @@ export default (el, opts) => {
       return h(ContentList, {
         props: {}
       })
-    },
+    }
   })
 
   return {
