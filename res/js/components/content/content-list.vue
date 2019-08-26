@@ -35,16 +35,16 @@
       }
     },
     methods: {
-      load (url) {
+      load (url, associations) {
         fetch(url)
           .then(res => res.json())
           .then(paginator => {
-            this.associations = this.associations.concat(paginator.results)
+            this.associations = associations.concat(paginator.results)
             this.nextPageURL = paginator.next
           })
       },
       loadMore () {
-        this.load(this.nextPageURL)
+        this.load(this.nextPageURL, this.associations)
       },
       updateFilters () {
         // auto-ordering
@@ -56,8 +56,7 @@
         // reload content list with filter params
         let params = new URLSearchParams()
         Object.entries(this.filters).forEach(([k, v]) => params.set(k, v))
-        this.associations = []
-        this.load('/stadt/api/content?' + params)
+        this.load('/stadt/api/content?' + params, [])
       }
     },
     created () {
