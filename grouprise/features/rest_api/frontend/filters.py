@@ -11,9 +11,17 @@ class ContentFilterSet(filters.FilterSet):
         choices=(
             ('articles', 'Artikel'),
             ('events', 'Veranstaltungen'),
+            ('upcoming-events', 'Kommende Veranstaltungen'),
         ),
         empty_label='Alle',
         method='filter_type',
+    )
+
+    ordering = filters.OrderingFilter(
+        fields={
+            'time_created': 'pub_time',
+            'content__time': 'ev_time',
+        },
     )
 
     def filter_type(self, queryset, name, value):
@@ -21,6 +29,8 @@ class ContentFilterSet(filters.FilterSet):
             queryset = queryset.filter_articles()
         elif value == 'events':
             queryset = queryset.filter_events()
+        elif value == 'upcoming-events':
+            queryset = queryset.filter_events().filter_upcoming()
         return queryset
 
 

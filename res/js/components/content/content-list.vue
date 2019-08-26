@@ -2,9 +2,9 @@
   <div class="content-list">
     <div>
       <select v-model="filters.type" v-on:change="updateFilters">
-        <option value="">Alle</option>
-        <option value="articles">Artikel</option>
-        <option value="events">Veranstaltungen</option>
+        <option value="">Alle Beiträge</option>
+        <option value="articles">Nur Artikel</option>
+        <option value="upcoming-events">Kommende Veranstaltungen</option>
       </select>
     </div>
     <ol class="content-preview-list">
@@ -12,7 +12,7 @@
         <content-preview :association="association"/>
       </li>
     </ol>
-    <div class="btn-toolbar btn-toolbar-centered">
+    <div v-if="nextPageURL" class="btn-toolbar btn-toolbar-centered">
       <button v-on:click="loadMore" class="btn btn-default">Weitere Beiträge</button>
     </div>
   </div>
@@ -27,7 +27,8 @@
     data () {
       return {
         filters: {
-          type: ''
+          type: '',
+          ordering: '-pub_time'
         },
         associations: [],
         nextPageURL: null
@@ -46,6 +47,13 @@
         this.load(this.nextPageURL)
       },
       updateFilters () {
+        // auto-ordering
+        if (this.filters.type == 'upcoming-events')
+          this.filters.ordering = 'ev_time'
+        else
+          this.filters.ordering = '-pub_time'
+
+        // reload content list with filter params
         let params = new URLSearchParams()
         Object.entries(this.filters).forEach(([k, v]) => params.set(k, v))
         this.associations = []
