@@ -48,10 +48,11 @@
       },
       updateFilters () {
         // auto-ordering
-        if (this.filters.type == 'upcoming-events')
+        if (this.filters.type === 'upcoming-events') {
           this.filters.ordering = 'ev_time'
-        else
+        } else {
           this.filters.ordering = '-pub_time'
+        }
 
         // reload content list with filter params
         let params = new URLSearchParams()
