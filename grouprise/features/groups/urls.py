@@ -1,10 +1,10 @@
 from django.urls import path
 
 from grouprise.features.groups.views import (
-        Create, ImageUpdate, List, RecommendView, SubscriptionsMemberships, Update)
+        Create, ImageUpdate, GroupListView, RecommendView, SubscriptionsMemberships, Update)
 
 urlpatterns = [
-    path('stadt/groups', List.as_view(), name='group-index'),
+    path('stadt/groups', GroupListView.as_view(), name='group-index'),
     path('stadt/groups/add', Create.as_view(), name='group-create'),
     path('stadt/settings/group', Update.as_view(), name='group-settings'),
     path('stadt/settings/group/images', ImageUpdate.as_view(), name='group-image-settings'),

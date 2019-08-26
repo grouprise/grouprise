@@ -7,16 +7,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
-from django_filters.views import FilterView
 
 from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
-from grouprise.features.groups import filters, forms, models
+from grouprise.features.groups import forms, models
 from grouprise.features.groups.forms import RecommendForm
 from grouprise.features.groups.models import Group
 from grouprise.features.groups.notifications import RecommendNotification
@@ -65,11 +64,10 @@ class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailVi
         return self.object
 
 
-class List(PermissionMixin, FilterView):
+class GroupListView(PermissionMixin, ListView):
     permission_required = 'groups.view_list'
-    filterset_class = filters.Group
+    template_name = 'groups/list.html'
     paginate_by = 10
-    strict = False
 
     def get_content(self):
         return associations.Association.objects.filter_group_containers().can_view(

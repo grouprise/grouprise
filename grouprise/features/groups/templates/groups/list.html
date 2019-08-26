@@ -22,14 +22,10 @@
     {% dismissible 'group-list-order' %}
         <div class="disclaimer content-block">
             {% dismiss 'group-list-order' %}
-            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnent_innen werden in Auflistungen zuerst angezeigt.</p>
+            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
         </div>
     {% enddismissible %}
-    <form class="form-search" method="get">
-        {% field filter.form.name %}
-        <button class="btn btn-default">Gruppen suchen</button>
-    </form>
-    <ol class="groups" data-component="masonry">
+    <ol class="groups">
         {% for group in object_list %}
             <li>
                 {% include 'groups/_preview.html' with group=group link=True %}
