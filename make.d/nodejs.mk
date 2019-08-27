@@ -1,4 +1,5 @@
 BIN_NODE_SYSTEM = $(shell which nodejs node || true)
+BIN_NPM_SYSTEM = $(shell which npm || true)
 BIN_NODE ?= $(DIR_BUILD)/node/bin/node
 BIN_NPM ?= $(DIR_BUILD)/node/bin/npm
 
@@ -24,7 +25,7 @@ $(BIN_NODE):
 	else \
 		echo >&2 "Local nodejs version is sufficient. Symlinking executables ..."; \
 		ln -s "$(BIN_NODE_SYSTEM)" "$(NODE_LOCAL_DIR)/bin/node"; \
-		ln -s "$$(which npm)" "$(NODE_LOCAL_DIR)/bin/npm"; \
+		ln -s "$(BIN_NPM_SYSTEM)" "$(NODE_LOCAL_DIR)/bin/npm"; \
 	fi
 
 $(BIN_NPM): $(BIN_NODE)
