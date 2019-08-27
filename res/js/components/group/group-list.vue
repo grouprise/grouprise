@@ -9,7 +9,7 @@
     </div>
     <ol class="groups">
       <li v-for="group in groups" :key="group.id">
-        <content-preview :group="group"/>
+        <group-preview :group="group"/>
       </li>
     </ol>
     <div v-if="nextPageURL" class="btn-toolbar btn-toolbar-centered">
@@ -50,7 +50,7 @@
         // reload content list with filter params
         let params = new URLSearchParams()
         Object.entries(this.filters).forEach(([k, v]) => params.set(k, v))
-        this.load('/stadt/api/groups?' + params, [])
+        this.load('/stadt/api/groups?page_size=10&' + params, [])
       }
     },
     created () {

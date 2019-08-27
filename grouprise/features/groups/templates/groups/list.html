@@ -25,12 +25,14 @@
             <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnentinnen werden in Auflistungen zuerst angezeigt.</p>
         </div>
     {% enddismissible %}
-    <ol class="groups" data-component="group-list">
-        {% for group in object_list %}
-            <li>
-                {% include 'groups/_preview.html' with group=group link=True %}
-            </li>
-        {% endfor %}
-    </ol>
-    {% pagination 'Weitere Gruppen' %}
+    <div data-component="group-list">
+        <ol class="groups">
+            {% for group in object_list %}
+                <li>
+                    {% include 'groups/_preview.html' with group=group link=True %}
+                </li>
+            {% endfor %}
+        </ol>
+        {% pagination 'Weitere Gruppen' %}
+    </div>
 {% endblock %}
