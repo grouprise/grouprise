@@ -1,6 +1,6 @@
 BIN_NODE_SYSTEM = $(shell which nodejs node || true)
 BIN_NODE ?= $(DIR_BUILD)/node/bin/node
-BIN_NODE_PKG ?= $(DIR_BUILD)/node/bin/npm
+BIN_NPM ?= $(DIR_BUILD)/node/bin/npm
 
 NODE_VERSION = $(shell hash "$(BIN_NODE_SYSTEM)" 2>/dev/null && "$(BIN_NODE_SYSTEM)" -v || echo "v0.0.0")
 NODE_VERSION_MIN = v8.12.0
@@ -27,6 +27,6 @@ $(BIN_NODE):
 		ln -s "$$(which npm)" "$(NODE_LOCAL_DIR)/bin/npm"; \
 	fi
 
-$(BIN_NODE_PKG): $(BIN_NODE)
-	@# verify that "npm" (BIN_NODE_PKG) is given as full path: node will not search PATH for it
-	@[ -e "$(BIN_NODE_PKG)" ] || { echo >&2 "BIN_NODE_PKG must be a path (not an executable to be found via PATH)"; false; }
+$(BIN_NPM): $(BIN_NODE)
+	@# verify that "npm" (BIN_NPM) is given as full path: node will not search PATH for it
+	@if [ -z "$(BIN_NPM)" ] || [ ! -x "$(BIN_NPM)" ]; then echo >&2 "BIN_NPM must be a path (not an executable to be found via PATH)"; exit 1; fi
