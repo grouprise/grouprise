@@ -19,7 +19,7 @@ from grouprise.features.images.models import Image
 from grouprise.features.memberships.models import Membership
 from grouprise.features.polls.models import CondorcetVote, Option, SimpleVote, Vote, \
         VoteType, WorkaroundPoll
-from .filters import ContentFilterSet, GroupFilter, ImageFilter
+from .filters import ContentFilterSet, GroupFilterSet, ImageFilter
 from .serializers import ContentAssociationSerializer, GestaltSerializer, \
         GestaltSettingSerializer, GroupSerializer, ImageSerializer, PollSerializer, \
         PollVoteSerializer
@@ -42,11 +42,18 @@ def permission(path):
     return UserPermission
 
 
-class ContentAssociationViewSet(ReadOnlyModelViewSet):
+class SimplePageNumberPagination(PageNumberPagination):
+    page_size = 10
 
+
+class RequestPageNumberPagination(PageNumberPagination):
+    page_size_query_param = 'page_size'
+
+
+class ContentAssociationViewSet(ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ContentAssociationSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = SimplePageNumberPagination
     filterset_class = ContentFilterSet
 
     def get_queryset(self):
@@ -70,11 +77,11 @@ class GestaltSettingSet(viewsets.ModelViewSet):
         return GestaltSetting.objects.filter(gestalt=self.kwargs['gestalt'])
 
 
-@permission_classes((permissions.AllowAny, ))
-class GroupSet(viewsets.ReadOnlyModelViewSet):
+class GroupViewSet(ReadOnlyModelViewSet):
+    permission_classes = (permissions.AllowAny,)
     serializer_class = GroupSerializer
-    filter_fields = ('id', 'name', 'slug', )
-    filter_class = GroupFilter
+    pagination_class = RequestPageNumberPagination
+    filterset_class = GroupFilterSet
     queryset = Group.objects.all()
 
 

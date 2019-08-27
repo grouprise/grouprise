@@ -34,7 +34,7 @@ class ContentFilterSet(filters.FilterSet):
         return queryset
 
 
-class GroupFilter(django_filters.rest_framework.FilterSet):
+class GroupFilterSet(filters.FilterSet):
     id = django_filters.Filter(lookup_expr='in', widget=django_filters.widgets.CSVWidget)
     name = django_filters.CharFilter(lookup_expr='icontains')
     slug = django_filters.CharFilter(lookup_expr='iexact')

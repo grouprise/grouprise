@@ -244,7 +244,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    'PAGE_SIZE': 10,
     'VIEW_DESCRIPTION_FUNCTION': 'grouprise.features.rest_api.views.get_view_description',
 }
 
