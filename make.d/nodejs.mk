@@ -3,11 +3,11 @@ BIN_NPM_SYSTEM = $(shell which npm || true)
 BIN_NODE ?= $(DIR_BUILD)/node/bin/node
 BIN_NPM ?= $(DIR_BUILD)/node/bin/npm
 
-NODE_VERSION = $(shell hash "$(BIN_NODE_SYSTEM)" 2>/dev/null && "$(BIN_NODE_SYSTEM)" -v || echo "v0.0.0")
+NODE_VERSION = $(shell if [ -n "$(BIN_NODE_SYSTEM)" ]; then "$(BIN_NODE_SYSTEM)" --version; else echo "v0.0.0"; fi)
 NODE_VERSION_MIN = v8.12.0
 NODE_URL_X86 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x86.tar.xz
 NODE_URL_X64 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x64.tar.xz
-NODE_URL = $(shell [ "$$(uname -m)" = "x86_64" ] && echo "$(NODE_URL_X64)" || echo "$(NODE_URL_X86)")
+NODE_URL = $(shell if [ "$(shell uname -m)" = "x86_64" ]; then echo "$(NODE_URL_X64)"; else echo "$(NODE_URL_X86)"; fi)
 NODE_LOCAL_DIR = $(DIR_BUILD)/node
 
 RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BUILD))" node
