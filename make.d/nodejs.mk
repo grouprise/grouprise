@@ -1,4 +1,4 @@
-BIN_NODE_SYSTEM = $(shell hash nodejs 2>/dev/null && echo nodejs || hash node 2>/dev/null && echo node)
+BIN_NODE_SYSTEM = $(shell which nodejs node || true)
 BIN_NODE ?= $(DIR_BUILD)/node/bin/node
 BIN_NODE_PKG ?= $(DIR_BUILD)/node/bin/npm
 
@@ -24,7 +24,7 @@ $(BIN_NODE):
 		wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_DEST)" --strip-components=1 -f -; \
 	else \
 		echo >&2 "Local nodejs version is sufficient. Symlinking executables ..."; \
-		ln -s "$$(which "$(BIN_NODE_SYSTEM)")" "$(NODE_DEST)/bin/node"; \
+		ln -s "$(BIN_NODE_SYSTEM)" "$(NODE_DEST)/bin/node"; \
 		ln -s "$$(which npm)" "$(NODE_DEST)/bin/npm"; \
 	fi
 
