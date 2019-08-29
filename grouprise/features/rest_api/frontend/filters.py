@@ -36,12 +36,31 @@ class ContentFilterSet(filters.FilterSet):
 
 class GroupFilterSet(filters.FilterSet):
     id = django_filters.Filter(lookup_expr='in', widget=django_filters.widgets.CSVWidget)
+    membership = filters.BooleanFilter(method='filter_membership')
     name = django_filters.CharFilter(lookup_expr='icontains')
     slug = django_filters.CharFilter(lookup_expr='iexact')
+    subscription = filters.BooleanFilter(method='filter_subscription')
+
+    ordering = filters.OrderingFilter(
+        fields={
+            'score': 'activity',
+            'name': 'name',
+        },
+    )
 
     class Meta:
         model = Group
         fields = ('id', 'name', 'slug', )
+
+    def filter_membership(self, queryset, _, value):
+        if value:
+            queryset = queryset.filter(members=self.request.user.gestalt)
+        return queryset
+
+    def filter_subscription(self, queryset, _, value):
+        if value:
+            queryset = queryset.filter(subscriptions__subscriber=self.request.user.gestalt)
+        return queryset
 
 
 class ImageFilter(django_filters.rest_framework.FilterSet):

@@ -1,10 +1,17 @@
 <template>
   <div>
     <div>
-      <select v-model="filters.type" v-on:change="updateFilters">
-        <option value="">Alle Beiträge</option>
-        <option value="articles">Nur Artikel</option>
-        <option value="upcoming-events">Kommende Veranstaltungen</option>
+      <label>
+        <input type="checkbox" v-model="filters.membership" v-on:change="updateFilters">
+        Mitglied
+      </label>
+      <label>
+        <input type="checkbox" v-model="filters.subscription" v-on:change="updateFilters">
+        Abonnent
+      </label>
+      <select v-model="filters.ordering" v-on:change="updateFilters">
+        <option value="-activity">Aktivität</option>
+        <option value="name">Name</option>
       </select>
     </div>
     <ol class="groups">
@@ -27,8 +34,9 @@
     data () {
       return {
         filters: {
-          type: '',
-          ordering: '-pub_time'
+          membership: false,
+          subscription: false,
+          ordering: '-activity'
         },
         groups: [],
         nextPageURL: null
@@ -36,7 +44,7 @@
     },
     methods: {
       load (url, groups) {
-        fetch(url)
+        fetch(url, {credentials: 'same-origin'})
           .then(res => res.json())
           .then(paginator => {
             this.groups = groups.concat(paginator.results)
