@@ -2,7 +2,7 @@
   <div>
     <div>
       <label>
-        <input type="checkbox" v-model="filters.membership" v-on:change="updateFilters">
+        <input type="checkbox" v-model="filters.membership" @change="updateFilters">
         Mitglied
       </label>
       <label>
@@ -15,7 +15,7 @@
       </select>
     </div>
     <ol class="groups">
-      <li v-for="group in groups" :key="group.id">
+      <li v-for="group in objectList" :key="group.id">
         <group-preview :group="group"/>
       </li>
     </ol>
@@ -26,8 +26,10 @@
 </template>
 
 <script>
-  import GroupPreview from './group-preview.vue'
+  import GroupPreview from '../preview/group-preview.vue'
+  import ListMixin from './list-mixin'
   export default {
+    mixins: [ListMixin],
     components: {
       GroupPreview
     },
@@ -37,28 +39,12 @@
           membership: false,
           subscription: false,
           ordering: '-activity'
-        },
-        groups: [],
-        nextPageURL: null
+        }
       }
     },
     methods: {
-      load (url, groups) {
-        fetch(url, {credentials: 'same-origin'})
-          .then(res => res.json())
-          .then(paginator => {
-            this.groups = groups.concat(paginator.results)
-            this.nextPageURL = paginator.next
-          })
-      },
-      loadMore () {
-        this.load(this.nextPageURL, this.groups)
-      },
       updateFilters () {
-        // reload content list with filter params
-        let params = new URLSearchParams()
-        Object.entries(this.filters).forEach(([k, v]) => params.set(k, v))
-        this.load('/stadt/api/groups?page_size=10&' + params, [])
+        this.loadInitial('/stadt/api/groups?page_size=10&')
       }
     },
     created () {

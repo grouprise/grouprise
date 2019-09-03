@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import ContentList from '../components/content/content-list.vue'
+import ContentList from '../components/list/content-list.vue'
 
 export default (el, opts) => {
   const state = {}

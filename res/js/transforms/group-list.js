@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import GroupList from '../components/group/group-list.vue'
+import GroupList from '../components/list/group-list.vue'
 
 export default (el, opts) => {
   const state = {}

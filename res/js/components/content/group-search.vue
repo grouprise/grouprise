@@ -18,7 +18,7 @@
   import axios from 'axios'
   import { group } from '../../adapters/api'
   import { danger } from '../../util/notify'
-  import GroupPreview from './group-mini-preview.vue'
+  import GroupPreview from '../preview/group-mini-preview.vue'
 
   export default {
     components: { GroupPreview },

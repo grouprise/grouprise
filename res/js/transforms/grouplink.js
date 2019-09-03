@@ -3,7 +3,7 @@ import Popper from 'popper.js'
 import randomId from 'random-id'
 import Vue from 'vue'
 import { group as api } from '../adapters/api'
-import GroupPreview from '../components/content/group-preview.vue'
+import GroupPreview from '../components/preview/group-hint-preview.vue'
 
 const cache = {}
 
