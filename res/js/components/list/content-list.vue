@@ -1,19 +1,20 @@
 <template>
   <div class="content-list">
+    <span v-if="loading">Lade ...</span>
     <div>
-      <select v-model="filters.type" v-on:change="updateFilters">
+      <select v-model="filters.type" @change="updateFilters">
         <option value="">Alle Beiträge</option>
         <option value="articles">Nur Artikel</option>
         <option value="upcoming-events">Kommende Veranstaltungen</option>
       </select>
     </div>
     <ol class="content-preview-list">
-      <li v-for="association in associations" :key="association.id">
+      <li v-for="association in objectList" :key="association.id">
         <content-preview :association="association"/>
       </li>
     </ol>
     <div v-if="nextPageURL" class="btn-toolbar btn-toolbar-centered">
-      <button v-on:click="loadMore" class="btn btn-default">Weitere Beiträge</button>
+      <button @click="loadMore" class="btn btn-default">Weitere Beiträge</button>
     </div>
   </div>
 </template>
@@ -43,7 +44,7 @@
           this.filters.ordering = '-pub_time'
         }
 
-        this.loadInitial('/stadt/api/content?') 
+        this.loadInitial('/stadt/api/content?')
       }
     },
     created () {

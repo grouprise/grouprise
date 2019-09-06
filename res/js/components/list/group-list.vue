@@ -1,15 +1,16 @@
 <template>
   <div>
+    <span v-if="loading">Lade ...</span>
     <div>
       <label>
         <input type="checkbox" v-model="filters.membership" @change="updateFilters">
         Mitglied
       </label>
       <label>
-        <input type="checkbox" v-model="filters.subscription" v-on:change="updateFilters">
+        <input type="checkbox" v-model="filters.subscription" @change="updateFilters">
         Abonnent
       </label>
-      <select v-model="filters.ordering" v-on:change="updateFilters">
+      <select v-model="filters.ordering" @change="updateFilters">
         <option value="-activity">Aktivität</option>
         <option value="name">Name</option>
       </select>
@@ -20,7 +21,7 @@
       </li>
     </ol>
     <div v-if="nextPageURL" class="btn-toolbar btn-toolbar-centered">
-      <button v-on:click="loadMore" class="btn btn-default">Weitere Gruppen</button>
+      <button @click="loadMore" class="btn btn-default">Weitere Gruppen</button>
     </div>
   </div>
 </template>

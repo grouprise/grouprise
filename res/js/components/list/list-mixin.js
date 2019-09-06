@@ -2,16 +2,19 @@ export default {
   data () {
     return {
       objectList: [],
-      nextPageURL: null
+      nextPageURL: null,
+      loading: false
     }
   },
   methods: {
     load (url, objectList) {
+      this.loading = true
       fetch(url, {credentials: 'same-origin'})
         .then(res => res.json())
         .then(paginator => {
           this.objectList = objectList.concat(paginator.results)
           this.nextPageURL = paginator.next
+          this.loading = false
         })
     },
     loadMore () {
