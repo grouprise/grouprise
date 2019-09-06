@@ -15,8 +15,8 @@
         <option value="name">Name</option>
       </select>
     </div>
-    <ol class="groups">
-      <li v-for="group in objectList" :key="group.id">
+    <ol class="groups" v-masonry>
+      <li v-for="group in objectList" :key="group.id" v-masonry-tile>
         <group-preview :group="group"/>
       </li>
     </ol>

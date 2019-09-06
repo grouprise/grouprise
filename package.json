@@ -100,6 +100,7 @@
     "tether-drop": "^1.4.2",
     "tether-tooltip": "^1.2.0",
     "vue": "^2.5.21",
+    "vue-masonry": "^0.11.8",
     "vue-on-click-outside": "^1.0.3",
     "vue-tabs-component": "git+https://github.com/stadtgestalten/vue-tabs-component.git#dist",
     "vuedraggable": "^2.17.0"
