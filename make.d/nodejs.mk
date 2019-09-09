@@ -4,7 +4,7 @@ NODE_LOCAL_DIR = $(DIR_BUILD)/node
 BIN_NODE ?= $(NODE_LOCAL_DIR)/bin/node
 BIN_NPM ?= $(NODE_LOCAL_DIR)/bin/npm
 
-NODE_VERSION = $(shell if [ -n "$(BIN_NODE_SYSTEM)" ]; then "$(BIN_NODE_SYSTEM)" --version; else echo "v0.0.0"; fi)
+NODE_VERSION_SYSTEM = $(shell if [ -n "$(BIN_NODE_SYSTEM)" ]; then "$(BIN_NODE_SYSTEM)" --version; else echo "v0.0.0"; fi)
 NODE_VERSION_MIN = v8.12.0
 NODE_URL_X86 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x86.tar.xz
 NODE_URL_X64 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x64.tar.xz
@@ -16,7 +16,7 @@ RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BU
 $(BIN_NODE):
 	rm -rf "$(NODE_LOCAL_DIR)"
 	mkdir -p "$(NODE_LOCAL_DIR)/bin"
-	@if [  "$(NODE_VERSION)" = $$(printf '%s\n' "$(NODE_VERSION)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
+	@if [ "$(NODE_VERSION_SYSTEM)" = $$(printf '%s\n' "$(NODE_VERSION_SYSTEM)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
 		if [ "$$(uname -s)" != "Linux" ]; then \
 			echo >&2 "NodeJS download for non-linux platforms is sadly not supported. Please install $(NODE_VERSION_MIN) or later manually."; \
 			exit 1; fi; \
