@@ -29,18 +29,17 @@
 {% endblock %}
 
 {% block content %}
-    {% comment %}
-    {% if show_filter %}
-        <div class="content-filter" data-component="content-order">
-            <form>
-                {{ filter.form }}
-                <button>Anzeigen</button>
-            </form>
-        </div>
-    {% endif %}
-    {% endcomment %}
     <div class="content-list" data-component="content-list">
-        {% include 'content/_list.html' with associations=object_list %}
-        {% pagination 'Weitere Beiträge' %}
+        {% if request.COOKIES.grjs %}
+            <noscript>
+                <p>Anscheinend hast du Javascript ausgeschaltet ohne dass wir es mitbekommen
+                haben. Am besten aktivierst du es.</p>
+                {# TODO: create middleware for removing grjs cookie #}
+                {# oder <a href="?grjs=false">lädst diese Seite ohne Javascript neu</a>. #}
+            </noscript>
+        {% else %}
+            {% include 'content/_list.html' with associations=object_list %}
+            {% pagination 'Weitere Beiträge' %}
+        {% endif %}
     </div>
 {% endblock %}

@@ -2,6 +2,7 @@ import '../css/app.less'
 import './files'
 import './config'
 import './setup'
+import './cookie'
 
 import { $$, component } from 'luett'
 import { defaultsDeep } from 'lodash'

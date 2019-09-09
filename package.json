@@ -78,6 +78,7 @@
     "font-awesome": "^4.5.0",
     "get-input-selection": "^1.1.4",
     "imagesloaded": "^4.1.4",
+    "js-cookie": "^2.2.1",
     "lodash": "^4.17.11",
     "lodash-move": "^1.1.1",
     "luett": "^2.6.0",
