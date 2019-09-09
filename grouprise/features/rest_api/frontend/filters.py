@@ -1,4 +1,7 @@
+from functools import reduce
+
 import django_filters
+from django.db.models import Q
 from django_filters import rest_framework as filters
 
 from grouprise.features.associations.models import Association
@@ -28,9 +31,11 @@ class ContentFilterSet(filters.FilterSet):
     )
 
     def filter_keywords(self, queryset, name, value):
+        lookups = ['content__title__icontains', 'slug__icontains']
         keywords = value.split()
         for keyword in keywords:
-            queryset = queryset.filter(content__title__icontains=keyword)
+            q_expressions = [Q(**{l: keyword}) for l in lookups]
+            queryset = queryset.filter(reduce(lambda q1, q2: q1 | q2, q_expressions))
         return queryset
 
     def filter_type(self, queryset, name, value):
