@@ -16,11 +16,11 @@ RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BU
 $(BIN_NODE):
 	rm -rf "$(NODE_LOCAL_DIR)"
 	mkdir -p "$(NODE_LOCAL_DIR)/bin"
-	@if [ "$(NODE_VERSION_SYSTEM)" = $$(printf '%s\n' "$(NODE_VERSION_SYSTEM)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ] || ! hash npm 2>/dev/null; then \
+	@if [ -z "$(BIN_NPM_SYSTEM)" ] || [ -z "$(BIN_NODE_SYSTEM)" ] || [ "$(NODE_VERSION_SYSTEM)" = $$(printf '%s\n' "$(NODE_VERSION_SYSTEM)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ]; then \
 		if [ "$$(uname -s)" != "Linux" ]; then \
 			echo >&2 "NodeJS download for non-linux platforms is sadly not supported. Please install $(NODE_VERSION_MIN) or later manually."; \
 			exit 1; fi; \
-		echo >&2 "Local nodejs version is too old (before $(NODE_VERSION_MIN)). Downloading from server ..."; \
+		echo >&2 "Local nodejs version is missing or too old (before $(NODE_VERSION_MIN)) or 'npm' is missing. Downloading from server ..."; \
 		wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_LOCAL_DIR)" --strip-components=1 -f -; \
 	else \
 		echo >&2 "Local nodejs version is sufficient. Symlinking executables ..."; \
