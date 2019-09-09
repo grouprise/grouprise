@@ -1,11 +1,14 @@
 import django_filters
 from django_filters import rest_framework as filters
 
+from grouprise.features.associations.models import Association
 from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
 
 
 class ContentFilterSet(filters.FilterSet):
+    
+    keywords = filters.CharFilter(method='filter_keywords')
 
     type = filters.ChoiceFilter(
         choices=(
@@ -23,6 +26,12 @@ class ContentFilterSet(filters.FilterSet):
             'content__time': 'ev_time',
         },
     )
+
+    def filter_keywords(self, queryset, name, value):
+        keywords = value.split()
+        for keyword in keywords:
+            queryset = queryset.filter(content__title__icontains=keyword)
+        return queryset
 
     def filter_type(self, queryset, name, value):
         if value == 'articles':

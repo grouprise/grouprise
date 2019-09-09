@@ -7,6 +7,7 @@
         <option value="articles">Nur Artikel</option>
         <option value="upcoming-events">Kommende Veranstaltungen</option>
       </select>
+      <input type="search" v-model="filters.keywords" @keyup="updateFilters">
     </div>
     <ol class="content-preview-list">
       <li v-for="association in objectList" :key="association.id">
@@ -30,6 +31,7 @@
     data () {
       return {
         filters: {
+          keywords: '',
           type: '',
           ordering: '-pub_time'
         }
