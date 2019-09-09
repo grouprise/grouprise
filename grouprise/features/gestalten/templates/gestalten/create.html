@@ -15,9 +15,11 @@
 
             <p>Deine E-Mail-Adresse wird dauerhaft gespeichert. Um sie später zu löschen,
             lösche dein Benutzerkonto in den Einstellungen oder
-            <a href="{% url 'create-group-conversation' about_group.pk %}">
-                schreib uns eine Nachricht
-            </a>.
+            {% if about_group %}
+                <a href="{% url 'create-group-conversation' about_group.pk %}">
+                    schreib uns eine Nachricht
+                </a>.
+            {% endif %}
         </div>
 
         {% field form.email %}
