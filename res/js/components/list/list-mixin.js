@@ -1,3 +1,5 @@
+import { danger } from '../../util/notify'
+
 export default {
   data () {
     return {
@@ -15,6 +17,10 @@ export default {
           this.objectList = objectList.concat(paginator.results)
           this.nextPageURL = paginator.next
           this.loading = false
+        })
+        .catch(error => {
+          this.loading = false
+          danger('Fehler bei der Kommunikation mit dem Server')
         })
     },
     loadMore () {
