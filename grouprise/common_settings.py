@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'cachalot',
+    # deactivated, see #662
+    # 'cachalot',
     'django_filters',
     'django_mailbox',
     'huey.contrib.djhuey',
