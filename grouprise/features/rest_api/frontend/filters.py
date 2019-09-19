@@ -9,9 +9,23 @@ from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
 
 
+class KeywordFilter(filters.CharFilter):
+    def __init__(self, *args, lookups=[], **kwargs):
+        self.lookups = lookups
+        self.method = 'filter_keywords'
+        super().__init__(*args, **kwargs)
+
+    def filter_keywords(self, queryset, name, value):
+        keywords = value.split()
+        for keyword in keywords:
+            q_expressions = [Q(**{l: keyword}) for l in self.lookups]
+            queryset = queryset.filter(reduce(lambda q1, q2: q1 | q2, q_expressions))
+        return queryset
+
+
 class ContentFilterSet(filters.FilterSet):
     
-    keywords = filters.CharFilter(method='filter_keywords')
+    keywords = KeywordFilter(lookups = ['content__title__icontains', 'slug__icontains'])
 
     type = filters.ChoiceFilter(
         choices=(
@@ -29,14 +43,6 @@ class ContentFilterSet(filters.FilterSet):
             'content__time': 'ev_time',
         },
     )
-
-    def filter_keywords(self, queryset, name, value):
-        lookups = ['content__title__icontains', 'slug__icontains']
-        keywords = value.split()
-        for keyword in keywords:
-            q_expressions = [Q(**{l: keyword}) for l in lookups]
-            queryset = queryset.filter(reduce(lambda q1, q2: q1 | q2, q_expressions))
-        return queryset
 
     def filter_type(self, queryset, name, value):
         if value == 'articles':
