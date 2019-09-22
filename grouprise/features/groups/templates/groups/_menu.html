@@ -36,6 +36,7 @@
         <div class="dock-content">
             <div class="dock-content-inner">
                 <ol class="nav-vertical">
+                    {% block group_menu_items %}
                     {# SUBSCRIPTION #}
                     {% load rules %}
                     {% has_perm 'subscriptions.create' user group as can_subscribe %}
@@ -150,6 +151,7 @@
                             </a>
                         </li>
                     {% endif %}
+                    {% endblock group_menu_items %}
                 </ol>
             </div>
         </div>
