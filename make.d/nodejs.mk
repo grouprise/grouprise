@@ -16,7 +16,7 @@ RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BU
 $(BIN_NODE):
 	rm -rf "$(NODE_LOCAL_DIR)"
 	mkdir -p "$(NODE_LOCAL_DIR)/bin"
-	@if [ -z "$(BIN_NPM_SYSTEM)" ] || [ -z "$(BIN_NODE_SYSTEM)" ] || [ "$(NODE_VERSION_SYSTEM)" = $$(printf '%s\n' "$(NODE_VERSION_SYSTEM)" "$(NODE_VERSION_MIN)" | sort -V | head -n1) ]; then \
+	@if [ -z "$(BIN_NPM_SYSTEM)" ] || [ -z "$(BIN_NODE_SYSTEM)" ] || [ "$(NODE_VERSION_SYSTEM)" = "$$(printf '%s\n' "$(NODE_VERSION_SYSTEM)" "$(NODE_VERSION_MIN)" | sort -V | head -n1)" ]; then \
 		if [ "$$(uname -s)" != "Linux" ]; then \
 			echo >&2 "NodeJS download for non-linux platforms is sadly not supported. Please install $(NODE_VERSION_MIN) or later manually."; \
 			exit 1; fi; \
