@@ -39,6 +39,8 @@ Recommends: ${misc:Recommends},
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
+Conflicts: stadtgestalten (<<3.0.0~1-1)
+Replaces: stadtgestalten (<<3.0.0~1-1)
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
@@ -72,3 +74,10 @@ Description: Web platform that enables social action and solidarity
  initiatives in a local context.
  .
  This package contains the dependencies for running grouprise.
+
+Package: stadtgestalten
+Architecture: any
+Depends: grouprise
+Description: transitional dummy package
+ This is a transitional dummy package, it can be safely removed.
+ See the "grouprise" package instead.
