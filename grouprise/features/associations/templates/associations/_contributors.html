@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <ul class="thread-contributors">
     <!-- todo external people probably should see individual group members answering -->
     {% for contributor in contributors %}
@@ -7,7 +9,7 @@
             </li>
         {% elif forloop.counter == max_shown|add:1  %}
             <li>
-                <div class="avatar avatar-size-32-32 avatar-more" title="und {{ forloop.revcounter }} weitere Gestalten"></div>
+                <div class="avatar avatar-size-32-32 avatar-more" title="und {{ forloop.revcounter }} {% trans 'more Persons' %}"></div>
             </li>
         {% endif %}
     {% endfor %}

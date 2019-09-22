@@ -1,20 +1,21 @@
 {% load rules dismissible %}
+{% load i18n %}
 
 {% has_perm 'conversations.create_group_conversation' user group as can_create_message %}
 
 <header class="content-section-header">
-    <h2 class="content-classification">Gespräche</h2>
+    <h2 class="content-classification">{% trans 'Discussions' %}</h2>
     <span class="decoration-icon sg-comments" role="presentation"></span>
     {% if can_create_message %}
         {% url 'create-group-conversation' group.pk as url %}
-        {% include 'core/_toolbutton.html' with label='<i class="sg sg-add"></i> Gespräch' url=url %}
+        {% include 'core/_toolbutton.html' with label='<i class="sg sg-add"></i> '|add:_('Discussion') url=url %}
     {% endif %}
 </header>
 
 {% dismissible 'group-conversation-visibility' %}
 <div class="disclaimer content-block">
     {% dismiss 'group-conversation-visibility' %}
-    <p>Gespräche sind nur für Gruppenmitglieder zugänglich.</p>
+    <p>{% trans 'Discussions are only visible to group members.' %}</p>
 </div>
 {% enddismissible %}
 
@@ -29,7 +30,7 @@
 {% if associations|length > 3 %}
     <div class="btn-toolbar btn-toolbar-centered">
         <a href="{% url 'group-conversations' group.pk %}" class="btn btn-default">
-            Weitere Gespräche
+            {% trans 'More discussions' %}
         </a>
     </div>
 {% endif %}

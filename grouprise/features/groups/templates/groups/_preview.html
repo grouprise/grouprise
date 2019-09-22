@@ -1,4 +1,5 @@
 {% load cache %}
+{% load i18n %}
 
 {% kwacro preview_body %}
     <header class="group-preview-header">
@@ -15,15 +16,15 @@
         {% if user.is_authenticated %}
             <div class="group-preview-stats">
                 {% if user.gestalt in group.subscribers %}
-                    <i class="sg sg-subscription sg-active" title="Du hast Beiträge dieser Gruppe abonniert"></i>
+                    <i class="sg sg-subscription sg-active" title="{% trans 'You are subscribed to contriutbions of this group' %}"></i>
                 {% else %}
-                    <i class="sg sg-subscription" title="Du hast Beiträge dieser Gruppe nicht abonniert"></i>
+                    <i class="sg sg-subscription" title="{% trans 'You are not subscribed to contributions of this group' %}"></i>
                 {% endif %}
                 {% load memberships %}
                 {% if user.gestalt|is_member:group %}
-                    <i class="sg sg-members sg-active" title="Du bist Mitglied dieser Gruppe"></i>
+                    <i class="sg sg-members sg-active" title="{% trans 'You are a member of this group' %}"></i>
                 {% else %}
-                    <i class="sg sg-members" title="Du bist nicht Mitglied dieser Gruppe"></i>
+                <i class="sg sg-members" title="{% trans 'You are not a member of this group' %}"></i>
                 {% endif %}
             </div>
         {% endif %}
@@ -34,7 +35,7 @@
             {% if group.description %}
                 {% markdown group.description preset='linkonly' %}
             {% else %}
-                Diese Gruppe hat noch keine Beschreibung auf {{ about_group }} hinterlegt.
+                {% blocktrans trimmed %}This group did not leave a statement at {{ about_group }}.{% endblocktrans %}
             {% endif %}
         </p>
     </div>

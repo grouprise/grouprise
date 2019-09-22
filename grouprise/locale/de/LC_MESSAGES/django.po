@@ -39,11 +39,23 @@ msgstr "Alle Gruppen"
 msgid "Activate Javascript to search for groups"
 msgstr "Mit aktiviertem JavaScript könntest du hier jetzt Gruppen suchen"
 
+msgid "More"
+msgstr "Mehr"
+
+msgid "Events"
+msgstr "Veranstaltungen"
+
+msgid "Articles"
+msgstr "Artikel"
+
+msgid "Persons"
+msgstr "Gestalten"
+
 msgid "Attach to the intro of the group"
 msgstr "Im Intro der Gruppe anheften"
 
 msgid ""
-"Attached contributions are shown first on a group' site. You can use them "
+"Attached contributions are shown first on a group's site. You can use them "
 "for common introductions and descriptions."
 msgstr ""
 "Angeheftete Beiträge werden auf der Gruppenseite zuerst angezeigt. Sie "
@@ -69,6 +81,9 @@ msgid ""
 "contribution."
 msgstr ""
 "Der Kurzname wird beispielsweise in der Webadresse des Beitrags verwendet."
+
+msgid "more Persons"
+msgstr "weitere Gestalten"
 
 msgid "Contribution"
 msgstr "Beitrag"
@@ -121,6 +136,12 @@ msgstr "Exportmöglichkeiten für Kalender"
 msgid "Export of figure's calendars"
 msgstr "Exportmöglichkeiten für Gestaltenkalender"
 
+msgid "Person"
+msgstr "Gestalt"
+
+msgid "More from"
+msgstr "Mehr von"
+
 msgid "Delete Account"
 msgstr "Benutzerkonto löschen"
 
@@ -145,7 +166,7 @@ msgstr "Mitgliedschaften in Gruppen"
 msgid "The following data will be marked as"
 msgstr "Folgende Daten werden unwiderruflich markiert als"
 
-msgid "Unknown figure"
+msgid "Unknown person"
 msgstr "Unbekannte Gestalt"
 
 msgid "Version of contribution"
@@ -171,10 +192,73 @@ msgstr "schreib uns stattdessen eine Nachricht"
 msgid "Delete account"
 msgstr "Benutzerkonto löschen"
 
+msgid "e.g. Repair Cafe"
+msgstr "z.B. Foodcoop"
+
+msgid "Picture of"
+msgstr "Titelbild von"
+
+msgid "Change background picture"
+msgstr "Hintergrundbild ändern"
+
+msgid "Privacy"
+msgstr "Datenschutzhinweise"
+
+msgid "Your profile is <strong>public</strong>"
+msgstr "Dein Profil ist <strong>öffentlich</strong>"
+
+msgid "Your profile is <strong>not public</strong>"
+msgstr "Dein Profil ist <strong>nicht öffentlich</strong>"
+
+msgid "About me"
+msgstr "Über mich"
+
+msgid "Write some lines about you!"
+msgstr "Schreib doch ein paar Zeilen zu dir!"
+
+msgid "This person has not written something here."
+msgstr "Dieser Mensch hat nichts zu sich geschrieben."
+
+msgid "URL at"
+msgstr "URL auf"
+
+msgid "Copy URL of this person"
+msgstr "URL zu dieser Gestalt kopieren"
+
+msgid "Edit profile"
+msgstr "Pofil bearbeiten"
+
+msgid "Send a message"
+msgstr "Nachricht schreiben"
+
+msgid "Contributions"
+msgstr "Beiträge"
+
+msgid "Write an article"
+msgstr "Artikel schreiben"
+
+msgid "Create an event"
+msgstr "Veranstaltung eintragen"
+
+msgid "Gallery"
+msgstr "Bildergalerie"
+
+msgid "More possibilities"
+msgstr "Weitere Möglichkeiten"
+
+msgid "Signup"
+msgstr "Registieren"
+
+msgid "your profile"
+msgstr "dein Pofil"
+
+msgid "your profile."
+msgstr "dein Profil."
+
 msgid "Path of the group's site"
 msgstr "Adresse der Gruppenseite"
 
-msgid "Will be use as short name"
+msgid "Will be used for referencing the group"
 msgstr "Wird auch als Kurzname verwendet"
 
 msgid "Address"
@@ -247,13 +331,10 @@ msgid "Group's homepage"
 msgstr "Zur Gruppenseite"
 
 msgid "Create group"
-msgstr "Gruppe erstellen"
+msgstr "Gruppe anlegen"
 
 msgid "Start a conversation with all group members"
 msgstr "Ein Gespräch mit den Gruppenmitgliedern beginnen"
-
-msgid "Send a message"
-msgstr "Nachricht schreiben"
 
 msgid "Join this group."
 msgstr "Der Gruppe beitreten"
@@ -330,17 +411,8 @@ msgstr "Über"
 msgid "Inprint"
 msgstr "Impressum"
 
-msgid "Privacy"
-msgstr "Datenschutzhinweise"
-
 msgid "Report abuse"
 msgstr "Missbrauch melden"
-
-msgid "Events"
-msgstr "Veranstaltungen"
-
-msgid "Articles"
-msgstr "Artikel"
 
 msgid "Public People"
 msgstr "Öffentliche Gestalten"
@@ -356,9 +428,6 @@ msgstr "Abmelden"
 
 msgid "Login"
 msgstr "Anmelden"
-
-msgid "Signup"
-msgstr "Registieren"
 
 msgid "Your group now!"
 msgstr "Deine Gruppe jetzt!"

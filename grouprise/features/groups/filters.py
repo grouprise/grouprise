@@ -1,5 +1,6 @@
 import django_filters as filters
 from django import forms
+from django.utils.translation import gettext as _
 
 from grouprise.features.groups import models
 
@@ -7,7 +8,7 @@ from grouprise.features.groups import models
 class Group(filters.FilterSet):
     name = filters.CharFilter(
             label='Name', lookup_expr='icontains',
-            widget=forms.TextInput(attrs={'placeholder': 'z.B. Foodcoop'}))
+            widget=forms.TextInput(attrs={'placeholder': _('e.g. Repair Cafe')}))
 
     only_with_membership = filters.BooleanFilter(method='filter_by_membership')
 

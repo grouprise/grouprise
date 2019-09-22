@@ -1,7 +1,8 @@
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GROUPRISE_PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(GROUPRISE_PACKAGE_DIR)
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
@@ -123,6 +124,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = [os.path.join(GROUPRISE_PACKAGE_DIR, "locale")]
 
 
 # Sites

@@ -1,5 +1,6 @@
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
+from django.utils.translation import gettext as _
 
 import grouprise.core.models
 from . import querysets
@@ -7,19 +8,17 @@ from . import querysets
 
 class Association(grouprise.core.models.Model):
     pinned = models.BooleanField(
-            'Im Intro der Gruppe anheften', default=False,
-            help_text='Angeheftete Beiträge werden auf der Gruppenseite zuerst angezeigt. Sie '
-            'können beispielsweise für allgemeine Einleitungs- und Beschreibungstexte '
-            'verwendet werden.')
+            _('Attach to the intro of the group'), default=False,
+            help_text=_("Attached contributions are shown first on a group's site. You can use "
+                        "them for common introductions and descriptions."))
     public = models.BooleanField(
-            'Öffentlich', default=False,
-            help_text='Öffentliche Beiträge sind auch für Besucherinnen sichtbar, die nicht '
-            'Mitglied der Gruppe sind. Benachrichtigungen werden an Mitglieder und '
-            'Abonnentinnen versendet.')
+            _('Public'), default=False,
+            help_text=_('Public contributions are visible to visitors that are not a member of '
+                        'the group. Members and subscribers will receive notifications.'))
     slug = models.SlugField(
-            'Kurzname', default=None, null=True,
-            help_text='Der Kurzname wird beispielsweise in der Webadresse des Beitrags '
-            'verwendet.')
+            _('Short name'), default=None, null=True,
+            help_text=_('Among other things the short name is used as part of the web address of '
+                        'a contribution.'))
 
     deleted = models.DateTimeField(null=True, blank=True)
 

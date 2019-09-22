@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <input class="dropdown-state" id="menu-more" type="checkbox" data-menu-group="main">
 <label for="menu-more" class="nav-menu-item nav-state-toggle"
        aria-label="Zeige weitere Menüpunkte" tabindex="0"
@@ -5,7 +7,7 @@
     <span class="nav-tab-icon">
         <i class="sg sg-dots"></i>
     </span>
-    <span>Mehr</span>
+    <span>{% trans 'More' %}</span>
     <i class="caret"></i>
 </label>
 <div class="dock dock-light dock-menu" id="menu-more-dropdown" data-dropdown
@@ -19,21 +21,21 @@
                         <a href="{% url 'events' %}"
                            class="nav-menu-item {% if menu|lower == 'event' %}nav-menu-item-current{% endif %}">
                             <i class="sg sg-fw sg-content-type-event"></i>
-                            <span class="nav-menu-item-label">Veranstaltungen</span>
+                            <span class="nav-menu-item-label">{% trans 'Events' %}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'articles' %}"
                            class="nav-menu-item {% if menu|lower == 'article' %}nav-menu-item-current{% endif %}">
                             <i class="sg sg-fw sg-content-type-article"></i>
-                            <span class="nav-menu-item-label">Artikel</span>
+                            <span class="nav-menu-item-label">{% trans 'Articles' %}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'gestalten' %}"
                            class="nav-menu-item {% if menu|lower == 'gestalt' %}nav-menu-item-current{% endif %}">
                             <i class="sg sg-fw sg-content-type-gestalt"></i>
-                            <span class="nav-menu-item-label">Gestalten</span>
+                            <span class="nav-menu-item-label">{% trans 'Persons' %}</span>
                         </a>
                     </li>
                 </ol>

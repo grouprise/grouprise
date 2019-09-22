@@ -1,5 +1,6 @@
 {% extends 'content/list.html' %}
 {% load events rules %}
+{% load i18n %}
 
 {% block title %}{{ gestalt }} - {{ block.super }}{% endblock %}
 {% block menu %}{% menu %}{% endblock %}
@@ -10,14 +11,14 @@
     <header class="profile-header">
         <div class="profile-header-title-image">
             {% if gestalt.background %}
-                <img src="{{ gestalt.background_cover.url }}" alt="Titelbild von {{ gestalt }}">
+                <img src="{{ gestalt.background_cover.url }}" alt="{% trans 'Picture of' %} {{ gestalt }}">
             {% else %}
                 <div class="disclaimer"></div>
             {% endif %}
 
             {% if can_edit %}
                 <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
-                    <a href="{% url 'image-settings' %}" class="btn btn-backdrop btn-ts" title="Hintergrundbild ändern">
+                    <a href="{% url 'image-settings' %}" class="btn btn-backdrop btn-ts" title="{% trans 'Change background picture' %}">
                         <i class="sg sg-2x sg-camera"></i>
                     </a>
                 </div>
@@ -45,26 +46,26 @@
                         {% if can_edit %}
                         <dt>
                             <i class="sg sg-private"></i>
-                            <span class="sr-only">Privatsphäre</span>
+                            <span class="sr-only">{% trans 'Privacy' %}</span>
                         </dt>
                         <dd>
                             {% if gestalt.public %}
-                                Dein Profil ist <strong>öffentlich</strong>
+                                {% trans 'Your profile is <strong>public</strong>' %}
                             {% else %}
-                                Dein Profil ist <strong>nicht öffentlich</strong>
+                                {% trans 'Your profile is <strong>not public</strong>' %}
                             {% endif %}
                         </dd>
                         {% endif %}
                         <dt>
                             <i class="sg sg-gestalt"></i>
-                            <span class="sr-only">Über mich</span>
+                            <span class="sr-only">{% trans 'About me' %}</span>
                         </dt>
                         <dd>
                             {% if not gestalt.about %}
                                 {% if request.user.gestalt == gestalt %}
-                                    Schreib doch ein paar Zeilen zu dir!
+                                    {% trans 'Write some lines about you!' %}
                                 {% else %}
-                                    Dieser Mensch hat nichts zu sich geschrieben.
+                                    {% trans 'This person has not written something here.' %}
                                 {% endif %}
                             {% else %}
                                 {{ gestalt.about }}
@@ -77,13 +78,13 @@
                     <dl class="def def-icons">
                         <dt>
                             <i class="sg sg-link"></i>
-                            <span class="sr-only">URL auf {{ about_group }}</span>
+                            <span class="sr-only">{% trans 'URL at' %} {{ about_group }}</span>
                         </dt>
                         <dd class="selectable">
                             {{ site.domain }}/<span class="selectable-token">{{ gestalt.user.username }}</span>
                             <button type="button" class="btn-text hide-no-js" data-component="clipboard"
                                     data-clipboard-text="{{ gestalt.get_absolute_url|full_url }}"
-                                    title="URL zu dieser Gestalt kopieren">
+                                    title="{%trans 'Copy URL of this person' %}">
                                 <i class="sg sg-copy"></i>
                             </button>
                         </dd>
@@ -99,7 +100,7 @@
                 <div class="btn-group">
                     <a href="{% url 'settings' %}" class="btn btn-default btn-sm">
                         <i class="sg sg-edit"></i>
-                        Profil bearbeiten
+                        {% trans 'Edit profile' %}
                     </a>
                 </div>
             {% endif %}
@@ -109,7 +110,7 @@
                 <div class="btn-group">
                     <a href="{% url 'create-gestalt-conversation' gestalt.pk %}" class="btn btn-default btn-sm">
                         <i class="sg sg-message"></i>
-                        Nachricht schreiben
+                        {% trans 'Send a message' %}
                     </a>
                 </div>
             {% endif %}
@@ -119,18 +120,18 @@
 
 {% block heading %}
     <div class="content-section-header">
-        <h2 class="content-classification">Beiträge</h2>
+        <h2 class="content-classification">{% trans 'Contributions' %}</h2>
         {% include "core/_decoration.html" with icon="sg-pen" %}
         <div class="btn-toolbar">
             {% has_perm 'content.create_for_gestalt' user gestalt as can_create_content %}
             {% if can_create_content %}
                 {% dropdown 'content-new' '<i class="sg sg-add"></i> Beitrag' %}
-                    <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> Artikel schreiben</a></li>
-                    <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> Veranstaltung eintragen</a></li>
-                    <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> Bildergalerie</a></li>
-                    <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> (Termin-)Umfrage beginnen</a></li>
+                    <li><a href="{% url 'create-article' %}"><i class="sg sg-fw sg-article"></i> {% trans 'Write an article' %}</a></li>
+                    <li><a href="{% url 'create-event' %}"><i class="sg sg-fw sg-event"></i> {% trans 'Create an event' %}</a></li>
+                    <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> {% trans 'Gallery' %}</a></li>
+                    <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> {% trans 'Start a (date) poll' %}</a></li>
                     {% if about_group %}
-                        <li><a href="{% url 'content' about_group.slug 'tools' %}#8-werkzeuge-fur-andere-anwendungsfalle"><i class="sg sg-fw sg-tools"></i> Weitere Möglichkeiten</a></li>
+                        <li><a href="{% url 'content' about_group.slug 'tools' %}#8-werkzeuge-fur-andere-anwendungsfalle"><i class="sg sg-fw sg-tools"></i> {% trans 'More possibilities' %}</a></li>
                     {% endif %}
                 {% enddropdown %}
             {% endif %}

@@ -1,16 +1,17 @@
 {% extends 'stadt/stadt.html' %}
 {% load dismissible events groups rules %}
+{% load i18n %}
 
-{% block title %}Gestalten - {{ GROUPRISE_SITE_NAME }}{% endblock %}
+{% block title %}{% trans 'Persons' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='gestalt' %}{{ block.super }}{% endwith %}{% endblock %}
-{% block heading_title %}<h1 class="content-classification">Gestalten</h1>{% endblock %}
+{% block heading_title %}<h1 class="content-classification">{% trans 'Persons' %}</h1>{% endblock %}
 
 {% block heading_toolbar %}
     {% has_perm 'account.signup' user as can_signup %}
     {% if can_signup %}
         <a href="{% url 'account_signup' %}" class="btn btn-ch">
             <span class="btn-label">
-                Registrieren
+                {% trans 'Signup' %}
             </span>
         </a>
     {% endif %}
@@ -27,14 +28,17 @@
         {% dismissible 'gestalt-profile-visibility' %}
         <div class="disclaimer disclaimer-standalone">
             {% dismiss 'gestalt-profile-visibility' %}
-            Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> entscheidet
-        für sich, ob sie ein öffentliches Profil haben möchte. Du kannst diese Einstellung in
+            {% blocktrans trimmed %}
+                Not all <em>persons</em> are visible to you.
+                Every single <em>person</em> can choose to publish their profile.
+            {% endblocktrans %}
             {% if can_edit %}
-                <a href="{% url 'gestalt-update' user.gestalt.pk %}">
-                    deinem Profil ändern.
-                </a>
+                {% url 'gestalt-update' user.gestalt.pk as url %}
+                {% blocktrans %}
+                You can change this setting in <a href="{{ url }}">your profile'</a>.
+                {% endblocktrans %}
             {% else %}
-                deinem Profil ändern.
+                {% trans 'You can change this setting in your profile.' %}
             {% endif %}
         </div>
         {% enddismissible %}

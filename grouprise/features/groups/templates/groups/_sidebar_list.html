@@ -1,11 +1,12 @@
 {% load cache rules %}
+{% load i18n %}
 
 <div class="box box-striped">
     <div class="box-inner">
         <header class="box-header">
             <h2 class="box-title">
                 <i class="sg sg-group"></i>
-                Gruppen
+                {% trans 'Groups' %}
             </h2>
         </header>
         <div class="box-content">
@@ -17,13 +18,13 @@
         </div>
         <div class="btn-toolbar btn-toolbar-right">
             <a href="{% url 'group-index' %}" class="btn btn-link">
-                <i class="sg sg-group"></i> Alle Gruppen
+                <i class="sg sg-group"></i> {% trans 'All groups' %}
             </a>
 
             {% has_perm 'groups.create_group' user as can_create_group %}
             {% if can_create_group %}
                 <a href="{% url 'group-create' %}" class="btn btn-link">
-                    <i class="sg sg-add"></i> Gruppe anlegen
+                    <i class="sg sg-add"></i> {% trans 'Create group' %}
                 </a>
             {% endif %}
         </div>
