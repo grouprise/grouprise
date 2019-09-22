@@ -1,14 +1,15 @@
 {% load memberships %}
+{% load i18n %}
 
 {% if user.is_authenticated %}
     <input class="dropdown-state" id="menu-groups-main" type="checkbox" data-menu-group="main">
-    <label for="menu-groups-main" aria-label="Zeige Gruppenmenü" tabindex="0"
+    <label for="menu-groups-main" aria-label="{%trans 'Show group menu' %}" tabindex="0"
            class="nav-menu-item nav-state-toggle"
            data-component="openable" data-openable-target="#group-main-menu-dropdown">
         <span class="nav-tab-icon">
             <i class="sg sg-group"></i>
         </span>
-        <span>Gruppen</span>
+        <span>{% trans 'Groups' %}</span>
         <i class="caret"></i>
     </label>
 {% else %}
@@ -16,7 +17,7 @@
         <span class="nav-tab-icon">
             <i class="sg sg-group"></i>
         </span>
-        <span class="nav-menu-item-label">Gruppen</span>
+        <span class="nav-menu-item-label">{% trans 'Groups' %}</span>
     </a>
 {% endif %}
 
@@ -27,22 +28,25 @@
             <span class="dock-decoration"></span>
             <header class="dock-header">
                 <div>
-                    <h3>Gruppen</h3>
+                        <h3>{% trans 'Groups' %}</h3>
                     {% if user.is_authenticated %}
                         <p class="dock-meta">
-                            Du bist Mitglied in {{ user.gestalt.memberships.count }}
-                            Gruppen
+                        {% blocktrans trimmed count membership_count=user.gestalt.memberships.count %}
+                        You are a member of one group.
+                        {% plural %}
+                        You are a member of {{ membership_count }} groups.
+                        {% endblocktrans %}
                         </p>
                     {% else %}
                         <p class="dock-meta">
-                            Melde dich an, um deine Gruppenmitgliedschaften zu sehen.
+                            {% trans 'Login to see your group memberships.' %}
                         </p>
                     {% endif %}
                 </div>
 
                 <a href="{% url 'group-index' %}" class="dock-header-link">
                     <i class="sg sg-group"></i>
-                    <span>Alle Gruppen</span>
+                    <span>{% trans 'All groups' %}</span>
                 </a>
             </header>
             <div class="dock-content">
@@ -53,7 +57,7 @@
                                 <div class="tabbl-content">
                                     <noscript>
                                         <p class="alert alert-info alert-block">
-                                            Mit aktiviertem JavaScript könntest du hier jetzt Gruppen&nbsp;suchen
+                                            {% trans 'Activate Javascript to search for groups' %}
                                         </p>
                                     </noscript>
                                     <div data-component="group-search">

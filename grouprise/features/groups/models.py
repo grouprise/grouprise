@@ -5,6 +5,7 @@ from django import urls
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.utils.translation import gettext as _
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 from taggit.managers import TaggableManager
@@ -13,7 +14,6 @@ import grouprise.core.models
 from grouprise.core.utils import get_random_color
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.stadt.models import EntitySlugField
-
 
 class GroupManager(models.Manager):
     def operator_group(self):
@@ -34,15 +34,15 @@ class Group(grouprise.core.models.Model):
             max_length=255)
     score = models.IntegerField(default=0)
     slug = EntitySlugField(
-            'Adresse der Gruppenseite', blank=True, null=True, unique=True,
-            help_text='Wird auch als Kurzname verwendet')
+            _("Path of the group's site"), blank=True, null=True, unique=True,
+            help_text=_('Will be use as short name'))
 
     address = models.TextField(
-            'Anschrift',
+            _('Address'),
             blank=True)
     avatar = grouprise.core.models.ImageField(
-            blank=True, help_text='Der Avatar ist ein kleines quadratisches Vorschaubild, '
-            'an welchem sich die Gruppe leicht erkennen lässt.')
+            blank=True, help_text=_('An avatar is a small square image, '
+            'used to identify the group.'))
     avatar_64 = ImageSpecField(
             source='avatar', processors=[Transpose(), ResizeToFit(64, 64)], format='PNG')
     avatar_256 = ImageSpecField(
@@ -51,31 +51,31 @@ class Group(grouprise.core.models.Model):
             max_length=7,
             default=get_random_color)
     date_founded = models.DateField(
-            'Gruppe gegründet', default=datetime.date.today,
-            help_text='Ungefähres Datum der tatsächlichen Gruppengründung')
+            _('Group founded'), default=datetime.date.today,
+            help_text=_('Approximate date of group creation'))
     description = models.TextField(
-            'Kurzbeschreibung',
+            _('Short description'),
             blank=True,
             default='',
             max_length=200,
-            help_text='Höchstens 200 Zeichen')
+            help_text=_('At most 200 characters'))
     logo = grouprise.core.models.ImageField(
-            blank=True, help_text='Das Logo wird auf der Gruppenseite rechts angezeigt.')
+            blank=True, help_text=_("The logo is visible in the right area at the group page."))
     logo_sidebar = ImageSpecField(
             source='logo', processors=[Transpose(), ResizeToFit(400)], format='PNG')
     url = models.URLField(
-            'Externe Website',
+            _('External website'),
             blank=True)
     url_import_feed = models.BooleanField(
-            'Beiträge von Website übernehmen', default=False,
-            help_text='Öffentliche Beiträge der angegebenen Website nach Möglichkeit '
-            'automatisch in dieser Gruppe veröffentlichen')
+            _('Import contributions from website'), default=False,
+            help_text=_('Try to automaticly import of public contributions of this website '
+            'on the group page'))
 
     closed = models.BooleanField(
-            'Geschlossene Gruppe', default=False, help_text='In eine geschlossene Gruppe '
-            'können nur Mitglieder neue Mitglieder aufnehmen.')
+            _('Restricted group'), default=False, help_text=_('Only members can add new members '
+            'to restricted groups.'))
 
-    tags = TaggableManager(verbose_name='Schlagworte', blank=True)
+    tags = TaggableManager(verbose_name=_('Tags'), blank=True)
 
     associations = django.contrib.contenttypes.fields.GenericRelation(
             'associations.Association', content_type_field='entity_type',

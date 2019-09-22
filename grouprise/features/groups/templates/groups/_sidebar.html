@@ -1,8 +1,9 @@
 {% extends 'core/_sidebar.html' %}
+{% load i18n %}
 
 {% block title %}
     <i class="sg sg-group"></i>
-    Gruppe
+    {% trans 'Group' %}
 {% endblock %}
 
 {% block content %}
@@ -10,5 +11,5 @@
 {% endblock %}
 
 {% block toolbar %}
-    <a href="{{ group.get_absolute_url }}" class="btn btn-link">Zur Gruppenseite</a>
+    <a href="{{ group.get_absolute_url }}" class="btn btn-link">{% trans "Group's homepage" %}</a>
 {% endblock %}
