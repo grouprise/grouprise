@@ -9,7 +9,7 @@ For a more scalable setup you should consider switching to another database engi
 All database engines except SQLite require the creation of a database in advance.
 The following sections demonstrate this step for various databases.
 
-After creating the database, you need to populate its structure (:code:`stadtctl migrate`) or
+After creating the database, you need to populate its structure (:code:`grouprisectl migrate`) or
 import existing data (see :ref:`database-move`).
 
 

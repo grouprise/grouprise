@@ -17,6 +17,6 @@ if [ "$(id -nu)" = "$EXEC_USER" ]; then
 elif [ "$(id -u)" = 0 ]; then
     su -s "$0" "$EXEC_USER" -- "$@"
 else
-    echo "please run stadtctl as root or '$EXEC_USER'" >&2
+    echo "please run $(basename "$0") as root or '$EXEC_USER'" >&2
     exit 1
 fi

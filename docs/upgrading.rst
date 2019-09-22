@@ -19,5 +19,5 @@ Source Setup
 #. Run `make install` with the same parameters that you used during the first installation.
 #. Read the release notes for the relevant versions and adjust the settings
    (in ``/etc/grouprise/``) if necessary.
-#. Run `stadtctl migrate` in order to apply outstanding database migrations.
+#. Run `grouprisectl migrate` in order to apply outstanding database migrations.
 #. Start the grouprise process (e.g. ``service uwsgi start``)
