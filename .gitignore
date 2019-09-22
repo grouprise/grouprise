@@ -14,6 +14,7 @@ grouprise/settings.py
 *.log
 .coverage
 docs/_build
+grouprise/core/locale/*/LC_MESSAGES/django.mo
 
 # debian shizzle
 makefilet

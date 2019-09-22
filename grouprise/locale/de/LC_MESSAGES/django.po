@@ -1,0 +1,394 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-21 22:46+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Show group menu"
+msgstr "Zeige Gruppenmenü"
+
+msgid "Groups"
+msgstr "Gruppen"
+
+#, python-format
+msgid "You are a member of one group."
+msgid_plural "You are a member of %(membership_count)s groups."
+msgstr[0] "Du bist Mitglied in einer Gruppe."
+msgstr[1] "Du bist Mitglied in %(membership_count)s Gruppen."
+
+msgid "Login to see your group memberships."
+msgstr "Melde dich an, um deine Gruppenmitgliedschaften zu sehen."
+
+msgid "All groups"
+msgstr "Alle Gruppen"
+
+msgid "Activate Javascript to search for groups"
+msgstr "Mit aktiviertem JavaScript könntest du hier jetzt Gruppen suchen"
+
+msgid "Attach to the intro of the group"
+msgstr "Im Intro der Gruppe anheften"
+
+msgid ""
+"Attached contributions are shown first on a group' site. You can use them "
+"for common introductions and descriptions."
+msgstr ""
+"Angeheftete Beiträge werden auf der Gruppenseite zuerst angezeigt. Sie "
+"können beispielsweise für allgemeine Einleitungs- und Beschreibungstexte "
+"verwendet werden."
+
+msgid "Public"
+msgstr "Öffentlich"
+
+msgid ""
+"Public contributions are visible to visitors that are not a member of the "
+"group. Members and subscribers will receive notifications."
+msgstr ""
+"Öffentliche Beiträge sind auch für Besucherinnen sichtbar, die nicht "
+"Mitglied der Gruppe sind. Benachrichtigungen werden an Mitglieder und "
+"Abonnentinnen versendet."
+
+msgid "Short name"
+msgstr "Kurzname"
+
+msgid ""
+"Among other things the short name is used as part of the web address of a "
+"contribution."
+msgstr ""
+"Der Kurzname wird beispielsweise in der Webadresse des Beitrags verwendet."
+
+msgid "Contribution"
+msgstr "Beitrag"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Contribution is visible to the public"
+msgstr "Beitrag ist öffentlich sichtbar"
+
+msgid "Contribution is only visible for members of the group"
+msgstr "Beitrag ist nur für Gruppenmitglieder sichtbar"
+
+msgid "Subscribe to this group"
+msgstr "Gruppe abonnieren"
+
+msgid "to receive prospective contribution of the group"
+msgstr "um über zukünftige Beiträge der Gruppe"
+
+msgid "by e-mail"
+msgstr "per E-Mail"
+
+msgid "Discussions"
+msgstr "Gespräche"
+
+msgid "Discussion"
+msgstr "Gespräche"
+
+msgid "Discussions are only visible to group members."
+msgstr "Gespräche sind nur für Gruppenmitglieder zugänglich."
+
+msgid "More discussions"
+msgstr "Weitere Gespräche"
+
+#, python-format
+msgid ""
+"%(group)s is a closed group. Please describe why you want to join it. "
+"Afterwards the group members will decide about your request."
+msgstr ""
+"Die Gruppe %(group)s ist eine geschlossene Gruppe. Beschreibe bitte kurz "
+"warum du der Gruppe beitreten möchtest. Anschließend entscheiden die "
+"Gruppenmitglieder, ob sie deiner Anfrage zustimmen."
+
+msgid "Export of group's calendars"
+msgstr "Exportmöglichkeiten für Gruppenkalender"
+
+msgid "Export of calendars"
+msgstr "Exportmöglichkeiten für Kalender"
+
+msgid "Export of figure's calendars"
+msgstr "Exportmöglichkeiten für Gestaltenkalender"
+
+msgid "Delete Account"
+msgstr "Benutzerkonto löschen"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Do you really want to delete your account?"
+msgstr "Möchtest Du Dein Benutzerkonto wirklich löschen?"
+
+msgid "The following data will be delete irrevocable:"
+msgstr "Folgende Daten werden unwiderruflich gelöscht:"
+
+msgid "Account and profile with all settings an e-mail addresses"
+msgstr "Benutzerkonto und Profil mit allen Einstellungen und E-Mail-Adressen"
+
+msgid "Subscriptions to groups"
+msgstr "Abonnements von Gruppen"
+
+msgid "Memberships of groups"
+msgstr "Mitgliedschaften in Gruppen"
+
+msgid "The following data will be marked as"
+msgstr "Folgende Daten werden unwiderruflich markiert als"
+
+msgid "Unknown figure"
+msgstr "Unbekannte Gestalt"
+
+msgid "Version of contribution"
+msgstr "Beitragsversionen"
+
+msgid "Comments and news"
+msgstr "Kommentare und Nachrichten"
+
+msgid "Pictures"
+msgstr "Bilder"
+
+msgid "Votes in surveys"
+msgstr "Stimmen in Umfragen"
+
+msgid "If you not agree with this procedure, do not proceed and"
+msgstr ""
+"Solltest Du damit nicht einverstanden sein, führe diesen Schritt bitte nicht "
+"aus und"
+
+msgid "send us a message instead"
+msgstr "schreib uns stattdessen eine Nachricht"
+
+msgid "Delete account"
+msgstr "Benutzerkonto löschen"
+
+msgid "Path of the group's site"
+msgstr "Adresse der Gruppenseite"
+
+msgid "Will be use as short name"
+msgstr "Wird auch als Kurzname verwendet"
+
+msgid "Address"
+msgstr "Anschrift"
+
+msgid "An avatar is a small square image, used to identify the group."
+msgstr ""
+"Der Avatar ist ein kleines quadratisches Vorschaubild, an welchem sich die "
+"Gruppe leicht erkennen lässt."
+
+msgid "Group founded"
+msgstr "Gruppe gegründet"
+
+msgid "Approximate date of group creation"
+msgstr "Ungefähres Datum der tatsächlichen Gruppengründung"
+
+msgid "Short description"
+msgstr "Kurzbeschreibung"
+
+msgid "At most 200 characters"
+msgstr "Höchstens 200 Zeichen"
+
+msgid "The logo is visible in the right area at the group page."
+msgstr "Das Logo wird auf der Gruppenseite rechts angezeigt."
+
+msgid "External website"
+msgstr "Externe Website"
+
+msgid "Import contributions from website"
+msgstr "Beiträge von Website übernehmen"
+
+msgid ""
+"Try to automaticly import of public contributions of this website on the "
+"group page"
+msgstr ""
+"Öffentliche Beiträge der angegebenen Website nach Möglichkeit automatisch in "
+"dieser Gruppe veröffentlichen"
+
+msgid "Restricted group"
+msgstr "Geschlossene Gruppe"
+
+msgid "Only members can add new members to restricted groups."
+msgstr ""
+"In eine geschlossene Gruppe können nur Mitglieder neue Mitglieder aufnehmen."
+
+msgid "Tags"
+msgstr "Schlagworte"
+
+msgid "You are subscribed to contriutbions of this group"
+msgstr "Du hast Beiträge dieser Gruppe abonniert"
+
+msgid "You are not subscribed to contributions of this group"
+msgstr "Du hast Beiträge dieser Gruppe nicht abonniert"
+
+msgid "You are a member of this group"
+msgstr "Du bist Mitglied dieser Gruppe"
+
+msgid "You are not a member of this group"
+msgstr "Du bist nicht Mitglied dieser Gruppe"
+
+#, python-format
+msgid "This group did not leave a statement at %(about_group)s."
+msgstr ""
+"Diese Gruppe hat noch keine Beschreibung auf %(about_group)s hinterlegt."
+
+msgid "Group"
+msgstr "Gruppe"
+
+msgid "Group's homepage"
+msgstr "Zur Gruppenseite"
+
+msgid "Create group"
+msgstr "Gruppe erstellen"
+
+msgid "Start a conversation with all group members"
+msgstr "Ein Gespräch mit den Gruppenmitgliedern beginnen"
+
+msgid "Send a message"
+msgstr "Nachricht schreiben"
+
+msgid "Join this group."
+msgstr "Der Gruppe beitreten"
+
+msgid "Join"
+msgstr "Beitreten"
+
+msgid "Request for membership"
+msgstr "Mitgliedschaft beantragen"
+
+msgid "Notification about new contributions"
+msgstr "Bei neuen Beiträgen benachrichtigt werden"
+
+msgid "Subscribe"
+msgstr "Abonnieren"
+
+msgid ""
+"Active groups with a lot of members or subscribes will be show first in a "
+"listing."
+msgstr ""
+"Aktive Gruppen mit vielen Mitgliedern oder Abonnent_innen werden in "
+"Auflistungen zuerst angezeigt."
+
+msgid "Search for groups"
+msgstr "Gruppen suchen"
+
+msgid "More groups"
+msgstr "Weitere Gruppen"
+
+msgid "There is no group named \"{}\". Your mail could not be delivered."
+msgstr ""
+"Es gibt keine Gruppe mit dem Namen \"{}\". Somit war deine Email nicht "
+"zustellbar."
+
+msgid ""
+"Your are not permited to start a conversation with this group by mail. "
+"Please use the button on the website."
+msgstr ""
+"Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte "
+"verwende die Schaltfläche auf der Webseite."
+
+msgid "Membership"
+msgstr "Mitgliedschaft"
+
+#, python-format
+msgid "Do you want to become a member of <em>%(group)s</em> on %(site)s? *"
+msgstr "Möchtest Du der Gruppe <em>%(group)s</em> auf %(site)s beitreten? *"
+
+msgid "Join this group"
+msgstr "Der Gruppe beitreten"
+
+msgid ""
+"In case you are not a member of the group in <em>real live</em> and want to "
+"join, please talk to a group member"
+msgstr ""
+"Falls Du in der <em>echten Welt</em> noch nicht Mitglied in der Gruppe bist "
+"und es werden möchtest, sprich bitte die anderen Gruppenmitglieder an."
+
+msgid "is based on the free software"
+msgstr "basiert auf der Freien Software"
+
+msgid "Support grouprise with a"
+msgstr "Unterstütze grouprise mit einer"
+
+msgid "donation"
+msgstr "Spende"
+
+msgid "Home"
+msgstr "Startseite"
+
+msgid "About"
+msgstr "Über"
+
+msgid "Inprint"
+msgstr "Impressum"
+
+msgid "Privacy"
+msgstr "Datenschutzhinweise"
+
+msgid "Report abuse"
+msgstr "Missbrauch melden"
+
+msgid "Events"
+msgstr "Veranstaltungen"
+
+msgid "Articles"
+msgstr "Artikel"
+
+msgid "Public People"
+msgstr "Öffentliche Gestalten"
+
+msgid "Your site"
+msgstr "Deine Seite"
+
+msgid "Your activities"
+msgstr "Dich betreffende Aktivität"
+
+msgid "Logout"
+msgstr "Abmelden"
+
+msgid "Login"
+msgstr "Anmelden"
+
+msgid "Signup"
+msgstr "Registieren"
+
+msgid "Your group now!"
+msgstr "Deine Gruppe jetzt!"
+
+msgid "For"
+msgstr "Für"
+
+msgid "No pranks"
+msgstr "Ohne Schabernack"
+
+msgid "You rule!"
+msgstr "Du bestimmst!"
+
+#, python-format
+msgid ""
+"In a blink you can create a group on %(group)s, make contributions, open a "
+"discussion, announce an event and mingle with other groups and follow their "
+"activities."
+msgstr ""
+"In 0, nix kannst Du bei %(group)s eine Gruppe anlegen, Beiträge schreiben, "
+"Diskussionen führen, Veranstaltungen ankündigen und mit anderen Gruppen in "
+"Kontakt treten und deren Aktivitäten im Auge behalten."
+
+#, python-format
+msgid ""
+"%(num_groups)s Groups / %(num_gestalten)s People / %(num_contributions)s "
+"Contributions"
+msgstr ""
+"%(num_groups)s Gruppen / %(num_gestalten)s Gestalten / %(num_contributions)s "
+"Beiträge"
+
+msgid "Help about"
+msgstr "Hilfe zu"
