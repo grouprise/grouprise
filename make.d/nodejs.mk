@@ -1,4 +1,4 @@
-BIN_NODE_SYSTEM = $(shell which nodejs node || true)
+BIN_NODE_SYSTEM = $(shell which nodejs node | head -1)
 BIN_NPM_SYSTEM = $(shell which npm || true)
 NODE_LOCAL_DIR = $(DIR_BUILD)/node
 BIN_NODE ?= $(NODE_LOCAL_DIR)/bin/node
