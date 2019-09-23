@@ -10,7 +10,7 @@ django-haystack             # debian: python3-django-haystack
 django-ical                 # NOT IN DEBIAN
 django-imagekit             # debian (buster): python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
-git+https://github.com/jazzband/django-taggit.git
+django-taggit
 djangorestframework         # debian: python-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: flake8
