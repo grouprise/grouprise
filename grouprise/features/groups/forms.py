@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.sites.models import Site
+from taggit.utils import edit_string_for_tags
 
 from . import models
 
