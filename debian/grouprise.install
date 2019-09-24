@@ -1,7 +1,7 @@
 #!/usr/bin/dh-exec
 debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/grouprise.ini
-debian/grouprise.settings.py => /etc/grouprise/settings.py
 debian/grouprisectl => /usr/bin/grouprisectl
 debian/README.backups => /var/backups/grouprise/README
 debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/grouprise/
 debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise/grouprise/
+grouprise/settings.py.production => /etc/grouprise/settings.py.dist
