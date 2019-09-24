@@ -127,6 +127,18 @@
                 <a href="{% url 'recommend-group' group.slug %}">Weiterempfehlen</a>
             {% endif %}
         </dd>
+        
+        {% if GROUPRISE_MAILINGLIST_ENABLED %}
+            <dt>
+                <i class="sg sg-mailinglist" title="E-Mail-Adresse, an die Gruppenmitglieder E-Mails versenden können"></i>
+                <span class="sr-only">E-Mail-Adresse, an die Gruppenmitglieder E-Mails versenden können</span>
+            </dt>
+            <dd>
+                <a href="mailto:{{ group.slug }}@{{ site.domain }}" title="E-Mail-Adresse, an die Gruppenmitglieder E-Mails versenden können">
+                    {{ group.slug }}@{{ site.domain }}
+                </a>
+            </dd>
+        {% endif %}
     </dl>
 </div>
 

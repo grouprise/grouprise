@@ -1,5 +1,6 @@
 import re
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
@@ -51,9 +52,11 @@ class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailVi
         intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
         if intro_gallery:
             intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
+        mailinglist_conf = settings.GROUPRISE.get('MAILINGLIST_ENABLED', False)
         kwargs['feed_url'] = self.request.build_absolute_uri(
                 reverse('group-feed', args=(self.object.pk,)))
         return super().get_context_data(
+                GROUPRISE_MAILINGLIST_ENABLED=mailinglist_conf,
                 associations=associations,
                 intro_associations=intro_associations,
                 intro_gallery=intro_gallery,

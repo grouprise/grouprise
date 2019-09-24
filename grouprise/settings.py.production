@@ -39,6 +39,7 @@ GROUPRISE = {
     'DEFAULT_REPLY_TO_EMAIL': 'reply+{reply_key}@localhost',
     'MAILBOX_DELIVERED_TO_EMAIL': 'mailbox@localhost',
     'POSTMASTER_EMAIL': 'postmaster@localhost',
+    'MAILINGLIST_ENABLED': False,
 
     # 'ENTITY_SLUG_BLACKLIST': [
     #     'all', 'grouprise', 'info', 'mail', 'noreply', 'postmaster', 'reply', 'stadt',

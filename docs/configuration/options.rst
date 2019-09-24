@@ -90,6 +90,10 @@ Email-related Settings
 ``POSTMASTER_EMAIL``
   Email address of the postmaster, defaults to ``postmaster@localhost``.
 
+``MAILINGLIST_ENABLED``
+  If set to ``True``, an email address is displayed for group members on the group page, which
+  can be used like a mailing list.
+
 
 Other Options
 =============
