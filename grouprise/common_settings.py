@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # deactivated, see #662
     # 'cachalot',
+    'corsheaders',
     'django_filters',
     'django_mailbox',
     'huey.contrib.djhuey',
     'haystack',
     'imagekit',
+    'oauth2_provider',
     'rest_framework',
     'rules',
     'taggit',
@@ -63,6 +65,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

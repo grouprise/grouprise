@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import include, path, re_path
 from django.conf.urls import url
 
 from grouprise.features.content.views import Detail as AssociationDetailView
@@ -39,4 +39,6 @@ urlpatterns = [
         r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/$',
         AssociationDetailView.as_view(),
         name='content'),
+
+    path('stadt/oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
