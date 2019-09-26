@@ -82,7 +82,8 @@ TEMPLATES = [
         'OPTIONS': {
             'builtins': [
                 'grouprise.core.templatetags.defaultfilters',
-                'grouprise.core.templatetags.defaulttags'
+                'grouprise.core.templatetags.defaulttags',
+                'rules.templatetags.rules',
             ],
             'context_processors': [
                 # django core
