@@ -1,6 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 
 {% block title %}{{ association.container }} - {{ block.super }}{% endblock %}
+{% block menu %}{% menu association.entity %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb association.entity association.container %}{% endblock %}
 
 {% block sidebar %}

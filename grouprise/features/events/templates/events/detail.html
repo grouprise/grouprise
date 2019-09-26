@@ -1,7 +1,5 @@
 {% extends 'content/detail.html' %}
 
-{% block menu %}{% menu association.entity %}{% endblock %}
-
 {% block content_type %}
     <i class="sg sg-content-type-event" data-day="{{ association.container.time|date:'d' }}"></i>
     <span>Veranstaltung</span>
