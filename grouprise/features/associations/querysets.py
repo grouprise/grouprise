@@ -55,7 +55,7 @@ class Association(models.QuerySet):
         return self.filter(entity_type=groups.Group.content_type)
 
     def filter_upcoming(self, time=None):
-        return self.filter(content__time__gte=time or django.utils.timezone.now())
+        return self.filter(content__until_time__gt=time or django.utils.timezone.now())
 
     def filter_user_content(self, user):
         qs = self
