@@ -291,9 +291,6 @@ class TestUrls(grouprise.core.tests.Test):
         self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('create-group-event', 'non-existent'))
         self.assertEqual(r.status_code, 404)
-        r = self.client.get(django.urls.reverse(
-            'gestalt-events-feed', args=['non-existent', 'public']))
-        self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('group-events-export', 'non-existent'))
         self.assertEqual(r.status_code, 404)
         r = self.client.get(django.urls.reverse(

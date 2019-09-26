@@ -1,51 +1,17 @@
-from django.conf.urls import url
+from django.urls import path, re_path
 
-from . import views
+from grouprise.features.events.views import List, Create, SiteCalendarExport, \
+        SiteCalendarFeed, Day, GroupCalendarExport, GroupCalendarFeed
 
 urlpatterns = [
-    url(
-        r'^stadt/events/$',
-        views.List.as_view(),
-        name='events'),
-
-    url(
-        r'^stadt/events/add/$',
-        views.Create.as_view(),
-        name='create-event'),
-
-    url(
-        r'^stadt/events/export$',
-        views.SiteCalendarExport.as_view(),
-        name='export-site-events'),
-
-    url(
-        r'^stadt/events/public.ics$',
-        views.SiteCalendarFeed(),
-        name='site-events-feed'),
-
-    url(
-        r'^stadt/events/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
-        views.Day.as_view(),
-        name='day-events'),
-
-    url(
-        r'^(?P<entity_slug>[\w.@+-]+)/events/add/$',
-        views.Create.as_view(),
-        name='create-group-event'),
-
-    url(
-        # TODO: remove 'gestalt/' prefix
-        r'^gestalt/(?P<gestalt_slug>[\w.@+-]+)/events/(?P<domain>public|private).ics$',
-        views.GestaltCalendarFeed(),
-        name='gestalt-events-feed'),
-
-    url(
-        r'^(?P<group_slug>[\w-]+)/events/export$',
-        views.GroupCalendarExport.as_view(),
-        name='group-events-export'),
-
-    url(
-        r'^(?P<group_slug>[\w-]+)/events/(?P<domain>public|private).ics$',
-        views.GroupCalendarFeed(),
-        name='group-events-feed'),
+    path('stadt/events', List.as_view(), name='events'),
+    path('stadt/events/add', Create.as_view(), name='create-event'),
+    path('stadt/events/export', SiteCalendarExport.as_view(), name='export-site-events'),
+    path('stadt/events/public.ics', SiteCalendarFeed(), name='site-events-feed'),
+    path('stadt/events/<int:year>/<slug:month>/<int:day>', Day.as_view(), name='day-events'),
+    path('<slug:entity_slug>/events/add', Create.as_view(), name='create-group-event'),
+    path('<slug:group_slug>/events/export', GroupCalendarExport.as_view(),
+         name='group-events-export'),
+    re_path(r'(?P<group_slug>[\w-]+)/events/(?P<domain>public|private).ics',
+            GroupCalendarFeed(), name='group-events-feed'),
 ]
