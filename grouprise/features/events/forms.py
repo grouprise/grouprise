@@ -1,9 +1,14 @@
-import grouprise.features
+from grouprise.features.content.forms import Create as ContentCreateForm
 
 
-class Create(grouprise.features.content.forms.Create):
+class EventCreateForm(ContentCreateForm):
+    """ model form for creating event content
+
+    Sends post_create signal after successful creation.
+    """
+
     def save(self, commit=True):
-        super().save(commit)
+        instance = super().save(commit)
         if commit:
             self.send_post_create()
-        return self.instance
+        return instance

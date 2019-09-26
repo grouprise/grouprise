@@ -40,7 +40,7 @@ class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
 
 
 class Create(grouprise.features.content.views.Create):
-    form_class = forms.Create
+    form_class = forms.EventCreateForm
     template_name = 'events/create.html'
 
     def get_form_kwargs(self):
