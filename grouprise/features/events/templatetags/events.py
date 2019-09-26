@@ -1,57 +1,33 @@
-import calendar as python_calendar
 import datetime
 import itertools
 
 import django.utils.formats
 import django.utils.timezone
-from django import template, urls
+from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from ..utils import get_requested_time
+from grouprise.features.events.utils import get_requested_time, EventCalendar
 
 register = template.Library()
 
 
-class Calendar(python_calendar.LocaleHTMLCalendar):
-    def __init__(self, event_dict, firstweekday=0, locale=None):
-        super().__init__(firstweekday, locale)
-        self.today = datetime.date.today()
-        self.events = event_dict
+@register.filter
+def day_preview(associations):
+    return ', '.join([
+        '{}{}'.format(
+            '{} '.format(django.utils.formats.time_format(
+                django.utils.timezone.localtime(a.container.time)))
+            if not a.container.all_day else '',
+            a.container.title)
+        for a in associations])
 
-    def formatday(self, thedate, themonth):
-        events = self.events.get(thedate, [])
-        url = ''
-        if len(events) == 1:
-            url = events[0].get_absolute_url()
-        elif len(events) > 1:
-            url = urls.reverse(
-                    'day-events', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ybd'])
-        return {
-                'day': thedate.day,
-                'events': events,
-                'in_month': thedate.month == themonth,
-                'today': thedate == self.today,
-                'url': url,
-                }
 
-    def formatmonthname(self, theyear, themonth):
-        with python_calendar.different_locale(self.locale):
-            return '%s %s' % (python_calendar.month_name[themonth], theyear)
-
-    def formatmonthweeks(self, theyear, themonth):
-        return [self.formatweek(week, themonth)
-                for week in self.monthdatescalendar(theyear, themonth)]
-
-    def formatweek(self, theweek, themonth):
-        return [self.formatday(d, themonth) for d in theweek]
-
-    def formatweekday(self, day):
-        with python_calendar.different_locale(self.locale):
-            return python_calendar.day_abbr[day]
-
-    def formatweekheader(self):
-        return [self.formatweekday(i) for i in self.iterweekdays()]
+@register.simple_tag(takes_context=True)
+def event_time(context, event):
+    context['event'] = event
+    time_str = context.template.engine.get_template('events/_time.html').render(context)
+    return time_str.strip()
 
 
 @register.inclusion_tag('events/_calendar.html', takes_context=True)
@@ -79,7 +55,7 @@ def calendar(context, associations, size='preview', component_id=None):
             ).order_by('content__time')
     calendar_event_dict = {date: list(events) for date, events in itertools.groupby(
         calendar_associations, key=lambda a: a.container.time.astimezone().date())}
-    calendar = Calendar(calendar_event_dict)
+    calendar = EventCalendar(calendar_event_dict)
     last_month = around.replace(day=1) + datetime.timedelta(days=-1)
     next_month = around.replace(day=1) + datetime.timedelta(days=31)
     context.update({
@@ -92,24 +68,6 @@ def calendar(context, associations, size='preview', component_id=None):
             'component_id': component_id,
             })
     return context
-
-
-@register.filter
-def day_preview(associations):
-    return ', '.join([
-        '{}{}'.format(
-            '{} '.format(django.utils.formats.time_format(
-                django.utils.timezone.localtime(a.container.time)))
-            if not a.container.all_day else '',
-            a.container.title)
-        for a in associations])
-
-
-@register.simple_tag(takes_context=True)
-def event_time(context, event):
-    context['event'] = event
-    time_str = context.template.engine.get_template('events/_time.html').render(context)
-    return time_str.strip()
 
 
 @register.inclusion_tag('events/_sidebar_calendar.html', takes_context=True)
@@ -153,8 +111,3 @@ def sidebar_calendar(
         'component_id': component_id
     })
     return context
-
-
-@register.filter
-def upcoming_events(events, preview_length):
-    return events.upcoming(preview_length)
