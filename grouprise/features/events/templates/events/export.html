@@ -1,22 +1,35 @@
 {% extends 'stadt/stadt.html' %}
-{% load memberships %}
 
-{% block sidebar %}{% endblock %}
+{% block title %}Kalenderexport - {{ block.super }}{% endblock %}
+{# {% block menu %}{% menu association.entity %}{% endblock %} #}
+{# {% block breadcrumb %}{% breadcrumb association.entity association.container %}{% endblock %} #}
 
-{% block heading %}
-        <div class="content-section-header">
-            <h2 class="content-classification">Kalenderexport</h2>
-            {% include "core/_decoration.html" with icon="sg-calendar" %}
-        </div>
-    {% endblock %}
+{% block sidebar %}
+    {% comment %}
+    {% if association.entity.is_group %}
+        {% include 'groups/_sidebar.html' with group=association.entity %}
+    {% else %}
+        {% if association.entity.public %}
+            {% include 'gestalten/_sidebar.html' with gestalt=association.entity %}
+        {% endif %}
+    {% endif %}
+    {% endcomment %}
+{% endblock %}
+
+{% block heading_title %}
+    <h1 class="content-classification">Kalenderexport</h1>
+    {% include "core/_decoration.html" with icon="sg-calendar" %}
+{% endblock %}
+
 {% block content %}
     <div class="content-body">
         <p>
-            Kalender werden im ICS-Exportformat bereitgestellt und lassen sich in dieser Form sowohl als
-            Abonnement einbinden, als auch einmalig herunterladen. Programme wie Thunderbird, aber
-            auch Web-Anwendungen wie owncloud oder Horde bieten es an diesen Kalender zu importieren.
-            Im Regelfall musst Du dafür die URL des Kalenders kopieren und im jeweiligen Programm einfügen.
-            Häufig wird die Funktionalität auch unter dem Namen WebCal angeboten.
+            Kalender werden im ICS-Exportformat bereitgestellt und lassen sich in dieser Form
+            sowohl als Abonnement einbinden, als auch einmalig herunterladen. Programme wie
+            Thunderbird, aber auch Web-Anwendungen wie owncloud oder Horde bieten es an diesen
+            Kalender zu importieren. Im Regelfall musst Du dafür die URL des Kalenders kopieren
+            und im jeweiligen Programm einfügen. Häufig wird die Funktionalität auch unter dem
+            Namen WebCal angeboten.
         </p>
 
         <h3>Öffentlicher Kalender</h3>
@@ -35,8 +48,9 @@
         {% if private_export_url %}
             <h3>Privater Kalender</h3>
             <p class="disclaimer">
-                Der private Kalender enthält alle nicht-öffentlichen Veranstaltungen. Wenn du die URL mit anderen
-                Menschen teilst, werden diese in deinem Namen auch Zugriff auf den Kalender haben.
+                Der private Kalender enthält alle nicht-öffentlichen Veranstaltungen. Wenn du
+                die URL mit anderen Menschen teilst, werden diese in deinem Namen auch Zugriff
+                auf den Kalender haben.
             </p>
             <div class="selectable-row">
                 <pre class="selectable selectable-mono">{{ private_export_url }}</pre>
