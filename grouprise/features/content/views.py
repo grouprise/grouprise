@@ -166,8 +166,6 @@ class Update(PermissionMixin, generic.UpdateView):
             name = 'galleries/update.html'
         elif self.object.container.is_file:
             name = 'files/update.html'
-        elif self.object.container.is_event:
-            name = 'events/update.html'
         else:
-            name = 'articles/update.html'
+            name = 'content/update.html'
         return [name]

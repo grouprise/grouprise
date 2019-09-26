@@ -2,6 +2,8 @@
 
 {% block title %}Beitrag erstellen - {{ block.super }}{% endblock %}
 
+{% block menu %}{% menu view.entity %}{% endblock %}
+
 {% block breadcrumb %}
     {% if view.entity.is_group %}
         {% breadcrumb view.entity 'Beitrag erstellen' %}

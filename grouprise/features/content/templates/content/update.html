@@ -2,6 +2,8 @@
 
 {% block title %}Beitrag bearbeiten - {{ block.super }}{% endblock %}
 
+{% block menu %}{% menu view.entity %}{% endblock %}
+
 {% block breadcrumb %}
     {% breadcrumb association.entity association 'Beitrag bearbeiten' %}
 {% endblock %}
