@@ -1,9 +1,4 @@
-import rules
+from rules import add_perm, always_allow
 
-rules.add_perm(
-        'events.view_day',
-        rules.always_allow)
-
-rules.add_perm(
-        'events.view_list',
-        rules.always_allow)
+add_perm('events.view_day', always_allow)
+add_perm('events.view_list', always_allow)
