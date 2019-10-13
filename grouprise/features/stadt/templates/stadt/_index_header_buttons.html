@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load stadt %}
 
     <ul class="actions">
         <li>
@@ -20,7 +21,7 @@
                         <i class="sg sg-intro-local"></i>
                     </span>
                     <span class="action-description">
-                        {% trans 'For' %} {{ audience }}
+                        {% trans 'For' %} {% target_audience %}
                     </span>
                 </span>
             </label>
