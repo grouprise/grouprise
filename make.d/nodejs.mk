@@ -21,7 +21,11 @@ $(BIN_NODE):
 			echo >&2 "NodeJS download for non-linux platforms is sadly not supported. Please install $(NODE_VERSION_MIN) or later manually."; \
 			exit 1; fi; \
 		echo >&2 "Local nodejs version is missing or too old (before $(NODE_VERSION_MIN)) or 'npm' is missing. Downloading from server ..."; \
-		wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_LOCAL_DIR)" --strip-components=1 -f -; \
+		if [ -n "$(shell which xzcat)" ]; then \
+			wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_LOCAL_DIR)" --strip-components=1 -f -; \
+		else \
+			echo >&2 "Failed to install nodejs due to missing dependency: xz compression tool (Debian: package 'xz-utils')"; \
+		fi; \
 	else \
 		echo >&2 "Local nodejs version is sufficient. Symlinking executables ..."; \
 		ln -s "$(BIN_NODE_SYSTEM)" "$(NODE_LOCAL_DIR)/bin/node"; \
