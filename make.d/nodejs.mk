@@ -1,8 +1,8 @@
 BIN_NODE_SYSTEM = $(shell which nodejs node | head -1)
 BIN_NPM_SYSTEM = $(shell which npm || true)
 NODE_LOCAL_DIR = $(DIR_BUILD)/node
-BIN_NODE ?= $(NODE_LOCAL_DIR)/bin/node
-BIN_NPM ?= $(NODE_LOCAL_DIR)/bin/npm
+BIN_NODE ?= $(abspath $(NODE_LOCAL_DIR))/bin/node
+BIN_NPM ?= $(abspath $(NODE_LOCAL_DIR))/bin/npm
 
 NODE_VERSION_SYSTEM = $(shell if [ -n "$(BIN_NODE_SYSTEM)" ]; then "$(BIN_NODE_SYSTEM)" --version; else echo "v0.0.0"; fi)
 NODE_VERSION_MIN = v8.12.0
