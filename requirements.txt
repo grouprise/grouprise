@@ -1,3 +1,12 @@
+# Python dependencies of grouprise
+#
+# Most dependencies below do not use specific version requirements.  In this case you may assume,
+# that the package in Debian Buster is suitable.
+#
+# Always synchronize your changes with debian/control, if the module is packaged for Debian:
+#    * Build-Depends in source package (first stanza)
+#    * Depends in package "grouprise-dependencies"
+#
 aiosmtpd                    # debian: python3-aiosmtpd
 bleach                      # debian: python3-bleach
 django<2.3                  # debian: python3-django
