@@ -1,36 +1,36 @@
 aiosmtpd                    # debian: python3-aiosmtpd
 bleach                      # debian: python3-bleach
 django<2.3                  # debian: python3-django
-django-allauth              # debian (buster): python3-django-allauth
+django-allauth              # debian: python3-django-allauth
 # deactivated, see #662
 # django-cachalot             # NOT IN DEBIAN
-django-csp                  # debian (buster): python3-django-csp
+django-csp                  # debian: python3-django-csp
 # the exact required version is unknown - but at least the Buster version (1.1.0) is too low
 django-filter>=2.0          # debian: python3-django-filters
 django-haystack             # debian: python3-django-haystack
 django-ical                 # NOT IN DEBIAN
-django-imagekit             # debian (buster): python3-django-imagekit
+django-imagekit             # debian: python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
-django-taggit               # python3-django-taggit
-djangorestframework         # debian: python-djangorestframework
+django-taggit               # debian: python3-django-taggit
+djangorestframework         # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
-flake8                      # debian: flake8
+flake8                      # debian: python3-flake8
 html2text                   # debian: python3-html2text
 huey                        # NOT IN DEBIAN
 # incompatible change introduced in https://github.com/Python-Markdown/markdown/commit/d18c3d0acab
 markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
-pillow                      # debian: python-pil
+pillow                      # debian: python3-pil
 pymdown-extensions<6        # NOT IN DEBIAN
 aiosmtplib                  # NOT IN DEBIAN
 schulze                     # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
-raven                       # debian (buster): python3-raven
+raven                       # debian: python3-raven
 recommonmark                # debian: python3-recommonmark
 redis                       # debian: python3-redis
 requests                    # debian: python3-requests
-rules                       # debian (buster): python3-django-rules
+rules                       # debian: python3-django-rules
 translitcodec               # NOT IN DEBIAN
-xapian-haystack             # debian (buster): python3-xapian-haystack
+xapian-haystack             # debian: python3-xapian-haystack
 # xapian-haystack also requires the xapian python bindings that you'll find
 # as "python3-xapian" in Debian/Ubuntu and "python-xapian" in ArchLinux
