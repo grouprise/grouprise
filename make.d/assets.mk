@@ -13,41 +13,31 @@ DEPS_ASSETS = $(shell find "$(DIR_RES)" -type f)
 DEPS_FONTS = $(shell find "$(DIR_FONTS)" -type f)
 DEPS_WEBPACK = $(shell find "webpack" -type f)
 
-# intermediate build files
-BUILD_FONT_GOOGLE = $(DIR_BUILD)/fonts/google
+# google fonts
+GOOGLE_FONTS_CSS = $(DIR_BUILD)/fonts/google/fonts.css
+URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:300,400,400i,500,700
 
 # static output files
-DIR_STATIC_FONT = $(DIR_STATIC)/fonts
-DIR_STATIC_FONT_GOOGLE = $(DIR_STATIC_FONT)/google
-STAMP_STATIC_FONT_GOOGLE = $(DIR_BUILD)/.static_font_google
 STAMP_STATIC_WEBPACK = $(DIR_BUILD)/.static_webpack
-
-URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:300,400,400i,500,700
 
 $(STAMP_NODE_MODULES): $(BIN_NODE) $(BIN_NPM) package.json
 	@# the module "phantomjs" fails to install without the environment setting OPENSSL_CONF
 	OPENSSL_CONF=/etc/ssl/ $(RUN_NODE) "$(BIN_NPM)" ci --no-progress
 	touch "$(STAMP_NODE_MODULES)"
 
-$(STAMP_STATIC_FONT_GOOGLE): $(STAMP_NODE_MODULES)
-	mkdir -p "$(BUILD_FONT_GOOGLE)"
-	$(RUN_NODE) "$(BIN_FONTDUMP)" --target-directory "$(BUILD_FONT_GOOGLE)" --web-directory "." "$(URL_FONT_GOOGLE)"
-	mkdir -p "$(DIR_STATIC_FONT_GOOGLE)"
-	cp -a "$(BUILD_FONT_GOOGLE)"/*.eot \
-		"$(BUILD_FONT_GOOGLE)"/*.svg \
-		"$(BUILD_FONT_GOOGLE)"/*.ttf \
-		"$(BUILD_FONT_GOOGLE)"/*.woff \
-		"$(BUILD_FONT_GOOGLE)"/*.woff2 \
-		"$(DIR_STATIC_FONT_GOOGLE)"
-	touch "$(STAMP_STATIC_FONT_GOOGLE)"
+$(GOOGLE_FONTS_CSS): $(STAMP_NODE_MODULES)
+	$(RUN_NODE) "$(BIN_FONTDUMP)" \
+		--target-directory "$(dir $(GOOGLE_FONTS_CSS))" \
+		--web-directory "." \
+		"$(URL_FONT_GOOGLE)"
 
-$(STAMP_STATIC_WEBPACK): $(STAMP_STATIC_FONT_GOOGLE) $(DEPS_ASSETS) $(DEPS_WEBPACK)
+$(STAMP_STATIC_WEBPACK): $(GOOGLE_FONTS_CSS) $(DEPS_ASSETS) $(DEPS_WEBPACK)
 	mkdir -p "$(DIR_STATIC)"
 	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK) --bail
 	touch "$(STAMP_STATIC_WEBPACK)"
 
 .PHONY: assets_fonts
-assets_fonts: $(STAMP_STATIC_FONT_GOOGLE)
+assets_fonts: $(GOOGLE_FONTS_CSS)
 
 .PHONY: assets_webpack
 assets_webpack: $(STAMP_STATIC_WEBPACK)

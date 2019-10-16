@@ -85,7 +85,7 @@
     "matches-selector-polyfill": "^1.0.0",
     "modernizr": "^3.6.0",
     "moment": "^2.23.0",
-    "node-fontdump": "^1.2.2",
+    "node-fontdump": "^2.1.0",
     "object-assign-shim": "^1.0.0",
     "photoswipe": "^4.1.2",
     "popper.js": "^1.14.6",
