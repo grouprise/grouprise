@@ -10,7 +10,12 @@ NODE_URL_X86 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_M
 NODE_URL_X64 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x64.tar.xz
 NODE_URL = $(shell if [ "$(shell uname -m)" = "x86_64" ]; then echo "$(NODE_URL_X64)"; else echo "$(NODE_URL_X86)"; fi)
 
-RUN_NODE = PATH="$$PATH:$$(dirname "$(BIN_NODE)")" DIR_BUILD="$(abspath $(DIR_BUILD))" "$(BIN_NODE)"
+@# the module "phantomJS" fails to install without the environment setting OPENSSL_CONF
+RUN_NODE = \
+	PATH="$$PATH:$$(dirname "$(BIN_NODE)")" \
+	DIR_BUILD="$(abspath $(DIR_BUILD))" \
+	OPENSSL_CONF=/etc/ssl/ \
+	"$(BIN_NODE)"
 
 
 $(BIN_NODE):

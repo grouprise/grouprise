@@ -21,8 +21,7 @@ URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,70
 STAMP_STATIC_WEBPACK = $(DIR_BUILD)/.static_webpack
 
 $(STAMP_NODE_MODULES): $(BIN_NODE) $(BIN_NPM) package.json
-	@# the module "phantomjs" fails to install without the environment setting OPENSSL_CONF
-	OPENSSL_CONF=/etc/ssl/ $(RUN_NODE) "$(BIN_NPM)" ci --no-progress
+	$(RUN_NODE) "$(BIN_NPM)" ci --no-progress
 	touch "$(STAMP_NODE_MODULES)"
 
 $(GOOGLE_FONTS_CSS): $(STAMP_NODE_MODULES)
