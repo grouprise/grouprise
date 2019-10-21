@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('content2', '0015_auto_20190408_0027'),
-        ('taggit', '0003_taggeditem_add_unique_index'),
+        ('taggit', '0002_auto_20150616_2121'),
         ('tags', '0010_auto_20170622_1655'),
     ]
 
