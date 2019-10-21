@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     raise CommandError('missing the sqlite3 binary. please install it') from err
                 else:
                     raise CommandError('Failed to create database dump.') from err
-        elif engine == 'postgresql':
+        elif engine in {'postgresql', 'postgis'}:
             try:
                 check_call(['pg_dump', '--no-owner', '--no-privileges', '-f', output_filename,
                             create_psql_uri(db)], cwd="/")
