@@ -1,4 +1,4 @@
-import grouprise.features
+import grouprise.features.content.views
 from . import forms
 
 
