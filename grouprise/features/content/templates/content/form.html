@@ -13,20 +13,22 @@
         {% csrf_token %}
         <div>
             {% include 'core/_field.html' with field=form.title %}
-            <div class="form-group">
-                <div class="editor-container">
-                    {% include 'core/_field.html' with field=form.text %}
-                </div>
+            {% if form.text %}
+                <div class="form-group">
+                    <div class="editor-container">
+                        {% include 'core/_field.html' with field=form.text %}
+                    </div>
 
-                <p class="help-block">
-                    Einfacher Text wird automatisch formatiert.
-                    {% if form.fields.text.widget.has_buttons %}
-                        Besondere Formatierungen lassen sich mit den Knöpfen oben erzeugen.
-                    {% endif %}
-                    Erläuterungen gibt es in der
-                    <a href="/stadt/markdown/"><i class="sg sg-info">&nbsp;</i>Hilfe zur Textauszeichnung</a>.
-                </p>
-            </div>
+                    <p class="help-block">
+                        Einfacher Text wird automatisch formatiert.
+                        {% if form.fields.text.widget.has_buttons %}
+                            Besondere Formatierungen lassen sich mit den Knöpfen oben erzeugen.
+                        {% endif %}
+                        Erläuterungen gibt es in der
+                        <a href="/stadt/markdown/"><i class="sg sg-info">&nbsp;</i>Hilfe zur Textauszeichnung</a>.
+                    </p>
+                </div>
+            {% endif %}
             {% block form_extra %}{% endblock %}
         </div>
         {% if form.time %}
