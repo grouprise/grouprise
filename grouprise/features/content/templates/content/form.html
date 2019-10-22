@@ -47,7 +47,7 @@
         {% endif %}
 
         <div class="section section-publish section-article" data-component="publish">
-            <h2>Beitragseinstellungen</h2>
+            {% block content_submission_header %}<h2>Beitragseinstellungen</h2>{% endblock %}
             <div class="row">
                 <div class="col-md-7">
                     {% if form.image %}
