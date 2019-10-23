@@ -16,7 +16,7 @@ from stadt.settings.default import *  # noqa: F401, F403
 #     ('Admins', 'administration@example.com'),
 # ]
 #
-# ABOUT_GROUP_ID = 1
+# OPERATOR_GROUP_ID = 1
 #
 #################################################
 
