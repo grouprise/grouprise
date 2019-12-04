@@ -1,5 +1,5 @@
 import { includes, isPlainObject } from 'lodash'
-import { cookie } from 'cookie_js'
+import cookie from 'cookie_js'
 import axios from 'axios'
 
 const noop = config => config

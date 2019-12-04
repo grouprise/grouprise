@@ -1,9 +1,25 @@
 <template>
-  <sg-user :user="user" v-if="user" v-bind="userAttribs">
-    <div class="form-modern" v-if="allowEdit || displayLogin"
-         style="display: flex; align-items: center">
-      <sg-input v-model="username" label="Dein Name" style="margin: 0" v-if="allowEdit" />
-      <a :href="loginUrl" class="btn btn-link" v-if="displayLogin">Anmelden</a>
+  <sg-user
+    v-if="user"
+    :user="user"
+    v-bind="userAttribs"
+  >
+    <div
+      v-if="allowEdit || displayLogin"
+      class="form-modern"
+      style="display: flex; align-items: center"
+    >
+      <sg-input
+        v-if="allowEdit"
+        v-model="username"
+        label="Dein Name"
+        style="margin: 0"
+      />
+      <a
+        v-if="displayLogin"
+        :href="loginUrl"
+        class="btn btn-link"
+      >Anmelden</a>
     </div>
   </sg-user>
 </template>
@@ -55,9 +71,6 @@
           } : this.userModel
       }
     },
-    async created () {
-      this.userModel = await getCurrentUser()
-    },
     watch: {
       user () {
         this.$emit('input', this.user)
@@ -67,6 +80,9 @@
           this.$emit('edit', this.username)
         }
       }
+    },
+    async created () {
+      this.userModel = await getCurrentUser()
     }
   }
 </script>

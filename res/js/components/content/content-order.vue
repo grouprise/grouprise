@@ -3,9 +3,18 @@
     <span class="btn-toolbar-label">Sortierung:</span>
 
     <template v-for="action in actions">
-      <button type="button" class="btn btn-icon btn-sm" :aria-pressed="action.pressed"
-              :title="action.title" @click="select(action.value)">
-        <i class="sg" :class="`sg-${action.icon}`"></i>
+      <button
+        :key="action.value"
+        type="button"
+        class="btn btn-icon btn-sm"
+        :aria-pressed="action.pressed"
+        :title="action.title"
+        @click="select(action.value)"
+      >
+        <i
+          class="sg"
+          :class="`sg-${action.icon}`"
+        />
       </button>
     </template>
   </div>
@@ -14,7 +23,10 @@
 <script>
   export default {
     props: {
-      value: String
+      value: {
+        type: String,
+        required: true
+      }
     },
     computed: {
       actions () {

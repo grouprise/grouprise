@@ -1,57 +1,104 @@
 <template>
-  <poll-voter class="poll-simple" :poll="poll" :canVote="canVote" :isVoting="isVoting"
-              @vote="startVote" ref="poll">
+  <poll-voter
+    ref="poll"
+    class="poll-simple"
+    :poll="poll"
+    :can-vote="canVote"
+    :is-voting="isVoting"
+    @vote="startVote"
+  >
     <!-- custom poll header during vote -->
-    <template slot="header" v-if="isVoting">
+    <template
+      v-if="isVoting"
+      slot="header"
+    >
       <div class="poll-info">
         Du stimmst ab, indem du Antworten einzeln bewertest.
-        <span class="content-nobreak"><i :class="icons.yes"></i> für <em>Ja</em></span>,
-        <span class="content-nobreak"><i :class="icons.no"></i> für <em>Nein</em></span>,
-        <span class="content-nobreak"><i :class="icons.maybe"></i> für <em>Vielleicht</em></span>.
+        <span class="content-nobreak"><i :class="icons.yes" /> für <em>Ja</em></span>,
+        <span class="content-nobreak"><i :class="icons.no" /> für <em>Nein</em></span>,
+        <span class="content-nobreak"><i :class="icons.maybe" /> für <em>Vielleicht</em></span>.
       </div>
     </template>
 
     <!-- custom poll footer during vote -->
-    <div class="poll-actions" slot="footer" slot-scope="props" v-if="isVoting">
-      <button type="button" class="btn btn-sm btn-primary"
-              @click="submitVote(props.canSubmitVote)">
+    <div
+      v-if="isVoting"
+      slot="footer"
+      slot-scope="props"
+      class="poll-actions"
+    >
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        @click="submitVote(props.canSubmitVote)"
+      >
         Stimme abgeben
       </button>
     </div>
 
     <template v-if="poll">
       <div class="poll-answers">
-        <poll-voter-answer :option="option"
-                           v-show="!optionsShorted || index < showThreshold"
-                           v-for="(option, index) in rankedOptions" :key="option.id">
-          <div slot="actions" v-if="!isVoting">
-            <sg-chart-pie :data="optionRatings[option.id]" size="2.5rem"
-                          v-if="optionRatings[option.id]" />
+        <poll-voter-answer
+          v-for="(option, index) in rankedOptions"
+          v-show="!optionsShorted || index < showThreshold"
+          :key="option.id"
+          :option="option"
+        >
+          <div
+            v-if="!isVoting"
+            slot="actions"
+          >
+            <sg-chart-pie
+              v-if="optionRatings[option.id]"
+              :data="optionRatings[option.id]"
+              size="2.5rem"
+            />
           </div>
-          <div slot="actions" v-if="isVoting">
-            <button type="button" class="btn btn-default poll-btn poll-endorse-yes"
-                    title="Vorschlag unterstützen"
-                    :aria-pressed="endorsements[option.id] === true ? 'true' : 'false'"
-                    @click="endorsements[option.id] = true">
-              <i :class="icons.yes"></i>
+          <div
+            v-if="isVoting"
+            slot="actions"
+          >
+            <button
+              type="button"
+              class="btn btn-default poll-btn poll-endorse-yes"
+              title="Vorschlag unterstützen"
+              :aria-pressed="endorsements[option.id] === true ? 'true' : 'false'"
+              @click="endorsements[option.id] = true"
+            >
+              <i :class="icons.yes" />
             </button>
-            <button type="button" class="btn btn-default poll-btn poll-endorse-maybe"
-                    title="Ist mir egal"
-                    :aria-pressed="endorsements[option.id] === null ? 'true' : 'false'"
-                    @click="endorsements[option.id] = null">
-              <i :class="icons.maybe"></i>
+            <button
+              type="button"
+              class="btn btn-default poll-btn poll-endorse-maybe"
+              title="Ist mir egal"
+              :aria-pressed="endorsements[option.id] === null ? 'true' : 'false'"
+              @click="endorsements[option.id] = null"
+            >
+              <i :class="icons.maybe" />
             </button>
-            <button type="button" class="btn btn-default poll-btn poll-endorse-no"
-                    title="Vorschlag ablehnen"
-                    :aria-pressed="endorsements[option.id] === false ? 'true' : 'false'"
-                    @click="endorsements[option.id] = false">
-              <i :class="icons.no"></i>
+            <button
+              type="button"
+              class="btn btn-default poll-btn poll-endorse-no"
+              title="Vorschlag ablehnen"
+              :aria-pressed="endorsements[option.id] === false ? 'true' : 'false'"
+              @click="endorsements[option.id] = false"
+            >
+              <i :class="icons.no" />
             </button>
           </div>
         </poll-voter-answer>
 
-        <div class="btn-toolbar btn-toolbar-centered" v-if="optionsShorted" @click="showAllOptions = true">
-          <button type="button" class="btn btn-sm btn-default">Restliche Optionen zeigen</button>
+        <div
+          v-if="optionsShorted"
+          class="btn-toolbar btn-toolbar-centered"
+          @click="showAllOptions = true"
+        >
+          <button
+            type="button"
+            class="btn btn-sm btn-default"
+          >
+            Restliche Optionen zeigen
+          </button>
         </div>
       </div>
     </template>

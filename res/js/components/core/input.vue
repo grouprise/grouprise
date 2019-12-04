@@ -1,10 +1,23 @@
 <template>
-  <div class="form-group" :class="_groupClasses">
-    <label class="control-label" :for="id" v-if="label">{{ label }}</label>
-    <input class="form-control vue-input" :class="inputClasses" :id="id" v-model="currentValue"
-           ref="input"
-           @focus="hasFocus = true; hadFocus = true" @blur="hasFocus = false"
-           @input="hasChanged = true">
+  <div
+    class="form-group"
+    :class="_groupClasses"
+  >
+    <label
+      v-if="label"
+      class="control-label"
+      :for="id"
+    >{{ label }}</label>
+    <input
+      :id="id"
+      ref="input"
+      v-model="currentValue"
+      class="form-control vue-input"
+      :class="inputClasses"
+      @focus="hasFocus = true; hadFocus = true"
+      @blur="hasFocus = false"
+      @input="hasChanged = true"
+    >
   </div>
 </template>
 
@@ -52,16 +65,16 @@
         }, `input-type-${this.type.toLowerCase()}`]
       }
     },
+    watch: {
+      currentValue (value) {
+        setTimeout(() => { this.$emit('input', value) }, 0)
+      }
+    },
     created () {
       this.currentValue = this.value || ''
     },
     mounted () {
       this.$refs.input.type = this.type
-    },
-    watch: {
-      currentValue (value) {
-        setTimeout(() => { this.$emit('input', value) }, 0)
-      }
     }
   }
 </script>

@@ -1,5 +1,5 @@
-BIN_NODE_SYSTEM = $(shell which nodejs node | head -1)
-BIN_NPM_SYSTEM = $(shell which npm || true)
+BIN_NODE_SYSTEM = $(shell command -v nodejs node | head -1)
+BIN_NPM_SYSTEM = $(shell command -v npm || true)
 NODE_LOCAL_DIR = $(DIR_BUILD)/node
 BIN_NODE ?= $(abspath $(NODE_LOCAL_DIR))/bin/node
 BIN_NPM ?= $(abspath $(NODE_LOCAL_DIR))/bin/npm
@@ -26,7 +26,7 @@ $(BIN_NODE):
 			echo >&2 "NodeJS download for non-linux platforms is sadly not supported. Please install $(NODE_VERSION_MIN) or later manually."; \
 			exit 1; fi; \
 		echo >&2 "Local nodejs version is missing or too old (before $(NODE_VERSION_MIN)) or 'npm' is missing. Downloading from server ..."; \
-		if [ -n "$(shell which xzcat)" ]; then \
+		if [ -n "$(shell command -v xzcat)" ]; then \
 			wget -O - "$(NODE_URL)" | tar -xJ -C "$(NODE_LOCAL_DIR)" --strip-components=1 -f -; \
 		else \
 			echo >&2 "Failed to install nodejs due to missing dependency: xz compression tool (Debian: package 'xz-utils')"; \

@@ -1,20 +1,33 @@
 <template>
   <div class="poll-editor-appointment form-modern">
-    <ol class="poll-answers" v-if="answers.length > 0">
-      <li v-for="(answer, index) in answers" :key="answer.rowIndex">
+    <ol
+      v-if="answers.length > 0"
+      class="poll-answers"
+    >
+      <li
+        v-for="(answer, index) in answers"
+        :key="answer.rowIndex"
+      >
         <answer @remove="removeRow(index)">
           <appointment-answer v-model="answer.value" />
         </answer>
       </li>
     </ol>
-    <div class="poll-answers poll-answers-empty" v-else>
+    <div
+      v-else
+      class="poll-answers poll-answers-empty"
+    >
       <p>
         <em>Füge deiner Terminumfrage einen Termin hinzu</em>
       </p>
     </div>
     <div class="btn-toolbar">
-      <button type="button" class="btn btn-sm btn-primary" @click="addAnswer()">
-        <i class="sg sg-add"></i>
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        @click="addAnswer()"
+      >
+        <i class="sg sg-add" />
         Termin hinzufügen
       </button>
     </div>

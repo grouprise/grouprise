@@ -1,14 +1,30 @@
 <template>
   <div class="form form-modern search">
-    <sg-input type="search" v-model="searchTerm" label="Gruppen suchen..."
-              :groupClasses="{'search-loading': isSearching }"
-              :inputClasses="['search-input']"></sg-input>
-    <div v-if="!searchTerm" v-html="defaultResults"></div>
-    <div class="search-results" v-else-if="hasResults">
-      <group-preview :group="group" :key="group.id" v-for="group in results" />
+    <sg-input
+      v-model="searchTerm"
+      type="search"
+      label="Gruppen suchen..."
+      :group-classes="{'search-loading': isSearching }"
+      :input-classes="['search-input']"
+    />
+    <div
+      v-if="!searchTerm"
+      v-html="defaultResults"
+    />
+    <div
+      v-else-if="hasResults"
+      class="search-results"
+    >
+      <group-preview
+        v-for="group in results"
+        :key="group.id"
+        :group="group"
+      />
     </div>
     <div v-else-if="hasNoResults">
-      <div class="alert alert-block">Nix g’scheites bei 😞</div>
+      <div class="alert alert-block">
+        Nix g’scheites bei 😞
+      </div>
     </div>
   </div>
 </template>

@@ -2,16 +2,37 @@
   <div class="numspi">
     <div class="numspi-inner">
       <div class="numspi-ctl">
-        <button type="button" class="numspi-btn" @click="modifyValue(-1)" :disabled="!allowDecrement">
-          <i class="sg sg-decrease"></i>
+        <button
+          type="button"
+          class="numspi-btn"
+          :disabled="!allowDecrement"
+          @click="modifyValue(-1)"
+        >
+          <i class="sg sg-decrease" />
         </button>
-        <input class="numspi-input" type="number" :min="min" :max="max" :step="step" v-model.number="currentValue" :id="id">
-        <button type="button" class="numspi-btn" @click="modifyValue(1)" :disabled="!allowIncrement">
-          <i class="sg sg-increase"></i>
+        <input
+          :id="id"
+          v-model.number="currentValue"
+          class="numspi-input"
+          type="number"
+          :min="min"
+          :max="max"
+          :step="step"
+        >
+        <button
+          type="button"
+          class="numspi-btn"
+          :disabled="!allowIncrement"
+          @click="modifyValue(1)"
+        >
+          <i class="sg sg-increase" />
         </button>
       </div>
     </div>
-    <label class="numspi-label" :for="id">{{ label }}</label>
+    <label
+      class="numspi-label"
+      :for="id"
+    >{{ label }}</label>
   </div>
 </template>
 
@@ -53,17 +74,17 @@
         return this.min === null || this.currentValue - stepValue(this.step) >= this.min
       }
     },
-    methods: {
-      modifyValue (modifier) {
-        this.currentValue += stepValue(this.step) * modifier
+    watch: {
+      currentValue (value) {
+        setTimeout(() => { this.$emit('input', value) }, 0)
       }
     },
     created () {
       this.currentValue = this.value || null
     },
-    watch: {
-      currentValue (value) {
-        setTimeout(() => { this.$emit('input', value) }, 0)
+    methods: {
+      modifyValue (modifier) {
+        this.currentValue += stepValue(this.step) * modifier
       }
     }
   }

@@ -1,6 +1,7 @@
 const path = require('path')
-const { baseDir, buildDir, isDebug, jsDir, cssDir, imgDir } = require('../env')
-const extractTextPlugin = require('../plugins/extract-text')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { baseDir, buildDir, nodeEnv, isDebug, jsDir, cssDir, imgDir } = require('../env')
+const cssPlugin = require('../plugins/css')
 
 const resolveFilename = file => {
   // resolve files in node_modules, in build dir and font files to hash filenames
@@ -16,6 +17,7 @@ const resolveFilename = file => {
 }
 
 module.exports = {
+  mode: nodeEnv,
   resolve: {
     alias: {
       app: jsDir,
@@ -31,7 +33,44 @@ module.exports = {
       /moment.js/
     ],
     rules: [
-      extractTextPlugin.lessConfig,
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV === 'development',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              sourceMap: true,
+              strictMath: true,
+              strictUnits: true,
+              noIeCompat: true,
+              compress: false,
+              outputSourceFiles: true,
+              sourceMapFileInline: true,
+              globalVars: {
+                'build-root': `'${buildDir}'`
+              }
+            }
+          }
+        ]
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader'

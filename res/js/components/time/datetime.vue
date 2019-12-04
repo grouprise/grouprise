@@ -1,20 +1,55 @@
 <template>
   <div class="datetime">
-    <div class="datetime-calendar" ref="calendar"></div>
-    <div class="form-group datetime-date" ref="dateFieldGroup">
-      <label class="control-label" v-if="showLabels" :for="dateFieldId">{{ dateLabel }}</label>
+    <div
+      ref="calendar"
+      class="datetime-calendar"
+    />
+    <div
+      ref="dateFieldGroup"
+      class="form-group datetime-date"
+    >
+      <label
+        v-if="showLabels"
+        class="control-label"
+        :for="dateFieldId"
+      >{{ dateLabel }}</label>
       <div class="controls">
-        <input type="text" class="form-control form-control-icon" v-model.lazy="date" ref="date"
-               @focus="isEditing = true" @blur="isEditing = false" @wheel="scrollDate" :id="dateFieldId">
+        <input
+          :id="dateFieldId"
+          ref="date"
+          v-model.lazy="date"
+          type="text"
+          class="form-control form-control-icon"
+          @focus="isEditing = true"
+          @blur="isEditing = false"
+          @wheel="scrollDate"
+        >
       </div>
     </div>
     <transition name="fade">
-      <div class="form-group datetime-time" v-if="enableTime" ref="timeFieldGroup">
-        <label class="control-label" v-if="showLabels" :for="timeFieldId">{{ timeLabel }}</label>
+      <div
+        v-if="enableTime"
+        ref="timeFieldGroup"
+        class="form-group datetime-time"
+      >
+        <label
+          v-if="showLabels"
+          class="control-label"
+          :for="timeFieldId"
+        >{{ timeLabel }}</label>
         <div class="controls">
-          <input type="text" class="form-control form-control-icon" v-model.lazy="time" ref="time"
-                 pattern="^(0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$" :id="timeFieldId" :placeholder="timePlaceholder"
-                 @focus="isEditing = true" @blur="guessTime" @wheel="scrollTime">
+          <input
+            :id="timeFieldId"
+            ref="time"
+            v-model.lazy="time"
+            type="text"
+            class="form-control form-control-icon"
+            pattern="^(0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
+            :placeholder="timePlaceholder"
+            @focus="isEditing = true"
+            @blur="guessTime"
+            @wheel="scrollTime"
+          >
         </div>
       </div>
     </transition>

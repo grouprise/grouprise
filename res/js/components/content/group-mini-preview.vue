@@ -1,7 +1,13 @@
 <template>
-  <a class="group-media" :href="group.url">
+  <a
+    class="group-media"
+    :href="group.url"
+  >
     <header class="group-media-image">
-      <sg-avatar :size="64" :entity="group" />
+      <sg-avatar
+        :size="64"
+        :entity="group"
+      />
     </header>
     <div class="group-media-body">
       <h3>{{ group.name }}</h3>

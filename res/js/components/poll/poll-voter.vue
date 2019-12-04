@@ -1,32 +1,61 @@
 <template>
-  <div class="poll" :class="{ 'poll-voting': isVoting, 'poll-loading': !poll }">
+  <div
+    class="poll"
+    :class="{ 'poll-voting': isVoting, 'poll-loading': !poll }"
+  >
     <header class="poll-header">
-      <i class="poll-header-icon sg sg-poll-info" v-if="isVoting"></i>
+      <i
+        v-if="isVoting"
+        class="poll-header-icon sg sg-poll-info"
+      />
       <slot name="header">
         <div class="poll-info">
           <div>{{ headerText }}</div>
-          <small class="content-mute" v-if="lastVoted">
+          <small
+            v-if="lastVoted"
+            class="content-mute"
+          >
             Letztes Votum {{ lastVoted.from(new Date()) }}
           </small>
         </div>
         <div class="poll-header-actions">
-          <div class="spinner" v-if="!poll"></div>
-          <button type="button" class="btn btn-primary btn-sm" @click="notifyVote"
-                  v-if="poll && allowVote">
+          <div
+            v-if="!poll"
+            class="spinner"
+          />
+          <button
+            v-if="poll && allowVote"
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="notifyVote"
+          >
             Jetzt abstimmen
           </button>
         </div>
       </slot>
     </header>
-    <div class="poll-body" v-if="poll">
+    <div
+      v-if="poll"
+      class="poll-body"
+    >
       <slot />
     </div>
-    <footer class="poll-footer" v-if="poll && allowVote">
+    <footer
+      v-if="poll && allowVote"
+      class="poll-footer"
+    >
       <keep-alive>
-        <sg-user-current :anonymousEdit="true" :anonymousLogin="true" v-model="user"
-                         @edit="notifyVote" />
+        <sg-user-current
+          v-model="user"
+          :anonymous-edit="true"
+          :anonymous-login="true"
+          @edit="notifyVote"
+        />
       </keep-alive>
-      <slot name="footer" :canSubmitVote="user && user.name" />
+      <slot
+        name="footer"
+        :canSubmitVote="user && user.name"
+      />
     </footer>
   </div>
 </template>
@@ -69,6 +98,11 @@
       }
     },
     inject: ['controller'],
+    watch: {
+      user () {
+        this.$emit('user', this.user)
+      }
+    },
     methods: {
       notifyVote () {
         if (!this.isVoting && this.allowVote) {
@@ -104,11 +138,6 @@
       },
       requestUserName () {
         danger('Bitte gib einen Namen ein oder melde dich an')
-      }
-    },
-    watch: {
-      user () {
-        this.$emit('user', this.user)
       }
     }
   }

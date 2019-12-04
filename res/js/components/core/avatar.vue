@@ -1,17 +1,34 @@
 <template>
-    <div class="avatar-wrap" :title="entity.name" :class="{ 'avatar-inline': inline }">
-        <div class="avatar" :class="avatarClasses" v-if="entity.avatar !== null">
-            <img :src="entity.avatar" alt="">
-        </div>
-        <div class="avatar avatar-initials" :class="avatarClasses" :data-initials="entity.initials.length" :style="avatarStyle" v-else>
-          <span v-if="entity.initials.length <= 4">
-            {{ entity.initials }}
-          </span>
-          <span v-else>
-            {{ entity.initials.substr(0, 1) }}...
-          </span>
-        </div>
+  <div
+    class="avatar-wrap"
+    :title="entity.name"
+    :class="{ 'avatar-inline': inline }"
+  >
+    <div
+      v-if="entity.avatar !== null"
+      class="avatar"
+      :class="avatarClasses"
+    >
+      <img
+        :src="entity.avatar"
+        alt=""
+      >
     </div>
+    <div
+      v-else
+      class="avatar avatar-initials"
+      :class="avatarClasses"
+      :data-initials="entity.initials.length"
+      :style="avatarStyle"
+    >
+      <span v-if="entity.initials.length <= 4">
+        {{ entity.initials }}
+      </span>
+      <span v-else>
+        {{ entity.initials.substr(0, 1) }}...
+      </span>
+    </div>
+  </div>
 </template>
 
 <script>

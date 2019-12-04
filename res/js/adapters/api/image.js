@@ -1,5 +1,5 @@
 import { each, has, pick, defaults, mapKeys, mapValues, pickBy } from 'lodash'
-import { cookie } from 'cookie_js'
+import cookie from 'cookie_js'
 import decorator from './_decorator'
 
 const numberOrNull = numeric => {

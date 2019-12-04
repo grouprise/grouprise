@@ -2,13 +2,27 @@
   <div class="poll-answer">
     <div class="poll-answer-body">
       <strong class="poll-answer-name">{{ option.title }}</strong>
-      <figure class="poll-answer-voters" v-if="option.voters.length > 0">
+      <figure
+        v-if="option.voters.length > 0"
+        class="poll-answer-voters"
+      >
         <figcaption>
-          <i class="sg sg-poll-favorite" title="Favorisiert von"></i>
+          <i
+            class="sg sg-poll-favorite"
+            title="Favorisiert von"
+          />
         </figcaption>
         <ul class="avatars avatars-nowrap">
-          <li v-for="voter in option.voters">
-            <sg-avatar :entity="voter" :size="16" :rounded="true" :inline="true" />
+          <li
+            v-for="voter in option.voters"
+            :key="voter.id"
+          >
+            <sg-avatar
+              :entity="voter"
+              :size="16"
+              :rounded="true"
+              :inline="true"
+            />
           </li>
         </ul>
       </figure>

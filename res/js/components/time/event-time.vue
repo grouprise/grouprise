@@ -1,33 +1,84 @@
 <template>
   <div class="form-group">
-    <label class="control-label" for="event-time">Datum & Uhrzeit</label>
+    <label
+      class="control-label"
+      for="event-time"
+    >Datum & Uhrzeit</label>
     <div class="controls">
-      <sg-configurator id="event-time" @save="propagate" @show="configure">
+      <sg-configurator
+        id="event-time"
+        @save="propagate"
+        @show="configure"
+      >
         <span slot="label">{{ label }}</span>
-        <i slot="icon" class="sg sg-time"></i>
+        <i
+          slot="icon"
+          class="sg sg-time"
+        />
         <span slot="title">
           Wann findet die Veranstaltung statt?
         </span>
-        <sg-switch slot="modifiers" v-model="currentAllDay" trueLabel="Ja" falseLabel="Nein" label="Ganztägig"></sg-switch>
+        <sg-switch
+          slot="modifiers"
+          v-model="currentAllDay"
+          true-label="Ja"
+          false-label="Nein"
+          label="Ganztägig"
+        />
         <slot>
           <div class="datetime-row">
-            <sg-datetime v-model="currentStartDate" :enableTime="!currentAllDay" :showLabels="true" dateLabel="Beginnt am" timeLabel="um"></sg-datetime>
-            <div class="form-group" v-if="showDuration" key="duration">
+            <sg-datetime
+              v-model="currentStartDate"
+              :enable-time="!currentAllDay"
+              :show-labels="true"
+              date-label="Beginnt am"
+              time-label="um"
+            />
+            <div
+              v-if="showDuration"
+              key="duration"
+              class="form-group"
+            >
               <label class="control-label">Dauer</label>
               <div class="controls">
-                <sg-number-spinner v-model="duration" :step="1" :min="1" :label="durationLabel"></sg-number-spinner>
+                <sg-number-spinner
+                  v-model="duration"
+                  :step="1"
+                  :min="1"
+                  :label="durationLabel"
+                />
               </div>
             </div>
           </div>
 
-          <div class="datetime-row" v-if="configurableEndDate">
-            <sg-datetime v-model="currentEndDate" :enableTime="!currentAllDay" :showLabels="true" dateLabel="Endet am" timeLabel="um" :timeDefault="[23, 59, 59]"></sg-datetime>
+          <div
+            v-if="configurableEndDate"
+            class="datetime-row"
+          >
+            <sg-datetime
+              v-model="currentEndDate"
+              :enable-time="!currentAllDay"
+              :show-labels="true"
+              date-label="Endet am"
+              time-label="um"
+              :time-default="[23, 59, 59]"
+            />
           </div>
 
-          <button type="button" class="btn btn-text" @click="configurableEndDate = true" v-if="!configurableEndDate">
+          <button
+            v-if="!configurableEndDate"
+            type="button"
+            class="btn btn-text"
+            @click="configurableEndDate = true"
+          >
             {{ currentAllDay ? 'Enddatum angeben' : 'Endzeit statt Dauer angeben' }}
           </button>
-          <button type="button" class="btn btn-text" @click="configurableEndDate = false" v-else>
+          <button
+            v-else
+            type="button"
+            class="btn btn-text"
+            @click="configurableEndDate = false"
+          >
             {{ currentAllDay ? 'Enddatum entfernen' : 'Endzeit entfernen' }}
           </button>
         </slot>
@@ -117,22 +168,6 @@
         return label(this.start, this.end, this.allDay)
       }
     },
-    methods: {
-      propagate () {
-        window.setTimeout(() => {
-          this.$emit('change', {
-            start: this.currentStartDate,
-            end: this.finalEndDate,
-            allDay: this.currentAllDay
-          })
-        }, 0)
-      },
-      configure () {
-        const [duration, showDuration] = calculateDuration(this.start, this.end)
-        this.configurableEndDate = !showDuration
-        this.duration = duration
-      }
-    },
     watch: {
       currentStartDate (currentStartDate) {
         // check if dates are valid and prefer start date when fixing
@@ -167,6 +202,22 @@
       this.currentEndDate = this.end
       this.currentAllDay = this.allDay
       this.configure()
+    },
+    methods: {
+      propagate () {
+        window.setTimeout(() => {
+          this.$emit('change', {
+            start: this.currentStartDate,
+            end: this.finalEndDate,
+            allDay: this.currentAllDay
+          })
+        }, 0)
+      },
+      configure () {
+        const [duration, showDuration] = calculateDuration(this.start, this.end)
+        this.configurableEndDate = !showDuration
+        this.duration = duration
+      }
     }
   }
 </script>

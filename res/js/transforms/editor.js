@@ -154,8 +154,8 @@ function editor (CodeMirror, SimpleMDE, el, opts) {
 
 export default (el, opts) => {
   return Promise.all([
-    System.import('codemirror'),
-    System.import('simplemde')
+    import('codemirror').then(m => m.default),
+    import('simplemde').then(m => m.default)
   ]).then(deps => {
     const [CodeMirror, SimpleMDE] = deps
     return Promise.resolve(editor(CodeMirror, SimpleMDE, el, opts))

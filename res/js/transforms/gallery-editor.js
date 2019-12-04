@@ -18,18 +18,6 @@ export default el => {
 
   const editor = new Vue({
     el: `#${container.id}`,
-    render (h) {
-      return h(GalleryCreator, {
-        props: {
-          images: this.images,
-          imagesReady: this.imagesReady
-        },
-        on: {
-          add: this.addImages,
-          remove: this.removeImage
-        }
-      })
-    },
     data: {
       images,
       imagesReady: true
@@ -49,6 +37,18 @@ export default el => {
         if (option) option.selected = false
         emitChange()
       }
+    },
+    render (h) {
+      return h(GalleryCreator, {
+        props: {
+          images: this.images,
+          imagesReady: this.imagesReady
+        },
+        on: {
+          add: this.addImages,
+          remove: this.removeImage
+        }
+      })
     }
   })
 

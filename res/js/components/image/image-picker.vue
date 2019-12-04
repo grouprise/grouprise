@@ -1,14 +1,35 @@
 <template>
-  <div class="media" :class="{'media-loading': isLoading }">
+  <div
+    class="media"
+    :class="{'media-loading': isLoading }"
+  >
     <div class="media-image">
-      <img :src="image.preview" alt="" class="thumbnail thumbnail-square thumbnail-100" v-if="image">
-      <div class="thumbnail thumbnail-square thumbnail-100 thumbnail-placeholder" v-else></div>
+      <img
+        v-if="image"
+        :src="image.preview"
+        alt=""
+        class="thumbnail thumbnail-square thumbnail-100"
+      >
+      <div
+        v-else
+        class="thumbnail thumbnail-square thumbnail-100 thumbnail-placeholder"
+      />
     </div>
     <div class="media-content">
-      <sg-file-picker :accept="['image/png', 'image/gif', 'image/jpeg', 'capture=camera']"
-                      @input="upload" :disabled="isLoading" :multiple="multiple"
-                      :btnLabel="btnLabel" :btnClasses="['btn', 'btn-default', 'btn-sm']" />
-      <div class="help-block" v-if="help">{{ help }}</div>
+      <sg-file-picker
+        :accept="['image/png', 'image/gif', 'image/jpeg', 'capture=camera']"
+        :disabled="isLoading"
+        :multiple="multiple"
+        :btn-label="btnLabel"
+        :btn-classes="['btn', 'btn-default', 'btn-sm']"
+        @input="upload"
+      />
+      <div
+        v-if="help"
+        class="help-block"
+      >
+        {{ help }}
+      </div>
     </div>
   </div>
 </template>

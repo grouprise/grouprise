@@ -2,12 +2,28 @@
   <label class="switch-wrap">
     <span class="switch-description">{{ label }}</span>
 
-    <button type="button" class="switch" role="checkbox" @click="toggle" :class="{'switch-active': currentValue }"
-            :data-true="trueLabel" :data-false="falseLabel" :aria-checked="currentValue ? 'true' : 'false'">
-      <span class="switch-trigger"></span>
-      <transition >
-        <span class="switch-label switch-label-on" key="label-on" v-if="currentValue">{{ trueLabel }}</span>
-        <span class="switch-label switch-label-off" key="label-off" v-else>{{ falseLabel }}</span>
+    <button
+      type="button"
+      class="switch"
+      role="checkbox"
+      :class="{'switch-active': currentValue }"
+      :data-true="trueLabel"
+      :data-false="falseLabel"
+      :aria-checked="currentValue ? 'true' : 'false'"
+      @click="toggle"
+    >
+      <span class="switch-trigger" />
+      <transition>
+        <span
+          v-if="currentValue"
+          key="label-on"
+          class="switch-label switch-label-on"
+        >{{ trueLabel }}</span>
+        <span
+          v-else
+          key="label-off"
+          class="switch-label switch-label-off"
+        >{{ falseLabel }}</span>
       </transition>
     </button>
   </label>
@@ -35,17 +51,17 @@
         currentValue: false
       }
     },
-    methods: {
-      toggle () {
-        this.currentValue = !this.currentValue
+    watch: {
+      currentValue (value) {
+        setTimeout(() => { this.$emit('input', value) }, 0)
       }
     },
     created () {
       this.currentValue = !!this.value
     },
-    watch: {
-      currentValue (value) {
-        setTimeout(() => { this.$emit('input', value) }, 0)
+    methods: {
+      toggle () {
+        this.currentValue = !this.currentValue
       }
     }
   }

@@ -1,9 +1,20 @@
 <template>
-  <svg viewBox="-1 -1 2 2" class="chart chart-pie" :style="style">
+  <svg
+    viewBox="-1 -1 2 2"
+    class="chart chart-pie"
+    :style="style"
+  >
     <g transform="rotate(-90)">
-      <g class="chart-arc" v-for="(item, index) in data">
+      <g
+        v-for="(item, index) in data"
+        :key="index"
+        class="chart-arc"
+      >
         <title v-if="item.title">{{ item.title }}</title>
-        <path :d="calculateArc(item, index)" :class="item.classes" />
+        <path
+          :d="calculateArc(item, index)"
+          :class="item.classes"
+        />
       </g>
     </g>
   </svg>

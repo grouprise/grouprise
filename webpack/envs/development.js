@@ -9,17 +9,15 @@ module.exports = [
       require('../plugins/html-favicons'),
       require('../plugins/html-pwa'),
       require('../plugins/html-extensions'),
-      require('../plugins/define'),
       require('../plugins/lodash'),
       require('../plugins/loader-options'),
-      require('../plugins/extract-text'),
-      require('../plugins/common-chunks'),
-      require('../plugins/bundle-analyzer')
+      require('../plugins/css'),
+      require('../plugins/bundle-analyzer'),
+      require('../plugins/vue')
     ]
   }),
   assign({}, commonConfig, snake, {
     plugins: [
-      require('../plugins/define'),
       require('../plugins/lodash'),
       require('../plugins/loader-options')
     ]

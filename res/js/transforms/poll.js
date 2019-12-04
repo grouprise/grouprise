@@ -13,6 +13,9 @@ export default (el, opts) => {
   const vue = new Vue({
     el: `#${containerAdapter.container.id}`,
     data: state,
+    created () {
+      containerAdapter.replacedEl.hide()
+    },
     render (h) {
       return h(PollVoter, {
         props: {
@@ -21,9 +24,6 @@ export default (el, opts) => {
           type: this.type
         }
       })
-    },
-    created () {
-      containerAdapter.replacedEl.hide()
     }
   })
 

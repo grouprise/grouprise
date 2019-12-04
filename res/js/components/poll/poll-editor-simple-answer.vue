@@ -1,5 +1,8 @@
 <template>
-    <sg-input label="Antwort" v-model="answer.title" />
+  <sg-input
+    v-model="answer.title"
+    label="Antwort"
+  />
 </template>
 
 <script>

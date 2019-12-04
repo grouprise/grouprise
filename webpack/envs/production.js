@@ -12,11 +12,11 @@ module.exports = [
       require('../plugins/define'),
       require('../plugins/lodash'),
       require('../plugins/loader-options'),
-      require('../plugins/extract-text'),
-      require('../plugins/common-chunks'),
+      require('../plugins/css'),
       require('../plugins/uglify'),
       require('../plugins/bundle-analyzer'),
-      require('../plugins/banner')
+      require('../plugins/banner'),
+      require('../plugins/vue')
     ]
   }),
   assign({}, commonConfig, snake, {

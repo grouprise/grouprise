@@ -1,15 +1,30 @@
 <template>
   <div>
-    <div v-if="this.voteType.getType() !== 'hidden'" style="margin: 2rem 0 -1rem 0">
-      <label id="vote-type-label" class="control-label">
+    <div
+      v-if="voteType.getType() !== 'hidden'"
+      style="margin: 2rem 0 -1rem 0"
+    >
+      <label
+        id="vote-type-label"
+        class="control-label"
+      >
         Wie wird abgestimmt?
       </label>
       <div class="row">
-        <div class="col-md-6" v-for="choice in voteTypes">
-          <div class="form-group" aria-labelledby="vote-type-label">
-            <div class="btn btn-plane"
-                 :aria-pressed="myVoteType === choice.value ? 'true' : 'false'"
-                 @click="myVoteType = choice.value">
+        <div
+          v-for="choice in voteTypes"
+          :key="choice.value"
+          class="col-md-6"
+        >
+          <div
+            class="form-group"
+            aria-labelledby="vote-type-label"
+          >
+            <div
+              class="btn btn-plane"
+              :aria-pressed="myVoteType === choice.value ? 'true' : 'false'"
+              @click="myVoteType = choice.value"
+            >
               <poll-vote-type :choice="choice" />
             </div>
           </div>
@@ -18,11 +33,25 @@
     </div>
     <div class="poll poll-editor">
       <tabs :storage="pollTypeStorage">
-        <tab id="simple" name="Einfache Umfrage" v-if="!pollType.isStatic || myPollType === 'simple'">
-          <simple-editor v-model="answers" v-if="myPollType === 'simple'" />
+        <tab
+          v-if="!pollType.isStatic || myPollType === 'simple'"
+          id="simple"
+          name="Einfache Umfrage"
+        >
+          <simple-editor
+            v-if="myPollType === 'simple'"
+            v-model="answers"
+          />
         </tab>
-        <tab id="event" name="Terminumfrage" v-if="!pollType.isStatic || myPollType === 'event'">
-          <appointment-editor v-model="answers" v-if="myPollType === 'event'" />
+        <tab
+          v-if="!pollType.isStatic || myPollType === 'event'"
+          id="event"
+          name="Terminumfrage"
+        >
+          <appointment-editor
+            v-if="myPollType === 'event'"
+            v-model="answers"
+          />
         </tab>
       </tabs>
     </div>

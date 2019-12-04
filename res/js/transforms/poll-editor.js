@@ -32,6 +32,10 @@ export default el => {
   const vue = new Vue({
     el: `#${containerAdapter.container.id}`,
     data: state,
+    created () {
+      pollSettings.hide()
+      containerAdapter.replacedEl.hide()
+    },
     render (h) {
       return h(PollEditor, {
         props: {
@@ -40,10 +44,6 @@ export default el => {
           answers: this.answers
         }
       })
-    },
-    created () {
-      pollSettings.hide()
-      containerAdapter.replacedEl.hide()
     }
   })
 

@@ -37,6 +37,12 @@ export default (el, opts) => {
 
       vue = new Vue({
         el: `#${container.id}`,
+        data: {
+          model,
+          defaultValue,
+          value,
+          adapter
+        },
         render (h) {
           return h(Select, {
             props: {
@@ -56,12 +62,6 @@ export default (el, opts) => {
               }
             }
           })
-        },
-        data: {
-          model,
-          defaultValue,
-          value,
-          adapter
         }
       })
     })

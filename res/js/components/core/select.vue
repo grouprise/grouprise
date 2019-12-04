@@ -1,44 +1,116 @@
 <template>
-    <div class="select" :id="componentId.wrapper" :class="selectClasses" @keydown.esc="closeFinder" v-on-click-outside="dismissSelect">
-        <div class="select-current" @click.prevent="toggleFinder()" @keydown="typeSelect" tabindex="0" ref="current">
-            <slot name="current-choice" :choice="currentChoice">
-                <component :is="renderer" :choice="currentChoice" v-if="currentChoice"></component>
-            </slot>
-            <slot name="no-result">
-                <div class="select-default" v-if="!currentChoice">
-                    {{ texts.noSelection }}
-                </div>
-            </slot>
-            <div class="select-decorator select-dismiss" :style="decoratorStyle" v-if="isDismissable" @click.prevent.stop="dismissChoice">
-                <i>×</i>
-            </div>
-            <div class="select-decorator select-caret" :style="decoratorStyle" v-else>
-                <i>▼</i>
-            </div>
+  <div
+    :id="componentId.wrapper"
+    v-on-click-outside="dismissSelect"
+    class="select"
+    :class="selectClasses"
+    @keydown.esc="closeFinder"
+  >
+    <div
+      ref="current"
+      class="select-current"
+      tabindex="0"
+      @click.prevent="toggleFinder()"
+      @keydown="typeSelect"
+    >
+      <slot
+        name="current-choice"
+        :choice="currentChoice"
+      >
+        <component
+          :is="renderer"
+          v-if="currentChoice"
+          :choice="currentChoice"
+        />
+      </slot>
+      <slot name="no-result">
+        <div
+          v-if="!currentChoice"
+          class="select-default"
+        >
+          {{ texts.noSelection }}
         </div>
-        <transition :name="finderBelow ? 'fade-down' : 'fade-up'">
-            <div class="select-finder" v-show="showFinder" ref="finder">
-                <div class="select-search" v-if="filter && choices.length > searchThreshold">
-                    <label :for="componentId.search" class="sr-only">{{ texts.searchLabel }}</label>
-                    <input type="search" class="select-search-input" v-model="currentSearch" ref="search"
-                           :id="componentId.search" :placeholder="texts.searchPlaceholder"
-                           @keydown.down.prevent="focusChoices" @keydown.enter.prevent="maybeSelect">
-                    <span class="select-search-count">{{ availableChoices.length }}</span>
-                </div>
-
-                <ol class="select-choices" @keydown.up.prevent="prevChoice" @keydown.down.prevent="nextChoice"
-                    ref="choices" v-if="availableChoices.length > 0">
-                    <li v-for="(choice, index) in availableChoices" :data-value="choice.value" @click="select(choice)"
-                        @keydown.enter="select(choice)" tabindex="0">
-                        <slot name="choice" :choice="choice" :index="index">
-                            <component :is="renderer" :choice="choice" :index="index"></component>
-                        </slot>
-                    </li>
-                </ol>
-                <p class="select-no-results" v-else>{{ texts.noResult }}</p>
-            </div>
-        </transition>
+      </slot>
+      <div
+        v-if="isDismissable"
+        class="select-decorator select-dismiss"
+        :style="decoratorStyle"
+        @click.prevent.stop="dismissChoice"
+      >
+        <i>×</i>
+      </div>
+      <div
+        v-else
+        class="select-decorator select-caret"
+        :style="decoratorStyle"
+      >
+        <i>▼</i>
+      </div>
     </div>
+    <transition :name="finderBelow ? 'fade-down' : 'fade-up'">
+      <div
+        v-show="showFinder"
+        ref="finder"
+        class="select-finder"
+      >
+        <div
+          v-if="filter && choices.length > searchThreshold"
+          class="select-search"
+        >
+          <label
+            :for="componentId.search"
+            class="sr-only"
+          >{{ texts.searchLabel }}</label>
+          <input
+            :id="componentId.search"
+            ref="search"
+            v-model="currentSearch"
+            type="search"
+            class="select-search-input"
+            :placeholder="texts.searchPlaceholder"
+            @keydown.down.prevent="focusChoices"
+            @keydown.enter.prevent="maybeSelect"
+          >
+          <span class="select-search-count">{{ availableChoices.length }}</span>
+        </div>
+
+        <ol
+          v-if="availableChoices.length > 0"
+          ref="choices"
+          class="select-choices"
+          @keydown.up.prevent="prevChoice"
+          @keydown.down.prevent="nextChoice"
+        >
+          <li
+            v-for="(choice, index) in availableChoices"
+            :key="index"
+            :data-value="choice.value"
+            tabindex="0"
+            @click="select(choice)"
+            @keydown.enter="select(choice)"
+          >
+            <slot
+              name="choice"
+              :choice="choice"
+              :index="index"
+            >
+              <component
+                :is="renderer"
+                :choice="choice"
+                :index="index"
+              />
+            </slot>
+          </li>
+        </ol>
+        <p
+          v-else
+          class="select-no-results"
+        >
+          {{ texts.noResult }}
+        </p>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -59,7 +131,7 @@
   }
 
   export default {
-    name: 'choice',
+    name: 'Choice',
     mixins: [onClickOutside],
     props: {
       id: {
@@ -142,6 +214,30 @@
       decoratorStyle () {
         return {minHeight: `calc(${this.size}px - 1rem)`}
       }
+    },
+    watch: {
+      currentValue (value) {
+        setTimeout(() => {
+          this.$emit('input', value)
+          this.$emit('choice', this.currentChoice)
+          this.updateSize()
+        }, 0)
+      }
+    },
+    created () {
+      this.currentValue = this.value || null
+      this.resizeListener = throttle(this.updateSize, 250)
+      this.scrollListener = throttle(this.updateFinderPosition, 250)
+    },
+    mounted () {
+      this.updateSize()
+      this.updateFinderPosition()
+      window.addEventListener('resize', this.resizeListener)
+      window.addEventListener('scroll', this.scrollListener, { passive: true })
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.resizeListener)
+      window.removeEventListener('scroll', this.scrollListener)
     },
     methods: {
       toggleFinder (focus = true, forcedState = null) {
@@ -267,30 +363,6 @@
         const distanceFromBottom = window.innerHeight - inputBounds.bottom + inputHeight
         this.finderBelow = distanceFromBottom > calendarHeight + 30
       }
-    },
-    watch: {
-      currentValue (value) {
-        setTimeout(() => {
-          this.$emit('input', value)
-          this.$emit('choice', this.currentChoice)
-          this.updateSize()
-        }, 0)
-      }
-    },
-    created () {
-      this.currentValue = this.value || null
-      this.resizeListener = throttle(this.updateSize, 250)
-      this.scrollListener = throttle(this.updateFinderPosition, 250)
-    },
-    mounted () {
-      this.updateSize()
-      this.updateFinderPosition()
-      window.addEventListener('resize', this.resizeListener)
-      window.addEventListener('scroll', this.scrollListener, { passive: true })
-    },
-    beforeDestroy () {
-      window.removeEventListener('resize', this.resizeListener)
-      window.removeEventListener('scroll', this.scrollListener)
     }
   }
 </script>

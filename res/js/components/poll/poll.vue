@@ -1,5 +1,9 @@
 <template>
-  <component :is="voter" :poll="poll" :canVote="canVote" />
+  <component
+    :is="voter"
+    :poll="poll"
+    :can-vote="canVote"
+  />
 </template>
 
 <script>
@@ -24,6 +28,7 @@
           case 'simple': return VoterSimple
           case 'condorcet': return VoterCondorcet
         }
+        return null
       }
     },
     provide () {
@@ -33,6 +38,9 @@
         }
       }
     },
+    async created () {
+      this.refreshPoll()
+    },
     methods: {
       async refreshPoll () {
         this.poll = null
@@ -40,9 +48,6 @@
         this.poll = _poll
         return _poll
       }
-    },
-    async created () {
-      this.refreshPoll()
     }
   }
 </script>

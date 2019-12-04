@@ -1,12 +1,29 @@
 <template>
   <div class="datetime-row">
-    <sg-datetime v-model="answer.start" :enableTime="true" :showLabels="true"
-                 dateLabel="Datum" timeLabel="Uhrzeit" :timeDefault="[12,0,0]"></sg-datetime>
+    <sg-datetime
+      v-model="answer.start"
+      :enable-time="true"
+      :show-labels="true"
+      date-label="Datum"
+      time-label="Uhrzeit"
+      :time-default="[12,0,0]"
+    />
     <div class="datetime-duration">
-      <button type="button" class="btn btn-default btn-sm" @click="toggleDuration()" v-if="answer.duration === null">
+      <button
+        v-if="answer.duration === null"
+        type="button"
+        class="btn btn-default btn-sm"
+        @click="toggleDuration()"
+      >
         Dauer angeben
       </button>
-      <sg-number-spinner v-model="answer.duration" :step="1" :min="1" :label="durationLabel" v-else></sg-number-spinner>
+      <sg-number-spinner
+        v-else
+        v-model="answer.duration"
+        :step="1"
+        :min="1"
+        :label="durationLabel"
+      />
     </div>
   </div>
 </template>
@@ -19,6 +36,11 @@
     props: {
       answer: Object
     },
+    computed: {
+      durationLabel () {
+        return this.answer.duration === 1 ? 'Stunde' : 'Stunden'
+      }
+    },
     methods: {
       toggleDuration () {
         if (this.answer.duration !== null) {
@@ -26,11 +48,6 @@
         } else {
           this.answer.duration = 1
         }
-      }
-    },
-    computed: {
-      durationLabel () {
-        return this.answer.duration === 1 ? 'Stunde' : 'Stunden'
       }
     }
   }

@@ -1,10 +1,24 @@
 <template>
   <div>
-    <button type="button" :class="btnClasses" @click.prevent="open" :disabled="disabled">
-      <i class="sg" :class="btnIcon"></i> {{ btnLabel }}
+    <button
+      type="button"
+      :class="btnClasses"
+      :disabled="disabled"
+      @click.prevent="open"
+    >
+      <i
+        class="sg"
+        :class="btnIcon"
+      /> {{ btnLabel }}
     </button>
-    <input type="file" :accept="accept.join(',')" :multiple="multiple" @change="dispatch" ref="input"
-           style="position: absolute; z-index: -1; opacity: 0; pointer-events: none; height: 0; width: 0">
+    <input
+      ref="input"
+      type="file"
+      :accept="accept.join(',')"
+      :multiple="multiple"
+      style="position: absolute; z-index: -1; opacity: 0; pointer-events: none; height: 0; width: 0"
+      @change="dispatch"
+    >
   </div>
 </template>
 
