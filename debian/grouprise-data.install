@@ -1,2 +1,2 @@
-debian/tmp/usr/share/grouprise/offline-website /usr/share/grouprise/
-debian/tmp/usr/share/grouprise/static /usr/share/grouprise/
+offline-website /usr/share/grouprise/
+static /usr/share/grouprise/

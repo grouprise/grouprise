@@ -26,17 +26,6 @@ def get_version():
         return f.read().strip()
 
 
-def include_recursive(directory):
-    result = {}
-    for dirpath, dirnames, filenames in os.walk(directory):
-        if filenames:
-            result[dirpath] = [os.path.join(dirpath, fname) for fname in filenames]
-    return tuple(result.items())
-
-
-static_files = include_recursive('static')
-offline_website = include_recursive('offline-website')
-
 setup(
     name='grouprise',
     version=get_version(),
@@ -64,5 +53,5 @@ setup(
         ('.', (
             'manage.py', 'README.md', 'LICENSE', 'CONTRIBUTORS.md', 'CONTRIBUTING.md',
         )),
-    ) + static_files + offline_website,
+    ),
 )
