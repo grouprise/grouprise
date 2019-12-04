@@ -34,7 +34,7 @@ pymdown-extensions<6        # NOT IN DEBIAN
 aiosmtplib                  # NOT IN DEBIAN
 schulze                     # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
-raven                       # debian: python3-raven
+raven                       # NOT IN DEBIAN (removed in #939074)
 recommonmark                # debian: python3-recommonmark
 redis                       # debian: python3-redis
 requests                    # debian: python3-requests
