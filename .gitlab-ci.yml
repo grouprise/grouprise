@@ -21,7 +21,6 @@ make_test:
 make_deb_package:
     stage: deploy
     only:
-        - tags
         - triggers
         - schedules
         - merge_requests
@@ -32,3 +31,15 @@ make_deb_package:
         paths:
             - build/debian
         expire_in: 1w
+
+make_deb_package_release:
+    stage: deploy
+    only:
+        - tags
+        - web
+    script:
+        - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
+    artifacts:
+        paths:
+            - build/debian
+        expire_in: 1000 yrs
