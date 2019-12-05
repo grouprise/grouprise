@@ -1,4 +1,4 @@
-grouprise (3.0.0~1-1) unstable; urgency=medium
+grouprise (3.0.0-1) unstable; urgency=medium
 
   * Change package name from stadtgestalten to grouprise
 
