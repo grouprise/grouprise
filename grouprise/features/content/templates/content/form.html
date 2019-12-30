@@ -44,6 +44,10 @@
                             {% include 'core/_field.html' with field=form.until_time %}
                             {% include 'core/_field.html' with field=form.all_day %}
                         </div>
+                        <div data-component="event-repetitions">
+                            {% include 'core/_field.html' with field=form.time_repetitions_period %}
+                            {% include 'core/_field.html' with field=form.time_repetitions_count %}
+                        </div>
                     </div>
                 </div>
             </div>
