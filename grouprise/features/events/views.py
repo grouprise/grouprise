@@ -19,8 +19,10 @@ from grouprise.features.gestalten import models as gestalten
 from grouprise.features.gestalten.auth.resolvers import get_user_resolver
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships.predicates import is_member_of
-from .utils import get_requested_time
+
 from . import forms
+from .settings import EVENT_SETTINGS
+from .utils import get_requested_time
 
 
 class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
@@ -48,6 +50,11 @@ class Create(grouprise.features.content.views.Create):
         kwargs = super().get_form_kwargs()
         kwargs['with_time'] = True
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["settings_enable_repetitions"] = EVENT_SETTINGS.ENABLE_REPETITIONS
+        return context
 
 
 class Day(List):

@@ -967,6 +967,10 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             ),
             append=True,
         ),
+        BooleanConfig(
+            name=("events", "enable_repetitions"),
+            django_target=("GROUPRISE", "EVENTS", "ENABLE_REPETITIONS"),
+        ),
         ListConfig(
             name="hook_script_paths",
             django_target=("GROUPRISE", "HOOK_SCRIPT_PATHS"),

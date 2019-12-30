@@ -193,6 +193,16 @@ This setting may be left empty, if a different method for mail reception is used
 
 Default: empty
 
+
+## Features
+
+### `events → enable_repetitions`
+Enable form widgets for creating copies of an event based on a given period.
+This represents a trivial approach for supporting recurring events.
+
+Default: `false`
+
+
 ## Special groups and users
 
 ### `feed_importer_gestalt_id`
