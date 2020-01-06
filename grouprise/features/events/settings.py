@@ -11,4 +11,5 @@ except (AttributeError, KeyError):
 
 EVENT_SETTINGS = LazySettingsResolver(
     ENABLE_REPETITIONS=_EVENT_SETTINGS_RAW.get("ENABLE_REPETITIONS", False),
+    ENABLE_ATTENDANCE=_EVENT_SETTINGS_RAW.get("ENABLE_ATTENDANCE", False),
 )

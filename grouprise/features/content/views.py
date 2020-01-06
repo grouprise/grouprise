@@ -13,6 +13,7 @@ from grouprise.features.associations.views import get_association_or_404
 from grouprise.features.contributions import view_mixins as contributions
 from grouprise.features.contributions.forms import Text as ContributionForm
 from grouprise.features.contributions.models import Contribution
+from grouprise.features.events.settings import EVENT_SETTINGS
 from grouprise.features.files import forms as files
 from grouprise.features.galleries import forms as galleries
 from grouprise.features.gestalten import models as gestalten
@@ -38,6 +39,11 @@ class DetailBase(grouprise.features.associations.views.AssociationMixin,
     template_name = 'articles/detail.html'
 
     form_class = ContributionForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["settings_enable_attendance"] = EVENT_SETTINGS.ENABLE_ATTENDANCE
+        return context
 
     def get_contributions(self):
         user = self.request.user
