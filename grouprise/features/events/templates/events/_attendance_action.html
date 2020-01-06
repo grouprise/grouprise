@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% if can_attend %}
+    <form action="{% url 'group-event-attendance' association.pk %}" method="post">
+        {% csrf_token %}
+        {% if redirect_url %}
+            <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
+        {% endif %}
+        <button class="btn btn-default btn-sm">
+            <i class="sg sg-add"></i> {% trans 'Show interest' %}
+        </button>
+    </form>
+{% elif can_abstain %}
+    {# TODO: replace this GET request with a javascript-based DELETE request #}
+    <form action="{% url 'group-event-attendance' association.pk %}" method="get">
+        {% csrf_token %}
+        {% if redirect_url %}
+            <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
+        {% endif %}
+        <button class="btn btn-default btn-sm">
+            <i class="sg sg-remove"></i> {% trans 'Revoke interest' %}
+        </button>
+    </form>
+{% endif %}
