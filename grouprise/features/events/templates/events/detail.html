@@ -1,4 +1,5 @@
 {% extends 'content/detail.html' %}
+{% load i18n %}
 
 {% block content_type %}
     <i class="sg sg-content-type-event" data-day="{{ association.container.time|date:'d' }}"></i>
@@ -27,6 +28,28 @@
                     {{ event.place | linebreaksbr }}
                 </div>
             </div>
+            {% if settings_enable_attendance %}
+                {% load events %}
+                {% load rules %}
+                {% has_perm 'events.can_attend' user association as can_attend %}
+                {% has_perm 'events.can_abstain' user association as can_abstain %}
+                {% with attendee_count=event.attendance_statements.count %}
+                    {% if attendee_count > 0 or can_attend or can_abstain %}
+                        <div class="meta-box">
+                            <h4 class="meta-box-title">
+                                <i class="sg sg-marker"></i>
+                                <span>{% trans 'Announced participants' %}</span>
+                            </h4>
+                            <div class="meta-box-body">
+                                {% if attendee_count > 0 %}
+                                    {% trans 'Notifications:' %} {{ attendee_count }}
+                                {% endif %}
+                            </div>
+                            {% include 'events/_attendance_action.html' with association=association can_attend=can_attend can_abstain=can_abstain %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
         </div>
     {% endwith %}
 {% endblock %}

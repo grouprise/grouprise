@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from grouprise.features.events.views import List, Create, SiteCalendarExport, \
+from grouprise.features.events.views import Attendance, Create, List, SiteCalendarExport, \
         SiteCalendarFeed, Day, GroupCalendarExport, GroupCalendarFeed
 
 urlpatterns = [
@@ -12,6 +12,8 @@ urlpatterns = [
     path('<slug:entity_slug>/events/add', Create.as_view(), name='create-group-event'),
     path('<slug:group_slug>/events/export', GroupCalendarExport.as_view(),
          name='group-events-export'),
+    path('stadt/content/<int:association_pk>/events/attendees', Attendance.as_view(),
+         name='group-event-attendance'),
     re_path(r'(?P<group_slug>[\w-]+)/events/(?P<domain>public|private).ics',
             GroupCalendarFeed(), name='group-events-feed'),
 ]

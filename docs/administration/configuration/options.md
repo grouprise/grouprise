@@ -202,6 +202,13 @@ This represents a trivial approach for supporting recurring events.
 
 Default: `false`
 
+### `events → enable_attendance`
+Enable form widgets for indicating the willigness to attend an event.
+This may be useful for populating the personal calendar with events of interest.
+In addition hosters of events gain an indicator for estimating the number of participants.
+
+Default: `false`
+
 
 ## Special groups and users
 

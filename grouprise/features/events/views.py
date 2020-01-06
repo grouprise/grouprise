@@ -5,7 +5,7 @@ import django.views.generic
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django_ical.views import ICalFeed
 from django.utils.translation import gettext as _
@@ -20,7 +20,7 @@ from grouprise.features.gestalten.auth.resolvers import get_user_resolver
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships.predicates import is_member_of
 
-from . import forms
+from . import forms, models
 from .settings import EVENT_SETTINGS
 from .utils import get_requested_time
 
@@ -73,6 +73,67 @@ class Day(List):
                 content__time__lt=datetime.datetime.combine(
                     date + datetime.timedelta(days=1), datetime.time.min)
                 ).can_view(self.request.user).order_by('content__time')
+
+
+class Attendance(grouprise.core.views.PermissionMixin,
+                 grouprise.features.associations.views.AssociationMixin,
+                 django.views.generic.View):
+    # TODO: remove the GET request as soon as we emit a real DELETE request via javascript
+    http_method_names = ['get', 'delete', 'post']
+    permission_required = 'events.can_change_attendance'
+
+    def get_association(self):
+        association_pk = self.kwargs.get('association_pk')
+        return django.shortcuts.get_object_or_404(associations.Association, pk=association_pk)
+
+    def get_permission_object(self):
+        return self.get_association()
+
+    def get_success_redirect(self):
+        association = self.get_association()
+        request = self.request
+        if request.method == 'GET':
+            redirect_url = request.GET.get('redirect_url')
+        elif request.method == 'POST':
+            redirect_url = request.POST.get('redirect_url')
+        elif request.method == 'DELETE':
+            redirect_url = request.DELETE.get('redirect_url')
+        else:
+            redirect_url = None
+        if redirect_url is None:
+            redirect_url = reverse('content-permalink', args=[association.pk])
+        return HttpResponseRedirect(redirect_url)
+
+    def get_attendee(self, request):
+        return request.user.gestalt
+
+    def get_attendance_statement(self, request):
+        gestalt = self.get_attendee(request)
+        association = self.get_association()
+        try:
+            return models.AttendanceStatement.objects.filter(attendee=gestalt,
+                                                             content=association.container).first()
+        except models.AttendanceStatement.DoesNotExist:
+            # we tolerate duplicate calls
+            return None
+
+    # TODO: remove the GET request as soon as we emit a real DELETE request via javascript
+    def get(self, request, **kwargs):
+        return self.delete(request, **kwargs)
+
+    def delete(self, request, **kwargs):
+        statement = self.get_attendance_statement(request)
+        if statement is not None:
+            statement.delete()
+        return self.get_success_redirect()
+
+    def post(self, request, **kwargs):
+        statement = self.get_attendance_statement(request)
+        if statement is None:
+            gestalt = self.get_attendee(request)
+            association = self.get_association()
+            models.AttendanceStatement(attendee=gestalt, content=association.container).save()
+        return self.get_success_redirect()
 
 
 class BaseCalendarFeed(ICalFeed):
