@@ -3,10 +3,9 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-14 01:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.2\n"
 
 msgid "Show group menu"
 msgstr "Zeige Gruppenmenü"
@@ -25,10 +25,10 @@ msgid "Groups"
 msgstr "Gruppen"
 
 #, python-format
-msgid "You are a member of one group."
-msgid_plural "You are a member of %(membership_count)s groups."
-msgstr[0] "Du bist Mitglied in einer Gruppe."
-msgstr[1] "Du bist Mitglied in %(membership_count)s Gruppen."
+msgid "one group"
+msgid_plural "%(membership_count)s groups"
+msgstr[0] "einer Gruppe"
+msgstr[1] "%(membership_count)s Gruppen"
 
 msgid "Login to see your group memberships."
 msgstr "Melde dich an, um deine Gruppenmitgliedschaften zu sehen."
@@ -192,9 +192,6 @@ msgstr "schreib uns stattdessen eine Nachricht"
 msgid "Delete account"
 msgstr "Benutzerkonto löschen"
 
-msgid "e.g. Repair Cafe"
-msgstr "z.B. Foodcoop"
-
 msgid "Picture of"
 msgstr "Titelbild von"
 
@@ -243,17 +240,39 @@ msgstr "Veranstaltung eintragen"
 msgid "Gallery"
 msgstr "Bildergalerie"
 
+msgid "Start a (date) poll"
+msgstr "(Termin-)Umfrage beginnen"
+
 msgid "More possibilities"
 msgstr "Weitere Möglichkeiten"
 
 msgid "Signup"
 msgstr "Registieren"
 
-msgid "your profile"
-msgstr "dein Pofil"
+msgid ""
+"Not all <em>persons</em> are visible to you. Every single <em>person</em> "
+"can choose to publish their profile."
+msgstr ""
+"Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> "
+"entscheidet für sich, ob sie ein öffentliches Profil haben möchte."
 
-msgid "your profile."
-msgstr "dein Profil."
+#, python-format
+msgid ""
+"\n"
+"                You can change this setting in <a href=\"%(url)s\">your "
+"profile'</a>.\n"
+"                "
+msgstr ""
+"\n"
+"                Du kannst dieses Verhalten in <a href=\"%(url)s\">deinem "
+"Profil'</a> ändern.\n"
+"                "
+
+msgid "You can change this setting in your profile."
+msgstr "Du kannst dieses Verhalten in deinem Profil ändern."
+
+msgid "e.g. Repair Cafe"
+msgstr "z.B. Foodcoop"
 
 msgid "Path of the group's site"
 msgstr "Adresse der Gruppenseite"
@@ -336,7 +355,7 @@ msgstr "Gruppe anlegen"
 msgid "Start a conversation with all group members"
 msgstr "Ein Gespräch mit den Gruppenmitgliedern beginnen"
 
-msgid "Join this group."
+msgid "Join this group"
 msgstr "Der Gruppe beitreten"
 
 msgid "Join"
@@ -364,31 +383,16 @@ msgstr "Gruppen suchen"
 msgid "More groups"
 msgstr "Weitere Gruppen"
 
-msgid "There is no group named \"{}\". Your mail could not be delivered."
-msgstr ""
-"Es gibt keine Gruppe mit dem Namen \"{}\". Somit war deine Email nicht "
-"zustellbar."
-
-msgid ""
-"Your are not permited to start a conversation with this group by mail. "
-"Please use the button on the website."
-msgstr ""
-"Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte "
-"verwende die Schaltfläche auf der Webseite."
-
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
 #, python-format
-msgid "Do you want to become a member of <em>%(group)s</em> on %(site)s? *"
-msgstr "Möchtest Du der Gruppe <em>%(group)s</em> auf %(site)s beitreten? *"
-
-msgid "Join this group"
-msgstr "Der Gruppe beitreten"
+msgid "Do you want to become a member of <em>%(group)s</em> on %(site)s?"
+msgstr "Möchtest Du der Gruppe <em>%(group)s</em> auf %(site)s beitreten?"
 
 msgid ""
 "In case you are not a member of the group in <em>real live</em> and want to "
-"join, please talk to a group member"
+"join, please talk to a group member."
 msgstr ""
 "Falls Du in der <em>echten Welt</em> noch nicht Mitglied in der Gruppe bist "
 "und es werden möchtest, sprich bitte die anderen Gruppenmitglieder an."
