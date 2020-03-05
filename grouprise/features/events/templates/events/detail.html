@@ -33,6 +33,7 @@
                 {% load rules %}
                 {% has_perm 'events.can_attend' user association as can_attend %}
                 {% has_perm 'events.can_abstain' user association as can_abstain %}
+                {% has_perm 'events.can_attend_group_members' user association.entity as can_attend_group_members %}
                 {% with attendee_count=event.attendance_statements.count %}
                     {% if attendee_count > 0 or can_attend or can_abstain %}
                         <div class="meta-box">
@@ -40,12 +41,16 @@
                                 <i class="sg sg-marker"></i>
                                 <span>{% trans 'Announced participants' %}</span>
                             </h4>
-                            <div class="meta-box-body">
-                                {% if attendee_count > 0 %}
-                                    {% trans 'Notifications:' %} {{ attendee_count }}
-                                {% endif %}
-                            </div>
-                            {% include 'events/_attendance_action.html' with association=association can_attend=can_attend can_abstain=can_abstain %}
+                            {% if can_attend_group_members %}
+                                {% include 'events/_attendance_list_current.html' with event_association=association redirect_url=request.path user=user %}
+                            {% else %}
+                                <div class="meta-box-body">
+                                    {% if attendee_count > 0 %}
+                                        {% trans 'Notifications' context 'attendance registrations' %}: {{ attendee_count }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% include 'events/_attendance_action.html' with event_association=association %}
                         </div>
                     {% endif %}
                 {% endwith %}

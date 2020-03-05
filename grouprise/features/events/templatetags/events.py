@@ -1,6 +1,7 @@
 import datetime
 import itertools
 
+from django.db.models import BooleanField
 import django.utils.formats
 import django.utils.timezone
 from django import template
@@ -112,3 +113,22 @@ def sidebar_calendar(
         'component_id': component_id
     })
     return context
+
+
+@register.simple_tag(takes_context=False)
+def show_checkbox_state(bool_state):
+    return BooleanField('', default=bool_state)
+
+
+@register.filter
+def filter_event_attendees(candidates, event):
+    return [candidate
+            for candidate in candidates
+            if event.attendance_statements.filter(attendee=candidate).exists()]
+
+
+@register.filter
+def filter_event_non_attendees(candidates, event):
+    return [candidate
+            for candidate in candidates
+            if not event.attendance_statements.filter(attendee=candidate).exists()]

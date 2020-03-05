@@ -1,7 +1,49 @@
 {% load i18n %}
+{% load rules %}
+{% load gestalten %}
+{% load events %}
 
-{% if can_attend %}
-    <form action="{% url 'group-event-attendance' association.pk %}" method="post">
+{% has_perm 'events.can_attend' user event_association as can_attend %}
+{% has_perm 'events.can_abstain' user event_association as can_abstain %}
+{% has_perm 'events.can_attend_group_members' user event_association.entity as can_attend_group_members %}
+
+{% if can_attend_group_members %}
+    {# show a dropdown with non-attending group members #}
+    {% with event_association.entity.members.all|filter_event_non_attendees:event_association.container|sort_gestalt_first:user.gestalt as non_attending_members %}
+        {% if non_attending_members %}
+            {% with event_association.container.pk|stringformat:"d"|add:"-select-event-attendee" as target_name %}
+                <div class="dropdown-container">
+                    <input class="dropdown-state" id="input-{{ target_name }}" type="checkbox" />
+                        <label class="btn" for="input-{{ target_name }}" data-component="openable" data-openable-target="#dropdown-{{ target_name }}">
+                        <span class="btn-label">
+                            <i class="sg sg-members"></i>{% trans 'Members' %} <span class="caret"></span>
+                        </span>
+                    </label>
+                    <ul class="dropdown" id="dropdown-{{ target_name }}" data-dropdown>
+                    {% for candidate in non_attending_members %}
+                        <form action="{% url 'group-event-attendance' event_association.pk %}" method="post">
+                            {% csrf_token %}
+                            {% if redirect_url %}
+                                <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
+                            {% endif %}
+                            <input type="hidden" name="other_gestalt" value="{{ candidate.pk }}" />
+                            <button class="btn btn-default btn-sm">
+                                {% if candidate is user.gestalt %}
+                                    <b>{{ candidate }}</b>
+                                {% else %}
+                                    {{ candidate }}
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endwith %}
+        {% endif %}
+    {% endwith %}
+{% elif can_attend %}
+    {# allow the user to attend the event #}
+    <form action="{% url 'group-event-attendance' event_association.pk %}" method="post">
         {% csrf_token %}
         {% if redirect_url %}
             <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
@@ -11,8 +53,9 @@
         </button>
     </form>
 {% elif can_abstain %}
+    {# allow the user to cancel the attendance of the event #}
     {# TODO: replace this GET request with a javascript-based DELETE request #}
-    <form action="{% url 'group-event-attendance' association.pk %}" method="get">
+    <form action="{% url 'group-event-attendance' event_association.pk %}" method="get">
         {% csrf_token %}
         {% if redirect_url %}
             <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
