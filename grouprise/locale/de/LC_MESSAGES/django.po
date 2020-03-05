@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-14 01:55+0200\n"
+"POT-Creation-Date: 2019-10-22 21:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,6 +126,25 @@ msgstr ""
 "Die Gruppe %(group)s ist eine geschlossene Gruppe. Beschreibe bitte kurz "
 "warum du der Gruppe beitreten möchtest. Anschließend entscheiden die "
 "Gruppenmitglieder, ob sie deiner Anfrage zustimmen."
+
+msgid "Last Update"
+msgstr "Letzte Aktualisierung"
+
+msgid "Members"
+msgstr "Mitglieder"
+
+msgid "Show interest"
+msgstr "Eintragen"
+
+msgid "Revoke interest"
+msgstr "Austragen"
+
+msgid "Announced participants"
+msgstr "Anmeldungen"
+
+msgctxt "attendance registrations"
+msgid "Notifications"
+msgstr "Anmeldungen"
 
 msgid "Export of group's calendars"
 msgstr "Exportmöglichkeiten für Gruppenkalender"

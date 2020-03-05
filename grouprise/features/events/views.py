@@ -105,7 +105,22 @@ class Attendance(grouprise.core.views.PermissionMixin,
         return HttpResponseRedirect(redirect_url)
 
     def get_attendee(self, request):
-        return request.user.gestalt
+        if request.method == 'GET':
+            other_pk = request.GET.get('other_gestalt')
+        elif request.method == 'POST':
+            other_pk = request.POST.get('other_gestalt')
+        elif request.method == 'DELETE':
+            other_pk = request.DELETE.get('other_gestalt')
+        else:
+            other_pk = None
+        try:
+            other_pk = int(other_pk)
+        except (TypeError, ValueError):
+            other_pk = None
+        if other_pk is not None:
+            return gestalten.Gestalt.objects.get(pk=other_pk)
+        else:
+            return request.user.gestalt
 
     def get_attendance_statement(self, request):
         gestalt = self.get_attendee(request)

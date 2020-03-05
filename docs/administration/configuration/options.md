@@ -209,6 +209,13 @@ In addition hosters of events gain an indicator for estimating the number of par
 
 Default: `false`
 
+### `events → allow_attendance_management_for_group_members`
+Configure the availability of the group-based attendance management.
+This feature may be useful, if the groups in the *grouprise* instance are "managed" (instead of self-organized).
+In this case it may be desirable, that members of the group can assign other members of the group to specific events ("tasks").
+
+Default: `false`
+
 
 ## Special groups and users
 

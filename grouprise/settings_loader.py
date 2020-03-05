@@ -975,6 +975,14 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name=("events", "enable_attendance"),
             django_target=("GROUPRISE", "EVENTS", "ENABLE_ATTENDANCE"),
         ),
+        BooleanConfig(
+            name=("events", "allow_attendance_management_for_group_members"),
+            django_target=(
+                "GROUPRISE",
+                "EVENTS",
+                "ALLOW_ATTENDANCE_MANAGEMENT_FOR_GROUP_MEMBERS",
+            ),
+        ),
         ListConfig(
             name="hook_script_paths",
             django_target=("GROUPRISE", "HOOK_SCRIPT_PATHS"),
