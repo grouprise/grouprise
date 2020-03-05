@@ -127,6 +127,24 @@ msgstr ""
 "warum du der Gruppe beitreten möchtest. Anschließend entscheiden die "
 "Gruppenmitglieder, ob sie deiner Anfrage zustimmen."
 
+msgid "Last Update"
+msgstr "Letzte Aktualisierung"
+
+msgid "Members"
+msgstr "Mitglieder"
+
+msgid "Show interest"
+msgstr "Eintragen"
+
+msgid "Revoke interest"
+msgstr "Austragen"
+
+msgid "Announced participants"
+msgstr "Anmeldungen"
+
+msgid "Notifications:"
+msgstr "Benachrichtigungen:"
+
 msgid "Export of group's calendars"
 msgstr "Exportmöglichkeiten für Gruppenkalender"
 

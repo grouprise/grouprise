@@ -1,0 +1,26 @@
+{% load rules %}
+{% load events %}
+
+{% has_perm 'events.can_attend_group_members' user event_association as can_attend_group_members %}
+{% with separator|default:", " as separator %}
+{% if can_attend_group_members %}
+    {% for candidate in event_association.entity.members.all|filter_event_attendees:event_association.container %}
+    {% if not forloop.first %}{{ separator }}{% endif %}
+        {% if read_only %}
+            {{ candidate }}
+        {% else %}
+	    {{ candidate }}
+            <form action="{% url 'group-event-attendance' event_association.pk %}" method="delete" style="display:inline">
+                {% csrf_token %}
+                {% if redirect_url %}
+                    <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
+                {% endif %}
+                <input type="hidden" name="other_gestalt" value="{{ candidate.pk }}" />
+                <button class="btn btn-default btn-sm"><i class="sg sg-remove"></i></button>
+            </form>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {{ event_association.entity.members.all|filter_event_attendees:event_association.container|join:separator }}
+{% endif %}
+{% endwith %}
