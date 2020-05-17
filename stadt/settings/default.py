@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'mailer',
     'rest_framework',
     'rules.apps.AutodiscoverRulesConfig',
+    'simplemathcaptcha',
     # HACK: load allauth late to allow overriding templates
     'allauth',
     'allauth.account',
