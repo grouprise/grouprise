@@ -1,5 +1,5 @@
 <div id="div_{{ field.id_for_label }}" class="form-group{% if field.errors %} has-error{% endif %}">
-    {% if not hide_label %}
+    {% if not hide_label and field.label %}
         <label for="{{ field.id_for_label }}" class="control-label">
             {{ field.label }}
         </label>
