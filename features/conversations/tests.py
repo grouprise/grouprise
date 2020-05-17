@@ -62,11 +62,11 @@ class CanCreateGestaltConversationWithEmail:
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
                 self.get_url('create-gestalt-conversation', key=self.other_gestalt.pk),
-                {
+                tests.with_captcha({
                     'author': 'anonymous@example.org',
                     'subject': 'Temp Test Thema',
                     'text': 'Test Text',
-                })
+                }))
         self.assertExists(associations.Association, conversation__subject='Temp Test Thema')
         self.assertRedirects(response, self.other_gestalt.get_absolute_url())
 
@@ -94,11 +94,11 @@ class CanCreateGroupConversationWithEmail:
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
                 self.get_url('create-group-conversation', key=self.group.pk),
-                {
+                tests.with_captcha({
                     'author': 'anonymous@example.org',
                     'subject': 'Temp Test Thema',
                     'text': 'Test Text',
-                })
+                }))
         self.assertExists(associations.Association, conversation__subject='Temp Test Thema')
         self.assertRedirects(response, self.group.get_absolute_url())
 
