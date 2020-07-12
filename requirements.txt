@@ -21,7 +21,7 @@ django-ical                 # NOT IN DEBIAN
 django-imagekit             # debian: python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
 django-taggit               # debian: python3-django-taggit
-djangorestframework         # debian: python3-djangorestframework
+djangorestframework>=3.9    # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: python3-flake8
 html2text                   # debian: python3-html2text
