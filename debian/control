@@ -7,20 +7,24 @@ Build-Depends:
  dh-exec,
  dh-python,
  nodejs,
+ python3-flake8,
+ python3-sphinx,
+ wget,
+# These should be kept in sync with the dependencies of our
+# primary grouprise binary package.
  python3-all,
  python3-aiosmtpd,
  python3-bleach,
- python3-django,
+ python3-django (>= 2.2),
  python3-django-allauth,
  python3-django-csp,
- python3-django-filters,
+ python3-django-filters (>= 2.1.0),
  python3-django-haystack,
  python3-django-imagekit,
  python3-django-rules,
  python3-django-taggit,
  python3-djangorestframework (>= 3.9),
  python3-feedparser,
- python3-flake8,
  python3-html2text,
  python3-markdown,
  python3-pil,
@@ -29,20 +33,45 @@ Build-Depends:
  python3-requests,
  python3-setuptools,
  python3-six,
- python3-sphinx,
  python3-tz,
  python3-xapian-haystack,
- wget,
 Standards-Version: 3.9.6
 
 Package: grouprise
 Architecture: all
-Depends: ${misc:Depends},
+Depends:
+ ${misc:Depends},
  adduser,
  grouprise-data,
  grouprise-dependencies,
  moreutils,
-Recommends: ${misc:Recommends},
+# Python dependencies should be added to the Build-Depends
+# field of the source package too!
+ python3-all,
+ python3-aiosmtpd,
+ python3-bleach,
+ python3-django (>= 2.2),
+ python3-django-allauth,
+ python3-django-csp,
+ python3-django-filters (>= 2.1.0),
+ python3-django-haystack,
+ python3-django-imagekit,
+ python3-django-rules,
+ python3-django-taggit,
+ python3-djangorestframework (>= 3.9),
+ python3-feedparser,
+ python3-html2text,
+ python3-markdown,
+ python3-pil,
+ python3-recommonmark,
+ python3-redis,
+ python3-requests,
+ python3-setuptools,
+ python3-six,
+ python3-tz,
+ python3-xapian-haystack,
+Recommends:
+ ${misc:Recommends},
  ghostscript,
  postgresql-client-common,
  python3-psycopg2,
@@ -62,7 +91,8 @@ Description: Web platform that enables social action and solidarity
 
 Package: grouprise-data
 Architecture: all
-Depends: ${misc:Depends}
+Depends:
+ ${misc:Depends},
 Description: data for the grouprise web application
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
@@ -79,32 +109,8 @@ Description: Web platform that enables social action and solidarity
 
 Package: grouprise-dependencies
 Architecture: all
-# python3-requests: for django-allauth
-# python3-six: for django-mailbox
-Depends: ${misc:Depends},
- python3,
- python3-aiosmtpd,
- python3-bleach,
- python3-django,
- python3-django-allauth,
- python3-django-csp,
- python3-django-filters,
- python3-django-haystack,
- python3-django-imagekit,
- python3-django-rules,
- python3-django-taggit,
- python3-djangorestframework,
- python3-feedparser,
- python3-flake8,
- python3-html2text,
- python3-markdown,
- python3-pil,
- python3-recommonmark,
- python3-redis,
- python3-requests,
- python3-six,
- python3-tz,
- python3-xapian-haystack,
+Depends:
+ ${misc:Depends},
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
