@@ -30,6 +30,7 @@ default-target: build
 # include project makefiles
 include make.d/virtualenv.mk
 include make.d/app.mk
+include make.d/ci.mk
 include make.d/doc.mk
 include make.d/nodejs.mk
 include make.d/assets.mk

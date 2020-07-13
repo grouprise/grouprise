@@ -12,6 +12,7 @@ Build-Depends:
  wget,
 # These should be kept in sync with the dependencies of our
 # primary grouprise binary package.
+# See also: make.d/ci.mk
  python3-all,
  python3-aiosmtpd,
  python3-bleach,
@@ -47,6 +48,7 @@ Depends:
  moreutils,
 # Python dependencies should be added to the Build-Depends
 # field of the source package too!
+# See also: make.d/ci.mk
  python3-all,
  python3-aiosmtpd,
  python3-bleach,

@@ -1,6 +1,6 @@
 __pycache__
 backup
-build/
+/build/
 dist/
 db.sqlite3*
 media/
