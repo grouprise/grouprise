@@ -115,7 +115,9 @@ Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
  .
- This package contains the dependencies for running grouprise.
+ This package contains additional dependencies in the form of a
+ pre-packaged python virtual environment (venv) for running the
+ grouprise application.
 
 Package: stadtgestalten
 Architecture: any
