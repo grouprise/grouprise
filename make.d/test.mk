@@ -24,7 +24,7 @@ lint_packages:
 	@echo "OK"
 
 .PHONY: test
-test: lint test_js
+test: test_js
 
 .PHONY: test_py
 test_py: test-python
