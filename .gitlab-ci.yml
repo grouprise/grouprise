@@ -27,6 +27,7 @@ make_deb_package:
         - schedules
         - merge_requests
         - web
+        - /^release-.*$/
     script:
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
     artifacts:
