@@ -5,7 +5,7 @@
 #
 # Always synchronize your changes with debian/control, if the module is packaged for Debian:
 #    * Build-Depends in source package (first stanza)
-#    * Depends in package "grouprise-dependencies"
+#    * Depends in package "grouprise"
 #
 aiosmtpd                    # debian: python3-aiosmtpd
 bleach                      # debian: python3-bleach
@@ -17,7 +17,7 @@ django-csp                  # debian: python3-django-csp
 # the exact required version is unknown - but at least the Buster version (1.1.0) is too low
 django-filter>=2.0          # debian: python3-django-filters
 django-haystack             # debian: python3-django-haystack
-django-ical                 # NOT IN DEBIAN
+django-ical                 # debian (bullseye): python3-django-ical
 django-imagekit             # debian: python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
 django-taggit               # debian: python3-django-taggit
