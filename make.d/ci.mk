@@ -9,10 +9,15 @@ DOCKER_REGISTRY = git-registry.hack-hro.de:443/stadtgestalten/stadtgestalten
 CI_BUILD_IMAGE_PATH = docker/build/Dockerfile
 CI_BUILD_IMAGE_NAME = build:buster
 CI_BUILD_IMAGE = $(DOCKER_REGISTRY)/$(CI_BUILD_IMAGE_NAME)
+CI_BUILD_IMAGE_LOCALES = de_DE.UTF-8 en_US.UTF-8
 
 .PHONY: ci_image_build
 ci_image_build:
-	docker build --tag "$(CI_BUILD_IMAGE)" --file "$(CI_BUILD_IMAGE_PATH)" .
+	docker build \
+		--tag "$(CI_BUILD_IMAGE)" \
+		--file "$(CI_BUILD_IMAGE_PATH)" \
+		--build-arg 'LOCALES=$(CI_BUILD_IMAGE_LOCALES)' \
+		.
 
 .PHONY: ci_image_push
 ci_image_push:

@@ -12,11 +12,17 @@ FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild-python-webdev:b
 # Copy the created Build-Depends package from the last build stage,
 # serve it via a local apt repo, and install it so that all build
 # dependencies for our build are available.
+ARG LOCALES
 COPY --from=build-deps \
     /usr/src/app/grouprise-build-deps_*.deb \
     /srv/local-apt-repository/grouprise-build-deps.deb
 RUN /usr/lib/local-apt-repository/rebuild && \
     apt update -y && \
     apt install -y -t buster-backports grouprise-build-deps && \
+    apt-get clean -y
+# compile locales required for example app configuration
+RUN apt install -y locales && \
+    for locale in $LOCALES; do sed -i "s/^# $locale/$locale/g" /etc/locale.gen; done && \
+    dpkg-reconfigure locales && \
     apt-get clean -y
 
