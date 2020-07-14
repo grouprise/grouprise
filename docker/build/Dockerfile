@@ -8,7 +8,7 @@ COPY ./debian debian
 RUN mk-build-deps debian/control
 
 
-FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild-webdev:buster
+FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild-python-webdev:buster
 # Copy the created Build-Depends package from the last build stage,
 # serve it via a local apt repo, and install it so that all build
 # dependencies for our build are available.
