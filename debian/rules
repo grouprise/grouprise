@@ -37,6 +37,7 @@ override_dh_auto_build:
 
 override_dh_fixperms:
 	dh_fixperms
+	mv debian/grouprise/etc/grouprise/settings.py.dist debian/grouprise/etc/grouprise/settings.py
 	chmod 600 debian/grouprise/etc/grouprise/settings.py
 
 override_dh_auto_test:
