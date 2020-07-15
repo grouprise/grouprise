@@ -18,7 +18,7 @@ override_dh_install:
 	@# is active (e.g. in a CI environment).  In this case the default "build/venv" location is
 	@# not valid.
 	@# We simplify the following path accesses by guaranteeing that build/venv always exists.
-	if [ -n "$$VIRTUALENV" ] && [ ! -d build/venv ]; then ln -s "$$VIRTUALENV" build/venv; fi
+	if [ -n "$$VIRTUAL_ENV" ] && [ ! -d build/venv ]; then ln -s "$$VIRTUAL_ENV" build/venv; fi
 	# remove compiled python modules
 	find debian/tmp/ build/venv/lib -type f -name "*.pyc" -delete
 	find debian/tmp/ build/venv/lib -type d -name "__pycache__" -delete
