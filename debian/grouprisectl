@@ -3,7 +3,7 @@
 set -eu
 
 EXEC_USER=grouprise
-MANAGE_BIN=/usr/share/grouprise/python-lib/manage.py
+MANAGE_BIN=/usr/share/grouprise/manage.py
 EXTRA_PYTHON_PATHS=/usr/share/grouprise/python-lib:/usr/share/grouprise/dependencies
 
 if [ "$(id -nu)" = "$EXEC_USER" ]; then
