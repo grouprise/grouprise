@@ -22,12 +22,8 @@ make_test:
 #   https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package
 make_deb_package:
     stage: deploy
-    only:
-        - triggers
-        - schedules
-        - merge_requests
-        - web
-        - /^release-.*$/
+    except:
+        - tags
     script:
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
     artifacts:
