@@ -3,7 +3,7 @@
 #   * project-wide inclusion as a git-submodule (or code copy)
 #   * on-demand download (temporarily stored in the local 'build/' directory)
 
-MAKEFILET_DOWNLOAD_VERSION = 0.6.3
+MAKEFILET_DOWNLOAD_VERSION = 0.6.4
 MAKEFILET_DOWNLOAD_URL ?= https://notabug.org/sumpfralle/makefilet/archive/v$(MAKEFILET_DOWNLOAD_VERSION).tar.gz
 
 # first attempt: system-wide installation (e.g. deb package) or submodule of this project?
