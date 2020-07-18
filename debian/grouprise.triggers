@@ -1,0 +1,18 @@
+# grouprise packages
+interest-noawait /usr/share/grouprise/python-lib
+interest-noawait /usr/share/grouprise/dependencies
+
+# related django packages
+# source:
+#     grep "python3.*django" debian/control | awk '{print $1}' | tr -d ',' | sort | uniq \
+#         | while read p; do apt-file list "$p" | grep "dist-packages/[^/]\+/__init__.py$"; done \
+#         | sed 's/^[^ ]* //; s#/__init__\.py$##' | sed 's/^/interest-noawait /' | sort
+interest-noawait /usr/lib/python3/dist-packages/allauth
+interest-noawait /usr/lib/python3/dist-packages/csp
+interest-noawait /usr/lib/python3/dist-packages/django
+interest-noawait /usr/lib/python3/dist-packages/django_filters
+interest-noawait /usr/lib/python3/dist-packages/haystack
+interest-noawait /usr/lib/python3/dist-packages/imagekit
+interest-noawait /usr/lib/python3/dist-packages/rest_framework
+interest-noawait /usr/lib/python3/dist-packages/rules
+interest-noawait /usr/lib/python3/dist-packages/taggit

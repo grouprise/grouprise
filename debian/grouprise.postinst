@@ -27,6 +27,11 @@ if [ "$1" = "configure" ]; then
     chown "$PKG_USER:adm" "$DIR_LOGS"
 fi
 
+if [ "$1" = "triggered" ]; then
+    # assemble static assets from related packages
+    GROUPRISE_USER=root grouprisectl collectstatic --no-input
+fi
+
 # manually trigger byte compilation (since we do not use dh_python3)
 if which py3compile >/dev/null; then
     py3compile -p grouprise
