@@ -29,6 +29,10 @@ if [ "$1" = "configure" ]; then
         fi
     fi
 
+    # protect sensitive content (e.g. database credentials)
+    chown "root:$PKG_GROUP" /etc/grouprise/settings.py
+    chmod 640 /etc/grouprise/settings.py
+
     mkdir -p "$DIR_LOGS"
     chown "$PKG_USER:adm" "$DIR_LOGS"
 fi
