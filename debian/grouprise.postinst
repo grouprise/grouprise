@@ -3,16 +3,22 @@
 set -eu
 
 PKG_USER="_grouprise"
+PKG_GROUP="_grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
 
 if [ "$1" = "configure" ]; then
+    if ! getent group "$PKG_GROUP" >/dev/null; then
+        # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
+        addgroup --quiet --system --force-badname "$PKG_GROUP"
+    fi
+
     if ! getent passwd "$PKG_USER" >/dev/null; then
         # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
         adduser --quiet --system --disabled-password \
             --force-badname \
-            --home "$DIR_HOME" "$PKG_USER"
+            --ingroup "$PKG_GROUP" --home "$DIR_HOME" "$PKG_USER"
     fi
 
     if [ -f "/etc/uwsgi/apps-enabled/grouprise.ini" ]; then

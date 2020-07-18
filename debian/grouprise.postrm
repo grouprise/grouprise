@@ -3,12 +3,16 @@
 set -eu
 
 PKG_USER="_grouprise"
+PKG_GROUP="_grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 
 if [ "$1" = "remove" ]; then
     if getent passwd "$PKG_USER" >/dev/null; then
         deluser --quiet "$PKG_USER"
+    fi
+    if getent group "$PKG_GROUP" >/dev/null; then
+        delgroup --quiet "$PKG_GROUP"
     fi
 elif [ "$1" = "purge" ]; then
     rm -rf "$DIR_ETC"
