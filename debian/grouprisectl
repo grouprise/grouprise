@@ -2,7 +2,7 @@
 
 set -eu
 
-EXEC_USER=grouprise
+EXEC_USER=_grouprise
 MANAGE_BIN=/usr/share/grouprise/manage.py
 EXTRA_PYTHON_PATHS=/usr/share/grouprise/python-lib:/usr/share/grouprise/dependencies
 
