@@ -21,7 +21,7 @@ make_test:
 # The latest built deb package is available under the following URL:
 #   https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package
 make_deb_package:
-    stage: deploy
+    stage: build
     except:
         - tags
     script:
@@ -42,3 +42,16 @@ make_deb_package_release:
         paths:
             - build/debian
         expire_in: 1000 yrs
+
+deb_package_test:
+    stage: test
+    dependencies:
+      - make_deb_package
+    script:
+      # we are running autopkgtest manually, thus we need to ensure manually, that all dependencies are fulfilled
+      - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq | grep -v grouprise)"
+      # the package "moreutils" is only a grouprise dependency (not a build dependency), thus it is missing from the docker image
+      - apt-get install moreutils
+      - dpkg -i build/debian/grouprise_*.deb build/debian/grouprise-dependencies_*.deb
+      - apt-get install -y autopkgtest
+      - autopkgtest --no-built-binaries build/debian/grouprise*.dsc -- null
