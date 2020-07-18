@@ -2,6 +2,6 @@
 debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/grouprise.ini
 debian/grouprisectl => /usr/bin/grouprisectl
 debian/README.backups => /var/backups/grouprise/README
-debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/grouprise/
-debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise/grouprise/
+debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/python-lib
+debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise/python-lib
 grouprise/settings.py.production => /etc/grouprise/settings.py.dist
