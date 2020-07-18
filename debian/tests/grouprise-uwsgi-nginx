@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# some random port
+export HTTP_SOCKET="localhost:37136"
+
+TEST_DIRECTORY="debian/tests/grouprise-uwsgi-nginx.d"
+
+set -eu
+
+for script in $(find "$TEST_DIRECTORY" -type f -name "*.t" | sort); do
+    verbose=t "$script"
+done
