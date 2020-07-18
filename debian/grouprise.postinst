@@ -24,7 +24,7 @@ if [ "$1" = "configure" ]; then
     fi
 
     mkdir -p "$DIR_LOGS"
-    chown "$PKG_USER:root" "$DIR_LOGS"
+    chown "$PKG_USER:adm" "$DIR_LOGS"
 fi
 
 # manually trigger byte compilation (since we do not use dh_python3)
