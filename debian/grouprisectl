@@ -2,11 +2,11 @@
 
 set -eu
 
-EXEC_USER=_grouprise
+GROUPRISE_USER=${GROUPRISE_USER:-_grouprise}
 MANAGE_BIN=/usr/share/grouprise/manage.py
 EXTRA_PYTHON_PATHS=/usr/share/grouprise/python-lib:/usr/share/grouprise/dependencies
 
-if [ "$(id -nu)" = "$EXEC_USER" ]; then
+if [ "$(id -nu)" = "$GROUPRISE_USER" ]; then
     if [ -z "${PYTHONPATH:-}" ]; then
         PYTHONPATH=$EXTRA_PYTHON_PATHS
     else
@@ -15,8 +15,8 @@ if [ "$(id -nu)" = "$EXEC_USER" ]; then
     export PYTHONPATH
     python3 "$MANAGE_BIN" "$@"
 elif [ "$(id -u)" = 0 ]; then
-    su -s "$0" "$EXEC_USER" -- "$@"
+    su -s "$0" "$GROUPRISE_USER" -- "$@"
 else
-    echo "please run $(basename "$0") as root or '$EXEC_USER'" >&2
+    echo "please run $(basename "$0") as root or '$GROUPRISE_USER'" >&2
     exit 1
 fi
