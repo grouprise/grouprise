@@ -36,6 +36,9 @@ Build-Depends:
  python3-six,
  python3-tz,
  python3-xapian-haystack,
+# The following packages are indirectly required by the dependencies above.
+ python3-dateutil,
+ python3-icalendar,
 Standards-Version: 3.9.6
 
 Package: grouprise
@@ -72,6 +75,9 @@ Depends:
  python3-six,
  python3-tz,
  python3-xapian-haystack,
+# The following packages are indirectly required by the dependencies above.
+ python3-dateutil,
+ python3-icalendar,
 Recommends:
  ${misc:Recommends},
  ghostscript,
