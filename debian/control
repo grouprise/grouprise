@@ -46,7 +46,6 @@ Architecture: all
 Depends:
  ${misc:Depends},
  adduser,
- grouprise-data,
  grouprise-dependencies,
  moreutils,
 # Python dependencies should be added to the Build-Depends
@@ -96,16 +95,6 @@ Description: Web platform that enables social action and solidarity
  .
  This package contains the configuration, services and code for running
  grouprise.
-
-Package: grouprise-data
-Architecture: all
-Depends:
- ${misc:Depends},
-Description: data for the grouprise web application
- Grouprise is a web-based platform providing tools for groups and
- initiatives in a local context.
- .
- This package contains CSS and javascript assets of the web application.
 
 Package: grouprise-doc
 Architecture: all

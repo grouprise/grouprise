@@ -5,3 +5,4 @@ debian/README.backups => /var/backups/grouprise/README
 debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/python-lib
 debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise
 grouprise/settings.py.production => /etc/grouprise/settings.py
+offline-website /usr/share/grouprise/

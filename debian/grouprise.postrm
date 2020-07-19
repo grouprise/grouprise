@@ -6,6 +6,7 @@ PKG_USER="_grouprise"
 PKG_GROUP="_grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
+DIR_STATIC="/usr/share/grouprise/python-lib/static/"
 
 if [ "$1" = "remove" ]; then
     if getent passwd "$PKG_USER" >/dev/null; then
@@ -17,6 +18,7 @@ if [ "$1" = "remove" ]; then
 elif [ "$1" = "purge" ]; then
     rm -rf "$DIR_ETC"
     rm -rf "$DIR_HOME"
+    rm -rf "$DIR_STATIC"
     rm -f "/etc/uwsgi/conf-available/grouprise.ini" "/etc/uwsgi/conf-enabled/grouprise.ini"
 fi
 
