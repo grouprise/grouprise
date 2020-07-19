@@ -9,6 +9,10 @@ DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
 
 if [ "$1" = "configure" ]; then
+    # configure a random SECRET_KEY - otherwise "migrate" fails
+    new_secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
+    sed -i "s/^SECRET_KEY = ''$/SECRET_KEY = '$new_secret_key'/" /etc/grouprise/settings.py
+
     if ! getent group "$PKG_GROUP" >/dev/null; then
         # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
         addgroup --quiet --system --force-badname "$PKG_GROUP"
