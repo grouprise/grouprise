@@ -49,7 +49,6 @@ fi
 # manually trigger byte compilation (since we do not use dh_python3)
 if which py3compile >/dev/null; then
     py3compile -p grouprise
-    py3compile /usr/share/grouprise/python-lib
 fi
 
 set +eu
