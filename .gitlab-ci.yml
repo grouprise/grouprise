@@ -30,6 +30,9 @@ make_deb_package:
         name: grouprise-deb
         paths:
             - build/debian
+        exclude:
+            # omit the full build directory (including the huge "node_modules" directory)
+            - build/debian/grouprise-*/**
         expire_in: 1w
 
 make_deb_package_release:
