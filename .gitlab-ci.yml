@@ -27,6 +27,7 @@ make_deb_package:
     script:
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
     artifacts:
+        name: grouprise-deb
         paths:
             - build/debian
         expire_in: 1w
