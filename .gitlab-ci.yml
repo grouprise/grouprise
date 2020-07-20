@@ -26,6 +26,8 @@ make_deb_package:
         - tags
     script:
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
+        # turn the symlink of the orig tarball into a real file
+        - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
     artifacts:
         name: grouprise-deb
         paths:
