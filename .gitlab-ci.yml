@@ -4,27 +4,15 @@ variables:
     # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.
     virtualenv_directory: "$CI_PROJECT_DIR/gitlab-ci-build-venv"
 
-before_script:
+.populate_virtualenv: &populate_virtualenv
     - virtualenv -p python3 --system-site-packages "$virtualenv_directory"
     - source "$virtualenv_directory/bin/activate"
     - pip install --upgrade pip
     - pip install -r requirements.txt
 
-make_test:
-    stage: test
+.build_deb_package:
     script:
-        # stadt.settings is required for the tests
-        - make app_local_settings
-        - make lint
-        - make test
-
-# The latest built deb package is available under the following URL:
-#   https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package
-make_deb_package:
-    stage: build
-    except:
-        - tags
-    script:
+        - *populate_virtualenv
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
         # turn the symlink of the orig tarball into a real file
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
@@ -35,18 +23,33 @@ make_deb_package:
         exclude:
             # omit the full build directory (including the huge "node_modules" directory)
             - build/debian/grouprise-*/**
+
+make_test:
+    stage: test
+    script:
+        - *populate_virtualenv
+        # stadt.settings is required for the tests
+        - make app_local_settings
+        - make lint
+        - make test
+
+# The latest built deb package is available under the following URL:
+#   https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package
+make_deb_package:
+    extends: .build_deb_package
+    stage: build
+    except:
+        - tags
+    artifacts:
         expire_in: 1w
 
 make_deb_package_release:
+    extends: .build_deb_package
     stage: deploy
     only:
         - tags
         - web
-    script:
-        - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
     artifacts:
-        paths:
-            - build/debian
         expire_in: 1000 yrs
 
 deb_package_test:
