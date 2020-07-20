@@ -39,7 +39,7 @@ Build-Depends:
 # The following packages are indirectly required by the dependencies above.
  python3-dateutil,
  python3-icalendar,
-Standards-Version: 3.9.6
+Standards-Version: 4.5.0
 
 Package: grouprise
 Architecture: all
