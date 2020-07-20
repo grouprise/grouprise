@@ -3,7 +3,7 @@ Section: python
 Priority: optional
 Maintainer: grouprise Maintainers <mail@grouprise.org>
 Build-Depends:
- debhelper (>= 9),
+ debhelper (>= 12),
  dh-exec,
  dh-python,
  nodejs,
