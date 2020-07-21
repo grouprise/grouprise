@@ -63,6 +63,9 @@ deb_package_test:
       - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq | grep -v grouprise)"
       # the package "moreutils" is only a grouprise dependency (not a build dependency), thus it is missing from the docker image
       - apt-get install moreutils
+      # Disable minimization of the buster-slim docker image (e.g. removal of files below /usr/share/doc).
+      # Otherwise our nginx example configuration is unavailable for the autopkgtest.
+      - rm -f /etc/dpkg/dpkg.cfg.d/docker
       - dpkg -i build/debian/grouprise_*.deb build/debian/grouprise-dependencies_*.deb
       - apt-get install -y autopkgtest
       - autopkgtest --no-built-binaries build/debian/grouprise*.dsc -- null
