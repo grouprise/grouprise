@@ -83,7 +83,7 @@
   const wheelListener = callback => {
     const throttledCallback = throttle(callback, 35, { trailing: false })
     return function (event) {
-      if (document.activeElement === event.target && Math.abs(event.deltaY) >= 20) {
+      if (document.activeElement === event.target && Math.abs(event.deltaY) >= 2) {
         event.preventDefault()
         throttledCallback.call(this, event, event.deltaY < 0 ? 1 : -1)
       }
