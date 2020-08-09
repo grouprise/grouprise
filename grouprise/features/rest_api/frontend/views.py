@@ -2,9 +2,8 @@ from contextlib import contextmanager
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import Http404
 from rest_framework import mixins, permissions, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 
 from grouprise.core.templatetags.defaulttags import markdown
@@ -124,53 +123,47 @@ class MarkdownView(viewsets.ViewSet):
         })
 
 
-@api_view(('POST',))
-@permission_classes((permissions.AllowAny,))
-def vote(request, pk):
-    try:
-        poll = WorkaroundPoll.objects.get(pk=pk)
-    except WorkaroundPoll.DoesNotExist:
-        raise Http404()
-
-    payload = PollVoteSerializer().to_internal_value(request.data)
-
-    can_vote = request.user.has_perm('polls.vote', poll.content.associations.first())
-    can_anon_vote = not request.user.is_anonymous or Vote.objects \
-        .filter(option__in=poll.options.all(), anonymous=payload['gestalt']['name']) \
-        .count() == 0
-
-    if not (can_vote and can_anon_vote):
-        if can_anon_vote:
-            raise PermissionDenied('VOTE_ERR_ANON_VOTED')
-        else:
-            raise PermissionDenied('VOTE_ERR_GESTALT_VOTED')
-
-    @contextmanager
-    def create_vote(base_model, option: Option):
-        new_vote = base_model()  # type: Vote
-        new_vote.option = option
-        try:
-            new_vote.voter = request.user.gestalt
-        except AttributeError:
-            new_vote.anonymous = payload['gestalt']['name']
-        yield new_vote
-        new_vote.save()
-
-    if poll.vote_type is VoteType.CONDORCET:
-        num_options = len(payload['ranking'])
-        for (ranking, option) in enumerate(payload['ranking']):
-            with create_vote(CondorcetVote, option) as condorcet_vote:
-                condorcet_vote.rank = num_options - ranking
-    elif poll.vote_type is VoteType.SIMPLE:
-        for vote in payload['endorsements']:
-            with create_vote(SimpleVote, vote['option']) as simple_vote:
-                simple_vote.endorse = vote['endorsement']
-
-    return Response(status=200)
-
-
 @permission_classes((permissions.AllowAny,))
 class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = PollSerializer
     filter_fields = ('id',)
     queryset = WorkaroundPoll.objects.all()
+
+    @action(['POST'], detail=True, permission_classes=[permissions.AllowAny])
+    def vote(self, request, pk):
+        poll = self.get_object()
+        payload = PollVoteSerializer().to_internal_value(request.data)
+
+        can_vote = request.user.has_perm('polls.vote', poll.content.associations.first())
+        can_anon_vote = not request.user.is_anonymous or Vote.objects \
+            .filter(option__in=poll.options.all(), anonymous=payload['gestalt']['name']) \
+            .count() == 0
+
+        if not (can_vote and can_anon_vote):
+            if can_anon_vote:
+                raise PermissionDenied('VOTE_ERR_ANON_VOTED')
+            else:
+                raise PermissionDenied('VOTE_ERR_GESTALT_VOTED')
+
+        @contextmanager
+        def create_vote(base_model, option: Option):
+            new_vote = base_model()  # type: Vote
+            new_vote.option = option
+            try:
+                new_vote.voter = request.user.gestalt
+            except AttributeError:
+                new_vote.anonymous = payload['gestalt']['name']
+            yield new_vote
+            new_vote.save()
+
+        if poll.vote_type is VoteType.CONDORCET:
+            num_options = len(payload['ranking'])
+            for (ranking, option) in enumerate(payload['ranking']):
+                with create_vote(CondorcetVote, option) as condorcet_vote:
+                    condorcet_vote.rank = num_options - ranking
+        elif poll.vote_type is VoteType.SIMPLE:
+            for vote in payload['endorsements']:
+                with create_vote(SimpleVote, vote['option']) as simple_vote:
+                    simple_vote.endorse = vote['endorsement']
+
+        return Response(status=200)

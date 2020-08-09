@@ -9,7 +9,7 @@ export default decorator((req, opts) => {
   }
 
   const vote = (id, data) => {
-    return req.post(`${endpoint}/${id}/vote`, data)
+    return req.post(`${endpoint}/${id}/vote/`, data)
       .then(res => res.data)
   }
 
