@@ -91,7 +91,7 @@
     "popper.js": "^1.16.1",
     "postcss-cli": "^7.1.1",
     "postcss-less-engine": "^0.6.2",
-    "q": "^1.5.1",
+    "promise.allsettled": "^1.0.2",
     "random-color": "^1.0.1",
     "random-id": "^1.0.4",
     "simplemde": "git://github.com/stadtgestalten/simplemde-markdown-editor.git#translatable-prompt-texts",

@@ -113,7 +113,7 @@
           .then(results => {
             this.progress = null
             const files = results
-              .filter(r => r.state === 'fulfilled')
+              .filter(r => r.status === 'fulfilled')
               .map(r => r.value)
 
             if (files.length > 0) {

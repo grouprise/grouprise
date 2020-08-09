@@ -1,5 +1,4 @@
 import { sum, isFunction } from 'lodash'
-import Q from 'q'
 
 function progressAdapterFactory (onProgressCallback) {
   const iface = {}
@@ -27,12 +26,21 @@ function progressAdapterFactory (onProgressCallback) {
   return iface
 }
 
+async function allSettled (promises) {
+  if (Promise.allSettled) {
+    return Promise.allSettled(promises)
+  } else {
+    const allSettled = await import('promise.allsettled').then(m => m.default)
+    return allSettled(promises)
+  }
+}
+
 function selectResolver (spec) {
   switch (true) {
     case spec === 'all':
-      return Q.all
+      return Promise.all
     case spec === 'allSettled':
-      return Q.allSettled
+      return allSettled
     case isFunction(spec):
       return spec
     default:
