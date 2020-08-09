@@ -41,13 +41,13 @@
           <input
             :id="timeFieldId"
             ref="time"
-            v-model.lazy="time"
             type="text"
             class="form-control form-control-icon"
             pattern="^(0[0-9]|1[0-9]|2[0-3]):?[0-5][0-9]$"
             :placeholder="timePlaceholder"
+            :value="time"
             @focus="isEditing = true"
-            @blur="guessTime"
+            @change="guessTime"
             @wheel="scrollTime"
           >
         </div>
