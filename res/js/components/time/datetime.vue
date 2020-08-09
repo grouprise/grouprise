@@ -126,7 +126,7 @@
       },
       timeStep: {
         type: Number,
-        default: 30
+        default: 15
       },
       disableDates: {
         type: Array,
