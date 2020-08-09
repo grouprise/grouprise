@@ -1,5 +1,4 @@
 import '../css/app.less'
-import './files'
 import './config'
 import './setup'
 
