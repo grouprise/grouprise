@@ -253,8 +253,9 @@ REST_FRAMEWORK = {
 # https://django-csp.readthedocs.io/
 
 # sha256-Tli: allow the inline script defined in core/templates/core/base.html
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg='")
-
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 
 

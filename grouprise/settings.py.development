@@ -15,6 +15,15 @@ GROUPRISE = {}
 
 SECRET_KEY = 'DEVELOPMENT'
 
+# WEBPACK DEVELOPMENT CONFIGURATION
+# During development the webpack dev server will run on a separate port from our
+# django application. We need to tweak the default CSP configuration to allow
+# development with it.
+WEBPACK_DEV_SERVER_URL = os.environ.get('GROUPRISE_WEBPACK_DEV_SERVER', 'http://localhost:8080')
+CSP_SCRIPT_SRC = CSP_SCRIPT_SRC + (WEBPACK_DEV_SERVER_URL, "'unsafe-eval'")
+CSP_DEFAULT_SRC = CSP_DEFAULT_SRC + (WEBPACK_DEV_SERVER_URL,)
+CSP_CONNECT_SRC = CSP_CONNECT_SRC + (WEBPACK_DEV_SERVER_URL, WEBPACK_DEV_SERVER_URL.replace('http', 'ws'),)
+
 if TESTING:
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
     HUEY = {'always_eager': True}
