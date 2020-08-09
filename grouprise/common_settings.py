@@ -79,6 +79,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        # keep this, even if empty so local settings can easily append
+        'DIRS': [],
         'OPTIONS': {
             'builtins': [
                 'grouprise.core.templatetags.defaultfilters',
