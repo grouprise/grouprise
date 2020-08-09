@@ -1,7 +1,6 @@
 import 'object-assign-shim'
 import 'matches-selector-polyfill/dist/matches-selector-polyfill'
 import 'es6-promise/auto'
-import 'modernizr'
 import Vue from 'vue'
 
 // third-party vue plugins / components

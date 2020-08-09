@@ -11,7 +11,6 @@ BIN_FONTDUMP = $(DIR_NODE_BIN)/fontdump
 
 DEPS_ASSETS = $(shell find "$(DIR_RES)" -type f)
 DEPS_FONTS = $(shell find "$(DIR_FONTS)" -type f)
-DEPS_WEBPACK = $(shell find "webpack" -type f)
 
 # google fonts
 GOOGLE_FONTS_CSS = $(DIR_BUILD)/fonts/google/fonts.css
@@ -30,9 +29,9 @@ $(GOOGLE_FONTS_CSS): $(STAMP_NODE_MODULES)
 		--web-directory "." \
 		"$(URL_FONT_GOOGLE)"
 
-$(STAMP_STATIC_WEBPACK): $(GOOGLE_FONTS_CSS) $(DEPS_ASSETS) $(DEPS_WEBPACK)
+$(STAMP_STATIC_WEBPACK): $(GOOGLE_FONTS_CSS) $(DEPS_ASSETS) webpack.config.js
 	mkdir -p "$(DIR_STATIC)"
-	NODE_ENV=production $(RUN_NODE) $(BIN_WEBPACK) --bail
+	$(RUN_NODE) "$(BIN_NPM)" run build
 	touch "$(STAMP_STATIC_WEBPACK)"
 
 .PHONY: assets_fonts

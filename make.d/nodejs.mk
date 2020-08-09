@@ -5,7 +5,7 @@ BIN_NODE ?= $(abspath $(NODE_LOCAL_DIR))/bin/node
 BIN_NPM ?= $(abspath $(NODE_LOCAL_DIR))/bin/npm
 
 NODE_VERSION_SYSTEM = $(shell if [ -n "$(BIN_NODE_SYSTEM)" ]; then "$(BIN_NODE_SYSTEM)" --version; else echo "v0.0.0"; fi)
-NODE_VERSION_MIN = v8.12.0
+NODE_VERSION_MIN = v10.21.0
 NODE_URL_X86 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x86.tar.xz
 NODE_URL_X64 = https://nodejs.org/dist/$(NODE_VERSION_MIN)/node-$(NODE_VERSION_MIN)-linux-x64.tar.xz
 NODE_URL = $(shell if [ "$(shell uname -m)" = "x86_64" ]; then echo "$(NODE_URL_X64)"; else echo "$(NODE_URL_X86)"; fi)
