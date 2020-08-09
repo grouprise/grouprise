@@ -135,8 +135,11 @@ class Option(grouprise.core.models.Model):
         return super().__str__()
 
     def __lt__(self, other):
-        # we don’t really have an order, but now that you ask
-        return self.pk <= other.pk
+        if hasattr(self, 'simpleoption'):
+            return self.simpleoption.__lt__(other.simpleoption)
+        elif hasattr(self, 'eventoption'):
+            return self.eventoption.__lt__(other.eventoption)
+        return super().__lt__(other)
 
     class Meta:
         ordering = ('id', )
@@ -144,6 +147,9 @@ class Option(grouprise.core.models.Model):
 
 class SimpleOption(Option):
     title = models.CharField(max_length=255)
+
+    def __lt__(self, other):
+        return self.id < other.id
 
     def __str__(self):
         return self.title
@@ -169,6 +175,9 @@ class EventOption(Option):
                 time_start=time.strftime('%d. %m. %H:%M'),
                 time_end=until_time.strftime('%d. %m. %H:%M'),
             )
+
+    def __lt__(self, other):
+        return self.time < other.time
 
 
 class Vote(grouprise.core.models.Model):

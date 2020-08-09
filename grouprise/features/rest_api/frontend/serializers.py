@@ -130,8 +130,12 @@ class VoterSerializer(serializers.ModelSerializer):
 
 
 class PollSerializer(serializers.ModelSerializer):
-    options = OptionSerializer(many=True, read_only=True)
+    options = serializers.SerializerMethodField()
     last_voted = serializers.SerializerMethodField()
+
+    def get_options(self, instance: WorkaroundPoll):
+        options = sorted(list(instance.options.all()))
+        return OptionSerializer(options, many=True).data
 
     def get_last_voted(self, instance: WorkaroundPoll):
         last_vote = Vote.objects\
