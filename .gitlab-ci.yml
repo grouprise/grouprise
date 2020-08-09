@@ -5,10 +5,14 @@ variables:
     virtualenv_directory: "$CI_PROJECT_DIR/gitlab-ci-build-venv"
 
 .populate_virtualenv: &populate_virtualenv
-    - virtualenv -p python3 --system-site-packages "$virtualenv_directory"
+    # Install virtualenv-related modules as packaged for the base image instead of installing these
+    # in the virtualenv.  This improves the reproducibility of the CI tests.
+    # Ideally we should install python3-setuptools, too.  But somehow the deb packaging process
+    # fails with "--no-setuptools" on Debian Buster.
+    - apt install -q -y python3-pip python3-wheel
+    - virtualenv -p python3 --system-site-packages --no-pip --no-wheel "$virtualenv_directory"
     - source "$virtualenv_directory/bin/activate"
-    - pip install --upgrade pip
-    - pip install -r requirements.txt
+    - pip3 install -r requirements.txt
 
 .build_deb_package:
     script:
