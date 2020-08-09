@@ -1,4 +1,3 @@
-const fs = require('fs')
 const path = require('path')
 
 const _ = require('lodash')
@@ -17,6 +16,7 @@ const banner = require('./res/templates/banner.txt.js')
 const baseDir = __dirname
 const buildDir = process.env.DIR_BUILD || path.join(baseDir, 'build')
 const reportsDir = path.join(buildDir, 'reports')
+const devServerURL = new URL(process.env.GROUPRISE_WEBPACK_DEV_SERVER || 'http://localhost:8080')
 
 const postCss = {
   loader: 'postcss-loader',
@@ -38,7 +38,7 @@ module.exports = {
   devtool: isDebug ? 'eval' : 'source-map',
   entry: './index.js',
   output: {
-    publicPath: `${isDebug ? 'http://localhost:8080' : ''}/stadt/static/core/base/`,
+    publicPath: `${isDebug ? devServerURL.origin : ''}/stadt/static/core/base/`,
     path: path.join(__dirname, 'build', 'static'),
     filename: '[name].[hash].js'
   },
@@ -50,6 +50,9 @@ module.exports = {
   },
   devServer: {
     contentBase: './dist',
+    port: devServerURL.port,
+    host: ['localhost', '127.0.0.1'].includes(devServerURL.hostname) ? 'localhost' : '0.0.0.0',
+    public: isDebug ? devServerURL.host : null,
     hot: true,
     overlay: true,
     headers: {
