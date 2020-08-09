@@ -1,38 +1,21 @@
 import Vue from 'vue'
 
-// third-party vue plugins / components
-import draggable from 'vuedraggable'
-
-// custom global vue components
-import FilePicker from './components/core/file-picker.vue'
-import ImagePicker from './components/image/image-picker.vue'
-import Select from './components/core/select.vue'
-import Avatar from './components/core/avatar.vue'
-import DateTime from './components/time/datetime.vue'
-import NumberSpinner from './components/core/number-spinner.vue'
-import Switch from './components/core/switch.vue'
-import Configurator from './components/core/configurator.vue'
-import Input from './components/core/input.vue'
-import User from './components/core/user.vue'
-import UserCurrent from './components/core/user-current.vue'
-import ChartPie from './components/core/chart-pie.vue'
-
 // custom global vue filters
 import { fallback, truncatewords } from './components/core/filters.js'
 
 // vue setup
 Vue.filter('default', fallback)
 Vue.filter('truncatewords', truncatewords)
-Vue.component('draggable', draggable)
-Vue.component('sg-file-picker', FilePicker)
-Vue.component('sg-image-picker', ImagePicker)
-Vue.component('sg-input', Input)
-Vue.component('sg-select', Select)
-Vue.component('sg-avatar', Avatar)
-Vue.component('sg-datetime', DateTime)
-Vue.component('sg-number-spinner', NumberSpinner)
-Vue.component('sg-switch', Switch)
-Vue.component('sg-configurator', Configurator)
-Vue.component('sg-user', User)
-Vue.component('sg-user-current', UserCurrent)
-Vue.component('sg-chart-pie', ChartPie)
+Vue.component('draggable', () => import('vuedraggable'))
+Vue.component('sg-file-picker', () => import('./components/core/file-picker.vue'))
+Vue.component('sg-image-picker', () => import('./components/image/image-picker.vue'))
+Vue.component('sg-input', () => import('./components/core/input.vue'))
+Vue.component('sg-select', () => import('./components/core/select.vue'))
+Vue.component('sg-avatar', () => import('./components/core/avatar.vue'))
+Vue.component('sg-datetime', () => import('./components/time/datetime.vue'))
+Vue.component('sg-number-spinner', () => import('./components/core/number-spinner.vue'))
+Vue.component('sg-switch', () => import('./components/core/switch.vue'))
+Vue.component('sg-configurator', () => import('./components/core/configurator.vue'))
+Vue.component('sg-user', () => import('./components/core/user.vue'))
+Vue.component('sg-user-current', () => import('./components/core/user-current.vue'))
+Vue.component('sg-chart-pie', () => import('./components/core/chart-pie.vue'))

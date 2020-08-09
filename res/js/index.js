@@ -5,40 +5,13 @@ import './setup'
 import { $$, component } from 'luett'
 import { defaultsDeep } from 'lodash'
 import closest from 'closest'
+import { asyncComponent } from './util/dom'
 
 import PubSub from './util/pubsub'
 import HistoryStateDispatcher from './util/history'
 
-import date from './transforms/date'
-import editor from './transforms/editor'
-import calendar from './transforms/calendar'
-import time from './transforms/time'
-import gallery from './transforms/gallery'
-import input from './transforms/input'
-import snake from './transforms/snake'
-import openable from './transforms/openable'
-import clipboard from './transforms/clipboard'
 import browserWarning from './transforms/browser-warning'
-import carousel from './transforms/carousel'
-import conversation from './transforms/conversation'
-import keysubmit from './transforms/keysubmit'
-import select from './transforms/select'
-import publish from './transforms/publish'
-import eventTime from './transforms/event-time'
-import dismissible from './transforms/dismissible'
-import autosize from './transforms/autosize'
-import cite from './transforms/cite'
-import grouplink from './transforms/grouplink'
-import quote from './transforms/quote'
-import masonry from './transforms/masonry'
-import galleryEditor from './transforms/gallery-editor'
-import imagePicker from './transforms/image-picker'
-import poll from './transforms/poll'
-import pollEditor from './transforms/poll-editor'
-import groupSearch from './transforms/group-search'
-import menu from './transforms/menu'
-import dock from './transforms/dock'
-import contentOrder from './transforms/content-order'
+import time from './transforms/time'
 
 __webpack_nonce__ = 'value'  // eslint-disable-line
 
@@ -49,40 +22,50 @@ function init (searchIn = document) {
   const opts = { root: searchIn, conf: { bus, init, history } }
 
   // initialize components on load
-  component('masonry', masonry, opts)
-  component('date', date, opts)
-  component('menu', menu, opts)
-  component('dock', dock, opts)
-  component('editor', editor, opts)
   component('time', time, opts)
-  component('calendar', calendar, opts)
-  component('gallery', gallery, opts)
-  component('gallery-editor', galleryEditor, opts)
-  component('snake', snake, opts)
-  component('openable', openable, opts)
-  component('clipboard', clipboard, opts)
   component('browser-warning', browserWarning, opts)
-  component('carousel', carousel, opts)
-  component('conversation', conversation, opts)
-  component('keysubmit', keysubmit, opts)
-  component('select', select, opts)
-  component('publish', publish, opts)
-  component('event-time', eventTime, opts)
-  component('dismissible', dismissible, opts)
-  component('autosize', autosize, opts)
-  component('cite', cite, opts)
-  component('grouplink', grouplink, opts)
-  component('image-picker', imagePicker, opts)
-  component('group-search', groupSearch, opts)
-  component('poll', poll, opts)
-  component('poll-editor', pollEditor, opts)
-  component('content-order', contentOrder, opts)
+  asyncComponent('masonry', () => import('./transforms/masonry'), opts)
+  asyncComponent('date', () => import('./transforms/date'), opts)
+  asyncComponent('menu', () => import('./transforms/menu'), opts)
+  asyncComponent('dock', () => import('./transforms/dock'), opts)
+  asyncComponent('editor', () => import('./transforms/editor'), opts)
+  asyncComponent('calendar', () => import('./transforms/calendar'), opts)
+  asyncComponent('gallery', () => import('./transforms/gallery'), opts)
+  asyncComponent('gallery-editor', () => import('./transforms/gallery-editor'), opts)
+  asyncComponent('snake', () => import('./transforms/snake'), opts)
+  asyncComponent('openable', () => import('./transforms/openable'), opts)
+  asyncComponent('clipboard', () => import('./transforms/clipboard'), opts)
+  asyncComponent('carousel', () => import('./transforms/carousel'), opts)
+  asyncComponent('conversation', () => import('./transforms/conversation'), opts)
+  asyncComponent('keysubmit', () => import('./transforms/keysubmit'), opts)
+  asyncComponent('select', () => import('./transforms/select'), opts)
+  asyncComponent('publish', () => import('./transforms/publish'), opts)
+  asyncComponent('event-time', () => import('./transforms/event-time'), opts)
+  asyncComponent('dismissible', () => import('./transforms/dismissible'), opts)
+  asyncComponent('autosize', () => import('./transforms/autosize'), opts)
+  asyncComponent('cite', () => import('./transforms/cite'), opts)
+  asyncComponent('grouplink', () => import('./transforms/grouplink'), opts)
+  asyncComponent('image-picker', () => import('./transforms/image-picker'), opts)
+  asyncComponent('group-search', () => import('./transforms/group-search'), opts)
+  asyncComponent('poll', () => import('./transforms/poll'), opts)
+  asyncComponent('poll-editor', () => import('./transforms/poll-editor'), opts)
 
   // initialize components not based on component interface
-  component($$('input:not(.vue-input), select, textarea'), input, defaultsDeep({
-    conf: { target: el => closest(el, '.form-group') || el }
-  }, opts))
-  component($$('blockquote').filter(b => !closest(b, 'blockquote')), quote, opts)
+  asyncComponent(
+    $$('input:not(.vue-input), select, textarea'),
+    () => import('./transforms/input'),
+    defaultsDeep({
+      conf: { target: el => closest(el, '.form-group') || el },
+      name: 'input'
+    }, opts)
+  )
+  asyncComponent(
+    $$('blockquote').filter(b => !closest(b, 'blockquote')),
+    () => import('./transforms/quote'),
+    defaultsDeep({
+      name: 'quote'
+    }, opts)
+  )
 
   // register popstate handler
   history.mount()

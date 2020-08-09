@@ -1,5 +1,6 @@
 import randomId from 'random-id'
-import { remove, insertElement } from 'luett'
+import { has } from 'lodash'
+import { component, remove, insertElement } from 'luett'
 
 export function createDisplayControl (...args) {
   function doWithArgs (callback) {
@@ -48,6 +49,19 @@ export function getTimeFormat (date) {
 
   console.error(`unknown timeformat for date ${date.value}`)
   return getTimeFormat.default
+}
+
+export function asyncComponent (name, componentInitializerLoader, opts) {
+  let componentInitializer = null
+  return component(name, async (...args) => {
+    if (componentInitializer === null) {
+      const loadResult = await componentInitializerLoader()
+      componentInitializer = typeof loadResult !== 'function' && has(loadResult, 'default')
+        ? loadResult.default
+        : loadResult
+    }
+    return componentInitializer(...args)
+  }, opts)
 }
 
 getTimeFormat.formats = [
