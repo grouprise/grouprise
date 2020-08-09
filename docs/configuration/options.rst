@@ -94,6 +94,39 @@ Email-related Settings
   If set to ``True``, an email address is displayed for group members on the group page, which
   can be used like a mailing list.
 
+Branding
+--------
+
+Grouprise supports a few branding options that allow you to change the look of the website.
+
+For most logos you should use SVG files. These are vector graphics and always look sharp
+on any kind of display. If you provide custom logos make sure to account for browser caching
+if you later change the logo files on disk. It’s usually sufficient to add a little query
+string to the end of the URL (like `?v=1`).
+
+``BRANDING_THEME_COLOR``
+  This is the color that modern browsers (especially on mobile) use to decorate the tab with.
+  You can set this to `None` if you want to embed the theme color through other means.
+
+``BRANDING_LOGO_TEXT``
+  This logo file is used in the main menu on the top left part of the screen.
+  It has a fixed height at around ~44px and should not occupy more than 230px of width.
+
+``BRANDING_LOGO_FAVICON``
+  This is used as the applications favicon that you usually see on the left hand side
+  of the browser tab right next to the title of the webpage. We recommend that you use a
+  PNG file for the favicon as support for SVG favicons is still spotty (as of Aug 2020).
+  You can set this to `None` if you want to embed the favicon through other means.
+
+``BRANDING_LOGO_BACKDROP``
+  This logo is used on the left hand side of the footer. Generally you should use a type
+  of white mask graphic here. See the default grouprise backdrop logo for reference.
+
+``BRANDING_LOGO_SQUARE``
+  This logo is used in various places like the login form, menus, help pages and other
+  places. As the name states this logo should be a square image. Please use an
+  absolute URL if you override this logo as it will be used by external services
+  to reference your site.
 
 Other Options
 =============

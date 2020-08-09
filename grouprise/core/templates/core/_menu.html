@@ -5,8 +5,7 @@
 
             {% block logo %}
                 <a class="nav-logo" href="{% url 'index' %}">
-                    {% load staticfiles %}
-                    <img src="{% static 'stadt/img/logos/logo_text.svg' %}" alt="{{ GROUPRISE_SITE_NAME }}"/>
+                    <img src="{{ GROUPRISE_LOGO_TEXT }}" alt="{{ GROUPRISE_SITE_NAME }}"/>
                 </a>
             {% endblock %}
 

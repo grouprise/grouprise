@@ -1,5 +1,6 @@
 import html
 import os
+import re
 
 import html2text as python_html2text
 from django import template
@@ -9,6 +10,8 @@ from django.contrib.sites import models as sites_models
 from . import Link
 
 register = template.Library()
+
+HAS_HTTP_PROTOCOL_REGEX = re.compile(r'^https?://')
 
 
 @register.filter
@@ -70,6 +73,9 @@ def html2text(html_text, preset='mail'):
 
 @register.filter
 def full_url(path):
+    if HAS_HTTP_PROTOCOL_REGEX.match(path) is not None:
+        # path already is an absolute URL
+        return path
     return '{proto}://{domain}{path}'.format(
             proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
             domain=sites_models.Site.objects.get_current().domain,
