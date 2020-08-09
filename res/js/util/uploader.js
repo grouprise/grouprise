@@ -38,7 +38,7 @@ async function allSettled (promises) {
 function selectResolver (spec) {
   switch (true) {
     case spec === 'all':
-      return Promise.all
+      return promises => Promise.all(promises)
     case spec === 'allSettled':
       return allSettled
     case isFunction(spec):
