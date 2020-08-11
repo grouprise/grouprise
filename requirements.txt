@@ -20,6 +20,7 @@ django-haystack             # debian: python3-django-haystack
 django-ical                 # debian (bullseye): python3-django-ical
 django-imagekit             # debian: python3-django-imagekit
 django-mailbox              # NOT IN DEBIAN
+django-simple-math-captcha  # NOT IN DEBIAN
 django-taggit               # debian: python3-django-taggit
 djangorestframework>=3.9    # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser

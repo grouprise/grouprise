@@ -280,14 +280,20 @@ class ContributionMailProcessor:
         post_create.send(sender=None, instance=contribution)
 
     def _process_initial_thread_contribution(self, message, recipient):
-        local, domain = recipient.split('@')
-        if not self.is_mail_domain(domain):
-            error_text = 'Unknown target mail domain: {} instead of {}.'.format(domain,
-                                                                                self._reply_domain)
-            logger.error('Could not process receiver %s in message %s. %s',
+        error_text = None
+        try:
+            local, domain = recipient.split('@')
+        except ValueError:
+            error_text = 'Invalid target mail address: {}'.format(recipient)
+        else:
+            if not self.is_mail_domain(domain):
+                # This message could be part of a delivery failure response, but it should never
+                # happen with a properly configured mail server.
+                error_text = 'Unknown target mail domain: {} instead of {}.'.format(
+                    domain, self._reply_domain)
+        if error_text is not None:
+            logger.error('Could not process receiver "%s" in message %s. %s',
                          recipient, message.id, error_text)
-            # This message could be part of a delivery failure response, but it should never happen
-            # with a properly configured mail server (this traffic would be misdirected).
             raise MailProcessingFailure(error_text)
         gestalt = get_sender_gestalt(message.from_address)
         try:

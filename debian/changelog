@@ -1,8 +1,8 @@
-grouprise (3.0.0-1) unstable; urgency=medium
+stadtgestalten (2.4.3-1) unstable; urgency=medium
 
-  * Change package name from stadtgestalten to grouprise
+  * New upstream release
 
- -- Lars Kruse <devel@sumpfralle.de>  Mon, 04 Feb 2019 04:37:10 +0100
+ -- Konrad Mohrfeldt <konrad.mohrfeldt@farbdev.org>  Sun, 17 May 2020 15:11:26 +0200
 
 stadtgestalten (2.4.2-1) unstable; urgency=medium
 

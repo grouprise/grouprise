@@ -7,6 +7,7 @@ from django import test, urls
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
 from django.core import mail
+from simplemathcaptcha.utils import hash_answer
 
 
 HTTP_GET = 'get'
@@ -37,6 +38,14 @@ def temporary_settings_override(key, value):
             del settings.GROUPRISE[key]
         else:
             settings.GROUPRISE[key] = original_value
+
+
+def with_captcha(data, answer=10, field_name='captcha'):
+    data.update({
+        field_name + '_0': answer,
+        field_name + '_1': hash_answer(answer)
+    })
+    return data
 
 
 class Test(test.TestCase):

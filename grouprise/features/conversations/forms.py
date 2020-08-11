@@ -1,5 +1,6 @@
 from django import forms
 
+from grouprise.core.forms import Captcha
 import grouprise.features
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.associations import models as associations
@@ -11,6 +12,7 @@ from . import models
 
 class Create(forms.ModelForm):
     author = forms.EmailField(label='E-Mail-Adresse')
+    captcha = Captcha()
     subject = forms.CharField(label='Thema', max_length=255)
     text = forms.CharField(label='Nachricht', widget=forms.Textarea(
         {'rows': 5, 'data-component': 'keysubmit autosize'}))
@@ -26,6 +28,7 @@ class Create(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.has_author:
             del self.fields['author']
+            del self.fields['captcha']
 
     def clean(self):
         if 'author' in self.cleaned_data:
