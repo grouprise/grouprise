@@ -2,6 +2,8 @@ import os
 import re
 from setuptools import setup, find_packages
 
+from grouprise import __version__
+
 
 # parse dependencies from requirements.txt
 def get_requirements():
@@ -21,14 +23,9 @@ def get_readme():
         return f.read()
 
 
-def get_version():
-    with open(os.path.join(os.path.dirname(__file__), 'VERSION')) as f:
-        return f.read().strip()
-
-
 setup(
     name='grouprise',
-    version=get_version(),
+    version=__version__,
     description='grouprise is a platform that encourages and enables '
                 'social action and solidarity',
     long_description=get_readme(),
