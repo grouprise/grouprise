@@ -87,6 +87,9 @@ Recommends:
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
+Suggests:
+ ${misc:Suggests},
+ python3-sentry-sdk,
 Conflicts: stadtgestalten (<<3.0.0~1-1)
 Replaces: stadtgestalten (<<3.0.0~1-1)
 Description: Web platform that enables social action and solidarity
