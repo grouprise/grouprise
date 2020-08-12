@@ -16,7 +16,7 @@ Build-Depends:
  python3-all,
  python3-aiosmtpd,
  python3-bleach,
- python3-django (>= 2.2),
+ python3-django (>= 2:2.2),
  python3-django-allauth,
  python3-django-csp,
  python3-django-filters (>= 2.1.0),
