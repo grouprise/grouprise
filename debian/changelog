@@ -1,3 +1,9 @@
+grouprise (3.0.0-4) unstable; urgency=medium
+
+  * fixed ci issue causing deb builds to fail
+
+ -- Konrad Mohrfeldt <konrad.mohrfeldt@farbdev.org>  Wed, 12 Aug 2020 12:55:12 +0200
+
 grouprise (3.0.0-3) unstable; urgency=medium
 
   * fix inclusion of orig.tar.gz in deb package build
