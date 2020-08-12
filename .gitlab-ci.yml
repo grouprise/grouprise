@@ -15,7 +15,7 @@ variables:
 .build_deb_package:
     script:
         - *populate_virtualenv
-        - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage --no-sign"
+        - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage -sa --no-sign"
         # turn the symlink of the orig tarball into a real file
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
     artifacts:
