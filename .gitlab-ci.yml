@@ -59,7 +59,7 @@ make_deb_package_release:
         expire_in: 1000 yrs
 
 deb_package_test:
-    stage: deploy
+    stage: test
     dependencies:
       - make_deb_package
       - make_deb_package_release
