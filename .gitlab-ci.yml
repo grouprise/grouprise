@@ -49,7 +49,7 @@ make_deb_package:
 
 make_deb_package_release:
     extends: .build_deb_package
-    stage: deploy
+    stage: build
     only:
         - tags
         - web
@@ -57,9 +57,10 @@ make_deb_package_release:
         expire_in: 1000 yrs
 
 deb_package_test:
-    stage: test
+    stage: deploy
     dependencies:
       - make_deb_package
+      - make_deb_package_release
     script:
       # we are running autopkgtest manually, thus we need to ensure manually, that all dependencies are fulfilled
       - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq | grep -v grouprise)"
