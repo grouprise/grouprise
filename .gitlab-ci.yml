@@ -36,6 +36,8 @@ make_test:
         - make test
     # disable artifacts: otherwise the deb package would be checked by lintian (and fail)
     dependencies: []
+    # do not wait for the build jobs
+    needs: []
 
 # The latest built deb package is available under the following URL:
 #   https://git.hack-hro.de/stadtgestalten/stadtgestalten/builds/artifacts/master/raw/build/debian/export/stadtgestalten.deb?job=deb-package
