@@ -64,7 +64,7 @@ fi
 
 if [ "$1" = "triggered" ]; then
     # assemble static assets from related packages
-    grouprisectl collectstatic --no-input
+    grouprisectl collectstatic --clear --no-input
 fi
 
 # manually trigger byte compilation (since we do not use dh_python3)
