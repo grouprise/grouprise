@@ -1,21 +1,8 @@
 from django import forms
 from django.contrib.sites.models import Site
-from taggit.utils import edit_string_for_tags
+from taggit.forms import TextareaTagWidget
 
 from . import models
-
-
-# TODO: remove TagWidgetMixin and TextareaTagWidget when django-taggit release > 1.1.0
-
-class TagWidgetMixin:
-    def format_value(self, value):
-        if value is not None and not isinstance(value, str):
-            value = edit_string_for_tags(value)
-        return super().format_value(value)
-
-
-class TextareaTagWidget(TagWidgetMixin, forms.Textarea):
-    pass
 
 
 class RecommendForm(forms.Form):
