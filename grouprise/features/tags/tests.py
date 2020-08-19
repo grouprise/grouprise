@@ -5,7 +5,14 @@ from django_mailbox.signals import message_received
 
 from grouprise.core.tests import Test, get_url as u
 from grouprise.features.associations.models import Association
+from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
+
+
+class TaggedGroupMixin(GroupMixin):
+    def setUp(self):
+        super().setUp()
+        self.group.tags.add('test')
 
 
 class BasicTagTests(AuthenticatedMemberMixin, Test):
@@ -52,3 +59,9 @@ class BasicTagTests(AuthenticatedMemberMixin, Test):
         r = self.client.get(reverse('tag', args=('tag',)))
         self.assertContains(r, 'href="{}"'.format(
             Association.objects.get(content__title='Test').get_absolute_url()))
+
+
+class TaggedGroupTests(TaggedGroupMixin, AuthenticatedMemberMixin, Test):
+    def test_show_settings_page(self):
+        r = self.client.get('{}?group={}'.format(reverse('group-settings'), self.group.slug))
+        self.assertEqual(r.status_code, 200)
