@@ -3,13 +3,12 @@ from django.urls import reverse
 from django_mailbox.models import Message
 from django_mailbox.signals import message_received
 
-import grouprise.core
-from grouprise.core.tests import get_url as u
+from grouprise.core.tests import Test, get_url as u
 from grouprise.features.associations.models import Association
-from grouprise.features.memberships import test_mixins as memberships
+from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
 
-class Test(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
+class BasicTagTests(AuthenticatedMemberMixin, Test):
 
     def test_tag_page_has_group_tag_link(self):
         self.client.get(u('tag', 'test'))
