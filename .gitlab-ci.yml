@@ -61,13 +61,17 @@ deb_package_test:
       - make_deb_package
       - make_deb_package_release
     script:
-      # we are running autopkgtest manually, thus we need to ensure manually, that all dependencies are fulfilled
-      - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq | grep -v grouprise)"
-      # the package "moreutils" is only a grouprise dependency (not a build dependency), thus it is missing from the docker image
-      - apt-get install moreutils
+      # make all built grouprise packages available locally
+      - apt-get install -y local-apt-repository
+      - mkdir -p /srv/local-apt-repository
+      - cp build/debian/*.deb /srv/local-apt-repository/
+      - /usr/lib/local-apt-repository/rebuild
+      - apt-get update
       # Disable minimization of the buster-slim docker image (e.g. removal of files below /usr/share/doc).
       # Otherwise our nginx example configuration is unavailable for the autopkgtest.
       - rm -f /etc/dpkg/dpkg.cfg.d/docker
-      - dpkg -i build/debian/grouprise_*.deb build/debian/grouprise-dependencies_*.deb
+      # we are running autopkgtest manually, thus we need to ensure manually, that all dependencies are fulfilled
+      - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq)"
+      # install and run autopkgtest
       - apt-get install -y autopkgtest
       - autopkgtest --no-built-binaries build/debian/grouprise*.dsc -- null
