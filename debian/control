@@ -47,6 +47,7 @@ Depends:
  ${misc:Depends},
  adduser,
  grouprise-dependencies,
+ grouprise-db-postgresql | grouprise-db-sqlite,
  moreutils,
 # Python dependencies should be added to the Build-Depends
 # field of the source package too!
@@ -80,10 +81,7 @@ Depends:
 Recommends:
  ${misc:Recommends},
  ghostscript,
- postgresql-client-common,
- python3-psycopg2,
  redis-server,
- sqlite3,
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
@@ -98,6 +96,24 @@ Description: Web platform that enables social action and solidarity
  .
  This package contains the configuration, services and code for running
  grouprise.
+
+Package: grouprise-db-postgresql
+Depends: postgresql-client-common, python3-psycopg2
+Description: Web platform that enables social action and solidarity
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package installs everything what's needed for grouprise to work
+ with PostgreSQL as underlying data storage engine.
+
+Package: grouprise-db-sqlite
+Depends: sqlite3
+Description: Web platform that enables social action and solidarity
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package installs everything what's needed for grouprise to work
+ with SQLite as underlying data storage engine.
 
 Package: grouprise-doc
 Architecture: all
