@@ -41,6 +41,6 @@ redis                       # debian: python3-redis
 requests                    # debian: python3-requests
 rules                       # debian: python3-django-rules
 translitcodec               # NOT IN DEBIAN
-xapian-haystack             # debian: python3-xapian-haystack
+xapian-haystack>=2.1.1      # debian: python3-xapian-haystack
 # xapian-haystack also requires the xapian python bindings that you'll find
 # as "python3-xapian" in Debian/Ubuntu and "python-xapian" in ArchLinux
