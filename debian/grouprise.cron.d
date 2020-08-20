@@ -10,9 +10,5 @@
 # import content from external websites
 46  * * * * _grouprise        chronic grouprisectl import_feeds
 
-# send mails with django-mailer
-*   * * * * _grouprise        cd /tmp && chronic sh -c "grouprisectl send_mail 2>&1 | tee -a /var/log/grouprise/mailer-grouprise.log"
-9,29,49 * * * * _grouprise    cd /tmp && chronic sh -c "grouprisectl retry_deferred 2>&1 | tee -a /var/log/grouprise/mailer-grouprise.log"
-
 # update search index
 */5 * * * * _grouprise        chronic grouprisectl update_index --remove
