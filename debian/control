@@ -98,6 +98,7 @@ Description: Web platform that enables social action and solidarity
  grouprise.
 
 Package: grouprise-db-postgresql
+Architecture: all
 Depends: postgresql-client-common, python3-psycopg2
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
@@ -107,6 +108,7 @@ Description: Web platform that enables social action and solidarity
  with PostgreSQL as underlying data storage engine.
 
 Package: grouprise-db-sqlite
+Architecture: all
 Depends: sqlite3
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
