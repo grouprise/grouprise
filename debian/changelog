@@ -1,3 +1,9 @@
+grouprise (3.0.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Robert <robert@hinz.local>  Thu, 20 Aug 2020 07:53:49 +0200
+
 grouprise (3.0.1-1) unstable; urgency=medium
 
   * New upstream release
