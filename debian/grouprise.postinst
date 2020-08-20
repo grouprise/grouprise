@@ -39,6 +39,12 @@ if [ "$1" = "configure" ]; then
         else
             echo "error while executing $PKG_USER migrations. maintenance mode still active (indicator file: $DIR_ETC/maintenance_mode)" >&2
         fi
+        # restart uwsgi
+        if [ -d /run/systemd/system ]; then
+            deb-systemd-invoke restart uwsgi.service >/dev/null || true
+        else
+            invoke-rc.d --skip-systemd-native uwsgi restart || true
+        fi
     fi
 
     # protect sensitive content (e.g. database credentials)
