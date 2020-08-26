@@ -128,7 +128,9 @@
             {% endif %}
         </dd>
         
-        {% if GROUPRISE_MAILINGLIST_ENABLED %}
+        {% load rules %}
+        {% has_perm 'groups.change' user group as can_view_details %}
+        {% if GROUPRISE_MAILINGLIST_ENABLED and can_view_details %}
             <dt>
                 <i class="sg sg-mailinglist" title="E-Mail-Adresse, an die Gruppenmitglieder E-Mails versenden können"></i>
                 <span class="sr-only">E-Mail-Adresse, an die Gruppenmitglieder E-Mails versenden können</span>
