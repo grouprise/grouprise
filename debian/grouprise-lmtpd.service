@@ -1,0 +1,13 @@
+[Unit]
+Description=Grouprise LMTP Mail Handler
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=_grouprise
+Group=_grouprise
+ExecStart=/usr/bin/grouprisectl run_lmtpd 127.0.0.1 1025
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

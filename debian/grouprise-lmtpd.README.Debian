@@ -1,0 +1,25 @@
+Grouprise can handle incoming emails either indirectly by collecting
+them from an IMAP mailbox (requires a periodic cron job) or directly
+by offering an LMTP service which injects the mails at their time of
+arrival.
+
+This package (grouprise-lmtpd) provides the LMTP based service.
+
+
+1. Configuration
+
+The systemd service "grouprise-lmtpd" is automatically enabled after
+installing the package.
+
+It works out of the box.  The only additional requirement is a
+configured local mail server (e.g. postfix) handing incoming mails
+over to the LMTP service.
+
+
+2. Example postfix configuration
+
+virtual_mailbox_domains = example.org
+virtual_transport = lmtp:inet:localhost:1025
+
+The above configuration delivers all mails directed at the specified
+domain to the local LMTP service provided by grouprise.

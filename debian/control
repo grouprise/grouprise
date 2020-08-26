@@ -10,8 +10,8 @@ Build-Depends:
  python3-flake8,
  python3-sphinx,
  wget,
-# These should be kept in sync with the dependencies of our
-# primary grouprise binary package.
+# These should be kept in sync with the dependencies of all
+# related binary packages.
 # See also: make.d/ci.mk
  python3-all,
  python3-aiosmtpd,
@@ -53,7 +53,6 @@ Depends:
 # field of the source package too!
 # See also: make.d/ci.mk
  python3-all,
- python3-aiosmtpd,
  python3-bleach,
  python3-django (>= 2.2),
  python3-django-allauth,
@@ -116,6 +115,16 @@ Description: Web platform that enables social action and solidarity
  .
  This package installs everything what's needed for grouprise to work
  with SQLite as underlying data storage engine.
+
+Package: grouprise-lmtpd
+Architecture: all
+Depends: grouprise, python3-aiosmtpd
+Description: Web platform that enables social action and solidarity
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package provides a local LMTP services for receiving email
+ submission from a local mail server (e.g. postfix).
 
 Package: grouprise-doc
 Architecture: all
