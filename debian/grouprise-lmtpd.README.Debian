@@ -20,6 +20,9 @@ over to the LMTP service.
 
 virtual_mailbox_domains = example.org
 virtual_transport = lmtp:inet:localhost:1025
+# Use the line below or just add "reject_unverified_recipient" to an
+# existing "smtpd_recipient_restrictions".
+smtpd_recipient_restrictions = reject_unverified_recipient
 
 The above configuration delivers all mails directed at the specified
 domain to the local LMTP service provided by grouprise.
