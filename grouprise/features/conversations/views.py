@@ -105,10 +105,6 @@ class CreateGroupConversation(CreateConversation):
 
 
 class CreateAbuseConversation(CreateGroupConversation):
-    def get(self, *args, **kwargs):
-        kwargs['group_pk'] = Group.objects.operator_group().pk
-        return super().get(*args, **kwargs)
-
     def get_initial(self):
         return {
                 'subject': 'Missbrauch melden',
@@ -116,6 +112,6 @@ class CreateAbuseConversation(CreateGroupConversation):
                         'Regeln verstößt.'.format(
                             self.request.build_absolute_uri(self.kwargs['path']))}
 
-    def get_object(self):
-        self.kwargs['group_pk'] = Group.objects.operator_group().pk
-        return super().get_object()
+    def get_permission_object(self):
+        self.entity = Group.objects.operator_group()
+        return self.entity
