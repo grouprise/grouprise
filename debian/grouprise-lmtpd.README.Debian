@@ -18,11 +18,15 @@ over to the LMTP service.
 
 2. Example postfix configuration
 
-virtual_mailbox_domains = example.org
-virtual_transport = lmtp:inet:localhost:1025
-# Use the line below or just add "reject_unverified_recipient" to an
-# existing "smtpd_recipient_restrictions".
-smtpd_recipient_restrictions = reject_unverified_recipient
+A complete postfix configuration suitable for a grouprise instance
+could look like the following:
+
+  myorigin = example.org
+  relayhost = <YOUR_UPLINK_SMTP_SERVER>
+  recipient_delimiter = +
+  smtpd_recipient_restrictions = reject_unverified_recipient
+  virtual_mailbox_domains = example.org
+  virtual_transport = lmtp:inet:localhost:1025
 
 The above configuration delivers all mails directed at the specified
 domain to the local LMTP service provided by grouprise.
