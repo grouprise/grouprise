@@ -31,7 +31,7 @@
                     {% if user.is_authenticated %}
                         <p class="dock-meta">
                             Du bist Mitglied in {{ user.gestalt.memberships.count }}
-                            Gruppen
+                            Gruppe{{ user.gestalt.memberships.count|pluralize:'n' }}
                         </p>
                     {% else %}
                         <p class="dock-meta">
