@@ -57,9 +57,15 @@ def url_for_user(model, user):
     return model.get_absolute_url_for_user(user)
 
 
+def _get_baseurl():
+    return '{proto}://{domain}'.format(
+            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
+            domain=sites_models.Site.objects.get_current().domain)
+
+
 @register.filter
 def html2text(html_text, preset='mail'):
-    text_maker = python_html2text.HTML2Text()
+    text_maker = python_html2text.HTML2Text(baseurl=_get_baseurl())
     text_maker.body_width = 0
     if preset == 'mail':
         text_maker.inline_links = False
@@ -76,7 +82,5 @@ def full_url(path):
     if HAS_HTTP_PROTOCOL_REGEX.match(path) is not None:
         # path already is an absolute URL
         return path
-    return '{proto}://{domain}{path}'.format(
-            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
-            domain=sites_models.Site.objects.get_current().domain,
-            path=path)
+    else:
+        return '{baseurl}{path}'.format(baseurl=_get_baseurl(), path=path)
