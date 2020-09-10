@@ -28,30 +28,18 @@ CSP_REPORT_URI = ("https://sentry.example.org/api/2/csp-report/?sentry_key=01234
 ```
 
 
-## Overriding Styles
+## Adding Scripts or Stylesheets
 
-FIXME: Revise this section after adding theming support.
-
-If you want to override styles or colors you can do that by adding
-a custom stylesheet. The easiest way to do this is to add the following line to your local configuration (or `/etc/grouprise/settings.py`):
+You may override any grouprise template. To do so, add something like the following line to `/etc/grouprise/settings.py`:
 
 ```python
-from core.assets import add_style_reference
-add_style_reference('stadt/custom.css')
+TEMPLATES[0]['DIRS'] += ['/var/www/mysite/templates/']
 ```
 
-This will add a stylesheet reference to `/stadt/static/stadt/custom.css`. On your local machine this matches the `$PROJECT_DIR/build/static/custom.css` path. On a production server you would add a configuraton to the webserver that creates an alias for the mentioned path to the local filesystem. A simple nginx example:
-
-```nginx
-location /stadt/static/stadt/custom.css {
-    alias /var/www/custom.css;
-}
-```
+For adding scripts or stylesheets the hook include `core/_head.html` is especially useful. Just add a file `core/_head.html` to your local template directory as defined by the line above and add local stylesheet and link definitions to that file. Don't forget to adjust the CSP directives as described in the previous section.
 
 Take a look at the next section about style variables to learn about easy style overrides with CSS variables.
 
-Note: Please refrain vom using the `add_style_inline` function from the `core.assets` module as it will break JavaScript-generated inline-styles in HTML.
- 
 
 ## Style Variables
 
