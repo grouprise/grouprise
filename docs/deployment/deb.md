@@ -27,9 +27,17 @@ Für einige Funktionen von grouprise wird weitere Software benötigt:
 
 ## grouprise installieren
 
-Das aktuelle stabile Release findest du unter [git.hack-hro.de](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tags).
+Die aktuellen Grouprise-deb-Pakete sind in folgendem Repository zu finden:
+```
+deb https://deb.grouprise.org/ unstable main
+```
 
-Installiere das deb-Paket mit `dpkg -i <paketname>`.
+Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigkeiten einige wenige
+*backports*-Pakete erforderlich.  Diese sind über die folgende Quelle zugänglich:
+
+```
+deb http://deb.debian.org/debian buster-backports main
+```
 
 
 ## Datenbank einrichten
