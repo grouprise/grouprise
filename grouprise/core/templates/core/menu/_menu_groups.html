@@ -30,8 +30,11 @@
                     <h3>Gruppen</h3>
                     {% if user.is_authenticated %}
                         <p class="dock-meta">
-                            Du bist Mitglied in {{ user.gestalt.memberships.count }}
-                            Gruppe{{ user.gestalt.memberships.count|pluralize:'n' }}
+                            Du bist
+                            <a href="{% url 'group-index' %}?only_with_membership=true">
+                                Mitglied in {{ user.gestalt.memberships.count }}
+                                Gruppe{{ user.gestalt.memberships.count|pluralize:'n' }}
+                            </a>
                         </p>
                     {% else %}
                         <p class="dock-meta">
