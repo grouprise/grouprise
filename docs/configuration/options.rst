@@ -50,8 +50,10 @@ General grouprise Settings
   ['all', 'grouprise', 'info', 'mail', 'noreply', 'postmaster', 'reply', 'stadt', 'webmaster', 'www']
 
 ``SCORE_CONTENT_AGE``
-  Age in days, after which activity counts as *not active*. Group ordering is based on
-  acitivity. Defaults to ``0``.
+  The ordering or groups and users in certain places is based on their activity.  The
+  ``SCORE_CONTENT_AGE`` settings limits, how old content may be in order to be included in the
+  calculation of this activity score.  Older content has no impact at all.
+  Defaults to ``100`` days.
 
 ``UPLOAD_MAX_FILE_SIZE``
   File size in MB to which uploads are restricted. Set the value allowed by the webserver to

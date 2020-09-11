@@ -12,7 +12,7 @@ from grouprise.features.groups import models as groups
 from grouprise.features.subscriptions import models as subscriptions
 
 
-MAX_SCORE_CONTENT_AGE_DAYS = settings.GROUPRISE.get('SCORE_CONTENT_AGE', 0)
+MAX_SCORE_CONTENT_AGE_DAYS = settings.GROUPRISE.get('SCORE_CONTENT_AGE', 100)
 
 
 class Gestalt:
