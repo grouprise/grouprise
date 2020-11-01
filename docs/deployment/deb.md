@@ -7,12 +7,18 @@ meisten Anwendungen der einfachste Weg sein.
 ## Pakete installieren
 
 Die aktuellen Grouprise-deb-Pakete sind in folgendem Repository zu finden:
-```
+```shell
 deb https://deb.grouprise.org/ unstable main
 ```
 
 Die obige Zeile kannst du in `/etc/apt/sources.list` eintragen.
-Aktualisiere anschließend den Paketindex via `apt update`.
+
+Importiere anschließend den Repository-Schlüssel in deinen lokalen apt-Schlüsselring:
+```shell
+wget -O /etc/apt/trusted.gpg.d/deb.grouprise.org.asc https://deb.grouprise.org/keys/repository.asc
+```
+
+Nun kannst du den Paketindex via `apt update` aktualisieren.
 
 Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigkeiten einige wenige
 *backports*-Pakete erforderlich.  Diese sind in der folgende Quelle zugänglich:
