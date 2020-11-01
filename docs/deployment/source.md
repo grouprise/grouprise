@@ -1,6 +1,7 @@
-# grouprise Deployment (Version 2.X.X)
+# Installation aus den Quellen
 
-Idealerweise kannst du grouprise via deb-Paket installieren. Falls das nicht geht, hilft dir die folgende Anleitung.
+In den meisten Fällen möchtest du grouprise als [deb-Paket installieren](deployment/deb.md).
+Falls dies nicht möglich sein sollte oder du spezielle Anforderungen haben solltest, dann folge der untenstehenden Beschreibung zur Installation aus den Quellen.
 
 
 ## Abhängigkeiten installieren
@@ -12,7 +13,7 @@ Folgende Software wird benötigt:
 * `virtualenv`
 * `nodejs`
 
-Ein passendes DBMS, wir empfehlen `postgresql` mit Python-Bindings (`python3-psycopg2`).
+Hinzu kommt ein passendes DBMS, wir empfehlen `postgresql` mit Python-Bindings (`python3-psycopg2`).
 
 Außerdem verwenden wir in dieser Anleitung eine Konfiguration mit UWSGI und Nginx:
 
@@ -47,7 +48,7 @@ make
 
 ## Konfigurationsdatei installieren
 
-Kopiere die [Beispieldatei](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tree/master/docs/deployment/settings.py) nach `/etc/grouprise/settings.py`. Passe die Einstellungen an.
+Kopiere die [Beispieldatei](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tree/master/grouprise/settings.py.production) nach `/etc/grouprise/settings.py`. Passe die Einstellungen an.
 
 Falls du PostgreSQL verwendest, helfen dir die folgenden Zeilen beim Einrichten der Datenbank:
 
@@ -56,13 +57,13 @@ CREATE USER grouprise WITH PASSWORD 'xxxxx';
 CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER grouprise;
 ```
 
-(Dafür muss das Locale `de_DE.UTF8` für PostgreSQL installiert sein.)
+Eventuell musst du zuvor das Locale `de_DE.UTF8` aktivieren: `dpkg-reconfigure locales`.
 
-Nun kannst du einen Link setzen, damit grouprise die Konfiguration findet und die Datenbank initialisieren:
+Nun kannst du einen Link setzen, damit grouprise die Konfiguration findet und die Datenbank initialisiert:
 
 ```bash
 cd /usr/local/share/grouprise
-ln -s /etc/grouprise/settings.py stadt/settings/local.py
+ln -s /etc/grouprise/settings.py grouprise/settings/local.py
 python manage.py migrate
 ```
 
@@ -72,7 +73,7 @@ Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org
 python manage.py runserver 0.0.0.0:8000
 ```
 
-(Wenn du in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
+(Wenn du temporär in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
 
 
 ## UWSGI und Nginx einrichten

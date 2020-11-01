@@ -1,39 +1,21 @@
-# grouprise Deployment mit deb-Paket (Version 2.4.x)
+# Installation mittels deb-Paket
 
-Idealerweise kannst du grouprise via deb-Paket installieren.
-
-
-## Abhängigkeiten installieren
-
-Folgende Software wird benötigt:
-
-* `python3`
-* `pip`
-* `virtualenv`
-* `nodejs`
-
-Ein passendes DBMS, wir empfehlen `postgresql` mit Python-Bindings (`python3-psycopg2`).
-
-Außerdem verwenden wir in dieser Anleitung eine Konfiguration mit UWSGI und Nginx:
-
-* `uwsgi`
-* `uwsgi-plugin-python3`
-* `nginx`
-
-Für einige Funktionen von grouprise wird weitere Software benötigt:
-
-* `python3-xapian` (für die Suchfunktion)
+Die Installation von grouprise mit Hilfe der deb-Pakete, die wir bereitstellen, dürfte für die
+meisten Anwendungen der einfachste Weg sein.
 
 
-## grouprise installieren
+## Pakete installieren
 
 Die aktuellen Grouprise-deb-Pakete sind in folgendem Repository zu finden:
 ```
 deb https://deb.grouprise.org/ unstable main
 ```
 
+Die obige Zeile kannst du in `/etc/apt/sources.list` eintragen.
+Aktualisiere anschließend den Paketindex via `apt update`.
+
 Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigkeiten einige wenige
-*backports*-Pakete erforderlich.  Diese sind über die folgende Quelle zugänglich:
+*backports*-Pakete erforderlich.  Diese sind in der folgende Quelle zugänglich:
 
 ```
 deb http://deb.debian.org/debian buster-backports main
@@ -49,9 +31,9 @@ CREATE USER grouprise WITH PASSWORD 'xxxxx';
 CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER grouprise;
 ```
 
-(Dafür muss das Locale `de_DE.UTF8` für PostgreSQL installiert sein.)
+Eventuell musst du zuvor das Locale `de_DE.UTF8` aktivieren: `dpkg-reconfigure locales`.
 
-Trage die Angaben zur Datenbank in `/etc/stadtgestalten/settings.py` ein. Ändere dort auch alle anderen Angaben entsprechend. Ein weiteres Beispiel für eine Deployment-Konfiguration findest du [im Repository](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tree/master/docs/deployment/settings.py).
+Trage die Angaben zur Datenbank in `/etc/grouprise/settings.py` ein. Ändere dort auch alle anderen Angaben entsprechend. Ein weiteres Beispiel für eine Deployment-Konfiguration findest du [im Repository](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tree/master/grouprise/settings.py.production).
 
 Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org:8000`):
 
@@ -59,7 +41,7 @@ Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org
 stadtctl runserver 0.0.0.0:8000
 ```
 
-(Wenn du in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
+(Wenn du temporär in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
 
 
 ## UWSGI und Nginx einrichten
@@ -67,8 +49,3 @@ stadtctl runserver 0.0.0.0:8000
 Nun musst du grouprise nur noch via Webserver verfügbar machen. Eine UWSGI-Konfiguration ist bereits installiert. Aktiviere sie mit `ln -s ../apps-available/stadtgestalten.ini /etc/uwsgi/apps-enabled`. Nun kannst du UWSGI mit `service uwsgi restart` neustarten.
 
 Kopiere anschließend die Datei `/usr/share/doc/stadtgestalten/examples/nginx.conf` nach `/etc/nginx/sites-available/stadtgestalten`. Passe den Hostnamen an. Nun nur noch die Konfiguration aktivieren (`ln -s ../sites-available/stadtgestalten /etc/nginx/sites-enabled/stadtgestalten`) und den Webserver neustarten (`service nginx restart`). Yeah!
-
-
-## Weitere Dienste einrichten
-
-Für einige Funktionen werden weitere Dienste benötigt. Anleitung folgt.

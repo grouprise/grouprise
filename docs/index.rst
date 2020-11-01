@@ -6,6 +6,7 @@ grouprise Documentation
    :caption: Contents:
    :includehidden:
 
+   deployment/index
    configuration/options
    configuration/assets
    database/index
