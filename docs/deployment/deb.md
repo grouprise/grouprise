@@ -23,9 +23,15 @@ Nun kannst du den Paketindex via `apt update` aktualisieren.
 Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigkeiten einige wenige
 *backports*-Pakete erforderlich.  Diese sind in der folgende Quelle zugänglich:
 
-```
+```shell
 deb http://deb.debian.org/debian buster-backports main
 ```
+
+Paket installieren:
+```shell
+apt install grouprise python3-django-filters/buster-backports
+```
+
 
 
 ## Datenbank einrichten
