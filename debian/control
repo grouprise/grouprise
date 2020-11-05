@@ -8,6 +8,9 @@ Build-Depends:
  dh-python,
  nodejs,
  python3-flake8,
+# stemmer is only relevant for sphinx in Buster
+ python3-stemmer,
+# switch to "sphinx" for Debian Bullseye or later
  python3-sphinx,
  wget,
 # These should be kept in sync with the dependencies of all
