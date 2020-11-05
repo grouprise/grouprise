@@ -27,3 +27,7 @@ ci_image_push:
 ci_docker_login:
 	@echo "Login credentials correspond to those of your GitLab account"
 	docker login "$(DOCKER_REGISTRY)"
+
+.PHONY: ci_docker_logout
+ci_docker_logout:
+	docker logout "$(DOCKER_REGISTRY)"
