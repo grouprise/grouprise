@@ -57,7 +57,7 @@ The following variables are supported:
  
 ### CSS Example
 
-```css
+```
 :root {
     --color-primary: red;
     --color-primary-dark: crimson;
