@@ -43,7 +43,7 @@ Take a look at the next section about style variables to learn about easy style 
 
 ## Style Variables
 
-To ease the process of overriding styles, grouprise supports CSS variables where applicable. CSS variables are a nice thing because with a single rule you can override a setting on the entire platform. Please mind that support for these type of variables is a browser feature and rather new, so you may still want to override individual styles depending on your target audience. 
+To ease the process of overriding styles, grouprise supports CSS variables where applicable. CSS variables are a nice thing because with a single rule you can override a setting on the entire platform. Please mind that support for these type of variables is a browser feature and rather new, so you may still want to override individual styles depending on your target audience.
 
 ### Supported Variables
 
@@ -54,7 +54,7 @@ The following variables are supported:
 
 `-color-primary-dark`
  : used for active states where `--color-primary` is used. if you override `--color-primary` you want to override this variable.
- 
+
 ### CSS Example
 
 ```

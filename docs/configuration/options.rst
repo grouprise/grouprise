@@ -43,7 +43,7 @@ General grouprise Settings
   A list of claims. A random claim is displayed for each request. The default ist ``[]``.
 
 ``ENTITY_SLUG_BLACKLIST``
-  A list of reserved slugs for users and groups that cannot be chosen by users. Exclude slugs 
+  A list of reserved slugs for users and groups that cannot be chosen by users. Exclude slugs
   that you want to use as mail addresses or subdomains. You should include ``'stadt'`` which
   is the root namespace used by grouprise URLs. Defaults to::
 
