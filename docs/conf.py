@@ -162,8 +162,16 @@ epub_title = project
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
 
-source_suffix = {
+
+# determine the supported markdown parser interface
+import recommonmark.parser
+if hasattr(recommonmark.parser.CommonMarkParser, 'setup_sections'):
+    # recommonmark v0.6 or later (since Debian Bullseye) supports sphinx's new parser interface
+    source_suffix = {
         '.rst': 'restructuredtext',
-        '.txt': 'markdown',
         '.md': 'markdown',
-}
+    }
+else:
+    # recommonmark before v0.6.0 (e.g. Debian Buster) uses sphinx's older parser interface
+    source_parsers = {'.md': recommonmark.parser.CommonMarkParser}
+    source_suffix = ['.rst', '.md']
