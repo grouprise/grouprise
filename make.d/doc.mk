@@ -11,14 +11,10 @@ build: doc
 
 .PHONY: install-doc
 install-doc: doc
-	mkdir -p "$(DESTDIR)/usr/share/doc/grouprise/html"
-	cp "$(DIR_BUILD_DOC)"/html/*.html \
-		"$(DIR_BUILD_DOC)"/html/*.js \
-		"$(DESTDIR)/usr/share/doc/grouprise/html/"
-	cp -r "$(DIR_BUILD_DOC)"/html/configuration \
-		"$(DIR_BUILD_DOC)"/html/database \
-		"$(DIR_BUILD_DOC)"/html/_static \
-		"$(DESTDIR)/usr/share/doc/grouprise/html/"
+	cd "$(DIR_BUILD_DOC)/html" \
+		&& { find -type f -name "*.html" -or -name "*.js"; find _static -type f; } \
+			| sort | uniq | while read -r fname; do \
+				install -D --target-directory "$(abspath $(DESTDIR))/usr/share/doc/grouprise/html/$$(dirname "$$fname")" "$$fname"; done
 
 
 install: install-doc
