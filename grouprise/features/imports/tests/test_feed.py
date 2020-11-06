@@ -41,7 +41,8 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
 
     def _get_now(self):
         tz = django.utils.timezone.get_current_timezone()
-        return datetime.datetime.now(tz=tz)
+        # remove microseconds, since sqlite uses stores only seconds
+        return datetime.datetime.now(tz=tz).replace(microsecond=0)
 
     def _get_feed_content(self, **kwargs):
         data = dict(self.FEED_DEFAULTS)
@@ -55,15 +56,13 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
     def test_content(self):
         now = self._get_now()
         import_from_feed(self._get_feed_content(date=now), self.gestalt, self.group)
-        # TODO: check timezone correctness ("hour" is omitted below)
+        # compare date and time (timezone aware) separately in order to ignore different timezones
+        now_utc = now.astimezone(datetime.timezone.utc)
         self.assertExists(
             associations.Association,
             content__title="First Title",
-            content__versions__time_created__year=now.year,
-            content__versions__time_created__month=now.month,
-            content__versions__time_created__day=now.day,
-            content__versions__time_created__minute=now.minute,
-            content__versions__time_created__second=now.second,
+            content__versions__time_created__date=now_utc.date(),
+            content__versions__time_created__time=now_utc.time(),
         )
 
     def test_ignore_duplicates(self):
