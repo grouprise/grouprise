@@ -4,6 +4,7 @@ set -eu
 
 PKG_USER="_grouprise"
 PKG_GROUP="_grouprise"
+DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
@@ -24,6 +25,10 @@ if [ "$1" = "configure" ]; then
 
     if ! grep -q '^MEDIA_ROOT\b' /etc/grouprise/settings.py; then
         echo "MEDIA_ROOT = '$DIR_MEDIA'" >>/etc/grouprise/settings.py
+    fi
+
+    if ! grep -q '^ *["'"'"']BACKUP_PATH["'"'"']' /etc/grouprise/settings.py; then
+        sed "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUP'," /etc/grouprise/settings.py
     fi
 
     if ! getent group "$PKG_GROUP" >/dev/null; then
