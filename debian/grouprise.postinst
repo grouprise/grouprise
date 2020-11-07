@@ -18,7 +18,7 @@ if [ "$1" = "configure" ]; then
     sed -i "s/^SECRET_KEY = ''$/SECRET_KEY = '$new_secret_key'/" /etc/grouprise/settings.py
 
     # configure the directory for static ressources (assembled during postinst)
-    if ! grep -q "^STATIC_ROOT" /etc/grouprise/settings.py; then
+    if ! grep -q '^STATIC_ROOT\b' /etc/grouprise/settings.py; then
         echo "STATIC_ROOT = '$DIR_STATIC'" >>/etc/grouprise/settings.py
     fi
 
