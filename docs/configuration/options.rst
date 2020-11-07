@@ -130,6 +130,15 @@ string to the end of the URL (like `?v=1`).
   absolute URL if you override this logo as it will be used by external services
   to reference your site.
 
+
+System / hosting
+----------------
+
+``BACKUP_PATH``
+  Backups are created automatically during [package upgrades](../deployment/deb.md) in this
+  directory.
+
+
 Other Options
 =============
 
