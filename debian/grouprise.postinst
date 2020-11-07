@@ -22,6 +22,10 @@ if [ "$1" = "configure" ]; then
         echo "STATIC_ROOT = '$DIR_STATIC'" >>/etc/grouprise/settings.py
     fi
 
+    if ! grep -q '^MEDIA_ROOT\b' /etc/grouprise/settings.py; then
+        echo "MEDIA_ROOT = '$DIR_MEDIA'" >>/etc/grouprise/settings.py
+    fi
+
     if ! getent group "$PKG_GROUP" >/dev/null; then
         # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
         addgroup --quiet --system --force-badname "$PKG_GROUP"
