@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 User=_grouprise
 Group=_grouprise
-ExecStart=/usr/bin/grouprisectl run_lmtpd 127.0.0.1 1025
+ExecStart=/usr/bin/grouprisectl run_lmtpd localhost 1025
 Restart=on-failure
 
 [Install]
