@@ -43,7 +43,8 @@ CREATE USER grouprise WITH PASSWORD 'xxxxx';
 CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER grouprise;
 ```
 
-Eventuell musst du zuvor das Locale `de_DE.UTF8` aktivieren: `dpkg-reconfigure locales`.
+Die Angabe von `LC_COLLATE` und `LC_CTYPE` sind beispielsweise für die korrekte alphabetische Sortierung von Zeichenketten mit Umlauten relevant.
+Eventuell musst du zuvor das Locale `de_DE.UTF8` via `dpkg-reconfigure locales` auf dem Datenbank-Host aktivieren (und bei Bedarf den PostgreSQL-Server neustarten).
 
 Trage die Angaben zur Datenbank in `/etc/grouprise/settings.py` ein. Ändere dort auch alle anderen Angaben entsprechend. Ein weiteres Beispiel für eine Deployment-Konfiguration findest du [im Repository](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tree/master/grouprise/settings.py.production).
 
