@@ -27,9 +27,9 @@ Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigk
 deb http://deb.debian.org/debian buster-backports main
 ```
 
-Paket installieren:
+Pakete installieren:
 ```shell
-apt install grouprise python3-django-filters/buster-backports
+apt install grouprise python3-django/buster-backports python3-django-filters/buster-backports
 ```
 
 
