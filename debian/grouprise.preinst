@@ -12,9 +12,9 @@ CTL_TOOL=$(which grouprisectl stadtctl | head -1)
 
 if getent passwd "$PKG_USER" >/dev/null && getent group "$PKG_GROUP" >/dev/null; then
     # adjust ownership and permissions of backup directory (keeping local modifications)
-    if [ "$(stat --format="%u:%g:%a" "$DIR_BACKUP")" = "0:0:755" ]; then
-        chown "$PKG_USER:$PKG_GROUP" "$DIR_BACKUP"
-        chmod 750 "$DIR_BACKUP"
+    if [ "$(stat --format="%u:%g:%a" "$DIR_BACKUPS")" = "0:0:755" ]; then
+        chown "$PKG_USER:$PKG_GROUP" "$DIR_BACKUPS"
+        chmod 750 "$DIR_BACKUPS"
     fi
 
     if [ -e "$UWSGI_APP_SYMLINK" ]; then
