@@ -28,6 +28,8 @@ override_dh_install:
 	    $(RM) -r build/venv/lib/python*/site-packages/$$module/; \
 	    $(RM) -r build/venv/lib/python*/site-packages/$$module-*.dist-info/; \
 	done
+	# override the base data directory (otherwise it would be somewhere below /usr/share/grouprise)
+	sed -i "s#^BASE_DIR = .*#BASE_DIR = '/var/lib/grouprise'#" debian/tmp/usr/share/grouprise/grouprise/common_settings.py
 	# process the debian/*.install files
 	dh_install
 
