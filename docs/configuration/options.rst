@@ -146,3 +146,7 @@ Other Options
   Used to generate links sent via email. Defaults to ``'http'``. You probably want to set it
   to ``'https'``.
 
+``HAYSTACK_XAPIAN_LANGUAGE``
+  The language used by the [Xapian](https://xapian.org/) indexer database (used for search
+  operations).  The full list of supported languages is provided in the
+  [Xapian documentation](https://xapian.org/docs/apidoc/html/classXapian_1_1Stem.html).
