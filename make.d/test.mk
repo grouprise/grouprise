@@ -2,13 +2,18 @@ LINT_PKG_IGNORE_GLOBAL = -path "./debian/*" -o -path "./build/*" -o -path "./.py
 	-o -path "./.venv/*" -o -path "./gitlab-ci-build-venv/*" -o -path "./docs/*"
 LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT_PKG_IGNORE_GLOBAL) \) -print0 | \
 	xargs -0 -n1 dirname | sort | uniq)
+SHELL_SCRIPTS = $(shell find debian/ -maxdepth 1 -type f -executable | grep -v debian/rules)
 
 .PHONY: lint
-lint: lint_js lint-python lint_packages
+lint: lint_js lint_packages lint-python lint_shell
 
 .PHONY: lint_js
 lint_js: $(STAMP_NODE_MODULES) $(BIN_NPM)
 	$(RUN_NODE) "$(BIN_NPM)" run lint
+
+.PHONY: lint_shell
+lint_shell:
+	shellcheck -s dash $(SHELL_SCRIPTS)
 
 .PHONY: lint_packages
 lint_packages:

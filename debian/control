@@ -14,6 +14,7 @@ Build-Depends:
  python3-sphinx,
 # "wheel" is required for makefilet
  python3-wheel,
+ shellcheck,
  wget,
 # These should be kept in sync with the dependencies of all
 # related binary packages.
