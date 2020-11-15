@@ -8,6 +8,8 @@ DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
+DIR_MEDIA="/var/lib/grouprise/media"
+DIR_STATIC="/var/lib/grouprise/static"
 UWSGI_APP_SYMLINK="/etc/uwsgi/apps-enabled/grouprise.ini"
 
 
@@ -19,6 +21,14 @@ if [ "$1" = "configure" ]; then
     # configure the directory for static ressources (assembled during postinst)
     if ! grep -q '^STATIC_ROOT\b' /etc/grouprise/settings.py; then
         echo "STATIC_ROOT = '$DIR_STATIC'" >>/etc/grouprise/settings.py
+    fi
+
+    if ! grep -q '^MEDIA_ROOT\b' /etc/grouprise/settings.py; then
+        echo "MEDIA_ROOT = '$DIR_MEDIA'" >>/etc/grouprise/settings.py
+    fi
+
+    if ! grep -q '^ *["'"'"']BACKUP_PATH["'"'"']' /etc/grouprise/settings.py; then
+        sed "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," /etc/grouprise/settings.py
     fi
 
     if ! getent group "$PKG_GROUP" >/dev/null; then
@@ -53,6 +63,9 @@ if [ "$1" = "configure" ]; then
 
     mkdir -p "$DIR_LOGS"
     chown "$PKG_USER:adm" "$DIR_LOGS"
+
+    mkdir -p "$DIR_MEDIA" "$DIR_STATIC"
+    chown "$PKG_USER:$PKG_GROUP" "$DIR_MEDIA" "$DIR_STATIC"
 
     # assemble static assets after an update of the grouprise package
     grouprisectl collectstatic --no-input
