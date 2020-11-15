@@ -1,0 +1,17 @@
+Override the base data directory
+
+Otherwise data storage location would default to /usr/lib/grouprise/python-lib/.
+
+diff --git a/grouprise/common_settings.py b/grouprise/common_settings.py
+index 0b0a6ac3..c1cdecde 100644
+--- a/grouprise/common_settings.py
++++ b/grouprise/common_settings.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
++BASE_DIR = '/var/lib/grouprise'
+ 
+ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+ 
