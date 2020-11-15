@@ -1,4 +1,5 @@
 import datetime
+import logging
 import re
 import ssl
 import time
@@ -18,6 +19,8 @@ from grouprise.features.gestalten import models as gestalten
 from grouprise.features.groups import models as groups
 from grouprise.features.imports import models
 
+
+logger = logging.getLogger(__name__)
 
 FEED_RE = (
         r'<link\s+[^>]*'
@@ -83,12 +86,16 @@ class Command(django.core.management.base.BaseCommand):
         author = gestalten.Gestalt.objects.get(
             id=settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID'))
         for group in groups.Group.objects.filter(url_import_feed=True):
-            try:
-                response = requests.get(group.url, headers={'User-Agent': 'grouprise'})
-            except (requests.exceptions.ChunkedEncodingError,
-                    requests.exceptions.ConnectionError):
-                pass
+            if group.url:
+                try:
+                    response = requests.get(group.url, headers={'User-Agent': 'grouprise'})
+                except (requests.exceptions.ChunkedEncodingError,
+                        requests.exceptions.ConnectionError):
+                    pass
+                else:
+                    feed_url = parse_feed_url_from_website_content(response.text)
+                    if feed_url:
+                        import_from_feed(feed_url, author, group)
             else:
-                feed_url = parse_feed_url_from_website_content(response.text)
-                if feed_url:
-                    import_from_feed(feed_url, author, group)
+                logger.warning(
+                    "Skipping feed import due to missing source URL for group '%s'", group)
