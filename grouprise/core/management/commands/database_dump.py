@@ -1,8 +1,8 @@
 import getpass
 import datetime
-import gzip
 import os
-from subprocess import check_call, CalledProcessError
+import subprocess
+
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
@@ -62,29 +62,64 @@ class Command(BaseCommand):
         output_filename = create_filename(output_dir, prefix, output_file, suffix=".gz")
 
         if engine == 'sqlite3':
-            try:
-                output_file = gzip.GzipFile(output_filename, 'wb')
-            except FileNotFoundError as err:
-                raise CommandError('Failed to create dump output file: {}'
-                                   .format(output_filename)) from err
-            try:
-                check_call(['sqlite3', db['NAME'], '.dump'], stdout=output_file)
-            except (FileNotFoundError, CalledProcessError) as err:
-                output_file.close()
-                os.unlink(output_filename)
-                if isinstance(err, FileNotFoundError):
-                    raise CommandError('missing the sqlite3 binary. please install it') from err
-                else:
-                    raise CommandError('Failed to create database dump.') from err
+            dump_call = ('sqlite3', db['NAME'], '.dump')
         elif engine in {'postgresql', 'postgis'}:
-            try:
-                check_call(['pg_dump', '--no-owner', '--no-privileges', '--compress=9',
-                            '--file', output_filename, create_psql_uri(db)], cwd="/")
-            except FileNotFoundError as err:
-                raise CommandError('missing the pg_dump binary. please install it') from err
+            dump_call = ('pg_dump', '--no-owner', '--no-privileges', create_psql_uri(db))
         else:
             raise CommandError('database backup not supported with %s engine' % engine)
-
+        try:
+            with open(output_filename, 'wb') as dump_out:
+                try:
+                    dump_proc = subprocess.Popen(
+                            dump_call, cwd="/", stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                except FileNotFoundError:
+                    raise CommandError(
+                        'executable "{}" seems to be missing'.format(dump_call[0]))
+                # compress the output
+                # Sadly we cannot use the gzip module for on-the-fly compression
+                # (e.g. "gzip.open"), since subprocess.Popen would write directly to the underlying
+                # file handle instead of using the "write" method of the Gzip object.
+                # See https://stackoverflow.com/questions/7452427/
+                # Thus we need to handle two processes running in parallel.
+                try:
+                    compress_proc = subprocess.Popen(
+                            ['gzip'], cwd="/",
+                            stdin=dump_proc.stdout, stdout=dump_out, stderr=subprocess.PIPE)
+                except FileNotFoundError:
+                    raise CommandError('executable "gzip" seems to be missing')
+                # wait until either one process aborts or both succeed
+                while not ((compress_proc.returncode == 0) and (dump_proc.returncode == 0)):
+                    try:
+                        if dump_proc.wait(0.1) != 0:
+                            break
+                    except subprocess.TimeoutExpired:
+                        pass
+                    try:
+                        if compress_proc.wait(0.1) != 0:
+                            break
+                    except subprocess.TimeoutExpired:
+                        pass
+                # in case of failure: kill the other remaining process
+                dump_proc.terminate()
+                compress_proc.terminate()
+                # check whether one of the processes failed (ignoring "None", due to "terminate")
+                if (compress_proc.returncode is not None) and (compress_proc.returncode != 0):
+                    # compression failed
+                    error_message = compress_proc.stderr.read().decode()
+                    raise CommandError(
+                            "Failed to write compressed file: {}".format(error_message))
+                if (dump_proc.returncode is not None) and (dump_proc.returncode != 0):
+                    # database dump failed
+                    error_message = dump_proc.stderr.read().decode()
+                    raise CommandError(
+                        'Failed to dump database via {}: {}'.format(dump_call[0], error_message))
+        except FileNotFoundError:
+            raise CommandError(
+                'Failed to create dump output file: {}'.format(output_filename))
+        except CommandError:
+            os.unlink(output_filename)
+            raise
         self.stdout.write(
             self.style.SUCCESS('Successfully created database backup in "%s"' % output_filename)
         )
