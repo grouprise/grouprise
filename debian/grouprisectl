@@ -13,9 +13,9 @@ if [ "$(id -nu)" = "$GROUPRISE_USER" ]; then
         PYTHONPATH=$EXTRA_PYTHON_PATHS:$PYTHONPATH
     fi
     export PYTHONPATH
-    python3 "$MANAGE_BIN" "$@"
+    exec python3 "$MANAGE_BIN" "$@"
 elif [ "$(id -u)" = 0 ]; then
-    su -s "$0" "$GROUPRISE_USER" -- "$@"
+    exec su -s "$0" "$GROUPRISE_USER" -- "$@"
 else
     echo "please run $(basename "$0") as root or '$GROUPRISE_USER'" >&2
     exit 1
