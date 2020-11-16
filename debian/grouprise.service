@@ -3,6 +3,8 @@ Description=grouprise huey consumer
 
 [Service]
 Type=simple
+User=_grouprise
+Group=_grouprise
 ExecStart=/usr/bin/grouprisectl run_huey -w 2
 
 [Install]
