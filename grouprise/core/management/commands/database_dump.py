@@ -1,15 +1,17 @@
 import getpass
 import datetime
+import gzip
 import os
 from subprocess import check_call, CalledProcessError
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-def create_filename(directory, prefix, filename=None):
-    return os.path.abspath(os.path.join(directory, '{prefix}{filename}'.format(**{
+def create_filename(directory, prefix, filename=None, suffix=''):
+    return os.path.abspath(os.path.join(directory, '{prefix}{filename}{suffix}'.format(**{
         'prefix': '{}_'.format(prefix) if prefix else '',
-        'filename': filename or datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '.sql'
+        'filename': filename or datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '.sql',
+        'suffix': suffix,
     })))
 
 
@@ -57,11 +59,11 @@ class Command(BaseCommand):
         output_file = options.get('output_file')
         db = settings.DATABASES['default']
         engine = db['ENGINE'].split('.')[-1]
-        output_filename = create_filename(output_dir, prefix, output_file)
+        output_filename = create_filename(output_dir, prefix, output_file, suffix=".gz")
 
         if engine == 'sqlite3':
             try:
-                output_file = open(output_filename, 'wb')
+                output_file = gzip.GzipFile(output_filename, 'wb')
             except FileNotFoundError as err:
                 raise CommandError('Failed to create dump output file: {}'
                                    .format(output_filename)) from err
@@ -76,8 +78,8 @@ class Command(BaseCommand):
                     raise CommandError('Failed to create database dump.') from err
         elif engine in {'postgresql', 'postgis'}:
             try:
-                check_call(['pg_dump', '--no-owner', '--no-privileges', '-f', output_filename,
-                            create_psql_uri(db)], cwd="/")
+                check_call(['pg_dump', '--no-owner', '--no-privileges', '--compress=9',
+                            '--file', output_filename, create_psql_uri(db)], cwd="/")
             except FileNotFoundError as err:
                 raise CommandError('missing the pg_dump binary. please install it') from err
         else:
