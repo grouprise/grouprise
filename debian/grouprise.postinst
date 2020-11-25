@@ -8,6 +8,8 @@ DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
+DIR_MEDIA="/var/lib/grouprise/media"
+DIR_STATIC="/var/lib/grouprise/static"
 UWSGI_APP_SYMLINK="/etc/uwsgi/apps-enabled/grouprise.ini"
 
 
@@ -52,6 +54,9 @@ if [ "$1" = "configure" ]; then
 
     mkdir -p "$DIR_LOGS"
     chown "$PKG_USER:adm" "$DIR_LOGS"
+
+    mkdir -p "$DIR_MEDIA" "$DIR_STATIC"
+    chown "$PKG_USER:$PKG_GROUP" "$DIR_MEDIA" "$DIR_STATIC"
 
     # assemble static assets after an update of the grouprise package
     grouprisectl collectstatic --no-input

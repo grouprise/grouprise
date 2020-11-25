@@ -7,6 +7,7 @@ PKG_GROUP="_grouprise"
 DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
+DIR_STATIC="/var/lib/grouprise/static"
 UWSGI_APP_SYMLINK="/etc/uwsgi/apps-enabled/grouprise.ini"
 
 
@@ -32,6 +33,7 @@ elif [ "$1" = "purge" ]; then
     rm -rf "$DIR_ETC"
     rm -rf "$DIR_HOME"
     rm -rf "$DIR_LOGS"
+    rm -rf "$DIR_STATIC"
 fi
 
 set +eu
