@@ -1,6 +1,6 @@
 # Installation aus den Quellen
 
-In den meisten Fällen möchtest du grouprise als [deb-Paket installieren](deployment/deb.md).
+In den meisten Fällen möchtest du grouprise als [deb-Paket installieren](./deb.md).
 Falls dies nicht möglich sein sollte oder du spezielle Anforderungen haben solltest, dann folge der untenstehenden Beschreibung zur Installation aus den Quellen.
 
 
