@@ -8,9 +8,6 @@ Authentication
     external_providers
 
 
-Overview
---------
-
 *grouprise* offers all authentication features provided by
 `Django <https://docs.djangoproject.com/en/dev/topics/auth/customizing/>`_
 (e.g. internal database, LDAP or others).
