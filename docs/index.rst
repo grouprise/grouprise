@@ -10,4 +10,5 @@ grouprise Documentation
    configuration/options
    configuration/assets
    database/index
+   authentication/index
    upgrading
