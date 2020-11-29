@@ -92,6 +92,7 @@ html_theme = 'alabaster'
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'grouprisedoc'
+html_logo = 'logo.png'
 
 
 # -- Options for LaTeX output ------------------------------------------------
