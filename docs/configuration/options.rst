@@ -173,3 +173,15 @@ Other Options
   The language used by the `Xapian <https://xapian.org/>`_ indexer database (used for search
   operations).  The full list of supported languages is provided in the
   `Xapian documentation <https://xapian.org/docs/apidoc/html/classXapian_1_1Stem.html>`_.
+
+``HUEY``
+
+  grouprise uses `huey <https://huey.readthedocs.io/en/latest/index.html>`_ for tasks to be
+  executed independent from HTTP requests (e.g. sending emails). By default a local
+  `redis <https://redis.io/>`_ instance is used. Alternative storage methods can be
+  `configured <https://huey.readthedocs.io/en/latest/contrib.html#django>`_, e.g.::
+
+    HUEY = {
+        'huey_class': 'huey.SqliteHuey',
+        'filename': '/var/lib/grouprise/huey.sqlite',
+    }
