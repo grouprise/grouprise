@@ -2,6 +2,11 @@
 Configuration Options
 *********************
 
+Various details of grouprise can be configured in the ``settings.py`` file (e.g. ``/etc/grouprise/settings.py``).
+Any generic `Django setting <https://docs.djangoproject.com/en/stable/ref/settings/>`_ may be specified.
+Additionally grouprise-specific settings can be added to the ``GROUPRISE`` dictionary.
+
+
 Django Options
 ==============
 
