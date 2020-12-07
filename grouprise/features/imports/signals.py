@@ -178,7 +178,7 @@ class ParsedMailMessage(collections.namedtuple(
         if from_address is None:
             from_address = email_obj.get('From')
         if email_obj.is_multipart():
-            body_part = email_obj.get_body(preferencelist=('html', 'text'))
+            body_part = email_obj.get_body(preferencelist=('html', 'plain'))
             if body_part is None:
                 body_part = email_obj
             attachments = tuple(
