@@ -19,7 +19,7 @@ if [ "$1" = "configure" ]; then
     sed -i "s/^SECRET_KEY = ''$/SECRET_KEY = '$new_secret_key'/" /etc/grouprise/settings.py
 
     if ! grep -q '^ *["'"'"']BACKUP_PATH["'"'"']' /etc/grouprise/settings.py; then
-        sed "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," /etc/grouprise/settings.py
+        sed -i "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," /etc/grouprise/settings.py
     fi
 
     if ! getent group "$PKG_GROUP" >/dev/null; then
