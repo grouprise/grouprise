@@ -39,7 +39,7 @@ test_expect_success "configure nginx site" '
   cat >/etc/nginx/sites-enabled/grouprise <<EOF
 server {
   listen '"$HTTP_SOCKET"';
-  include /usr/share/doc/grouprise/examples/nginx.conf;
+  include snippets/grouprise.conf;
 }
 EOF
   # avoid using port 80 (only relevant if the test does not run in a separate network environment)
