@@ -152,6 +152,17 @@ Description: Web platform that enables social action and solidarity
  pre-packaged python virtual environment (venv) for running the
  grouprise application.
 
+Package: element-web-installer
+Architecture: all
+Depends:
+ curl,
+ gpg,
+ moreutils,
+Suggests: httpd
+Description: Installer for the Matrix web client Element
+ Download the Element web client and keep it updated.
+ Local configuration is applied automatically.
+
 Package: stadtgestalten
 Architecture: any
 Depends: grouprise

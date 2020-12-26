@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+debian/element-web-installer.README_configuration => /etc/element-web/README
+debian/element-web-installer.bin => /usr/bin/element-web-installer
+debian/element-web-installer.release-key.asc => /usr/share/element-web-installer/release-key.asc

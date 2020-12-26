@@ -1,0 +1,139 @@
+#!/bin/sh
+#
+# Download, verify and extract a release of the element-web client.
+#
+# License: GPLv3 or later
+#
+
+set -eu
+
+
+DOWNLOAD_BASE_URL=https://github.com
+DOWNLOAD_PROJECT_URL_PATH=vector-im/element-web
+DOWNLOAD_APP_NAME=element
+# source: https://packages.riot.im/riot-release-key.gpg
+# Retrieve key and apply ascii armor packaging:
+#   keyring=$(mktemp) && touch "$keyring" && curl -s "https://packages.riot.im/riot-release-key.gpg" | gpg --no-default-keyring --keyring "$keyring" --import && gpg --no-default-keyring --keyring "$keyring" --armor --export >debian/element-web-installer.release-key.asc && rm -f "$keyring"
+SIGNING_KEY_PATH=${SIGNING_KEY_PATH:-/usr/share/element-web-installer/release-key.asc}
+INSTALL_PATH=${INSTALL_PATH:-/var/lib/element-web-installer}
+SETTINGS_PATH=${SETTINGS_PATH:-/etc/element-web}
+
+
+get_latest_version() {
+    curl -sSL --fail "$DOWNLOAD_BASE_URL/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
+        | grep "<a href=\"/$DOWNLOAD_PROJECT_URL_PATH/releases/download/v[0-9.]\+/${DOWNLOAD_APP_NAME}-v[0-9.]\+.tar.gz[^.]" \
+        | cut -f 2 -d '"' \
+        | sed "s|^.*/${DOWNLOAD_APP_NAME}-v||; s|\.tar\.gz$||"
+}
+
+
+get_installed_version() {
+    # return the currently installed version (or empty, if not installed)
+    cat "$INSTALL_PATH/version" 2>/dev/null || true
+}
+
+
+get_download_url() {
+    local version="$1"
+    echo "$DOWNLOAD_BASE_URL/$DOWNLOAD_PROJECT_URL_PATH/releases/download/v$version/${DOWNLOAD_APP_NAME}-v$version.tar.gz"
+}
+
+
+get_download_signature_url() {
+    local version="$1"
+    echo "$(get_download_url "$version").asc"
+}
+
+
+apply_local_settings() {
+    local destination_path="$1"
+    (cd "$SETTINGS_PATH" && find . -type f) | cut -d / -f 2- | while read -r fname; do
+        mkdir -p "$destination_path/$(dirname "$fname")"
+        ln -sfn "$SETTINGS_PATH/$fname" "$destination_path/$fname"
+    done
+}
+
+
+extract_archive_to_destination() {
+    local archive_path="$1"
+    local destination_path="$2"
+    local temp_dest
+    temp_dest=$(mktemp -d --tmpdir="$(dirname "$destination_path")" element-web-installer-XXXXXX)
+    trap 'rm -rf "$temp_dest"' EXIT
+    tar -C "$temp_dest" --strip-components=1 -xzf "$archive_path"
+    apply_local_settings "$temp_dest"
+    rm -rf "$destination_path"
+    mv "$temp_dest" "$destination_path"
+}
+
+
+extract_verified_download() {
+    local target_path="$1"
+    local target_version="$2"
+    local download_dir archive_path signature_path gpg_keyring_path
+    download_dir=$(mktemp -d)
+    trap 'rm -rf "$download_dir"' EXIT
+    archive_path=$download_dir/archive.tar.gz
+    signature_path=$download_dir/signature.asc
+    gpg_keyring_path=$download_dir/gnupg-keyring
+    curl -sSL --fail "$(get_download_url "$target_version")" >"$archive_path"
+    curl -sSL --fail "$(get_download_signature_url "$target_version")" >"$signature_path"
+    touch "$gpg_keyring_path"
+    gpg --quiet --no-default-keyring --keyring="$gpg_keyring_path" --import <"$SIGNING_KEY_PATH"
+    # suppress the verification summary in case of success (via "chronic")
+    if chronic gpg --trust-model=always --no-default-keyring --keyring="$gpg_keyring_path" --verify "$signature_path" "$archive_path"; then
+        extract_archive_to_destination "$archive_path" "$target_path"
+    fi
+}
+
+
+if [ $# -gt 0 ]; then
+    ACTION=$1
+    shift
+else
+    ACTION=status
+fi
+
+case "$ACTION" in
+    status)
+        printf 'Currently installed version:\t%s\n' "$(get_installed_version)"
+        printf 'Latest available version:\t%s\n' "$(get_latest_version)"
+        ;;
+    upgrade)
+        wanted_version=${1:-latest}
+        [ "$wanted_version" = "latest" ] && wanted_version=$(get_latest_version)
+        if [ "$wanted_version" = "$(get_installed_version)" ]; then
+            echo "Version '$wanted_version' is already installed. Nothing needs to be done."
+        else
+            echo "Dowloading and extracting element-web version '$wanted_version' ..."
+            extract_verified_download "$INSTALL_PATH" "$wanted_version"
+        fi
+        ;;
+    show-installed-version)
+        installed_version=$(get_installed_version)
+        if [ -z "$installed_version" ]; then
+            echo >&2 "element-web was not downloaded to '$INSTALL_PATH', yet."
+            exit 2
+        else
+            printf '%s\n' "$installed_version"
+        fi
+        ;;
+    show-latest-version)
+        get_latest_version
+        ;;
+    apply-configuration)
+        apply_local_settings "$INSTALL_PATH"
+        ;;
+    help|--help)
+        echo "Syntax: $(basename "$0") ACTION"
+        echo "    upgrade [VERSION]       - upgrade the element directory ($INSTALL_PATH) to the specified version (default: latest) and apply the local configuration"
+        echo "    apply-configuration     - apply the local configuration ($SETTINGS_PATH) to the element directory ($INSTALL_PATH)"
+        echo "    show-installed-version  - output the currently installed version"
+        echo "    show-latest-version     - output the latest released version of element-web"
+        echo
+        ;;
+    *)
+        "$0" help >&2
+        exit 1
+        ;;
+esac
