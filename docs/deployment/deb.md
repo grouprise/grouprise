@@ -6,16 +6,13 @@ meisten Anwendungen der einfachste Weg sein.
 
 ## Pakete installieren
 
-Die aktuellen Grouprise-deb-Pakete sind in folgendem Repository zu finden:
+Add the grouprise repository, download its signing key and trust this key for the repository:
+Import the grouprise apt repository key and enable it for the grouprise repository:
 ```shell
-deb https://deb.grouprise.org/ unstable main
-```
-
-Die obige Zeile kannst du in `/etc/apt/sources.list` eintragen.
-
-Importiere anschließend den Repository-Schlüssel in deinen lokalen apt-Schlüsselring:
-```shell
-wget -O /etc/apt/trusted.gpg.d/deb.grouprise.org.asc https://deb.grouprise.org/keys/repository.asc
+mkdir -p /etc/grouprise
+touch /etc/grouprise/apt-keyring.gpg
+wget -q -O - https://deb.grouprise.org/keys/repository.asc | gpg --no-default-keyring --keyring /etc/grouprise/apt-keyring.gpg --import
+echo "deb [signed-by=/etc/grouprise/apt-keyring.gpg] https://deb.grouprise.org/ unstable main" >/etc/apt/sources.list.d/grouprise.list
 ```
 
 Nun kannst du den Paketindex via `apt update` aktualisieren.
