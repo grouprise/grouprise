@@ -51,7 +51,7 @@ Trage die Angaben zur Datenbank in `/etc/grouprise/settings.py` ein. Ändere dor
 Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org:8000`):
 
 ```bash
-stadtctl runserver 0.0.0.0:8000
+grouprisectl runserver 0.0.0.0:8000
 ```
 
 (Wenn du temporär in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
@@ -59,6 +59,24 @@ stadtctl runserver 0.0.0.0:8000
 
 ## UWSGI und Nginx einrichten
 
-Nun musst du grouprise nur noch via Webserver verfügbar machen. Eine UWSGI-Konfiguration ist bereits installiert. Aktiviere sie mit `ln -s ../apps-available/stadtgestalten.ini /etc/uwsgi/apps-enabled`. Nun kannst du UWSGI mit `service uwsgi restart` neustarten.
+Nun musst du grouprise nur noch via Webserver verfügbar machen. Eine UWSGI-Konfiguration ist bereits installiert. Aktiviere sie:
+```shell
+ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/
+service uwsgi restart
+```
 
-Kopiere anschließend die Datei `/usr/share/doc/stadtgestalten/examples/nginx.conf` nach `/etc/nginx/sites-available/stadtgestalten`. Passe den Hostnamen an. Nun nur noch die Konfiguration aktivieren (`ln -s ../sites-available/stadtgestalten /etc/nginx/sites-enabled/stadtgestalten`) und den Webserver neustarten (`service nginx restart`). Yeah!
+Erzeuge anschließend eine nginx-site-Konfiguration (z.B. `/etc/nginx/sites-available/grouprise`), wobei die Domain anzupassen ist:
+```
+server {
+    server_name example.org;
+    include snippets/grouprise.conf;
+}
+```
+
+Aktiviere diese nginx-site und lade nginx neu:
+```shell
+ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/
+service nginx restart
+```
+
+Nun kannst du mit deinem Browser den Webserver besuchen. Herzlichen Glückwunsch!
