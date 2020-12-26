@@ -1,0 +1,47 @@
+Overview
+--------
+
+This package provides a script for downloading, verifying and extracting a release of the
+element-web [1] client for the Matrix [2] network.
+
+The element-web client is extracted to /var/lib/element-web-installer/.
+
+The element-web client is updated automatically via a daily cron job.
+
+
+Configuration
+-------------
+
+Local customizations can be placed below /etc/element-web/.  At least config.json [3]
+Every file somewhere below this directory is symlinked into the directory of the extracted
+element-web client, whenever the client is updated.
+
+
+Web server configuration
+------------------------
+
+The web client's directory may simply be published by your webserver.
+
+Example configuration for apache2:
+
+  <VirtualHost *>
+    ServerName example.org
+    DocumentRoot /var/lib/element-web-installer
+    <Directory /var/lib/element-web-installer>
+      Require all granted
+      Options SymLinksIfOwnerMatch
+    </Directory>
+  </VirtualHost>
+
+
+Example configuration for nginx:
+
+  server {
+    server_name example.org;
+    root /var/lib/element-web-installer;
+  }
+
+
+[1] https://element.io/
+[2] https://matrix.org/
+[3] https://github.com/vector-im/element-web/blob/develop/docs/config.md

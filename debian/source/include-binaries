@@ -1,0 +1,3 @@
+# a gnupg keyring for the element-web release key
+# see debian/element-web-installer.install for its source
+debian/element-web-installer.d/release-trustedkeys.gpg
