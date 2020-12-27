@@ -12,3 +12,4 @@ grouprise Documentation
    database/index
    authentication/index
    upgrading
+   releases/index
