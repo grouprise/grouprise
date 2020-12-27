@@ -23,10 +23,11 @@ The following `make` targets are probably of most interest:
 
 To create a new release take the following steps:
 
-1. clean your workspace (the output of `git status` should be empty)
-2. checkout the master branch and update it
-3. run `make release-major`, `make release-minor` or `make release-patch`
-4. push your updated master branch (`git push`) and tags (`git push --tags`)¹
-5. done
+1. checkout the master branch
+2. create a release notes document (below `docs/releases/`) and add it to `docs/releases/index.rst`
+3. commit your changes
+4. run `make release-major`, `make release-minor` or `make release-patch`
+5. push your updated master branch (`git push`) and tags (`git push --tags`)¹
+6. done
 
-¹ you might also want to checkout `config --global push.followTags true` ;)  
+¹ you might also want to apply `git config --global push.followTags true` ;)
