@@ -56,6 +56,17 @@ The following statement creates a suitable database including proper collation s
 The command above requires the locale 'de_DE.UTF8' in the system of the database server.
 
 
+## Docker deployment
+
+[Docker](https://docker.io/) may be used for a quick and dirty way to set up an instance of
+grouprise.
+
+The docker image based on the latest released deb package of grouprise can be built easily:
+```sh
+docker build docker/grouprise-released-deb
+```
+
+
 ## Production deployment
 
 We recommend to use the provided deb package. It contains an nginx and UWSGI configuration.
