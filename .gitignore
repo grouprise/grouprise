@@ -26,6 +26,6 @@ debian/*.debhelper
 debian/tmp
 debian/*.substvars
 debian/files
-stadtgestalten.egg-info/
-/root/
+grouprise.egg-info/
+gitlab-ci-build-venv/
 grouprise/core/templates/core/_assets.html
