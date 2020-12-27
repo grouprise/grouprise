@@ -71,7 +71,7 @@ docker build docker/grouprise-released-deb
 
 We recommend to use the provided deb package. It contains an nginx and UWSGI configuration.
 
-See also [DEPLOYMENT.md](./docs/deployment/DEPLOYMENT.md).
+See also [deb.md](./docs/deployment/deb.md).
 
 
 ## Contributing
