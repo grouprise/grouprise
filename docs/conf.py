@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'grouprise'
-copyright = '2019, grouprise contributors'
+copyright = 'grouprise contributors'
 author = 'grouprise contributors'
 
 # The short X.Y version
@@ -92,7 +92,7 @@ html_theme = 'alabaster'
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'grouprisedoc'
-html_logo = 'logo.png'
+html_logo = 'logo.svg'
 
 
 # -- Options for LaTeX output ------------------------------------------------
