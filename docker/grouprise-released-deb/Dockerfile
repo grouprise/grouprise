@@ -29,4 +29,4 @@ RUN ln -s ../apps-available/stadtgestalten.ini /etc/uwsgi/apps-enabled/ \
     && echo "server { include snippets/grouprise.conf; }" >/etc/nginx/sites-available/grouprise \
     && ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/ \
     && rm -f /etc/nginx/sites-enabled/default \
-    && nginx -s reload && service nginx restart
+    && service nginx restart
