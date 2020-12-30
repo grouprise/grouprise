@@ -17,12 +17,11 @@ COPY --from=build-deps \
     /usr/src/app/grouprise-build-deps_*.deb \
     /srv/local-apt-repository/grouprise-build-deps.deb
 RUN /usr/lib/local-apt-repository/rebuild && \
-    apt update -y && \
-    apt install -y -t buster-backports grouprise-build-deps && \
-    apt-get clean -y
+    apt-get --yes update && \
+    apt-get --yes --target=buster-backports install grouprise-build-deps && \
+    apt-get --yes clean
 # compile locales required for example app configuration
-RUN apt install -y locales && \
+RUN apt-get --yes install locales && \
     for locale in $LOCALES; do sed -i "s/^# $locale/$locale/g" /etc/locale.gen; done && \
     dpkg-reconfigure locales && \
-    apt-get clean -y
-
+    apt-get --yes clean
