@@ -67,10 +67,7 @@ deb_package_test:
       - cp build/debian/*.deb /srv/local-apt-repository/
       - /usr/lib/local-apt-repository/rebuild
       - apt-get update
-      # Disable minimization of the buster-slim docker image (e.g. removal of files below /usr/share/doc).
-      # Otherwise our nginx example configuration is unavailable for the autopkgtest.
-      - rm -f /etc/dpkg/dpkg.cfg.d/docker
-      # we are running autopkgtest manually, thus we need to ensure manually, that all dependencies are fulfilled
+      # we are running autopkgtest manually, thus we need to install its dependencies
       - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq)"
       # install and run autopkgtest
       - apt-get install -y autopkgtest
