@@ -219,7 +219,7 @@ class ContributionMailProcessor:
 
     def is_valid_groupname(self, group_name):
         try:
-            groups.Group.objects.get(slug__iexact=group_name.lower())
+            groups.Group.objects.get(slug__iexact=group_name)
             return True
         except groups.Group.DoesNotExist:
             return False
@@ -297,7 +297,7 @@ class ContributionMailProcessor:
             raise MailProcessingFailure(error_text)
         gestalt = get_sender_gestalt(message.from_address)
         try:
-            group = groups.Group.objects.get(slug=local)
+            group = groups.Group.objects.get(slug__iexact=local)
         except groups.Group.DoesNotExist:
             raise MailProcessingFailure(
                 'Es gibt keine Gruppe mit dem Namen "{}". Somit war deine Email nicht zustellbar.'
