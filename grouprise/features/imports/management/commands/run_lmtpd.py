@@ -15,7 +15,6 @@ from aiosmtplib.smtp import SMTP
 import django
 from django.conf import settings
 
-from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
 from grouprise.features.imports.signals import (
         ContributionMailProcessor, MailProcessingFailure, ParsedMailMessage)
 
@@ -59,8 +58,7 @@ class ContributionLMTPD:
             self._error_writer = functools.partial(logger.error)
         else:
             self._error_writer = error_writer
-        processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
-                                              settings.DEFAULT_FROM_EMAIL)
+        processor = ContributionMailProcessor()
         self._handler = ContributionHandler(processor, self._success_writer, self._error_writer)
 
     def serve_forever(self, host, port):

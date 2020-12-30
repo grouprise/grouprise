@@ -69,8 +69,7 @@ def sanitize_subject(subject):
 def process_incoming_message(sender, message, **args):
     delivered_to = message.get_email_object()['Delivered-To']
     parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
-    processor = ContributionMailProcessor(DEFAULT_REPLY_TO_EMAIL,
-                                          settings.DEFAULT_FROM_EMAIL)
+    processor = ContributionMailProcessor()
     if not delivered_to:
         # The "Delivered-To" header is missing, if the mail server delivers the mail to more than
         # one recipient on the server. Otherwise this could cause a privacy breach for BCC
@@ -206,7 +205,11 @@ class ContributionMailProcessor:
 
     PROCESSING_FAILURE_TEXT = 'Konnte die Nachricht nicht verarbeiten.'
 
-    def __init__(self, default_reply_to_address, response_from_address):
+    def __init__(self, default_reply_to_address=None, response_from_address=None):
+        if default_reply_to_address is None:
+            default_reply_to_address = DEFAULT_REPLY_TO_EMAIL
+        if response_from_address is None:
+            response_from_address = settings.DEFAULT_FROM_EMAIL
         self._reply_domain = default_reply_to_address.split('@')[1]
         self.auth_token_regex = re.compile(r'^{prefix}([^@]+){suffix}$'.format(
             prefix=re.escape(default_reply_to_address.split('{')[0]),
