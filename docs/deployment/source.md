@@ -40,7 +40,7 @@ Die folgenden Zeilen verändern ausschließlich Dateien im grouprise-Verzeichnis
 
 ```bash
 cd /usr/local/share/grouprise
-make virtualenv_create
+make virtualenv-update
 . build/venv/bin/activate
 make
 ```
