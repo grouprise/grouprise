@@ -10,6 +10,7 @@ grouprise Documentation
    configuration/options
    configuration/assets
    database/index
+   mail_setup
    authentication/index
    upgrading
    releases/index
