@@ -1,18 +1,14 @@
 import contextlib
-import datetime
 import email.message
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
-import email.utils
 import os
 import re
 
 from aiosmtplib.errors import SMTPDataError
 from django.core import mail
 from django.urls import reverse
-import django.utils.timezone
-from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
 from grouprise.core import tests
 from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
@@ -21,8 +17,7 @@ from grouprise.features.contributions import models
 from grouprise.features.imports.management.commands.run_lmtpd import (
     ContributionLMTPD, POSTMASTER_ADDRESS)
 from grouprise.features.imports.signals import (
-    ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST,
-    MAILBOX_DELIVERED_TO_EMAIL)
+    ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST)
 from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.memberships import test_mixins as memberships
 
@@ -134,7 +129,6 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         self.assertInvalidRecipient('foo.org')
         self.assertInvalidRecipient('foo@example.org')
         self.assertInvalidRecipient(self.group_address.split('@')[0] + 'example.org')
-        self.assertInvalidRecipient(MAILBOX_DELIVERED_TO_EMAIL)
         self.assertValidRecipient(self.group_address)
         self.assertValidRecipient(self.group_address.swapcase())
         self.assertValidRecipient(DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
@@ -285,27 +279,6 @@ class ContentMetaDataViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
                              'Mon, 20 Nov 1995 20:12:08 +0100')
 
 
-class ContentMetaDataViaDjangoMailbox(memberships.AuthenticatedMemberMixin, tests.Test):
-
-    def test_mail_date(self):
-        """ verify that the notification uses the date of the incoming mail
-
-        TODO: sadly we cannot inject mails into django_mailbox at the moment.  Thus we cannot
-        influence the mail's date field.  As long as we cannot inject manually, this test is of no
-        real use, since it simply verifies that the outgoing notification has a current Date field.
-        """
-        posting_datetime = datetime.datetime.now(tz=django.utils.timezone.get_current_timezone())
-        self.client.post(
-                reverse('create-group-article', args=(self.group.slug,)),
-                {'title': 'Test', 'text': 'Test'})
-        self.assertNotificationSent()
-        parsed_datetime = email.utils.parsedate_to_datetime(mail.outbox[0].extra_headers['Date'])
-        delay = (parsed_datetime - posting_datetime).total_seconds()
-        self.assertLess(delay, 10)
-        # the create time seems to be rounded down - thus it may arrive slightly before "now"
-        self.assertGreater(delay, -1)
-
-
 class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjectLMTPMixin,
                                  tests.Test):
 
@@ -323,28 +296,6 @@ class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjec
                 content=a.content.get(), text__text='Text B').exists())
             self.assertTrue(models.Contribution.objects_with_internal.filter(
                 content=a.content.get(), text__text='Text B').exists())
-
-
-class ContentReplyByEmailViaDjangoMailbox(memberships.AuthenticatedMemberMixin, tests.Test):
-
-    def test_content_reply_by_email_mailbox(self):
-        # create article
-        self.client.post(
-                reverse('create-group-article', args=(self.group.slug,)),
-                {'title': 'Test', 'text': 'Test'})
-        a = self.assertExists(associations.Association, content__title='Test')
-        self.assertNotificationSent()
-        # generate reply message
-        reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(
-                from_header=self.gestalt.user.email,
-                body='Delivered-To: {}\n\nText B'.format(reply_to))
-        # send signal like getmail would
-        mailbox_signals.message_received.send(self, message=msg)
-        self.assertFalse(models.Contribution.objects.filter(
-            content=a.content.get(), text__text='Text B').exists())
-        self.assertTrue(models.Contribution.objects_with_internal.filter(
-            content=a.content.get(), text__text='Text B').exists())
 
 
 class ConversationInitiateByEmailViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
@@ -414,28 +365,6 @@ class ConversationReplyByEmailViaLMTP(gestalten.AuthenticatedMixin, gestalten.Ot
             self.assertEqual(1, len(get_new_mails()))
             self.assertIsProcessingFailureReply(get_new_mails()[0])
             self.assertNotExists(models.Contribution, text__text='Text F')
-
-
-class ConversationReplyByEmailViaDjangoMailbox(gestalten.AuthenticatedMixin,
-                                               gestalten.OtherGestaltMixin, tests.Test):
-
-    def test_texts_reply_by_email_mailbox(self):
-        # send message to other_gestalt via web interface
-        self.client.post(
-                self.get_url('create-gestalt-conversation', self.other_gestalt.pk),
-                {'subject': 'Subject A', 'text': 'Text A'})
-        text_a = self.assertExists(models.Contribution, conversation__subject='Subject A')
-        self.assertNotificationSent()
-        # generate reply message
-        reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(
-                from_header=self.other_gestalt.user.email,
-                body='Delivered-To: {}\n\nText B'.format(reply_to))
-        # send signal like getmail would
-        mailbox_signals.message_received.send(self, message=msg)
-        self.assertExists(
-                models.Contribution, conversation=text_a.conversation.get(),
-                text__text='Text B')
 
 
 class ConversationAttachmentsViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):

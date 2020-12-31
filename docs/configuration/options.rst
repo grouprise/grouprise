@@ -104,11 +104,6 @@ See `mail setup <../mail_setup.html>`_ for an overview of mail setup considerati
   Email address written to the ``Reply-To`` header of user content notifications. Defaults to
   ``'reply+{reply_key}@localhost'``.
 
-``MAILBOX_DELIVERED_TO_EMAIL``
-
-  When using mailbox delivery, set this to the address of the ``Delivered-To`` header set by
-  the mailer for incoming mail. Defaults to ``mailbox@localhost``.
-
 ``COLLECTOR_MAILBOX_ADDRESS``
 
   All mails are expected to be delivered to this single mail address and processed via the

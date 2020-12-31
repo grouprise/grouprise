@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     # deactivated, see #662
     # 'cachalot',
     'django_filters',
-    'django_mailbox',
     'huey.contrib.djhuey',
     'haystack',
     'imagekit',
