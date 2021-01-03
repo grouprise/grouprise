@@ -18,7 +18,7 @@ COPY --from=build-deps \
     /srv/local-apt-repository/grouprise-build-deps.deb
 RUN /usr/lib/local-apt-repository/rebuild && \
     apt-get --yes update && \
-    apt-get --yes --target=buster-backports install grouprise-build-deps && \
+    apt-get --yes --target-release=buster-backports install grouprise-build-deps && \
     apt-get --yes clean
 # compile locales required for example app configuration
 RUN apt-get --yes install locales && \
