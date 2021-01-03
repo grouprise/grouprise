@@ -14,7 +14,7 @@ Use cases:
 .. info:
 
     The procedure described below requires manual adjustments of the dumped data due to
-    https://git.hack-hro.de/stadtgestalten/stadtgestalten/issues/629. Thus it is currently only
+    https://git.hack-hro.de/grouprise/grouprise/issues/629. Thus it is currently only
     suitable for very small sets of data.
 
 Procedure:

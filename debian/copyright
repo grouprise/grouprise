@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Source: https://git.hack-hro.de/stadtgestalten/stadtgestalten
+Source: https://git.hack-hro.de/grouprise/grouprise
 
 Files: *
 License: AGPL-3.0-or-later

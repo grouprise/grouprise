@@ -5,7 +5,7 @@
 #     make ci_image_build ci_docker_login ci_image_push
 # to update the docker image for the build process.
 
-DOCKER_REGISTRY = git-registry.hack-hro.de:443/stadtgestalten/stadtgestalten
+DOCKER_REGISTRY = git-registry.hack-hro.de:443/grouprise/grouprise
 CI_BUILD_IMAGE_PATH = docker/build/Dockerfile
 CI_BUILD_IMAGE_NAME = build:buster
 CI_BUILD_IMAGE = $(DOCKER_REGISTRY)/$(CI_BUILD_IMAGE_NAME)

@@ -29,7 +29,7 @@ setup(
     description='grouprise is a platform that encourages and enables '
                 'social action and solidarity',
     long_description=get_readme(),
-    url='https://git.hack-hro.de/stadtgestalten/stadtgestalten.git',
+    url='https://git.hack-hro.de/grouprise/grouprise.git',
     author='grouprise Maintainers',
     author_email='mail@grouprise.org',
     packages=find_packages(),

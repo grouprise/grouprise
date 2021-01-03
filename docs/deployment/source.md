@@ -29,7 +29,7 @@ Für einige Funktionen von grouprise wird weitere Software benötigt:
 
 ## Quelltext installieren
 
-Das aktuelle stabile Release findest du unter [git.hack-hro.de](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tags).
+Das aktuelle stabile Release findest du unter [git.hack-hro.de](https://git.hack-hro.de/grouprise/grouprise/tags).
 
 Kopiere den Quelltext in ein passendes Verzeichnis deiner Wahl, wir verwenden hier `/usr/local/share/grouprise`.
 
@@ -48,7 +48,7 @@ make
 
 ## Konfigurationsdatei installieren
 
-Kopiere die [Beispieldatei](https://git.hack-hro.de/stadtgestalten/stadtgestalten/tree/master/grouprise/settings.py.production) nach `/etc/grouprise/settings.py`. Passe die Einstellungen an.
+Kopiere die [Beispieldatei](https://git.hack-hro.de/grouprise/grouprise/tree/master/grouprise/settings.py.production) nach `/etc/grouprise/settings.py`. Passe die Einstellungen an.
 
 Falls du PostgreSQL verwendest, helfen dir die folgenden Zeilen beim Einrichten der Datenbank:
 
