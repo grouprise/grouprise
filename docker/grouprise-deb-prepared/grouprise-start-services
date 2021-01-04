@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -eu
+
+# postgresql seemingly fails for unknown reasons
+service postgresql start 2>/dev/null || true
+service nginx start
+# uwsgi seemingly fails, since start-stop-daemon cannot read /proc/PID/exe in a docker container
+# See https://github.com/moby/moby/issues/40713
+# Workaround: additional argument for "docker run": "--cap-add=SYS_PTRACE"
+service uwsgi start 2>/dev/null || true

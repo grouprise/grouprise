@@ -8,9 +8,36 @@ grouprise is a platform destined to encourage and enable social action and solid
 You may want to install the latest [snapshot build](https://git.hack-hro.de/grouprise/grouprise/builds/artifacts/master/raw/build/debian/export/grouprise.deb?job=deb-package) as a deb package. Please note that this is a rather dirty package (embedded dependencies; suitable for Debian Buster).
 
 ### For developers
+
+The *local source* approach described below is suitable for developing the code of grouprise itself.
+The *system in docker* approach is helpful for developing integrations with other packages (e.g. a mail server or matrix).
+
+#### Local Source
+
 1. You will need [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/) (downloaded automatically if unavailable), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see the Dependencies Section
 2. Run `make app_run` and wait until you see something like `Starting development server at http://127.0.0.1:8000/`
 3. Visit http://127.0.0.1:8000/
+
+#### System in Docker
+
+1. generate a docker image containing a prepared Debian Buster image. It is ready for installing
+grouprise's [deb packages](./-/blob/master/docs/deployment/deb.md) from grouprise's apt repository
+or for testing locally built deb packages:
+```shell
+docker build --tag=grouprise-deb-prepared docker/grouprise-deb-prepared
+```
+2. enter an interactive shell in the system:
+```shell
+docker run --tty --interactive --mount "type=bind,source=$(pwd),destination=/app" --publish 8000:80 --workdir=/app grouprise-deb-prepared "$SHELL"
+```
+3. install released packages from the official apt repository or locally built deb packages:
+```shell
+# a) install released grouprise packages
+apt install grouprise
+# b) install locally built packages
+dpkg -i build/debian/grouprise_*.deb
+```
+
 
 ## Dependencies
 
