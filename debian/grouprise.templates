@@ -1,0 +1,8 @@
+Template: grouprise/domain
+Type: string
+Description: Domain of grouprise:
+
+Template: grouprise/configure-webserver
+Type: select
+Choices: none, nginx
+Description: Configure a webserver?

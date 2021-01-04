@@ -52,6 +52,7 @@ Architecture: all
 Depends:
  ${misc:Depends},
  adduser,
+ debconf,
  grouprise-dependencies,
  grouprise-db-postgresql | grouprise-db-sqlite,
  moreutils,
