@@ -24,7 +24,7 @@ RUN service postgresql start \
     && sed -i "s/'PASSWORD':.*$/'PASSWORD': '$db_password',/" /etc/grouprise/settings.py
 
 # publish service
-RUN ln -s ../apps-available/stadtgestalten.ini /etc/uwsgi/apps-enabled/ \
+RUN ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/ \
     && service uwsgi restart \
     && echo "server { include snippets/grouprise.conf; }" >/etc/nginx/sites-available/grouprise \
     && ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/ \
