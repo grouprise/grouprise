@@ -6,7 +6,6 @@ from django.core.management.base import BaseCommand, CommandError
 
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.content.models import Version
-from grouprise.features.groups.models import Group
 
 
 class Command(BaseCommand):
@@ -44,7 +43,7 @@ class Command(BaseCommand):
                 model = model.container
             elif isinstance(model, Version):
                 model = model.content
-            
+
             if hasattr(model, 'tags'):
                 tag_name = tags[link['tag']]['name']
                 if len(tag_name) <= 100:
