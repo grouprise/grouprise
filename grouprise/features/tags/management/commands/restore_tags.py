@@ -2,6 +2,7 @@ import mmap
 import re
 
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand, CommandError
 
 from grouprise.features.contributions.models import Contribution
@@ -50,8 +51,8 @@ class Command(BaseCommand):
             content_type = ContentType.objects.get_for_id(link["tagged_type"])
             try:
                 model = content_type.get_object_for_this_type(id=link["tagged"])
-            except:
-                print(
+            except ObjectDoesNotExist:
+                self.stderr.write(
                     "Warning: Tagged object does no longer exist (type {}, id {})".format(
                         link["tagged_type"], link["tagged"]
                     )
@@ -67,9 +68,11 @@ class Command(BaseCommand):
                 if len(tag_name) <= 100:
                     model.tags.add(tag_name)
                 else:
-                    print("Warning: Tag name is too long: {}".format(tag_name))
+                    self.stderr.write(
+                        "Warning: Tag name is too long: {}".format(tag_name)
+                    )
             else:
-                print(
+                self.stderr.write(
                     "Warning: Model of type {} is not taggable".format(
                         model.__class__.__name__
                     )
