@@ -38,7 +38,12 @@ class Command(BaseCommand):
 
         for link in links:
             content_type = ContentType.objects.get_for_id(link['tagged_type'])
-            model = content_type.get_object_for_this_type(id=link['tagged'])
+            try:
+                model = content_type.get_object_for_this_type(id=link['tagged'])
+            except:
+                print('Warning: Tagged object does no longer exist (type {}, id {})'
+                        .format(link['tagged_type'], link['tagged']))
+                continue
             if isinstance(model, Contribution):
                 model = model.container
             elif isinstance(model, Version):
