@@ -22,18 +22,6 @@ if [ "$1" = "configure" ]; then
         sed -i "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," /etc/grouprise/settings.py
     fi
 
-    if ! getent group "$PKG_GROUP" >/dev/null; then
-        # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
-        addgroup --quiet --system --force-badname "$PKG_GROUP"
-    fi
-
-    if ! getent passwd "$PKG_USER" >/dev/null; then
-        # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
-        adduser --quiet --system --disabled-password \
-            --force-badname \
-            --ingroup "$PKG_GROUP" --home "$DIR_HOME" "$PKG_USER"
-    fi
-
     if [ -e "$UWSGI_APP_SYMLINK" ]; then
         if grouprisectl migrate --no-input >/dev/null; then
             rm -f "$DIR_ETC/maintenance_mode"

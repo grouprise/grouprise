@@ -6,6 +6,7 @@ Build-Depends:
  debhelper (>= 12),
  dh-exec,
  dh-python,
+ dh-sysuser,
  nodejs,
  python3-flake8,
 # stemmer is only relevant for sphinx in Buster

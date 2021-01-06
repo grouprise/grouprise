@@ -23,12 +23,7 @@ if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
 fi
 
 if [ "$1" = "remove" ]; then
-    if getent passwd "$PKG_USER" >/dev/null; then
-        deluser --quiet "$PKG_USER"
-    fi
-    if getent group "$PKG_GROUP" >/dev/null; then
-        delgroup --quiet "$PKG_GROUP"
-    fi
+    # the user is removed via dh-sysuser
 elif [ "$1" = "purge" ]; then
     rm -rf "$DIR_ETC"
     rm -rf "$DIR_HOME"
