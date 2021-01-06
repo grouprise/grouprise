@@ -92,6 +92,8 @@ Special Users and Groups
 Email-related Settings
 ----------------------
 
+See `mail setup <../mail_setup.html>`_ for an overview of mail setup considerations.
+
 ``DEFAULT_DISTINCT_FROM_EMAIL``
 
   Email address used as ``From`` address for user content notifications. Defaults to
@@ -102,10 +104,12 @@ Email-related Settings
   Email address written to the ``Reply-To`` header of user content notifications. Defaults to
   ``'reply+{reply_key}@localhost'``.
 
-``MAILBOX_DELIVERED_TO_EMAIL``
+``COLLECTOR_MAILBOX_ADDRESS``
 
-  When using mailbox delivery, set this to the address of the ``Delivered-To`` header set by
-  the mailer for incoming mail. Defaults to ``mailbox@localhost``.
+  All mails are expected to be delivered to this single mail address and processed via the
+  *Scripted processing* ("dot-forward") approach described in `mail setup <../mail_setup.html>`_.
+  Empty by default.
+
 
 ``POSTMASTER_EMAIL``
 

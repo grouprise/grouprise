@@ -5,9 +5,7 @@ import logging
 import re
 
 import django.db.models.signals
-import django_mailbox.signals
 from django.conf import settings
-from django.dispatch import receiver
 import django.utils.timezone
 import html2text
 
@@ -27,11 +25,6 @@ logger = logging.getLogger(__name__)
 
 # a message containing exactly the following subject will raise a ValueError (for the unittests)
 MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST = 'ijoo9zee7Cheisoochae2Ophie4ohx9ahyai3ux1Quae0Phu'
-
-
-# mail address used in Delivered-To header in case of mailbox delivery
-MAILBOX_DELIVERED_TO_EMAIL = settings.GROUPRISE.get(
-        'MAILBOX_DELIVERED_TO_EMAIL', 'mailbox@localhost')
 
 
 class MailProcessingFailure(Exception):
@@ -65,35 +58,6 @@ def sanitize_subject(subject):
     return subject.replace('\n', ' ').replace('\r', '')
 
 
-@receiver(django_mailbox.signals.message_received)
-def process_incoming_message(sender, message, **args):
-    delivered_to = message.get_email_object()['Delivered-To']
-    parsed_message = ParsedMailMessage.from_django_mailbox_message(message)
-    processor = ContributionMailProcessor()
-    if not delivered_to:
-        # The "Delivered-To" header is missing, if the mail server delivers the mail to more than
-        # one recipient on the server. Otherwise this could cause a privacy breach for BCC
-        # recipients.
-        error_message = "Could not process message {}: no Delivered-To header".format(message.id)
-        logger.error(error_message)
-        processor.send_error_mail_response(parsed_message, error_message, fail_silently=True)
-        return
-    if delivered_to.lower() == MAILBOX_DELIVERED_TO_EMAIL.lower():
-        # Mailbox-based delivery uses the bot mail address as a catch-all address for the existing
-        # groups. Thus we cannot trust the "Delivered-To" header, but we need to parse the "To"
-        # headers instead.
-        recipients = parsed_message.to_addresses
-    else:
-        recipients = [delivered_to]
-    for address in recipients:
-        address = address.lstrip('<')
-        address = address.rstrip('>')
-        try:
-            processor.process_message_for_recipient(parsed_message, address)
-        except MailProcessingFailure as exc:
-            processor.send_error_mail_response(parsed_message, str(exc), fail_silently=True)
-
-
 ParsedMailAttachment = collections.namedtuple('ParsedMailAttachment',
                                               ('content_type', 'filename', 'data', 'model_obj'))
 
@@ -103,7 +67,7 @@ class ParsedMailMessage(collections.namedtuple(
                        'date', 'attachments'))):
     """ neutral mail message container to be used processing a ContributionMailProcessor
 
-    The different sources (e.g. django_mailbox or LMTP) should produce instances of this class.
+    The different sources (e.g. LMTP) should produce instances of this class.
     """
 
     MISSING_SUBJECT_DEFAULT = 'Namenlose Nachricht'
@@ -150,26 +114,6 @@ class ParsedMailMessage(collections.namedtuple(
             return parsed.astimezone(tz=tz)
         else:
             return now
-
-    @classmethod
-    def from_django_mailbox_message(cls, message):
-        # we ignore multiple "From:" addresses
-        from_address = message.from_address[0]
-        # make sure a subject exists and is valid
-        subject = sanitize_subject(message.subject or cls.MISSING_SUBJECT_DEFAULT)
-        # parse the content type from the attachments
-        attachments = []
-        header_parser = email.parser.HeaderParser()
-        for attachment in message.attachments.all():
-            attachment_header = header_parser.parsestr(attachment.headers)
-            parsed_attachment = ParsedMailAttachment(attachment_header.get_content_type(),
-                                                     attachment_header.get_filename(), None,
-                                                     attachment.document)
-            attachments.append(parsed_attachment)
-        text_content = cls.get_processed_content(message.html or message.text, bool(message.html))
-        msg_date = cls.parse_date(message.get_email_object()['Date'])
-        return cls(subject, text_content, message.to_addresses, from_address,
-                   message.get_email_object(), message.id, msg_date, tuple(attachments))
 
     @classmethod
     def from_email_object(cls, email_obj, from_address=None):

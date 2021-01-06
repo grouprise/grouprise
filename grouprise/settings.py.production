@@ -37,7 +37,7 @@ GROUPRISE = {
     # email settings
     'DEFAULT_DISTINCT_FROM_EMAIL': 'noreply+{slug}@localhost',
     'DEFAULT_REPLY_TO_EMAIL': 'reply+{reply_key}@localhost',
-    'MAILBOX_DELIVERED_TO_EMAIL': 'mailbox@localhost',
+    'COLLECTOR_MAILBOX_ADDRESS': '',
     'POSTMASTER_EMAIL': 'postmaster@localhost',
     'MAILINGLIST_ENABLED': False,
 

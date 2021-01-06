@@ -1,17 +1,14 @@
 import contextlib
-import datetime
 import email.message
-import email.utils
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 import os
 import re
-import tempfile
 
 from aiosmtplib.errors import SMTPDataError
-from django.conf import settings
 from django.core import mail
 from django.urls import reverse
-import django.utils.timezone
-from django_mailbox import models as mailbox_models, signals as mailbox_signals
 
 from grouprise.core import tests
 from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
@@ -20,23 +17,9 @@ from grouprise.features.contributions import models
 from grouprise.features.imports.management.commands.run_lmtpd import (
     ContributionLMTPD, POSTMASTER_ADDRESS)
 from grouprise.features.imports.signals import (
-    ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST,
-    MAILBOX_DELIVERED_TO_EMAIL)
+    ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST)
 from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.memberships import test_mixins as memberships
-
-
-@contextlib.contextmanager
-def get_temporary_media_file(content=None, suffix=None):
-    file_handle, filename = tempfile.mkstemp(dir=settings.MEDIA_ROOT, suffix=suffix)
-    if content is not None:
-        os.write(file_handle, content)
-    os.close(file_handle)
-    yield filename
-    try:
-        os.unlink(filename)
-    except OSError:
-        pass
 
 
 class MailInjectLMTPMixin:
@@ -49,12 +32,38 @@ class MailInjectLMTPMixin:
         self.assertNotIn(ContributionMailProcessor.PROCESSING_FAILURE_TEXT, message.body,
                          message.body)
 
-    def assemble_mail_data(self, headers, body=None):
-        message = email.message.Message()
+    def assemble_mail_data(self, headers, body=None, attachments=None):
+        """ assemble an email message object based on the given arguments
+
+        A MIME multipart mail is generated, if 'attachments' is non-empty.
+
+        @param headers: dictionary of mail headers
+        @param body: optional text body of the mail message
+        @param attachments: optional list of dictionaries describing attachments.  Each dictionary
+            must contain "content_type" and "payload". The key "disposition_filename" is optional.
+        """
+        if attachments is None:
+            attachments = []
+        if not attachments:
+            message = email.message.Message()
+        else:
+            message = MIMEMultipart()
         for key, value in headers.items():
             message.add_header(key, value)
-        if body:
-            message.set_payload(body)
+        if attachments:
+            if body:
+                message.attach(MIMEText(body))
+            for attachment_info in attachments:
+                attachment = MIMEBase(*attachment_info['content_type'].split('/', 1))
+                attachment.set_payload(attachment_info['payload'])
+                if 'disposition_filename' in attachment_info:
+                    attachment.add_header(
+                            'Content-Disposition', 'attachment',
+                            filename=attachment_info['disposition_filename'])
+                message.attach(attachment)
+        else:
+            if body:
+                message.set_payload(body)
         return message.as_bytes()
 
     def inject_mail(
@@ -107,7 +116,7 @@ class ContentViaLMTP(MailInjectLMTPMixin, tests.Test):
             self.assertEqual(0, len(get_new_mails()))
 
 
-class GroupMailMixin(memberships.AuthenticatedMemberMixin):
+class GroupMailMixin(memberships.MemberMixin):
 
     @property
     def group_address(self):
@@ -120,7 +129,6 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         self.assertInvalidRecipient('foo.org')
         self.assertInvalidRecipient('foo@example.org')
         self.assertInvalidRecipient(self.group_address.split('@')[0] + 'example.org')
-        self.assertInvalidRecipient(MAILBOX_DELIVERED_TO_EMAIL)
         self.assertValidRecipient(self.group_address)
         self.assertValidRecipient(self.group_address.swapcase())
         self.assertValidRecipient(DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
@@ -151,9 +159,9 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
     def test_discard_wrong_domain(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
             wrong_target_domain = self.group_address.replace('@', '@x')
-            rejections_count = self.inject_mail(self.gestalt.user.email, [wrong_target_domain],
-                                                data=b'foo')
-            self.assertEqual(1, len(rejections_count))
+            rejections = self.inject_mail(
+                    self.gestalt.user.email, [wrong_target_domain], data=b'foo')
+            self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
     def test_accept_initial_contribution_from_member(self):
@@ -271,27 +279,6 @@ class ContentMetaDataViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
                              'Mon, 20 Nov 1995 20:12:08 +0100')
 
 
-class ContentMetaDataViaDjangoMailbox(memberships.AuthenticatedMemberMixin, tests.Test):
-
-    def test_mail_date(self):
-        """ verify that the notification uses the date of the incoming mail
-
-        TODO: sadly we cannot inject mails into django_mailbox at the moment.  Thus we cannot
-        influence the mail's date field.  As long as we cannot inject manually, this test is of no
-        real use, since it simply verifies that the outgoing notification has a current Date field.
-        """
-        posting_datetime = datetime.datetime.now(tz=django.utils.timezone.get_current_timezone())
-        self.client.post(
-                reverse('create-group-article', args=(self.group.slug,)),
-                {'title': 'Test', 'text': 'Test'})
-        self.assertNotificationSent()
-        parsed_datetime = email.utils.parsedate_to_datetime(mail.outbox[0].extra_headers['Date'])
-        delay = (parsed_datetime - posting_datetime).total_seconds()
-        self.assertLess(delay, 10)
-        # the create time seems to be rounded down - thus it may arrive slightly before "now"
-        self.assertGreater(delay, -1)
-
-
 class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjectLMTPMixin,
                                  tests.Test):
 
@@ -311,48 +298,29 @@ class ContentReplyByEmailViaLMTP(memberships.AuthenticatedMemberMixin, MailInjec
                 content=a.content.get(), text__text='Text B').exists())
 
 
-class ContentReplyByEmailViaDjangoMailbox(memberships.AuthenticatedMemberMixin, tests.Test):
+class ConversationInitiateByEmailViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
 
-    def test_content_reply_by_email_mailbox(self):
-        # create article
-        self.client.post(
-                reverse('create-group-article', args=(self.group.slug,)),
-                {'title': 'Test', 'text': 'Test'})
-        a = self.assertExists(associations.Association, content__title='Test')
-        self.assertNotificationSent()
-        # generate reply message
-        reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(
-                from_header=self.gestalt.user.email,
-                body='Delivered-To: {}\n\nText B'.format(reply_to))
-        # send signal like getmail would
-        mailbox_signals.message_received.send(self, message=msg)
-        self.assertFalse(models.Contribution.objects.filter(
-            content=a.content.get(), text__text='Text B').exists())
-        self.assertTrue(models.Contribution.objects_with_internal.filter(
-            content=a.content.get(), text__text='Text B').exists())
-
-
-class ConversationInitiateByEmailViaDjangoMailbox(memberships.MemberMixin, tests.Test):
     def test_conversation_initiate_by_email(self):
-        # generate initial message
-        msg = mailbox_models.Message(
-                from_header=self.gestalt.user.email,
-                body='Delivered-To: {}@localhost\n\nText A'.format(self.group.slug))
-        # send signal like getmail would
-        mailbox_signals.message_received.send(self, message=msg)
+        self.inject_mail(self.gestalt.user.email, [self.group_address],
+                         data=self.assemble_mail_data({}, body='Text A'))
         self.assertExists(
                 models.Contribution, conversation__associations__group=self.group,
                 text__text='Text A')
 
+    def test_conversation_initiate_by_email_mixed_case_addresses(self):
+        self.inject_mail(self.gestalt.user.email.title(), [self.group_address.title()],
+                         data=self.assemble_mail_data({}, body='Text B'))
+        self.assertExists(
+                models.Contribution, conversation__associations__group=self.group,
+                text__text='Text B')
+
     def test_conversation_initiate_by_email_failing(self):
-        # generate initial message
-        msg = mailbox_models.Message(
-                from_header=self.gestalt.user.email,
-                body='Delivered-To: not-existing@localhost\n\nText A')
-        # send signal like getmail would
-        mailbox_signals.message_received.send(self, message=msg)
-        self.assertEqual(len(mail.outbox), 1)
+        with self.fresh_outbox_mails_retriever() as get_new_mails:
+            rejections = self.inject_mail(
+                    self.gestalt.user.email, ['not-existing@localhost'],
+                    data=self.assemble_mail_data({}, body='Text C'))
+            self.assertEqual(1, len(rejections))
+            self.assertEqual(0, len(get_new_mails()))
 
 
 class ConversationReplyByEmailViaLMTP(gestalten.AuthenticatedMixin, gestalten.OtherGestaltMixin,
@@ -399,50 +367,17 @@ class ConversationReplyByEmailViaLMTP(gestalten.AuthenticatedMixin, gestalten.Ot
             self.assertNotExists(models.Contribution, text__text='Text F')
 
 
-class ConversationReplyByEmailViaDjangoMailbox(gestalten.AuthenticatedMixin,
-                                               gestalten.OtherGestaltMixin, tests.Test):
-
-    def test_texts_reply_by_email_mailbox(self):
-        # send message to other_gestalt via web interface
-        self.client.post(
-                self.get_url('create-gestalt-conversation', self.other_gestalt.pk),
-                {'subject': 'Subject A', 'text': 'Text A'})
-        text_a = self.assertExists(models.Contribution, conversation__subject='Subject A')
-        self.assertNotificationSent()
-        # generate reply message
-        reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = mailbox_models.Message(
-                from_header=self.other_gestalt.user.email,
-                body='Delivered-To: {}\n\nText B'.format(reply_to))
-        # send signal like getmail would
-        mailbox_signals.message_received.send(self, message=msg)
-        self.assertExists(
-                models.Contribution, conversation=text_a.conversation.get(),
-                text__text='Text B')
-
-
-class ConversationAttachmentsViaDjangoMailbox(memberships.MemberMixin, tests.Test):
+class ConversationAttachmentsViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
 
     def test_conversation_initiate_with_attachments(self):
-        with get_temporary_media_file(content=b"foo") as filename1, \
-                get_temporary_media_file(content=b"bar") as filename2:
-            box = mailbox_models.Mailbox.objects.create()
-            msg = mailbox_models.Message.objects.create(
-                    mailbox=box,
-                    from_header=self.gestalt.user.email,
-                    body='Delivered-To: {}@localhost\n\nText B'.format(self.group.slug),
-            )
-            mailbox_models.MessageAttachment.objects.create(
-                message=msg, headers="Content-Type: text/plain",
-                document=os.path.basename(filename1))
-            # this file should be ignore (based on its content type)
-            mailbox_models.MessageAttachment.objects.create(
-                message=msg, headers="Content-Type: application/pgp-signature",
-                document=os.path.basename(filename2))
-            # send signal like getmail would
-            mailbox_signals.message_received.send(self, message=msg)
-            contribution = self.assertExists(
-                    models.Contribution, conversation__associations__group=self.group,
-                    text__text='Text B')
-            # only the non-signature attachement should be visible
-            self.assertEqual(contribution.attachments.count(), 1)
+        message = self.assemble_mail_data(
+                {}, body='Text B',
+                attachments=[
+                    {'content_type': 'text/plain', 'payload': 'foo'},
+                    {'content_type': 'application/pgp-signature', 'payload': 'bar'}])
+        self.inject_mail(self.gestalt.user.email, [self.group_address], data=message)
+        contribution = self.assertExists(
+                models.Contribution, conversation__associations__group=self.group,
+                text__text='Text B')
+        # only the non-signature attachment should be visible
+        self.assertEqual(contribution.attachments.count(), 1)

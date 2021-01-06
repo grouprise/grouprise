@@ -1,11 +1,10 @@
 from django.core import mail
 from django.urls import reverse
-from django_mailbox.models import Message
-from django_mailbox.signals import message_received
 
 from grouprise.core.tests import Test, get_url as u
 from grouprise.features.associations.models import Association
 from grouprise.features.groups.tests.mixins import GroupMixin
+from grouprise.features.imports.tests.test_mail import MailInjectLMTPMixin
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
 
@@ -15,7 +14,7 @@ class TaggedGroupMixin(GroupMixin):
         self.group.tags.add('test')
 
 
-class BasicTagTests(AuthenticatedMemberMixin, Test):
+class BasicTagTests(AuthenticatedMemberMixin, MailInjectLMTPMixin, Test):
 
     def test_tag_page_has_group_tag_link(self):
         self.client.get(u('tag', 'test'))
@@ -39,10 +38,7 @@ class BasicTagTests(AuthenticatedMemberMixin, Test):
                 reverse('create-group-conversation', args=(self.group.pk,)),
                 {'subject': 'Subject', 'text': 'Text'})
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = Message(
-                from_header=self.gestalt.user.email,
-                body='Delivered-To: {}\n\nText with #tag'.format(reply_to))
-        message_received.send(self, message=msg)
+        self.inject_mail(self.gestalt.user.email, [reply_to], data='Text with #tag')
 
     def test_receive_content_contribution_with_tag_by_mail(self):
         # create incoming mail with tag (#302)
@@ -50,10 +46,7 @@ class BasicTagTests(AuthenticatedMemberMixin, Test):
                 reverse('create-group-article', args=(self.group.slug,)),
                 {'title': 'Test', 'text': 'Test'})
         reply_to = mail.outbox[0].extra_headers['Reply-To']
-        msg = Message(
-                from_header=self.gestalt.user.email,
-                body='Delivered-To: {}\n\nText with #tag'.format(reply_to))
-        message_received.send(self, message=msg)
+        self.inject_mail(self.gestalt.user.email, [reply_to], data='Text with #tag')
 
         # check, that tag page contains link to article
         r = self.client.get(reverse('tag', args=('tag',)))
