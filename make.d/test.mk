@@ -61,7 +61,7 @@ test_js: $(STAMP_NODE_MODULES) $(BIN_NPM) lint_js
 
 .PHONY: report-python-coverage
 coverage_py: $(ACTIVATE_VIRTUALENV) virtualenv-check
-	( . "$(ACTIVATE_VIRTUALENV)" && STADTGESTALTEN_PRESET=test "$(PYTHON_BIN)" -m coverage run -m manage test )
+	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage run -m manage test )
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage report )
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage html --directory="$(DIR_BUILD)/coverage-report" )
 	@echo "Coverage Report Location: file://$(realpath $(DIR_BUILD))/coverage-report/index.html"
