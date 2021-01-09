@@ -20,6 +20,7 @@ Documentation for users can be found on `stadtgestalten <https://stadtgestalten.
    configuration/assets
    database/index
    mail_setup
+   matrix_chat
    authentication/index
    upgrading
    releases/index
