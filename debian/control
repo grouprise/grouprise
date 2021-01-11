@@ -153,6 +153,24 @@ Description: Web platform that enables social action and solidarity
  pre-packaged python virtual environment (venv) for running the
  grouprise application.
 
+Package: grouprise-matrix
+Architecture: all
+Depends:
+ element-web-installer,
+ jq,
+ matrix-synapse,
+ moreutils,
+# the package shipped in Buster does not support Django 2.0 or newer
+ python3-django-cas-server (>= 1.2),
+# this package is not shipped in buster or buster-backports ("bullseye" is necessary)
+ python3-matrix-nio,
+Description: Matrix integration for grouprise platform
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package contains necessary services and files for configuring
+ a Matrix server to be used as a chat manager for grouprise.
+
 Package: element-web-installer
 Architecture: all
 Depends:

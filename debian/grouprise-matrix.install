@@ -1,0 +1,6 @@
+#!/usr/bin/dh-exec
+debian/grouprise-matrix.d/matrix-site.yaml => /etc/matrix-synapse/conf.d/grouprise-matrix-site.yaml
+debian/grouprise-matrix.d/matrix-authentication.yaml => /etc/matrix-synapse/conf.d/grouprise-matrix-authentication.yaml
+debian/grouprise-matrix.d/nginx-element.conf => /etc/nginx/snippets/grouprise-element.conf
+debian/grouprise-matrix.d/nginx-matrix-site => /etc/nginx/sites-available/grouprise-matrix
+debian/grouprise-matrix.d/nginx-matrix.conf => /etc/nginx/snippets/grouprise-matrix.conf

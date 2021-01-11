@@ -1,0 +1,127 @@
+#!/bin/sh
+
+set -e
+
+GROUPRISE_CONFIG_FILE=/etc/grouprise/settings.py
+ELEMENT_CONFIG_FILE=/etc/element-web/config.json
+
+
+. /usr/share/debconf/confmodule
+db_version 2.1
+
+# debconf does not work with "set -u", thus we enable it after loading debconf
+set -eu
+
+
+ask_debconf_question() {
+    local question="$1"
+    local priority="$2"
+    local default_value="${3:-}"
+    local RET
+    if [ -n "$default_value" ] && ( ! db_get "$question" || [ -z "$RET" ] ); then
+        # the value is not configured via debconf, yet
+        db_set "$question" "$default_value"
+    fi
+    db_input "$priority" "$question" || true
+    # shellcheck disable=SC2119
+    db_go || true
+    db_get "$question" || true
+    printf '%s' "$RET"
+}
+
+
+configure_grouprise_matrix() {
+    local grouprise_domain webserver_type
+    grouprise_domain=$(ask_debconf_question "grouprise/domain" "high")
+    webserver_type=$(ask_debconf_question "grouprise/configure-webserver" "high")
+    case "$webserver_type" in
+        nginx)
+            for filename in grouprise-matrix.conf grouprise-element.conf; do
+                if ! grep -q "include snippets/$filename" /etc/nginx/sites-available/grouprise; then
+                    sed -i "s|\(include snippets/grouprise.conf;\)|\1\n    include snippets/$filename;|" \
+                        /etc/nginx/sites-available/grouprise
+                fi
+            done
+            sed -i "s|server_name .*$|server_name $grouprise_domain;|g" /etc/nginx/sites-available/grouprise-matrix
+            sed -i "s|example\.org|$grouprise_domain|g" /etc/nginx/sites-available/grouprise-matrix
+            if [ ! -e "/etc/nginx/sites-enabled/grouprise-matrix" ]; then
+                mkdir -p /etc/nginx/sites-enabled/
+                ln -s ../sites-available/grouprise-matrix /etc/nginx/sites-enabled/
+                if [ -x /usr/sbin/nginx ]; then
+                    service nginx reload || true
+                fi
+            fi
+            ;;
+        none)
+            ;;
+        *)
+            echo >&2 "Ignoring unknown webserver type for grouprise: $webserver_type"
+            ;;
+    esac
+    sed -i "s|example\.org|$grouprise_domain|g" /etc/matrix-synapse/conf.d/grouprise-matrix-authentication.yaml
+}
+
+
+reconfigure_element() {
+    local arg="$1"
+    jq "$arg" <"$ELEMENT_CONFIG_FILE" | sponge "$ELEMENT_CONFIG_FILE"
+}
+
+
+configure_grouprise_element() {
+    # Probably this only works in the second run of this script, since the config file will be
+    # available only after element-web-installer finished its configuration.
+    if [ -e "$ELEMENT_CONFIG_FILE" ]; then
+        reconfigure_element '.brand |= "Grouprise Chat"'
+        reconfigure_element '.branding.welcomeBackgroundUrl = "/stadt/logos/square"'
+        reconfigure_element '.branding.authHeaderLogoUrl = "/stadt/logos/text"'
+        # bug reporting would require a "ragshake" server
+        reconfigure_element 'del (.bug_report_endpoint_url)'
+        reconfigure_element '.terms_and_conditions_links |= [{"url": "/stadt/privacy", "text": "Datenschutzhinweise"}]'
+        # reduce configurability and options
+        reconfigure_element '.disable_custom_urls = true'
+        reconfigure_element '.disable_guests = true'
+        reconfigure_element '.disable_login_language_selector = true'
+        reconfigure_element '.disable_3pid_login = true'
+        # disable various features, which are not usable due to our external account management
+        reconfigure_element '.settingDefaults["UIFeature.feedback"] = false'
+        reconfigure_element '.settingDefaults["UIFeature.identityServer"] = false'
+        reconfigure_element '.settingDefaults["UIFeature.thirdPartyId"] = false'
+        reconfigure_element '.settingDefaults["UIFeature.registration"] = false'
+        reconfigure_element '.settingDefaults["UIFeature.passwordReset"] = false'
+        reconfigure_element '.settingDefaults["UIFeature.deactivate"] = false'
+        # show "login" instead of "welcome" (hiding the registration button)
+        reconfigure_element '.embeddedPages = {"loginForWelcome": true}'
+    fi
+}
+
+
+configure_grouprise() {
+    # the file may not be empty, otherwise "sed '$afoo'" would not do anything (lacking a line)
+    [ -s "$GROUPRISE_CONFIG_FILE" ] || echo "$GROUPRISE_CONFIG_FILE"
+    if ! grep -q "cas_server" "$GROUPRISE_CONFIG_FILE"; then
+        # shellcheck disable=SC2016
+        sed -i '$aINSTALLED_APPS.extend(["cas_server", "grouprise.features.matrix_chat"])' "$GROUPRISE_CONFIG_FILE"
+    fi
+    if ! grep -q "MATRIX_CHAT" "$GROUPRISE_CONFIG_FILE"; then
+        # shellcheck disable=SC2016
+        sed -i '$aGROUPRISE["MATRIX_CHAT"] = {"ENABLED": True}' "$GROUPRISE_CONFIG_FILE"
+    fi
+}
+
+
+if [ "$1" = "configure" ]; then
+    configure_grouprise_matrix
+    configure_grouprise_element
+    configure_grouprise
+    grouprisectl matrix_chat_authentication add grouprise-matrix
+fi
+
+set +eu
+
+# dh_installdeb will replace this with shell code automatically
+# generated by other debhelper scripts.
+
+#DEBHELPER#
+
+exit 0
