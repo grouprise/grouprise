@@ -8,7 +8,7 @@ import sys
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from grouprise.features.imports.signals import (
+from grouprise.features.imports.mails import (
     ContributionMailProcessor,
     MailProcessingFailure,
     ParsedMailMessage,

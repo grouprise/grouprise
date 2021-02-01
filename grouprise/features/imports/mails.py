@@ -4,7 +4,6 @@ import email.parser
 import logging
 import re
 
-import django.db.models.signals
 from django.conf import settings
 import django.utils.timezone
 import html2text

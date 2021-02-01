@@ -16,7 +16,7 @@ from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models
 from grouprise.features.imports.management.commands.run_lmtpd import (
     ContributionLMTPD, POSTMASTER_ADDRESS)
-from grouprise.features.imports.signals import (
+from grouprise.features.imports.mails import (
     ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST)
 from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.memberships import test_mixins as memberships
