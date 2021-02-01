@@ -1,0 +1,7 @@
+{{ object.slug }}
+{{ object.name }}
+{{ object.address }}
+{{ object.description }}
+{% for tagged in object.taggeds.all %}
+    {{ tagged.tag.name }}
+{% endfor %}

@@ -22,7 +22,11 @@
             <ol class="content-preview-list">
                 {% for result in object_list %}
                     <li>
-                        {% include 'associations/_preview.html' with association=result.object %}
+                        {% if result.model_name == "association" %}
+                            {% include 'associations/_preview.html' with association=result.object %}
+                        {% elif result.model_name == "group" %}
+                            {% include 'groups/_preview.html' with group=result.object link=True %}
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ol>
