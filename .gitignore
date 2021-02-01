@@ -22,10 +22,15 @@ debian/debhelper-build-stamp
 debian/grouprise/
 debian/grouprise-dependencies/
 debian/grouprise-doc/
+debian/grouprise-db-postgresql/
+debian/grouprise-db-sqlite/
+debian/grouprise-lmtpd/
+debian/stadtgestalten/
 debian/*.debhelper
 debian/tmp
 debian/*.substvars
 debian/files
+
 grouprise.egg-info/
 gitlab-ci-build-venv/
 grouprise/core/templates/core/_assets.html
