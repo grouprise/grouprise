@@ -4,7 +4,7 @@ LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT
 	xargs -0 -n1 dirname | sort | uniq)
 
 .PHONY: lint
-lint: lint_js lint_packages lint-python
+lint: lint_js lint_packages
 
 .PHONY: lint_js
 lint_js: $(STAMP_NODE_MODULES) $(BIN_NPM)
@@ -26,9 +26,7 @@ lint_packages:
 .PHONY: test
 test: test_js
 
-.PHONY: test_py
-test_py: test-python
-
+# the "test-python" target is provided by makefilet
 test-python: test_py_prepare
 
 .PHONY: test_py_prepare
