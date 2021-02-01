@@ -35,7 +35,10 @@ release = ''
 #
 # needs_sphinx = '1.0'
 
-extensions = ['recommonmark']
+extensions = [
+        'recommonmark',
+        'sphinx.ext.graphviz',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
