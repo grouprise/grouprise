@@ -11,8 +11,9 @@ from ..management.commands.import_feeds import (
 
 
 FEED_LINK_EXAMPLES = (
-    ('<link rel="alternate" type="application/rss+xml" title="Peter Weiss Haus &raquo; Feed" '
-     'href="https://peterweisshaus.de/feed/" />"', 'https://peterweisshaus.de/feed/'),
+    b'<link rel="alternate" type="application/rss+xml" title="Peter Weiss Haus &raquo; Feed" '
+    b'href="https://peterweisshaus.de/feed/" />"',
+    b'https://peterweisshaus.de/feed/',
 )
 
 FEED_CONTENT_TEMPLATE = (

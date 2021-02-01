@@ -37,7 +37,6 @@ Build-Depends:
  python3-pil,
  python3-recommonmark,
  python3-redis,
- python3-requests,
  python3-setuptools,
  python3-six,
  python3-tz,

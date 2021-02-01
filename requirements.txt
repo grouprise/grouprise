@@ -38,7 +38,6 @@ randomcolor                 # NOT IN DEBIAN
 sentry-sdk                  # debian: python3-sentry-sdk
 recommonmark                # debian: python3-recommonmark
 redis                       # debian: python3-redis
-requests                    # debian: python3-requests
 rules                       # debian: python3-django-rules
 translitcodec               # NOT IN DEBIAN
 xapian-haystack>=2.1.1      # debian: python3-xapian-haystack

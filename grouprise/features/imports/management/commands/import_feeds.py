@@ -1,12 +1,12 @@
 import datetime
 import logging
 import re
-import ssl
+import sys
 import time
+import urllib.request
 
 import django
 import feedparser
-import requests
 from django.conf import settings
 
 import grouprise.core
@@ -22,25 +22,20 @@ from grouprise.features.imports import models
 
 logger = logging.getLogger(__name__)
 
-FEED_RE = (
-        r'<link\s+[^>]*'
-        r'(?:type=[\"\']application/(?:rss|atom)\+xml[\"\']\s+[^>]*'
-        r'href=[\"\']([^\"\']+)[\"\']'
-        r'|href=[\"\']([^\"\']+)[\"\']\s+[^>]*'
-        r'type=[\"\']application/(?:rss|atom)\+xml[\"\'])'
-        r'[^>]*>')
+FEED_RE = re.compile(
+        br'<link\s+[^>]*'
+        br'(?:type=[\"\']application/(?:rss|atom)\+xml[\"\']\s+[^>]*'
+        br'href=[\"\']([^\"\']+)[\"\']'
+        br'|href=[\"\']([^\"\']+)[\"\']\s+[^>]*'
+        br'type=[\"\']application/(?:rss|atom)\+xml[\"\'])'
+        br'[^>]*>')
 
 
-if hasattr(ssl, '_create_unverified_context'):
-    ssl._create_default_https_context = ssl._create_unverified_context
-
-
-def parse_feed_url_from_website_content(website_content):
-    matches = re.findall(FEED_RE, website_content)
-    for i, match_groups in enumerate(matches):
+def parse_feed_url_from_website_content(raw_website_content):
+    for match_groups in FEED_RE.findall(raw_website_content):
         feed_url = match_groups[0] or match_groups[1]
         if feed_url:
-            return feed_url
+            return feed_url.decode()
     else:
         return None
 
@@ -83,17 +78,23 @@ def import_from_feed(feed_url, submitter, target_group):
 class Command(django.core.management.base.BaseCommand):
 
     def handle(self, *args, **options):
-        author = gestalten.Gestalt.objects.get(
-            id=settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID'))
+        feed_importer_id = settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID')
+        if feed_importer_id is None:
+            logger.error(
+                    "No FEED_IMPORTER_GESTALT_ID setting is specified - aborting feed import.")
+            sys.exit(1)
+        author = gestalten.Gestalt.objects.get(id=feed_importer_id)
         for group in groups.Group.objects.filter(url_import_feed=True):
             if group.url:
+                request = urllib.request.Request(group.url, headers={"User-Agent": "grouprise"})
                 try:
-                    response = requests.get(group.url, headers={'User-Agent': 'grouprise'})
-                except (requests.exceptions.ChunkedEncodingError,
-                        requests.exceptions.ConnectionError):
-                    pass
+                    with urllib.request.urlopen(request) as req:
+                        text = req.read()
+                except urllib.request.URLError as exc:
+                    logger.warning(f"Failed to retrieve content from '{group.url}': {exc}")
                 else:
-                    feed_url = parse_feed_url_from_website_content(response.text)
+                    feed_url = parse_feed_url_from_website_content(text)
+                    logger.info(f"Retrieved feed URL for group '{group.name}': {feed_url}")
                     if feed_url:
                         import_from_feed(feed_url, author, group)
             else:
