@@ -90,8 +90,10 @@ grouprise.
 
 The docker image based on the latest released deb package of grouprise can be built easily:
 ```sh
-docker build docker/grouprise-released-deb
+docker build docker/grouprise-deb-prepared
 ```
+
+Run `/usr/bin/grouprise-start-services` within the built docker image for starting all grouprise related services.
 
 
 ## Production deployment
