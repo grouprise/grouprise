@@ -19,7 +19,21 @@ The following `make` targets are probably of most interest:
 * `test`: run the automated test suite
 
 
-## Release Workflow
+## Branch workflow
+
+The git branches of the repository are used according to the [OneFlow](https://www.endoflineblog.com/oneflow-a-git-branching-model-and-workflow) concept.
+The [merge of a feature branch](https://www.endoflineblog.com/oneflow-a-git-branching-model-and-workflow#finishing-a-feature-branch) should use *Option 1 (rebase)* or *Option 3 (rebase + merge no-ff)*.
+
+In case of TL;DR:
+
+* There is only one permanent branch (`master`).  Release commits are branched, tagged and merged back into `master`.
+* Feature branches are based on the `master` branch.  They are merged back into `master` via *rebase* or *rebase + merge no-fastforward*.
+* Hot fixes start at a release tag.  After tagging they are merged back into `master`.
+
+Only the most recent release is supported (for hot fixes).
+
+
+## Release workflow
 
 To create a new release take the following steps:
 
