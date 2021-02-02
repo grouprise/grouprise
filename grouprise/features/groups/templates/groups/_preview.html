@@ -32,7 +32,7 @@
         <h3>{{ group.name }}</h3>
         <p>
             {% if group.description %}
-                {{ group.description }}
+                {% markdown group.description preset='linkonly' %}
             {% else %}
                 Diese Gruppe hat noch keine Beschreibung auf {{ about_group }} hinterlegt.
             {% endif %}
