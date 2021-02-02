@@ -226,6 +226,17 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_XAPIAN_LANGUAGE = 'german2'
 
 
+HUEY = {
+    'huey_class': 'huey.SqliteHuey',
+    'filename': os.path.join(BASE_DIR, 'huey.sqlite'),
+    # Do not store results of tasks, since we do not use them.
+    # Otherwise we would need to run the following periodically:
+    #   from huey.contrib.djhuey import HUEY
+    #   HUEY.storage.flush_results()
+    'results': False,
+}
+
+
 # Django Rest Framework
 # http://www.django-rest-framework.org/
 

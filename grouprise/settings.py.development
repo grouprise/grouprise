@@ -26,5 +26,8 @@ CSP_CONNECT_SRC = CSP_CONNECT_SRC + (WEBPACK_DEV_SERVER_URL, WEBPACK_DEV_SERVER_
 
 if TESTING:
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    HUEY = {'always_eager': True}
+    try:
+        HUEY['always_eager'] = True
+    except NameError:
+        HUEY = {'always_eager': True}
     SYNC_EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
