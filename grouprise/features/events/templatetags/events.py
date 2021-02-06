@@ -7,6 +7,7 @@ from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
+from grouprise.core.utils import get_verified_locale
 from grouprise.features.events.utils import get_requested_time, EventCalendar
 
 register = template.Library()
@@ -55,7 +56,7 @@ def calendar(context, associations, size='preview', component_id=None):
             ).order_by('content__time')
     calendar_event_dict = {date: list(events) for date, events in itertools.groupby(
         calendar_associations, key=lambda a: a.container.time.astimezone().date())}
-    calendar = EventCalendar(calendar_event_dict)
+    calendar = EventCalendar(calendar_event_dict, locale=get_verified_locale(request))
     last_month = around.replace(day=1) + datetime.timedelta(days=-1)
     next_month = around.replace(day=1) + datetime.timedelta(days=31)
     context.update({
