@@ -114,6 +114,18 @@ if [ "$1" = "configure" ]; then
     configure_grouprise_matrix
     configure_grouprise_element
     configure_grouprise
+    # register the privileged bot account
+    bot_token=$(GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot)
+    if [ -n "$bot_token" ]; then
+        # write the bot token to the configuration file
+        # TODO: switch to a machine-writable configuration format
+        if ! grep -q "BOT_USERNAME" "$GROUPRISE_CONFIG_FILE"; then
+            # shellcheck disable=SC2016
+            sed -i '$aGROUPRISE["MATRIX_CHAT"]["BOT_USERNAME"] = "grouprise-bot"' "$GROUPRISE_CONFIG_FILE"
+            # shellcheck disable=SC2016
+            sed -i '$aGROUPRISE["MATRIX_CHAT"]["BOT_ACCESS_TOKEN"] = "'"$bot_token"'"' "$GROUPRISE_CONFIG_FILE"
+        fi
+    fi
 fi
 
 set +eu
