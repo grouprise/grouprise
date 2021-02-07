@@ -99,9 +99,9 @@ configure_grouprise_element() {
 configure_grouprise() {
     # the file may not be empty, otherwise "sed '$afoo'" would not do anything (lacking a line)
     [ -s "$GROUPRISE_CONFIG_FILE" ] || echo "$GROUPRISE_CONFIG_FILE"
-    if ! grep -q "cas_server" "$GROUPRISE_CONFIG_FILE"; then
+    if ! grep -q "matrix_chat" "$GROUPRISE_CONFIG_FILE"; then
         # shellcheck disable=SC2016
-        sed -i '$aINSTALLED_APPS.extend(["cas_server", "grouprise.features.matrix_chat"])' "$GROUPRISE_CONFIG_FILE"
+        sed -i '$aINSTALLED_APPS.append("grouprise.features.matrix_chat")' "$GROUPRISE_CONFIG_FILE"
     fi
     if ! grep -q "MATRIX_CHAT" "$GROUPRISE_CONFIG_FILE"; then
         # shellcheck disable=SC2016
@@ -114,7 +114,6 @@ if [ "$1" = "configure" ]; then
     configure_grouprise_matrix
     configure_grouprise_element
     configure_grouprise
-    grouprisectl matrix_chat_authentication add grouprise-matrix
 fi
 
 set +eu

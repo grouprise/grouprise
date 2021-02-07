@@ -160,8 +160,6 @@ Depends:
  jq,
  matrix-synapse,
  moreutils,
-# the package shipped in Buster does not support Django 2.0 or newer
- python3-django-cas-server (>= 1.2),
 # this package is not shipped in buster or buster-backports ("bullseye" is necessary)
  python3-matrix-nio,
 Description: Matrix integration for grouprise platform

@@ -43,9 +43,6 @@ packages with proper security support.
 
 1. add the `buster-backports` repository to your apt sources file
    (for the `matrix-synapse` package)
-1. install `python3-django-cas-server` from the Debian *testing* repository
-   The required version of `python3-django-cas-server` will be part of the *Debian Bullseye* in 2021.
-   Hint: do not forget to remove the *testing* repository from your sources list afterwards.
 1. install the matrix integration package for grouprise: `apt install grouprise-matrix`
 1. answer the configuration questions during package installation:
     * matrix-synapse:
