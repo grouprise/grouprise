@@ -44,6 +44,8 @@ The following list of Django applications implementing the various protocols is 
 
 * [CAS Server](https://github.com/nitmir/django-cas-server):
     * [Debian package](https://packages.debian.org/python3-django-cas-server/) is available
+    * a separate login activity is required, since the grouprise session is not related to the CAS
+      session (see [django-cas-server#70](https://github.com/nitmir/django-cas-server/issues/70))
 
 
 ### OAuth
