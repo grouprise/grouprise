@@ -17,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 
 @receiver(post_save, sender=grouprise.features.groups.models.Group)
-@db_task()
-def update_matrix_rooms_for_group(sender, instance, created, update_fields, **kwargs):
-    if created or (update_fields and "logo" in update_fields):
+def update_matrix_rooms_for_group(sender, instance, created, **kwargs):
+    if created:
+        _sync_rooms_delayed(instance)
+
 
 @db_task()
 def _sync_rooms_delayed(group):

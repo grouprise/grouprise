@@ -69,34 +69,7 @@ class MatrixBot:
             except MatrixError as exc:
                 logger.error(f"Failed to synchronize room: {exc}")
                 continue
-            avatar_changed = False
-            if group.avatar:
-                grouprise_avatar_url = full_url(group.avatar_64.url)
-                response = await self.client.room_get_state_event(
-                    room.room_id, "m.room.avatar"
-                )
-                if isinstance(response, nio.responses.RoomGetStateEventResponse):
-                    current_matrix_avatar_url = response.content.get("url")
-                elif isinstance(response, nio.responses.RoomGetStateEventError) and (
-                    response.status_code == "M_NOT_FOUND"
-                ):
-                    current_matrix_avatar_url = None
-                else:
-                    logger.warning(
-                        f"Failed to retrieve current avatar of group '{group}': {response}"
-                    )
-                    continue
-                if current_matrix_avatar_url != grouprise_avatar_url:
-                    response = await self.client.room_put_state(
-                        room.room_id, "m.room.avatar", {"url": grouprise_avatar_url}
-                    )
-                    if isinstance(response, nio.responses.RoomPutStateResponse):
-                        avatar_changed = True
-                    else:
-                        logger.warning(
-                            f"Failed to update avatar for room '{room}': {response}"
-                        )
-            if created or avatar_changed:
+            if created:
                 yield room
 
     async def _get_or_create_room(self, group, is_private):
