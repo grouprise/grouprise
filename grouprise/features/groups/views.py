@@ -21,6 +21,7 @@ from grouprise.features.groups import filters, forms, models
 from grouprise.features.groups.forms import RecommendForm
 from grouprise.features.groups.models import Group
 from grouprise.features.groups.notifications import RecommendNotification
+from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 
 
 class Create(PermissionMixin, CreateView):
@@ -54,6 +55,10 @@ class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailVi
             intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
         kwargs['feed_url'] = self.request.build_absolute_uri(
                 reverse('group-feed', args=(self.object.pk,)))
+        if MATRIX_SETTINGS.ENABLED:
+            all_rooms = self.object.matrix_rooms
+            kwargs['public_chat_room'] = all_rooms.filter(is_private=False).first()
+            kwargs['private_chat_room'] = all_rooms.filter(is_private=True).first()
         return super().get_context_data(
                 GROUPRISE_MAILINGLIST_ENABLED=CORE_SETTINGS.MAILINGLIST_ENABLED,
                 associations=associations,
