@@ -53,6 +53,11 @@ class Gestalt(grouprise.core.models.Model):
     score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     activity_bookmark_time = models.DateTimeField(default=now)
+    is_email_blocker = models.BooleanField(
+            'E-Mail-Benachrichtigungen ausschalten',
+            default=False,
+            help_text='Unabhängig von Abonnements alle Benachrichtigungen via E-Mail deaktivieren'
+    )
 
     associations = django.contrib.contenttypes.fields.GenericRelation(
             'associations.Association', content_type_field='entity_type',

@@ -23,7 +23,8 @@ class Notification:
     @classmethod
     def send_all(cls, instance, **extra_kwargs):
         for recipient, kwargs in cls.get_recipients(instance).items():
-            if recipient.id != settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID'):
+            if (not recipient.is_email_blocker) and (
+                    recipient.id != settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID')):
                 kwargs.update(extra_kwargs)
                 cls(instance).send(recipient, **kwargs)
 

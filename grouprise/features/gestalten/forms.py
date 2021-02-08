@@ -63,7 +63,7 @@ class Create(allauth.account.forms.SignupForm):
 class Update(forms.ModelForm):
     class Meta:
         model = models.Gestalt
-        fields = ('about', 'public')
+        fields = ('about', 'is_email_blocker', 'public')
         widgets = {'about': forms.Textarea({'rows': 5})}
 
     first_name = forms.CharField(label='Vorname', required=False)
