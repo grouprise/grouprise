@@ -20,4 +20,4 @@ def send_membership_notification(sender, instance, created, **kwargs):
     if created:
         membership = instance
         if membership.created_by != membership.member:
-            notifications.MembershipCreated.send_all(membership)
+            notifications.MembershipCreated.send_all(membership, force=True)
