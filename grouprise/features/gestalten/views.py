@@ -35,8 +35,10 @@ class Delete(PermissionMixin, DeleteView):
     success_url = '/'
 
     def get_object(self):
-        gestalt = self.request.user.gestalt
-        self.data = gestalt.get_data()
+        gestalt = None
+        if self.request.user.is_authenticated:
+            gestalt = self.request.user.gestalt
+            self.data = gestalt.get_data()
         return gestalt
 
 
