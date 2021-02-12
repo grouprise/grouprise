@@ -1,4 +1,4 @@
-{% extends 'content/created.txt' %}{% block content %}Galerie online ansehen und kommentieren:
+{% extends 'email_notifications/content_created.txt' %}{% block content %}Galerie online ansehen und kommentieren:
 {% url 'content-permalink' association.pk as path %}{{ path|full_url }}
 
 Galerie mit {{ object.gallery_images.count }} Bild{{ object.gallery_images.count|pluralize:'ern' }}

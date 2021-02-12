@@ -3,8 +3,9 @@ from django import forms
 from django.db.models import Q
 
 import grouprise.core.forms
+from grouprise.core.signals import post_create
 from grouprise.core.utils import slugify
-from . import models, signals
+from . import models
 from grouprise.features.associations import models as associations
 from grouprise.features.groups import models as groups
 from grouprise.features.images.models import Image
@@ -83,7 +84,7 @@ class Create(forms.ModelForm):
         pass
 
     def send_post_create(self, instance=None):
-        signals.post_create.send(
+        post_create.send(
                 sender=self.__class__,
                 instance=instance if instance else self.instance.container)
 

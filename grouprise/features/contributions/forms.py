@@ -1,7 +1,7 @@
 from django import forms
 
+from grouprise.core.signals import post_create
 from grouprise.features.contributions import models as contributions
-from . import signals
 
 
 class Text(forms.ModelForm):
@@ -25,5 +25,5 @@ class Text(forms.ModelForm):
                 text=self.cleaned_data['text'])
         if commit:
             contribution.save()
-        signals.post_create.send(sender=self.__class__, instance=contribution)
+        post_create.send(sender=self.__class__, instance=contribution)
         return contribution

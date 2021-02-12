@@ -1,4 +1,4 @@
-{% extends 'content/created.txt' %}{% block content %}Artikel online lesen und kommentieren:
+{% extends 'email_notifications/content_created.txt' %}{% block content %}Artikel online lesen und kommentieren:
 {% url 'content-permalink' association.pk as path %}{{ path|full_url }}
 
 {% markdown object.versions.last.text as html %}{{ html|html2text:'mail' }}{% endblock %}

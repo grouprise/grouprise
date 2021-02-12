@@ -10,10 +10,10 @@ import html2text
 
 import grouprise.core.models
 from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
+from grouprise.core.signals import post_create
 from grouprise.features.associations import models as associations
 from grouprise.features.content.models import Content
 from grouprise.features.contributions import models
-from grouprise.features.contributions.signals import post_create
 from grouprise.features.conversations import models as conversations
 from grouprise.features.files import models as files
 from grouprise.features.gestalten.models import Gestalt

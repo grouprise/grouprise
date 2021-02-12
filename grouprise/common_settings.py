@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'grouprise.features.contributions',
     'grouprise.features.conversations',
     'grouprise.features.content',
+    'grouprise.features.email_notifications',
     'grouprise.features.events',
     'grouprise.features.files',
     'grouprise.features.galleries',
@@ -284,10 +285,10 @@ GROUPRISE_SCORE_PROCESSORS = (
 
 GROUPRISE_REPEATABLE_TASKS = {
     'content2.Content':
-    'grouprise.features.content.notifications.send_content_notifications',
+    'grouprise.features.email_notifications.notifications.send_content_notifications',
 
     'contributions.Contribution':
-    'grouprise.features.contributions.notifications.send_contribution_notifications',
+    'grouprise.features.email_notifications.notifications.send_contribution_notifications',
 }
 
 

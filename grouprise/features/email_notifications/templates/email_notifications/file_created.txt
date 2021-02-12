@@ -1,4 +1,4 @@
-{% extends 'content/created.txt' %}{% block content %}Datei online ansehen und kommentieren:
+{% extends 'email_notifications/content_created.txt' %}{% block content %}Datei online ansehen und kommentieren:
 {% url 'content-permalink' association.pk as path %}{{ path|full_url }}
 
 Datei {{ object.versions.last.file.get }}

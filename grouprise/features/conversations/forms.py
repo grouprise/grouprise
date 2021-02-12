@@ -71,7 +71,7 @@ class Create(forms.ModelForm):
             application_contribution.save()
 
         # send contribution creation signal
-        grouprise.features.contributions.signals.post_create.send(
+        grouprise.core.signals.post_create.send(
                 sender=self.__class__, instance=self.contribution)
 
         return association
