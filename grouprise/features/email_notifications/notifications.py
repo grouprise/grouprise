@@ -5,32 +5,58 @@ import django
 import django.utils.timezone
 from django.urls import reverse
 
-import grouprise.core
-from grouprise.core import notifications
+from grouprise.core.notifications import Notification
 from grouprise.core.templatetags.defaulttags import ref
 from grouprise.features.contributions import models as contributions
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships import models as memberships
 
 
-def update_recipients(recipients_dict, association=None, subscriptions=[], contributions=[]):
+def update_recipients(
+    recipients_dict, association=None, subscriptions=[], contributions=[]
+):
     def update_attributes(key, **kwargs):
         attributes = recipients_dict.setdefault(key, {})
         attributes.update((k, v) for k, v in kwargs.items() if v)
 
     for subscription in subscriptions:
-        membership = subscription.subscriber.memberships \
-                .filter(group=subscription.subscribed_to).first()
+        membership = subscription.subscriber.memberships.filter(
+            group=subscription.subscribed_to
+        ).first()
         update_attributes(
-                subscription.subscriber, association=association, membership=membership,
-                subscription=subscription)
+            subscription.subscriber,
+            association=association,
+            membership=membership,
+            subscription=subscription,
+        )
     # for contribution in contributions:
     #     update_attributes(contribution.author, contribution=contribution)
     if association and not association.entity.is_group:
         update_attributes(association.entity, association=association)
 
 
-class ContentCreated(grouprise.core.notifications.Notification):
+class ContentOrContributionCreated(Notification):
+    def get_group(self):
+        if self.association and self.association.entity.is_group:
+            return self.association.entity
+        else:
+            return None
+
+    def get_list_id(self):
+        if self.group:
+            return "<{}.{}>".format(self.group.slug, self.site.domain)
+        return super().get_list_id()
+
+    def get_message(self):
+        self.association = self.kwargs.get("association")
+        self.group = self.get_group()
+        return super().get_message()
+
+    def get_reply_token(self):
+        return self.create_token()
+
+
+class ContentCreated(ContentOrContributionCreated):
     @classmethod
     def get_recipients(cls, content):
         recipients = {}
@@ -49,27 +75,8 @@ class ContentCreated(grouprise.core.notifications.Notification):
             )
         return recipients
 
-    def get_group(self):
-        if self.association and self.association.entity.is_group:
-            return self.association.entity
-        else:
-            return None
-
-    def get_list_id(self):
-        if self.group:
-            return "<{}.{}>".format(self.group.slug, self.site.domain)
-        return super().get_list_id()
-
-    def get_message(self):
-        self.association = self.kwargs.get("association")
-        self.group = self.get_group()
-        return super().get_message()
-
     def get_message_ids(self):
         return self.object.get_unique_id(), None, []
-
-    def get_reply_token(self):
-        return self.create_token()
 
     def get_sender(self):
         if self.group and not self.recipient.user.has_perm(
@@ -107,11 +114,7 @@ class ContentCreated(grouprise.core.notifications.Notification):
         return super().get_url()
 
 
-def send_content_notifications(instance):
-    ContentCreated.send_all(instance)
-
-
-class ContributionCreated(notifications.Notification):
+class ContributionCreated(ContentOrContributionCreated):
     @classmethod
     def get_recipients(cls, contribution):
         recipients = {}
@@ -156,22 +159,6 @@ class ContributionCreated(notifications.Notification):
         contribution_date = self.object.time_created.astimezone(tz=tz)
         return email.utils.format_datetime(contribution_date)
 
-    def get_group(self):
-        if self.association and self.association.entity.is_group:
-            return self.association.entity
-        else:
-            return None
-
-    def get_list_id(self):
-        if self.group:
-            return "<{}.{}>".format(self.group.slug, self.site.domain)
-        return super().get_list_id()
-
-    def get_message(self):
-        self.association = self.kwargs.get("association")
-        self.group = self.get_group()
-        return super().get_message()
-
     def get_message_ids(self):
         my_id = self.object.get_unique_id()
         container = self.object.container
@@ -182,9 +169,6 @@ class ContributionCreated(notifications.Notification):
         if thread_id != parent_id:
             ref_ids.append(thread_id)
         return my_id, parent_id, ref_ids
-
-    def get_reply_token(self):
-        return self.create_token()
 
     def get_sender(self):
         return self.object.author
@@ -223,7 +207,3 @@ class ContributionCreated(notifications.Notification):
             self.object.container.is_conversation
             and self.object.container.contributions.first() == self.object
         )
-
-
-def send_contribution_notifications(instance):
-    ContributionCreated.send_all(instance)

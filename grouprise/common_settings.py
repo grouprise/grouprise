@@ -285,10 +285,10 @@ GROUPRISE_SCORE_PROCESSORS = (
 
 GROUPRISE_REPEATABLE_TASKS = {
     'content2.Content':
-    'grouprise.features.email_notifications.notifications.send_content_notifications',
+    'grouprise.features.email_notifications.tasks.send_content_notifications',
 
     'contributions.Contribution':
-    'grouprise.features.email_notifications.notifications.send_contribution_notifications',
+    'grouprise.features.email_notifications.tasks.send_contribution_notifications',
 }
 
 
