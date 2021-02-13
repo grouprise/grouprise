@@ -3,6 +3,7 @@ from django.contrib.messages import success, info
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views.generic import CreateView, DeleteView, FormView
 
 from grouprise.core.models import PermissionToken
@@ -124,3 +125,6 @@ class GroupUnsubscribeRequest(PermissionMixin, FormView):
 
     def get_success_url(self):
         return self.group.get_absolute_url()
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return HttpResponseRedirect(reverse('group-unsubscribe', args=[self.group.pk]))
