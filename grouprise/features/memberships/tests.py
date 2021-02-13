@@ -54,11 +54,12 @@ class Membership(MemberMixin, TestCase):
         mail.outbox = []
         self.client.logout()
 
-        # notification contains link to resign form
-        resign_request_url = reverse('resign-request', args=(self.group.pk,))
-        self.assertTrue(resign_request_url in email_obj.body)
+        # notification contains link to unsubscribe form
+        unsubscribe_request_url = reverse('group-unsubscribe-request', args=(self.group.pk,))
+        self.assertTrue(unsubscribe_request_url in email_obj.body)
 
-        # resign form renders ok
+        # resign form (not used at the moment) renders ok
+        resign_request_url = reverse('resign-request', args=(self.group.pk,))
         r = self.client.get(resign_request_url)
         self.assertEquals(r.status_code, 200)
 

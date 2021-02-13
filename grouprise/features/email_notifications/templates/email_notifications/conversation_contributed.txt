@@ -9,9 +9,6 @@ Nachricht online lesen und beantworten:
 {% load rules %}{% has_perm 'contributions.reply_to_author' recipient.user object as can_reply_to_author %}{% if can_reply_to_author %}
 Nur an {{ object.author }} antworten:
 {% if association %}{% url 'reply-to-author' association.pk object.pk as path %}{% else %}{% url 'reply-to-author' object.container.associations.first.pk object.pk as path %}{% endif %}{{ path|full_url }}{% endif %}
-{% if contribution %}
-Du erhältst diese Benachrichtigung, weil Du Dich an diesem Gespräch beteiligt hast.
-{% url 'conversation' object.container.associations.first.pk as path %}{{ path|full_url }}#{% ref contribution %}
-{% elif subscription and membership %}
-Du erhältst diese Benachrichtigung weil Du Mitglied der Gruppe '{{ membership.group }}' bist und die Gruppe abonniert hast. Gruppe verlassen:
-{% if membership.member.can_login %}{% url 'resign' membership.group.pk as resign_url %}{% else %}{% url 'resign-request' membership.group.pk as resign_url %}{% endif %}{{ resign_url|full_url }}{% endif %}
+{% if is_subscriber %}
+Du erhältst diese Benachrichtigung, weil du die Gruppe '{{ association.entity }}' abonniert hast. Benachrichtigungen abbestellen:
+{% url 'group-unsubscribe-request' association.entity.pk as unsub_url %}{{ unsub_url|full_url }}{% endif %}
