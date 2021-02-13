@@ -1,41 +1,80 @@
 import email.utils
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.associations.models import Association
 import os
 
 import django
+from django.db import models
 import django.utils.timezone
 from django.urls import reverse
 
 from grouprise.core.notifications import Notification
 from grouprise.core.templatetags.defaulttags import ref
+from grouprise.features.content.models import Content
 from grouprise.features.contributions import models as contributions
+from grouprise.features.conversations.models import Conversation
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships import models as memberships
 
 
-def update_recipients(
-    recipients_dict, association=None, subscriptions=[], contributions=[]
-):
-    def update_attributes(key, **kwargs):
-        attributes = recipients_dict.setdefault(key, {})
-        attributes.update((k, v) for k, v in kwargs.items() if v)
-
-    for subscription in subscriptions:
-        membership = subscription.subscriber.memberships.filter(
-            group=subscription.subscribed_to
-        ).first()
-        update_attributes(
-            subscription.subscriber,
-            association=association,
-            membership=membership,
-            subscription=subscription,
-        )
-    # for contribution in contributions:
-    #     update_attributes(contribution.author, contribution=contribution)
-    if association and not association.entity.is_group:
-        update_attributes(association.entity, association=association)
-
-
 class ContentOrContributionCreated(Notification):
+    @staticmethod
+    def get_recipients(contentOrContribution: models.Model) -> dict:
+        if isinstance(contentOrContribution, Content):
+            container = contentOrContribution
+        else:
+            container = contentOrContribution.container
+        recipients = {}
+        association: Association
+        for association in container.associations.all():
+            if association.public:
+                # for public associations we just send notifications to all group subscribers
+                if isinstance(association.entity, Group):
+                    recipients.update(
+                        {
+                            subscriber: {"is_subscriber": True}
+                            for subscriber in association.entity.subscribers.all()
+                        }
+                    )
+            else:
+                # for private associations
+                if isinstance(association.entity, Group):
+                    # we send notifications to subscribed group members
+                    recipients.update(
+                        {
+                            subscriber: {"is_subscriber": True}
+                            for subscriber in association.entity.members.filter(
+                                subscriptions__group=association.entity
+                            )
+                        }
+                    )
+                elif isinstance(association.entity, Gestalt):
+                    # we send a notification to the associated gestalt
+                    recipients[association.entity] = {}
+                # for conversations we check the initiating contribution
+                if (
+                    isinstance(container, Conversation)
+                    and container.contributions.exists()
+                ):
+                    initiating_gestalt: Gestalt = container.contributions.first().author
+                    # if either the conversation is private (associated to a gestalt) or the
+                    # initial author is not a group member, they get notified
+                    if isinstance(association.entity, Gestalt) or (
+                        isinstance(association.entity, Group)
+                        and not association.entity.members.filter(
+                            pk=initiating_gestalt.pk
+                        ).exists()
+                    ):
+                        recipients[initiating_gestalt] = {}
+            # enrich recipients with some context
+            recipients.update(
+                {
+                    recipient: {"association": association, **context}
+                    for recipient, context in recipients.items()
+                }
+            )
+        return recipients
+
     def get_group(self):
         if self.association and self.association.entity.is_group:
             return self.association.entity
@@ -57,24 +96,6 @@ class ContentOrContributionCreated(Notification):
 
 
 class ContentCreated(ContentOrContributionCreated):
-    @classmethod
-    def get_recipients(cls, content):
-        recipients = {}
-        # send notifications to groups associated with content (instance)
-        associations = content.associations.filter(entity_type=Group.content_type)
-        for association in associations:
-            # all subscribers receive a notification
-            subscriptions = association.entity.subscriptions.all()
-            if not association.public:
-                # for internal content, only subscribed members receive a notification
-                subscriptions = subscriptions.filter(
-                    subscriber__memberships__group=association.entity
-                )
-            update_recipients(
-                recipients, association=association, subscriptions=subscriptions
-            )
-        return recipients
-
     def get_message_ids(self):
         return self.object.get_unique_id(), None, []
 
@@ -115,28 +136,6 @@ class ContentCreated(ContentOrContributionCreated):
 
 
 class ContributionCreated(ContentOrContributionCreated):
-    @classmethod
-    def get_recipients(cls, contribution):
-        recipients = {}
-        # send notifications to gestalten and groups associated with content (instance)
-        for association in contribution.container.associations.all():
-            if association.entity.is_group:
-                # subscribed members receive a notification
-                subscriptions = association.entity.subscriptions.filter(
-                    subscriber__memberships__group=association.entity
-                )
-                update_recipients(
-                    recipients, association=association, subscriptions=subscriptions
-                )
-            else:
-                # associated gestalten receive a notification
-                update_recipients(recipients, association=association)
-        # send notifications to contributing gestalten
-        update_recipients(
-            recipients, contributions=contribution.container.contributions.all()
-        )
-        return recipients
-
     def get_attachments(self):
         return [
             os.path.join(django.conf.settings.MEDIA_ROOT, c.contribution.file.name)
