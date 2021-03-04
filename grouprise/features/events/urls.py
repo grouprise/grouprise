@@ -8,7 +8,7 @@ urlpatterns = [
     path('stadt/events/add', Create.as_view(), name='create-event'),
     path('stadt/events/export', SiteCalendarExport.as_view(), name='export-site-events'),
     path('stadt/events/public.ics', SiteCalendarFeed(), name='site-events-feed'),
-    path('stadt/events/<int:year>/<slug:month>/<int:day>', Day.as_view(), name='day-events'),
+    path('stadt/events/<int:year>/<int:month>/<int:day>', Day.as_view(), name='day-events'),
     path('<slug:entity_slug>/events/add', Create.as_view(), name='create-group-event'),
     path('<slug:group_slug>/events/export', GroupCalendarExport.as_view(),
          name='group-events-export'),
