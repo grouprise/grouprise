@@ -55,7 +55,7 @@ class Day(List):
     def get_date(self):
         return django.views.generic.dates._date_from_string(
                 self.kwargs['year'], '%Y',
-                self.kwargs['month'], '%b',
+                self.kwargs['month'], '%m',
                 self.kwargs['day'], '%d')
 
     def get_queryset(self):
