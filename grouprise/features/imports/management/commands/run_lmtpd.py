@@ -13,6 +13,7 @@ from aiosmtpd.lmtp import LMTP
 from aiosmtplib.errors import SMTPRecipientsRefused, SMTPResponseException
 from aiosmtplib.smtp import SMTP
 import django
+import django.db
 from django.conf import settings
 
 from grouprise.features.imports.mails import (
@@ -169,6 +170,23 @@ class AsyncLMTPClient:
         return self.loop.run_until_complete(command)
 
 
+def close_db_connection_afterwards(func):
+    """ force closing of the database connection after every single request
+
+    See https://git.hack-hro.de/grouprise/grouprise/-/issues/711 for details.
+    This prevents a restart or temporary loss of the database server from breaking all future
+    requests (due to an "not closed, but unusable" database connection).
+    See also https://code.djangoproject.com/ticket/24810.
+    """
+    @functools.wraps(func)
+    async def wrapper(*args, **kwargs):
+        try:
+            return await func(*args, **kwargs)
+        finally:
+            django.db.connection.close()
+    return wrapper
+
+
 class ContributionHandler:
 
     def __init__(self, contribution_processor, success_writer, error_writer):
@@ -195,6 +213,7 @@ class ContributionHandler:
         else:
             return 'Unknown target mail address'
 
+    @close_db_connection_afterwards
     async def handle_VRFY(self, server, session, envelope, recipient):
         error_message = self._get_recipient_check_error_message(recipient)
         if error_message is None:
@@ -202,6 +221,7 @@ class ContributionHandler:
         else:
             return '550 {}'.format(error_message)
 
+    @close_db_connection_afterwards
     async def handle_RCPT(self, server, session, envelope, recipient, rcpt_options):
         # TODO: we should test here, if the sender is allowed to reach this recipient. LMTP allows
         # partial rejection - this would be good to use (e.g. for CCing multiple groups).
@@ -212,6 +232,7 @@ class ContributionHandler:
         else:
             return '550 {}'.format(error_message)
 
+    @close_db_connection_afterwards
     async def handle_DATA(self, server, session, envelope):
         parser = email.parser.BytesParser(policy=email.policy.SMTP)
         message = parser.parsebytes(envelope.content)
