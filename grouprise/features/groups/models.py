@@ -34,7 +34,7 @@ class Group(grouprise.core.models.Model):
             max_length=255)
     score = models.IntegerField(default=0)
     slug = EntitySlugField(
-            'Adresse der Gruppenseite', blank=True, null=True, unique=True,
+            'Adresse der Gruppenseite', unique=True,
             help_text='Wird auch als Kurzname verwendet')
 
     address = models.TextField(
