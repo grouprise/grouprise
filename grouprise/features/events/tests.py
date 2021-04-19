@@ -287,8 +287,6 @@ class GroupCalendarExportNonMember(memberships.MemberMixin,
 
 class TestUrls(grouprise.core.tests.Test):
     def test_events_404(self):
-        r = self.client.get(django.urls.reverse('day-events', args=[1970, 1, 1]))
-        self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('create-group-event', 'non-existent'))
         self.assertEqual(r.status_code, 404)
         r = self.client.get(self.get_url('group-events-export', 'non-existent'))
