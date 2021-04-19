@@ -9,7 +9,7 @@ from django.db import models
 from django.utils import crypto
 import django.utils.timezone
 
-MAX_FILE_SIZE = settings.GROUPRISE.get('UPLOAD_MAX_FILE_SIZE', 0)
+MAX_FILE_SIZE = settings.GROUPRISE.get('UPLOAD_MAX_FILE_SIZE', 10)
 
 IMAGE_FIELD_HELP_TEXT = (
         'Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- '

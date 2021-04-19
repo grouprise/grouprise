@@ -69,7 +69,7 @@ General grouprise Settings
 ``UPLOAD_MAX_FILE_SIZE``
 
   File size in MB to which uploads are restricted. Set the value allowed by the webserver to
-  a higher value. Defaults to ``0``.
+  a higher value. Defaults to ``10``.
 
 Special Users and Groups
 ------------------------

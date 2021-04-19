@@ -27,7 +27,7 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 GROUPRISE = {
     'CLAIMS': [],
     'SCORE_CONTENT_AGE': 100,
-    'UPLOAD_MAX_FILE_SIZE': 0,
+    'UPLOAD_MAX_FILE_SIZE': 10,
 
     # special users and groups
     'FEED_IMPORTER_GESTALT_ID': 1,
