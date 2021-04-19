@@ -157,6 +157,9 @@ class UpdateImages(PermissionMixin, UpdateView):
         else:
             return None
 
+    def get_success_url(self):
+        return self.object.get_profile_url()
+
 
 class UpdatePassword(PermissionMixin, allauth_views.PasswordChangeView):
     permission_required = "gestalten.change_password"
