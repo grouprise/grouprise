@@ -168,6 +168,25 @@ System / hosting
   Backups are created automatically during `package upgrades <../deployment/deb.html>`_ in this
   directory.
 
+``HOOK_SCRIPT_PATH``
+
+  Path to an executable called upon certain events. It is receiving JSON data describing the
+  event as the first argument. The following events are supported:
+
+  * event types: ``created``, ``changed``, ``deleted``
+  * object types: ``Group``
+
+  Example data looks like this::
+
+    {
+      "eventType": "created",
+      "objectType": "Group",
+      "objectData": {
+        "id": 4,
+        "slug": ""
+      }
+    }
+
 
 Other Options
 =============
