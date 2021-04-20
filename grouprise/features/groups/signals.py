@@ -5,6 +5,7 @@ import subprocess
 from django.conf import settings
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from huey.contrib.djhuey import task
 
 from grouprise.core.utils import slugify
 from grouprise.features.gestalten import models as gestalten
@@ -15,19 +16,21 @@ from ...core.models import get_unique_slug
 logger = logging.getLogger(__name__)
 
 
+@task()
 def call_hook_script(event_type: str, group: Group):
-    try:
-        hook_script_name = settings.GROUPRISE.get("HOOK_SCRIPT_PATH", "true")
-        hook_event_info_json = json.dumps(
-            {
-                "eventType": event_type,
-                "objectType": "Group",
-                "objectData": {"id": group.id, "slug": group.slug},
-            }
-        )
-        subprocess.run([hook_script_name, hook_event_info_json])
-    except FileNotFoundError:
-        logger.error("Could not call hook script.")
+    hook_event_info_json = json.dumps(
+        {
+            "eventType": event_type,
+            "objectType": "Group",
+            "objectData": {"id": group.id, "slug": group.slug},
+        }
+    )
+    hook_script_names = settings.GROUPRISE.get("HOOK_SCRIPT_PATHS", [])
+    for script_name in hook_script_names:
+        try:
+            subprocess.run([script_name, hook_event_info_json])
+        except FileNotFoundError:
+            logger.error("Could not call hook script.")
 
 
 @receiver(post_save, sender=Group)
