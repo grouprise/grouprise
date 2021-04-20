@@ -4,9 +4,8 @@
 (e.g. social platforms). This allows users to re-use existing external accounts
 instead of memorizing another password for a local account.
 
-There is a variety of Django applications adding support for connecting to
-[external OAuth providers](https://djangopackages.org/grids/g/oauth/).
-
-The
-[list of Django authentication applications](https://djangopackages.org/grids/g/authentication/)
-mentions even more options based on different protocols.
+*grouprise* uses [django-allauth](https://www.intenct.nl/projects/django-allauth/) for
+authentication. If you want to add one of the
+[supported authentication providers](https://django-allauth.readthedocs.io/en/latest/providers.html)
+this might be possible with little effort. [Contact us](https://grouprise.org/#kontakt), if you
+need help.
