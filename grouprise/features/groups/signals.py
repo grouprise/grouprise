@@ -1,5 +1,6 @@
 import json
 import logging
+import shlex
 import subprocess
 
 from django.conf import settings
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @db_task()
-def call_hook_script(event_type: str, group: Group):
+def call_hook_script(event_type: str, group: Group, timeout=300):
     hook_event_info_json = json.dumps(
         {
             "eventType": event_type,
@@ -28,9 +29,39 @@ def call_hook_script(event_type: str, group: Group):
     hook_script_names = settings.GROUPRISE.get("HOOK_SCRIPT_PATHS", [])
     for script_name in hook_script_names:
         try:
-            subprocess.run([script_name, hook_event_info_json])
+            subprocess.run(
+                [script_name, hook_event_info_json],
+                check=True,
+                capture_output=True,
+                timeout=timeout,
+            )
         except FileNotFoundError:
-            logger.error("Could not call hook script.")
+            logger.error("Configured hook script does not exist: %s", script_name)
+        except PermissionError:
+            logger.error(
+                "Configured hook script is not accessible or not executable: %s",
+                script_name,
+            )
+        except subprocess.CalledProcessError as exc:
+            logger.error(
+                "Hook script failed with a non-zero exitcode (%d): %s %s -> %s",
+                exc.returncode,
+                script_name,
+                shlex.quote(hook_event_info_json),
+                exc.stderr,
+            )
+        except subprocess.TimeoutExpired:
+            logger.error(
+                "Configured hook script failed to return within %d seconds: %s",
+                timeout,
+                script_name,
+            )
+        else:
+            logger.info(
+                "Hook script finished successfully: %s %s",
+                script_name,
+                shlex.quote(hook_event_info_json),
+            )
 
 
 @receiver(post_save, sender=Group)
