@@ -5,7 +5,7 @@ import subprocess
 from django.conf import settings
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from huey.contrib.djhuey import task
+from huey.contrib.djhuey import db_task
 
 from grouprise.core.utils import slugify
 from grouprise.features.gestalten import models as gestalten
@@ -16,7 +16,7 @@ from ...core.models import get_unique_slug
 logger = logging.getLogger(__name__)
 
 
-@task()
+@db_task()
 def call_hook_script(event_type: str, group: Group):
     hook_event_info_json = json.dumps(
         {
