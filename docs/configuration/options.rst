@@ -213,3 +213,4 @@ Other Options
         'huey_class': 'huey.SqliteHuey',
         'filename': '/var/lib/grouprise/huey.sqlite',
     }
+
