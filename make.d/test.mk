@@ -1,5 +1,5 @@
 LINT_PKG_IGNORE_GLOBAL = -path "./debian/*" -o -path "./build/*" -o -path "./.pybuild/*" -o -path "./scripts/*" \
-	-o -path "./.venv/*" -o -path "./gitlab-ci-build-venv/*" -o -path "./docs/*"
+	-o -path "./.venv/*" -o -path "./gitlab-ci-build-venv/*" -o -path "./docs/*" -o -path "./venv/*"
 LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT_PKG_IGNORE_GLOBAL) \) -print0 | \
 	xargs -0 -n1 dirname | sort | uniq)
 
