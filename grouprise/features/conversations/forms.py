@@ -1,6 +1,6 @@
 from django import forms
 
-from grouprise.core.forms import Captcha
+from grouprise.core.forms import CaptchaField
 import grouprise.features
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.associations import models as associations
@@ -12,7 +12,7 @@ from . import models
 
 class Create(forms.ModelForm):
     author = forms.EmailField(label='E-Mail-Adresse')
-    captcha = Captcha()
+    captcha = CaptchaField()
     subject = forms.CharField(label='Thema', max_length=255)
     text = forms.CharField(label='Nachricht', widget=forms.Textarea(
         {'rows': 5, 'data-component': 'keysubmit autosize'}))

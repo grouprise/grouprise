@@ -15,7 +15,7 @@ class GroupSelect(forms.Select):
     template_name = 'core/widgets/group_select.html'
 
 
-class Captcha(MathCaptchaField):
+class CaptchaField(MathCaptchaField):
     class Widget(MathCaptchaWidget):
         def get_context(self, *args, **kwargs):
             ctx = super().get_context(*args, **kwargs)
