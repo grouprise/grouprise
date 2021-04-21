@@ -3,6 +3,7 @@ from django import forms
 from django.contrib import auth
 from django.core.exceptions import ValidationError
 
+from grouprise.core.forms import CaptchaField
 from grouprise.features.gestalten import models
 from grouprise.features.stadt.forms import validate_entity_slug
 
@@ -32,6 +33,7 @@ class GestaltByEmailField(forms.EmailField):
 class Create(allauth.account.forms.SignupForm):
     password1 = forms.CharField(label='Kennwort', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Kennwort (Wiederholung)', widget=forms.PasswordInput())
+    captcha = CaptchaField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
