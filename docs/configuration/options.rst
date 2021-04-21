@@ -6,6 +6,11 @@ Various details of grouprise can be configured in the ``settings.py`` file (e.g.
 Any generic `Django setting <https://docs.djangoproject.com/en/stable/ref/settings/>`_ may be specified.
 Additionally grouprise-specific settings can be added to the ``GROUPRISE`` dictionary.
 
+Setup Wizard
+============
+
+On a freshly deployed grouprise site call ``grouprisectl setup_site``. It will ask you some
+basic questions, create initial groups and users and prepare a bunch of useful articles.
 
 Django Options
 ==============
