@@ -11,7 +11,7 @@ from grouprise.features.memberships import test_mixins as memberships
 
 class ArticleMixin(gestalten.AuthenticatedMixin):
     def create_article(self, **kwargs):
-        kwargs.update({'title': 'Test', 'text': 'Test'})
+        kwargs.update({'title': 'Test', 'text': 'Test', 'as_gestalt': True})
         self.client.post(reverse('create-article'), kwargs)
         return Association.objects.get(content__title='Test')
 
@@ -29,7 +29,7 @@ class ArticleMixin(gestalten.AuthenticatedMixin):
 
 class GroupArticleMixin(ArticleMixin):
     def create_article(self, **kwargs):
-        kwargs.update({'title': 'Group Article', 'text': 'Test'})
+        kwargs.update({'title': 'Group Article', 'text': 'Test', 'as_gestalt': True})
         self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
         return Association.objects.get(content__title='Group Article')
 
@@ -37,7 +37,7 @@ class GroupArticleMixin(ArticleMixin):
 class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
     def create_article(self, **kwargs):
         self.client.force_login(self.gestalt.user)
-        kwargs.update({'title': 'Test', 'text': 'Test'})
+        kwargs.update({'title': 'Test', 'text': 'Test', 'as_gestalt': True})
         self.client.post(self.get_url('create-article'), kwargs)
         self.client.logout()
 
@@ -105,7 +105,7 @@ class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
 
 class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_article(self, **kwargs):
-        kwargs.update({'title': 'Test', 'text': 'Test'})
+        kwargs.update({'title': 'Test', 'text': 'Test', 'as_gestalt': True})
         return self.client.post(self.get_url('create-article'), kwargs)
 
     def create_group_article(self, **kwargs):
@@ -180,7 +180,7 @@ class TwoGestalten(
         memberships.OtherMemberMixin, memberships.AuthenticatedMemberMixin,
         grouprise.core.tests.Test):
     def create_article(self, **kwargs):
-        kwargs.update({'title': 'Group Article', 'text': 'Test'})
+        kwargs.update({'title': 'Group Article', 'text': 'Test', 'as_gestalt': True})
         self.client.post(self.get_url('create-group-article', self.group.slug), kwargs)
         self.association = Association.objects.get(content__title='Group Article')
 

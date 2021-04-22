@@ -1,14 +1,15 @@
 import grouprise.core
+from grouprise.core.tests import Test
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
 from grouprise.features.images import tests as images
 from grouprise.features.memberships import test_mixins as memberships
 
 
-class Guest(images.ImageMixin, memberships.MemberMixin, grouprise.core.tests.Test):
+class Guest(images.ImageMixin, memberships.MemberMixin, Test):
     def create_gallery(self, **kwargs):
         self.client.force_login(self.gestalt.user)
-        kwargs.update({'title': 'Test', 'text': 'Test', 'images': [self.image.pk]})
+        kwargs.update({'title': 'Test', 'text': 'Test', 'images': [self.image.pk], 'as_gestalt': True})
         self.client.post(self.get_url('create-gallery'), kwargs)
         self.client.logout()
 
@@ -70,7 +71,7 @@ class Guest(images.ImageMixin, memberships.MemberMixin, grouprise.core.tests.Tes
 
 class Gestalt(images.ImageMixin, memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
     def create_gallery(self, **kwargs):
-        kwargs.update({'title': 'Test', 'text': 'Test', 'images': [self.image.pk]})
+        kwargs.update({'title': 'Test', 'text': 'Test', 'images': [self.image.pk], 'as_gestalt': True})
         return self.client.post(self.get_url('create-gallery'), kwargs)
 
     def create_group_gallery(self, **kwargs):

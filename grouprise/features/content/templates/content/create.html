@@ -16,7 +16,8 @@
 
 {% block extra_settings_left %}
     {% if form.group %}
-        {% include 'core/_field.html' with field=form.group %}
+        {% field form.group %}
+        {% field_checkbox form.as_gestalt %}
     {% endif %}
 {% endblock %}
 

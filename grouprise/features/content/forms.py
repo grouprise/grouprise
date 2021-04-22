@@ -1,6 +1,8 @@
 import django.db.transaction
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.utils.safestring import mark_safe
 
 import grouprise.core.forms
 from grouprise.core.signals import post_create
@@ -21,6 +23,11 @@ class Create(forms.ModelForm):
     group = forms.ModelChoiceField(
             label='Veröffentlichen als', queryset=groups.Group.objects.none(), required=False,
             widget=grouprise.core.forms.GroupSelect)
+    as_gestalt = forms.BooleanField(
+        label="Veröffentlichung unter persönlichem Profil", required=False,
+        help_text=mark_safe("Der Beitrag wird nicht von einer Gruppe, sondern von dir als <em>Gestalt</em> "
+                            "veröffentlicht. Einige Funktionen wie beispielsweise <em>Abonnieren</em> stehen nicht zur "
+                            "Verfügung."))
     text = forms.CharField(label='Text', widget=grouprise.core.forms.EditorTextarea)
     title = forms.CharField(label='Titel')
     image = forms.ModelChoiceField(
@@ -43,6 +50,7 @@ class Create(forms.ModelForm):
         self.fields['image'].queryset = self.author.images
         if self.instance.entity.is_group:
             del self.fields['group']
+            del self.fields['as_gestalt']
         else:
             self.fields['group'].queryset = groups.Group.objects.filter(
                     memberships__member=self.author)
@@ -53,6 +61,14 @@ class Create(forms.ModelForm):
             del self.fields['all_day']
         else:
             del self.fields['image']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.entity.is_group and not cleaned_data["group"] and not cleaned_data["as_gestalt"]:
+            self.add_error("group", "Bitte eine Gruppe auswählen")
+            self.add_error("as_gestalt", "Falls keine Gruppe gewählt wird, bitte diese Option wählen")
+            raise ValidationError("Entweder eine Gruppe oder 'Veröffentlichung unter persönlichem Profil' muss "
+                                  "ausgewählt sein.", code="invalid")
 
     def save(self, commit=True):
         with django.db.transaction.atomic():

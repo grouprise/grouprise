@@ -19,6 +19,7 @@ def get_post_data():
             'form-MIN_NUM_FORMS': '1',
             'form-MAX_NUM_FORMS': '1000',
             'form-0-title': 'Test',
+            'as_gestalt': True,
             }
 
 
