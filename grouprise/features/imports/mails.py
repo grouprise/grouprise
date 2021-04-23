@@ -290,8 +290,9 @@ class ContributionMailProcessor:
             group = groups.Group.objects.get(slug__iexact=local)
         except groups.Group.DoesNotExist:
             raise MailProcessingFailure(
-                _('There is no group named "{}". Your mail could not be delivered.')
-                    .format(local)
+                _(
+                    'There is no group named "{}". Your mail could not be delivered.'
+                ).format(local)
             )
         if gestalt and gestalt.user.has_perm(
             "conversations.create_group_conversation_by_email", group
@@ -314,8 +315,10 @@ class ContributionMailProcessor:
                 recipient,
             )
             raise MailProcessingFailure(
-                _('You are not permitted to start a conversation with this group by mail. '
-                  'Please use the button on the website.')
+                _(
+                    "You are not permitted to start a conversation with this group by mail. "
+                    "Please use the button on the website."
+                )
             )
 
     def _process_message(self, message, recipient):
