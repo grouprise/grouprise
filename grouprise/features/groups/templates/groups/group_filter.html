@@ -1,9 +1,10 @@
 {% extends 'stadt/stadt.html' %}
 {% load events rules dismissible %}
+{% load i18n %}
 
-{% block title %}Gruppen - {{ GROUPRISE_SITE_NAME }}{% endblock %}
+{% block title %}{% trans 'Groups' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
-{% block heading_title %}<h1 class="content-classification">Gruppen</h1>{% endblock %}
+{% block heading_title %}<h1 class="content-classification">{% trans 'Groups' %}</h1>{% endblock %}
 
 {% block sidebar %}
     {% sidebar_calendar view.get_content component_id='groups-calendar' %}
@@ -13,7 +14,7 @@
     {% has_perm 'groups.create_group' user as can_create_group %}
     {% if can_create_group %}
         <a href="{% url 'group-create' %}" class="btn btn-ch">
-            <span class="btn-label"><i class="sg sg-add"></i> Gruppe</span>
+            <span class="btn-label"><i class="sg sg-add"></i>{% trans 'Group' %}</span>
         </a>
     {% endif %}
 {% endblock %}
@@ -22,12 +23,12 @@
     {% dismissible 'group-list-order' %}
         <div class="disclaimer content-block">
             {% dismiss 'group-list-order' %}
-            <p>Aktive Gruppen mit vielen Mitgliedern oder Abonnent_innen werden in Auflistungen zuerst angezeigt.</p>
+            <p>{% trans 'Active groups with a lot of members or subscribes will be show first in a listing.' %}</p>
         </div>
     {% enddismissible %}
     <form class="form-search" method="get">
         {% field filter.form.name %}
-        <button class="btn btn-default">Gruppen suchen</button>
+        <button class="btn btn-default">{% trans 'Search for groups' %}</button>
     </form>
     <ol class="groups" data-component="masonry">
         {% for group in object_list %}
@@ -36,5 +37,5 @@
             </li>
         {% endfor %}
     </ol>
-    {% pagination 'Weitere Gruppen' %}
+    {% pagination _("More groups") %}
 {% endblock %}

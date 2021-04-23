@@ -4,9 +4,10 @@ import email.parser
 import logging
 import re
 
-from django.conf import settings
 import django.utils.timezone
 import html2text
+from django.conf import settings
+from django.utils.translation import gettext as _
 
 import grouprise.core.models
 from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
@@ -289,8 +290,8 @@ class ContributionMailProcessor:
             group = groups.Group.objects.get(slug__iexact=local)
         except groups.Group.DoesNotExist:
             raise MailProcessingFailure(
-                "Es gibt keine Gruppe mit dem Namen '{}'. "
-                "Somit war deine Email nicht zustellbar.".format(local)
+                _('There is no group named "{}". Your mail could not be delivered.')
+                    .format(local)
             )
         if gestalt and gestalt.user.has_perm(
             "conversations.create_group_conversation_by_email", group
@@ -313,8 +314,8 @@ class ContributionMailProcessor:
                 recipient,
             )
             raise MailProcessingFailure(
-                "Du darfst mit dieser Gruppe kein Gespräch per E-Mail beginnen. Bitte "
-                "verwende die Schaltfläche auf der Webseite."
+                _('You are not permitted to start a conversation with this group by mail. '
+                  'Please use the button on the website.')
             )
 
     def _process_message(self, message, recipient):
