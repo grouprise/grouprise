@@ -14,16 +14,12 @@ from aiosmtplib.errors import SMTPRecipientsRefused, SMTPResponseException
 from aiosmtplib.smtp import SMTP
 import django
 import django.db
-from django.conf import settings
 
+from grouprise.core.settings import POSTMASTER_EMAIL as POSTMASTER_ADDRESS
 from grouprise.features.imports.mails import (
         ContributionMailProcessor, MailProcessingFailure, ParsedMailMessage)
 
 logger = logging.getLogger(__name__)
-
-
-# internal error mails are sent to the postmaster
-POSTMASTER_ADDRESS = settings.GROUPRISE.get('POSTMASTER_EMAIL', 'postmaster@localhost')
 
 
 class Command(django.core.management.base.BaseCommand):

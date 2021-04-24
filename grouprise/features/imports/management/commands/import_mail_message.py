@@ -5,9 +5,9 @@ import os
 import re
 import sys
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from grouprise.core.settings import COLLECTOR_MAILBOX_ADDRESS
 from grouprise.features.imports.mails import (
     ContributionMailProcessor,
     MailProcessingFailure,
@@ -25,9 +25,6 @@ The content of the line could be:
     Delivered-To: Alice <foo@example.org>
 """
 DTLINE_REGEX = re.compile(r"^Delivered-To:\s*(.+)$", flags=re.IGNORECASE)
-# Email address used in Delivered-To header in case of mailbox delivery (all incoming mails being
-# delivered to a single mailbox).
-COLLECTOR_MAILBOX_ADDRESS = settings.GROUPRISE.get("COLLECTOR_MAILBOX_ADDRESS")
 EXITCODE_TEMPORARY_FAILURE = 1
 EXITCODE_PERMANENT_FAILURE = 70
 EXITCODE_DELIVERY_SUCCESS = 99

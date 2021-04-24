@@ -1,13 +1,7 @@
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_slug
 
-DEFAULT_ENTITY_SLUG_BLACKLIST = [
-        'all', 'grouprise', 'info', 'mail', 'noreply', 'postmaster', 'reply', 'stadt',
-        'webmaster', 'www']
-
-ENTITY_SLUG_BLACKLIST = settings.GROUPRISE.get(
-        'ENTITY_SLUG_BLACKLIST', DEFAULT_ENTITY_SLUG_BLACKLIST)
+from grouprise.core.settings import ENTITY_SLUG_BLACKLIST
 
 
 def validate_entity_slug(slug, entity=None):

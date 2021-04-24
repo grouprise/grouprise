@@ -9,7 +9,7 @@ import django.utils.timezone
 import html2text
 
 import grouprise.core.models
-from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
+from grouprise.core.settings import DEFAULT_REPLY_TO_EMAIL
 from grouprise.core.signals import post_create
 from grouprise.features.associations import models as associations
 from grouprise.features.content.models import Content

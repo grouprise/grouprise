@@ -1,13 +1,14 @@
 import contextlib
 import logging
 
-from django.conf import settings
 import django.urls
 from django import test, urls
 from django.contrib import auth
 from django.contrib.sites import models as sites_models
 from django.core import mail
 from simplemathcaptcha.utils import hash_answer
+
+import grouprise.core.settings as grouprise_settings
 
 
 HTTP_GET = 'get'
@@ -24,20 +25,26 @@ def get_url(url, *args):
 
 @contextlib.contextmanager
 def temporary_settings_override(key, value):
-    """ provide a context for temporarily changing a setting in the GROUPRISE dictionary """
+    """ provide a context for temporarily changing a setting in the GROUPRISE dictionary
+
+    This override only works, if the setting is accessed as an attributes of the
+    grouprise.core.settings module.
+    Thus direct imports of the values (e.g. "from grouprise.core.settings import FOO") are not
+    affected by such overrides.
+    """
     try:
-        original_value = settings.GROUPRISE[key]
+        original_value = getattr(grouprise_settings, key)
         is_missing = False
-    except KeyError:
+    except AttributeError:
         is_missing = True
-    settings.GROUPRISE[key] = value
+    setattr(grouprise_settings, key, value)
     try:
         yield
     finally:
         if is_missing:
-            del settings.GROUPRISE[key]
+            delattr(grouprise_settings, key)
         else:
-            settings.GROUPRISE[key] = original_value
+            setattr(grouprise_settings, key, original_value)
 
 
 def with_captcha(data, answer=10, field_name='captcha'):

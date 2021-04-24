@@ -2,7 +2,6 @@ import datetime
 
 import django
 from django import urls
-from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext as _
@@ -11,6 +10,7 @@ from imagekit.processors import ResizeToFit, Transpose
 from taggit.managers import TaggableManager
 
 import grouprise.core.models
+from grouprise.core.settings import OPERATOR_GROUP_ID
 from grouprise.core.utils import get_random_color
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.stadt.models import EntitySlugField
@@ -18,8 +18,7 @@ from grouprise.features.stadt.models import EntitySlugField
 
 class GroupManager(models.Manager):
     def operator_group(self):
-        operator_group_id = settings.GROUPRISE.get('OPERATOR_GROUP_ID', 1)
-        return self.get_queryset().filter(id=operator_group_id).first()
+        return self.get_queryset().filter(id=OPERATOR_GROUP_ID).first()
 
 
 class Group(grouprise.core.models.Model):

@@ -3,11 +3,11 @@ import logging
 import shlex
 import subprocess
 
-from django.conf import settings
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
+from grouprise.core.settings import HOOK_SCRIPT_PATHS
 from grouprise.core.utils import slugify
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.stadt.forms import ENTITY_SLUG_BLACKLIST
@@ -26,8 +26,7 @@ def call_hook_script(event_type: str, group: Group, timeout=300):
             "objectData": {"id": group.id, "slug": group.slug},
         }
     )
-    hook_script_names = settings.GROUPRISE.get("HOOK_SCRIPT_PATHS", [])
-    for script_name in hook_script_names:
+    for script_name in HOOK_SCRIPT_PATHS:
         try:
             subprocess.run(
                 [script_name, hook_event_info_json],

@@ -11,7 +11,7 @@ from django.core import mail
 from django.urls import reverse
 
 from grouprise.core import tests
-from grouprise.core.notifications import DEFAULT_REPLY_TO_EMAIL
+from grouprise.core.settings import DEFAULT_REPLY_TO_EMAIL
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models
 from grouprise.features.imports.management.commands.run_lmtpd import (

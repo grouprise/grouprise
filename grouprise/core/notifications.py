@@ -11,12 +11,10 @@ from django.core import mail
 from django.template import loader
 
 from grouprise.core.models import PermissionToken
+import grouprise.core.settings as grouprise_settings
 from grouprise.core.templatetags.defaultfilters import full_url as build_absolute_uri
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_REPLY_TO_EMAIL = settings.GROUPRISE.get(
-        'DEFAULT_REPLY_TO_EMAIL', 'reply+{reply_key}@localhost')
 
 
 class Notification:
@@ -24,7 +22,7 @@ class Notification:
     def send_all(cls, instance, force=False, **extra_kwargs):
         for recipient, kwargs in cls.get_recipients(instance).items():
             if (force or not recipient.is_email_blocker) and (
-                    recipient.id != settings.GROUPRISE.get('FEED_IMPORTER_GESTALT_ID')):
+                    recipient.id != grouprise_settings.FEED_IMPORTER_GESTALT_ID):
                 kwargs.update(extra_kwargs)
                 cls(instance).send(recipient, **kwargs)
 
@@ -65,16 +63,14 @@ class Notification:
         return '{} <{}>'.format(self.recipient, self.recipient.user.email)
 
     def get_formatted_reply_address(self, token):
-        return '<{}>'.format(DEFAULT_REPLY_TO_EMAIL.format(
+        return '<{}>'.format(grouprise_settings.DEFAULT_REPLY_TO_EMAIL.format(
                 reply_key=token.secret_key))
 
     def get_formatted_sender(self):
         sender = self.get_sender()
         name = '{} via '.format(sender) if sender else ''
         if sender:
-            email = settings.GROUPRISE \
-                    .get('DEFAULT_DISTINCT_FROM_EMAIL', 'noreply+{slug}@localhost') \
-                    .format(slug=sender.slug)
+            email = grouprise_settings.DEFAULT_DISTINCT_FROM_EMAIL.format(slug=sender.slug)
         else:
             email = settings.DEFAULT_FROM_EMAIL
         from_email = '{name}{site} <{email}>'.format(

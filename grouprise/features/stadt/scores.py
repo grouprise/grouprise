@@ -3,16 +3,14 @@ from math import log
 
 import django.conf
 import django.utils.timezone
-from django.conf import settings
+
+from grouprise.core.settings import SCORE_CONTENT_AGE as MAX_SCORE_CONTENT_AGE_DAYS
 
 from grouprise.features.content import models as content
 from grouprise.features.contributions import models as contributions
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.groups import models as groups
 from grouprise.features.subscriptions import models as subscriptions
-
-
-MAX_SCORE_CONTENT_AGE_DAYS = settings.GROUPRISE.get('SCORE_CONTENT_AGE', 100)
 
 
 class Gestalt:
