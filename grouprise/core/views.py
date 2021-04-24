@@ -1,9 +1,13 @@
 import json
 
 import django
+from django.http import Http404
+from django.views.generic.base import RedirectView
 from django_filters.views import FilterMixin
 
 from rules.contrib.views import PermissionRequiredMixin
+
+import grouprise.core.settings as grouprise_settings
 
 
 class PermissionMixin(PermissionRequiredMixin):
@@ -52,3 +56,19 @@ app_config = AppConfig()
 
 class Markdown(django.views.generic.TemplateView):
     template_name = 'core/markdown.html'
+
+
+class LogoRedirects(RedirectView):
+
+    LOGO_NAME_URL_MAP = {
+        "backdrop": grouprise_settings.LOGO_BACKDROP,
+        "favicon": grouprise_settings.LOGO_FAVICON,
+        "square": grouprise_settings.LOGO_SQUARE,
+        "text": grouprise_settings.LOGO_TEXT,
+    }
+
+    def get_redirect_url(self, name):
+        try:
+            return self.LOGO_NAME_URL_MAP[name]
+        except KeyError:
+            raise Http404("Unknown logo")
