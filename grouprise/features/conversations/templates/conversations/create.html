@@ -1,7 +1,6 @@
 {% extends 'stadt/stadt.html' %}
-{% load i18n %}
 
-{% block title %}{% trans 'Discussion' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
+{% block title %}Gespräch - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}
     {% if view.entity.is_group %}
         {% with group=view.entity menu='conversation' %}{{ block.super }}{% endwith %}
@@ -11,7 +10,7 @@
 {% endblock %}
 {% block breadcrumb %}{% breadcrumb view.entity 'Gespräch' %}{% endblock %}
 
-{% block heading_title %}<h1 class="content-classification">{% trans 'Discussion' %}</h1>{% endblock %}
+{% block heading_title %}<h1 class="content-classification">Gespräch</h1>{% endblock %}
 
 {% block sidebar %}
     {% if view.entity.is_group %}
@@ -25,10 +24,9 @@
 
 {% block content %}
     {% if view.with_membership_application %}
-    <p>{% blocktrans with group=view.entity trimmed %}
-       {{ group }} is a closed group. Please describe why you want to join it. Afterwards 
-       the group members will decide about your request.
-       {% endblocktrans %}</p>
+        <p>Die Gruppe '{{ view.entity }}' ist eine geschlossene Gruppe. Beschreibe bitte kurz,
+        warum du der Gruppe beitreten möchtest. Anschließend entscheiden die Gruppenmitglieder,
+        ob sie deiner Anfrage zustimmen.</p>
     {% endif %}
     {% include 'conversations/_create_form.html' with membership_application=view.with_membership_application %}
 {% endblock %}

@@ -1,13 +1,12 @@
 {% extends 'associations/detail.html' %}
 {% load rules %}
-{% load i18n %}
 
 {% block meta %}
     {% include 'content/_meta.html' with content=association.container %}
 {% endblock %}
 
 {% block heading_title %}
-    <span class="content-classification">{% trans 'Contribution' %}</span>
+    <span class="content-classification">Beitrag</span>
     <span class="decoration-icon sg-pen" role="presentation"></span>
 {% endblock %}
 
@@ -16,7 +15,7 @@
         {% has_perm 'content.change' user association as can_edit %}
         {% if can_edit %}
         <a href="{% url 'update-content' association.entity.slug association.slug %}" class="btn btn-ch">
-            <span class="btn-label">{% trans 'Edit' %}</span>
+            <span class="btn-label">Bearbeiten</span>
         </a>
         {% endif %}
     </div>
@@ -33,9 +32,9 @@
     <article class="content">
         <header class="content-header">
             {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
-            <span class="content-type" title="{% if association.public %}{% trans 'Contribution is visible to the public' %}{% else %}{% trans 'Contribution is only visible for members of the group' %}{% endif %}">
+            <span class="content-type" title="{% if association.public %}Beitrag ist öffentlich sichtbar{% else %}Beitrag ist nur für Gruppenmitglieder sichtbar{% endif %}">
                 {% block content_type %}
-                    <span>{% trans 'Contribution' %}</span>
+                    <span>Beitrag</span>
                 {% endblock %}
             </span>
             {% include 'content/_content_visibility.html' %}
@@ -60,19 +59,19 @@
                                 method="post">
                                 {% csrf_token %}
                                 <button class="btn btn-default btn-sm">
-                                    <i class="sg sg-subscription"></i> {% trans 'Subscribe to this group' %}
+                                    <i class="sg sg-subscription"></i> Gruppe abonnieren
                                 </button>
                             </form>
                         {% else %}
                             <a href="{% url 'group-subscribe' association.entity.slug %}"
                                 class="btn btn-default btn-sm">
-                                <i class="sg sg-subscription"></i> {% trans 'Subscribe to this group' %}
+                                <i class="sg sg-subscription"></i> Gruppe abonnieren
                             </a>
                         {% endif %}
                         <small>
-                            {% trans 'to receive prospective contribution of the group' %}
+                            um über zukünftige Beiträge der Gruppe
                             <a href="{{ association.entity.get_absolute_url }}">@{{ association.entity.slug }}</a>
-                            {% trans 'by e-mail' %}
+                            per E-Mail informiert zu werden
                         </small>
                     </div>
                 {% endif %}

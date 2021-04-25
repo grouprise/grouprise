@@ -1,52 +1,50 @@
-{% load i18n %}
-
 <div class="page-footer">
     <div class="page-footer-content">
         <div class="page-footer-text">
             <p>{% markdown about_group.description preset='linkonly' %}</p>
-
-            <p>{{ about_group }} {% trans 'is based on the free software' %}
+            
+            <p>{{ about_group }} basiert auf der Freien Software
             <a href="https://grouprise.org/">grouprise</a>.
-            {% trans 'Support grouprise with a' %}
-            <a href="https://grouprise.org/#spenden">{% trans 'donation' %}</a>.
+            Unterstütze grouprise mit einer
+            <a href="https://grouprise.org/#spenden">Spende</a>.
         </div>
         <ul class="nav-footer">
             <li>
                 <ul>
-                    <li><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+                    <li><a href="{% url 'index' %}">Startseite</a></li>
                     <li class="separator"></li>
-                    <li><a href="{{ about_group.get_absolute_url }}">{% trans 'About' %} {{ about_group }}</a></li>
+                    <li><a href="{{ about_group.get_absolute_url }}">Über {{ about_group }}</a></li>
                     {% if about_group %}
-                        <li><a href="{% url 'content' about_group.slug 'imprint' %}">{% trans 'Inprint' %}</a></li>
+                        <li><a href="{% url 'content' about_group.slug 'imprint' %}">Impressum</a></li>
                     {% endif %}
-                    <li><a href="{% url 'privacy' %}">{% trans 'Privacy' %}</a></li>
+                    <li><a href="{% url 'privacy' %}">Datenschutzhinweise</a></li>
                     <li class="separator"></li>
-                    <li><a href="{% url 'abuse' request.path %}">{% trans 'Report abuse' %}</a></li>
+                    <li><a href="{% url 'abuse' request.path %}">Missbrauch melden</a></li>
                 </ul>
             </li>
             <li class="hidden-xs">
                 <ul>
-                    <li><a href="{% url 'group-index' %}">{% trans 'All groups' %}</a></li>
+                    <li><a href="{% url 'group-index' %}">Alle Gruppen</a></li>
                     <li class="separator"></li>
-                    <li><a href="{% url 'events' %}">{% trans 'Events' %}</a></li>
-                    <li><a href="{% url 'articles' %}">{% trans 'Articles' %}</a></li>
+                    <li><a href="{% url 'events' %}">Veranstaltungen</a></li>
+                    <li><a href="{% url 'articles' %}">Artikel</a></li>
                     <li class="separator"></li>
-                    <li><a href="{% url 'gestalten' %}">{% trans 'Public People' %}</a></li>
+                    <li><a href="{% url 'gestalten' %}">Öffentliche Gestalten</a></li>
                 </ul>
             </li>
             <li class="hidden-xs">
                 <ul>
                     {% if user.is_authenticated %}
-                        <li><a href="{{ user.gestalt.get_profile_url }}">{% trans 'Your site' %}</a></li>
-                        <li><a href="{% url 'activity' %}">{% trans 'Your activities' %}</a></li>
+                        <li><a href="{{ user.gestalt.get_profile_url }}">Deine Seite</a></li>
+                        <li><a href="{% url 'activity' %}">Dich betreffende Aktivität</a></li>
                         <li class="separator"></li>
-                        <li><a href="{% url 'settings' %}">{% trans 'Settings' %}</a></li>
+                        <li><a href="{% url 'settings' %}">Einstellungen</a></li>
                         <li class="separator"></li>
-                        <li><a href="{% url 'account_logout' %}?next={{ request.path }}">{% trans 'Logout' %}</a></li>
+                        <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Abmelden</a></li>
                     {% else %}
-                        <li><a href="{% url 'account_login' %}?next={{ request.path }}">{% trans 'Login' %}</a></li>
+                        <li><a href="{% url 'account_login' %}?next={{ request.path }}">Anmelden</a></li>
                         <li class="separator"></li>
-                        <li><a href="{% url 'account_signup' %}?next={{ request.path }}">{% trans 'Signup' %}</a></li>
+                        <li><a href="{% url 'account_signup' %}?next={{ request.path }}">Registrieren</a></li>
                     {% endif %}
                 </ul>
             </li>

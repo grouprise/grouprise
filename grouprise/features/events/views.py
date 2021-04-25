@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.views import generic
 from django_ical.views import ICalFeed
-from django.utils.translation import gettext as _
 
 import grouprise.core.views
 import grouprise.features.content.views
@@ -245,7 +244,7 @@ class GroupCalendarExport(CalendarExport):
     model = grouprise.features.groups.models.Group
     slug_url_kwarg = 'group_slug'
     permission_required = 'groups.view'
-    title = _("Export of group's calendars")
+    title = 'Exportmöglichkeiten für Gruppenkalender'
     parent = 'group'
     feed_route = 'group-events-feed'
 
@@ -261,7 +260,7 @@ class GroupCalendarExport(CalendarExport):
 
 class SiteCalendarExport(generic.TemplateView):
     permission_required = 'stadt.view_index'
-    title = _('Export of calendars')
+    title = 'Exportmöglichkeiten für Kalender'
     feed_route = 'site-events-feed'
     template_name = 'events/export.html'
 
@@ -291,7 +290,7 @@ class GestaltCalendarExport(generic.DetailView):
     slug_url_kwarg = 'gestalt_slug'
     sidebar = tuple()
     permission = 'gestalten.view'
-    title = _("Export of figure's calendars")
+    title = 'Exportmöglichkeiten für Gestaltenkalender'
     template_name = 'gestalten/events_export.html'
     parent = 'gestalt-index'
 

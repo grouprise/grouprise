@@ -1,41 +1,40 @@
 {% extends 'stadt/stadt.html' %}
-{% load i18n %}
 
-{% block title %}{% trans 'Delete Account' %} - {{ block.super }}{% endblock %}
+{% block title %}Benutzerkonto löschen - {{ block.super }}{% endblock %}
 {% block menu %}{% menu %}{% endblock %}
 
-{% block heading_title_text %}{% trans 'Settings' %}{% endblock %}
+{% block heading_title_text %}Einstellungen{% endblock %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
 
-        <p><strong>{% trans 'Do you really want to delete your account?' %}</strong></p>
+        <p><strong>Möchtest Du Dein Benutzerkonto wirklich löschen?</strong></p>
 
-        <p><strong>{% trans 'The following data will be delete irrevocable:' %}</strong></p>
+        <p><strong>Folgende Daten werden unwiderruflich gelöscht:</strong></p>
 
         <ul>
-            <li>{% trans 'Account and profile with all settings an e-mail addresses' %}</li>
-            <li>{{ view.data.subscriptions.count }} {%trans 'Subscriptions to groups' %}</li>
-            <li>{{ view.data.memberships.count }} {% trans 'Memberships of groups' %}</li>
+            <li>Benutzerkonto und Profil mit allen Einstellungen und E-Mail-Adressen</li>
+            <li>{{ view.data.subscriptions.count }} Abonnements von Gruppen</li>
+            <li>{{ view.data.memberships.count }} Mitgliedschaften in Gruppen</li>
         </ul>
 
-        <p><strong>{% trans 'The following data will be marked as' %}<em>{% trans 'Unknown person' %}</em>:</strong></p>
+        <p><strong>Folgende Daten werden unwiderruflich als <em>Unbekannte Gestalt</em> markiert:</strong></p>
 
         <ul>
-            <li>{{ view.data.versions.count }} {% trans 'Version of contribution' %}</li>
-            <li>{{ view.data.contributions.count }} {% trans 'Comments and news' %}</li>
-            <li>{{ view.data.images.count }} {% trans 'Pictures' %}</li>
-            <li>{{ view.data.votes.count }} {% trans 'Votes in surveys' %}</li>
+            <li>{{ view.data.versions.count }} Beitragsversionen</li>
+            <li>{{ view.data.contributions.count }} Kommentare und Nachrichten</li>
+            <li>{{ view.data.images.count }} Bilder</li>
+            <li>{{ view.data.votes.count }} Stimmen in Umfragen</li>
         </ul>
 
         {% if about_group %}
-            <p>{% trans 'If you not agree with this procedure, do not proceed and' %}
-            <a href="{% url 'create-group-conversation' about_group.pk %}">{% trans 'send us a message instead' %}</a>.</p>
+            <p>Solltest Du damit nicht einverstanden sein, führe diesen Schritt bitte nicht aus sondern
+            <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns stattdessen eine Nachricht</a>.</p>
         {% endif %}
 
         <button class="btn btn-danger">
-            {% trans 'Delete account' %}
+            Benutzerkonto löschen
         </button>
     </form>
 {% endblock %}

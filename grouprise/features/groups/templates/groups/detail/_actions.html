@@ -1,5 +1,3 @@
-{% load i18n %}
-
 <div class="group-actions">
     <div class="btn-toolbar">
         {# CONVERSATION #}
@@ -7,8 +5,8 @@
         {% has_perm 'conversations.list_group' user group as can_list_group_conversations %}
         {% if not can_list_group_conversations %}
             <div class="btn-group">
-                    <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default btn-sm" title="{% trans 'Start a conversation with all group members' %}">
-                    <i class="sg sg-message"></i> {% trans 'Send a message' %}
+                <a href="{% url 'create-group-conversation' group.pk %}" class="btn btn-default btn-sm" title="Ein Gespräch mit den Gruppenmitgliedern beginnen">
+                    <i class="sg sg-message"></i> Nachricht schreiben
                 </a>
             </div>
         {% endif %}
@@ -18,12 +16,12 @@
         {% has_perm 'memberships.try_to_join' user group as can_join %}
         {% has_perm 'conversations.create_group_conversation_with_membership_application' user group as can_apply %}
         {% if can_join %}
-                <a href="{% url 'join' group.slug %}" class="btn btn-default btn-sm" title="{% trans 'Join this group.' %}">
-                <i class="sg sg-join"></i> {% trans "Join" %}
+            <a href="{% url 'join' group.slug %}" class="btn btn-default btn-sm" title="Der Gruppe beitreten">
+                <i class="sg sg-join"></i> Beitreten
             </a>
         {% elif can_apply %}
-                <a href="{% url 'create-group-conversation' group.pk %}?apply_for_membership=1" class="btn btn-default btn-sm" title="{% trans 'Request for membership' %}">
-                <i class="sg sg-join"></i> {% trans 'Request for membership' %}
+            <a href="{% url 'create-group-conversation' group.pk %}?apply_for_membership=1" class="btn btn-default btn-sm" title="Mitgliedschaft beantragen">
+                <i class="sg sg-join"></i> Mitgliedschaft beantragen
             </a>
         {% endif %}
 
@@ -34,13 +32,13 @@
             {% if user.is_authenticated %}
                 <form action="{% url 'group-subscribe' group.slug %}" method="post">
                     {% csrf_token %}
-                    <button class="btn btn-primary btn-sm" title="{% trans 'Notification about new contributions' %}">
-                         <i class="sg sg-subscription"></i> {% trans 'Subscribe' %}
+                    <button class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+                        <i class="sg sg-subscription"></i> Abonnieren
                     </button>
                 </form>
             {% else %}
-                <a href="{% url 'group-subscribe' group.slug %}" class="btn btn-primary btn-sm" title="{% trans 'Notification about new contributions' %}">
-                <i class="sg sg-subscription"></i> {% trans 'Subscribe' %}
+                <a href="{% url 'group-subscribe' group.slug %}" class="btn btn-primary btn-sm" title="Bei neuen Beiträgen benachrichtigt werden">
+                    <i class="sg sg-subscription"></i> Abonnieren
                 </a>
             {% endif %}
         {% endif %}

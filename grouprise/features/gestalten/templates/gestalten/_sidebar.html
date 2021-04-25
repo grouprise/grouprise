@@ -1,18 +1,16 @@
-{% load i18n %}
-
 <div class="box box-striped">
     <div class="box-inner">
         <header class="box-header">
             <h2 class="box-title">
                 <i class="sg sg-author"></i>
-		{% trans 'Person' %}
+                Gestalt
             </h2>
         </header>
         <div class="box-content">
             {% include "gestalten/_preview.html" with gestalt=gestalt link=False %}
         </div>
         <div class="btn-toolbar btn-toolbar-right">
-            <a href="{{ gestalt|url_for_user:user }}" class="btn btn-link">{% trans 'More of' %} {{ gestalt }}</a>
+            <a href="{{ gestalt|url_for_user:user }}" class="btn btn-link">Mehr von {{ gestalt }}</a>
         </div>
     </div>
 </div>

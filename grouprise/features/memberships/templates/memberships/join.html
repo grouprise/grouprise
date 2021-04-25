@@ -1,10 +1,9 @@
 {% extends 'stadt/stadt.html' %}
-{% load i18n %}
 
-{% block title %}{% trans 'Membership' %} - {{ block.super }}{% endblock %}
+{% block title %}Mitgliedschaft - {{ block.super }}{% endblock %}
 {% block menu %}{% menu view.group %}{% endblock %}
 {% block breadcrumb %}{% breadcrumb view.group 'Mitgliedschaft' %}{% endblock %}
-{% block heading_title_text %}{% trans 'Membership' %}{% endblock %}
+{% block heading_title_text %}Mitgliedschaft{% endblock %}
 
 {% block sidebar %}
     {% include 'associations/_sidebar_entity.html' with entity=view.group %}
@@ -13,10 +12,8 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <p>{% blocktrans with group=view.group site=GROUPRISE_SITE_NAME trimmed %}
-            Do you want to become a member of <em>{{ group }}</em> on {{ site }}? *
-            {% endblocktrans %}</p>
-        <button class="btn btn-primary">{% trans 'Join this group' %}*</button>
+        <p>Möchtest Du der Gruppe <em>{{ view.group }}</em> auf {{ GROUPRISE_SITE_NAME }} beitreten? *</p>
+        <button class="btn btn-primary">Der Gruppe beitreten *</button>
     </form>
-    <p><small>* {% trans 'In case you are not a member of the group in <em>real live</em> and want to join, please talk to a group member' %}</small>.</p>
+    <p><small>* Falls Du in der <em>echten Welt</em> noch nicht Mitglied in der Gruppe bist und es werden möchtest, sprich bitte die anderen Gruppenmitglieder an.</small></p>
 {% endblock %}
