@@ -1,2 +1,6 @@
-recursive-include **/templates *
-recursive-include **/static *
+CONTRIBUTING.md
+CONTRIBUTORS.md
+LICENSE
+README.md
+VERSION
+recursive-include grouprise *.html *.txt *.png *.svg *.po *.mo
