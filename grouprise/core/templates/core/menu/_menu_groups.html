@@ -31,14 +31,14 @@
                         <h3>{% trans 'Groups' %}</h3>
                     {% if user.is_authenticated %}
                         <p class="dock-meta">
-                            {% trans 'You are' %}
-                            <a href="{% url 'group-index' %}?only_with_membership=true">
-                                {% blocktrans trimmed count membership_count=user.gestalt.memberships.count %}
-                                member of one group.
-                                {% plural %}
-                                member of {{ membership_count }} groups.
-                                {% endblocktrans %}
-                            </a>
+                        You are a member
+                        <a href="{% url 'group-index' %}?only_with_membership=true">
+                            {% blocktrans trimmed count membership_count=user.gestalt.memberships.count %}
+                                one group
+                            {% plural %}
+                                {{ membership_count }} groups
+                            {% endblocktrans %}
+                        </a>
                         </p>
                     {% else %}
                         <p class="dock-meta">

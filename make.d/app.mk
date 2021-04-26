@@ -13,7 +13,7 @@ app_migrate: virtualenv-check
 virtualenv-check: app_local_settings
 
 .PHONY: app_run
-app_run: app_migrate app_collect_static
+app_run: app_migrate app_collect_static app_compile_translations
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" manage.py runserver )
 
 .PHONY: app_collect_static
@@ -22,3 +22,16 @@ app_collect_static: virtualenv-check assets
 
 .PHONY: app_local_settings
 app_local_settings: $(CONFIG_APP_SETUP)
+
+.PHONY: app_collect_translation_strings
+app_collect_translation_strings:
+	( . "$(ACTIVATE_VIRTUALENV)" && cd grouprise && "$(PYTHON_BIN)" ../manage.py makemessages --no-location )
+
+.PHONY: app_compile_translations
+app_compile_translations:
+	( . "$(ACTIVATE_VIRTUALENV)" && cd grouprise && "$(PYTHON_BIN)" ../manage.py compilemessages )
+
+.PHONY: app_translate
+app_translate:
+	$(MAKE) app_collect_translation_strings
+	$(MAKE) app_compile_translations

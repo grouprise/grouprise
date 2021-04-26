@@ -15,7 +15,7 @@ clean-grouprise:
 clean: clean-grouprise
 
 .PHONY: build-grouprise
-build-grouprise: assets app_migrate app_collect_static
+build-grouprise: assets app_migrate app_collect_static app_compile_translations
 build: build-grouprise
 
 .PHONY: install-grouprise

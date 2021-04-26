@@ -14,9 +14,9 @@
     <form method="post">
         {% csrf_token %}
         <p>{% blocktrans with group=view.group site=GROUPRISE_SITE_NAME trimmed %}
-            Do you want to become a member of <em>{{ group }}</em> on {{ site }}? *
-            {% endblocktrans %}</p>
-        <button class="btn btn-primary">{% trans 'Join this group' %}*</button>
+            Do you want to become a member of <em>{{ group }}</em> on {{ site }}?
+            {% endblocktrans %} *</p>
+        <button class="btn btn-primary">{% trans 'Join this group' %} *</button>
     </form>
-    <p><small>* {% trans 'In case you are not a member of the group in <em>real live</em> and want to join, please talk to a group member' %}</small>.</p>
+    <p><small>* {% trans 'In case you are not a member of the group in <em>real live</em> and want to join, please talk to a group member.' %}</small></p>
 {% endblock %}

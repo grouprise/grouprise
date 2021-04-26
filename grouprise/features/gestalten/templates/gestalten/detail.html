@@ -11,14 +11,14 @@
     <header class="profile-header">
         <div class="profile-header-title-image">
             {% if gestalt.background %}
-	    <img src="{{ gestalt.background_cover.url }}" alt="{% trans 'Picture of' %} {{ gestalt }}">
+                <img src="{{ gestalt.background_cover.url }}" alt="{% trans 'Picture of' %} {{ gestalt }}">
             {% else %}
                 <div class="disclaimer"></div>
             {% endif %}
 
             {% if can_edit %}
                 <div class="btn-toolbar btn-toolbar-bottom btn-toolbar-fixed">
-		    <a href="{% url 'image-settings' %}" class="btn btn-backdrop btn-ts" title="{% trans 'Change background picture' %}">
+                    <a href="{% url 'image-settings' %}" class="btn btn-backdrop btn-ts" title="{% trans 'Change background picture' %}">
                         <i class="sg sg-2x sg-camera"></i>
                     </a>
                 </div>
@@ -46,26 +46,26 @@
                         {% if can_edit %}
                         <dt>
                             <i class="sg sg-private"></i>
-			    <span class="sr-only">{% trans 'Privacy' %}</span>
+                            <span class="sr-only">{% trans 'Privacy' %}</span>
                         </dt>
                         <dd>
                             {% if gestalt.public %}
-			        {% trans 'Your profile is <strong>public</strong>' %}
+                                {% trans 'Your profile is <strong>public</strong>' %}
                             {% else %}
-			        {% trans 'Your profile is <strong>not public</strong>' %}
+                                {% trans 'Your profile is <strong>not public</strong>' %}
                             {% endif %}
                         </dd>
                         {% endif %}
                         <dt>
                             <i class="sg sg-gestalt"></i>
-			    <span class="sr-only">{% trans 'About me' %}</span>
+                            <span class="sr-only">{% trans 'About me' %}</span>
                         </dt>
                         <dd>
                             {% if not gestalt.about %}
                                 {% if request.user.gestalt == gestalt %}
-				    {% trans 'Write some lines about you!' %}
+                                    {% trans 'Write some lines about you!' %}
                                 {% else %}
-				    {% trans 'This person has not write something her' %}
+                                    {% trans 'This person has not written something here.' %}
                                 {% endif %}
                             {% else %}
                                 {{ gestalt.about }}
@@ -78,13 +78,13 @@
                     <dl class="def def-icons">
                         <dt>
                             <i class="sg sg-link"></i>
-			    <span class="sr-only">{% trans 'URL at' %} {{ about_group }}</span>
+                            <span class="sr-only">{% trans 'URL at' %} {{ about_group }}</span>
                         </dt>
                         <dd class="selectable">
                             {{ site.domain }}/<span class="selectable-token">{{ gestalt.user.username }}</span>
                             <button type="button" class="btn-text hide-no-js" data-component="clipboard"
                                     data-clipboard-text="{{ gestalt.get_absolute_url|full_url }}"
-				    title="{%trans 'Copy URL from this person' %}">
+                                    title="{%trans 'Copy URL of this person' %}">
                                 <i class="sg sg-copy"></i>
                             </button>
                         </dd>
@@ -100,7 +100,7 @@
                 <div class="btn-group">
                     <a href="{% url 'settings' %}" class="btn btn-default btn-sm">
                         <i class="sg sg-edit"></i>
-			{% trans 'Edit profile' %}
+                        {% trans 'Edit profile' %}
                     </a>
                 </div>
             {% endif %}
@@ -110,7 +110,7 @@
                 <div class="btn-group">
                     <a href="{% url 'create-gestalt-conversation' gestalt.pk %}" class="btn btn-default btn-sm">
                         <i class="sg sg-message"></i>
-			{% trans 'Send a message' %}
+                        {% trans 'Send a message' %}
                     </a>
                 </div>
             {% endif %}
@@ -131,7 +131,7 @@
                     <li><a href="{% url 'create-gallery' %}"><i class="sg sg-fw sg-gallery"></i> {% trans 'Gallery' %}</a></li>
                     <li><a href="{% url 'create-poll' %}"><i class="sg sg-fw sg-poll"></i> {% trans 'Start a (date) poll' %}</a></li>
                     {% if about_group %}
-		        <li><a href="{% url 'content' about_group.slug 'tools' %}#8-werkzeuge-fur-andere-anwendungsfalle"><i class="sg sg-fw sg-tools"></i> {% trans 'More options' %}</a></li>
+                        <li><a href="{% url 'content' about_group.slug 'tools' %}#8-werkzeuge-fur-andere-anwendungsfalle"><i class="sg sg-fw sg-tools"></i> {% trans 'More possibilities' %}</a></li>
                     {% endif %}
                 {% enddropdown %}
             {% endif %}

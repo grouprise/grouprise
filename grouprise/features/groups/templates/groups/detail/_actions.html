@@ -18,7 +18,7 @@
         {% has_perm 'memberships.try_to_join' user group as can_join %}
         {% has_perm 'conversations.create_group_conversation_with_membership_application' user group as can_apply %}
         {% if can_join %}
-                <a href="{% url 'join' group.slug %}" class="btn btn-default btn-sm" title="{% trans 'Join this group.' %}">
+                <a href="{% url 'join' group.slug %}" class="btn btn-default btn-sm" title="{% trans 'Join this group' %}">
                 <i class="sg sg-join"></i> {% trans "Join" %}
             </a>
         {% elif can_apply %}

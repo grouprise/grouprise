@@ -11,7 +11,7 @@
     {% if can_signup %}
         <a href="{% url 'account_signup' %}" class="btn btn-ch">
             <span class="btn-label">
-	        {% trans 'Signup' %}
+                {% trans 'Signup' %}
             </span>
         </a>
     {% endif %}
@@ -28,14 +28,17 @@
         {% dismissible 'gestalt-profile-visibility' %}
         <div class="disclaimer disclaimer-standalone">
             {% dismiss 'gestalt-profile-visibility' %}
-	    {% trans 'Not all <em>persons</em> are visible to you. Every single <em>person</em> can
-	    choose to publish their profile. You can change this setting in' %}
+            {% blocktrans trimmed %}
+                Not all <em>persons</em> are visible to you.
+                Every single <em>person</em> can choose to publish their profile.
+            {% endblocktrans %}
             {% if can_edit %}
-                <a href="{% url 'gestalt-update' user.gestalt.pk %}">
-   		    {% trans 'your profile' %}
-                </a>.
+                {% url 'gestalt-update' user.gestalt.pk as url %}
+                {% blocktrans %}
+                You can change this setting in <a href="{{ url }}">your profile'</a>.
+                {% endblocktrans %}
             {% else %}
-                {% trans 'your profile.' %}
+                {% trans 'You can change this setting in your profile.' %}
             {% endif %}
         </div>
         {% enddismissible %}
