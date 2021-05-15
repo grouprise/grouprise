@@ -6,6 +6,7 @@ db.sqlite3*
 media/
 media-*/
 node_modules
+static/
 xapian_index
 res/img/backdrops
 grouprise/settings.py
