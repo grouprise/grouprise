@@ -68,7 +68,7 @@ class Group(grouprise.core.models.Model):
             blank=True)
     url_import_feed = models.BooleanField(
             _('Import contributions from website'), default=False,
-            help_text=_('Try to automaticly import of public contributions of this website '
+            help_text=_('Try to automatically import public contributions of this website '
                         'on the group page'))
 
     closed = models.BooleanField(

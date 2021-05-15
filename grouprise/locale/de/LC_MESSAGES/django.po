@@ -310,7 +310,7 @@ msgid "Import contributions from website"
 msgstr "Beiträge von Website übernehmen"
 
 msgid ""
-"Try to automaticly import of public contributions of this website on the "
+"Try to automatically import public contributions of this website on the "
 "group page"
 msgstr ""
 "Öffentliche Beiträge der angegebenen Website nach Möglichkeit automatisch in "

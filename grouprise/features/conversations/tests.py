@@ -43,7 +43,7 @@ class NotificationContainsConversationMessageIDs:
         self.assertNotificationHeaderContent('Message-ID',
                                              '<conversation.%d.' % self.association.pk)
         # the thread ID refers to the first message of this conversation
-        # (the proper tread ID is hard to retrieve - we just verify its existence)
+        # (the proper thread ID is hard to retrieve - we just verify its existence)
         self.assertNotificationHeaderContent('References',
                                              '<conversation.%d.' % self.association.pk)
 

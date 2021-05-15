@@ -14,7 +14,7 @@ def _get_adjusted_event_args(missing_keys=None, **kwargs):
     """ assemble a dictionary of arguments for a new event
 
     @param missing_keys: keys to be removed from the dictionary
-    other keyword arguments: values to be overriden in the default dictionary
+    other keyword arguments: values to be overridden in the default dictionary
     """
     event_args = {'title': 'Some Event', 'text': 'Test Text', 'place': 'Test Place',
                   'time': '3000-01-01 00:00', 'until_time': '3000-01-01 00:00', 'as_gestalt': True}
