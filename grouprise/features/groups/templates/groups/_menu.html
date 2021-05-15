@@ -68,7 +68,7 @@
                             <span class="nav-menu-item-label">Nachricht schreiben</span>
                         </a>
                     </li>
-                    
+
                     {# MEMBERSHIP #}
                     {% load rules %}
                     {% has_perm 'memberships.try_to_join' user group as can_join %}
@@ -132,7 +132,7 @@
                             </ol>
                         </li>
                     {% endif %}
-                    
+
                     {# SETTINGS #}
                     {% load rules %}
                     {% has_perm 'groups.change' user group as can_change_group %}

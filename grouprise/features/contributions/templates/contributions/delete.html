@@ -13,7 +13,7 @@
     <form method="post">
         {% csrf_token %}
 
-        <p>Möchtest Du den Kommentar 
+        <p>Möchtest Du den Kommentar
         <em>{{ contribution.contribution.text|truncatechars:50 }}</em>
         wirklich löschen?</p>
 

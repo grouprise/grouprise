@@ -19,7 +19,7 @@
             {% has_perm 'memberships.join' user group as can_join %}
             {% if can_join %}
                 <p>Wenn Du in der Gruppe aktiv bist, kannst Du ihr
-                <a href="{% url 'join' group.slug %}">beitreten</a> und ein Bild 
+                <a href="{% url 'join' group.slug %}">beitreten</a> und ein Bild
                 hochladen.</p>
             {% endif %}
         </div>

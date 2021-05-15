@@ -127,7 +127,7 @@
                 <a href="{% url 'recommend-group' group.slug %}">Weiterempfehlen</a>
             {% endif %}
         </dd>
-        
+
         {% load rules %}
         {% has_perm 'groups.change' user group as can_view_details %}
         {% if GROUPRISE_MAILINGLIST_ENABLED and can_view_details %}

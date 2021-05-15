@@ -15,7 +15,7 @@
 
 {% block content %}
     {% has_perm 'conversations.reply' user association as can_reply %}
-    
+
     <div class="conversation" data-component="conversation" id="{% ref association.container %}">
         <header class="conversation-header">
             <h1 class="conversation-title">

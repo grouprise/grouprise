@@ -6,7 +6,7 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <p>Ist 
+        <p>Ist
         <a href="mailto:{{ confirmation.email_address.email }}">
             {{ confirmation.email_address.email }}
         </a>

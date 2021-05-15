@@ -10,7 +10,7 @@
             <i class="sg sg-xl sg-privacy-{% if association.public %}public{% else %}private{% endif %}"></i>
             <span class="btn-htitle" data-position="right" title="
             Post wird {% if not association.public %}nicht {% endif %}öffentlich sein.
-            Benachrichtigungen werden an 
+            Benachrichtigungen werden an
             {% if association.entity.is_group %}Mitglieder der Gruppe{% endif %}
             @{{ association.entity.slug }}
             {% if association.entity.is_group %}

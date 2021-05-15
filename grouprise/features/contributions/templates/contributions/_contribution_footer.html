@@ -2,17 +2,17 @@
     {% block media_footer %}
         <div class="media-footer-left">
             {% if not contribution.public %}
-                <span class="btn has-state has-square-icon has-hover-title is-unresponsive" 
+                <span class="btn has-state has-square-icon has-hover-title is-unresponsive"
                     data-state="active">
                     <i class="sg sg-xs sg-privacy-private"></i>
                     {% if contribution.author == user.gestalt %}
                         <span class="btn-htitle" data-position="left"
-                            title="Dieser Kommentar ist nicht öffentlich sichtbar. Du kannst 
+                            title="Dieser Kommentar ist nicht öffentlich sichtbar. Du kannst
                             ihn sehen, weil Du ihn selbst verfasst hast."></span>
                     {% else %}
                         <span class="btn-htitle" data-position="left"
-                            title="Dieser Kommentar ist nicht öffentlich sichtbar. Du kannst 
-                            ihn sehen, weil Du Mitglied der Gruppe 
+                            title="Dieser Kommentar ist nicht öffentlich sichtbar. Du kannst
+                            ihn sehen, weil Du Mitglied der Gruppe
                             @{{ association.entity.slug }} bist."></span>
                     {% endif %}
                 </span>
