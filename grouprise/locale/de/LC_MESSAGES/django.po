@@ -271,6 +271,15 @@ msgstr ""
 msgid "You can change this setting in your profile."
 msgstr "Du kannst dieses Verhalten in deinem Profil ändern."
 
+msgid "verified"
+msgstr "geprüft"
+
+msgid "unverified"
+msgstr "ungeprüft"
+
+msgid "primary address"
+msgstr "Hauptaddresse"
+
 msgid "e.g. Repair Cafe"
 msgstr "z.B. Foodcoop"
 

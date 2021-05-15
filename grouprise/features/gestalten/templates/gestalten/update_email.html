@@ -1,4 +1,5 @@
 {% extends 'stadt/settings.html' %}
+{% load i18n %}
 
 {% block sidebar %}
     {% with chapter='gestalt-email' %}{{ block.super }}{% endwith %}
@@ -21,13 +22,15 @@
                        value="{{ address.email }}"
                        />
                     {{ address.email }}
+                    &mdash;
                     {% if address.verified %}
-                    <span class="verified">bestätigt</span>
+                        <span class="verified">{% trans 'verified' %}</span>
                     {% else %}
-                    <span class="unverified">unbestätigt</span>
+                        <span class="unverified">{% trans 'unverified' %}</span>
                     {% endif %}
                     {% if address.primary %}
-                    <span class="primary">Hauptadresse</span>
+                        &mdash;
+                        <span class="primary">{% trans 'primary address' %}</span>
                     {% endif %}
                 </label>
             </li>
