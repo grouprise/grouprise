@@ -26,7 +26,7 @@ class LazySettingsResolver:
         except AttributeError:
             # "cached_property" was not available before Python 3.8
             def lazy_resolver(func):
-                return property(functools.lru_cache(func))
+                return property(functools.lru_cache()(func))
 
         self._attribute_names = set()
         # set the attribute values or (for callables) a lazy evaluator
