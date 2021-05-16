@@ -19,7 +19,7 @@ URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,70
 # static output files
 STAMP_STATIC_WEBPACK = $(DIR_BUILD)/.static_webpack
 
-$(STAMP_NODE_MODULES): $(BIN_NODE) $(BIN_NPM) package.json
+$(STAMP_NODE_MODULES): package.json
 	$(RUN_NODE) "$(BIN_NPM)" ci --no-progress
 	touch "$(STAMP_NODE_MODULES)"
 
