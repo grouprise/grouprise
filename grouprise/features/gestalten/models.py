@@ -9,7 +9,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import SmartResize, Transpose
 
 import grouprise.core
-from grouprise.core.settings import UNKNOWN_GESTALT_ID
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.utils import get_random_color
 
 
@@ -82,7 +82,7 @@ class Gestalt(grouprise.core.models.Model):
 
     def delete(self, *args, **kwargs):
         data = self.get_data()
-        unknown_gestalt = Gestalt.objects.get(id=UNKNOWN_GESTALT_ID)
+        unknown_gestalt = Gestalt.objects.get(id=CORE_SETTINGS.UNKNOWN_GESTALT_ID)
         data['associations'].update(entity_id=unknown_gestalt.id)
         data['contributions'].update(author=unknown_gestalt)
         data['images'].update(creator=unknown_gestalt)

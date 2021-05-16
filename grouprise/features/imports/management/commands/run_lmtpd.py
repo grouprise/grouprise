@@ -15,7 +15,7 @@ from aiosmtplib.smtp import SMTP
 import django
 import django.db
 
-from grouprise.core.settings import POSTMASTER_EMAIL as POSTMASTER_ADDRESS
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
         ContributionMailProcessor, MailProcessingFailure, ParsedMailMessage)
 
@@ -238,8 +238,8 @@ class ContributionHandler:
             err_msg = ''.join(traceback.format_exception(*sys.exc_info()))
             self._error_writer('Failed to parse Message:\n{}'.format(err_msg))
             django.core.mail.send_mail(
-                'LMTP Handling Error', err_msg, from_email=POSTMASTER_ADDRESS,
-                recipient_list=[POSTMASTER_ADDRESS], fail_silently=True)
+                'LMTP Handling Error', err_msg, from_email=CORE_SETTINGS.POSTMASTER_EMAIL,
+                recipient_list=[CORE_SETTINGS.POSTMASTER_EMAIL], fail_silently=True)
             return '500 Failed to parse incoming message'
         success_count = 0
         error_messages = []
@@ -277,7 +277,8 @@ class ContributionHandler:
                                         for recipient, exc in internal_problems)
             # inform developers
             self._contribution_processor.send_error_mail_response(
-                parsed_message, problems_text, recipient=POSTMASTER_ADDRESS, fail_silently=True)
+                parsed_message, problems_text, recipient=CORE_SETTINGS.POSTMASTER_EMAIL,
+                fail_silently=True)
             if success_count > 0:
                 # Never reject a message that was at least partly processed. Otherwise a
                 # contribution could be published multiple times - which would be quite annoying

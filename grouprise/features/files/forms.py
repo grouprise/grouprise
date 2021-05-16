@@ -2,7 +2,7 @@ import os
 
 from django import forms
 
-from grouprise.core.settings import UPLOAD_MAX_FILE_SIZE
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.content import forms as content
 
 
@@ -10,7 +10,7 @@ class Create(content.Create):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     file = forms.FileField(
             label='Datei', help_text='Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
-                UPLOAD_MAX_FILE_SIZE))
+                CORE_SETTINGS.UPLOAD_MAX_FILE_SIZE))
 
     def save(self, commit=True):
         association = super().save(False)
@@ -27,7 +27,7 @@ class Update(content.Update):
     text = forms.CharField(label='Beschreibung', widget=forms.Textarea({'rows': 2}))
     file = forms.FileField(
             label='Datei', help_text='Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
-                UPLOAD_MAX_FILE_SIZE))
+                CORE_SETTINGS.UPLOAD_MAX_FILE_SIZE))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

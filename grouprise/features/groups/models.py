@@ -10,7 +10,7 @@ from imagekit.processors import ResizeToFit, Transpose
 from taggit.managers import TaggableManager
 
 import grouprise.core.models
-from grouprise.core.settings import OPERATOR_GROUP_ID
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.utils import get_random_color
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.stadt.models import EntitySlugField
@@ -18,7 +18,7 @@ from grouprise.features.stadt.models import EntitySlugField
 
 class GroupManager(models.Manager):
     def operator_group(self):
-        return self.get_queryset().filter(id=OPERATOR_GROUP_ID).first()
+        return self.get_queryset().filter(id=CORE_SETTINGS.OPERATOR_GROUP_ID).first()
 
 
 class Group(grouprise.core.models.Model):

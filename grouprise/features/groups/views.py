@@ -13,7 +13,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
 from django_filters.views import FilterView
 
-from grouprise.core.settings import MAILINGLIST_ENABLED
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
@@ -55,7 +55,7 @@ class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailVi
         kwargs['feed_url'] = self.request.build_absolute_uri(
                 reverse('group-feed', args=(self.object.pk,)))
         return super().get_context_data(
-                GROUPRISE_MAILINGLIST_ENABLED=MAILINGLIST_ENABLED,
+                GROUPRISE_MAILINGLIST_ENABLED=CORE_SETTINGS.MAILINGLIST_ENABLED,
                 associations=associations,
                 intro_associations=intro_associations,
                 intro_gallery=intro_gallery,

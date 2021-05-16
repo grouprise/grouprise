@@ -3,7 +3,7 @@ import datetime
 import django.utils.timezone
 
 from grouprise.core import tests
-from grouprise.core.tests import temporary_settings_override
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.associations import models as associations
 from grouprise.features.memberships.test_mixins import MemberMixin, OtherMemberMixin
 from ..feeds import import_from_feed, parse_feed_url_from_website_content
@@ -66,7 +66,7 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
         self.assertEqual(associations.Association.objects.count(), 1)
 
     def test_notifications_all(self):
-        with temporary_settings_override("FEED_IMPORTER_GESTALT_ID", self.other_gestalt.id):
+        with CORE_SETTINGS.temporary_override(FEED_IMPORTER_GESTALT_ID=self.other_gestalt.id):
             self.assertEqual(associations.Association.objects.count(), 0)
             # send a "new" (recent date) feed entry: otherwise its notification is skipped
             import_from_feed(self._get_feed_content(date=self._get_now()),

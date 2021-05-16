@@ -7,7 +7,7 @@ import sys
 
 from django.core.management.base import BaseCommand
 
-from grouprise.core.settings import COLLECTOR_MAILBOX_ADDRESS
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
     ContributionMailProcessor,
     MailProcessingFailure,
@@ -86,9 +86,9 @@ class Command(BaseCommand):
                     )
                 )
             delivered_to_address = get_normalized_address(match.groups()[0])
-            if COLLECTOR_MAILBOX_ADDRESS:
+            if CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS:
                 if (
-                    get_normalized_address(COLLECTOR_MAILBOX_ADDRESS)
+                    get_normalized_address(CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS)
                     == delivered_to_address
                 ):
                     # The message was delivered to the mailbox configured for collecting all
@@ -99,7 +99,7 @@ class Command(BaseCommand):
                     raise ValueError(
                         "Rejecting the mail, since its envelope address ({}) does not match the "
                         "expected mailbox address (COLLECTOR_MAILBOX_ADDRESS='{}').".format(
-                            delivered_to_address, COLLECTOR_MAILBOX_ADDRESS
+                            delivered_to_address, CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS
                         )
                     )
             else:

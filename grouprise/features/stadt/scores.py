@@ -4,7 +4,7 @@ from math import log
 import django.conf
 import django.utils.timezone
 
-from grouprise.core.settings import SCORE_CONTENT_AGE as MAX_SCORE_CONTENT_AGE_DAYS
+from grouprise.core.settings import CORE_SETTINGS
 
 from grouprise.features.content import models as content
 from grouprise.features.contributions import models as contributions
@@ -17,7 +17,7 @@ class Gestalt:
     @classmethod
     def score(cls, instance):
         minimum_timestamp = (
-            django.utils.timezone.now() - datetime.timedelta(days=MAX_SCORE_CONTENT_AGE_DAYS))
+            django.utils.timezone.now() - datetime.timedelta(days=CORE_SETTINGS.SCORE_CONTENT_AGE))
         s = 0
         if isinstance(instance, gestalten.Gestalt):
             authored_versions = content.Version.objects.filter(
@@ -34,7 +34,7 @@ class Group:
     @classmethod
     def score(cls, instance):
         minimum_timestamp = (
-            django.utils.timezone.now() - datetime.timedelta(days=MAX_SCORE_CONTENT_AGE_DAYS))
+            django.utils.timezone.now() - datetime.timedelta(days=CORE_SETTINGS.SCORE_CONTENT_AGE))
         s = 0
         if isinstance(instance, groups.Group):
             num_members = instance.memberships.count()

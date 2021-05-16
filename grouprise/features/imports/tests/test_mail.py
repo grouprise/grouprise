@@ -11,11 +11,10 @@ from django.core import mail
 from django.urls import reverse
 
 from grouprise.core import tests
-from grouprise.core.settings import DEFAULT_REPLY_TO_EMAIL
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models
-from grouprise.features.imports.management.commands.run_lmtpd import (
-    ContributionLMTPD, POSTMASTER_ADDRESS)
+from grouprise.features.imports.management.commands.run_lmtpd import ContributionLMTPD
 from grouprise.features.imports.mails import (
     ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST)
 from grouprise.features.gestalten import tests as gestalten
@@ -131,9 +130,9 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         self.assertInvalidRecipient(self.group_address.split('@')[0] + 'example.org')
         self.assertValidRecipient(self.group_address)
         self.assertValidRecipient(self.group_address.swapcase())
-        self.assertValidRecipient(DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
+        self.assertValidRecipient(CORE_SETTINGS.DEFAULT_REPLY_TO_EMAIL.format(reply_key='foo'))
         self.assertInvalidRecipient(
-            DEFAULT_REPLY_TO_EMAIL.replace('+{', '-{').format(reply_key='foo'))
+            CORE_SETTINGS.DEFAULT_REPLY_TO_EMAIL.replace('+{', '-{').format(reply_key='foo'))
 
     def test_internal_error_mail_handling(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
@@ -147,8 +146,8 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
             self.assertEqual(1, len(get_new_mails()))
             self.assertIn(MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST.swapcase(),
                           get_new_mails()[0].body)
-            self.assertListEqual([POSTMASTER_ADDRESS], get_new_mails()[0].recipients(),
-                                 get_new_mails()[0])
+            self.assertListEqual([CORE_SETTINGS.POSTMASTER_EMAIL],
+                                 get_new_mails()[0].recipients(), get_new_mails()[0])
 
     def test_reject_initial_contribution_from_non_member(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:

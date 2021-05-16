@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_slug
 
-from grouprise.core.settings import ENTITY_SLUG_BLACKLIST
+from grouprise.core.settings import CORE_SETTINGS
 
 
 def validate_entity_slug(slug, entity=None):
@@ -12,7 +12,7 @@ def validate_entity_slug(slug, entity=None):
     validate_slug(slug)
 
     # validate by blacklist
-    if slug.lower() in ENTITY_SLUG_BLACKLIST:
+    if slug.lower() in CORE_SETTINGS.ENTITY_SLUG_BLACKLIST:
         raise ValidationError(
                 'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
                 params={'slug': slug}, code='reserved')

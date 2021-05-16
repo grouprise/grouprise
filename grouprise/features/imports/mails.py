@@ -9,7 +9,7 @@ import django.utils.timezone
 import html2text
 
 import grouprise.core.models
-from grouprise.core.settings import DEFAULT_REPLY_TO_EMAIL
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.signals import post_create
 from grouprise.features.associations import models as associations
 from grouprise.features.content.models import Content
@@ -178,7 +178,7 @@ class ContributionMailProcessor:
 
     def __init__(self, default_reply_to_address=None, response_from_address=None):
         if default_reply_to_address is None:
-            default_reply_to_address = DEFAULT_REPLY_TO_EMAIL
+            default_reply_to_address = CORE_SETTINGS.DEFAULT_REPLY_TO_EMAIL
         if response_from_address is None:
             response_from_address = settings.DEFAULT_FROM_EMAIL
         self._reply_domain = default_reply_to_address.split("@")[1]

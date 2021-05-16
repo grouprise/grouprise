@@ -7,10 +7,9 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
-from grouprise.core.settings import HOOK_SCRIPT_PATHS
+from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.utils import slugify
 from grouprise.features.gestalten import models as gestalten
-from grouprise.features.stadt.forms import ENTITY_SLUG_BLACKLIST
 from .models import Group
 from ...core.models import get_unique_slug
 
@@ -26,7 +25,7 @@ def call_hook_script(event_type: str, group: Group, timeout=300):
             "objectData": {"id": group.id, "slug": group.slug},
         }
     )
-    for script_name in HOOK_SCRIPT_PATHS:
+    for script_name in CORE_SETTINGS.HOOK_SCRIPT_PATHS:
         try:
             subprocess.run(
                 [script_name, hook_event_info_json],
@@ -74,7 +73,7 @@ def post_group_save(sender, instance, created, **kwargs):
         instance.slug = get_unique_slug(
             Group,
             {"slug": slugify(instance.name)},
-            reserved_slugs=ENTITY_SLUG_BLACKLIST,
+            reserved_slugs=CORE_SETTINGS.ENTITY_SLUG_BLACKLIST,
             reserved_slug_qs=gestalten.Gestalt.objects,
             reserved_slug_qs_field="user__username",
         )

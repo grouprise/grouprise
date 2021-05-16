@@ -6,7 +6,7 @@ import subprocess
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from grouprise.core.settings import BACKUP_PATH
+from grouprise.core.settings import CORE_SETTINGS
 
 
 def create_filename(directory, prefix, filename=None, suffix=''):
@@ -51,7 +51,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--prefix', default='', help='prefix for the filename')
-        parser.add_argument('--output-dir', default=BACKUP_PATH, help='backup storage dir')
+        parser.add_argument(
+                '--output-dir', default=CORE_SETTINGS.BACKUP_PATH, help='backup storage dir')
         parser.add_argument('--output-file', default=None, help='backup filename')
 
     def handle(self, *args, **options):
