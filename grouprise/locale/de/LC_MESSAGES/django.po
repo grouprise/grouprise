@@ -392,6 +392,22 @@ msgstr "Gruppen suchen"
 msgid "More groups"
 msgstr "Weitere Gruppen"
 
+msgid "Custom (external) matrix user ID"
+msgstr "Eigene (externe) Matrix-Nutzer-ID"
+
+msgid ""
+"Leave this field empty, if you want to use the local Matrix user ID. A "
+"Matrix user ID looks like '@foo:example.org'."
+msgstr ""
+"Lass das Feld leer, um die lokale Matrix-Nutzer-ID zu verwenden. Eine Matrix-"
+"Nutzer-ID hat die Form '@foo:example.org'."
+
+msgid "Chat Settings - Matrix"
+msgstr "Chat-Einstellungen (Matrix)"
+
+msgid "Save settings"
+msgstr "Einstellungen speichern"
+
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
@@ -479,6 +495,9 @@ msgstr ""
 
 msgid "Help about"
 msgstr "Hilfe zu"
+
+msgid "Chat (Matrix)"
+msgstr "Chat (Matrix)"
 
 msgid "all"
 msgstr "alle"
