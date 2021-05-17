@@ -6,9 +6,10 @@ from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
 from grouprise.core.templatetags.defaultfilters import full_url
-import grouprise.features.groups.models
-import grouprise.features.contributions.models
 import grouprise.features.content.models
+import grouprise.features.contributions.models
+import grouprise.features.groups.models
+import grouprise.features.memberships.models
 from .matrix_bot import MatrixBot, MatrixError
 from .models import MatrixChatGroupRoom
 
@@ -112,3 +113,24 @@ def send_contribution_notification_to_matrix_rooms(sender, instance, created, **
                 summary = f"Diskussionsbeitrag: [{instance.container.subject} ({author})]({url})"
                 messages.append((group, summary, instance.public))
         send_matrix_room_messages(messages)
+
+
+@receiver(post_save, sender=grouprise.features.memberships.models.Membership)
+def synchronize_matrix_room_memberships(sender, instance, created, **kwargs):
+    if created:
+        _invite_to_group_rooms(instance.group)
+
+
+@db_task()
+def _invite_to_group_rooms(group):
+    async def _invite_to_group_rooms_delayed(group):
+        async with MatrixBot() as bot:
+            try:
+                async for invited in bot.send_invitations_to_group_members(group):
+                    logger.info(f"Invitation sent: {invited}")
+            except MatrixError as exc:
+                logger.warning(
+                    f"Failed to invite new group members ({group}) to matrix rooms: {exc}"
+                )
+
+    asyncio.run(_invite_to_group_rooms_delayed(group))
