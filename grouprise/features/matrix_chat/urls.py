@@ -12,6 +12,11 @@ if MATRIX_SETTINGS.ENABLED:
             views.UpdateMatrixChatGestaltSettings.as_view(),
             name="matrix-chat-settings",
         ),
+        url(
+            r"^stadt/help/matrix-chat/$",
+            views.ShowMatrixChatHelp.as_view(),
+            name="help-matrix-chat",
+        ),
     ]
 else:
     urlpatterns = []
