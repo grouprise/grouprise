@@ -3,4 +3,6 @@ CONTRIBUTORS.md
 LICENSE
 README.md
 VERSION
+recursive-include **/static *
+recursive-include **/templates *
 recursive-include grouprise *.html *.txt *.png *.svg *.po *.mo
