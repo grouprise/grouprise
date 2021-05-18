@@ -10,7 +10,7 @@ _GR = settings.GROUPRISE
 
 
 class LazySettingsResolver:
-    """ storage class for settings
+    """storage class for settings
 
     Features:
     * optional lazy evaluation
@@ -19,20 +19,43 @@ class LazySettingsResolver:
           pre-configure phase (e.g. while "urls.py" is parsed).
     * allow temporary override of specific settings
     """
+
     def __init__(self, **kwargs):
-        # determine which resolver is available for lazy evaluation
-        try:
-            lazy_resolver = functools.cached_property
-        except AttributeError:
-            # "cached_property" was not available before Python 3.8
-            def lazy_resolver(func):
-                return property(functools.lru_cache()(func))
+        def lazy_resolver(func):
+            return functools.lru_cache()(func)
 
         self._attribute_names = set()
+        self._unresolved_attributes = {}
         # set the attribute values or (for callables) a lazy evaluator
         for key, value in kwargs.items():
-            setattr(self, key, lazy_resolver(value) if callable(value) else value)
+            if callable(value):
+                self._unresolved_attributes[key] = value
+            else:
+                # simple attribute values
+                setattr(self, key, value)
             self._attribute_names.add(key)
+
+    def __getattr__(self, name):
+        """implement a lazy evaluation mechanism (similar to functools.cached_property)
+
+        This function is supposed to be called for each key in `self._unresolved_attributes`, when
+        it is accessed for the first time.
+
+        The `functools.cached_property` decorator could be used instead, but it is only available
+        since Python 3.9.
+        Note: the `cached_property` would need to be assigned to the class (not the instance) and
+        `__set_name__` needs to be called explicitly on the new `cached_property` instance.
+        See https://bugs.python.org/issue38517
+        """
+        try:
+            value_func = self._unresolved_attributes.pop(name)
+        except KeyError:
+            raise AttributeError(f"Missing settings key '{name}' in {type(self)}")
+        else:
+            # first access to the lazy-evaluation attribute: finally set the calculated value
+            value = value_func()
+            setattr(self, name, value)
+            return value
 
     @contextlib.contextmanager
     def temporary_override(self, **kwargs):
