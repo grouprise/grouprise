@@ -18,7 +18,8 @@ echo "deb [signed-by=/etc/grouprise/apt-keyring.gpg] https://deb.grouprise.org/ 
 Nun kannst du den Paketindex via `apt update` aktualisieren.
 
 Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigkeiten einige wenige
-*backports*-Pakete erforderlich.  Diese sind in der folgende Quelle zugänglich:
+*backports*-Pakete erforderlich.  Diese sind in der folgende Quelle zugänglich (zu den Details der Einrichtung des
+Backports-Repositories siehe den Abschnitt *Instructions* auf [backports.debian.org](https://backports.debian.org/)):
 
 ```shell
 deb http://deb.debian.org/debian buster-backports main
@@ -62,7 +63,9 @@ ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/
 service uwsgi restart
 ```
 
-Erzeuge anschließend eine nginx-site-Konfiguration (z.B. `/etc/nginx/sites-available/grouprise`), wobei die Domain anzupassen ist:
+Erzeuge anschließend eine nginx-Site-Konfiguration (z.B. `/etc/nginx/sites-available/grouprise`), wobei die Domain
+anzupassen ist. Details zur Konfiguration von Sites in nginx unter Debian-Betriebssystemen finden sich in vielen
+Tutorials im Internet:
 ```
 server {
     server_name example.org;
