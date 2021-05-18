@@ -156,3 +156,27 @@ class MatrixBot:
                         logger.warning(
                             f"Invite request for {gestalt} into {room} was rejected: {result}"
                         )
+
+    async def kick_gestalt_from_group_rooms(self, group, gestalt, reason=None):
+        gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
+        for room in MatrixChatGroupRoom.objects.filter(group=group):
+            try:
+                result = await self.client.room_kick(
+                    room.room_id, gestalt_matrix_id, reason=reason
+                )
+            except nio.exceptions.ProtocolError as exc:
+                logger.warning(f"Failed to kick {gestalt} from {room}: {exc}")
+            else:
+                if isinstance(result, nio.responses.RoomKickResponse) or (
+                    isinstance(result, nio.responses.RoomKickError)
+                    and (result.status_code == "M_FORBIDDEN")
+                ):
+                    # "forbidden" indicates that we were not a member of the room.
+                    # Discard invitations, anyway.
+                    MatrixChatGroupRoomInvitations.objects.filter(
+                        room=room, gestalt=gestalt
+                    ).delete()
+                else:
+                    logger.warning(
+                        f"Kick request for {gestalt} out of {room} was rejected: {result}"
+                    )

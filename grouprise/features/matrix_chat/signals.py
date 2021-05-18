@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
@@ -134,3 +134,22 @@ def _invite_to_group_rooms(group):
                 )
 
     asyncio.run(_invite_to_group_rooms_delayed(group))
+
+
+@receiver(post_delete, sender=grouprise.features.memberships.models.Membership)
+def kick_room_members_after_leaving_group(sender, instance, **kwargs):
+    _kick_gestalt_from_group_rooms(instance.group, instance.member)
+
+
+@db_task()
+def _kick_gestalt_from_group_rooms(group, gestalt):
+    async def _kick_gestalt_from_group_rooms_delayed(group, gestalt):
+        async with MatrixBot() as bot:
+            try:
+                await bot.kick_gestalt_from_group_rooms(group, gestalt)
+            except MatrixError as exc:
+                logger.warning(
+                    f"Failed to kick previous group members ({group}) from matrix rooms: {exc}"
+                )
+
+    asyncio.run(_kick_gestalt_from_group_rooms_delayed(group, gestalt))
