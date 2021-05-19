@@ -1,0 +1,7 @@
+All files below the directory /etc/element-web/ can be used to add files to the
+element-web directory or override existing files (via symlinks).
+
+Probably you want to add at least your config.json file [1] and maybe additional assets to be
+published via HTTP (e.g. a custom logo).
+
+[1] https://github.com/vector-im/element-web/blob/develop/docs/config.md

@@ -1,0 +1,9 @@
+#!/usr/bin/dh-exec
+debian/element-web-installer.d/README_configuration => /etc/element-web/README
+debian/element-web-installer.d/element-web-installer /usr/sbin/
+# source: https://packages.riot.im/element-release-key.gpg
+# Retrieve key and apply ascii armor packaging:
+#   keyring=debian/element-web-installer.d/release-trustedkeys.gpg && echo -n >"$keyring" && curl -s "https://packages.riot.im/element-release-key.gpg" | gpg --no-default-keyring --keyring "$keyring" --import
+debian/element-web-installer.d/release-trustedkeys.gpg => /usr/share/element-web-installer/trustedkeys.gpg
+debian/element-web-installer.d/apache2/element-web.conf /etc/apache2/sites-available/
+debian/element-web-installer.d/nginx/element-web /etc/nginx/sites-available/

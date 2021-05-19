@@ -52,6 +52,7 @@ Architecture: all
 Depends:
  ${misc:Depends},
  adduser,
+ debconf,
  grouprise-dependencies,
  grouprise-db-postgresql | grouprise-db-sqlite,
  moreutils,
@@ -151,6 +152,35 @@ Description: Web platform that enables social action and solidarity
  This package contains additional dependencies in the form of a
  pre-packaged python virtual environment (venv) for running the
  grouprise application.
+
+Package: grouprise-matrix
+Architecture: all
+Depends:
+ element-web-installer,
+ jq,
+ matrix-synapse,
+ moreutils,
+# this package is not shipped in buster or buster-backports ("bullseye" is necessary)
+ python3-matrix-nio,
+Description: Matrix integration for grouprise platform
+ Grouprise is a web-based platform providing tools for groups and
+ initiatives in a local context.
+ .
+ This package contains necessary services and files for configuring
+ a Matrix server to be used as a chat manager for grouprise.
+
+Package: element-web-installer
+Architecture: all
+Depends:
+ curl,
+ debconf,
+ gpgv,
+ jq,
+ moreutils,
+Suggests: httpd
+Description: Installer for the Matrix web client Element
+ Download the Element web client and keep it updated.
+ Local configuration is applied automatically.
 
 Package: stadtgestalten
 Architecture: any

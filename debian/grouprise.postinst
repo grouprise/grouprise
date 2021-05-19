@@ -1,25 +1,91 @@
 #!/bin/sh
 
-set -eu
+set -e
 
 PKG_USER="_grouprise"
 PKG_GROUP="_grouprise"
 DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
+GROUPRISE_SETTINGS_FILE="$DIR_ETC/settings.py"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
 DIR_MEDIA="/var/lib/grouprise/media"
 DIR_STATIC="/var/lib/grouprise/static"
 UWSGI_APP_SYMLINK="/etc/uwsgi/apps-enabled/grouprise.ini"
 
+. /usr/share/debconf/confmodule
+db_version 2.1
+
+# debconf does not work with "set -u", thus we enable it after loading debconf
+set -eu
+
+
+get_configured_grouprise_domain() {
+    # "dumpdata" is allowed fail here silently, since the database may not be configured, yet
+    grouprisectl dumpdata sites 2>/dev/null | jq -r '.[0].fields.domain // ""'
+}
+
+set_configured_grouprise_domain() {
+    local domain="$1"
+    sed -i 's/^\(ALLOWED_HOSTS =\).*$/\1 ["'"$grouprise_domain"'", "localhost"]/' "$GROUPRISE_SETTINGS_FILE"
+    # update the domain and maybe the name (if it was never set)
+    # This operation may fail, if the database is not configured, yet.
+    printf '%s\n' \
+            "UPDATE django_site SET domain='$domain' WHERE id=1;" \
+            "UPDATE django_site SET name='$domain' WHERE id=1 AND name='example.com';" \
+        | grouprisectl dbshell >/dev/null 2>&1 || true
+}
+
+
+ask_debconf_question() {
+    local question="$1"
+    local priority="$2"
+    local default_value="${3:-}"
+    local RET
+    if [ -n "$default_value" ] && ( ! db_get "$question" || [ -z "$RET" ] ); then
+        # the value is not configured via debconf, yet
+        db_set "$question" "$default_value"
+    fi
+    db_input "$priority" "$question" || true
+    # shellcheck disable=SC2119
+    db_go || true
+    db_get "$question" || true
+    printf '%s' "$RET"
+}
+
+
+configure_grouprise() {
+    local grouprise_domain webserver_type
+    grouprise_domain=$(ask_debconf_question "grouprise/domain" "high" "$(hostname -f)")
+    webserver_type=$(ask_debconf_question "grouprise/configure-webserver" "high")
+    set_configured_grouprise_domain "$grouprise_domain" || true
+    case "$webserver_type" in
+        nginx)
+            sed -i "s|server_name .*$|server_name $grouprise_domain;|g" /etc/nginx/sites-available/grouprise
+            if [ ! -e "/etc/nginx/sites-enabled/grouprise" ]; then
+                mkdir -p /etc/nginx/sites-enabled/
+                ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/
+                if [ -x /usr/sbin/nginx ]; then
+                    service nginx reload || true
+                fi
+            fi
+            ;;
+        none)
+            ;;
+        *)
+            echo >&2 "Ignoring unknown webserver type for grouprise: $webserver_type"
+            ;;
+    esac
+}
+
 
 if [ "$1" = "configure" ]; then
     # configure a random SECRET_KEY - otherwise "migrate" fails
     new_secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
-    sed -i "s/^SECRET_KEY = ''$/SECRET_KEY = '$new_secret_key'/" /etc/grouprise/settings.py
+    sed -i "s/^SECRET_KEY = ''$/SECRET_KEY = '$new_secret_key'/" "$GROUPRISE_SETTINGS_FILE"
 
-    if ! grep -q '^ *["'"'"']BACKUP_PATH["'"'"']' /etc/grouprise/settings.py; then
-        sed -i "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," /etc/grouprise/settings.py
+    if ! grep -q '^ *["'"'"']BACKUP_PATH["'"'"']' "$GROUPRISE_SETTINGS_FILE"; then
+        sed -i "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," "$GROUPRISE_SETTINGS_FILE"
     fi
 
     if ! getent group "$PKG_GROUP" >/dev/null; then
@@ -33,6 +99,9 @@ if [ "$1" = "configure" ]; then
             --force-badname \
             --ingroup "$PKG_GROUP" --home "$DIR_HOME" "$PKG_USER"
     fi
+
+    # the user needs to be created before the configuration (it relies on grouprisectl)
+    configure_grouprise
 
     if [ -e "$UWSGI_APP_SYMLINK" ]; then
         if grouprisectl migrate --no-input >/dev/null; then
@@ -49,8 +118,8 @@ if [ "$1" = "configure" ]; then
     fi
 
     # protect sensitive content (e.g. database credentials)
-    chown "root:$PKG_GROUP" /etc/grouprise/settings.py
-    chmod 640 /etc/grouprise/settings.py
+    chown "root:$PKG_GROUP" "$GROUPRISE_SETTINGS_FILE"
+    chmod 640 "$GROUPRISE_SETTINGS_FILE"
 
     mkdir -p "$DIR_LOGS"
     chown "$PKG_USER:adm" "$DIR_LOGS"

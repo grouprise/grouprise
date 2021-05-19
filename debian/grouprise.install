@@ -3,6 +3,7 @@ debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/grouprise.ini
 debian/grouprisectl => /usr/bin/grouprisectl
 debian/README.backups => /var/backups/grouprise/README
 debian/nginx.conf => /etc/nginx/snippets/grouprise.conf
+debian/grouprise.d/nginx/grouprise-site => /etc/nginx/sites-available/grouprise
 debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/python-lib
 debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise
 grouprise/settings.py.production => /etc/grouprise/settings.py

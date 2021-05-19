@@ -21,12 +21,14 @@ grouprise/locale/*/LC_MESSAGES/django.mo
 makefilet
 .pybuild/
 debian/debhelper-build-stamp
+debian/element-web-installer/
 debian/grouprise/
 debian/grouprise-dependencies/
 debian/grouprise-doc/
 debian/grouprise-db-postgresql/
 debian/grouprise-db-sqlite/
 debian/grouprise-lmtpd/
+debian/grouprise-matrix/
 debian/stadtgestalten/
 debian/*.debhelper
 debian/tmp

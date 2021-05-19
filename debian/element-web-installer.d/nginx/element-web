@@ -1,0 +1,4 @@
+server {
+    server_name localhost;
+    root /var/lib/element-web-installer/htdocs;
+}

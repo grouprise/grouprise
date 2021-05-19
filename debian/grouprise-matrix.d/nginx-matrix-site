@@ -1,0 +1,12 @@
+server {
+    server_name example.org;
+    # for SSL: add "ssl http2"
+    listen 8448;
+
+    # for SSL: enable the certificate/key files
+    # for certbot: use "/etc/letsencrypt/live/" instead of "/var/lib/dehydrated/certs/"
+    #ssl_certificate /var/lib/dehydrated/certs/example.org/fullchain.pem;
+    #ssl_certificate_key /var/lib/dehydrated/certs/example.org/privkey.pem;
+
+    include snippets/grouprise-matrix.conf;
+}

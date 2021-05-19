@@ -1,0 +1,13 @@
+Template: element-web-installer/domain
+Type: string
+Description: Domain served by element-web:
+
+Template: element-web-installer/configure-webserver
+Type: select
+Choices: none, apache2, nginx
+Description: Configure a webserver?
+
+Template: element-web-installer/matrix-homeserver-name
+Type: string
+Default: matrix.org
+Description: Name of the default Matrix homeserver:

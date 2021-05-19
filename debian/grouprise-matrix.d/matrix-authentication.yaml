@@ -1,0 +1,13 @@
+# The following settings connect the matrix server to the grouprise instance.
+# Most likely these settings do not require changes by local admins.
+
+enable_registration: false
+
+password_config:
+   enabled: true
+
+password_providers:
+  - module: "grouprise.auth.matrix_synapse_auth_grouprise.GroupriseAuthProvider"
+    config:
+      enabled: true
+      settings_filename: /etc/grouprise/settings.py

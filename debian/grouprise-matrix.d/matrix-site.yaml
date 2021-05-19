@@ -1,0 +1,55 @@
+# The following settings provide usable defaults for a matrix-synapse setup.
+# These settings are not related to grouprise and may be adjusted by the local administrator.
+
+listeners:
+  - port: 8008
+    tls: false
+    bind_addresses:
+      - '::'
+      - '0.0.0.0'
+    type: http
+    x_forwarded: true
+    resources:
+      # openid is required for matrix-dimension
+      - names: [client]
+        compress: true
+      - names: [federation]
+        compress: false
+
+# the server is accessed via an SSL terminating proxy
+no_tls: True
+
+database:
+  name: psycopg2
+  args:
+    user: grouprise_matrix
+    password: secret_db_password
+    database: grouprise_matrix
+    host: localhost
+    cp_min: 5
+    cp_max: 10
+
+# allow browsing the list of public rooms (e.g. via the element web interface)
+allow_public_rooms_without_auth: true
+allow_public_rooms_over_federation: true
+
+enable_group_creation: true
+# keep in sync with "client_max_body_size" in nginx site configuration
+max_upload_size: "10M"
+
+url_preview_enabled: true
+url_preview_ip_range_blacklist: []
+url_preview_ip_range_whitelist:
+  - '127.0.0.0/8'
+  - '10.0.0.0/8'
+  - '172.16.0.0/12'
+  - '192.168.0.0/16'
+  - '100.64.0.0/10'
+  - '169.254.0.0/16'
+  - '::1/128'
+  - 'fe80::/64'
+  - 'fc00::/7'
+url_preview_accept_language:
+  - en
+
+trusted_third_party_id_servers: []
