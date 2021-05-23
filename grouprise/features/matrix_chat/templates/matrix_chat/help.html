@@ -18,7 +18,7 @@
 <ol>
     <li><a href="#overview">{% trans "Overview" %}</a></li>
     <li><a href="#matrix_features">{% trans "Matrix Features" %}</a></li>
-    <li><a href="#integration">{% trans "Integration with community website" %}</a></li>
+    <li><a href="#integration">{% blocktrans %}Integration with {{ GROUPRISE_SITE_NAME }}{% endblocktrans %}</a></li>
     <li><a href="#usage">{% trans "Usage" %}</a></li>
     <li><a href="#faq">{% trans "FAQ" %}</a></li>
 </ol>
@@ -26,22 +26,25 @@
 <hr/>
 
 <h1 id="overview">{% trans "Overview" %}</h1>
-<p>{% blocktrans %}Sometimes it is useful to communicate directly and without delay in order to achieve a common goal.
-Or it may be useful to direct interested people from the outside to an accessible and open communication room, where they can meet the people involved in a group or project.{% endblocktrans %}</p>
+<p>{% blocktrans trimmed %}
+Instant messagging (<i>chat</i>) is an efficient way of communicating directly (without delay) within a group or between interested people and group members.
+{% endblocktrans %}</p>
 
-<p>{% blocktrans %}<i>Chat</i> or <i>Instant Messaging</i> can be a useful tool under these circumstances.{% endblocktrans %}</p>
+<p>{% blocktrans trimmed %}
+The platform {{ GROUPRISE_SITE_NAME }} provides an integrated chat service, which can be used for internal communication as well as for communication with other users of this chat protocol (<a href="{{ matrix_url }}">Matrix</a>) worldwide.
+{% endblocktrans %}</p>
 
-<p>{% blocktrans %}A wide variety of instant messenger applications and protocols is available, e.g. Jabber, IRC, Whatsapp, Facebook Messenger, Slack, Mattermost and many more.
-<i>Grouprise</i> integrates the <a href="{{ matrix_url }}">Matrix</a> protocol, since it offers a wide range of features, that turn it into a perfect fit for this platform.
-These features are detailed below.{% endblocktrans %}</p>
-
-<ul>
-    <li><b><a href="{{ grouprise_url }}">{% trans "grouprise" %}</a></b>: {% trans "The community website your are browsing right now is based on the grouprise software." %}</li>
-    <li><b><a href="{{ matrix_url }}">{% trans "Matrix" %}</a></b>: {% trans "Matrix is a decentral and federated chat communication protocol." %}</li>
-</ul>
+<p>{% blocktrans trimmed %}
+Use the web client or a mobile app (see <a href="#usage">Usage</a>) for accessing the chat rooms.
+{% endblocktrans %}</p>
 
 
 <h1 id="matrix_features">{% trans "Matrix Features" %}</h1>
+
+<p>{% blocktrans trimmed %}
+A wide variety of instant messenger applications and protocols is available, e.g. Jabber, IRC, Whatsapp, Facebook Messenger, Slack, Mattermost and many more.
+This platform ({{ GROUPRISE_SITE_NAME }}) integrates the <a href="{{ matrix_url }}">Matrix</a> protocol, since it offers a wide range of features, that turn it into a perfect fit.
+{% endblocktrans %}</p>
 
 <p>{% trans "Matrix offers the following features:" %}</p>
 <ul>
@@ -52,13 +55,13 @@ These features are detailed below.{% endblocktrans %}</p>
 </ul>
 
 
-<h1 id="integration">{% trans "Integration with community website" %}</h1>
+<h1 id="integration">{% blocktrans %}Integration with {{ GROUPRISE_SITE_NAME }}{% endblocktrans %}</h1>
 
-<p>{% trans "The integration of the Matrix chat into a grouprise instance (this community website) offers the following features:" %}</p>
+<p>{% blocktrans %}The integration of the Matrix chat into the {{ GROUPRISE_SITE_NAME }} platform offers the following features:{% endblocktrans %}</p>
 <ul>
     <li>{% trans "Use your grouprise user account (name and password) to log in to the Matrix homeserver. There is no need for a separate Matrix account." %}</li>
-    <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url %}A local instance of the <a href="{{ element_url }}">Element web client</a> is provided along with the grouprise community website (<a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>).{% endblocktrans %}</li>
-    <li>{% trans "A public and a private Matrix room is automatically created for each grouprise group." %}</li>
+    <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url %}A local instance of the <a href="{{ element_url }}">Element web client</a> is provided along with {{ GROUPRISE_SITE_NAME }} (<a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>).{% endblocktrans %}</li>
+    <li>{% blocktrans %}A public and a private Matrix room is automatically created for each {{ GROUPRISE_SITE_NAME }} group.{% endblocktrans %}</li>
     <li>{% trans "All members of a grouprise group are automatically invited to the group's Matrix rooms." %}</li>
     <li>{% trans "Notifications for new content (articles, events, discussions, ...) are sent to the related Matrix rooms (internal messages are announced in the private room, only)." %}</li>
 </ul>
@@ -81,7 +84,9 @@ These features are detailed below.{% endblocktrans %}</p>
 <p>{% trans "There are two approaches for entering the chat rooms:" %}</p>
 <ul>
     <li>{% trans "Visit the page of a group and select <i>Public Chat Room</i> or <i>Private Chat Room</i>." %}</li>
-    <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url %}Visit the URL <a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>.{% endblocktrans %}</li>
+    <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url trimmed %}
+        Visit the URL <a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>.
+    {% endblocktrans %}</li>
 </ul>
 
 <p>{% trans "Enter your grouprise login (username and password) in the login dialog." %}</p>
@@ -102,22 +107,40 @@ These features are detailed below.{% endblocktrans %}</p>
 
 <h2>{% trans "Why is there a <i>public</i> and a <i>private</i> room?" %}</h2>
 
-<p>{% blocktrans %}These pre-configured rooms for each group were prepared for your convenvience.
+<p>{% blocktrans trimmed %}
+These pre-configured rooms for each group were prepared for your convenvience.
 The <i>public room</i> is configured to be open for random visitors.
 Such rooms are visible in the public "room directory" (list of rooms hosted on the Matrix server).
 A <i>private room</i> is not listed in the room directory of the server.
-Interested people may only join private rooms after being invited by a current room member.{% endblocktrans %}</p>
+Interested people may only join private rooms after being invited by a current room member.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+In addition to the two pre-configured rooms per group, your are free to create as many rooms as you like.
+{% endblocktrans %}</p>
 
 <h2>{% trans "Room members" %}</h2>
 
-<p>{% blocktrans %}Whenever someone joins a group in the grouprise website, the corresponding matrix account of this new member automatically is invited to the public and the private Matrix room belonging to this group.{% endblocktrans %}</p>
+<p>{% blocktrans trimmed %}
+Whenever someone joins a group in the {{ GROUPRISE_SITE_NAME }} platform, the corresponding matrix account is automatically invited to this group's chat rooms.
+{% endblocktrans %}</p>
 
-<p>{% blocktrans %}People leaving a grouprise group are automatically removed from the group's Matrix rooms.{% endblocktrans %}</p>
+<p>{% blocktrans trimmed %}
+People leaving a group in the {{ GROUPRISE_SITE_NAME }} platform are automatically removed from the group's chat rooms.
+{% endblocktrans %}</p>
 
-<p>{% blocktrans %}Any external person (even people without an account on the local grouprise instance) may join public rooms or may be invited to private rooms.{% endblocktrans %}</p>
+<p>{% blocktrans trimmed %}
+Any external person (even people without an account on the local grouprise instance) may join public rooms or may be invited to private rooms.
+{% endblocktrans %}</p>
 
 <h2>{% trans "I want to know more!" %}</h2>
 
-<p>{% blocktrans %}Feel free to dive into the <a href="{{ help_matrix_url }}">Matrix FAQ</a> or visit the <a href="{{ help_element_url }}">Element community room</a>, if you have further questions.{% endblocktrans %}</p>
+<p>{% blocktrans trimmed %}
+Feel free to dive into the <a href="{{ help_matrix_url }}">Matrix FAQ</a> or visit the <a href="{{ help_element_url }}">Element community room</a>, if you have further questions.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans with room_name="@grouprise-users:systemausfall.org" trimmed %}
+For questions regarding the combination of <i>grouprise</i> ({{ GROUPRISE_SITE_NAME }}) and Matrix, you are welcome to join the matrix room <code>{{ room_name }}</code>.
+{% endblocktrans %}</p>
 
 {% endblock %}
