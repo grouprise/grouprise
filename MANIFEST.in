@@ -1,8 +1,8 @@
-CONTRIBUTING.md
-CONTRIBUTORS.md
-LICENSE
-README.md
-VERSION
+include CONTRIBUTING.md
+include CONTRIBUTORS.md
+include LICENSE
+include README.md
+include VERSION
 recursive-include **/static *
 recursive-include **/templates *
 recursive-include grouprise *.html *.txt *.png *.svg *.po *.mo
