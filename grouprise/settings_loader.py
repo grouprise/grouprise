@@ -474,6 +474,8 @@ class OIDCProviderEnableConfig(BooleanConfig):
             settings["OAUTH2_PROVIDER"].setdefault("SCOPES", []).append(
                 {"openid": "OpenID Connect scope"}
             )
+            validator = "grouprise.auth.oauth_validators.AccountOAuth2Validator"
+            settings["OAUTH2_PROVIDER"]["OAUTH2_VALIDATOR_CLASS"] = validator
             # verify the version of oauth2_provider (OIDC support started in v1.5.0)
             try:
                 import oauth2_provider
