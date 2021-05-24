@@ -416,7 +416,7 @@ msgstr "Matrix-Funktionen"
 
 #, python-format
 msgid "Integration with %(GROUPRISE_SITE_NAME)s"
-msgstr "Integration in %(GROUPRISE_SITE_NAME)s"
+msgstr "Einbindung in %(GROUPRISE_SITE_NAME)s"
 
 msgid "Usage"
 msgstr "Nutzung"
