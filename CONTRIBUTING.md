@@ -45,3 +45,9 @@ To create a new release take the following steps:
 6. done
 
 ¹ you might also want to apply `git config --global push.followTags true` ;)
+
+## License
+
+The source code of grouprise itself is released under the [AGPLv3](LICENSE),
+which is included in the [LICENSE](LICENSE) file.
+
