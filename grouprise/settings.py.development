@@ -30,4 +30,3 @@ if TESTING:
         HUEY['always_eager'] = True
     except NameError:
         HUEY = {'always_eager': True}
-    SYNC_EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
