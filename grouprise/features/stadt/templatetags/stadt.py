@@ -7,4 +7,9 @@ register = template.Library()
 
 @register.simple_tag()
 def target_audience():
-    return settings.GROUPRISE.get('TARGET_AUDIENCE', _('all'))
+    # We cannot use grouprise.core.settings.CORE_SETTINGS here, since the default value needs to be
+    # localized for each requester.
+    try:
+        return settings.GROUPRISE["TARGET_AUDIENCE"]
+    except (KeyError, AttributeError):
+        return _('all')

@@ -4,7 +4,10 @@ from django.contrib.sites.models import Site
 from grouprise.core.settings import LazySettingsResolver
 
 
-_MATRIX_SETTINGS = settings.GROUPRISE.get("MATRIX_CHAT", {})
+try:
+    _MATRIX_SETTINGS = settings.GROUPRISE["MATRIX_CHAT"]
+except (KeyError, AttributeError):
+    _MATRIX_SETTINGS = {}
 
 
 MATRIX_SETTINGS = LazySettingsResolver(

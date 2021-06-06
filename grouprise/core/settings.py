@@ -6,7 +6,10 @@ from django.conf import settings
 from django.templatetags.static import static
 
 
-_GR = settings.GROUPRISE
+try:
+    _GR = settings.GROUPRISE
+except AttributeError:
+    _GR = {}
 
 
 class LazySettingsResolver:
