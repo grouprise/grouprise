@@ -42,6 +42,7 @@ Build-Depends:
  python3-six,
  python3-tz,
  python3-xapian-haystack,
+ python3-yaml,
 # The following packages are indirectly required by the dependencies above.
  python3-dateutil,
  python3-icalendar,
@@ -81,6 +82,7 @@ Depends:
  python3-six,
  python3-tz,
  python3-xapian-haystack,
+ python3-yaml,
 # The following packages are indirectly required by the dependencies above.
  python3-dateutil,
  python3-icalendar,
