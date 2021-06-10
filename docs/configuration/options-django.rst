@@ -1,10 +1,17 @@
-*********************
-Configuration Options
-*********************
+:orphan:
+
+*****************************************
+Configuration Options for Django (legacy)
+*****************************************
+
+.. caution:: The following configuration approach is deprecated. Please take a look at `grouprise options <options.html>`_ instead.
 
 Various details of grouprise can be configured in the ``settings.py`` file (e.g. ``/etc/grouprise/settings.py``).
 Any generic `Django setting <https://docs.djangoproject.com/en/stable/ref/settings/>`_ may be specified.
 Additionally grouprise-specific settings can be added to the ``GROUPRISE`` dictionary.
+
+Please note, that all settings below perform direct manipulations of the Django settings.
+Since `grouprise v3.4 <../releases/3.4.html>`_ it is recommended to use `grouprise's yaml-based configuration <options.html>`_ instead.
 
 Setup Wizard
 ============
@@ -66,8 +73,8 @@ General grouprise Settings
 
 ``SCORE_CONTENT_AGE``
 
-  The ordering or groups and users in certain places is based on their activity.  The
-  ``SCORE_CONTENT_AGE`` settings limits, how old content may be in order to be included in the
+  The ordering of groups and users in certain places is based on their activity.  The
+  ``SCORE_CONTENT_AGE`` setting limits, how old content may be in order to be included in the
   calculation of this activity score.  Older content has no impact at all.
   Defaults to ``100`` days.
 

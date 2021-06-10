@@ -59,13 +59,12 @@ CREATE DATABASE grouprise_matrix ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' tem
 ```
 1. configure this database connection in `/etc/matrix-synapse/conf.d/grouprise-matrix.yaml`
 1. start matrix-synapse: `service matrix-synapse start`
-1. generate an administrative access token for matrix-synapse to be used by grouprise: `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`. The resulting access token needs to be configured in `/etc/grouprise/settings.py`:
-```python
-GROUPRISE["MATRIX_CHAT"] = {
-    'ENABLED': True,
-    'BOT_USERNAME': 'grouprise-bot',
-    'BOT_ACCESS_TOKEN': '_YOUR_BOT_ACCESS_TOKEN_',
-}
+1. generate an administrative access token for matrix-synapse to be used by grouprise: `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`. The resulting access token needs to be configured below `/etc/grouprise/conf.d/`:
+```yaml
+matrix_chat:
+  enabled: true
+  bot_username: grouprise-bot
+  bot_access_token: '_YOUR_BOT_ACCESS_TOKEN_'
 ```
 1. Run `grouprisectl matrix_chat_manage create-rooms` and `grouprisectl matrix_chat_manage invite-room-members` in order to populate the Matrix rooms for all groups.
 
@@ -78,14 +77,13 @@ dpkg-reconfigure --unseen-only grouprise-matrix
 
 ## Configuration settings
 
-The following configuration settings are available below the `GROUPRISE["MATRIX_CHAT"]` dictionary
-in your grouprise settings file (e.g. `/etc/grouprise/settings.py`):
+The following configuration settings are available below the `matrix_chat` path in your grouprise settings file (e.g. `/etc/grouprise/conf.d/local.yaml`):
 
-* `DOMAIN`: The Matrix domain to be used.  Defaults to the grourise domain.
-* `BOT_USERNAME`: The local name of the Matrix bot used by grouprise.  Defaults to `grouprise-bot`.
-* `BOT_ACCESS_TOKEN`: The access token of the Matrix bot used by grouprise.  To be generated via
+* `domain`: The Matrix domain to be used.  Defaults to the grourise domain.
+* `bot_username`: The local name of the Matrix bot used by grouprise.  Defaults to `grouprise-bot`.
+* `bot_access_token`: The access token of the Matrix bot used by grouprise.  To be generated via
   `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`.  In case of manual account
   creation, it can be retrieved from the Matrix grouprise database via
   `select token from access_tokens where user_id='@USERNAME:MATRIX_DOMAIN';`.
-* `ADMIN_API_URL`: An API URL of the Matrix instance, which accepts Synapse admin requests
+* `admin_api_url`: An API URL of the Matrix instance, which accepts Synapse admin requests
   (e.g. `/_synapse/admin`).  Defaults to `http://localhost:8008`.
