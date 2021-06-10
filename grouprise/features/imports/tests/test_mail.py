@@ -7,6 +7,7 @@ import os
 import re
 
 from aiosmtplib.errors import SMTPDataError
+from django.contrib.sites.models import Site
 from django.core import mail
 from django.urls import reverse
 
@@ -19,6 +20,10 @@ from grouprise.features.imports.mails import (
     ContributionMailProcessor, ParsedMailMessage, MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST)
 from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.memberships import test_mixins as memberships
+
+
+def get_full_address(local):
+    return local + "@" + Site.objects.get_current().domain
 
 
 class MailInjectLMTPMixin:
@@ -104,13 +109,15 @@ class ContentViaLMTP(MailInjectLMTPMixin, tests.Test):
         # Mails with a wrong target domain should never reach us. They are probably caused by a
         # configuration error of the local mail server.
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            rejections = self.inject_mail('foo@localhost', ['foo@example.org'], data=b'foo')
+            rejections = self.inject_mail(
+                    get_full_address('foo'), ['foo@example.org'], data=b'foo')
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
     def test_reject_non_existing_target_group(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            rejections = self.inject_mail('foo@localhost', ['foo@localhost'], data=b'foo')
+            rejections = self.inject_mail(
+                    get_full_address('foo'), [get_full_address('foo')], data=b'foo')
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
@@ -119,7 +126,7 @@ class GroupMailMixin(memberships.MemberMixin):
 
     @property
     def group_address(self):
-        return '{}@localhost'.format(self.group.slug)
+        return get_full_address(self.group.slug)
 
 
 class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
@@ -179,7 +186,7 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
                                                      ('precedence', '', False),
                                                      ('X-AUTORESPONDER', 'foo', True)):
             with self.fresh_outbox_mails_retriever() as get_new_mails:
-                self.inject_mail('foo@localhost', [self.group_address],
+                self.inject_mail(get_full_address('foo'), [self.group_address],
                                  data=self.assemble_mail_data({header_key: header_value}))
                 self.assertEqual(is_ignored, len(get_new_mails()) == 0,
                                  (header_key, header_value))
@@ -316,7 +323,7 @@ class ConversationInitiateByEmailViaLMTP(GroupMailMixin, MailInjectLMTPMixin, te
     def test_conversation_initiate_by_email_failing(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
             rejections = self.inject_mail(
-                    self.gestalt.user.email, ['not-existing@localhost'],
+                    self.gestalt.user.email, [get_full_address('not-existing')],
                     data=self.assemble_mail_data({}, body='Text C'))
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))

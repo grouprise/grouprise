@@ -3,6 +3,7 @@ import functools
 import os
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.templatetags.static import static
 
 
@@ -72,6 +73,10 @@ class LazySettingsResolver:
             setattr(self, key, value)
 
 
+def _get_domain():
+    return Site.objects.get_current().domain
+
+
 CORE_SETTINGS = LazySettingsResolver(
     # branding
     CLAIMS=_GR.get("CLAIMS", []),
@@ -85,13 +90,13 @@ CORE_SETTINGS = LazySettingsResolver(
     # mail handling
     COLLECTOR_MAILBOX_ADDRESS=_GR.get("COLLECTOR_MAILBOX_ADDRESS", None),
     DEFAULT_DISTINCT_FROM_EMAIL=_GR.get(
-        "DEFAULT_DISTINCT_FROM_EMAIL", "noreply+{slug}@localhost"
+        "DEFAULT_DISTINCT_FROM_EMAIL", lambda: "noreply+{slug}@" + _get_domain()
     ),
     DEFAULT_REPLY_TO_EMAIL=_GR.get(
-        "DEFAULT_REPLY_TO_EMAIL", "reply+{reply_key}@localhost"
+        "DEFAULT_REPLY_TO_EMAIL", lambda: "reply+{reply_key}@" + _get_domain()
     ),
     MAILINGLIST_ENABLED=_GR.get("MAILINGLIST_ENABLED", False),
-    POSTMASTER_EMAIL=_GR.get("POSTMASTER_EMAIL", "postmaster@localhost"),
+    POSTMASTER_EMAIL=_GR.get("POSTMASTER_EMAIL", lambda: "postmaster@" + _get_domain()),
     # content import
     FEED_IMPORTER_GESTALT_ID=_GR.get("FEED_IMPORTER_GESTALT_ID", None),
     OPERATOR_GROUP_ID=_GR.get("OPERATOR_GROUP_ID", 1),
