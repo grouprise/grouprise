@@ -1,5 +1,4 @@
-# "-W": warnings are treated as errors
-SPHINXOPTS    = -W
+SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
