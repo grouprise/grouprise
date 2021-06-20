@@ -9,7 +9,7 @@ Authentication
 
 
 *grouprise* offers all authentication features provided by
-`Django <https://docs.djangoproject.com/en/dev/topics/auth/customizing/>`_
+`Django <https://docs.djangoproject.com/en/stable/topics/auth/customizing/>`_
 (e.g. internal database, LDAP or others).
 
 Additionally it is possible to use external authentication sources

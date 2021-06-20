@@ -11,7 +11,7 @@ All databases supported by `Django <https://www.djangoproject.com/>`_ are usable
 * MySQL / MariaDB
 
 See the
-`Django Database documentation <https://docs.djangoproject.com/en/dev/ref/settings/#databases>`_
+`Django Database documentation <https://docs.djangoproject.com/en/stable/ref/settings/#databases>`_
 for all settings related to the database connection.
 
 By default grouprise uses the SQLite backend.  A public site should probably use one of the other
@@ -68,4 +68,4 @@ MySQL / MariaDB
     }
 
 In case of MySQL before v5.7: please read
-`Django hints for the setting 'sql_mode' <https://docs.djangoproject.com/en/dev/ref/databases/#mysql-sql-mode>`_.
+`Django hints for the setting 'sql_mode' <https://docs.djangoproject.com/en/stable/ref/databases/#mysql-sql-mode>`_.

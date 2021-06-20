@@ -12,36 +12,34 @@ Processing of incoming emails need to be configured (see below).
 
 ## Mail notifications
 
-Outgoing emails are configured via
-[Django's email settings](https://docs.djangoproject.com/en/dev/ref/settings/#email-host).
+Outgoing email submission is configured in the [`email_submission`](configuration/options.html#email-delivery-of-outgoing-messages) configuration section.
 
-The following additional settings in the `GROUPRISE` section are available:
-* `DEFAULT_DISTINCT_FROM_EMAIL`: `From` address used when sending one-way notifications
-* `DEFAULT_REPLY_TO_EMAIL`: `From` address used when sending notifications, which can be answered
+The `From` address of outgoing mail is configurable:
 
-See [grouprise options](configuration/options) for details.
+* [`default_distinct_from_email`](configuration/options.html#default-distinct-from-email): one-way notifications
+* [`default_reply_to_email`](configuration/options.html#default-reply-to-email): notifications, which can be answered
 
 
 ## Processing incoming emails
 
 Incoming emails can be configured in different ways (or disabled).
 
-See [grouprise options](configuration/options) for the specific settings mentioned below.
+See [grouprise options](/configuration/options) for the specific settings mentioned below.
 
 
 ### Disable reception of emails
 
 Mail reception is disabled by default.
-It can be enabled by setting `MAILINGLIST_ENABLED` to `True`.
-In this case, all outgoing mails use `DEFAULT_DISTINCT_FROM_EMAIL` as their `From` address.
-Users need to use the web-interface of *grouprise* for communication.
+It can be enabled by setting [`mailinglist_enabled`](configuration/options.html#mailinglist-enabled) to `true`.
+In this case, all outgoing mails use [`default_distinct_from_email`](configuration/options.html#default-distinct-from-email) as their `From` address.
+Users need to use the web-interface of *grouprise* for communication afterwards.
 
 
 ### LMTP
 
 The preferred setup for mail delivery to *grouprise* is based on LMTP.
 A minimal LMTP server is part of *grouprise*.
-The server can be enabled by installing the [deb package](deployment/deb) `grouprise-lmtpd` package
+The server can be enabled by installing the [deb package](/deployment/deb) `grouprise-lmtpd` package
 or by executing `grouprisectl run_lmtpd`.
 
 All incoming mails are instantly handed over to *grouprise*.

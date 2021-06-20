@@ -1,5 +1,5 @@
 # grouprise settings file
-# see https://docs.djangoproject.com/en/2.1/ref/settings/
+# see https://docs.djangoproject.com/en/stable/ref/settings/
 
 import os
 import subprocess

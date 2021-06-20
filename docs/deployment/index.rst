@@ -71,4 +71,4 @@ LMTP Server
 Mailserver
   The external mailserver (e.g. Postfix or Exim) delivers outgoing emails to external recipients and transfers incoming mails to the integrated LTMP Server.
 
-The `deployment based on deb packages <./deployment/deb.html>`_ configures most of these components.
+The `deployment based on deb packages <./deb.html>`_ configures most of these components.
