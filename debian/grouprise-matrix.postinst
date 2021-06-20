@@ -2,7 +2,7 @@
 
 set -e
 
-GROUPRISE_CONFIG_FILE=/etc/grouprise/settings.py
+GROUPRISE_SETTINGS_FILE="/etc/grouprise/conf.d/200-matrix_chat.yaml"
 ELEMENT_CONFIG_FILE=/etc/element-web/config.json
 
 
@@ -27,6 +27,12 @@ ask_debconf_question() {
     db_go || true
     db_get "$question" || true
     printf '%s' "$RET"
+}
+
+
+grouprise_settings() {
+    # access the settings with root privileges - otherwise we could not write below /etc/
+    GROUPRISE_USER=root grouprisectl grouprise_settings --modifiable-config="$GROUPRISE_SETTINGS_FILE" "$@"
 }
 
 
@@ -96,34 +102,18 @@ configure_grouprise_element() {
 }
 
 
-configure_grouprise() {
-    # the file may not be empty, otherwise "sed '$afoo'" would not do anything (lacking a line)
-    [ -s "$GROUPRISE_CONFIG_FILE" ] || echo "$GROUPRISE_CONFIG_FILE"
-    if ! grep -q "matrix_chat" "$GROUPRISE_CONFIG_FILE"; then
-        # shellcheck disable=SC2016
-        sed -i '$aINSTALLED_APPS.append("grouprise.features.matrix_chat")' "$GROUPRISE_CONFIG_FILE"
-    fi
-    if ! grep -q "MATRIX_CHAT" "$GROUPRISE_CONFIG_FILE"; then
-        # shellcheck disable=SC2016
-        sed -i '$aGROUPRISE["MATRIX_CHAT"] = {"ENABLED": True}' "$GROUPRISE_CONFIG_FILE"
-    fi
-}
-
 
 if [ "$1" = "configure" ]; then
     configure_grouprise_matrix
     configure_grouprise_element
-    configure_grouprise
-    # register the privileged bot account
-    bot_token=$(GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot)
-    if [ -n "$bot_token" ]; then
+    echo "true" | grouprise_settings set "matrix_chat.enabled"
+    if [ -z "$(grouprise_settings get "matrix.bot_access_token")" ]; then
+        # register the privileged bot account
+        bot_token=$(GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot)
         # write the bot token to the configuration file
-        # TODO: switch to a machine-writable configuration format
-        if ! grep -q "BOT_USERNAME" "$GROUPRISE_CONFIG_FILE"; then
-            # shellcheck disable=SC2016
-            sed -i '$aGROUPRISE["MATRIX_CHAT"]["BOT_USERNAME"] = "grouprise-bot"' "$GROUPRISE_CONFIG_FILE"
-            # shellcheck disable=SC2016
-            sed -i '$aGROUPRISE["MATRIX_CHAT"]["BOT_ACCESS_TOKEN"] = "'"$bot_token"'"' "$GROUPRISE_CONFIG_FILE"
+        if [ -n "$bot_token" ]; then
+            echo "grouprise-bot" | grouprise_settings set "matrix_chat.bot_username"
+            echo "'$bot_token'" | grouprise_settings set "matrix_chat.bot_access_token"
         fi
     fi
 fi

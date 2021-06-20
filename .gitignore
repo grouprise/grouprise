@@ -3,13 +3,13 @@ backup
 /build/
 dist/
 db.sqlite3*
+grouprise.yaml
 media/
 media-*/
 node_modules
 /static/
 xapian_index
 res/img/backdrops
-grouprise/settings.py
 *.swp
 *.pyc
 *.log

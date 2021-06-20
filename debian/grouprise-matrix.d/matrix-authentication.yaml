@@ -10,4 +10,4 @@ password_providers:
   - module: "grouprise.auth.matrix_synapse_auth_grouprise.GroupriseAuthProvider"
     config:
       enabled: true
-      settings_filename: /etc/grouprise/settings.py
+      settings_location: /etc/grouprise/conf.d/

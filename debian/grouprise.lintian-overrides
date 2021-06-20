@@ -4,6 +4,3 @@ non-standard-dir-in-var var/backups/
 
 # documentation file for the grouprise's automatic backups
 file-in-unusual-dir var/backups/grouprise/README
-
-# the administrator may decide to add secrets to the configuration file later
-non-standard-file-perm etc/grouprise/settings.py 0600 != 0644

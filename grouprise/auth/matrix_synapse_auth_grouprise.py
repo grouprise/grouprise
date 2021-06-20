@@ -18,16 +18,16 @@ Configuration:
     - module: "grouprise.auth.matrix_synapse_auth_grouprise.GroupriseAuthProvider"
       config:
         enabled: true
-        settings_filename: /etc/grouprise/settings.py
-* allow the matrix user to read the grouprise configuration:
-    chmod 644 /etc/grouprise/settings.py
+        settings_location: /etc/grouprise/conf.d/200-matrix.yaml
 """
 
-import importlib
 import logging
-import types
 
-import django
+from grouprise.settings_loader import (
+    import_settings_from_yaml,
+    load_settings_from_yaml_files,
+)
+
 import django.conf
 from django.contrib.auth import authenticate
 
@@ -39,40 +39,25 @@ class ConfigurationError(Exception):
     """ Any kind of problem related to loading and using the configuration """
 
 
-def _load_grouprise_configuration(filename):
-    spec = importlib.util.spec_from_file_location("grouprise_settings", filename)
-    grouprise_settings = importlib.util.module_from_spec(spec)
-    try:
-        spec.loader.exec_module(grouprise_settings)
-    except ImportError as exc:
-        raise ConfigurationError(
-            "Failed to load module for grouprise authentication: {}".format(exc)
-        )
-    settings_dict = {}
-    for key in dir(grouprise_settings):
-        value = getattr(grouprise_settings, key)
-        if key.startswith("_"):
-            continue
-        if isinstance(value, types.ModuleType):
-            continue
-        settings_dict[key] = value
-    django.conf.settings.configure(**settings_dict)
-    django.setup()
-    return grouprise_settings
+def _get_grouprise_configuration(filename=None):
+    locations = None if filename is None else [filename]
+    return load_settings_from_yaml_files(locations)
+
+
+def _initialize_django_settings(filename=None):
+    from grouprise.common_settings import *  # noqa: F403 F406
+
+    settings = locals()
+    locations = None if filename is None else [filename]
+    import_settings_from_yaml(settings, locations=locations)
+    django.conf.settings.configure(settings)
 
 
 class GroupriseAuthProvider:
     def __init__(self, config, account_handler):
         self.account_handler = account_handler
-
-        if not hasattr(config, "settings_filename"):
-            raise ConfigurationError(
-                "Grouprise authentication requires 'settings_filename'"
-            )
-
-        settings_filename = config.settings_filename
-
-        self.grouprise_settings = _load_grouprise_configuration(settings_filename)
+        self.grouprise_settings = _get_grouprise_configuration(config.settings_location)
+        self._initialize_django_settings(config.settings_location)
 
     @staticmethod
     def parse_config(config):
@@ -80,9 +65,7 @@ class GroupriseAuthProvider:
             pass
 
         result = _Config()
-        result.settings_filename = config.get(
-            "settings_filename", "/etc/grouprise.settings.py"
-        )
+        result.settings_location = config.get("settings_location", None)
         return result
 
     def get_supported_login_types(self):
@@ -91,6 +74,7 @@ class GroupriseAuthProvider:
     def _authenticate_email(self, email_address, password):
         # this import may not happen before the django configuration
         from grouprise.features.gestalten.models import Gestalt
+
         try:
             email_user = Gestalt.objects.get_by_email(email_address).user
         except Gestalt.DoesNotExist:

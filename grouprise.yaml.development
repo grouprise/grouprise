@@ -1,0 +1,18 @@
+# example settings for local development and tests
+
+domain: example.org
+debug: true
+extra_allowed_hosts: [ "localhost", "127.0.0.1", "[::1]" ]
+secret_key: DEVELOPMENT_IS_NOT_SECURE
+email_submission: { backend: console }
+database: { engine: sqlite, name: db.sqlite3 }
+transport_security: disabled 
+# allow the usage of a local webpack dev server (via `npm run dev`)
+csp:
+  script_src:
+    - http://localhost:8080
+  default_src:
+    - http://localhost:8080
+  connect_src:
+    - http://localhost:8080
+    - ws://localhost:8080
