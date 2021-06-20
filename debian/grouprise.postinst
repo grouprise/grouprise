@@ -6,7 +6,7 @@ PKG_USER="_grouprise"
 PKG_GROUP="_grouprise"
 DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
-GROUPRISE_SETTINGS_FILE="$DIR_ETC/settings.py"
+GROUPRISE_SETTINGS_FILE="$DIR_ETC/conf.d/100-package.yaml"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
 DIR_MEDIA="/var/lib/grouprise/media"
@@ -20,14 +20,9 @@ db_version 2.1
 set -eu
 
 
-get_configured_grouprise_domain() {
-    # "dumpdata" is allowed fail here silently, since the database may not be configured, yet
-    grouprisectl dumpdata sites 2>/dev/null | jq -r '.[0].fields.domain // ""'
-}
-
 set_configured_grouprise_domain() {
     local domain="$1"
-    sed -i 's/^\(ALLOWED_HOSTS =\).*$/\1 ["'"$grouprise_domain"'", "localhost"]/' "$GROUPRISE_SETTINGS_FILE"
+    printf '%s' "$domain" | grouprise_settings set "domain"
     # update the domain and maybe the name (if it was never set)
     # This operation may fail, if the database is not configured, yet.
     printf '%s\n' \
@@ -79,15 +74,15 @@ configure_grouprise() {
 }
 
 
+grouprise_settings() {
+    # write settings with root privileges - otherwise we could not write to files below /etc/
+    [ "$1" = "set" ] && export GROUPRISE_USER=root
+    grouprisectl grouprise_settings --modifiable-config="$GROUPRISE_SETTINGS_FILE" "$@"
+}
+
+
 if [ "$1" = "configure" ]; then
-    # configure a random SECRET_KEY - otherwise "migrate" fails
-    new_secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
-    sed -i "s/^SECRET_KEY = ''$/SECRET_KEY = '$new_secret_key'/" "$GROUPRISE_SETTINGS_FILE"
-
-    if ! grep -q '^ *["'"'"']BACKUP_PATH["'"'"']' "$GROUPRISE_SETTINGS_FILE"; then
-        sed -i "/^GROUPRISE = {$/a\    'BACKUP_PATH': '$DIR_BACKUPS'," "$GROUPRISE_SETTINGS_FILE"
-    fi
-
+    # the user needs to be created before the configuration (the latter relies on grouprisectl)
     if ! getent group "$PKG_GROUP" >/dev/null; then
         # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
         addgroup --quiet --system --force-badname "$PKG_GROUP"
@@ -100,7 +95,30 @@ if [ "$1" = "configure" ]; then
             --ingroup "$PKG_GROUP" --home "$DIR_HOME" "$PKG_USER"
     fi
 
-    # the user needs to be created before the configuration (it relies on grouprisectl)
+    if [ -z "$(grouprise_settings  get "secret_key" 2>/dev/null)" ]; then
+        # configure a random SECRET_KEY - otherwise "migrate" fails
+        new_secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
+        if [ ! -s "$GROUPRISE_SETTINGS_FILE" ] && ! grouprise_settings --help >/dev/null 2>&1; then
+            # The config file does not exist and the "grouprise_settings" is not available, yet.
+            # Probably the "secret_key" is not configured, thus Django refuses to look for
+            # management commands within the installed apps.
+            # In this case we need to set the "secret_key" manually.
+            mkdir -p "$(dirname "$GROUPRISE_SETTINGS_FILE")"
+            echo "secret_key: '$new_secret_key'" > "$GROUPRISE_SETTINGS_FILE"
+        else
+            printf '%s' "$new_secret_key" | grouprise_settings set "secret_key"
+        fi
+    fi
+
+    # adjust ownership and permissions of backup directory (keeping local modifications)
+    if [ "$(stat --format="%u:%g:%a" "$DIR_BACKUPS")" = "0:0:755" ]; then
+        chown "$PKG_USER:$PKG_GROUP" "$DIR_BACKUPS"
+        chmod 750 "$DIR_BACKUPS"
+    fi
+    if [ -z "$(grouprise_settings get "backup_path")" ]; then
+        printf '%s' "$DIR_BACKUPS" | grouprise_settings set "backup_path"
+    fi
+
     configure_grouprise
 
     if [ -e "$UWSGI_APP_SYMLINK" ]; then

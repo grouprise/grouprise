@@ -6,5 +6,4 @@ debian/nginx.conf => /etc/nginx/snippets/grouprise.conf
 debian/grouprise.d/nginx/grouprise-site => /etc/nginx/sites-available/grouprise
 debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/python-lib
 debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise
-grouprise/settings.py.production => /etc/grouprise/settings.py
 offline-website /usr/share/grouprise/

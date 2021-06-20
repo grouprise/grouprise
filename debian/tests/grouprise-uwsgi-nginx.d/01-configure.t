@@ -19,7 +19,13 @@ test_expect_success "start postgresql database server" '
 test_expect_success "configure grouprise database" '
   db_password=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
   # configure database password
-  sed -i "s/'"\('PASSWORD': '\)\(',\)$"'/\1$db_password\2/" /etc/grouprise/settings.py
+  printf "%s\n" \
+    "engine: postgresql" \
+    "host: localhost" \
+    "name: grouprise" \
+    "user: grouprise" \
+    "password: \"$db_password\"" \
+    | GROUPRISE_USER=root grouprisectl grouprise_settings set database
   # create database
   psql_command1="CREATE ROLE grouprise LOGIN PASSWORD '"'"'$db_password'"'"';"
   psql_command2="CREATE DATABASE grouprise OWNER grouprise;"
@@ -32,7 +38,8 @@ test_expect_success "initialize grouprise database" '
 '
 
 test_expect_success "configure grouprise proxy setup" '
-  sed -i "s/^ALLOWED_HOSTS = \[\]$/ALLOWED_HOSTS = [\"localhost\"]/" /etc/grouprise/settings.py
+  echo "- localhost" | GROUPRISE_USER=root grouprisectl grouprise_settings set extra_allowed_hosts
+  echo "disabled" | GROUPRISE_USER=root grouprisectl grouprise_settings set transport_security
 '
 
 test_expect_success "configure nginx site" '
