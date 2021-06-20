@@ -16,8 +16,7 @@ Documentation for users can be found on `stadtgestalten <https://stadtgestalten.
    :includehidden:
 
    deployment/index
-   configuration/options
-   configuration/assets
+   configuration/index
    database/index
    mail_setup
    matrix_chat

@@ -48,7 +48,7 @@ make
 
 ## Konfigurationsdatei installieren
 
-Kopiere die [Beispieldatei](https://git.hack-hro.de/grouprise/grouprise/tree/master/grouprise/settings.py.production) nach `/etc/grouprise/settings.py`. Passe die Einstellungen an.
+Erzeuge eine [Konfigurationsdatei](/configuration/files) unter `/etc/grouprise/conf.d/`.
 
 Falls du PostgreSQL verwendest, helfen dir die folgenden Zeilen beim Einrichten der Datenbank:
 
@@ -63,7 +63,6 @@ Nun kannst du einen Link setzen, damit grouprise die Konfiguration findet und di
 
 ```bash
 cd /usr/local/share/grouprise
-ln -s /etc/grouprise/settings.py grouprise/settings/local.py
 python manage.py migrate
 ```
 

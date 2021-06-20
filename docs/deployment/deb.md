@@ -44,7 +44,8 @@ CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE=
 Die Angabe von `LC_COLLATE` und `LC_CTYPE` sind beispielsweise für die korrekte alphabetische Sortierung von Zeichenketten mit Umlauten relevant.
 Eventuell musst du zuvor das Locale `de_DE.UTF8` via `dpkg-reconfigure locales` auf dem Datenbank-Host aktivieren (und bei Bedarf den PostgreSQL-Server neustarten).
 
-Trage die Angaben zur Datenbank in `/etc/grouprise/settings.py` ein. Ändere dort auch alle anderen Angaben entsprechend. Ein weiteres Beispiel für eine Deployment-Konfiguration findest du [im Repository](https://git.hack-hro.de/grouprise/grouprise/tree/master/grouprise/settings.py.production).
+Trage die Angaben zur Datenbank unter `/etc/grouprise/conf.d/` ein.
+Ändere dort auch alle anderen Angaben entsprechend.
 
 Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org:8000`):
 
@@ -52,7 +53,7 @@ Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org
 grouprisectl runserver 0.0.0.0:8000
 ```
 
-(Wenn du temporär in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
+(Wenn du temporär in den Einstellungen [`debug`](configuration/options.html#debug) auf `true` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
 
 
 ## UWSGI und Nginx einrichten
