@@ -59,7 +59,7 @@ This delivery method can be used in two ways:
 * A) domain-global forwarding: Configure `| grouprisectl import_mail_message` as the mail delivery
      mechanism for all addresses of the mail domain.
 * B) single inbox forwarding: Redirect all incoming mails for the domain into a single mailbox
-     (see `COLLECTOR_MAILBOX_ADDRESS`).  Configure `| grouprisectl import_mail_message` as mail
+     (see [`collector_mailbox_address`](configuration/options.html#collector-mailbox-address)).  Configure `| grouprisectl import_mail_message` as mail
      forwarding for this single mailbox.
 
 Please note two disadvantages of the scripted processing in comparison to the LMTP service (above):
@@ -69,5 +69,5 @@ Please note two disadvantages of the scripted processing in comparison to the LM
   In case of a rejection by *grouprise*, this will cause subsequent
   [backscatter](https://en.wikipedia.org/wiki/Backscatter_%28email%29) (delivery failure emails).
   Early rejection during the initial SMTP session would be preferable (see *LMTP* above).
-* Forwarding all mails to a single mailbox (`COLLECTOR_MAILBOX_ADDRESS`) breaks the proper handling
+* Forwarding all mails to a single mailbox ([`collector_mailbox_address`](configuration/options.html#collector-mailbox-address)) breaks the proper handling
   of `CC` and `BCC` addressing.

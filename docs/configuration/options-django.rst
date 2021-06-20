@@ -6,7 +6,7 @@ Configuration Options for Django (legacy)
 
 .. caution:: The following configuration approach is deprecated. Please take a look at `grouprise options <options.html>`_ instead.
 
-Various details of grouprise can be configured in the ``settings.py`` file (e.g. ``/etc/grouprise/settings.py``).
+Various details of grouprise can be configured in a Django settings file (see [`extra_django_settings_filenames`](configuration/options.html#extra-django-settings-filenames)).
 Any generic `Django setting <https://docs.djangoproject.com/en/stable/ref/settings/>`_ may be specified.
 Additionally grouprise-specific settings can be added to the ``GROUPRISE`` dictionary.
 

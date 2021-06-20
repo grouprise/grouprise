@@ -30,7 +30,7 @@ CSP_REPORT_URI = ("https://sentry.example.org/api/2/csp-report/?sentry_key=01234
 
 ## Adding Scripts or Stylesheets
 
-You may override any grouprise template. To do so, add something like the following line to `/etc/grouprise/settings.py`:
+You may override any grouprise template. To do so, add something like the following line to the Django configuration:
 
 ```python
 TEMPLATES[0]['DIRS'] += ['/var/www/mysite/templates/']

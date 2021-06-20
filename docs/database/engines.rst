@@ -17,7 +17,7 @@ for all settings related to the database connection.
 By default grouprise uses the SQLite backend.  A public site should probably use one of the other
 database backends instead, in order to improve performance.
 
-The database engine and its details are configured in :code:`/etc/grouprise/settings.py`.
+The database engine and its details are configured below :code:`/etc/grouprise/conf.d/`.
 
 
 Example Configurations
@@ -26,46 +26,37 @@ Example Configurations
 SQLite
 ~~~~~~
 
-.. code-block:: python
+.. code-block:: yaml
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': '/var/lib/grouprise/db.sqlite3',
-        }
-    }
+    database:
+            engine: sqlite
+            name: '/var/lib/grouprise/db.sqlite3'
 
 PostgreSQL
 ~~~~~~~~~~
 
-.. code-block:: python
+.. code-block:: yaml
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'mydatabase',
-            'USER': 'mydatabaseuser',
-            'PASSWORD': 'mypassword',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-        }
-    }
+    database:
+        engine: postgresql
+        name: 'mydatabase'
+        user: 'mydatabaseuser'
+        password: 'mypassword'
+        host: '127.0.0.1'
+        port: 5432
 
 MySQL / MariaDB
 ~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'mydatabase',
-            'USER': 'mydatabaseuser',
-            'PASSWORD': 'mypassword',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-        }
-    }
+    database:
+        engine: mysql
+        name: 'mydatabase'
+        user: 'mydatabaseuser'
+        password: 'mypassword'
+        host: '127.0.0.1'
+        port: 3306
 
 In case of MySQL before v5.7: please read
 `Django hints for the setting 'sql_mode' <https://docs.djangoproject.com/en/stable/ref/databases/#mysql-sql-mode>`_.
