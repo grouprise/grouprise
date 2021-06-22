@@ -24,7 +24,7 @@ def _get_nested_dict_value(data, path, default=None):
 
 
 class Command(BaseCommand):
-    """ Management command for querying and manipulating settings.
+    """Management command for querying and manipulating settings.
 
     Changed settings are written to a configuration file.
     Beware, that the resolution order of configuration files may prevent a changed setting from
@@ -38,10 +38,19 @@ class Command(BaseCommand):
         parser.add_argument("--format", choices=("json", "yaml"), default="yaml")
         parser.add_argument("--input", type=argparse.FileType("r"), default=sys.stdin)
         parser.add_argument(
+            "--source-config",
+            type=str,
+            action="append",
+            help=(
+                "Location of configuration data (directory or filename). "
+                "May be specified multiple times",
+            ),
+        )
+        parser.add_argument(
             "--modifiable-config",
             type=str,
             default="/etc/grouprise/conf.d/800-local.yaml",
-            help="Path of yaml to be used for changing settings ('set')",
+            help="Path of yaml file to be used for changing settings ('set')",
         )
         parser.add_argument("action", choices=("set", "get", "dump"))
         parser.add_argument("selector", nargs="?", type=str)
@@ -79,13 +88,14 @@ class Command(BaseCommand):
         return tokens
 
     def handle(self, *args, **options):
+        source_config_locations = options["source_config"]
         action = options["action"]
         if action == "dump":
-            settings = load_settings_from_yaml_files()
+            settings = load_settings_from_yaml_files(source_config_locations)
             self.stdout.write(self._get_formatted(settings, options["format"]))
         elif action == "get":
             tokens = self._parse_selector(options["selector"])
-            settings = load_settings_from_yaml_files()
+            settings = load_settings_from_yaml_files(source_config_locations)
             value = _get_nested_dict_value(settings, tokens)
             self.stdout.write(self._get_formatted(value, options["format"]))
         elif action == "set":
