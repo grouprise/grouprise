@@ -16,12 +16,6 @@ Additionally grouprise-specific settings can be added to the ``GROUPRISE`` dicti
 Please note, that all settings below perform direct manipulations of the Django settings.
 Since `grouprise v4.0 <../releases/4.0.html>`_ it is recommended to use `grouprise's yaml-based configuration <options.html>`_ instead.
 
-Setup Wizard
-============
-
-On a freshly deployed grouprise site call ``grouprisectl setup_site``. It will ask you some
-basic questions, create initial groups and users and prepare a bunch of useful articles.
-
 Django Options
 ==============
 
