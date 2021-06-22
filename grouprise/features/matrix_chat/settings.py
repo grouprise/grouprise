@@ -16,3 +16,20 @@ MATRIX_SETTINGS = LazySettingsResolver(
     BOT_USERNAME=_MATRIX_SETTINGS.get("BOT_USERNAME", "grouprise-bot"),
     BOT_ACCESS_TOKEN=_MATRIX_SETTINGS.get("BOT_ACCESS_TOKEN", None),
 )
+
+
+def get_matrix_url():
+    return f"https://{MATRIX_SETTINGS.DOMAIN}:8448"
+
+
+def get_or_create_oidc_client_application():
+    from oauth2_provider.models import Application
+    app, created = Application.objects.get_or_create(name="matrix_chat")
+    if created:
+        app.redirect_uris = get_matrix_url() + "/_synapse/client/oidc/callback"
+        app.client_type = "confidential"
+        app.authorization_grant_type = "authorization-code"
+        app.skip_authorization = True
+        app.algorithm = "RS256"
+        app.save()
+    return app
