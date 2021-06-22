@@ -4,14 +4,17 @@
 Configuration Options for Django (legacy)
 *****************************************
 
-.. caution:: The following configuration approach is deprecated. Please take a look at `grouprise options <options.html>`_ instead.
+.. caution::
+   The following configuration approach is deprecated.
+   Please take a look at `grouprise options <options.html>`_ instead.
+   See `grouprise v4.0 release notes <../releases/4.0.html#new-configuration-format>`_ for migration hints.
 
 Various details of grouprise can be configured in a Django settings file (see [`extra_django_settings_filenames`](configuration/options.html#extra-django-settings-filenames)).
 Any generic `Django setting <https://docs.djangoproject.com/en/stable/ref/settings/>`_ may be specified.
 Additionally grouprise-specific settings can be added to the ``GROUPRISE`` dictionary.
 
 Please note, that all settings below perform direct manipulations of the Django settings.
-Since `grouprise v3.4 <../releases/3.4.html>`_ it is recommended to use `grouprise's yaml-based configuration <options.html>`_ instead.
+Since `grouprise v4.0 <../releases/4.0.html>`_ it is recommended to use `grouprise's yaml-based configuration <options.html>`_ instead.
 
 Setup Wizard
 ============
