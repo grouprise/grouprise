@@ -1,4 +1,7 @@
+import copy
 import getpass
+
+import yaml
 
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -8,6 +11,7 @@ from django.core.management.utils import get_random_secret_key
 from grouprise.features.associations.models import Association
 from grouprise.features.content.models import Content
 from grouprise.features.groups.models import Group
+from grouprise.settings_loader import load_settings_from_yaml_files
 
 
 def get_input(prompt, default=None):
@@ -25,10 +29,34 @@ def create_article(author, group, slug, title, text, public=True, pinned=False):
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--source-config",
+            type=str,
+            action="append",
+            help=(
+                "Location of configuration data (directory or filename). "
+                "May be specified multiple times",
+            ),
+        )
+        parser.add_argument(
+            "--modifiable-config",
+            type=str,
+            default="/etc/grouprise/conf.d/800-local.yaml",
+            help="Path of yaml file to be used for storing settings",
+        )
+
     def handle(self, *args, **options):
+        original_settings = load_settings_from_yaml_files(options["source_config"])
+        target_settings = load_settings_from_yaml_files([options["modifiable_config"]])
+        original_target_settings = copy.copy(target_settings)
+
+        site = Site.objects.get_current()
         # site settings
-        site_domain = get_input("Site's domain")
-        site_name = get_input("Site's (long) name")
+        site_domain = get_input(
+            "Site's domain", default=original_settings.get("domain", site.domain)
+        )
+        site_name = get_input("Site's (long) name", default=site.name)
         site_short_name = get_input("Site's short name")
 
         # admin user
@@ -55,13 +83,12 @@ class Command(BaseCommand):
             "Import user's email", default=f"{import_username}@{site_domain}"
         )
 
-        secret_key = get_random_secret_key()
+        secret_key = original_settings.get("secret_key", get_random_secret_key())
 
         # we assume there's only one site
-        default_site = Site.objects.first()
-        default_site.domain = site_domain
-        default_site.name = site_name
-        default_site.save()
+        site.domain = site_domain
+        site.name = site_name
+        site.save()
 
         operator_group, _ = Group.objects.get_or_create(name=site_short_name)
 
@@ -81,6 +108,7 @@ class Command(BaseCommand):
             username=import_username, email=import_email, first_name=import_name
         )
 
+        # TODO: allow multiple runs (idempotency) without throwing `IntegrityError`
         create_article(
             unknown_user.gestalt,
             operator_group,
@@ -118,24 +146,21 @@ class Command(BaseCommand):
             pinned=True,
         )
 
-        # TODO: replace with template
-        print(
-            f"""
-Integrate the following lines into your grouprise settings file:
+        # add only changed or new settings to the target dictionary (minimize changes in the file)
+        for key, value in {
+            "secret_key": secret_key,
+            "domain": site_domain,
+            "operator_group_id": operator_group.id,
+            "unknown_gestalt_id": unknown_user.id,
+            "feed_importer_gestalt_id": import_user.id,
+        }.items():
+            if original_settings.get(key) != value:
+                target_settings[key] = value
+        if admin_email not in original_settings.get("log_recipient_emails", []):
+            target_settings.setdefault("log_recipient_emails", [])
+            target_settings["log_recipient_emails"].append(admin_email)
 
-SECRET_KEY = "{secret_key}"
-ALLOWED_HOSTS = ["localhost", "{site_domain}"]
-ADMINS = [("{admin_first_name}", "{admin_email}")]
-DEFAULT_FROM_EMAIL = "noreply@{site_domain}"
-SERVER_EMAIL = "noreply@{site_domain}"
-
-GROUPRISE = {{
-    "OPERATOR_GROUP_ID": {operator_group.id},
-    "UNKNOWN_GESTALT_ID": {unknown_user.id},
-    "FEED_IMPORTER_GESTALT_ID": {import_user.id},
-    "DEFAULT_DISTINCT_FROM_EMAIL": "noreply+{{slug}}@{site_domain}",
-    "DEFAULT_REPLY_TO_EMAIL": "reply+{{reply_key}}@{site_domain}",
-    "POSTMASTER_EMAIL": "postmaster@{site_domain}",
-}}
-"""
-        )
+        if target_settings != original_target_settings:
+            raw = yaml.dump(target_settings)
+        with open(options["modifiable_config"], "w") as output_file:
+            output_file.write(raw)
