@@ -263,6 +263,16 @@ The Content Security Policy is relevant, if you want to execute customized clien
 See the [Django CSP documentation](https://django-csp.readthedocs.io/en/latest/configuration.html) for details.
 
 
+## Authentication
+
+### `oidc_provider → enabled`
+
+It is possible to use the *grouprise* instance as an [OIDC](https://en.wikipedia.org/wiki/OIDC) provider.
+This could be useful for connecting external services with the *grouprise* instance (e.g. a [Matrix-Synapse](https://github.com/matrix-org/synapse/) server).
+
+Client applications (like the Matrix server) need to be added to the OIDC setup (see `/stadt/admin/`).
+
+
 ## System / hosting
 
 ### `backup_path`
