@@ -1,8 +1,10 @@
+from distutils.version import LooseVersion
 import enum
 import importlib.util
 import logging
 import os
 import re
+import subprocess
 import types
 
 import ruamel.yaml
@@ -12,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 CONFIGURATION_FILENAME_PATTERN = re.compile(r"^[\w-]+\.yaml$")
+# django-oauth-toolkit introduced OIDC support in v1.5
+# https://django-oauth-toolkit.readthedocs.io/en/1.5.0/changelog.html#id1
+MINIMUM_OAUTH2_VERSION = "1.5.0"
 # from user configuration name to the name used by django
 DATABASE_ENGINES_MAP = {
     "mysql": "django.db.backends.mysql",
@@ -29,6 +34,27 @@ class EmailSubmissionEncryption(enum.Enum):
     PLAIN = "plain"
     STARTTLS = "starttls"
     SSL = "ssl"
+
+
+def create_rsa_key(filename, bits=4096):
+    try:
+        proc = subprocess.Popen(
+            ["openssl", "genrsa", str(bits)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except FileNotFoundError:
+        raise ConfigError(
+            "Failed to generate RSA key via OpenSSL: the 'openssl' executable was not found")
+    proc.wait()
+    if proc.returncode != 0:
+        stderr = proc.stderr.read().decode()
+        raise ConfigError(f"Failed to generate RSA key via OpenSSL: {stderr}")
+    key_raw = proc.stdout.read()
+    # openssl genrsa -out oidc.key 4096
+    with open(filename, "wb") as out_file:
+        os.chmod(filename, 0o600)
+        out_file.write(key_raw)
 
 
 def get_configuration_path_candidates():
@@ -431,6 +457,65 @@ class MatrixAppEnableConfig(BooleanConfig):
         settings["INSTALLED_APPS"].append("grouprise.features.matrix_chat")
 
 
+class OIDCProviderEnableConfig(BooleanConfig):
+    def __init__(self, *args, config_base_directory=None, **kwargs):
+        self.config_base_directory = config_base_directory
+        super().__init__(*args, **kwargs)
+
+    def apply_to_settings(self, settings, value):
+        # store the boolean value
+        super().apply_to_settings(settings, value)
+        if value:
+            # enable the required applications and middleware
+            settings["INSTALLED_APPS"].append("corsheaders")
+            settings["INSTALLED_APPS"].append("oauth2_provider")
+            settings["MIDDLEWARE"].insert(0, "corsheaders.middleware.CorsMiddleware")
+            settings["OAUTH2_PROVIDER"]["OIDC_ENABLED"] = True
+            settings["OAUTH2_PROVIDER"].setdefault("SCOPES", []).append(
+                {"openid": "OpenID Connect scope"}
+            )
+            # verify the version of oauth2_provider (OIDC support started in v1.5.0)
+            try:
+                import oauth2_provider
+            except ImportError:
+                raise ConfigError(
+                    "Failed to import 'oauth2_provider'. "
+                    "The module is required for the OIDC provider, but it seems to be missing. "
+                    "You should either disable OIDC ('oidc_provider: { enabled: false }') or "
+                    "install the 'python3-django-oauth-toolkit' package (system-wide) or install "
+                    "the 'django-oauth-toolkit' package via pip in a virtualenv."
+                )
+            installed_version = LooseVersion(oauth2_provider.__version__)
+            wanted_version = LooseVersion(MINIMUM_OAUTH2_VERSION)
+            if wanted_version < installed_version:
+                raise ConfigError(
+                    "The minimum required version of 'oauth2_provider' for OIDC support is "
+                    f"{MINIMUM_OAUTH2_VERSION}. "
+                    f"The installed version is only {oauth2_provider.__version__}. "
+                    "You should either disable OIDC ('oidc_provider: { enabled: false }') or "
+                    "install a newer version of the 'python3-django-oauth-toolkit package "
+                    "(if available) or install the 'django-oauth-toolkit' package via pip in a "
+                    "virtualenv."
+                )
+            # verify the availability of the "corsheaders" package
+            try:
+                import corsheaders  # noqa: F401
+            except ImportError:
+                raise ConfigError(
+                    "The python package 'django-cors-headers' is missing. "
+                    "This package is required for the OIDC provider."
+                )
+            if self.config_base_directory is None:
+                raise ConfigError(
+                    "OIDC is enabled, but the configuration's location could not be determined. "
+                    "Thus the location of the OIDC key file cannot be defined."
+                )
+            oidc_key_file = os.path.join(self.config_base_directory, "oidc.key")
+            if not os.path.exists(oidc_key_file):
+                create_rsa_key(oidc_key_file)
+            settings["OAUTH2_PROVIDER"]["OIDC_RSA_PRIVATE_KEY"] = oidc_key_file
+
+
 def _get_nested_dict_value(data, path, default=None):
     if isinstance(path, str):
         return data.get(path, default)
@@ -455,6 +540,28 @@ def recursivly_normalize_dict_keys_to_lower_case(data):
         return [recursivly_normalize_dict_keys_to_lower_case(item) for item in data]
     else:
         return data
+
+
+def get_config_base_directory(locations=None):
+    """ Try to determine, which directory could be regarded as the base configuration directory.
+
+    The given locations (or being absent: the default locations) are scanned for configuration
+    files.
+    The directory of the first configuration file is returned (with a possibly trailing "conf.d"
+    path component removed).  If no configuration files are found, None is returned.
+    """
+    config_directories = [
+        os.path.dirname(filename)
+        for filename in get_configuration_filenames(location_candidates=locations)
+    ]
+    if config_directories:
+        # remove a trailing "conf.d" path component
+        result = config_directories[0]
+        if os.path.basename(result) == "conf.d":
+            result = os.path.dirname(result)
+        return result
+    else:
+        return None
 
 
 def import_settings_from_yaml(settings, locations=None):
@@ -647,6 +754,11 @@ def import_settings_from_yaml(settings, locations=None):
             name=("matrix_chat", "bot_access_token"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "BOT_ACCESS_TOKEN"),
             regex=r"[\w\-]+$",
+        ),
+        OIDCProviderEnableConfig(
+            name=("oidc_provider", "enabled"),
+            config_base_directory=get_config_base_directory(locations),
+            django_target=("OAUTH2_PROVIDER", "OIDC_ENABLED"),
         ),
     ]
     for parser in parsers:

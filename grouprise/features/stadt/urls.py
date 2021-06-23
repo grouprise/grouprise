@@ -1,9 +1,11 @@
-from django.urls import path, re_path
+import django.apps
+from django.urls import include, path, re_path
 from django.conf.urls import url
 
 from grouprise.features.content.views import Detail as AssociationDetailView
 from grouprise.features.stadt.views import Help
 from . import feeds, views
+
 
 urlpatterns = [
     url(
@@ -40,3 +42,7 @@ urlpatterns = [
         AssociationDetailView.as_view(),
         name='content'),
 ]
+
+if django.apps.apps.is_installed("oauth2_provider"):
+    urlpatterns.append(
+            path('stadt/oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')))
