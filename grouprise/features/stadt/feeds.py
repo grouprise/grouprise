@@ -1,9 +1,9 @@
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 
+from grouprise.core.settings import get_grouprise_site
 from grouprise.features.associations.models import Association
 from grouprise.features.groups.models import Group
 
@@ -22,7 +22,7 @@ class IndexFeed(Feed):
         return item.container.versions.first().time_created
 
     def title(self):
-        return Site.objects.get_current().name
+        return get_grouprise_site().name
 
 
 class GroupFeed(IndexFeed):

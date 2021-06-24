@@ -7,12 +7,11 @@ import os
 import re
 
 from aiosmtplib.errors import SMTPDataError
-from django.contrib.sites.models import Site
 from django.core import mail
 from django.urls import reverse
 
 from grouprise.core import tests
-from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models
 from grouprise.features.imports.management.commands.run_lmtpd import ContributionLMTPD
@@ -23,7 +22,7 @@ from grouprise.features.memberships import test_mixins as memberships
 
 
 def get_full_address(local):
-    return local + "@" + Site.objects.get_current().domain
+    return local + "@" + get_grouprise_site().domain
 
 
 class MailInjectLMTPMixin:

@@ -2,7 +2,6 @@ import datetime
 
 import django.utils.timezone
 import django.views.generic
-from django.contrib.sites import models as sites_models
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
@@ -11,6 +10,7 @@ from django.views import generic
 from django_ical.views import ICalFeed
 from django.utils.translation import gettext as _
 
+from grouprise.core.settings import get_grouprise_site
 import grouprise.core.views
 import grouprise.features.content.views
 import grouprise.features.groups.views
@@ -80,7 +80,7 @@ class BaseCalendarFeed(ICalFeed):
         except PermissionDenied:
             response = HttpResponse()
             response.status_code = 401
-            domain = sites_models.Site.objects.get_current().domain
+            domain = get_grouprise_site().domain
             response['WWW-Authenticate'] = 'Basic realm="{}"'.format(domain)
             return response
 
@@ -175,7 +175,7 @@ class GroupCalendarFeed(BaseCalendarFeed):
         return None
 
     def title(self):
-        site_name = sites_models.Site.objects.get_current().name
+        site_name = get_grouprise_site().name
         group = self.get_group()
         if group is None:
             return None
@@ -188,7 +188,7 @@ class GroupCalendarFeed(BaseCalendarFeed):
         return super().items().filter(**filter_dict)
 
     def item_guid(self, item):
-        domain = sites_models.Site.objects.get_current().domain
+        domain = get_grouprise_site().domain
         group = self.get_group()
         if group is None:
             return None
@@ -215,7 +215,7 @@ class SiteCalendarFeed(BaseCalendarFeed):
             return super().item_title(item)
 
     def title(self):
-        return sites_models.Site.objects.get_current().name
+        return get_grouprise_site().name
 
 
 class CalendarExport(generic.DetailView):

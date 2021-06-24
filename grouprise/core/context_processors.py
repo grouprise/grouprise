@@ -1,12 +1,10 @@
-from django.contrib.sites.models import Site
-
-from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 
 
 def settings(request):
     return {
         "GROUPRISE_CLAIMS": CORE_SETTINGS.CLAIMS,
-        "GROUPRISE_SITE_NAME": Site.objects.get_current().name,
+        "GROUPRISE_SITE_NAME": get_grouprise_site().name,
         "GROUPRISE_THEME_COLOR": CORE_SETTINGS.THEME_COLOR,
         "GROUPRISE_LOGO_TEXT": CORE_SETTINGS.LOGO_TEXT,
         "GROUPRISE_LOGO_BACKDROP": CORE_SETTINGS.LOGO_BACKDROP,
