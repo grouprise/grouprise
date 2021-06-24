@@ -3,9 +3,10 @@ import logging
 import django.urls
 from django import test, urls
 from django.contrib import auth
-from django.contrib.sites import models as sites_models
 from django.core import mail
 from simplemathcaptcha.utils import hash_answer
+
+from grouprise.core.settings import get_grouprise_site
 
 
 HTTP_GET = 'get'
@@ -86,7 +87,7 @@ class Test(test.TestCase):
 
     def assertNotificationSenderAnonymous(self):
         self.assertTrue(self.get_latest_notification().from_email.startswith(
-            sites_models.Site.objects.get_current().name))
+            get_grouprise_site().name))
 
     def assertNotificationSenderName(self, gestalt):
         self.assertTrue(self.get_latest_notification().from_email.startswith(str(gestalt)))

@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.sites.models import Site
 from taggit.forms import TextareaTagWidget
+
+from grouprise.core.settings import get_grouprise_site
 
 from . import models
 
@@ -29,4 +30,4 @@ class Update(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.slug_domain = '{}/'.format(Site.objects.get_current().domain)
+        self.slug_domain = '{}/'.format(get_grouprise_site().domain)

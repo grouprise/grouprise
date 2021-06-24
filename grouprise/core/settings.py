@@ -73,8 +73,8 @@ class LazySettingsResolver:
             setattr(self, key, value)
 
 
-def _get_domain():
-    return Site.objects.get_current().domain
+def get_grouprise_site():
+    return Site.objects.get_current()
 
 
 CORE_SETTINGS = LazySettingsResolver(
@@ -90,13 +90,17 @@ CORE_SETTINGS = LazySettingsResolver(
     # mail handling
     COLLECTOR_MAILBOX_ADDRESS=_GR.get("COLLECTOR_MAILBOX_ADDRESS", None),
     DEFAULT_DISTINCT_FROM_EMAIL=_GR.get(
-        "DEFAULT_DISTINCT_FROM_EMAIL", lambda: "noreply+{slug}@" + _get_domain()
+        "DEFAULT_DISTINCT_FROM_EMAIL",
+        lambda: "noreply+{slug}@" + get_grouprise_site().domain,
     ),
     DEFAULT_REPLY_TO_EMAIL=_GR.get(
-        "DEFAULT_REPLY_TO_EMAIL", lambda: "reply+{reply_key}@" + _get_domain()
+        "DEFAULT_REPLY_TO_EMAIL",
+        lambda: "reply+{reply_key}@" + get_grouprise_site().domain,
     ),
     MAILINGLIST_ENABLED=_GR.get("MAILINGLIST_ENABLED", False),
-    POSTMASTER_EMAIL=_GR.get("POSTMASTER_EMAIL", lambda: "postmaster@" + _get_domain()),
+    POSTMASTER_EMAIL=_GR.get(
+        "POSTMASTER_EMAIL", lambda: "postmaster@" + get_grouprise_site().domain
+    ),
     # content import
     FEED_IMPORTER_GESTALT_ID=_GR.get("FEED_IMPORTER_GESTALT_ID", None),
     OPERATOR_GROUP_ID=_GR.get("OPERATOR_GROUP_ID", 1),

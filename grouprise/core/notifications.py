@@ -6,12 +6,11 @@ import uuid
 
 from django.apps import apps
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.core import mail
 from django.template import loader
 
 from grouprise.core.models import PermissionToken
-from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url as build_absolute_uri
 
 logger = logging.getLogger(__name__)
@@ -28,7 +27,7 @@ class Notification:
 
     def __init__(self, instance):
         self.object = instance
-        self.site = Site.objects.get_current()
+        self.site = get_grouprise_site()
 
     def create_token(self):
         token = PermissionToken(feature_key='notification-reply', gestalt=self.recipient)

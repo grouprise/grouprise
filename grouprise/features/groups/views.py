@@ -2,7 +2,6 @@ import re
 
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
@@ -13,7 +12,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
 from django_filters.views import FilterView
 
-from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
@@ -141,7 +140,7 @@ class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, For
     def get_initial(self):
         context = dict(
             group=self.object,
-            site=Site.objects.get_current(),
+            site=get_grouprise_site(),
             user=self.request.user
         )
         template = get_template('groups/recommend.txt')

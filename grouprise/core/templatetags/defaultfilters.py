@@ -4,8 +4,8 @@ import re
 
 import html2text as python_html2text
 from django import template
-from django.conf import settings
-from django.contrib.sites import models as sites_models
+
+from grouprise.core.settings import get_grouprise_site
 
 from . import Link
 
@@ -60,7 +60,7 @@ def url_for_user(model, user):
 def _get_baseurl():
     return '{proto}://{domain}'.format(
             proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
-            domain=sites_models.Site.objects.get_current().domain)
+            domain=get_grouprise_site().domain)
 
 
 @register.filter
