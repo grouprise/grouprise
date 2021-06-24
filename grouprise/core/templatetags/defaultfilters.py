@@ -5,7 +5,7 @@ import re
 import html2text as python_html2text
 from django import template
 
-from grouprise.core.settings import get_grouprise_site
+from grouprise.core.settings import get_grouprise_baseurl
 
 from . import Link
 
@@ -57,15 +57,9 @@ def url_for_user(model, user):
     return model.get_absolute_url_for_user(user)
 
 
-def _get_baseurl():
-    return '{proto}://{domain}'.format(
-            proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
-            domain=get_grouprise_site().domain)
-
-
 @register.filter
 def html2text(html_text, preset='mail'):
-    text_maker = python_html2text.HTML2Text(baseurl=_get_baseurl())
+    text_maker = python_html2text.HTML2Text(baseurl=get_grouprise_baseurl())
     text_maker.body_width = 0
     if preset == 'mail':
         text_maker.inline_links = False
@@ -83,4 +77,4 @@ def full_url(path):
         # path already is an absolute URL
         return path
     else:
-        return '{baseurl}{path}'.format(baseurl=_get_baseurl(), path=path)
+        return '{baseurl}{path}'.format(baseurl=get_grouprise_baseurl(), path=path)

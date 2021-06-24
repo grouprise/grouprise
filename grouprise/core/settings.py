@@ -73,6 +73,13 @@ class LazySettingsResolver:
             setattr(self, key, value)
 
 
+def get_grouprise_baseurl():
+    return "{proto}://{domain}".format(
+        proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
+        domain=get_grouprise_site().domain,
+    )
+
+
 def get_grouprise_site():
     return Site.objects.get_current()
 
