@@ -50,9 +50,9 @@ configure_element() {
             if [ ! -e "/etc/apache2/sites-enabled/element-web.conf" ]; then
                 mkdir -p /etc/apache2/sites-enabled/
                 ln -s ../sites-available/element-web.conf /etc/apache2/sites-enabled/
-                if [ -x /usr/sbin/apache2 ]; then
-                    service apache2 reload || true
-                fi
+            fi
+            if [ -x /usr/sbin/apache2 ]; then
+                service apache2 reload || true
             fi
             ;;
         nginx)
@@ -60,9 +60,9 @@ configure_element() {
             if [ ! -e "/etc/nginx/sites-enabled/element-web" ]; then
                 mkdir -p /etc/nginx/sites-enabled/
                 ln -s ../sites-available/element-web /etc/nginx/sites-enabled/
-                if [ -x /usr/sbin/nginx ]; then
-                    service nginx reload || true
-                fi
+            fi
+            if [ -x /usr/sbin/nginx ]; then
+                service nginx reload || true
             fi
             ;;
         none)

@@ -60,9 +60,9 @@ configure_grouprise() {
             if [ ! -e "/etc/nginx/sites-enabled/grouprise" ]; then
                 mkdir -p /etc/nginx/sites-enabled/
                 ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/
-                if [ -x /usr/sbin/nginx ]; then
-                    service nginx reload || true
-                fi
+            fi
+            if [ -x /usr/sbin/nginx ]; then
+                service nginx reload || true
             fi
             ;;
         none)
