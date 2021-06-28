@@ -1,7 +1,7 @@
 import copy
 import getpass
 
-import yaml
+import ruamel.yaml
 
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
@@ -161,6 +161,5 @@ class Command(BaseCommand):
             target_settings["log_recipient_emails"].append(admin_email)
 
         if target_settings != original_target_settings:
-            raw = yaml.dump(target_settings)
-        with open(options["modifiable_config"], "w") as output_file:
-            output_file.write(raw)
+            with open(options["modifiable_config"], "w") as output_file:
+                ruamel.yaml.YAML().dump(target_settings, output_file)

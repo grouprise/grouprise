@@ -5,7 +5,7 @@ import os
 import re
 import types
 
-import yaml
+import ruamel.yaml
 
 
 logger = logging.getLogger(__name__)
@@ -88,9 +88,10 @@ def get_configuration_filenames(location_candidates=None):
 def load_settings_from_yaml_files(locations=None):
     config_filenames = get_configuration_filenames(location_candidates=locations)
     combined_configuration = {}
+    loader = ruamel.yaml.YAML()
     for config_filename in config_filenames:
         with open(config_filename, "r") as config_file:
-            data = yaml.safe_load(config_file)
+            data = loader.load(config_file)
             if data is None:
                 pass
             elif not isinstance(data, dict):

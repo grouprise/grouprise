@@ -1,9 +1,11 @@
 import argparse
 import copy
+import io
 import json
 import os
 import sys
-import yaml
+
+import ruamel.yaml
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -58,7 +60,7 @@ class Command(BaseCommand):
     @staticmethod
     def _get_parsed(raw, format_name):
         if format_name == "yaml":
-            return yaml.safe_load(raw)
+            return ruamel.yaml.YAML().load(raw)
         elif format_name == "json":
             return json.loads(raw)
         else:
@@ -69,7 +71,9 @@ class Command(BaseCommand):
         if data is None:
             return ""
         elif format_name == "yaml":
-            lines = yaml.dump(data).splitlines()
+            target = io.StringIO()
+            ruamel.yaml.YAML().dump(data, target)
+            lines = target.getvalue().splitlines()
             if lines[-1] == "...":
                 lines.pop(-1)
             return os.linesep.join(lines)
