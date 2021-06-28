@@ -9,6 +9,14 @@ RUN apt-get update && \
     apt-get update && \
     apt-get --yes install python3-django/buster-backports python3-django-filters/buster-backports
 
+# install a few packages from Debian Bullseye
+# The newer version of oauthlib (v3.1 or newer) is required for OIDC support in django-oauth-toolkit.
+RUN echo "deb http://deb.debian.org/debian bullseye main" >>/etc/apt/sources.list.d/bullseye.list && \
+    apt-get update && \
+    apt-get --yes install --target-release buster python3-authlib python3-matrix-nio python3-oauthlib/bullseye && \
+    rm /etc/apt/sources.list.d/bullseye.list && \
+    apt-get update
+
 # Install all dependencies and recommends in order to simplify the manual installation of locally
 # built packages (via dpkg instead of apt).
 # TODO: enable the line below after switching to Debian Bullseye (apt v1.9 or newer is required)
