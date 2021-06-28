@@ -20,6 +20,7 @@ RUN apt-cache show grouprise \
     | sed 's/, /\n/g' \
     | sed 's/ |.*$//g' \
     | sed 's/ (.*)$//g' \
+    | grep -v grouprise \
     | tr '\n' '\0' \
     | xargs --null --no-run-if-empty apt-get install --yes
 
