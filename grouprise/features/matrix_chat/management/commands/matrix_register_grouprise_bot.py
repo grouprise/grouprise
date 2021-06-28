@@ -10,10 +10,12 @@ import tempfile
 import time
 import urllib.error
 
+import ruamel.yaml
+
 from django.core.management.base import BaseCommand
 
-from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 from grouprise.features.matrix_chat.matrix_admin import MatrixAdmin
+from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 
 
 DEFAULT_MATRIX_CONFIG_LOCATIONS = [
@@ -81,6 +83,13 @@ class Command(BaseCommand):
                 "A matrix-synapse configuration file or directory. This argument may be specified "
                 "multiple times."
             ),
+        )
+        parser.add_argument(
+            "--modifiable-grouprise-config",
+            type=str,
+            default="/etc/grouprise/conf.d/820-matrix.yaml",
+            dest="modifiable_grouprise_config",
+            help="Path of yaml file to be used for storing settings",
         )
 
     def request_admin_user_via_api(self, api, username, registration_token):
@@ -207,6 +216,31 @@ class Command(BaseCommand):
             )
         else:
             # we need to create a new user
+            yaml = ruamel.yaml.YAML()
+            grouprise_config_filename = options["modifiable_grouprise_config"]
+            try:
+                with open(grouprise_config_filename, "r") as config_file:
+                    grouprise_settings = yaml.load(config_file)
+            except PermissionError as exc:
+                self.stderr.write(
+                    f"Target configuration file ({grouprise_config_filename}) is not readable:"
+                    f" {exc}"
+                )
+                sys.exit(1)
+            except FileNotFoundError:
+                grouprise_settings = {}
+            except IOError as exc:
+                self.stderr.write(
+                    f"Failed to read target configuration file ({grouprise_config_filename}):"
+                    f" {exc}"
+                )
+                sys.exit(2)
+            # test write permission in advance - otherwise we could loose the new bot token
+            if not os.access(grouprise_config_filename, os.W_OK):
+                self.stderr.write(
+                    f"Target configuration file ({grouprise_config_filename}) is not writable"
+                )
+                sys.exit(3)
             config_locations = options["matrix_config_locations"]
             if not config_locations:
                 config_locations = DEFAULT_MATRIX_CONFIG_LOCATIONS
@@ -215,4 +249,17 @@ class Command(BaseCommand):
                 options["matrix_api_url"],
                 config_locations,
             )
-            print(access_token)
+            if "matrix_chat" not in grouprise_settings:
+                grouprise_settings["matrix_chat"] = {}
+            grouprise_settings["matrix_chat"]["admin_api_url"] = options["matrix_api_url"]
+            grouprise_settings["matrix_chat"]["bot_access_token"] = access_token
+            grouprise_settings["matrix_chat"]["bot_username"] = options["bot_username"]
+            try:
+                with open(grouprise_config_filename, "w") as config_file:
+                    yaml.dump(grouprise_settings, config_file)
+            except IOError as exc:
+                self.stderr.write(
+                    f"Failed to write new 'bot_access_token' ({access_token}) to target"
+                    f" configuration file ({grouprise_config_filename}) {exc}"
+                )
+                sys.exit(4)
