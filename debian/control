@@ -158,12 +158,13 @@ Description: Web platform that enables social action and solidarity
 Package: grouprise-matrix
 Architecture: all
 Depends:
- element-web-installer,
  jq,
- matrix-synapse,
  moreutils,
 # this package is not shipped in buster or buster-backports ("bullseye" is necessary)
  python3-matrix-nio,
+Recommends:
+ element-web-installer,
+ matrix-synapse,
 Description: Matrix integration for grouprise platform
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
