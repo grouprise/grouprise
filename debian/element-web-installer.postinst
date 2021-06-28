@@ -41,9 +41,15 @@ configure_element() {
     local element_domain webserver_type homeserver_name homeserver_info
     webserver_type=$(ask_debconf_question "element-web-installer/configure-webserver" "high")
     if [ "$webserver_type" != "none" ]; then
-        element_domain=$(ask_debconf_question "element-web-installer/domain" "high" "$(hostname -f)")
+        element_domain=
+        while [ -z "$element_domain" ]; do
+            element_domain=$(ask_debconf_question "element-web-installer/domain" "high" "$(hostname -f)")
+        done
     fi
-    homeserver_name=$(ask_debconf_question "element-web-installer/matrix-homeserver-name" "high")
+    homeserver_name=
+    while [ -z "$homeserver_name" ]; do
+        homeserver_name=$(ask_debconf_question "element-web-installer/matrix-homeserver-name" "high")
+    done
     case "$webserver_type" in
         apache2)
             sed -i "s|ServerName.*$|ServerName $element_domain|g" /etc/apache2/sites-available/element-web.conf

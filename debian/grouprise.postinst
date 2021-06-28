@@ -50,8 +50,11 @@ ask_debconf_question() {
 
 
 configure_grouprise() {
-    local grouprise_domain webserver_type
-    grouprise_domain=$(ask_debconf_question "grouprise/domain" "high" "$(hostname -f)")
+    local grouprise_domain=
+    local webserver_type
+    while [ -z "$grouprise_domain" ]; do
+        grouprise_domain=$(ask_debconf_question "grouprise/domain" "high" "$(hostname -f)")
+    done
     webserver_type=$(ask_debconf_question "grouprise/configure-webserver" "high")
     set_configured_grouprise_domain "$grouprise_domain" || true
     case "$webserver_type" in
