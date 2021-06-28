@@ -18,7 +18,8 @@ RUN apt-cache show grouprise \
     | grep -E "^(Depends|Recommends):" \
     | cut -f 2- -d " " \
     | sed 's/, /\n/g' \
-    | sed 's/ (.*)$//g; s/ |.*$//g' \
+    | sed 's/ |.*$//g' \
+    | sed 's/ (.*)$//g' \
     | tr '\n' '\0' \
     | xargs --null --no-run-if-empty apt-get install --yes
 
