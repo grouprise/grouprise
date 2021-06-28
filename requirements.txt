@@ -35,6 +35,7 @@ pymdown-extensions<6        # NOT IN DEBIAN
 aiosmtplib                  # NOT IN DEBIAN
 schulze                     # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
+ruamel.yaml                 # debian: python3-ruamel.yaml
 sentry-sdk                  # debian: python3-sentry-sdk
 recommonmark                # debian: python3-recommonmark
 redis                       # debian: python3-redis
@@ -43,4 +44,3 @@ translitcodec               # NOT IN DEBIAN
 xapian-haystack>=2.1.1      # debian: python3-xapian-haystack
 # xapian-haystack also requires the xapian python bindings that you'll find
 # as "python3-xapian" in Debian/Ubuntu and "python-xapian" in ArchLinux
-pyyaml                      # debian: python3-yaml
