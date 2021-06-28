@@ -32,11 +32,13 @@ Additionally the usual benefits of the Matrix system are available:
 The web client is accessible via `https://YOUR_DOMAIN/stadt/chat`.
 
 
-## Setup
+## Administration
+
+### Setup
 
 The following steps are based on the [deb-based deployment](deployment/deb).
 
-Warning: currently (January 2021) the required Debian packages are not part of a stable Debian
+Warning: currently (June 2021) the required Debian packages are not part of a stable Debian
 release (as of now: Debian Buster).
 Thus you may need to wait for the next Debian release (*Bullseye*), if you prefer a setup of
 packages with proper security support.
@@ -75,7 +77,7 @@ dpkg-reconfigure --unseen-only grouprise-matrix
 ```
 
 
-## Configuration settings
+### Configuration settings
 
 The following configuration settings are available below the `matrix_chat` path in your grouprise settings file (e.g. `/etc/grouprise/conf.d/local.yaml`):
 
@@ -87,3 +89,80 @@ The following configuration settings are available below the `matrix_chat` path 
   `select token from access_tokens where user_id='@USERNAME:MATRIX_DOMAIN';`.
 * `admin_api_url`: An API URL of the Matrix instance, which accepts Synapse admin requests
   (e.g. `/_synapse/admin`).  Defaults to `http://localhost:8008`.
+
+Example:
+```yaml
+matrix_chat:
+    enabled: true
+    bot_username: grouprise-bot
+    bot_access_token: 'SECRET_ACCESS_TOKEN'
+```
+
+
+### Authentication via OIDC
+
+It is possible configure *grouprise* as an OIDC authentication provider for *matrix-synapse*.
+This allows users to log into their matrix account with their *grouprise* session (e.g. via
+the *element* web client).
+
+The steps below are only relevant for the source-based installation of *grouprise*.
+The *deb* package provided for *grouprise* automatically handles these steps.
+
+#### Settings for grouprise
+
+##### Dependencies
+
+* install the Python package *django-oauth-toolkit*:
+    * Debian: `apt install python3-django-oauth-toolkit`
+        * *TODO*: sadly v1.5.0 (required for OIDC) is not part of Debian at the moment (Debian *Bullseye*).  Until it is included, the approach via *pip* (see below) is necessary.
+    * *pip* (local Python module installation):
+        * `pip3 install --user "django-oauth-toolkit>=1.5.0"`
+        * add the line `pythonpath = /root/.local/lib/python3.X/site-packages` to your uwsgi configuration (e.g. `/etc/uwsgi/apps-enabled/grouprise.ini`)
+            * adjust the Python version according to your setup
+
+##### Configuration
+You just need to add an OAuth client configuration.
+This can be done via Django's admin interface (`/stadt/admin`):
+
+* User: empty
+* Redirect URL: `https://example.org:8448/_synapse/client/oidc/callback`
+* Client Type: *confidential*
+* Authorization Type: Authorization Code
+* Name: *matrix_chat*
+* Skip Authorization: true
+* Algorithm: RSA
+
+#### Settings for matrix-synapse
+
+##### Dependencies
+
+* `apt install python3-authlib`
+    * matrix-synapse requires this module, if OIDC is enabled
+    * This package is available in Debian since *Bullseye*.
+
+##### Configuration
+
+Configure the OIDC provider (e.g. in `grouprise-matrix-authentication.yaml`):
+```yaml
+password_config:
+   enabled: false
+
+public_baseurl: "https://example.org:8448/"
+
+oidc_providers:
+  - idp_id: example
+    idp_name: example.org
+    discover: true
+    issuer: "https://example.org/stadt/oauth/"
+    client_id: "SEE_GROUPRISE_OAUTH_APPLICATION"
+    client_secret: "SEE_GROUPRISE_OAUTH_APPLICATION"
+    client_auth_method: client_secret_post
+    scopes: ["openid"]
+    skip_verification: true
+    user_mapping_provider:
+      config:
+        subject_claim: "id"
+        localpart_template: "{{ user.id }}"
+        display_name_template: "{{ user.display_name }}"
+        email_template: "{{ user.email }}"
+```
