@@ -53,12 +53,9 @@ test_expect_success "restart nginx" '
   service nginx restart
 '
 
-test_expect_success "configure uwsgi application" '
-  ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/
-'
-
-test_expect_success "restart uwsgi" '
-  service uwsgi restart
+test_expect_success "start grouprise" '
+  # we cannot prevent uwsgi from emitting "getting INI configuration from ..." to stderr
+  service grouprise start 2>&1
 '
 
 test_done

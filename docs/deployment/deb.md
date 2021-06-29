@@ -58,15 +58,10 @@ grouprisectl runserver 0.0.0.0:8000
 
 ## UWSGI und Nginx einrichten
 
-Nun musst du grouprise nur noch via Webserver verfügbar machen. Eine UWSGI-Konfiguration ist bereits installiert. Aktiviere sie:
-```shell
-ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/
-service uwsgi restart
-```
+Nun musst du grouprise nur noch via Webserver verfügbar machen.
 
-Erzeuge anschließend eine nginx-Site-Konfiguration (z.B. `/etc/nginx/sites-available/grouprise`), wobei die Domain
-anzupassen ist. Details zur Konfiguration von Sites in nginx unter Debian-Betriebssystemen finden sich in vielen
-Tutorials im Internet:
+Erzeuge dafür eine nginx-Site-Konfiguration (z.B. `/etc/nginx/sites-available/grouprise`), wobei die Domain anzupassen ist.
+Details zur Konfiguration von Sites in nginx unter Debian-Betriebssystemen finden sich in vielen Tutorials im Internet:
 ```
 server {
     server_name example.org;

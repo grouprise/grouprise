@@ -1,0 +1,15 @@
+[Unit]
+Description=grouprise web service
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/uwsgi --ini /etc/grouprise/uwsgi.ini
+RuntimeDirectory=grouprise
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

@@ -8,19 +8,7 @@ DIR_ETC="/etc/grouprise"
 DIR_HOME="/var/lib/grouprise"
 DIR_LOGS="/var/log/grouprise"
 DIR_STATIC="/var/lib/grouprise/static"
-UWSGI_APP_SYMLINK="/etc/uwsgi/apps-enabled/grouprise.ini"
 
-
-# stop running services using the user ID
-if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
-    if [ -e "$UWSGI_APP_SYMLINK" ]; then
-        # uwsgi needs to be stopped *before* removing the file - otherwise "restart" is a no-op,
-        # if there are no other application configuration files (at least for sysvinit).
-        service uwsgi stop || true
-        rm -f "$UWSGI_APP_SYMLINK"
-        service uwsgi start || true
-    fi
-fi
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
     if getent passwd "$PKG_USER" >/dev/null; then

@@ -1,5 +1,5 @@
 #!/usr/bin/dh-exec
-debian/grouprise.uwsgi.ini => /etc/uwsgi/apps-available/grouprise.ini
+debian/grouprise.uwsgi.ini => /etc/grouprise/uwsgi.ini
 debian/grouprisectl => /usr/bin/grouprisectl
 debian/README.backups => /var/backups/grouprise/README
 debian/nginx.conf => /etc/nginx/snippets/grouprise.conf
