@@ -33,10 +33,6 @@ test_expect_success "configure grouprise database" '
   su -c "$psql_call" postgres
 '
 
-test_expect_success "initialize grouprise database" '
-  grouprisectl migrate
-'
-
 test_expect_success "configure grouprise proxy setup" '
   echo "- localhost" | GROUPRISE_USER=root grouprisectl grouprise_settings set extra_allowed_hosts
   echo "disabled" | GROUPRISE_USER=root grouprisectl grouprise_settings set transport_security
