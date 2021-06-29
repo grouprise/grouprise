@@ -125,11 +125,6 @@ if [ "$1" = "configure" ]; then
     configure_grouprise
 
     if [ -e "$UWSGI_APP_SYMLINK" ]; then
-        if grouprisectl migrate --no-input >/dev/null; then
-            rm -f "$DIR_ETC/maintenance_mode"
-        else
-            echo "error while executing $PKG_USER migrations. maintenance mode still active (indicator file: $DIR_ETC/maintenance_mode)" >&2
-        fi
         # restart uwsgi
         if [ -d /run/systemd/system ]; then
             deb-systemd-invoke restart uwsgi.service >/dev/null || true
@@ -147,9 +142,6 @@ if [ "$1" = "configure" ]; then
 
     mkdir -p "$DIR_MEDIA" "$DIR_STATIC"
     chown "$PKG_USER:$PKG_GROUP" "$DIR_MEDIA" "$DIR_STATIC"
-
-    # assemble static assets after an update of the grouprise package
-    grouprisectl collectstatic --no-input
 fi
 
 if [ "$1" = "triggered" ]; then

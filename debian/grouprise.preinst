@@ -24,6 +24,7 @@ if getent passwd "$PKG_USER" >/dev/null && getent group "$PKG_GROUP" >/dev/null;
             echo >&2 "Failed to create a database backup.  Maybe the relevant package (see 'grouprise-deb-*') is missing.  Aborting in order to prevent any changes while lacking a database backup."
             exit 1
         fi
+        rm -f "$DIR_ETC/maintenance_mode"
     fi
 fi
 
