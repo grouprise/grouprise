@@ -49,6 +49,10 @@ EOF
   rm -f /etc/nginx/sites-enabled/default
 '
 
+test_expect_success "enable grouprise debugging" '
+  echo "debug: true" >/etc/grouprise/conf.d/234-test.yaml
+'
+
 test_expect_success "restart nginx" '
   service nginx restart
 '
