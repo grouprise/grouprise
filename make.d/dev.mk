@@ -1,3 +1,4 @@
+# used by makefilet
 TAGS_SOURCE_DIRS = account content core entities features stadt utils
 
 
@@ -19,7 +20,19 @@ help-grouprise:
 	@echo "    ci_docker_logout    - log out of docker registry (remove locally stored credentials)"
 	@echo "    doc                 - build documentation"
 	@echo "    install-grouprise   - install all grouprise components"
+	@echo "    run-docker-deb-prepared  - enter a local docker instance prepared for installing deb packages"
 	@echo "    tags                - generate tags file for grouprise code"
 	@echo
 
 help: help-grouprise
+
+
+.PHONY: run-docker-deb-prepared
+run-docker-deb-prepared:
+	docker build --tag=grouprise-deb-prepared docker/grouprise-deb-prepared
+	docker run \
+		--tty \
+		--interactive \
+		--mount "type=bind,source=$$(pwd),destination=/app" \
+		--publish 8000:80 \
+		grouprise-deb-prepared "$$SHELL"
