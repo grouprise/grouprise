@@ -1,0 +1,25 @@
+#!/lib/init/init-d-script
+### BEGIN INIT INFO
+# Provides:          grouprise-tasks
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: grouprise-tasks
+# Description:       grouprise huey consumer
+### END INIT INFO
+
+DESC="grouprise huey consumer"
+NAME=grouprise-tasks
+DAEMON=/usr/bin/grouprisectl
+PIDFILE=/run/grouprise/tasks.pid
+DAEMON_ARGS="run_huey -w 2"
+START_ARGS="--background --pidfile $PIDFILE --make-pidfile"
+
+
+do_start_prepare() {
+    mkdir -p /run/grouprise
+}
+
+do_stop_cmd_override() {
+    # do not match NAME and DAEMON (being "python3")
+    start-stop-daemon --stop --quiet --remove-pidfile --pidfile "$PIDFILE"
+}

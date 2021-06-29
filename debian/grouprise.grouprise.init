@@ -1,0 +1,33 @@
+#!/lib/init/init-d-script
+### BEGIN INIT INFO
+# Provides:          grouprise
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: grouprise
+# Description:       grouprise web service
+### END INIT INFO
+
+DESC="grouprise web service"
+NAME=grouprise
+DAEMON=/usr/bin/uwsgi
+PIDFILE=/run/grouprise/uwsgi.pid
+DAEMON_ARGS="--pidfile $PIDFILE --daemonize --ini /etc/grouprise/uwsgi.ini"
+
+
+do_stop_prepare() {
+    /usr/sbin/service grouprise-tasks stop
+}
+
+do_restart_prepare() {
+    /usr/sbin/service grouprise-tasks restart
+}
+
+do_start_prepare() {
+    mkdir -p /run/grouprise
+    /usr/sbin/service grouprise-tasks start
+}
+
+do_stop_cmd_override() {
+    # do not match NAME and DAEMON (being "uwsgi") and send QUIT on stop
+    start-stop-daemon --stop --quiet --signal QUIT --remove-pidfile --pidfile "$PIDFILE"
+}
