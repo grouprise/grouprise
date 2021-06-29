@@ -1,5 +1,7 @@
 [Unit]
 Description=grouprise huey consumer
+PartOf=grouprise.service
+ReloadPropagatedFrom=grouprise.service
 
 [Service]
 Type=simple
