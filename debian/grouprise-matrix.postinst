@@ -107,7 +107,7 @@ if [ "$1" = "configure" ]; then
     configure_grouprise_matrix
     configure_grouprise_element
     echo "true" | grouprise_settings set "matrix_chat.enabled"
-    if [ -z "$(grouprise_settings get "matrix.bot_access_token")" ]; then
+    if [ -z "$(grouprise_settings get "matrix_chat.bot_access_token")" ]; then
         # register the privileged bot account
         GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot
     fi
