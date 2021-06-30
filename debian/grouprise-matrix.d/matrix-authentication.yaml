@@ -4,7 +4,7 @@
 enable_registration: false
 
 password_config:
-   enabled: true
+   enabled: false
 
 password_providers:
   - module: "grouprise.auth.matrix_synapse_auth_grouprise.GroupriseAuthProvider"
