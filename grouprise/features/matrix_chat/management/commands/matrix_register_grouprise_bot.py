@@ -87,7 +87,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--modifiable-grouprise-config",
             type=str,
-            default="/etc/grouprise/conf.d/820-matrix.yaml",
+            default="/etc/grouprise/conf.d/200-matrix_chat.yaml",
             dest="modifiable_grouprise_config",
             help="Path of yaml file to be used for storing settings",
         )

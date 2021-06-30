@@ -18,7 +18,7 @@ Configuration:
     - module: "grouprise.auth.matrix_synapse_auth_grouprise.GroupriseAuthProvider"
       config:
         enabled: true
-        settings_location: /etc/grouprise/conf.d/200-matrix.yaml
+        settings_location: /etc/grouprise/conf.d/200-matrix_chat.yaml
 """
 
 import logging
