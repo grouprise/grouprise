@@ -1,0 +1,25 @@
+#!/lib/init/init-d-script
+### BEGIN INIT INFO
+# Provides:          grouprise-lmtpd
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: grouprise-lmtpd
+# Description:       grouprise lmtp service for handling incoming mails
+### END INIT INFO
+
+DESC="grouprise lmtp service"
+NAME=grouprise-lmtpd
+DAEMON=/usr/bin/grouprisectl
+PIDFILE=/run/grouprise/tasks.pid
+DAEMON_ARGS="run_lmtpd localhost 1025"
+START_ARGS="--background --pidfile $PIDFILE --make-pidfile"
+
+
+do_start_prepare() {
+    mkdir -p /run/grouprise
+}
+
+do_stop_cmd_override() {
+    # do not match NAME and DAEMON (being "python3")
+    start-stop-daemon --stop --quiet --remove-pidfile --pidfile "$PIDFILE"
+}
