@@ -76,7 +76,7 @@ class Command(BaseCommand):
             lines = target.getvalue().splitlines()
             if lines[-1] == "...":
                 lines.pop(-1)
-            return os.linesep.join(lines)
+            return os.linesep.join(lines) + os.linesep
         elif format_name == "json":
             return json.dumps(data)
         else:
