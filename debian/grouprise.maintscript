@@ -1,1 +1,2 @@
 rm_conffile /etc/cron.d/grouprise 3.2.0-1~
+rm_conffile /etc/uwsgi/apps-available/grouprise.ini 4.0.0-1~
