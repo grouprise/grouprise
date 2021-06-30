@@ -49,9 +49,9 @@ override_dh_auto_test:
 			| grep -q . || { echo >&2 "Missing module '$$module' in package grouprise-dependencies"; false; break; }; done
 
 override_dh_installsystemd:
-	dh_installsystemd --name=grouprise
+	dh_installsystemd
 	dh_installsystemd --name=grouprise-tasks
 
 override_dh_installinit:
-	dh_installinit --name=grouprise
+	dh_installinit
 	dh_installinit --name=grouprise-tasks
