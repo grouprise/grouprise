@@ -13,18 +13,30 @@ DAEMON=/usr/bin/uwsgi
 PIDFILE=/run/grouprise/uwsgi.pid
 DAEMON_ARGS="--pidfile $PIDFILE --daemonize --ini /etc/grouprise/uwsgi.ini"
 
+GROUPRISE_LMTPD_IS_RUNNING=$(if service grouprise-lmtpd status >/dev/null 2>&1; then echo 1; else echo 0; fi)
+
 
 do_stop_prepare() {
     /usr/sbin/service grouprise-tasks stop
+    if [ "$GROUPRISE_LMTPD_IS_RUNNING" = 1 ]; then
+        /usr/sbin/service grouprise-lmtpd stop
+    fi
 }
 
+# ensure the restart of related services - otherwise they are not aware of configuration changes
 do_restart_prepare() {
     /usr/sbin/service grouprise-tasks restart
+    if [ "$GROUPRISE_LMTPD_IS_RUNNING" = 1 ]; then
+        /usr/sbin/service grouprise-lmtpd restart
+    fi
 }
 
 do_start_prepare() {
     mkdir -p /run/grouprise
     /usr/sbin/service grouprise-tasks start
+    if [ "$GROUPRISE_LMTPD_IS_RUNNING" = 1 ]; then
+        /usr/sbin/service grouprise-lmtpd start
+    fi
 }
 
 do_stop_cmd_override() {

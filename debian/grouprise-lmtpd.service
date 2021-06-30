@@ -2,6 +2,8 @@
 Description=Grouprise LMTP Mail Handler
 After=network-online.target
 Wants=network-online.target
+PartOf=grouprise.service
+ReloadPropagatedFrom=grouprise.service
 
 [Service]
 User=_grouprise
