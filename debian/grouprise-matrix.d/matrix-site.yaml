@@ -19,16 +19,6 @@ listeners:
 # the server is accessed via an SSL terminating proxy
 no_tls: True
 
-database:
-  name: psycopg2
-  args:
-    user: grouprise_matrix
-    password: secret_db_password
-    database: grouprise_matrix
-    host: localhost
-    cp_min: 5
-    cp_max: 10
-
 # allow browsing the list of public rooms (e.g. via the element web interface)
 allow_public_rooms_without_auth: true
 allow_public_rooms_over_federation: true
