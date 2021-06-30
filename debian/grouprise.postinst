@@ -97,7 +97,7 @@ if [ "$1" = "configure" ]; then
             --ingroup "$PKG_GROUP" --home "$DIR_HOME" "$PKG_USER"
     fi
 
-    if [ -z "$(grouprise_settings  get "secret_key" 2>/dev/null)" ]; then
+    if [ -z "$(grouprise_settings get "secret_key" 2>/dev/null)" ]; then
         # configure a random SECRET_KEY - otherwise "migrate" fails
         new_secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
         if [ ! -s "$GROUPRISE_SETTINGS_FILE" ] && ! grouprise_settings --help >/dev/null 2>&1; then

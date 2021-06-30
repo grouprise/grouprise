@@ -43,10 +43,10 @@
 
 {% if link %}
     <a class="group-preview" href="{{ group.get_absolute_url }}">
-        {%  usekwacro preview_body %}
+        {% usekwacro preview_body %}
     </a>
 {% else %}
     <div class="group-preview">
-        {%  usekwacro preview_body %}
+        {% usekwacro preview_body %}
     </div>
 {% endif %}

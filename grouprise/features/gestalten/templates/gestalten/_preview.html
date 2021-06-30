@@ -2,7 +2,7 @@
 
 {% kwacro preview %}
     <div class="profile-short">
-        {%  if not hide_avatar|default:False %}
+        {% if not hide_avatar|default:False %}
             {% include 'gestalten/_avatar.html' with gestalt=gestalt link=False %}
         {% endif %}
         <div class="profile-data">

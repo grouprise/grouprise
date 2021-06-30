@@ -7,7 +7,7 @@
             <li>
                 {% include 'gestalten/_avatar.html' with gestalt=contributor link=False size=32 %}
             </li>
-        {% elif forloop.counter == max_shown|add:1  %}
+        {% elif forloop.counter == max_shown|add:1 %}
             <li>
                 <div class="avatar avatar-size-32-32 avatar-more" title="und {{ forloop.revcounter }} {% trans 'more Persons' %}"></div>
             </li>
