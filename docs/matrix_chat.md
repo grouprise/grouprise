@@ -121,16 +121,16 @@ The *deb* package provided for *grouprise* automatically handles these steps.
             * adjust the Python version according to your setup
 
 ##### Configuration
-You just need to add an OAuth client configuration.
-This can be done via Django's admin interface (`/stadt/admin`):
 
-* User: empty
-* Redirect URL: `https://example.org:8448/_synapse/client/oidc/callback`
-* Client Type: *confidential*
-* Authorization Type: Authorization Code
-* Name: *matrix_chat*
-* Skip Authorization: true
-* Algorithm: RSA
+1. set `oidc_provider: {enabled: true}` in the grouprise configuration (e.g. `/etc/grouprise/conf.d/200-matrix_chat.yaml`)
+2. add an OAuth client configuration via Django's admin interface (`/stadt/admin`):
+    * User: empty
+    * Redirect URL: `https://example.org:8448/_synapse/client/oidc/callback`
+    * Client Type: *confidential*
+    * Authorization Type: Authorization Code
+    * Name: *matrix_chat*
+    * Skip Authorization: true
+    * Algorithm: RSA
 
 #### Settings for matrix-synapse
 
