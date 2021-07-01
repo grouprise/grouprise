@@ -3,6 +3,7 @@
 set -e
 
 GROUPRISE_SETTINGS_FILE="/etc/grouprise/conf.d/200-matrix_chat.yaml"
+MATRIX_AUTHENTICATION_FILE="/etc/matrix-synapse/conf.d/grouprise-matrix-authentication.yaml"
 ELEMENT_CONFIG_FILE=/etc/element-web/config.json
 
 
@@ -110,6 +111,13 @@ if [ "$1" = "configure" ]; then
     if [ -z "$(grouprise_settings get "matrix_chat.bot_access_token")" ]; then
         # register the privileged bot account
         GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot
+    fi
+    echo "true" | grouprise_settings set "oidc_provider.enabled"
+    # generate the matrix-synapse configuration for using grouprise as an OIDC provider
+    if [ ! -e "$MATRIX_AUTHENTICATION_FILE" ]; then
+        configuration=$(GROUPRISE_USER=root grouprisectl matrix_chat_manage print-synapse-configuration)
+        printf "%s\n" "$configuration" >"$MATRIX_AUTHENTICATION_FILE"
+        service matrix-synapse restart
     fi
 fi
 
