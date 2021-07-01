@@ -17,11 +17,11 @@ class MatrixChatGroupRoom(models.Model):
 
     def __str__(self):
         if self.is_private:
-            return "MatrixChatGroupRoom<{}, private, {}>".format(
+            return "{} (private, {})".format(
                 self.group.name, self.room_id
             )
         else:
-            return "MatrixChatGroupRoom<{}, public, {}>".format(
+            return "{} (public, {})".format(
                 self.group.name, self.room_id
             )
 
@@ -37,6 +37,9 @@ class MatrixChatGroupRoomInvitations(models.Model):
     gestalt = models.ForeignKey(
         "gestalten.Gestalt", related_name="+", on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return f"{self.gestalt} invited into {self.room}"
 
 
 class MatrixChatGestaltSettings(models.Model):
