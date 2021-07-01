@@ -3,6 +3,7 @@ backup
 /build/
 dist/
 db.sqlite3*
+huey.sqlite
 grouprise.yaml
 media/
 media-*/
