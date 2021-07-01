@@ -512,10 +512,17 @@ class OIDCProviderEnableConfig(BooleanConfig):
                     "OIDC is enabled, but the configuration's location could not be determined. "
                     "Thus the location of the OIDC key file cannot be defined."
                 )
-            oidc_key_file = os.path.join(self.config_base_directory, "oidc.key")
-            if not os.path.exists(oidc_key_file):
-                create_rsa_key(oidc_key_file)
-            settings["OAUTH2_PROVIDER"]["OIDC_RSA_PRIVATE_KEY"] = oidc_key_file
+            oidc_key_filename = os.path.join(self.config_base_directory, "oidc.key")
+            if not os.path.exists(oidc_key_filename):
+                create_rsa_key(oidc_key_filename)
+            try:
+                with open(oidc_key_filename, "r") as oidc_key_file:
+                    oidc_key = oidc_key_file.read()
+            except IOError as exc:
+                raise ConfigError(
+                    f"Failed to read OIDC key file ({oidc_key_filename}): {exc}"
+                )
+            settings["OAUTH2_PROVIDER"]["OIDC_RSA_PRIVATE_KEY"] = oidc_key
 
 
 def _get_nested_dict_value(data, path, default=None):
