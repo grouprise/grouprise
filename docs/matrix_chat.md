@@ -68,7 +68,7 @@ matrix_chat:
   bot_username: grouprise-bot
   bot_access_token: '_YOUR_BOT_ACCESS_TOKEN_'
 ```
-1. Run `grouprisectl matrix_chat_manage create-rooms` and `grouprisectl matrix_chat_manage invite-room-members` in order to populate the Matrix rooms for all groups.
+1. Run `grouprisectl matrix_chat_manage configure-rooms` and `grouprisectl matrix_chat_manage invite-room-members` in order to populate the Matrix rooms for all groups.
 
 In order to apply all settings properly, it is (for now) necessary to go run the configuration of
 the `grouprise-matrix` package manually again:

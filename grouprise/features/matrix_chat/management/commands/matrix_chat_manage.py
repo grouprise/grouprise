@@ -25,12 +25,16 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             "action",
-            choices=("print-synapse-configuration", "create-rooms", "invite-room-members"),
+            choices=(
+                "print-synapse-configuration",
+                "configure-rooms",
+                "invite-room-members",
+            ),
         )
 
     def handle(self, *args, **options):
         action = options["action"]
-        if action == "create-rooms":
+        if action == "configure-rooms":
 
             async def create_group_rooms(groups):
                 async with MatrixBot() as bot:

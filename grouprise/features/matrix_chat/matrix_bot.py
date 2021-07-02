@@ -67,10 +67,14 @@ class MatrixBot:
             try:
                 room, created = await self._get_or_create_room(group, is_private)
             except MatrixError as exc:
-                logger.error(f"Failed to synchronize room: {exc}")
-                continue
-            if created:
-                yield room
+                logger.error(f"Failed to create room: {exc}")
+            else:
+                if created:
+                    yield room
+                await self.configure_room(room)
+
+    def _get_group_room_name_local(self, group, is_private):
+        return (group.slug or group.name) + ("-private" if is_private else "")
 
     async def _get_or_create_room(self, group, is_private):
         try:
@@ -81,22 +85,28 @@ class MatrixBot:
         # the room does not exist: we need to create it
         group_url = full_url(group.get_absolute_url())
         if is_private:
-            suffix = "-private"
             room_title = "{} (private)".format(group.name)
             room_description = "{} - members only".format(group_url)
         else:
-            suffix = ""
             room_title = group.name
             room_description = group_url
-        group_name_local = (group.slug or group.name) + suffix
+        group_name_local = self._get_group_room_name_local(group, is_private)
         preset = (
             nio.api.RoomPreset.private_chat
             if is_private
             else nio.api.RoomPreset.public_chat
         )
+        visibility = (
+            nio.api.RoomVisibility.private
+            if is_private
+            else nio.api.RoomVisibility.public
+        )
         try:
             response = await self.client.room_create(
-                name=room_title, topic=room_description, preset=preset
+                name=room_title,
+                topic=room_description,
+                preset=preset,
+                visibility=visibility,
             )
         except nio.exceptions.ProtocolError as exc:
             raise MatrixError(f"Failed to create room '{group_name_local}': {exc}")
@@ -108,8 +118,74 @@ class MatrixBot:
         room = MatrixChatGroupRoom.objects.create(
             group=group, is_private=is_private, room_id=response.room_id
         )
-        # try to attach the canonical alias (optional)
+        # respond with success, even though the alias assignment may have failed
+        return room, True
+
+    async def configure_room(self, room):
+        group_name_local = self._get_group_room_name_local(room.group, room.is_private)
         room_alias = f"#{group_name_local}:{MATRIX_SETTINGS.DOMAIN}"
+        # try to set the visibility of the room in the public room directory
+        try:
+            response = await self.client._send(
+                nio.responses.EmptyResponse,
+                "PUT",
+                nio.api.Api._build_path(
+                    ["directory", "list", "room", room.room_id],
+                    {"access_token": self.client.access_token},
+                ),
+                data=nio.api.Api.to_json(
+                    {
+                        "visibility": (
+                            nio.api.RoomVisibility.private
+                            if room.is_private
+                            else nio.api.RoomVisibility.public
+                        ).value
+                    }
+                ),
+            )
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to set visibility of room ({room_alias}): {exc}")
+        else:
+            if not isinstance(response, nio.responses.EmptyResponse):
+                logger.warning(
+                    f"Refused to set visibility of room ({room_alias}): {response}"
+                )
+        # try to assign a local alias to the room
+        try:
+            response = await self.client._send(
+                nio.responses.EmptyResponse,
+                "PUT",
+                nio.api.Api._build_path(
+                    ["directory", "room", room_alias],
+                    {"access_token": self.client.access_token},
+                ),
+                data=nio.api.Api.to_json({"room_id": room.room_id}),
+            )
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to assign alias ({room_alias}) to room: {exc}")
+        else:
+            # we cannot detect the state of an alias already existing, thus we parse the message
+            if not isinstance(
+                response, nio.responses.EmptyResponse
+            ) and not response.message.endswith(" already exists"):
+                logger.warning(
+                    f"Refused to assign alias ({room_alias}) to room: {response}"
+                )
+        # try to tell the room about its alias
+        try:
+            response = await self.client.room_put_state(
+                room.room_id,
+                "m.room.aliases",
+                {"alias": [room_alias]},
+            )
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to tell room its alias ({room_alias}): {exc}")
+        else:
+            if not isinstance(response, nio.responses.RoomPutStateResponse):
+                logger.warning(
+                    f"Refused to memorize alias for room ({room_alias}): {response}"
+                )
+        # try to set the alias as canonical
         try:
             response = await self.client.room_put_state(
                 room.room_id,
@@ -117,14 +193,31 @@ class MatrixBot:
                 {"alias": room_alias},
             )
         except nio.exceptions.ProtocolError as exc:
-            logger.warning(f"Failed to assign alias ({room_alias}) to room: {exc}")
+            logger.warning(
+                f"Failed to set canonical alias ({room_alias}) of room: {exc}"
+            )
         else:
             if not isinstance(response, nio.responses.RoomPutStateResponse):
                 logger.warning(
-                    f"Refused to assign alias ({room_alias}) to room: {response}"
+                    f"Refused to set canonical alias ({room_alias}) of room: {response}"
                 )
-        # respond with success, even though the alias assignment may have failed
-        return room, True
+        # try to lower the required power level for invitations
+        try:
+            response = await self.client.room_put_state(
+                room.room_id,
+                "m.room.power_levels",
+                {"invite": 0},
+            )
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(
+                f"Failed to lower required power level for invitations ({room_alias}): {exc}"
+            )
+        else:
+            if not isinstance(response, nio.responses.RoomPutStateResponse):
+                logger.warning(
+                    f"Refused to lower required power level for invitations ({room_alias}):"
+                    f" {response}"
+                )
 
     async def send_invitations_to_group_members(self, group):
         for room in MatrixChatGroupRoom.objects.filter(group=group):
