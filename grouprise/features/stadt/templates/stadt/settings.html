@@ -31,7 +31,7 @@
     {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
     {% if matrix_chat_enabled %}
     <li>
-        <a href="{% url 'matrix-chat-settings' %}?group={{ group.slug }}"
+        <a href="{% url 'matrix-chat-settings-user' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-matrix-chat' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-public-chat"></i>
             <span class="nav-menu-item-label">{% trans 'Chat (Matrix)' %}</span>

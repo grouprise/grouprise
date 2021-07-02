@@ -10,7 +10,7 @@ if MATRIX_SETTINGS.ENABLED:
         url(
             r"^stadt/settings/matrix-chat/$",
             views.UpdateMatrixChatGestaltSettings.as_view(),
-            name="matrix-chat-settings",
+            name="matrix-chat-settings-user",
         ),
         url(
             r"^stadt/help/matrix-chat/$",

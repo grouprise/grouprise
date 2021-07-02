@@ -41,7 +41,7 @@ class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.Form
     def success_url(self):
         group = self.get_group()
         slug = group.slug if group else ""
-        return "{}?group={}".format(reverse("matrix-chat-settings"), slug)
+        return "{}?group={}".format(reverse("matrix-chat-settings-user"), slug)
 
     def form_valid(self, form):
         gestalt = self.request.user.gestalt
