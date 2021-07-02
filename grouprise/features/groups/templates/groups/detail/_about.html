@@ -142,24 +142,17 @@
             </dd>
         {% endif %}
 
-        {% if public_chat_room %}
-            <dt>
-                <i class="sg sg-public-chat"></i>
-            </dt>
-            <dd>
-                <a href="{{ public_chat_room.get_client_url }}"><strong>Öffentlicher Chatraum der Gruppe</strong></a>
-            </dd>
-        {% endif %}
+        {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
+        {% if matrix_chat_enabled %}
+            {% if public_chat_room %}
+                <dt><i class="sg sg-public-chat"></i></dt>
+                <dd><a href="{{ public_chat_room.get_client_url }}"><strong>Öffentlicher Chatraum der Gruppe</strong></a></dd>
+            {% endif %}
 
-        {% load rules %}
-        {% has_perm 'groups.change' user group as can_view_details %}
-        {% if private_chat_room and can_view_details %}
-            <dt>
-                <i class="sg sg-private-chat"></i>
-            </dt>
-            <dd>
-                <a href="{{ private_chat_room.get_client_url }}"><strong>Interner Chatraum der Gruppe</strong></a>
-            </dd>
+            {% if private_chat_room and can_view_details %}
+                <dt><i class="sg sg-private-chat"></i></dt>
+                <dd><a href="{{ private_chat_room.get_client_url }}"><strong>Interner Chatraum der Gruppe</strong></a></dd>
+            {% endif %}
         {% endif %}
     </dl>
 </div>
