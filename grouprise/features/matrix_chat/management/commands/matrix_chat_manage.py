@@ -18,6 +18,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            "--group",
+            help="Limit the action to a specific group (identified by its slug)",
+        )
+        parser.add_argument(
             "action",
             choices=("print-synapse-configuration", "create-rooms", "invite-room-members"),
         )
@@ -29,6 +33,8 @@ class Command(BaseCommand):
             async def create_group_rooms(groups):
                 async with MatrixBot() as bot:
                     for group in groups:
+                        if options["group"] and (group.slug != options["group"]):
+                            continue
                         async for updated_room in bot.synchronize_rooms_of_group(group):
                             self.stdout.write(
                                 self.style.NOTICE(
@@ -42,6 +48,8 @@ class Command(BaseCommand):
             async def invite_to_group_rooms(groups):
                 async with MatrixBot() as bot:
                     for group in groups:
+                        if options["group"] and (group.slug != options["group"]):
+                            continue
                         async for (
                             room,
                             gestalt,
