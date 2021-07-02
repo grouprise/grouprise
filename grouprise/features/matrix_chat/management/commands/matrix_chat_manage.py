@@ -9,7 +9,9 @@ from django.core.management.base import BaseCommand
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.features.groups.models import Group
 from grouprise.features.matrix_chat.matrix_bot import MatrixBot
-from grouprise.features.matrix_chat.settings import get_or_create_oidc_client_application
+from grouprise.features.matrix_chat.settings import (
+    get_or_create_oidc_client_application,
+)
 
 
 class Command(BaseCommand):
@@ -69,25 +71,27 @@ class Command(BaseCommand):
                 "password_config": {"enabled": False},
                 # synapse refuses to enable OIDC without a configured "public_baseurl"
                 "public_baseurl": get_grouprise_baseurl() + "/",
-                "oidc_providers": [{
-                    "idp_id": site.domain,
-                    "idp_name": site.name,
-                    "issuer": get_grouprise_baseurl() + "/stadt/oauth/",
-                    "client_id": matrix_chat_app.client_id,
-                    "client_secret": matrix_chat_app.client_secret,
-                    "client_auth_method": "client_secret_post",
-                    "discover": True,
-                    "scopes": ["openid"],
-                    "skip_verification": True,
-                    "user_mapping_provider": {
-                        "config": {
-                            "subject_claim": "id",
-                            "localpart_template": "{{ user.id }}",
-                            "display_name_template": "{{ user.display_name }}",
-                            "email_template": "{{ user.email }}",
+                "oidc_providers": [
+                    {
+                        "idp_id": site.domain,
+                        "idp_name": site.name,
+                        "issuer": get_grouprise_baseurl() + "/stadt/oauth/",
+                        "client_id": matrix_chat_app.client_id,
+                        "client_secret": matrix_chat_app.client_secret,
+                        "client_auth_method": "client_secret_post",
+                        "discover": True,
+                        "scopes": ["openid"],
+                        "skip_verification": True,
+                        "user_mapping_provider": {
+                            "config": {
+                                "subject_claim": "id",
+                                "localpart_template": "{{ user.id }}",
+                                "display_name_template": "{{ user.display_name }}",
+                                "email_template": "{{ user.email }}",
+                            },
                         },
-                    },
-                }],
+                    }
+                ],
             }
             target = io.StringIO()
             ruamel.yaml.YAML().dump(settings, target)
