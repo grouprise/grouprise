@@ -15,3 +15,14 @@ class MatrixChatGestaltSettingsForm(forms.Form):
             "A Matrix user ID looks like '@foo:example.org'."
         ),
     )
+
+
+class MatrixChatGroupSettingsForm(forms.Form):
+    room_public_visibility = forms.BooleanField(
+        label=_("Show links to the public chat room"),
+        required=False,
+    )
+    room_private_visibility = forms.BooleanField(
+        label=_("Show links to the private chat room"),
+        required=False,
+    )

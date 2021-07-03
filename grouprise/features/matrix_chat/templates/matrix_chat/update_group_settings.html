@@ -1,0 +1,20 @@
+{% extends 'stadt/settings.html' %}
+{% load i18n %}
+
+{% block sidebar %}
+    {% with chapter='group-matrix-chat' %}{{ block.super }}{% endwith %}
+{% endblock %}
+
+{% block content %}
+    <h2>{% trans "Chat Settings - Matrix" %}</h2>
+    <form method="post" class="form form-modern">
+        {% csrf_token %}
+
+        {% field_checkbox form.room_public_visibility %}
+        {% field_checkbox form.room_private_visibility %}
+
+        <button class="btn btn-sm btn-default" type="submit" name="action_send">
+            {% trans "Save settings" %}
+        </button>
+    </form>
+{% endblock %}

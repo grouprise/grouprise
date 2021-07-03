@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
 
-from .forms import MatrixChatGestaltSettingsForm
+from .forms import MatrixChatGestaltSettingsForm, MatrixChatGroupSettingsForm
 from .models import MatrixChatGestaltSettings
 from .settings import MATRIX_SETTINGS
 
@@ -51,6 +51,50 @@ class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.Form
         matrix_settings.matrix_id_override = form.cleaned_data["matrix_id"]
         matrix_settings.save()
         gestalt.save()
+        return super().form_valid(form)
+
+
+class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormView):
+    permission_required = "groups.change"
+    form_class = MatrixChatGroupSettingsForm
+    template_name = "matrix_chat/update_group_settings.html"
+
+    def get_group(self):
+        return Group.objects.filter(slug=self.request.GET.get("group")).first()
+
+    def get_group_rooms(self):
+        return self.get_group().matrix_rooms.order_by("is_private")
+
+    def get_permission_object(self):
+        return self.get_group()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["group"] = self.get_group()
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        for room in self.get_group_rooms():
+            if room.is_private:
+                initial["room_private_visibility"] = room.is_visible
+            else:
+                initial["room_public_visibility"] = room.is_visible
+        return initial
+
+    @property
+    def success_url(self):
+        return "{}?group={}".format(
+            reverse("matrix-chat-settings-group"), self.get_group().slug
+        )
+
+    def form_valid(self, form):
+        for room in self.get_group_rooms():
+            if room.is_private:
+                room.is_visible = form.cleaned_data["room_private_visibility"]
+            else:
+                room.is_visible = form.cleaned_data["room_public_visibility"]
+            room.save()
         return super().form_valid(form)
 
 

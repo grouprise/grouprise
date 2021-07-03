@@ -11,19 +11,16 @@ class MatrixChatGroupRoom(models.Model):
     )
     room_id = models.CharField(max_length=256)
     is_private = models.BooleanField()
+    is_visible = models.BooleanField(default=True)
 
     def get_client_url(self):
         return f"/stadt/chat/#/room/{self.room_id}"
 
     def __str__(self):
         if self.is_private:
-            return "{} (private, {})".format(
-                self.group.name, self.room_id
-            )
+            return "{} (private, {})".format(self.group.name, self.room_id)
         else:
-            return "{} (public, {})".format(
-                self.group.name, self.room_id
-            )
+            return "{} (public, {})".format(self.group.name, self.room_id)
 
 
 class MatrixChatGroupRoomInvitations(models.Model):

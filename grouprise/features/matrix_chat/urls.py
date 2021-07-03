@@ -13,6 +13,11 @@ if MATRIX_SETTINGS.ENABLED:
             name="matrix-chat-settings-user",
         ),
         url(
+            r"^stadt/settings/group/matrix-chat/$",
+            views.UpdateMatrixChatGroupSettings.as_view(),
+            name="matrix-chat-settings-group",
+        ),
+        url(
             r"^stadt/help/matrix-chat/$",
             views.ShowMatrixChatHelp.as_view(),
             name="help-matrix-chat",
