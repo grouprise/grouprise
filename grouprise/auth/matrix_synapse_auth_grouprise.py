@@ -22,6 +22,7 @@ Configuration:
 """
 
 import logging
+import types
 
 from grouprise.settings_loader import (
     import_settings_from_yaml,
@@ -45,9 +46,17 @@ def _get_grouprise_configuration(filename=None):
 
 
 def _initialize_django_settings(filename=None):
-    from grouprise.common_settings import *  # noqa: F403 F406
+    import grouprise.common_settings as common
 
-    settings = locals()
+    settings = {}
+    for key in dir(common):
+        item = getattr(common, key)
+        if (
+            not key.startswith("_")
+            and not callable(item)
+            and not isinstance(item, types.ModuleType)
+        ):
+            settings[key] = item
     locations = None if filename is None else [filename]
     import_settings_from_yaml(settings, locations=locations)
     django.conf.settings.configure(settings)
