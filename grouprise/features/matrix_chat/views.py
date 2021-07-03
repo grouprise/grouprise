@@ -14,7 +14,7 @@ from .settings import MATRIX_SETTINGS
 class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.FormView):
     permission_required = "gestalten.change"
     form_class = MatrixChatGestaltSettingsForm
-    template_name = "matrix_chat/update_settings.html"
+    template_name = "matrix_chat/update_gestalt_settings.html"
 
     def get_group(self):
         return Group.objects.filter(slug=self.request.GET.get("group")).first()
