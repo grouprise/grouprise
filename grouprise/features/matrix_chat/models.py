@@ -55,8 +55,12 @@ class MatrixChatGestaltSettings(models.Model):
     @classmethod
     def get_matrix_id(cls, gestalt):
         try:
-            return gestalt.matrix_chat_settings.matrix_id_override
+            matrix_id = gestalt.matrix_chat_settings.matrix_id_override
         except ObjectDoesNotExist:
+            matrix_id = None
+        if matrix_id:
+            return matrix_id
+        else:
             return cls.get_default_local_matrix_id(gestalt)
 
     @property
