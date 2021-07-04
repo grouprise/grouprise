@@ -1,3 +1,4 @@
+import copy
 import logging
 
 import markdown
@@ -201,23 +202,61 @@ class MatrixBot:
                 logger.warning(
                     f"Refused to set canonical alias ({room_alias}) of room: {response}"
                 )
-        # try to lower the required power level for invitations
+        # try to raise default role of new members
+        if not await self._change_room_power_state(room, {"users_default": 50}):
+            logger.warning(
+                f"Failed to raise default role for new members ({room_alias})"
+            )
+
+    async def _change_room_power_state(self, room, changes):
+        """configure the power levels in a room
+
+        The procedure is a bit complicated, since we need to send a full state dictionary.
+        Thus we retrieve the current state first and merge it with the wanted changes.
+        The result is sent to the server (if it differs from the current state).
+
+        Specification: https://matrix.org/docs/spec/client_server/latest#id253
+        """
+        # retrieve the current state
+        try:
+            response = await self.client.room_get_state(room.room_id)
+            failure_reason = None
+        except nio.exceptions.ProtocolError as exc:
+            response = None
+            failure_reason = exc
+        if not isinstance(response, nio.responses.RoomGetStateResponse):
+            logger.warning(f"Failed to get room state ({room}): {failure_reason}")
+            return False
+        original_state = [
+            event for event in response.events if event["type"] == "m.room.power_levels"
+        ][0]["content"]
+        wanted_state = copy.deepcopy(original_state)
+        # merge the current state with the wanted changes
+        for key, value in changes.items():
+            if isinstance(value, dict):
+                wanted_state[key].update(value)
+            else:
+                wanted_state[key] = value
+        if original_state == wanted_state:
+            return True
+        # apply the changes
         try:
             response = await self.client.room_put_state(
                 room.room_id,
                 "m.room.power_levels",
-                {"invite": 0},
+                wanted_state,
             )
         except nio.exceptions.ProtocolError as exc:
-            logger.warning(
-                f"Failed to lower required power level for invitations ({room_alias}): {exc}"
-            )
+            logger.warning(f"Failed to change power levels in room ({room}): {exc}")
+            return False
         else:
-            if not isinstance(response, nio.responses.RoomPutStateResponse):
+            if isinstance(response, nio.responses.RoomPutStateResponse):
+                return True
+            else:
                 logger.warning(
-                    f"Refused to lower required power level for invitations ({room_alias}):"
-                    f" {response}"
+                    f"Refused to change power levels in room ({room}): {response}"
                 )
+                return False
 
     async def send_invitations_to_group_members(self, group):
         for room in MatrixChatGroupRoom.objects.filter(group=group):
