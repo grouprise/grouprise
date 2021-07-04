@@ -9,31 +9,44 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0013_auto_20180109_1302'),
+        ("polls", "0013_auto_20180109_1302"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WorkaroundPoll',
+            name="WorkaroundPoll",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('condorcet', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("condorcet", models.BooleanField(default=False)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AlterModelOptions(
-            name='option',
-            options={'ordering': ('id',)},
+            name="option",
+            options={"ordering": ("id",)},
         ),
         migrations.AlterModelOptions(
-            name='vote',
-            options={'ordering': ('time_updated',)},
+            name="vote",
+            options={"ordering": ("time_updated",)},
         ),
         migrations.AddField(
-            model_name='option',
-            name='poll_new1',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='options_new', to='polls.WorkaroundPoll'),
+            model_name="option",
+            name="poll_new1",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="options_new",
+                to="polls.WorkaroundPoll",
+            ),
         ),
     ]

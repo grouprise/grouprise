@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0011_auto_20170918_1318'),
+        ("subscriptions", "0011_auto_20170918_1318"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='subscription',
-            name='unsubscribe',
+            model_name="subscription",
+            name="unsubscribe",
         ),
     ]

@@ -6,8 +6,8 @@ from django.db import migrations
 
 
 def move_polls_to_workaround(apps, schema_editor):
-    Poll = apps.get_model('polls', 'Poll')
-    WorkaroundPoll = apps.get_model('polls', 'WorkaroundPoll')
+    Poll = apps.get_model("polls", "Poll")
+    WorkaroundPoll = apps.get_model("polls", "WorkaroundPoll")
 
     for poll in Poll.objects.all():
         wp = WorkaroundPoll.objects.create()
@@ -21,10 +21,8 @@ def move_polls_to_workaround(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0010_content_poll_new'),
-        ('polls', '0014_auto_20180222_1033'),
+        ("content2", "0010_content_poll_new"),
+        ("polls", "0014_auto_20180222_1033"),
     ]
 
-    operations = [
-        migrations.RunPython(move_polls_to_workaround)
-    ]
+    operations = [migrations.RunPython(move_polls_to_workaround)]

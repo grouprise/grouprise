@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0008_group_url_import_feed'),
+        ("groups", "0008_group_url_import_feed"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='url_import_feed',
-            field=models.BooleanField(default=False, help_text='Öffentliche Beiträge der angegebenen Website automatisch veröffentlichen, wenn technisch möglich', verbose_name='Beiträge von Website übernehmen'),
+            model_name="group",
+            name="url_import_feed",
+            field=models.BooleanField(
+                default=False,
+                help_text="Öffentliche Beiträge der angegebenen Website automatisch veröffentlichen, wenn technisch möglich",
+                verbose_name="Beiträge von Website übernehmen",
+            ),
         ),
     ]

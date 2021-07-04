@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0003_auto_20160705_1143'),
+        ("subscriptions", "0003_auto_20160705_1143"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='subscription',
-            name='unsubscribe',
+            model_name="subscription",
+            name="unsubscribe",
             field=models.BooleanField(default=False),
         ),
     ]

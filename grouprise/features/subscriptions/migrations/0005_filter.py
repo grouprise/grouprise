@@ -9,16 +9,31 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0004_subscription_unsubscribe'),
+        ("subscriptions", "0004_subscription_unsubscribe"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Filter',
+            name="Filter",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('filter_id', models.PositiveSmallIntegerField()),
-                ('subscription', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filters', to='subscriptions.Subscription')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("filter_id", models.PositiveSmallIntegerField()),
+                (
+                    "subscription",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="filters",
+                        to="subscriptions.Subscription",
+                    ),
+                ),
             ],
         ),
     ]

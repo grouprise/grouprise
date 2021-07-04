@@ -9,14 +9,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0008_auto_20170620_1022'),
-        ('files', '0002_file_filename'),
+        ("content2", "0008_auto_20170620_1022"),
+        ("files", "0002_file_filename"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='file',
-            name='version',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='file', to='content2.Version'),
+            model_name="file",
+            name="version",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="file",
+                to="content2.Version",
+            ),
         ),
     ]

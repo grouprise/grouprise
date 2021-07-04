@@ -6,26 +6,26 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tags', '0010_auto_20170622_1655'),
+        ("tags", "0010_auto_20170622_1655"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='tagged',
+            name="tagged",
             unique_together=set(),
         ),
         migrations.RemoveField(
-            model_name='tagged',
-            name='tag',
+            model_name="tagged",
+            name="tag",
         ),
         migrations.RemoveField(
-            model_name='tagged',
-            name='tagged_type',
+            model_name="tagged",
+            name="tagged_type",
         ),
         migrations.DeleteModel(
-            name='Tag',
+            name="Tag",
         ),
         migrations.DeleteModel(
-            name='Tagged',
+            name="Tagged",
         ),
     ]

@@ -9,17 +9,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tags', '0007_auto_20170209_1540'),
+        ("tags", "0007_auto_20170209_1540"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='tagged',
-            name='name',
+            model_name="tagged",
+            name="name",
         ),
         migrations.AlterField(
-            model_name='tagged',
-            name='tag',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tags.Tag'),
+            model_name="tagged",
+            name="tag",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="tags.Tag"
+            ),
         ),
     ]

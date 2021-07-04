@@ -8,22 +8,22 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('galleries', '0004_auto_20170427_0844'),
-        ('content2', '0010_content_poll_new'),
-        ('polls', '0016_remove_option_poll'),
+        ("galleries", "0004_auto_20170427_0844"),
+        ("content2", "0010_content_poll_new"),
+        ("polls", "0016_remove_option_poll"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='poll',
-            name='content_ptr',
+            model_name="poll",
+            name="content_ptr",
         ),
         migrations.RenameField(
-            model_name='option',
-            old_name='poll_new1',
-            new_name='poll',
+            model_name="option",
+            old_name="poll_new1",
+            new_name="poll",
         ),
         migrations.DeleteModel(
-            name='Poll',
+            name="Poll",
         ),
     ]

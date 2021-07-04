@@ -7,24 +7,29 @@ from taggit.models import Tag, TaggedItem
 
 
 def copy_tags(apps, schema_editor):
-    Group = apps.get_model('groups', 'Group')
-    Tagged = apps.get_model('tags', 'Tagged')
+    Group = apps.get_model("groups", "Group")
+    Tagged = apps.get_model("tags", "Tagged")
     for tagged in Tagged.objects.all():
         if tagged.tagged_type == ContentType.objects.get_for_model(Group):
             group = Group.objects.get(id=tagged.tagged_id)
-            tag, _ = Tag.objects.get_or_create(name=tagged.tag.name, slug=tagged.tag.slug)
+            tag, _ = Tag.objects.get_or_create(
+                name=tagged.tag.name, slug=tagged.tag.slug
+            )
             mgr = _TaggableManager(
-                    through=TaggedItem, model=Group, instance=group,
-                    prefetch_cache_name='tags')
+                through=TaggedItem,
+                model=Group,
+                instance=group,
+                prefetch_cache_name="tags",
+            )
             mgr.add(tag)
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0022_auto_20190408_0027'),
-        ('taggit', '0002_auto_20150616_2121'),
-        ('tags', '0010_auto_20170622_1655'),
+        ("groups", "0022_auto_20190408_0027"),
+        ("taggit", "0002_auto_20150616_2121"),
+        ("tags", "0010_auto_20170622_1655"),
     ]
 
     operations = [

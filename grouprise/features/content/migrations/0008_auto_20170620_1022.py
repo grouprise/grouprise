@@ -9,13 +9,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0007_content_image'),
+        ("content2", "0007_content_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='content',
-            name='image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='images.Image'),
+            model_name="content",
+            name="image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="images.Image",
+            ),
         ),
     ]

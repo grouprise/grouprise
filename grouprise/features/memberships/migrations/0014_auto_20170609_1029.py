@@ -9,13 +9,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('memberships', '0013_application_group'),
+        ("memberships", "0013_application_group"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='application',
-            name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='applications', to='groups.Group'),
+            model_name="application",
+            name="group",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="applications",
+                to="groups.Group",
+            ),
         ),
     ]

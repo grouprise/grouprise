@@ -6,14 +6,14 @@ from django.db import connection, migrations
 
 
 def convert_votes(apps, schema_editor):
-    Vote = apps.get_model('polls', 'Vote')
+    Vote = apps.get_model("polls", "Vote")
     with connection.cursor() as cursor:
         for v in Vote.objects.all():
-            cursor.execute('INSERT INTO polls_simplevote VALUES (%s, \'0\')', [v.id])
+            cursor.execute("INSERT INTO polls_simplevote VALUES (%s, '0')", [v.id])
 
 
 def adapt_endorsement(apps, schema_editor):
-    SimpleVote = apps.get_model('polls', 'SimpleVote')
+    SimpleVote = apps.get_model("polls", "SimpleVote")
     for v in SimpleVote.objects.all():
         SimpleVote.objects.filter(id=v.id).update(endorse_new=v.endorse)
 
@@ -21,7 +21,7 @@ def adapt_endorsement(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0009_auto_20180104_1045'),
+        ("polls", "0009_auto_20180104_1045"),
     ]
 
     operations = [

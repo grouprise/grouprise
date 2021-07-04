@@ -9,8 +9,7 @@ from django.db import migrations, transaction
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0001_initial'),
+        ("gestalten", "0001_initial"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -8,14 +8,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0006_auto_20170421_0909'),
-        ('images', '0002_auto_20170421_0911'),
-        ('galleries', '0003_auto_20170421_1109'),
+        ("content2", "0006_auto_20170421_0909"),
+        ("images", "0002_auto_20170421_0911"),
+        ("galleries", "0003_auto_20170421_1109"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='galleryimage',
-            unique_together=set([('gallery', 'image')]),
+            name="galleryimage",
+            unique_together=set([("gallery", "image")]),
         ),
     ]

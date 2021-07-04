@@ -9,18 +9,22 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0001_initial'),
-        ('memberships', '0007_auto_20160830_1911'),
+        ("groups", "0001_initial"),
+        ("memberships", "0007_auto_20160830_1911"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='membership',
-            name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='groups.Group'),
+            model_name="membership",
+            name="group",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="memberships",
+                to="groups.Group",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='membership',
+            name="membership",
             unique_together=set([]),
         ),
     ]

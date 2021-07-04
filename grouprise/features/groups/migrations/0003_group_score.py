@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0002_auto_20160922_1108'),
+        ("groups", "0002_auto_20160922_1108"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='group',
-            name='score',
+            model_name="group",
+            name="score",
             field=models.IntegerField(default=0),
         ),
     ]

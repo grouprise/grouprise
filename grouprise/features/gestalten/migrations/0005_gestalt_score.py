@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0004_gestalt_addressed_content'),
+        ("gestalten", "0004_gestalt_addressed_content"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='gestalt',
-            name='score',
+            model_name="gestalt",
+            name="score",
             field=models.IntegerField(default=0),
         ),
     ]

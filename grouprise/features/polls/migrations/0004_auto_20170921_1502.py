@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0003_auto_20170921_1232'),
+        ("polls", "0003_auto_20170921_1232"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='vote',
-            name='endorse',
+            model_name="vote",
+            name="endorse",
             field=models.NullBooleanField(default=False),
         ),
     ]

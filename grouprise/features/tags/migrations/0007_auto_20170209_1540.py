@@ -7,11 +7,13 @@ from django.db import migrations
 
 
 def merge_tags(apps, schema_editor):
-    Tag = apps.get_model('tags', 'Tag')
-    Tagged = apps.get_model('tags', 'Tagged')
+    Tag = apps.get_model("tags", "Tag")
+    Tagged = apps.get_model("tags", "Tagged")
     for tagged in Tagged.objects.all():
         slug = slugify(None, None, tagged.name, dodging=False)
-        tag, created = Tag.objects.get_or_create(slug=slug, defaults={'name': tagged.name})
+        tag, created = Tag.objects.get_or_create(
+            slug=slug, defaults={"name": tagged.name}
+        )
         tagged.tag = tag
         tagged.save()
 
@@ -19,7 +21,7 @@ def merge_tags(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tags', '0006_auto_20170209_1540'),
+        ("tags", "0006_auto_20170209_1540"),
     ]
 
     operations = [

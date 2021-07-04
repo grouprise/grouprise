@@ -18,15 +18,48 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Gestalt',
+            name="Gestalt",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('about', models.TextField(blank=True, verbose_name='Selbstauskunft')),
-                ('avatar', models.ImageField(blank=True, upload_to='')),
-                ('avatar_color', models.CharField(default=grouprise.core.utils.get_random_color, max_length=7)),
-                ('background', models.ImageField(blank=True, upload_to='', verbose_name='Hintergrundbild')),
-                ('public', models.BooleanField(default=False, help_text='Meine Benutzerseite ist für alle Besucherinnen sichtbar.', verbose_name='Benutzerseite veröffentlichen')),
-                ('user', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, related_name='new_gestalt')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("about", models.TextField(blank=True, verbose_name="Selbstauskunft")),
+                ("avatar", models.ImageField(blank=True, upload_to="")),
+                (
+                    "avatar_color",
+                    models.CharField(
+                        default=grouprise.core.utils.get_random_color, max_length=7
+                    ),
+                ),
+                (
+                    "background",
+                    models.ImageField(
+                        blank=True, upload_to="", verbose_name="Hintergrundbild"
+                    ),
+                ),
+                (
+                    "public",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Meine Benutzerseite ist für alle Besucherinnen sichtbar.",
+                        verbose_name="Benutzerseite veröffentlichen",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        related_name="new_gestalt",
+                    ),
+                ),
             ],
         ),
     ]

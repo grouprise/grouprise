@@ -11,17 +11,39 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('content2', '0006_auto_20170421_0909'),
-        ('images', '0002_auto_20170421_0911'),
+        ("content2", "0006_auto_20170421_0909"),
+        ("images", "0002_auto_20170421_0911"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GalleryImage',
+            name="GalleryImage",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('gallery', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='content2.Content')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='images.Image')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "gallery",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="content2.Content",
+                    ),
+                ),
+                (
+                    "image",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="images.Image",
+                    ),
+                ),
             ],
         ),
     ]

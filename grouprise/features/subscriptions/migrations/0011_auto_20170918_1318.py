@@ -8,21 +8,21 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0010_auto_20170428_1503'),
+        ("subscriptions", "0010_auto_20170428_1503"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='filter',
-            name='subscription',
+            model_name="filter",
+            name="subscription",
         ),
         migrations.DeleteModel(
-            name='SubOrUnsubscription',
+            name="SubOrUnsubscription",
         ),
         migrations.DeleteModel(
-            name='Unsubscription',
+            name="Unsubscription",
         ),
         migrations.DeleteModel(
-            name='Filter',
+            name="Filter",
         ),
     ]

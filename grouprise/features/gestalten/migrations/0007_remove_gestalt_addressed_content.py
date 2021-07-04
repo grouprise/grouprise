@@ -8,8 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0006_gestaltsetting'),
+        ("gestalten", "0006_gestaltsetting"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -9,13 +9,19 @@ import grouprise.features.groups.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0011_auto_20170613_1501'),
+        ("groups", "0011_auto_20170613_1501"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='slug',
-            field=models.SlugField(blank=True, null=True, unique=True, validators=[], verbose_name='Adresse der Gruppenseite'),
+            model_name="group",
+            name="slug",
+            field=models.SlugField(
+                blank=True,
+                null=True,
+                unique=True,
+                validators=[],
+                verbose_name="Adresse der Gruppenseite",
+            ),
         ),
     ]

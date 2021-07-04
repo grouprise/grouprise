@@ -8,19 +8,19 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contributions', '0004_auto_20170428_0934'),
+        ("contributions", "0004_auto_20170428_0934"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='replykey',
-            name='contribution',
+            model_name="replykey",
+            name="contribution",
         ),
         migrations.RemoveField(
-            model_name='replykey',
-            name='gestalt',
+            model_name="replykey",
+            name="gestalt",
         ),
         migrations.DeleteModel(
-            name='ReplyKey',
+            name="ReplyKey",
         ),
     ]

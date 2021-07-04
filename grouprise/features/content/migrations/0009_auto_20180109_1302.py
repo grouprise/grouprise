@@ -7,18 +7,27 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0008_auto_20170620_1022'),
+        ("content2", "0008_auto_20170620_1022"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='content',
-            name='image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='images.Image'),
+            model_name="content",
+            name="image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="images.Image",
+            ),
         ),
         migrations.AlterField(
-            model_name='version',
-            name='author',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='versions', to='gestalten.Gestalt'),
+            model_name="version",
+            name="author",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="versions",
+                to="gestalten.Gestalt",
+            ),
         ),
     ]

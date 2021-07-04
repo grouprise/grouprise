@@ -8,13 +8,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0002_auto_20160922_1108'),
-        ('memberships', '0009_auto_20160923_0852'),
+        ("groups", "0002_auto_20160922_1108"),
+        ("memberships", "0009_auto_20160923_0852"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='membership',
-            unique_together=set([('group', 'member')]),
+            name="membership",
+            unique_together=set([("group", "member")]),
         ),
     ]

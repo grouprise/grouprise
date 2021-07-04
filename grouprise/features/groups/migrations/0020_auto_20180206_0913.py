@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0019_auto_20180109_1302'),
+        ("groups", "0019_auto_20180109_1302"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='date_founded',
-            field=models.DateField(default=datetime.date.today, help_text='Ungefähres Datum der tatsächlichen Gruppengründung', verbose_name='Gruppe gegründet'),
+            model_name="group",
+            name="date_founded",
+            field=models.DateField(
+                default=datetime.date.today,
+                help_text="Ungefähres Datum der tatsächlichen Gruppengründung",
+                verbose_name="Gruppe gegründet",
+            ),
         ),
     ]

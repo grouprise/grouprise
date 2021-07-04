@@ -7,14 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contributions', '0013_auto_20190408_0027'),
-        ('memberships', '0016_auto_20190408_0027'),
+        ("contributions", "0013_auto_20190408_0027"),
+        ("memberships", "0016_auto_20190408_0027"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='application',
-            name='attached_to',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='attached_applications', to='contributions.Contribution'),
+            model_name="application",
+            name="attached_to",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="attached_applications",
+                to="contributions.Contribution",
+            ),
         ),
     ]

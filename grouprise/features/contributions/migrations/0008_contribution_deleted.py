@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contributions', '0007_auto_20170711_1430'),
+        ("contributions", "0007_auto_20170711_1430"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contribution',
-            name='deleted',
+            model_name="contribution",
+            name="deleted",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

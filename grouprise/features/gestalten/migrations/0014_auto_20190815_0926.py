@@ -7,13 +7,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0013_gestalt_activity_bookmark_time'),
+        ("gestalten", "0013_gestalt_activity_bookmark_time"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='gestaltsetting',
-            name='gestalt',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='settings', to='gestalten.Gestalt'),
+            model_name="gestaltsetting",
+            name="gestalt",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="settings",
+                to="gestalten.Gestalt",
+            ),
         ),
     ]

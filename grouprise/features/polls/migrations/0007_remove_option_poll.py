@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0006_auto_20180104_0936'),
+        ("polls", "0006_auto_20180104_0936"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='option',
-            name='poll',
+            model_name="option",
+            name="poll",
         ),
     ]

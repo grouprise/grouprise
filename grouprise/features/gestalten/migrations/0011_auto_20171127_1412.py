@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0010_auto_20171124_1342'),
+        ("gestalten", "0010_auto_20171124_1342"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='gestalt',
-            name='public',
-            field=models.BooleanField(default=False, help_text='Öffentliche Benutzerseiten sind für alle Besucherinnen sichtbar.', verbose_name='Benutzerseite veröffentlichen'),
+            model_name="gestalt",
+            name="public",
+            field=models.BooleanField(
+                default=False,
+                help_text="Öffentliche Benutzerseiten sind für alle Besucherinnen sichtbar.",
+                verbose_name="Benutzerseite veröffentlichen",
+            ),
         ),
     ]

@@ -8,17 +8,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0007_unsubscription'),
+        ("subscriptions", "0007_unsubscription"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SubOrUnsubscription',
-            fields=[
-            ],
+            name="SubOrUnsubscription",
+            fields=[],
             options={
-                'proxy': True,
+                "proxy": True,
             },
-            bases=('subscriptions.subscription',),
+            bases=("subscriptions.subscription",),
         ),
     ]

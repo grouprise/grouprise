@@ -7,14 +7,20 @@ import taggit.managers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('taggit', '0002_auto_20150616_2121'),
-        ('groups', '0023_auto_20190624_1051'),
+        ("taggit", "0002_auto_20150616_2121"),
+        ("groups", "0023_auto_20190624_1051"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='group',
-            name='tags',
-            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Schlagworte'),
+            model_name="group",
+            name="tags",
+            field=taggit.managers.TaggableManager(
+                blank=True,
+                help_text="A comma-separated list of tags.",
+                through="taggit.TaggedItem",
+                to="taggit.Tag",
+                verbose_name="Schlagworte",
+            ),
         ),
     ]

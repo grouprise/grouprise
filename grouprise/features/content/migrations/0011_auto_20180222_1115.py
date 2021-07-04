@@ -8,14 +8,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0010_content_poll_new'),
-        ('polls', '0015_auto_20180222_1034'),
+        ("content2", "0010_content_poll_new"),
+        ("polls", "0015_auto_20180222_1034"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='content',
-            old_name='poll_new',
-            new_name='poll',
+            model_name="content",
+            old_name="poll_new",
+            new_name="poll",
         ),
     ]

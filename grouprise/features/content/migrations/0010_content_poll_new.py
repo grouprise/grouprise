@@ -9,14 +9,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0014_auto_20180222_1033'),
-        ('content2', '0009_auto_20180109_1302'),
+        ("polls", "0014_auto_20180222_1033"),
+        ("content2", "0009_auto_20180109_1302"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='content',
-            name='poll_new',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='content_new', to='polls.WorkaroundPoll'),
+            model_name="content",
+            name="poll_new",
+            field=models.OneToOneField(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="content_new",
+                to="polls.WorkaroundPoll",
+            ),
         ),
     ]

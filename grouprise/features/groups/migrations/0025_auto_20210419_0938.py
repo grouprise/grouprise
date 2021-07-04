@@ -4,17 +4,17 @@ from django.db import migrations
 
 
 def slugify_groups(apps, schema_editor):
-    Group = apps.get_model('groups', 'Group')
+    Group = apps.get_model("groups", "Group")
     for group in Group.objects.all():
         if not group.slug:
-            group.slug = 'grouprise-group-{}'.format(group.pk)
+            group.slug = "grouprise-group-{}".format(group.pk)
             group.save()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0024_group_tags'),
+        ("groups", "0024_group_tags"),
     ]
 
     operations = [

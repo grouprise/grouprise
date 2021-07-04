@@ -6,17 +6,17 @@ from django.db import migrations
 
 
 def rename_gestalten(apps, schema_editor):
-    Gestalt = apps.get_model('gestalten', 'Gestalt')
+    Gestalt = apps.get_model("gestalten", "Gestalt")
     for gestalt in Gestalt.objects.all():
-        gestalt.user.username = gestalt.user.username.replace('+', '_')
-        gestalt.user.username = gestalt.user.username.replace('.', '_')
+        gestalt.user.username = gestalt.user.username.replace("+", "_")
+        gestalt.user.username = gestalt.user.username.replace(".", "_")
         gestalt.user.save()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0009_auto_20170908_1620'),
+        ("gestalten", "0009_auto_20170908_1620"),
     ]
 
     operations = [

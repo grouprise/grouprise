@@ -7,18 +7,27 @@ import grouprise.core.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0011_auto_20171127_1412'),
+        ("gestalten", "0011_auto_20171127_1412"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='gestalt',
-            name='avatar',
-            field=grouprise.core.models.ImageField(blank=True, help_text='Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 0 MB.', upload_to=''),
+            model_name="gestalt",
+            name="avatar",
+            field=grouprise.core.models.ImageField(
+                blank=True,
+                help_text="Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 0 MB.",
+                upload_to="",
+            ),
         ),
         migrations.AlterField(
-            model_name='gestalt',
-            name='background',
-            field=grouprise.core.models.ImageField(blank=True, help_text='Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 0 MB.', upload_to='', verbose_name='Hintergrundbild'),
+            model_name="gestalt",
+            name="background",
+            field=grouprise.core.models.ImageField(
+                blank=True,
+                help_text="Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 0 MB.",
+                upload_to="",
+                verbose_name="Hintergrundbild",
+            ),
         ),
     ]

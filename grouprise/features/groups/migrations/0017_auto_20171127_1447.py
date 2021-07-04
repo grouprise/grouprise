@@ -9,13 +9,20 @@ import grouprise.features.stadt.forms
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0016_auto_20171120_1311'),
+        ("groups", "0016_auto_20171120_1311"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='slug',
-            field=models.SlugField(blank=True, help_text='Wird auch als Kurzname verwendet', null=True, unique=True, validators=[grouprise.features.stadt.forms.validate_entity_slug], verbose_name='Adresse der Gruppenseite'),
+            model_name="group",
+            name="slug",
+            field=models.SlugField(
+                blank=True,
+                help_text="Wird auch als Kurzname verwendet",
+                null=True,
+                unique=True,
+                validators=[grouprise.features.stadt.forms.validate_entity_slug],
+                verbose_name="Adresse der Gruppenseite",
+            ),
         ),
     ]

@@ -8,13 +8,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('tags', '0009_auto_20170210_1006'),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("tags", "0009_auto_20170210_1006"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='tagged',
-            unique_together=set([('tag', 'tagged_id', 'tagged_type')]),
+            name="tagged",
+            unique_together=set([("tag", "tagged_id", "tagged_type")]),
         ),
     ]

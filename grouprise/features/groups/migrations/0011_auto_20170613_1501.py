@@ -8,13 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0010_auto_20170613_1457'),
+        ("groups", "0010_auto_20170613_1457"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='slug',
-            field=models.SlugField(blank=True, null=True, unique=True, verbose_name='Adresse der Gruppenseite'),
+            model_name="group",
+            name="slug",
+            field=models.SlugField(
+                blank=True,
+                null=True,
+                unique=True,
+                verbose_name="Adresse der Gruppenseite",
+            ),
         ),
     ]

@@ -6,21 +6,24 @@ from django.db import migrations
 
 
 def copy_reply_keys(apps, schema_editor):
-    ContentType = apps.get_model('contenttypes', 'ContentType')
-    ReplyKey = apps.get_model('contributions', 'ReplyKey')
-    PermissionToken = apps.get_model('core', 'PermissionToken')
+    ContentType = apps.get_model("contenttypes", "ContentType")
+    ReplyKey = apps.get_model("contributions", "ReplyKey")
+    PermissionToken = apps.get_model("core", "PermissionToken")
     for key in ReplyKey.objects.all():
         PermissionToken.objects.create(
-                gestalt=key.gestalt, secret_key=key.key, feature_key='notification-reply',
-                target_type=ContentType.objects.get_for_model(key.contribution),
-                target_id=key.contribution.id)
+            gestalt=key.gestalt,
+            secret_key=key.key,
+            feature_key="notification-reply",
+            target_type=ContentType.objects.get_for_model(key.contribution),
+            target_id=key.contribution.id,
+        )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contributions', '0003_auto_20170330_1041'),
-        ('core', '0001_initial'),
+        ("contributions", "0003_auto_20170330_1041"),
+        ("core", "0001_initial"),
     ]
 
     operations = [

@@ -9,8 +9,7 @@ import itertools
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('conversations', '0001_initial'),
+        ("conversations", "0001_initial"),
     ]
 
-    operations = [
-    ]
+    operations = []

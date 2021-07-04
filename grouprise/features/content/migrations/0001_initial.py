@@ -11,25 +11,54 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('gestalten', '0006_gestaltsetting'),
+        ("gestalten", "0006_gestaltsetting"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Content',
+            name="Content",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
-            name='Version',
+            name="Version",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField()),
-                ('time_created', models.DateTimeField(auto_now_add=True)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gestalten.Gestalt')),
-                ('content', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='versions', to='content2.Content')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.TextField()),
+                ("time_created", models.DateTimeField(auto_now_add=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="gestalten.Gestalt",
+                    ),
+                ),
+                (
+                    "content",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="versions",
+                        to="content2.Content",
+                    ),
+                ),
             ],
         ),
     ]

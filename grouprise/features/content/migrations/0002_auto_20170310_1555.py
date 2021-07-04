@@ -10,8 +10,7 @@ import grouprise.core.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0001_initial'),
+        ("content2", "0001_initial"),
     ]
 
-    operations = [
-    ]
+    operations = []

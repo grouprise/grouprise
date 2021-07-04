@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0021_group_time_modified'),
+        ("groups", "0021_group_time_modified"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='date_created',
+            model_name="group",
+            name="date_created",
             field=models.DateField(default=datetime.date.today),
         ),
     ]

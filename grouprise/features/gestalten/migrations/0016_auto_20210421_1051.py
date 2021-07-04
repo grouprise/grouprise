@@ -7,18 +7,27 @@ import grouprise.core.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0015_gestalt_is_email_blocker'),
+        ("gestalten", "0015_gestalt_is_email_blocker"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='gestalt',
-            name='avatar',
-            field=grouprise.core.models.ImageField(blank=True, help_text='Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 10 MB.', upload_to=''),
+            model_name="gestalt",
+            name="avatar",
+            field=grouprise.core.models.ImageField(
+                blank=True,
+                help_text="Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 10 MB.",
+                upload_to="",
+            ),
         ),
         migrations.AlterField(
-            model_name='gestalt',
-            name='background',
-            field=grouprise.core.models.ImageField(blank=True, help_text='Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 10 MB.', upload_to='', verbose_name='Hintergrundbild'),
+            model_name="gestalt",
+            name="background",
+            field=grouprise.core.models.ImageField(
+                blank=True,
+                help_text="Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt 10 MB.",
+                upload_to="",
+                verbose_name="Hintergrundbild",
+            ),
         ),
     ]

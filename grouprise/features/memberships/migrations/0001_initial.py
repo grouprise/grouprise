@@ -11,22 +11,41 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('gestalten', '0001_initial'),
-        ('groups', '0001_initial'),
+        ("gestalten", "0001_initial"),
+        ("groups", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Membership',
+            name="Membership",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date_joined', models.DateField(auto_now_add=True)),
-                ('gestalt', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gestalten.Gestalt')),
-                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='groups.Group')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date_joined", models.DateField(auto_now_add=True)),
+                (
+                    "gestalt",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="gestalten.Gestalt",
+                    ),
+                ),
+                (
+                    "group",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="groups.Group"
+                    ),
+                ),
             ],
         ),
         migrations.AlterUniqueTogether(
-            name='membership',
-            unique_together=set([('gestalt', 'group')]),
+            name="membership",
+            unique_together=set([("gestalt", "group")]),
         ),
     ]

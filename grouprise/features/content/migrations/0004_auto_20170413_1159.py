@@ -8,28 +8,34 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0003_auto_20170330_1041'),
+        ("content2", "0003_auto_20170330_1041"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='content',
-            name='all_day',
-            field=models.BooleanField(default=False, help_text='Das Ereignis dauert den gesamten Tag.', verbose_name='ganztägig'),
+            model_name="content",
+            name="all_day",
+            field=models.BooleanField(
+                default=False,
+                help_text="Das Ereignis dauert den gesamten Tag.",
+                verbose_name="ganztägig",
+            ),
         ),
         migrations.AddField(
-            model_name='content',
-            name='place',
-            field=models.CharField(blank=True, max_length=255, verbose_name='Veranstaltungsort / Anschrift'),
+            model_name="content",
+            name="place",
+            field=models.CharField(
+                blank=True, max_length=255, verbose_name="Veranstaltungsort / Anschrift"
+            ),
         ),
         migrations.AddField(
-            model_name='content',
-            name='time',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Beginn'),
+            model_name="content",
+            name="time",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="Beginn"),
         ),
         migrations.AddField(
-            model_name='content',
-            name='until_time',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Ende'),
+            model_name="content",
+            name="until_time",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="Ende"),
         ),
     ]

@@ -6,15 +6,15 @@ from django.db import connection, migrations
 
 
 def convert_polls(apps, schema_editor):
-    Content = apps.get_model('content2', 'Content')
+    Content = apps.get_model("content2", "Content")
     with connection.cursor() as cursor:
         for c in Content.objects.all():
             if c.options.count() > 0:
-                cursor.execute('INSERT INTO polls_poll VALUES (%s, \'0\')', [c.id])
+                cursor.execute("INSERT INTO polls_poll VALUES (%s, '0')", [c.id])
 
 
 def adapt_options(apps, schema_editor):
-    Option = apps.get_model('polls', 'Option')
+    Option = apps.get_model("polls", "Option")
     for o in Option.objects.all():
         o.poll_new = o.poll.poll
         o.save()
@@ -23,8 +23,8 @@ def adapt_options(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content2', '0008_auto_20170620_1022'),
-        ('polls', '0005_auto_20171212_1637'),
+        ("content2", "0008_auto_20170620_1022"),
+        ("polls", "0005_auto_20171212_1637"),
     ]
 
     operations = [

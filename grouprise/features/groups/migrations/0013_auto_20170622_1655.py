@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0012_auto_20170619_1334'),
+        ("groups", "0012_auto_20170619_1334"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='members',
-            field=models.ManyToManyField(related_name='groups', through='memberships.Membership', to='gestalten.Gestalt'),
+            model_name="group",
+            name="members",
+            field=models.ManyToManyField(
+                related_name="groups",
+                through="memberships.Membership",
+                to="gestalten.Gestalt",
+            ),
         ),
     ]

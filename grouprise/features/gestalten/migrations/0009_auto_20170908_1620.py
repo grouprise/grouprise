@@ -8,17 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0008_auto_20170704_1729'),
+        ("gestalten", "0008_auto_20170704_1729"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='gestaltsetting',
-            name='category',
+            model_name="gestaltsetting",
+            name="category",
             field=models.CharField(blank=True, max_length=255),
         ),
         migrations.AlterUniqueTogether(
-            name='gestaltsetting',
-            unique_together=set([('gestalt', 'category', 'name')]),
+            name="gestaltsetting",
+            unique_together=set([("gestalt", "category", "name")]),
         ),
     ]

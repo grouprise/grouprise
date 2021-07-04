@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestalten', '0014_auto_20190815_0926'),
+        ("gestalten", "0014_auto_20190815_0926"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='gestalt',
-            name='is_email_blocker',
-            field=models.BooleanField(default=False, help_text='Unabhängig von Abonnements alle Benachrichtigungen via E-Mail deaktivieren', verbose_name='E-Mail-Benachrichtigungen ausschalten'),
+            model_name="gestalt",
+            name="is_email_blocker",
+            field=models.BooleanField(
+                default=False,
+                help_text="Unabhängig von Abonnements alle Benachrichtigungen via E-Mail deaktivieren",
+                verbose_name="E-Mail-Benachrichtigungen ausschalten",
+            ),
         ),
     ]

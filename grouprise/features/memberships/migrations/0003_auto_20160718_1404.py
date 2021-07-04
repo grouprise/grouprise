@@ -8,17 +8,17 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('memberships', '0002_auto_20160718_1052'),
+        ("memberships", "0002_auto_20160718_1052"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='membership',
-            old_name='gestalt',
-            new_name='member',
+            model_name="membership",
+            old_name="gestalt",
+            new_name="member",
         ),
         migrations.AlterUniqueTogether(
-            name='membership',
-            unique_together=set([('group', 'member')]),
+            name="membership",
+            unique_together=set([("group", "member")]),
         ),
     ]

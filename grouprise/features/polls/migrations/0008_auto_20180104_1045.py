@@ -8,13 +8,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0007_remove_option_poll'),
+        ("polls", "0007_remove_option_poll"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='option',
-            old_name='poll_new',
-            new_name='poll',
+            model_name="option",
+            old_name="poll_new",
+            new_name="poll",
         ),
     ]

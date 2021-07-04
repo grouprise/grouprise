@@ -9,18 +9,28 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contributions', '0005_auto_20170428_0959'),
+        ("contributions", "0005_auto_20170428_0959"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contribution',
-            name='attached_to',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='contributions.Contribution'),
+            model_name="contribution",
+            name="attached_to",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="contributions.Contribution",
+            ),
         ),
         migrations.AlterField(
-            model_name='contribution',
-            name='in_reply_to',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='contributions.Contribution'),
+            model_name="contribution",
+            name="in_reply_to",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="contributions.Contribution",
+            ),
         ),
     ]

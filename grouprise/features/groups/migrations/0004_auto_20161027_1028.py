@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0003_group_score'),
+        ("groups", "0003_group_score"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='group',
+            name="group",
             options={},
         ),
     ]

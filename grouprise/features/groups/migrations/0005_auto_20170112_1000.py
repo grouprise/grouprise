@@ -9,13 +9,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0004_auto_20161027_1028'),
+        ("groups", "0004_auto_20161027_1028"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='gestalt_created',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='gestalten.Gestalt'),
+            model_name="group",
+            name="gestalt_created",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="gestalten.Gestalt",
+            ),
         ),
     ]

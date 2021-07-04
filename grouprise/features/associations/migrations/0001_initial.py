@@ -11,18 +11,40 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
+        ("contenttypes", "0002_remove_content_type_name"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Association',
+            name="Association",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('container_id', models.PositiveIntegerField()),
-                ('entity_id', models.PositiveIntegerField()),
-                ('container_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='container_associations', to='contenttypes.ContentType')),
-                ('entity_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='entity_associations', to='contenttypes.ContentType')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("container_id", models.PositiveIntegerField()),
+                ("entity_id", models.PositiveIntegerField()),
+                (
+                    "container_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="container_associations",
+                        to="contenttypes.ContentType",
+                    ),
+                ),
+                (
+                    "entity_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="entity_associations",
+                        to="contenttypes.ContentType",
+                    ),
+                ),
             ],
         ),
     ]

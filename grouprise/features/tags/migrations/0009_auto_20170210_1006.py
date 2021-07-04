@@ -9,17 +9,21 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tags', '0008_auto_20170209_1549'),
+        ("tags", "0008_auto_20170209_1549"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='tagged',
-            options={'ordering': ('tag__name',)},
+            name="tagged",
+            options={"ordering": ("tag__name",)},
         ),
         migrations.AlterField(
-            model_name='tagged',
-            name='tag',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tagged', to='tags.Tag'),
+            model_name="tagged",
+            name="tag",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tagged",
+                to="tags.Tag",
+            ),
         ),
     ]

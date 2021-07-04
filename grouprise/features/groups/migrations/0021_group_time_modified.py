@@ -6,8 +6,8 @@ from django.db import migrations, models
 
 
 def set_time_modified_from_date_created(apps, schema_editor):
-    Group = apps.get_model('groups', 'Group')
-    tz_utc = pytz.timezone('Europe/Berlin')
+    Group = apps.get_model("groups", "Group")
+    tz_utc = pytz.timezone("Europe/Berlin")
 
     for group in Group.objects.all():
         time = datetime.datetime.combine(group.date_created, datetime.time.min)
@@ -17,19 +17,21 @@ def set_time_modified_from_date_created(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('groups', '0020_auto_20180206_0913'),
+        ("groups", "0020_auto_20180206_0913"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='group',
-            name='time_modified',
+            model_name="group",
+            name="time_modified",
             field=models.DateTimeField(blank=True, null=True),
         ),
-        migrations.RunPython(set_time_modified_from_date_created, migrations.RunPython.noop),
+        migrations.RunPython(
+            set_time_modified_from_date_created, migrations.RunPython.noop
+        ),
         migrations.AlterField(
-            model_name='group',
-            name='time_modified',
+            model_name="group",
+            name="time_modified",
             field=models.DateTimeField(auto_now=True),
         ),
     ]

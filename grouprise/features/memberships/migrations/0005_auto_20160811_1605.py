@@ -7,7 +7,7 @@ import django.db.models.deletion
 
 
 def set_created_by(apps, schema_editor):
-    Membership = apps.get_model('memberships', 'Membership')
+    Membership = apps.get_model("memberships", "Membership")
     for m in Membership.objects.all():
         m.created_by = m.member
         m.save()
@@ -16,19 +16,28 @@ def set_created_by(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('memberships', '0004_auto_20160724_1659'),
+        ("memberships", "0004_auto_20160724_1659"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='membership',
-            name='created_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='memberships_created', to='gestalten.Gestalt'),
+            model_name="membership",
+            name="created_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="memberships_created",
+                to="gestalten.Gestalt",
+            ),
         ),
         migrations.AlterField(
-            model_name='membership',
-            name='member',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='gestalten.Gestalt'),
+            model_name="membership",
+            name="member",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="memberships",
+                to="gestalten.Gestalt",
+            ),
         ),
         migrations.RunPython(set_created_by),
     ]

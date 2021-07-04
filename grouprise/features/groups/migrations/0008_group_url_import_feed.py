@@ -8,13 +8,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0007_remove_group_content'),
+        ("groups", "0007_remove_group_content"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='group',
-            name='url_import_feed',
-            field=models.BooleanField(default=False, verbose_name='Beiträge von Website übernehmen'),
+            model_name="group",
+            name="url_import_feed",
+            field=models.BooleanField(
+                default=False, verbose_name="Beiträge von Website übernehmen"
+            ),
         ),
     ]
