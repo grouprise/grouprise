@@ -34,11 +34,7 @@ def synchronize_matrix_rooms():
     async def synchronize():
         async with MatrixBot() as bot:
             for group in Group.objects.all():
-                async for _ in bot.synchronize_rooms_of_group(group):  # noqa: F841
-                    pass
-                async for _ in bot.send_invitations_to_group_members(
-                    group
-                ):  # noqa: F841
-                    pass
+                [_ async for _ in bot.synchronize_rooms_of_group(group)]
+                [_ async for _ in bot.send_invitations_to_group_members(group)]
 
     asyncio.run(synchronize())
