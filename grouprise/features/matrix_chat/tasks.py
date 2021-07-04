@@ -4,6 +4,7 @@ import logging
 from huey import crontab
 from huey.contrib.djhuey import db_periodic_task
 
+from grouprise.features.groups.models import Group
 from .matrix_bot import MatrixBot
 
 
@@ -19,3 +20,21 @@ def update_matrix_chat_statiscs():
             await bot.update_statistics()
 
     asyncio.run(update())
+
+
+@db_periodic_task(crontab(minute="39"))
+def synchronize_matrix_rooms():
+    """synchronize any outstanding missing room updates
+
+    All rooms should be created on demand and all invitations should be send automatically.
+    But somehow events may get lost, thus we trigger a periodic manual update.
+    """
+    logger.info("Synchronize matrix chat rooms")
+
+    async def synchronize():
+        async with MatrixBot() as bot:
+            for group in Group.objects.all():
+                async for room in bot.synchronize_rooms_of_group(group):
+                    pass
+
+    asyncio.run(synchronize())
