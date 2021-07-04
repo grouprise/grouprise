@@ -402,6 +402,12 @@ msgstr ""
 "Lass das Feld leer, um die lokale Matrix-Nutzer-ID zu verwenden. Eine Matrix-"
 "Nutzer-ID hat die Form '@foo:example.org'."
 
+msgid "Show links to the public chat room"
+msgstr "Zeige Verweise auf den öffentlichen Chat-Raum."
+
+msgid "Show links to the private chat room"
+msgstr "Zeige Verweise auf den internen Chat-Raum."
+
 msgid "Introduction to Chat"
 msgstr "Einführung in Chats"
 
@@ -527,11 +533,11 @@ msgstr ""
 "bietet die folgenden Funktionen:"
 
 msgid ""
-"Use your grouprise user account (name and password) to log in to the Matrix "
-"homeserver. There is no need for a separate Matrix account."
+"Use your grouprise user account to log in to the Matrix homeserver. There is "
+"no need for a separate Matrix account."
 msgstr ""
-"Verwende dein grouprise-Nutzerkonto (Name und Passwort) für die Anmeldung "
-"beim Matrix-Server. Ein separates Matrix-Konto ist nicht erforderlich."
+"Verwende dein grouprise-Nutzerkonto für die Anmeldung beim Matrix-Server. "
+"Ein separates Matrix-Konto ist nicht erforderlich."
 
 #, python-format
 msgid ""
@@ -618,11 +624,6 @@ msgid ""
 msgstr ""
 "Besuche die URL <a href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>."
 
-msgid "Enter your grouprise login (username and password) in the login dialog."
-msgstr ""
-"Gib deine grouprise-Anmeldedaten (Nutzername und Passwort) in das "
-"Anmeldefenster ein."
-
 msgid "Mobile App"
 msgstr "Mobile Anwendung"
 
@@ -677,8 +678,8 @@ msgid ""
 "In addition to the two pre-configured rooms per group, your are free to "
 "create as many rooms as you like."
 msgstr ""
-"Unabhängig von den beiden vorkonfigurierten Räumen pro Gruppe kannst du "
-"so viele Räume anlegen, wie du möchtest."
+"Unabhängig von den beiden vorkonfigurierten Räumen pro Gruppe kannst du so "
+"viele Räume anlegen, wie du möchtest."
 
 msgid "Room members"
 msgstr "Raum-Teilnehmer:innen"
@@ -707,6 +708,24 @@ msgid ""
 msgstr ""
 "Auch externe Personen (selbst ohne ein Nutzerkonto der Community-Webseite) "
 "können öffentliche Räume betreten und in private Räume eingeladen werden."
+
+msgid "Why are rooms not encrypted by default?"
+msgstr "Warum sind die Räume nicht verschlüsselt?"
+
+#, python-format
+msgid ""
+"The developers of *grouprise* <a href=\"%(issue_url)s\">discussed this "
+"question</a> and decided to prefer ease of use over security. Feel free to "
+"contact the site operators and ask them to enable encryption in rooms of "
+"your group. Alternatively you are free to create new rooms according to your "
+"personal preferences."
+msgstr ""
+"Die Entwickler:innen von *grouprise* <a href=\"%(issue_url)s\"> haben diese "
+"Frage diskutiert</a> und sich entschieden, der Bedienbarkeit den Vorrang "
+"gegenüber der Sicherheit zu geben. Die Betreiber dieser Seite werden auf "
+"Anfrage sicherlich gern die Verschlüsselung in ausgewählten Räumen "
+"aktivieren. Außerdem ist es leicht möglich, selbst neue Räume mit den "
+"gewünschten Einstellungen zu erstellen."
 
 msgid "I want to know more!"
 msgstr "Ich möchte mehr erfahren!"
