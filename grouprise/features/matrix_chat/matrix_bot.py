@@ -22,9 +22,9 @@ class MatrixError(Exception):
 class MatrixBot:
     def __init__(self):
         matrix_url = f"https://{MATRIX_SETTINGS.DOMAIN}"
-        bot_matrix_id = f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}"
+        self.bot_matrix_id = f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}"
         logger.info(f"Connecting to {matrix_url} as '{MATRIX_SETTINGS.BOT_USERNAME}'")
-        self.client = nio.AsyncClient(matrix_url, bot_matrix_id)
+        self.client = nio.AsyncClient(matrix_url, self.bot_matrix_id)
         # maybe we should use "self.client.login()" instead?
         self.client.access_token = MATRIX_SETTINGS.BOT_ACCESS_TOKEN
 
@@ -273,3 +273,46 @@ class MatrixBot:
                     logger.warning(
                         f"Kick request for {gestalt} out of {room} was rejected: {result}"
                     )
+
+    async def update_statistics(self):
+        for room in MatrixChatGroupRoom.objects.all():
+            await self.update_room_statistics(room)
+
+    async def update_room_statistics(self, room=None):
+        statistics = room.get_statistics()
+        try:
+            response = await self.client.joined_members(room.room_id)
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to retrieve message count from {room}: {exc}")
+        else:
+            if isinstance(response, nio.responses.JoinedMembersResponse):
+                # the grouprise bot does not count
+                statistics["members_count"] = len(response.members) - 1
+            else:
+                logger.warning(
+                    f"Retrieval of members count from {room} was rejected: {response}"
+                )
+        try:
+            response = await self.client.room_messages(
+                room.room_id,
+                start="",
+                limit=1,
+                message_filter={
+                    "not_senders": [self.bot_matrix_id],
+                    "types": ["m.room.message"],
+                },
+            )
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to retrieve message count from {room}: {exc}")
+        else:
+            if isinstance(response, nio.responses.RoomMessagesResponse):
+                if response.chunk:
+                    msg = response.chunk[0]
+                    # Matrix uses milliseconds for timestamps
+                    statistics["last_message_timestamp"] = msg.server_timestamp / 1000
+            else:
+                logger.warning(
+                    f"Retrieval of message count from {room} was rejected: {response}"
+                )
+        room.set_statistics(statistics)
+        room.save()

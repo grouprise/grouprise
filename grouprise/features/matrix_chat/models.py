@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -12,9 +14,23 @@ class MatrixChatGroupRoom(models.Model):
     room_id = models.CharField(max_length=256)
     is_private = models.BooleanField()
     is_visible = models.BooleanField(default=True)
+    statistics_cache_json = models.CharField(default="{}", max_length=4096)
 
     def get_client_url(self):
         return f"/stadt/chat/#/room/{self.room_id}"
+
+    def get_statistics(self):
+        try:
+            return json.loads(self.statistics_cache_json)
+        except ValueError:
+            return {}
+
+    def set_statistics(self, data):
+        self.statistics_cache_json = json.dumps(data)
+
+    @property
+    def members_count(self):
+        return self.get_statistics().get("members_count", 0)
 
     def __str__(self):
         if self.is_private:
