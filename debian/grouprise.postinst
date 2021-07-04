@@ -8,7 +8,6 @@ DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
 GROUPRISE_SETTINGS_FILE="$DIR_ETC/conf.d/100-package.yaml"
 DIR_HOME="/var/lib/grouprise"
-DIR_LOGS="/var/log/grouprise"
 DIR_MEDIA="/var/lib/grouprise/media"
 DIR_STATIC="/var/lib/grouprise/static"
 
@@ -126,9 +125,6 @@ if [ "$1" = "configure" ]; then
     # protect sensitive content (e.g. database credentials)
     chown "root:$PKG_GROUP" "$GROUPRISE_SETTINGS_FILE"
     chmod 640 "$GROUPRISE_SETTINGS_FILE"
-
-    mkdir -p "$DIR_LOGS"
-    chown "$PKG_USER:adm" "$DIR_LOGS"
 
     mkdir -p "$DIR_MEDIA" "$DIR_STATIC"
     chown "$PKG_USER:$PKG_GROUP" "$DIR_MEDIA" "$DIR_STATIC"
