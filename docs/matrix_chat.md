@@ -45,6 +45,14 @@ packages with proper security support.
 
 1. add the `buster-backports` repository to your apt sources file
    (for the `matrix-synapse` package)
+1. install the matrix server: `apt install matrix-synapse`
+1. create the postgresql database connection for matrix-synapse:
+```
+CREATE USER grouprise_matrix WITH password 'YOUR_SECRET_RANDOM_PASSWORD';
+CREATE DATABASE grouprise_matrix ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' template=template0 OWNER grouprise_matrix;
+```
+1. configure this database connection in `/etc/matrix-synapse/conf.d/grouprise-matrix.yaml`
+1. start matrix-synapse: `service matrix-synapse start`
 1. install the matrix integration package for grouprise: `apt install grouprise-matrix`
 1. answer the configuration questions during package installation:
     * matrix-synapse:
@@ -54,27 +62,8 @@ packages with proper security support.
         * default matrix server: the name of your grouprise domain (e.g. `example.org`)
     * grouprise-matrix:
         * webserver configuration: *nginx*
-1. create the postgresql database connection for matrix-synapse:
-```
-CREATE USER grouprise_matrix WITH password 'YOUR_SECRET_RANDOM_PASSWORD';
-CREATE DATABASE grouprise_matrix ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' template=template0 OWNER grouprise_matrix;
-```
-1. configure this database connection in `/etc/matrix-synapse/conf.d/grouprise-matrix.yaml`
-1. start matrix-synapse: `service matrix-synapse start`
-1. generate an administrative access token for matrix-synapse to be used by grouprise: `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`. The resulting access token needs to be configured below `/etc/grouprise/conf.d/`:
-```yaml
-matrix_chat:
-  enabled: true
-  bot_username: grouprise-bot
-  bot_access_token: '_YOUR_BOT_ACCESS_TOKEN_'
-```
+1. Generate an administrative access token for matrix-synapse to be used by grouprise: `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`. The resulting access token is automatically stored below `/etc/grouprise/conf.d/`.
 1. Run `grouprisectl matrix_chat_manage configure-rooms` and `grouprisectl matrix_chat_manage invite-room-members` in order to populate the Matrix rooms for all groups.
-
-In order to apply all settings properly, it is (for now) necessary to go run the configuration of
-the `grouprise-matrix` package manually again:
-```shell
-dpkg-reconfigure --unseen-only grouprise-matrix
-```
 
 
 ### Configuration settings
