@@ -752,7 +752,7 @@ def import_settings_from_yaml(settings, locations=None):
         StringConfig(
             name=("matrix_chat", "admin_api_url"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "ADMIN_API_URL"),
-            regex=r"https?://[\w\-.]+(:\d+)?/",
+            regex=r"https?://[\w\-.]+(:\d+)?/?.*$",
         ),
         StringConfig(
             name=("matrix_chat", "bot_username"),
