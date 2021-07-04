@@ -471,7 +471,7 @@ class OIDCProviderEnableConfig(BooleanConfig):
             settings["INSTALLED_APPS"].append("oauth2_provider")
             settings["MIDDLEWARE"].insert(0, "corsheaders.middleware.CorsMiddleware")
             settings["OAUTH2_PROVIDER"]["OIDC_ENABLED"] = True
-            settings["OAUTH2_PROVIDER"].setdefault("SCOPES", []).append(
+            settings["OAUTH2_PROVIDER"].setdefault("SCOPES", {}).update(
                 {"openid": "OpenID Connect scope"}
             )
             validator = "grouprise.auth.oauth_validators.AccountOAuth2Validator"
