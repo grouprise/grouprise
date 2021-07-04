@@ -143,10 +143,13 @@
         {% endif %}
 
         {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
+        {% test_rule "matrix_chat.room_is_populated" public_chat_room as public_chat_room_is_populated %}
         {% if matrix_chat_enabled %}
             {% if public_chat_room and public_chat_room.is_visible %}
-                <dt><i class="sg sg-public-chat"></i></dt>
-                <dd><a href="{{ public_chat_room.get_client_url }}"><strong>Öffentlicher Chatraum der Gruppe</strong></a></dd>
+                {% if can_view_details or public_chat_room_is_populated %}
+                    <dt><i class="sg sg-public-chat"></i></dt>
+                    <dd><a href="{{ public_chat_room.get_client_url }}"><strong>Öffentlicher Chatraum der Gruppe</strong></a></dd>
+                {% endif %}
             {% endif %}
 
             {% if private_chat_room and can_view_details and private_chat_room.is_visible %}
