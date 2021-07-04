@@ -36,5 +36,7 @@ def synchronize_matrix_rooms():
             for group in Group.objects.all():
                 async for room in bot.synchronize_rooms_of_group(group):
                     pass
+                async for invitation in bot.send_invitations_to_group_members(group):
+                    pass
 
     asyncio.run(synchronize())
