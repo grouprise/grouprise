@@ -48,7 +48,7 @@ This platform ({{ GROUPRISE_SITE_NAME }}) integrates the <a href="{{ matrix_url 
 
 <p>{% trans "Matrix offers the following features:" %}</p>
 <ul>
-	<li><b>{% trans "trustworthy" %}</b>: {% trans 'Both the server and the client implementations are available as <a href="{{ free_software_url }}">Free Software</a>. Thus anyone interested can verify, that the software is operating in the interest of the users.' %}</li>
+    <li><b>{% trans "trustworthy" %}</b>: {% trans 'Both the server and the client implementations are available as <a href="{{ free_software_url }}">Free Software</a>. Thus anyone interested can verify, that the software is operating in the interest of the users.' %}</li>
     <li><b>{% trans "federated" %}</b>: {% trans "Everyone can host their own server and all of these servers communicate with each other. This is similar to the design of the email protocol or the telephone network, where users of different providers can communicate with each other." %}</li>
     <li><b>{% trans "secure" %}</b>: {% trans "End-to-end encryption keeps the content of conversations safe from pryring eyes. Even the service provider cannot peek inside." %}</li>
     <li><b>{% trans "wide range of clients" %}</b>: {% trans 'Pick your favorite client from a <a href="{{ matrix_clients_url }}">wide range of applications</a> for various mobile and desktop platforms.' %}</li>
@@ -59,7 +59,7 @@ This platform ({{ GROUPRISE_SITE_NAME }}) integrates the <a href="{{ matrix_url 
 
 <p>{% blocktrans %}The integration of the Matrix chat into the {{ GROUPRISE_SITE_NAME }} platform offers the following features:{% endblocktrans %}</p>
 <ul>
-    <li>{% trans "Use your grouprise user account (name and password) to log in to the Matrix homeserver. There is no need for a separate Matrix account." %}</li>
+    <li>{% trans "Use your grouprise user account to log in to the Matrix homeserver. There is no need for a separate Matrix account." %}</li>
     <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url %}A local instance of the <a href="{{ element_url }}">Element web client</a> is provided along with {{ GROUPRISE_SITE_NAME }} (<a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>).{% endblocktrans %}</li>
     <li>{% blocktrans %}A public and a private Matrix room is automatically created for each {{ GROUPRISE_SITE_NAME }} group.{% endblocktrans %}</li>
     <li>{% trans "All members of a grouprise group are automatically invited to the group's Matrix rooms." %}</li>
@@ -88,8 +88,6 @@ This platform ({{ GROUPRISE_SITE_NAME }}) integrates the <a href="{{ matrix_url 
         Visit the URL <a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>.
     {% endblocktrans %}</li>
 </ul>
-
-<p>{% trans "Enter your grouprise login (username and password) in the login dialog." %}</p>
 
 
 <h2>{% trans "Mobile App" %}</h2>
@@ -131,6 +129,14 @@ People leaving a group in the {{ GROUPRISE_SITE_NAME }} platform are automatical
 
 <p>{% blocktrans trimmed %}
 Any external person (even people without an account on the local grouprise instance) may join public rooms or may be invited to private rooms.
+{% endblocktrans %}</p>
+
+<h2>{% trans "Why are rooms not encrypted by default?" %}</h2>
+
+<p>{% blocktrans trimmed with issue_url="https://git.hack-hro.de/grouprise/grouprise/-/issues/729" %}
+The developers of *grouprise* <a href="{{ issue_url }}">discussed this question</a> and decided to prefer ease of use over security.
+Feel free to contact the site operators and ask them to enable encryption in rooms of your group.
+Alternatively you are free to create new rooms according to your personal preferences.
 {% endblocktrans %}</p>
 
 <h2>{% trans "I want to know more!" %}</h2>
