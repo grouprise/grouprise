@@ -111,8 +111,8 @@ if [ "$1" = "configure" ]; then
         fi
     fi
 
-    # adjust ownership and permissions of backup directory (keeping local modifications)
-    if [ "$(stat --format="%u:%g:%a" "$DIR_BACKUPS")" = "0:0:755" ]; then
+    # adjust ownership and permissions of backup directory
+    if ! dpkg-statoverride --list "$DIR_BACKUPS" >/dev/null 2>&1; then
         chown "$PKG_USER:$PKG_GROUP" "$DIR_BACKUPS"
         chmod 750 "$DIR_BACKUPS"
     fi
@@ -123,11 +123,20 @@ if [ "$1" = "configure" ]; then
     configure_grouprise
 
     # protect sensitive content (e.g. database credentials)
-    chown "root:$PKG_GROUP" "$GROUPRISE_SETTINGS_FILE"
-    chmod 640 "$GROUPRISE_SETTINGS_FILE"
+    if ! dpkg-statoverride --list "$GROUPRISE_SETTINGS_FILE" >/dev/null 2>&1; then
+        chown "root:$PKG_GROUP" "$GROUPRISE_SETTINGS_FILE"
+        chmod 640 "$GROUPRISE_SETTINGS_FILE"
+    fi
 
-    mkdir -p "$DIR_MEDIA" "$DIR_STATIC"
-    chown "$PKG_USER:$PKG_GROUP" "$DIR_MEDIA" "$DIR_STATIC"
+    mkdir -p "$DIR_MEDIA"
+    if ! dpkg-statoverride --list "$DIR_MEDIA" >/dev/null 2>&1; then
+        chown "$PKG_USER:$PKG_GROUP" "$DIR_MEDIA"
+    fi
+
+    mkdir -p "$DIR_STATIC"
+    if ! dpkg-statoverride --list "$DIR_STATIC" >/dev/null 2>&1; then
+        chown "$PKG_USER:$PKG_GROUP" "$DIR_STATIC"
+    fi
 fi
 
 if [ "$1" = "triggered" ]; then
