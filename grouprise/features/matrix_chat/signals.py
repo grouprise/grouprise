@@ -11,10 +11,44 @@ import grouprise.features.contributions.models
 import grouprise.features.groups.models
 import grouprise.features.memberships.models
 from .matrix_bot import MatrixBot, MatrixError
-from .models import MatrixChatGroupRoom
+from .models import (
+    MatrixChatGestaltSettings,
+    MatrixChatGroupRoom,
+    MatrixChatGroupRoomInvitations,
+)
 
 
 logger = logging.getLogger(__name__)
+
+
+@receiver(post_save, sender=MatrixChatGestaltSettings)
+def post_matrix_chat_gestalt_settings_save(
+    sender, instance, created, update_fields=None, **kwargs
+):
+    if created or (update_fields and "matrix_id_override" in update_fields):
+        gestalt = instance.gestalt
+        # the matrix ID of the user has changed: remove all existing invitations
+        MatrixChatGroupRoomInvitations.objects.filter(gestalt=gestalt).delete()
+        _send_invitations_for_gestalt(gestalt)
+
+
+@db_task()
+def _send_invitations_for_gestalt(gestalt):
+    async def _invite_gestalt(gestalt):
+        async with MatrixBot() as bot:
+            for membership in gestalt.memberships.all():
+                group = membership.group
+                try:
+                    async for invited in bot.send_invitations_to_group_members(
+                        group, gestalten=[gestalt]
+                    ):
+                        logger.info(f"Invitation sent: {invited}")
+                except MatrixError as exc:
+                    logger.warning(
+                        f"Failed to invite {gestalt} to matrix rooms of group {group}: {exc}"
+                    )
+
+    asyncio.run(_invite_gestalt(gestalt))
 
 
 @receiver(post_save, sender=grouprise.features.groups.models.Group)
