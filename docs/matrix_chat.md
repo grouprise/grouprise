@@ -2,7 +2,7 @@
 
 [Matrix](https://matrix.org/) is a chat communication protocol.
 It can be used for real-time communication (with end-to-end encryption) between grouprise users
-and external Matrix users.
+and also external Matrix users.
 Matrix supports [federation](https://en.wikipedia.org/wiki/Federation_(information_technology)).
 Thus grouprise users may use either their existing Matrix account (hosted by an external provider)
 or they can use a new Matrix account, which is based on their grouprise account.
@@ -43,17 +43,31 @@ release (as of now: Debian Buster).
 Thus you may need to wait for the next Debian release (*Bullseye*), if you prefer a setup of
 packages with proper security support.
 
-1. add the `buster-backports` repository to your apt sources file
-   (for the `matrix-synapse` package)
-1. install the matrix server: `apt install matrix-synapse`
+1. add the `buster-backports` repository to your apt packages sources (see [instructions](https://backports.debian.org/Instructions/))
+1. update the package cache: `apt update`
+1. add the `buster-fasttrack` repository to your apt package sources (see [instructions](https://fasttrack.debian.net/))
+1. update the package cache: `apt update`
+1. install the matrix server: `apt install -t buster-backports matrix-synapse/buster-fasttrack`
 1. create the postgresql database connection for matrix-synapse:
 ```
 CREATE USER grouprise_matrix WITH password 'YOUR_SECRET_RANDOM_PASSWORD';
 CREATE DATABASE grouprise_matrix ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' template=template0 OWNER grouprise_matrix;
 ```
-1. configure this database connection in `/etc/matrix-synapse/conf.d/grouprise-matrix.yaml`
+1. configure this database connection (e.g. in `/etc/matrix-synapse/conf.d/database.yaml`):
+```yaml
+database:
+  name: psycopg2
+  args:
+    user: grouprise_matrix
+    password: "YOUR_SECRET_RANDOM_PASSWORD"
+    database: grouprise_matrix
+    host: YOUR_DATABASE_SERVER
+    cp_min: 5
+    cp_max: 10
+```
 1. start matrix-synapse: `service matrix-synapse start`
 1. install the matrix integration package for grouprise: `apt install grouprise-matrix`
+    * before Debian Bullseye, this requires the *testing* repository to be added temporarily and to install `python3-matrix-nio` and `python3-authlib` (for *matrix-synapse*) to be installed manually in advance: `apt install -t buster python3-matrix-nio python3-authlib`
 1. answer the configuration questions during package installation:
     * matrix-synapse:
         * server: the name of your grouprise domain (e.g. `example.org`)
@@ -62,13 +76,13 @@ CREATE DATABASE grouprise_matrix ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' tem
         * default matrix server: the name of your grouprise domain (e.g. `example.org`)
     * grouprise-matrix:
         * webserver configuration: *nginx*
-1. Generate an administrative access token for matrix-synapse to be used by grouprise: `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`. The resulting access token is automatically stored below `/etc/grouprise/conf.d/`.
-1. Run `grouprisectl matrix_chat_manage configure-rooms` and `grouprisectl matrix_chat_manage invite-room-members` in order to populate the Matrix rooms for all groups.
+1. Run `grouprisectl matrix_chat_manage configure-rooms` and `grouprisectl matrix_chat_manage invite-room-members` in order to populate the Matrix rooms for all groups.  You may omit this step, since it will happen automatically within one hour, anyway.
 
 
 ### Configuration settings
 
-The following configuration settings are available below the `matrix_chat` path in your grouprise settings file (e.g. `/etc/grouprise/conf.d/local.yaml`):
+The following configuration settings are available below the `matrix_chat` path in your grouprise settings file (e.g. `/etc/grouprise/conf.d/local.yaml`).
+They are configured automatically during the deb package configuration.
 
 * `domain`: The Matrix domain to be used.  Defaults to the grourise domain.
 * `bot_username`: The local name of the Matrix bot used by grouprise.  Defaults to `grouprise-bot`.
