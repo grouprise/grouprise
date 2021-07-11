@@ -78,8 +78,12 @@ python manage.py runserver 0.0.0.0:8000
 ## UWSGI und Nginx einrichten
 
 * install nginx and UWSGI (being remmomendations of the grouprise package): `apt install nginx uwsgi uwsgi-plugin-python3`
-* enable the UWSGI service: `ln -s ../apps-available/grouprise.ini /etc/uwsgi/apps-enabled/`
-* start UWSGI: `service uwsgi start`
+* create an UWSGI configuration
+    * see [debian/grouprise.uwsgi.ini](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.uwsgi.ini)
+* create a systemd service for *grouprise*
+    * see [debian/grouprise.service](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.service)
+    * alternative SysVinit script: [debian/grouprise.init](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.init)
+* start the *grouprise* service: `service grouprise start`
 * copy the nginx site example configuration: `cp /usr/share/doc/grouprise/examples/nginx.conf /etc/nginx/sites-available/grouprise`
 * set a suitable `server_name`: `edit /etc/nginx/sites-available/grouprise`
     * or remove the `default` nginx site (if it is not in use) in order to let the `grouprise` site be picked irrespective of the requested hostname

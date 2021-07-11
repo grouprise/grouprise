@@ -15,9 +15,8 @@ Source Setup
 ------------
 
 #. Download and extract the source release archive.
-#. Stop the grouprise process (e.g. ``service uwsgi stop``).
+#. Stop the grouprise process (e.g. ``service grouprise stop``).
 #. Run `make install` with the same parameters that you used during the first installation.
 #. Read the release notes for the relevant versions and adjust the settings
    (in ``/etc/grouprise/``) if necessary.
-#. Run `grouprisectl migrate` in order to apply outstanding database migrations.
-#. Start the grouprise process (e.g. ``service uwsgi start``)
+#. Start the grouprise process (e.g. ``service grouprise start``)

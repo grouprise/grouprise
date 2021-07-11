@@ -106,7 +106,7 @@ The *deb* package provided for *grouprise* automatically handles these steps.
         * *TODO*: sadly v1.5.0 (required for OIDC) is not part of Debian at the moment (Debian *Bullseye*).  Until it is included, the approach via *pip* (see below) is necessary.
     * *pip* (local Python module installation):
         * `pip3 install --user "django-oauth-toolkit>=1.5.0"`
-        * add the line `pythonpath = /root/.local/lib/python3.X/site-packages` to your uwsgi configuration (e.g. `/etc/uwsgi/apps-enabled/grouprise.ini`)
+        * add the line `pythonpath = /root/.local/lib/python3.X/site-packages` to your uwsgi configuration (e.g. `/etc/grouprise/uwsgi.ini`)
             * adjust the Python version according to your setup
 
 ##### Configuration
