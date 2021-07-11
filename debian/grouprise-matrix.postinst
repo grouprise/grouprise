@@ -134,7 +134,7 @@ enable_oidc_if_unconfigured() {
 enable_oidc_authentication_for_matrix_synapse() {
     # generate the matrix-synapse configuration for using grouprise as an OIDC provider
     if [ ! -e "$MATRIX_AUTHENTICATION_FILE" ]; then
-        configuration=$(GROUPRISE_USER=root grouprisectl matrix_chat_manage print-synapse-configuration)
+        configuration=$(grouprisectl matrix_chat_manage print-synapse-configuration)
         printf "%s\n" "$configuration" >"$MATRIX_AUTHENTICATION_FILE"
         invoke-rc.d matrix-synapse restart
     fi
