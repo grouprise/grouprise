@@ -55,7 +55,7 @@ make_deb_package_release:
     artifacts:
         expire_in: 1000 yrs
 
-deb_package_test:
+test_deb_package:
     stage: test
     dependencies:
       - make_deb_package
