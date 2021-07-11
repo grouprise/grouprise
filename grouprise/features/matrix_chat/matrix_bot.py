@@ -258,7 +258,11 @@ class MatrixBot:
                 )
                 return False
 
-    async def send_invitations_to_group_members(self, group):
+    async def send_invitations_to_group_members(self, group, gestalten=None):
+        """Send invitations to the rooms of group to all members that were not yet invited
+
+        Optionally these invitations may be limited to a set of gestalt objects.
+        """
         for room in MatrixChatGroupRoom.objects.filter(group=group):
             invited_members = [
                 invite.gestalt.id
@@ -266,7 +270,15 @@ class MatrixBot:
                     "gestalt"
                 )
             ]
-            for gestalt in group.members.exclude(id__in=invited_members):
+            if gestalten is None:
+                invitees = group.members.exclude(id__in=invited_members)
+            else:
+                invitees = [
+                    gestalt
+                    for gestalt in gestalten
+                    if gestalt.id not in invited_members
+                ]
+            for gestalt in invitees:
                 gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
                 try:
                     result = await self.client.room_invite(
