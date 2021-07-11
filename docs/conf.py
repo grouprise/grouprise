@@ -90,6 +90,8 @@ html_theme = 'alabaster'
 #
 # html_sidebars = {}
 
+html_favicon = '../grouprise/core/static/core/logos/logo-square.png'
+
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
