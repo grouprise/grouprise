@@ -102,21 +102,53 @@ configure_grouprise_element() {
 }
 
 
+enable_matrix_chat_if_unconfigured() {
+    original_chat_enabled_state=$(grouprise_settings get "matrix_chat.enabled")
+    if [ -z "$original_chat_enabled_state" ]; then
+        echo "true" | grouprise_settings set "matrix_chat.enabled"
+        # allow the fresh components to create their database tables
+        grouprisectl migrate
+    fi
+}
 
-if [ "$1" = "configure" ]; then
-    configure_grouprise_matrix
-    configure_grouprise_element
-    echo "true" | grouprise_settings set "matrix_chat.enabled"
+
+configure_grouprise_matrix_bot() {
+    # create a matrix user account for our bot and store its authentication token
     if [ -z "$(grouprise_settings get "matrix_chat.bot_access_token")" ]; then
         # register the privileged bot account
         GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot
     fi
-    echo "true" | grouprise_settings set "oidc_provider.enabled"
+}
+
+
+enable_oidc_if_unconfigured() {
+    original_oidc_enabled_state=$(grouprise_settings get "oidc_provider.enabled")
+    if [ -z "$original_oidc_enabled_state" ]; then
+        echo "true" | grouprise_settings set "oidc_provider.enabled"
+        # allow the fresh components to create their database tables
+        grouprisectl migrate
+    fi
+}
+
+
+enable_oidc_authentication_for_matrix_synapse() {
     # generate the matrix-synapse configuration for using grouprise as an OIDC provider
     if [ ! -e "$MATRIX_AUTHENTICATION_FILE" ]; then
         configuration=$(GROUPRISE_USER=root grouprisectl matrix_chat_manage print-synapse-configuration)
         printf "%s\n" "$configuration" >"$MATRIX_AUTHENTICATION_FILE"
-        service matrix-synapse restart
+        invoke-rc.d matrix-synapse restart
+    fi
+}
+
+
+if [ "$1" = "configure" ]; then
+    if [ "$(grouprise_settings get "matrix_chat.enabled")" != "false" ]; then
+        configure_grouprise_matrix
+        configure_grouprise_element
+        enable_matrix_chat_if_unconfigured
+        configure_grouprise_matrix_bot
+        enable_oidc_if_unconfigured
+        enable_oidc_authentication_for_matrix_synapse
     fi
 fi
 
