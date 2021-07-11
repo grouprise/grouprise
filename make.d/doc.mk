@@ -1,4 +1,5 @@
 DIR_BUILD_DOC = $(abspath $(DIR_BUILD)/doc)
+SPHINX_WANTED_FILE_EXTENSIONS = html js css png
 
 
 .PHONY: doc
@@ -12,7 +13,7 @@ build: doc
 .PHONY: install-doc
 install-doc: doc
 	cd "$(DIR_BUILD_DOC)/html" \
-		&& { find -type f -name "*.html" -or -name "*.js"; find _static -type f; } \
+		&& { find -type f -false $(patsubst %,-or -name "*.%",$(SPHINX_WANTED_FILE_EXTENSIONS)); find _static -type f; } \
 			| sort | uniq | while read -r fname; do \
 				install -D --target-directory "$(abspath $(DESTDIR))/usr/share/doc/grouprise/html/$$(dirname "$$fname")" "$$fname"; done
 
