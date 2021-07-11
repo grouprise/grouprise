@@ -65,7 +65,6 @@ configure_grouprise_matrix() {
             echo >&2 "Ignoring unknown webserver type for grouprise: $webserver_type"
             ;;
     esac
-    sed -i "s|example\.org|$grouprise_domain|g" /etc/matrix-synapse/conf.d/grouprise-matrix-authentication.yaml
 }
 
 
