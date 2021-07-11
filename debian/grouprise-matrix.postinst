@@ -5,6 +5,9 @@ set -e
 GROUPRISE_SETTINGS_FILE="/etc/grouprise/conf.d/200-matrix_chat.yaml"
 MATRIX_AUTHENTICATION_FILE="/etc/matrix-synapse/conf.d/grouprise-matrix-authentication.yaml"
 ELEMENT_CONFIG_FILE=/etc/element-web/config.json
+OIDC_KEY_FILE=/etc/grouprise/oidc.key
+OIDC_KEY_BITS=4096
+PKG_GROUP=_grouprise
 
 
 . /usr/share/debconf/confmodule
@@ -123,6 +126,18 @@ configure_grouprise_matrix_bot() {
 
 enable_oidc_if_unconfigured() {
     original_oidc_enabled_state=$(grouprise_settings get "oidc_provider.enabled")
+    if [ "$original_oidc_enabled_state" != "false" ]; then
+        # generate the OIDC key
+        if [ ! -s "$OIDC_KEY_FILE" ]; then
+            echo "Generating OIDC key ..."
+            oidc_key=$(openssl genrsa "$OIDC_KEY_BITS")
+            printf '%s\n' "$oidc_key" >"$OIDC_KEY_FILE"
+        fi
+        if ! dpkg-statoverride --list "$OIDC_KEY_FILE" >/dev/null 2>&1; then
+            chgrp "$PKG_GROUP" "$OIDC_KEY_FILE"
+            chmod 640 "$OIDC_KEY_FILE"
+        fi
+    fi
     if [ -z "$original_oidc_enabled_state" ]; then
         echo "true" | grouprise_settings set "oidc_provider.enabled"
         # allow the fresh components to create their database tables

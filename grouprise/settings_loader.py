@@ -4,7 +4,6 @@ import importlib.util
 import logging
 import os
 import re
-import subprocess
 import types
 
 import ruamel.yaml
@@ -34,27 +33,6 @@ class EmailSubmissionEncryption(enum.Enum):
     PLAIN = "plain"
     STARTTLS = "starttls"
     SSL = "ssl"
-
-
-def create_rsa_key(filename, bits=4096):
-    try:
-        proc = subprocess.Popen(
-            ["openssl", "genrsa", str(bits)],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-    except FileNotFoundError:
-        raise ConfigError(
-            "Failed to generate RSA key via OpenSSL: the 'openssl' executable was not found")
-    proc.wait()
-    if proc.returncode != 0:
-        stderr = proc.stderr.read().decode()
-        raise ConfigError(f"Failed to generate RSA key via OpenSSL: {stderr}")
-    key_raw = proc.stdout.read()
-    # openssl genrsa -out oidc.key 4096
-    with open(filename, "wb") as out_file:
-        os.chmod(filename, 0o600)
-        out_file.write(key_raw)
 
 
 def get_configuration_path_candidates():
@@ -514,10 +492,13 @@ class OIDCProviderEnableConfig(BooleanConfig):
                 )
             oidc_key_filename = os.path.join(self.config_base_directory, "oidc.key")
             if not os.path.exists(oidc_key_filename):
-                create_rsa_key(oidc_key_filename)
+                raise ConfigError(
+                    f"Missing OIDC key file ({oidc_key_filename})."
+                    f" You can create it via 'openssl genrsa -out ${oidc_key_filename} 4096'."
+                )
             try:
-                with open(oidc_key_filename, "r") as oidc_key_file:
-                    oidc_key = oidc_key_file.read()
+                with open(oidc_key_filename, "r") as key_file:
+                    oidc_key = key_file.read()
             except IOError as exc:
                 raise ConfigError(
                     f"Failed to read OIDC key file ({oidc_key_filename}): {exc}"
