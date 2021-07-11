@@ -139,11 +139,6 @@ if [ "$1" = "configure" ]; then
     fi
 fi
 
-if [ "$1" = "triggered" ]; then
-    # assemble static assets from related packages
-    grouprisectl collectstatic --clear --no-input
-fi
-
 # manually trigger byte compilation (since we do not use dh_python3)
 if which py3compile >/dev/null; then
     py3compile -p grouprise
