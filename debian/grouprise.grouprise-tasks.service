@@ -4,10 +4,10 @@ PartOf=grouprise.service
 ReloadPropagatedFrom=grouprise.service
 
 [Service]
-Type=simple
 User=_grouprise
 Group=_grouprise
 ExecStart=/usr/bin/grouprisectl run_huey -w 2
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

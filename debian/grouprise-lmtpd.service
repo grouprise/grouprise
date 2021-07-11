@@ -9,7 +9,7 @@ ReloadPropagatedFrom=grouprise.service
 User=_grouprise
 Group=_grouprise
 ExecStart=/usr/bin/grouprisectl run_lmtpd localhost 1025
-Restart=on-failure
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
