@@ -79,6 +79,9 @@ class Command(BaseCommand):
                 "password_config": {"enabled": False},
                 # synapse refuses to enable OIDC without a configured "public_baseurl"
                 "public_baseurl": get_grouprise_baseurl() + "/",
+                # The web client location can be used for discovering web clients of external
+                # homeservers: https://example.org/_matrix/client
+                "web_client_location": get_grouprise_baseurl() + "/stadt/chat/",
                 "oidc_providers": [
                     {
                         "idp_id": site.domain,
