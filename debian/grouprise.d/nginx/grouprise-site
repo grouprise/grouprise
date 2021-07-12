@@ -1,4 +1,5 @@
 server {
     server_name localhost;
+    client_max_body_size 10M;
     include snippets/grouprise.conf;
 }
