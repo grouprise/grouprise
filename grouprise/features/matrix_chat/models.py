@@ -32,6 +32,11 @@ class MatrixChatGroupRoom(models.Model):
     def members_count(self):
         return self.get_statistics().get("members_count", 0)
 
+    def get_default_room_alias(self):
+        group_slug = self.group.slug or self.group.name
+        name_suffix = "-private" if self.is_private else ""
+        return f"#{group_slug}{name_suffix}:{MATRIX_SETTINGS.DOMAIN}"
+
     def __str__(self):
         if self.is_private:
             return "{} (private, {})".format(self.group.name, self.room_id)

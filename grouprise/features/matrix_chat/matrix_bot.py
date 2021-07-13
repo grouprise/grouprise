@@ -83,9 +83,6 @@ class MatrixBot:
                     yield room
                 await self.configure_room(room)
 
-    def _get_group_room_name_local(self, group, is_private):
-        return (group.slug or group.name) + ("-private" if is_private else "")
-
     async def _get_or_create_room(self, group, is_private):
         try:
             room = MatrixChatGroupRoom.objects.get(group=group, is_private=is_private)
@@ -100,7 +97,7 @@ class MatrixBot:
         else:
             room_title = group.name
             room_description = group_url
-        group_name_local = self._get_group_room_name_local(group, is_private)
+        room_alias = room.get_default_room_alias()
         preset = (
             nio.api.RoomPreset.private_chat
             if is_private
@@ -119,10 +116,10 @@ class MatrixBot:
                 visibility=visibility,
             )
         except nio.exceptions.ProtocolError as exc:
-            raise MatrixError(f"Failed to create room '{group_name_local}': {exc}")
+            raise MatrixError(f"Failed to create room '{room_alias}': {exc}")
         if not isinstance(response, nio.responses.RoomCreateResponse):
             raise MatrixError(
-                f"Create room requested for '{group_name_local}' was rejected: {response}"
+                f"Create room requested for '{room_alias}' was rejected: {response}"
             )
         # store the room
         room = MatrixChatGroupRoom.objects.create(
@@ -132,8 +129,7 @@ class MatrixBot:
         return room, True
 
     async def configure_room(self, room):
-        group_name_local = self._get_group_room_name_local(room.group, room.is_private)
-        room_alias = f"#{group_name_local}:{MATRIX_SETTINGS.DOMAIN}"
+        room_alias = room.get_default_room_alias()
         # try to set the visibility of the room in the public room directory
         try:
             response = await self.client._send(
