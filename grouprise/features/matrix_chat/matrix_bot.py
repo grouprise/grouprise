@@ -21,7 +21,6 @@ class MatrixError(Exception):
 
 
 class MatrixClient(nio.AsyncClient):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.add_event_callback(self.cb_autojoin_room, nio.InviteEvent)
@@ -213,12 +212,50 @@ class MatrixBot:
                     f"Refused to set canonical alias ({room_alias}) of room: {response}"
                 )
         # try to raise default role of new members
-        if not await self._change_room_power_state(room, {"users_default": 50}):
+        if not await self._change_room_state(
+            room, {"users_default": 50}, "m.room.power_levels", room_label=str(room)
+        ):
             logger.warning(
                 f"Failed to raise default role for new members ({room_alias})"
             )
 
-    async def _change_room_power_state(self, room, changes):
+    async def remove_room_alias(self, room_id: str, room_alias: str):
+        canonical_state = await self._get_room_state(room_id, "m.room.canonical_alias")
+        if canonical_state and (canonical_state["alias"] == room_alias):
+            await self._change_room_state(
+                room_id, {"alias": None}, "m.room.canonical_alias"
+            )
+        aliases_state = await self._get_room_state(room_id, "m.room.aliases")
+        if aliases_state:
+            aliases = aliases_state["alias"]
+            if room_alias in aliases:
+                aliases.remove(room_alias)
+                await self._change_room_state(
+                    room_id, {"alias": aliases}, "m.room.aliases"
+                )
+
+    async def _get_room_state(self, room_id, state_key):
+        try:
+            response = await self.client.room_get_state(room_id)
+            failure_reason = None
+        except nio.exceptions.ProtocolError as exc:
+            response = None
+            failure_reason = exc
+        if not isinstance(response, nio.responses.RoomGetStateResponse):
+            error_message = failure_reason or response
+            logger.warning(f"Failed to get room state ({room_id}): {error_message}")
+            return None
+        matching_events = [
+            event for event in response.events if event["type"] == state_key
+        ]
+        if matching_events:
+            return matching_events[0]["content"]
+        else:
+            return {}
+
+    async def _change_room_state(
+        self, room_id: str, changes: dict, state_key: str, room_label=None
+    ):
         """configure the power levels in a room
 
         The procedure is a bit complicated, since we need to send a full state dictionary.
@@ -227,19 +264,17 @@ class MatrixBot:
 
         Specification: https://matrix.org/docs/spec/client_server/latest#id253
         """
+        state_label = state_key.split(".")[-1].replace("_", " ")
+        if room_label is None:
+            room_label = room_id
         # retrieve the current state
-        try:
-            response = await self.client.room_get_state(room.room_id)
-            failure_reason = None
-        except nio.exceptions.ProtocolError as exc:
-            response = None
-            failure_reason = exc
-        if not isinstance(response, nio.responses.RoomGetStateResponse):
-            logger.warning(f"Failed to get room state ({room}): {failure_reason}")
+        original_state = await self._get_room_state(room_id, state_key)
+        if original_state is None:
+            logger.warning(
+                f"Failed to retrieve current state before changing '{state_key}' in room"
+                f" '{room_label}'"
+            )
             return False
-        original_state = [
-            event for event in response.events if event["type"] == "m.room.power_levels"
-        ][0]["content"]
         wanted_state = copy.deepcopy(original_state)
         # merge the current state with the wanted changes
         for key, value in changes.items():
@@ -252,19 +287,19 @@ class MatrixBot:
         # apply the changes
         try:
             response = await self.client.room_put_state(
-                room.room_id,
-                "m.room.power_levels",
-                wanted_state,
+                room_id, state_key, wanted_state
             )
         except nio.exceptions.ProtocolError as exc:
-            logger.warning(f"Failed to change power levels in room ({room}): {exc}")
+            logger.warning(
+                f"Failed to change {state_label} in room ({room_label}): {exc}"
+            )
             return False
         else:
             if isinstance(response, nio.responses.RoomPutStateResponse):
                 return True
             else:
                 logger.warning(
-                    f"Refused to change power levels in room ({room}): {response}"
+                    f"Refused to change {state_label} in room ({room_label}): {response}"
                 )
                 return False
 
