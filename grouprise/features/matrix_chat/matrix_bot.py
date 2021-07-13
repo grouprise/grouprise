@@ -20,12 +20,22 @@ class MatrixError(Exception):
     """ an error occurred while communicating with the matrix server """
 
 
+class MatrixClient(nio.AsyncClient):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.add_event_callback(self.cb_autojoin_room, nio.InviteEvent)
+
+    async def cb_autojoin_room(self, room: nio.MatrixRoom, event: nio.InviteEvent):
+        await self.join(room.room_id)
+
+
 class MatrixBot:
     def __init__(self):
         matrix_url = f"https://{MATRIX_SETTINGS.DOMAIN}"
         self.bot_matrix_id = f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}"
         logger.info(f"Connecting to {matrix_url} as '{MATRIX_SETTINGS.BOT_USERNAME}'")
-        self.client = nio.AsyncClient(matrix_url, self.bot_matrix_id)
+        self.client = MatrixClient(matrix_url, self.bot_matrix_id)
         # maybe we should use "self.client.login()" instead?
         self.client.access_token = MATRIX_SETTINGS.BOT_ACCESS_TOKEN
 
