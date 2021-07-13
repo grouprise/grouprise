@@ -392,6 +392,17 @@ msgstr "Gruppen suchen"
 msgid "More groups"
 msgstr "Weitere Gruppen"
 
+#, python-brace-format
+msgid ""
+"A Matrix room ID (starting with '!') or an alias (starting with '#') can be "
+"used. You may want to invite {bot_address} to this room and grant moderation "
+"power after changing the room address."
+msgstr ""
+"Eine Matrix-Raum-ID (beginnend mit '!') oder ein Alias (beginnend mit '#') "
+"kann verwendet werden. Es ist empfehlenswert, {bot_address} in diesen Raum "
+"einzuladen und Moderationsrechte zu gewähren, falls die Adresse geändert "
+"wurde."
+
 msgid "Custom (external) matrix user ID"
 msgstr "Eigene (externe) Matrix-Nutzer-ID"
 
@@ -403,10 +414,16 @@ msgstr ""
 "Nutzer-ID hat die Form '@foo:example.org'."
 
 msgid "Show links to the public chat room"
-msgstr "Zeige Verweise auf den öffentlichen Chat-Raum."
+msgstr "Zeige Verweise auf den öffentlichen Chat-Raum"
+
+msgid "Public chat room"
+msgstr "Öffentlicher Chat-Raum"
 
 msgid "Show links to the private chat room"
-msgstr "Zeige Verweise auf den internen Chat-Raum."
+msgstr "Zeige Verweise auf den internen Chat-Raum"
+
+msgid "Private chat room"
+msgstr "Privater Chat-Raum"
 
 msgid "Introduction to Chat"
 msgstr "Einführung in Chats"
@@ -755,6 +772,12 @@ msgstr "Chat-Einstellungen (Matrix)"
 
 msgid "Save settings"
 msgstr "Einstellungen speichern"
+
+msgid "Public Chat Room"
+msgstr "Öffentlicher Chat-Raum"
+
+msgid "Private Chat Room"
+msgstr "Privater Chat-Raum"
 
 msgid "Chat / Instant Messaging"
 msgstr "Chat / Direktnachrichten"

@@ -78,8 +78,10 @@ class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormVi
         for room in self.get_group_rooms():
             if room.is_private:
                 initial["room_private_visibility"] = room.is_visible
+                initial["room_private_matrix_reference"] = room.room_id
             else:
                 initial["room_public_visibility"] = room.is_visible
+                initial["room_public_matrix_reference"] = room.room_id
         return initial
 
     @property
@@ -92,8 +94,10 @@ class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormVi
         for room in self.get_group_rooms():
             if room.is_private:
                 room.is_visible = form.cleaned_data["room_private_visibility"]
+                room.room_id = form.cleaned_data["room_private_matrix_reference"]
             else:
                 room.is_visible = form.cleaned_data["room_public_visibility"]
+                room.room_id = form.cleaned_data["room_public_matrix_reference"]
             room.save()
         return super().form_valid(form)
 
