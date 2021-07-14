@@ -425,6 +425,20 @@ msgstr "Zeige Verweise auf den internen Chat-Raum"
 msgid "Private chat room"
 msgstr "Privater Chat-Raum"
 
+#, python-brace-format
+msgid ""
+"The {room_visibility} chat room of [\"{group_name}\"]({group_url}) moved to "
+"{new_room_id}."
+msgstr ""
+"Der Chat-Raum von [\"{group_name}\"]({group_url}) ({room_visibility}) wurde "
+"nach {new_room_id} verschoben."
+
+msgid "private"
+msgstr "intern"
+
+msgid "public"
+msgstr "öffentlich"
+
 msgid "Introduction to Chat"
 msgstr "Einführung in Chats"
 

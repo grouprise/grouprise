@@ -1,10 +1,12 @@
 import asyncio
 import logging
 
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
+from django.utils.translation import gettext as _
 from huey.contrib.djhuey import db_task
 
+from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.core.templatetags.defaultfilters import full_url
 import grouprise.features.content.models
 import grouprise.features.contributions.models
@@ -52,7 +54,7 @@ def _send_invitations_for_gestalt(gestalt):
 
 
 @receiver(post_save, sender=grouprise.features.groups.models.Group)
-def update_matrix_rooms_for_group(sender, instance, created, **kwargs):
+def create_matrix_rooms_for_new_group(sender, instance, created, **kwargs):
     if created:
         _sync_rooms_delayed(instance)
 
@@ -168,6 +170,48 @@ def _invite_to_group_rooms(group):
                 )
 
     asyncio.run(_invite_to_group_rooms_delayed(group))
+
+
+@receiver(pre_save, sender=MatrixChatGroupRoom)
+def move_away_from_matrix_room(sender, instance, *args, update_fields=None, **kwargs):
+    if (instance.id is not None) and update_fields and ("room_id" in update_fields):
+        previous_room_id = MatrixChatGroupRoom.objects.get(pk=instance.pk).room_id
+        _migrate_to_new_room(
+            instance,
+            previous_room_id,
+            instance.get_default_room_alias(),
+            instance.room_id,
+        )
+        # the old invitations are no longer of any use
+        instance.invitations.all().delete()
+
+
+@db_task()
+def _migrate_to_new_room(*args):
+    async def _migrate_to_new_room_delayed(
+        room_object, old_room_id, room_alias, new_room_id
+    ):
+        async with MatrixBot() as bot:
+            await bot.remove_room_alias(old_room_id, room_alias)
+            text = _(
+                'The {room_visibility} chat room of ["{group_name}"]({group_url})'
+                " moved to {new_room_id}."
+            ).format(
+                room_visibility=_("private") if room_object.is_private else _("public"),
+                group_url=(
+                    get_grouprise_baseurl() + room_object.group.get_absolute_url()
+                ),
+                group_name=room_object.group.name,
+                new_room_id=new_room_id,
+            )
+            try:
+                await bot.send_text(old_room_id, text)
+            except MatrixError as exc:
+                logger.warning(
+                    f"Failed to send goodbye message to {old_room_id}: {exc}"
+                )
+
+    asyncio.run(_migrate_to_new_room_delayed(*args))
 
 
 @receiver(post_delete, sender=grouprise.features.memberships.models.Membership)
