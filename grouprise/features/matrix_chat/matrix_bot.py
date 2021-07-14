@@ -67,13 +67,15 @@ class MatrixBot:
         await self.client.close()
         return False
 
-    async def send_text(self, room, body, msgtype="m.notice", parser="markdown"):
+    async def send_text(
+        self, room_id: str, body: str, msgtype="m.notice", parser="markdown"
+    ):
         msg = {"body": body, "msgtype": msgtype}
         if parser == "markdown":
             msg["format"] = "org.matrix.custom.html"
             msg["formatted_body"] = markdown.markdown(body)
         try:
-            response = await self.client.room_send(room.room_id, "m.room.message", msg)
+            response = await self.client.room_send(room_id, "m.room.message", msg)
         except nio.exceptions.ProtocolError as exc:
             raise MatrixError(f"Failed to send message: {exc}")
         else:
@@ -218,7 +220,10 @@ class MatrixBot:
                 )
         # try to raise default role of new members
         if not await self._change_room_state(
-            room, {"users_default": 50}, "m.room.power_levels", room_label=str(room)
+            room.room_id,
+            {"users_default": 50},
+            "m.room.power_levels",
+            room_label=str(room),
         ):
             logger.warning(
                 f"Failed to raise default role for new members ({room_alias})"

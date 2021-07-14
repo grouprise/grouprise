@@ -80,7 +80,7 @@ def send_matrix_room_messages(messages):
                     # send private messages only to the internal room
                     if is_public or room.is_private:
                         try:
-                            await bot.send_text(room, message)
+                            await bot.send_text(room.room_id, message)
                         except MatrixError as exc:
                             logger.warning(
                                 f"Failed to send matrix notification for contribution: {exc}"
