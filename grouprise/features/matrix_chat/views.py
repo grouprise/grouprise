@@ -45,12 +45,17 @@ class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.Form
 
     def form_valid(self, form):
         gestalt = self.request.user.gestalt
-        matrix_settings = MatrixChatGestaltSettings.objects.get_or_create(
+        matrix_settings, created = MatrixChatGestaltSettings.objects.get_or_create(
             gestalt=gestalt
-        )[0]
-        matrix_settings.matrix_id_override = form.cleaned_data["matrix_id"]
-        matrix_settings.save()
-        gestalt.save()
+        )
+        update_fields = []
+        new_matrix_id = form.cleaned_data["matrix_id"]
+        if matrix_settings.matrix_id_override != new_matrix_id:
+            matrix_settings.matrix_id_override = new_matrix_id
+            update_fields.append("matrix_id_override")
+        matrix_settings.save(update_fields=update_fields)
+        if created:
+            gestalt.save()
         return super().form_valid(form)
 
 
@@ -92,13 +97,20 @@ class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormVi
 
     def form_valid(self, form):
         for room in self.get_group_rooms():
+            update_fields = []
             if room.is_private:
-                room.is_visible = form.cleaned_data["room_private_visibility"]
-                room.room_id = form.cleaned_data["room_private_matrix_reference"]
+                new_is_visible = form.cleaned_data["room_private_visibility"]
+                new_room_id = form.cleaned_data["room_private_matrix_reference"]
             else:
-                room.is_visible = form.cleaned_data["room_public_visibility"]
-                room.room_id = form.cleaned_data["room_public_matrix_reference"]
-            room.save()
+                new_is_visible = form.cleaned_data["room_public_visibility"]
+                new_room_id = form.cleaned_data["room_public_matrix_reference"]
+            if room.is_visible != new_is_visible:
+                room.is_visible = new_is_visible
+                update_fields.append("is_visible")
+            if room.room_id != new_room_id:
+                room.room_id = new_room_id
+                update_fields.append("room_id")
+            room.save(update_fields=update_fields)
         return super().form_valid(form)
 
 
