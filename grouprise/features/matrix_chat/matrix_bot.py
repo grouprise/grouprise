@@ -24,9 +24,17 @@ class MatrixClient(nio.AsyncClient):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.add_event_callback(self.cb_autojoin_room, nio.InviteEvent)
+        self.matrix_bot = None
 
     async def cb_autojoin_room(self, room: nio.MatrixRoom, event: nio.InviteEvent):
         await self.join(room.room_id)
+        if self.matrix_bot:
+            try:
+                room_object = MatrixChatGroupRoom.objects.get(room_id=room.room_id)
+            except MatrixChatGroupRoom.DoesNotExist:
+                pass
+            else:
+                await self.matrix_bot.configure_room(room_object)
 
 
 class MatrixBot:
@@ -35,6 +43,7 @@ class MatrixBot:
         self.bot_matrix_id = f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}"
         logger.info(f"Connecting to {matrix_url} as '{MATRIX_SETTINGS.BOT_USERNAME}'")
         self.client = MatrixClient(matrix_url, self.bot_matrix_id)
+        self.client.matrix_bot = self
         # maybe we should use "self.client.login()" instead?
         self.client.access_token = MATRIX_SETTINGS.BOT_ACCESS_TOKEN
 
