@@ -161,11 +161,12 @@ class ConfigBase:
 
 
 class StringConfig(ConfigBase):
-    def __init__(self, *args, regex=None, **kwargs):
+    def __init__(self, *args, regex=None, min_length=None, **kwargs):
         if regex and isinstance(regex, str):
             self.regex = re.compile(regex)
         else:
             self.regex = regex
+        self.min_length = min_length
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
@@ -174,6 +175,12 @@ class StringConfig(ConfigBase):
             raise ConfigError(
                 f"Setting '{self.name}' must be a string: {value} (type: {type(value)})"
             )
+        if self.min_length:
+            if len(value) < self.min_length:
+                raise ConfigError(
+                    f"Setting '{self.name}' is too short (less than {self.min_length} characters):"
+                    f" {value}"
+                )
         if self.regex:
             if not self.regex.match(value):
                 raise ConfigError(
@@ -636,7 +643,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name=("csp", "connect_src"), django_target="CSP_CONNECT_SRC", append=True
         ),
         TemplateDirectoriesConfig(name="template_directories", default=[]),
-        StringConfig(name="secret_key", django_target="SECRET_KEY", regex=r".{16}"),
+        StringConfig(name="secret_key", django_target="SECRET_KEY", min_length=16),
         StringConfig(
             name="default_from_email",
             django_target=lambda settings, value: settings.update(
