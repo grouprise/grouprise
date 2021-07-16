@@ -177,7 +177,8 @@ class StringConfig(ConfigBase):
         if self.regex:
             if not self.regex.match(value):
                 raise ConfigError(
-                    f"Setting '{self.name}' contains invalid characters: {value}"
+                    f"Setting '{self.name}' does not match the required regular expression"
+                    f" ({self.regex.pattern}): {value}"
                 )
 
 
