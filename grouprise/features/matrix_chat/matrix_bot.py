@@ -108,7 +108,6 @@ class MatrixBot:
         else:
             room_title = group.name
             room_description = group_url
-        room_alias = room.get_default_room_alias()
         preset = (
             nio.api.RoomPreset.private_chat
             if is_private
@@ -127,10 +126,10 @@ class MatrixBot:
                 visibility=visibility,
             )
         except nio.exceptions.ProtocolError as exc:
-            raise MatrixError(f"Failed to create room '{room_alias}': {exc}")
+            raise MatrixError(f"Failed to create room '{room_title}': {exc}")
         if not isinstance(response, nio.responses.RoomCreateResponse):
             raise MatrixError(
-                f"Create room requested for '{room_alias}' was rejected: {response}"
+                f"Create room requested for '{room_title}' was rejected: {response}"
             )
         # store the room
         room = MatrixChatGroupRoom.objects.create(
