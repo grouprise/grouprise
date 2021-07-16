@@ -106,9 +106,7 @@ def load_settings_from_yaml_files(locations=None):
                 )
             else:
                 combined_configuration.update(data)
-    # We want to tolerate settings with with upper-case instead of lower-case keys.
-    # This should simplify the migration from Django-based settings to the yaml-based settings.
-    return recursivly_normalize_dict_keys_to_lower_case(combined_configuration)
+    return combined_configuration
 
 
 class ConfigError(ValueError):
@@ -566,6 +564,18 @@ def import_settings_from_yaml(settings, locations=None):
     See "import_settings_from_python" for details.
     """
     config = load_settings_from_yaml_files(locations)
+    base_directory = get_config_base_directory(locations)
+    return import_settings_from_dict(settings, config, base_directory=base_directory)
+
+
+def import_settings_from_dict(settings: dict, config: dict, base_directory=None):
+    """
+    settings: the target dictionary to be populated (e.g. "locals()" in settings.py)
+    config: the source dictionary parsed from a grouprise configuration file
+    """
+    # We want to tolerate settings with with upper-case instead of lower-case keys.
+    # This should simplify the migration from Django-based settings to the yaml-based settings.
+    config = recursivly_normalize_dict_keys_to_lower_case(config)
     default_domain = "example.org"
     configured_domain = config.get("domain", default_domain)
     parsers = [
@@ -747,7 +757,7 @@ def import_settings_from_yaml(settings, locations=None):
         ),
         OIDCProviderEnableConfig(
             name=("oidc_provider", "enabled"),
-            config_base_directory=get_config_base_directory(locations),
+            config_base_directory=base_directory,
             django_target=("OAUTH2_PROVIDER", "OIDC_ENABLED"),
         ),
     ]
