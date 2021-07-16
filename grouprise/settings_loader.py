@@ -199,11 +199,24 @@ class BooleanConfig(ConfigBase):
 
 
 class IntegerConfig(ConfigBase):
+    def __init__(self, *args, minimum=None, maximum=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.minimum = minimum
+        self.maximum = maximum
+
     def validate(self, value):
         super().validate(value)
         if not isinstance(value, int):
             raise ConfigError(
                 f"Setting '{self.name}' must be an integer value: {value} (type: {type(value)})"
+            )
+        if (self.minimum is not None) and (value < self.minimum):
+            raise ConfigError(
+                f"Setting '{self.name}' is too small (less than {self.minimum}: {value}"
+            )
+        if (self.maximum is not None) and (value > self.maximum):
+            raise ConfigError(
+                f"Setting '{self.name}' is too big (greater than {self.maximum}: {value}"
             )
 
 
@@ -604,7 +617,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
                 "name": os.path.expanduser("~/grouprise.sqlite3"),
             },
         ),
-        IntegerConfig(name="session_cookie_age", django_target="SESSION_COOKIE_AGE"),
+        IntegerConfig(
+            name="session_cookie_age", django_target="SESSION_COOKIE_AGE", minimum=0
+        ),
         TransportSecurityConfig(
             name="transport_security",
             choices={"disabled", "reverse-proxy", "integrated"},
@@ -626,7 +641,12 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             default="plain",
         ),
         StringConfig(name=("email_submission", "host"), django_target="EMAIL_HOST"),
-        StringConfig(name=("email_submission", "port"), django_target="EMAIL_PORT"),
+        IntegerConfig(
+            name=("email_submission", "port"),
+            django_target="EMAIL_PORT",
+            minimum=1,
+            maximum=65535,
+        ),
         StringConfig(
             name=("email_submission", "user"), django_target="EMAIL_HOST_USER"
         ),
@@ -722,21 +742,29 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name="backup_path", django_target=("GROUPRISE", "BACKUP_PATH")
         ),
         IntegerConfig(
-            name="score_content_age", django_target=("GROUPRISE", "SCORE_CONTENT_AGE")
+            name="score_content_age",
+            django_target=("GROUPRISE", "SCORE_CONTENT_AGE"),
+            minimum=0,
         ),
         IntegerConfig(
             name="upload_max_file_size",
             django_target=("GROUPRISE", "UPLOAD_MAX_FILE_SIZE"),
+            minimum=0,
         ),
         IntegerConfig(
             name="feed_importer_gestalt_id",
             django_target=("GROUPRISE", "FEED_IMPORTER_GESTALT_ID"),
+            minimum=1,
         ),
         IntegerConfig(
-            name="operator_group_id", django_target=("GROUPRISE", "OPERATOR_GROUP_ID")
+            name="operator_group_id",
+            django_target=("GROUPRISE", "OPERATOR_GROUP_ID"),
+            minimum=1,
         ),
         IntegerConfig(
-            name="unknown_gestalt_id", django_target=("GROUPRISE", "UNKNOWN_GESTALT_ID")
+            name="unknown_gestalt_id",
+            django_target=("GROUPRISE", "UNKNOWN_GESTALT_ID"),
+            minimum=1,
         ),
         # matrix settings
         MatrixAppEnableConfig(
