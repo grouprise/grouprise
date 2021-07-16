@@ -473,15 +473,16 @@ class OIDCProviderEnableConfig(BooleanConfig):
         super().apply_to_settings(settings, value)
         if value:
             # enable the required applications and middleware
-            settings["INSTALLED_APPS"].append("corsheaders")
-            settings["INSTALLED_APPS"].append("oauth2_provider")
-            settings["MIDDLEWARE"].insert(0, "corsheaders.middleware.CorsMiddleware")
-            settings["OAUTH2_PROVIDER"]["OIDC_ENABLED"] = True
-            settings["OAUTH2_PROVIDER"].setdefault("SCOPES", {}).update(
-                {"openid": "OpenID Connect scope"}
-            )
+            apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
+            middleware = _get_nested_dict_value(settings, ["MIDDLEWARE"], [])
+            provider = _get_nested_dict_value(settings, ["OAUTH2_PROVIDER"], {})
+            apps.append("corsheaders")
+            apps.append("oauth2_provider")
+            middleware.insert(0, "corsheaders.middleware.CorsMiddleware")
+            provider["OIDC_ENABLED"] = True
+            provider.setdefault("SCOPES", {}).update({"openid": "OpenID Connect scope"})
             validator = "grouprise.auth.oauth_validators.AccountOAuth2Validator"
-            settings["OAUTH2_PROVIDER"]["OAUTH2_VALIDATOR_CLASS"] = validator
+            provider["OAUTH2_VALIDATOR_CLASS"] = validator
             # verify the version of oauth2_provider (OIDC support started in v1.5.0)
             try:
                 import oauth2_provider
