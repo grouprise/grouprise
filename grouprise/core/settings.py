@@ -87,6 +87,7 @@ def get_grouprise_site():
 CORE_SETTINGS = LazySettingsResolver(
     # branding
     CLAIMS=_GR.get("CLAIMS", []),
+    HEADER_ITEMS=_GR.get("HEADER_ITEMS", []),
     LOGO_BACKDROP=_GR.get(
         "BRANDING_LOGO_BACKDROP", static("core/logos/logo-backdrop.svg")
     ),

@@ -443,6 +443,60 @@ class TemplateDirectoriesConfig(ListConfig):
         templates[0]["DIRS"].extend(os.path.abspath(path) for path in value)
 
 
+class StylesheetsConfig(ListConfig):
+    def validate(self, value):
+        super().validate(value)
+        for item in value:
+            if not isinstance(item, dict):
+                raise ConfigError(
+                    f"Each item of '{self.name}' must be a dict: {item} (type: {type(item)})"
+                )
+            try:
+                path = item["path"]
+            except KeyError:
+                raise ConfigError(
+                    f"Missing required 'path' attribute in item of '{self.name}': {item}"
+                )
+            if not isinstance(path, str):
+                raise ConfigError(
+                    f"The 'path' value in '{self.name}' must be a string: {path}"
+                    f" (type: {type(path)})"
+                )
+            # allow only absolute links, but forbid protocol-relative (remote) links
+            if not re.match(r"^/[^/]", path):
+                raise ConfigError(
+                    f"The 'path' value in '{self.name}' must be an absolute (local) path"
+                    f" (starting with a single slash): {path}"
+                )
+            if "media" in item:
+                media = item["media"]
+                if not isinstance(media, str):
+                    raise ConfigError(
+                        f"The 'media' value in '{self.name}' must be a string: {media}"
+                        f" (type: {type(media)})"
+                    )
+            unknown_keys = set(item).difference({"path", "media"})
+            if unknown_keys:
+                logger.warning(
+                    "Unexpected attributes %s found in item of '%s': %s",
+                    unknown_keys,
+                    self.name,
+                    item,
+                )
+
+    def apply_to_settings(self, settings, value):
+        raw_lines = []
+        for item in value:
+            path = item["path"]
+            media = item.get("media")
+            if media:
+                line = f'<link rel="stylesheet" href="{path}" media="{media}">'
+            else:
+                line = f'<link rel="stylesheet" href="{path}">'
+            raw_lines.append(line)
+        super().apply_to_settings(settings, raw_lines)
+
+
 class AdministratorEmailsConfig(ListConfig):
     def validate(self, value):
         super().validate(value)
@@ -780,6 +834,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name="unknown_gestalt_id",
             django_target=("GROUPRISE", "UNKNOWN_GESTALT_ID"),
             minimum=1,
+        ),
+        StylesheetsConfig(
+            name="stylesheets", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
         ),
         # matrix settings
         MatrixAppEnableConfig(

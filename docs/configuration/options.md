@@ -244,6 +244,15 @@ The `score_content_age` setting limits, how old (in days) content may be in orde
 Older content has no impact at all.
 
 Default: `100`
+
+### `stylesheets`
+Add custom CSS stylesheets in order to override specific layout details.
+The `stylesheets` setting is a list of dictionaries.
+Each item needs to contain a `path` (absolute URL path of the local resource).
+Additionaly a [`media` value](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link) may be specified (e.g. `print`).
+
+Default: `[]` (empty)
+
 ### `template_directories`
 You may want to customize grouprise templates in order to add custom widgets or for embedding additional frontend ressources.
 The `template_directories` setting is a list of directory names, which are used for looking up templates.
