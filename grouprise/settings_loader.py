@@ -256,9 +256,8 @@ class ListConfig(ConfigBase):
                 path = [self.django_target]
             # Do not apply the concatenation ("+=") directly to the value, but reference it via its
             # parent.  Otherwise concatenation would have no effect on tuples.
-            parent = _get_nested_dict_value(
-                settings, path[:-1], default=self.append_pre_default
-            )
+            parent = _get_nested_dict_value(settings, path[:-1], default={})
+            parent.setdefault(path[-1], self.append_pre_default or [])
             parent[path[-1]] += tuple(value)
         else:
             super().apply_to_settings(settings, value)
@@ -451,7 +450,8 @@ class MatrixAppEnableConfig(BooleanConfig):
         # store the boolean value
         super().apply_to_settings(settings, value)
         # enable the matrix_chat django application
-        settings["INSTALLED_APPS"].append("grouprise.features.matrix_chat")
+        apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
+        apps.append("grouprise.features.matrix_chat")
 
 
 class OIDCProviderEnableConfig(BooleanConfig):
@@ -533,7 +533,7 @@ def _get_nested_dict_value(data, path, default=None):
     elif len(path) == 0:
         return data
     elif len(path) == 1:
-        return data.get(path[0], default)
+        return data.setdefault(path[0], default)
     else:
         return _get_nested_dict_value(data.get(path[0], {}), path[1:])
 
