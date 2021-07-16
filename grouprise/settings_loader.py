@@ -562,7 +562,7 @@ def recursivly_normalize_dict_keys_to_lower_case(data):
 
 
 def get_config_base_directory(locations=None):
-    """ Try to determine, which directory could be regarded as the base configuration directory.
+    """Try to determine, which directory could be regarded as the base configuration directory.
 
     The given locations (or being absent: the default locations) are scanned for configuration
     files.
@@ -636,7 +636,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             default="reverse-proxy",
         ),
         BooleanConfig(name="debug", django_target="DEBUG"),
-        LanguageCodeConfig(name="language_code", default="de-de"),
+        LanguageCodeConfig(
+            name="language_code", default="de-de", regex=r"^\w+([-_]\w+)?$"
+        ),
         StringConfig(name="time_zone", django_target="TIME_ZONE"),
         ListConfig(
             name="extra_allowed_hosts", django_target="ALLOWED_HOSTS", append=True
@@ -687,14 +689,17 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         StringConfig(
             name="default_distinct_from_email",
             django_target=("GROUPRISE", "DEFAULT_DISTINCT_FROM_EMAIL"),
+            regex=r"^[^@]*\{slug\}[^@]*@.*",
         ),
         StringConfig(
             name="default_reply_to_email",
             django_target=("GROUPRISE", "DEFAULT_REPLY_TO_EMAIL"),
+            regex=r"^[^@]*\{reply_key\}[^@]*@.*",
         ),
         StringConfig(
             name="collector_mailbox_address",
             django_target=("GROUPRISE", "COLLECTOR_MAILBOX_ADDRESS"),
+            regex=r"^[^@]+@.*",
         ),
         StringConfig(
             name="postmaster_email",
