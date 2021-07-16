@@ -329,6 +329,11 @@ class DirectoryConfig(StringConfig):
                 f"The configured path ({self.name}={value}) is not a directory"
             )
 
+    def apply_to_settings(self, settings, value):
+        """ store an absolute path in the configuration """
+        abspath = os.path.abspath(value)
+        super().apply_to_settings(settings, abspath)
+
 
 class WritableDirectoryConfig(DirectoryConfig):
     def validate(self, value):
@@ -431,7 +436,11 @@ class TemplateDirectoriesConfig(ListConfig):
                 )
 
     def apply_to_settings(self, settings, value):
-        settings["TEMPLATES"][0]["DIRS"].extend(value)
+        # create a dummy "TEMPLATES" attribute, if it is missing (useful only for tests)
+        templates = _get_nested_dict_value(settings, ["TEMPLATES"], [])
+        if not templates:
+            templates.append({"DIRS": []})
+        templates[0]["DIRS"].extend(os.path.abspath(path) for path in value)
 
 
 class AdministratorEmailsConfig(ListConfig):
