@@ -17,7 +17,6 @@ from grouprise.features.matrix_chat.settings import (
 
 
 class Command(BaseCommand):
-    args = ""
     help = "Synchronize rooms and other state from grouprise to matrix"
 
     def add_arguments(self, parser):

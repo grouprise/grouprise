@@ -597,13 +597,16 @@ class AdministratorEmailsConfig(ListConfig):
         settings["ADMINS"] = [("", item) for item in value]
 
 
-class MatrixAppEnableConfig(BooleanConfig):
+class DjangoAppEnableConfig(BooleanConfig):
+    def __init__(self, app_name):
+        self.app_name = app_name
+
     def apply_to_settings(self, settings, value):
         # store the boolean value
         super().apply_to_settings(settings, value)
-        # enable the matrix_chat django application
-        apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
-        apps.append("grouprise.features.matrix_chat")
+        if value:
+            apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
+            apps.append(self.app_name)
 
 
 class OIDCProviderEnableConfig(BooleanConfig):
@@ -936,9 +939,10 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name="scripts", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
         ),
         # matrix settings
-        MatrixAppEnableConfig(
+        DjangoAppEnableConfig(
             name=("matrix_chat", "enabled"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "ENABLED"),
+            app_name="grouprise.features.matrix_chat",
         ),
         StringConfig(
             name=("matrix_chat", "domain"),

@@ -59,7 +59,6 @@ def _get_matrix_config_key(key, config_locations):
 
 
 class Command(BaseCommand):
-    args = ""
     help = "Register a grouprise bot with local admin privileges on the matrix server"
 
     def add_arguments(self, parser):
