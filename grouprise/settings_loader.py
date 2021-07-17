@@ -679,14 +679,11 @@ class OIDCProviderEnableConfig(BooleanConfig):
 
 
 def _get_nested_dict_value(data, path, default=None, remove=False):
-    if isinstance(path, str):
-        if remove:
-            return data.pop(path, default)
-        else:
-            return data.get(path, default)
-    elif not isinstance(data, dict):
+    if not isinstance(data, dict):
         raise KeyError(f"Container is not a dictionary: {data}")
     elif len(path) == 0:
+        if remove:
+            raise ValueError("Removal of settings key is not possible, if the given path is empty")
         return data
     elif len(path) == 1:
         data.setdefault(path[0], default)
@@ -970,9 +967,10 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ),
     ]
     for parser in parsers:
+        value_path = [parser.name] if isinstance(parser.name, str) else parser.name
         try:
             value = _get_nested_dict_value(
-                config, parser.name, default=parser.default, remove=True
+                config, value_path, default=parser.default, remove=True
             )
         except KeyError as exc:
             raise ConfigError(
