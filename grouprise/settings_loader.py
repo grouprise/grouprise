@@ -678,17 +678,25 @@ class OIDCProviderEnableConfig(BooleanConfig):
             settings["OAUTH2_PROVIDER"]["OIDC_RSA_PRIVATE_KEY"] = oidc_key
 
 
-def _get_nested_dict_value(data, path, default=None):
+def _get_nested_dict_value(data, path, default=None, remove=False):
     if isinstance(path, str):
-        return data.get(path, default)
+        if remove:
+            return data.pop(path, default)
+        else:
+            return data.get(path, default)
     elif not isinstance(data, dict):
         raise KeyError(f"Container is not a dictionary: {data}")
     elif len(path) == 0:
         return data
     elif len(path) == 1:
-        return data.setdefault(path[0], default)
+        data.setdefault(path[0], default)
+        if remove:
+            return data.pop(path[0], default)
+        else:
+            return data.get(path[0], default)
     else:
-        return _get_nested_dict_value(data.get(path[0], {}), path[1:])
+        data.setdefault(path[0], {})
+        return _get_nested_dict_value(data[path[0]], path[1:], remove=remove)
 
 
 def recursivly_normalize_dict_keys_to_lower_case(data):
@@ -963,7 +971,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
     ]
     for parser in parsers:
         try:
-            value = _get_nested_dict_value(config, parser.name, default=parser.default)
+            value = _get_nested_dict_value(
+                config, parser.name, default=parser.default, remove=True
+            )
         except KeyError as exc:
             raise ConfigError(
                 f"Failed to traverse configuration path {parser.name} trough a nested dictionary. "
@@ -974,9 +984,22 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             parser.apply_to_settings(settings, value)
     # allow direct overrides of django configuration settings via python scripts
     django_settings_parser = ReadableFileConfig(name="extra_django_settings_filenames")
-    for filename in config.get(django_settings_parser.name, []):
+    for filename in config.pop(django_settings_parser.name, []):
         django_settings_parser.validate(filename)
         import_settings_from_python(settings, filename)
+    # report unprocessed values
+    # remove all empty dictionaries (traversing only one nesting level - we do not use more depth)
+    config = {
+        key: value
+        for key, value in config.items()
+        if not (isinstance(value, dict) and not value)
+    }
+    if config:
+        logger.warning(
+            "Some configuration settings were not processed (%s)."
+            " Maybe they are misspelled or are outdated?",
+            config,
+        )
 
 
 def import_settings_from_python(settings, filename):
