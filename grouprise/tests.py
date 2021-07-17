@@ -78,6 +78,11 @@ postmaster_email: postmaster@example.org
 oidc_provider:
         enabled: true
 score_content_age: 12
+scripts:
+        - path: /foo.js
+          load: blocking
+        - path: /bar.js
+        - content: 'alert("hello");'
 secret_key: "very-secret-django-key"
 session_cookie_age: 1000
 stylesheets:
@@ -124,6 +129,7 @@ DJANGO_SETTINGS_EXAMPLE = {
     "CSP_SCRIPT_SRC": [
         "https://tracker.example.net",
         "'sha256-J/TOUvP2iy3vYT4YNCGNCxigNR11I1/Zt517suNX1hk='",
+        "'sha384-TirQsvnG1MeGfZkhq8L6lMDkgOou3m57SpmscoAaKeSlZ42p1PWjQWD5Hsvyra7f'",
     ],
     "DATABASES": {
         "default": {
@@ -156,6 +162,9 @@ DJANGO_SETTINGS_EXAMPLE = {
         "HEADER_ITEMS": [
             '<link rel="stylesheet" href="/custom.css">',
             '<link rel="stylesheet" href="/print.css" media="print">',
+            '<script src="/foo.js" />',
+            '<script src="/bar.js" async defer />',
+            '<script type="application/json">alert("hello");</script>',
         ],
         "HOOK_SCRIPT_PATHS": ["/usr/local/bin/foo"],
         "MAILINGLIST_ENABLED": False,
@@ -286,6 +295,24 @@ class SettingsLoaderTest(TestCase):
             (
                 "Invalid stylesheet (mistyped media)",
                 {"stylesheets": [{"path": "/foo", "media": 4}]},
+            ),
+            ("Invalid scripts (key)", {"stylesheets": [{"no-path": "/foo"}]}),
+            ("Invalid scripts (mistyped path)", {"stylesheets": [{"path": 3}]}),
+            (
+                "Invalid scripts (mistyped load)",
+                {"scripts": [{"path": "/foo", "load": 3}]},
+            ),
+            (
+                "Invalid scripts (invalid load)",
+                {"scripts": [{"path": "/foo", "load": "bar"}]},
+            ),
+            (
+                "Invalid scripts (conflict)",
+                {"scripts": [{"path": "/foo", "content": "bar"}]},
+            ),
+            (
+                "Invalid scripts (content/load)",
+                {"scripts": [{"content": "foo", "load": "bar"}]},
             ),
             ("Mistyped integer (str)", {"session_cookie_age": "foo"}),
             ("Mistyped integer (list)", {"session_cookie_age": [1]}),

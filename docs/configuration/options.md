@@ -245,6 +245,16 @@ Older content has no impact at all.
 
 Default: `100`
 
+### `scripts`
+Add custom javascript resources either as inline snippets or by referencing a local URL path.
+The `scripts` setting is a list of dictionaries.
+Each item needs to contain either a `path` (absolute URL path of the local resource) or a `content` (inline javascript code).
+Additionally a `load` value may be added for a `path` value.
+A proper CSP hash is automatically configured for a `content` value.
+External resources may not be referenced, since this would leak user's data to remote servers.
+
+Default: `[]` (empty)
+
 ### `stylesheets`
 Add custom CSS stylesheets in order to override specific layout details.
 The `stylesheets` setting is a list of dictionaries.

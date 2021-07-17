@@ -1,6 +1,8 @@
+import base64
 from distutils.version import LooseVersion
 import enum
 import importlib.util
+import hashlib
 import logging
 import os
 import re
@@ -497,6 +499,93 @@ class StylesheetsConfig(ListConfig):
         super().apply_to_settings(settings, raw_lines)
 
 
+class ScriptsConfig(ListConfig):
+
+    SCRIPT_PATTERNS_MAP = {
+        "async": '<script src="{path}" async defer />',
+        "defer": '<script src="{path}" defer />',
+        "blocking": '<script src="{path}" />',
+    }
+
+    @staticmethod
+    def _calculate_csp_hash(script):
+        hash_algorithm = "sha384"
+        script_hash = hashlib.sha384(script.encode()).digest()
+        base64_hash = base64.b64encode(script_hash).decode()
+        return f"'{hash_algorithm}-{base64_hash}'"
+
+    def validate(self, value):
+        super().validate(value)
+        for item in value:
+            if not isinstance(item, dict):
+                raise ConfigError(
+                    f"Each item of '{self.name}' must be a dict: {item} (type: {type(item)})"
+                )
+            if "path" in item:
+                path = item["path"]
+                if "content" in item:
+                    raise ConfigError(
+                        f"The 'path' value in '{self.name}' may not be used together with the"
+                        f" 'content' value: {item}"
+                    )
+                if not isinstance(path, str):
+                    raise ConfigError(
+                        f"The 'path' value in '{self.name}' must be a string: {path}"
+                        f" (type: {type(path)})"
+                    )
+                # allow only absolute links, but forbid protocol-relative (remote) links
+                if not re.match(r"^/[^/]", path):
+                    raise ConfigError(
+                        f"The 'path' value in '{self.name}' must be an absolute (local) path"
+                        f" (starting with a single slash): {path}"
+                    )
+                load_type = item.get("load", "async")
+                if load_type not in self.SCRIPT_PATTERNS_MAP:
+                    raise ConfigError(
+                        f"The 'load' value in '{self.name}' must be one of"
+                        f" async / defer / blocking: {load_type}"
+                    )
+            elif "content" in item:
+                if "load" in item:
+                    raise ConfigError(
+                        f"The 'load' value in '{self.name}' may only be used together with the"
+                        f" 'path' value (not 'content'): {item}"
+                    )
+            else:
+                raise ConfigError(
+                    f"Neither 'path' nor 'content' was found in '{self.name}' item: {item}"
+                )
+
+            unknown_keys = set(item).difference({"path", "load", "content"})
+            if unknown_keys:
+                logger.warning(
+                    "Unexpected attributes %s found in item of '%s': %s",
+                    unknown_keys,
+                    self.name,
+                    item,
+                )
+
+    def apply_to_settings(self, settings, value):
+        raw_lines = []
+        csp_hashes = []
+        for item in value:
+            if "path" in item:
+                path = item["path"]
+                load_type = item.get("load", "async")
+                pattern = self.SCRIPT_PATTERNS_MAP[load_type]
+                raw_lines.append(pattern.format(path=path))
+            else:
+                content = item["content"]
+                csp_hashes.append(self._calculate_csp_hash(content))
+                raw_lines.append(f'<script type="application/json">{content}</script>')
+        if csp_hashes:
+            # announce the hashes of our javascript snippets as trustworthy
+            apps = _get_nested_dict_value(settings, ["CSP_SCRIPT_SRC"], [])
+            for csp_hash in csp_hashes:
+                apps.append(csp_hash)
+        super().apply_to_settings(settings, raw_lines)
+
+
 class AdministratorEmailsConfig(ListConfig):
     def validate(self, value):
         super().validate(value)
@@ -837,6 +926,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ),
         StylesheetsConfig(
             name="stylesheets", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
+        ),
+        ScriptsConfig(
+            name="scripts", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
         ),
         # matrix settings
         MatrixAppEnableConfig(
