@@ -598,7 +598,8 @@ class AdministratorEmailsConfig(ListConfig):
 
 
 class DjangoAppEnableConfig(BooleanConfig):
-    def __init__(self, app_name):
+    def __init__(self, app_name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.app_name = app_name
 
     def apply_to_settings(self, settings, value):
