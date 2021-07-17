@@ -295,7 +295,7 @@ Client applications (like the Matrix server) need to be added to the OIDC setup 
 ## System / hosting
 
 ### `backup_path`
-Backups are created automatically in this directory during [package upgrades](/deployment/deb.md).
+Backups are created automatically in this directory during [package upgrades](/deployment/deb).
 
 Default: current directory (depending on the context of process execution)
 

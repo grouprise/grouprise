@@ -24,7 +24,7 @@ The `From` address of outgoing mail is configurable:
 
 Incoming emails can be configured in different ways (or disabled).
 
-See [grouprise options](/configuration/options.html) for the specific settings mentioned below.
+See [grouprise options](/configuration/options) for the specific settings mentioned below.
 
 
 ### Disable reception of emails
@@ -39,7 +39,7 @@ Users need to use the web-interface of *grouprise* for communication afterwards.
 
 The preferred setup for mail delivery to *grouprise* is based on LMTP.
 A minimal LMTP server is part of *grouprise*.
-The server can be enabled by installing the [deb package](/deployment/deb.html) `grouprise-lmtpd` package
+The server can be enabled by installing the [deb package](/deployment/deb) `grouprise-lmtpd` package
 or by executing `grouprisectl run_lmtpd`.
 
 All incoming mails are instantly handed over to *grouprise*.
