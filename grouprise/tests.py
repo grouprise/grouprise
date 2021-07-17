@@ -109,6 +109,9 @@ DJANGO_SETTINGS_MINIMAL = {
         }
     },
     "DEFAULT_FROM_EMAIL": "noreply@example.org",
+    "EMAIL_PORT": 25,
+    "EMAIL_USE_SSL": False,
+    "EMAIL_USE_TLS": False,
     "HAYSTACK_XAPIAN_LANGUAGE": "german2",
     "LANGUAGE_CODE": "de-de",
     "SECURE_HSTS_SECONDS": 31536000,
@@ -260,12 +263,12 @@ class SettingsLoaderTest(TestCase):
         import_settings_from_dict(
             target, CONFIG_EXAMPLE, base_directory=self.temporary_directory
         )
-        self.assertEqual(target, DJANGO_SETTINGS_EXAMPLE)
+        self.assertEqual(DJANGO_SETTINGS_EXAMPLE, target)
 
     def test_minimal_settings(self):
         target = {}
         import_settings_from_dict(target, {})
-        self.assertEqual(target, DJANGO_SETTINGS_MINIMAL)
+        self.assertEqual(DJANGO_SETTINGS_MINIMAL, target)
 
     def test_list_append(self):
         """ verify that items can be added to existing lists """
@@ -278,7 +281,7 @@ class SettingsLoaderTest(TestCase):
             stylesheet_pattern.format("foo"),
             stylesheet_pattern.format("bar"),
         ]
-        self.assertEqual(target, wanted_result)
+        self.assertEqual(wanted_result, target)
 
     def test_invalid_structure(self):
         """ test various bad configuration input values """

@@ -1,4 +1,5 @@
 import base64
+import copy
 from distutils.version import LooseVersion
 import enum
 import importlib.util
@@ -239,7 +240,9 @@ class ListConfig(ConfigBase):
     def __init__(self, *args, append=None, append_pre_default=None, **kwargs):
         self.append = append
         # for "append" operations: fill the list with the given values, before appending new ones
-        self.append_pre_default = append_pre_default
+        self.append_pre_default = (
+            [] if append_pre_default is None else append_pre_default
+        )
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
@@ -259,8 +262,8 @@ class ListConfig(ConfigBase):
             # Do not apply the concatenation ("+=") directly to the value, but reference it via its
             # parent.  Otherwise concatenation would have no effect on tuples.
             parent = _get_nested_dict_value(settings, path[:-1], default={})
-            parent.setdefault(path[-1], self.append_pre_default or [])
-            parent[path[-1]] += tuple(value)
+            parent.setdefault(path[-1], copy.deepcopy(self.append_pre_default))
+            parent[path[-1]] += type(parent[path[-1]])(value)
         else:
             super().apply_to_settings(settings, value)
 
@@ -580,9 +583,8 @@ class ScriptsConfig(ListConfig):
                 raw_lines.append(f'<script type="application/json">{content}</script>')
         if csp_hashes:
             # announce the hashes of our javascript snippets as trustworthy
-            apps = _get_nested_dict_value(settings, ["CSP_SCRIPT_SRC"], [])
-            for csp_hash in csp_hashes:
-                apps.append(csp_hash)
+            settings.setdefault("CSP_SCRIPT_SRC", [])
+            settings["CSP_SCRIPT_SRC"] += type(settings["CSP_SCRIPT_SRC"])(csp_hashes)
         super().apply_to_settings(settings, raw_lines)
 
 
@@ -687,7 +689,9 @@ def _get_nested_dict_value(data, path, default=None, remove=False):
         raise KeyError(f"Container is not a dictionary: {data}")
     elif len(path) == 0:
         if remove:
-            raise ValueError("Removal of settings key is not possible, if the given path is empty")
+            raise ValueError(
+                "Removal of settings key is not possible, if the given path is empty"
+            )
         return data
     elif len(path) == 1:
         data.setdefault(path[0], default)
@@ -697,7 +701,9 @@ def _get_nested_dict_value(data, path, default=None, remove=False):
             return data.get(path[0], default)
     else:
         data.setdefault(path[0], {})
-        return _get_nested_dict_value(data[path[0]], path[1:], remove=remove)
+        return _get_nested_dict_value(
+            data[path[0]], path[1:], default=default, remove=remove
+        )
 
 
 def recursivly_normalize_dict_keys_to_lower_case(data):
