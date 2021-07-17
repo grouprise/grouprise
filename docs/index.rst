@@ -22,4 +22,5 @@ Documentation for users can be found on `stadtgestalten <https://stadtgestalten.
    matrix_chat
    authentication/index
    upgrading
+   contributing/index
    releases/index
