@@ -90,6 +90,14 @@ class Command(BaseCommand):
             dest="modifiable_grouprise_config",
             help="Path of yaml file to be used for storing settings",
         )
+        parser.add_argument(
+            "--print-only",
+            action="store_true",
+            help=(
+                "Do not read or write grouprise settings."
+                " Just print the access token for the created bot user account."
+            ),
+        )
 
     def request_admin_user_via_api(self, api, username, registration_token):
         """generate a user with admin privileges """
@@ -203,7 +211,16 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if (
+        config_locations = options["matrix_config_locations"]
+        if not config_locations:
+            config_locations = DEFAULT_MATRIX_CONFIG_LOCATIONS
+        if options["print_only"]:
+            print(
+                self.register_admin_account(
+                    options["bot_username"], options["matrix_api_url"], config_locations
+                )
+            )
+        elif (
             options["bot_username"] == MATRIX_SETTINGS.BOT_USERNAME
         ) and self.verify_configured_bot(options["matrix_api_url"]):
             self.stderr.write(
@@ -242,19 +259,15 @@ class Command(BaseCommand):
                     f"Target configuration file ({grouprise_config_filename}) is not writable"
                 )
                 sys.exit(3)
-            config_locations = options["matrix_config_locations"]
-            if not config_locations:
-                config_locations = DEFAULT_MATRIX_CONFIG_LOCATIONS
             access_token = self.register_admin_account(
                 options["bot_username"],
                 options["matrix_api_url"],
                 config_locations,
             )
-            if "matrix_chat" not in grouprise_settings:
-                grouprise_settings["matrix_chat"] = {}
-            grouprise_settings["matrix_chat"]["admin_api_url"] = options["matrix_api_url"]
-            grouprise_settings["matrix_chat"]["bot_access_token"] = access_token
-            grouprise_settings["matrix_chat"]["bot_username"] = options["bot_username"]
+            chat_settings = grouprise_settings.setdefault("matrix_chat", {})
+            chat_settings["admin_api_url"] = options["matrix_api_url"]
+            chat_settings["bot_access_token"] = access_token
+            chat_settings["bot_username"] = options["bot_username"]
             try:
                 with open(grouprise_config_filename, "w") as config_file:
                     yaml.dump(grouprise_settings, config_file)
