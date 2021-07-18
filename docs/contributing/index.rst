@@ -5,6 +5,7 @@ You are invited to contribute to the *grouprise* software.
 
 
 .. toctree::
+   development
    settings
    documentation
    releases
