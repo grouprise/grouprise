@@ -227,13 +227,15 @@ class Command(BaseCommand):
                 )
                 sys.exit(1)
             except FileNotFoundError:
-                grouprise_settings = {}
+                grouprise_settings = None
             except IOError as exc:
                 self.stderr.write(
                     f"Failed to read target configuration file ({grouprise_config_filename}):"
                     f" {exc}"
                 )
                 sys.exit(2)
+            if not grouprise_settings:
+                grouprise_settings = {}
             # test write permission in advance - otherwise we could loose the new bot token
             if not os.access(grouprise_config_filename, os.W_OK):
                 self.stderr.write(
