@@ -32,11 +32,11 @@ def get_unknown_username_response(username, max_alternative_count=10):
 
 
 @commander("user", is_abstract=True)
-def user_commands():
+def user():
     pass
 
 
-@commander("list", "unused", var("limit", is_optional=True), parent=user_commands)
+@commander(user, "list", "unused", var("limit", is_optional=True))
 def user_list_unused(limit: int = 5):
     result = []
     # TODO: verify the following queryset
@@ -54,7 +54,7 @@ def user_list_unused(limit: int = 5):
             yield CommandResult(f"{gestalt.user.username} ({gestalt.user.date_joined})")
 
 
-@commander("show", var("username"), parent=user_commands)
+@commander(user, "show", var("username"))
 def show_user(username):
     try:
         gestalt = Gestalt.objects.get(user__username=username)
@@ -70,7 +70,7 @@ def show_user(username):
         yield CommandResult(f"Latest contribution: {timestamp}")
 
 
-@commander("remove", var("username"), parent=user_commands)
+@commander(user, "remove", var("username"))
 def remove_user(username):
     try:
         gestalt = Gestalt.objects.get(user__username=username)
