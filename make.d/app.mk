@@ -24,11 +24,11 @@ app_collect_static: virtualenv-check assets
 app_local_settings: $(CONFIG_APP_SETUP)
 
 .PHONY: app_collect_translation_strings
-app_collect_translation_strings:
+app_collect_translation_strings: virtualenv-check
 	( . "$(ACTIVATE_VIRTUALENV)" && cd grouprise && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" ../manage.py makemessages --no-location )
 
 .PHONY: app_compile_translations
-app_compile_translations:
+app_compile_translations: virtualenv-check
 	( . "$(ACTIVATE_VIRTUALENV)" && cd grouprise && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" ../manage.py compilemessages )
 
 .PHONY: app_translate
