@@ -1,6 +1,6 @@
 # Managing grouprise settings
 
-Grouprise is configured via [yaml-based configuration files](/configuration/files).
+Grouprise is configured via [yaml-based configuration files](/administration/configuration/files).
 
 The content of these files is parsed and transferred into Django settings.
 This simplifies the access to settings from within the Django-based application code.
@@ -22,5 +22,5 @@ In order to change existing settings or add new ones, the following steps are re
     * e.g. `grouprise/core/settings.py` or `grouprise/features/*/settings.py`
 1. add tests for configuration handling in `grouprise/tests.py`
     * only relevant for non-trivial settings
-1. document the setting in `docs/configuration/options.md`
+1. document the setting in `docs/administration/configuration/options.md`
 1. mention the setting in the upcoming release notes (below `docs/releases/`)

@@ -11,17 +11,11 @@ This documentation describes the administrative aspects of *grouprise*: installa
 Documentation for users can be found on `stadtgestalten <https://stadtgestalten.org/nutzungshinweise/>`_ (only German).
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
-   :includehidden:
 
    deployment/index
-   configuration/index
-   database/index
-   mail_setup
-   matrix_chat
-   authentication/index
-   management/index
-   upgrading
+   administration/index
+   Management <management/index>
    contributing/index
    releases/index

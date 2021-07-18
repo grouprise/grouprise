@@ -48,7 +48,7 @@ make
 
 ## Konfigurationsdatei installieren
 
-Erzeuge eine [Konfigurationsdatei](/configuration/files) unter `/etc/grouprise/conf.d/`.
+Erzeuge eine [Konfigurationsdatei](/administration/configuration/files) unter `/etc/grouprise/conf.d/`.
 
 Falls du PostgreSQL verwendest, helfen dir die folgenden Zeilen beim Einrichten der Datenbank:
 

@@ -47,7 +47,7 @@ extra_django_settings_filenames:
 
 ## Grouprise settings
 
-Take a look at the [list of grouprise settings](/configuration/options).
+Take a look at the [list of grouprise settings](/administration/configuration/options).
 
 
 ## Advanced settings

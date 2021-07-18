@@ -20,7 +20,7 @@ The supported engines are:
 The `sqlite` database requires the additional parameter `name`, which specifies the path of the database file.
 The `mysql` and `postgresql` database engines accept the additional parameters `host`, `port`, `name`, `user` and `password`.
 
-See [database engines](/database/engines) for examples and details.
+See [database engines](/administration/database/engines) for examples and details.
 
 ### `debug`
 Boolean setting for temporarily enabling debug-friendly settings.
@@ -174,7 +174,7 @@ This setting controls the availability of this feature.
 Default: `false`
 
 ### `collector_mailbox_address`
-All incoming mails are expected to be delivered to this single mail address and processed via the *Scripted processing* ("dot-forward") approach described in [mail setup](/mail_setup).
+All incoming mails are expected to be delivered to this single mail address and processed via the *Scripted processing* ("dot-forward") approach described in [mail setup](/administration/mail_setup).
 This setting may be left empty, if a different method for mail reception is used.
 
 Default: empty

@@ -2,9 +2,10 @@ Deployment
 ==========
 
 .. toctree::
+   :maxdepth: 1
 
-    deb
-    source
+   deb
+   source
 
 
 Architecture

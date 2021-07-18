@@ -9,6 +9,7 @@ Managment of a *grouprise* instance consists of the following tasks:
 This can be accomplished with one of the provided management interfaces.
 
 .. toctree::
+   :maxdepth: 1
 
    matrix_commander
    django_admin

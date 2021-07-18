@@ -53,7 +53,7 @@ Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org
 grouprisectl runserver 0.0.0.0:8000
 ```
 
-(Wenn du temporär in den Einstellungen [`debug`](configuration/options.html#debug) auf `true` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
+(Wenn du temporär in den Einstellungen [`debug`](../administration/configuration/options.html#debug) auf `true` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
 
 
 ## UWSGI und Nginx einrichten

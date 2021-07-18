@@ -36,7 +36,7 @@ The web client is accessible via `https://YOUR_DOMAIN/stadt/chat`.
 
 ### Setup
 
-The following steps are based on the [deb-based deployment](deployment/deb).
+The following steps are based on the [deb-based deployment](../deployment/deb).
 
 Warning: currently (June 2021) the required Debian packages are not part of a stable Debian
 release (as of now: Debian Buster).

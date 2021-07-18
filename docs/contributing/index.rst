@@ -5,6 +5,8 @@ You are invited to contribute to the *grouprise* software.
 
 
 .. toctree::
+   :maxdepth: 1
+
    development
    settings
    documentation

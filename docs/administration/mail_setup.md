@@ -24,7 +24,7 @@ The `From` address of outgoing mail is configurable:
 
 Incoming emails can be configured in different ways (or disabled).
 
-See [grouprise options](/configuration/options) for the specific settings mentioned below.
+See [grouprise options](/administration/configuration/options) for the specific settings mentioned below.
 
 
 ### Disable reception of emails

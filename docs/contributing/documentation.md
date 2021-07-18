@@ -20,7 +20,7 @@ The following hints may help you:
     * sadly such references need to rely on automatically generated HTML anchors (e.g. `configuration/options.html#stylesheets`)
     * the path needs to be relative (i.e. add `../` in front, depending on the nesting level of the current document)
 * referencing a file:
-    * use something like `/options/configurations`
+    * use something like `/administration/configuration/options`
     * in contrast to referencing a section (see above), the path can be absolute and should not include the `.html` extension
 
 ## Graphs (via graphviz)
