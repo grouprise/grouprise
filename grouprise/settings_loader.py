@@ -612,6 +612,18 @@ class DjangoAppEnableConfig(BooleanConfig):
             apps.append(self.app_name)
 
 
+class MarixRoomIDList(ListConfig):
+    ROOM_ID_REGEX = re.compile(r"^(![\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$")
+
+    def validate(self, value):
+        super().validate(value)
+        for item in value:
+            if not self.ROOM_ID_REGEX.match(item):
+                raise ConfigError(
+                    f"A matrix room ID ({self.name}) contains invalid characters: {item}"
+                )
+
+
 class OIDCProviderEnableConfig(BooleanConfig):
     def __init__(self, *args, config_base_directory=None, **kwargs):
         self.config_base_directory = config_base_directory
@@ -970,6 +982,24 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name=("matrix_chat", "bot_access_token"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "BOT_ACCESS_TOKEN"),
             regex=r"[\w\-]+$",
+        ),
+        DjangoAppEnableConfig(
+            name=("matrix_commander", "enabled"),
+            django_target=("GROUPRISE", "MATRIX_COMMANDER", "ENABLED"),
+            app_name="grouprise.features.matrix_commander",
+        ),
+        StringConfig(
+            name=("matrix_commander", "bot_id"),
+            django_target=("GROUPRISE", "MATRIX_COMMANDER", "BOT_ID"),
+        ),
+        StringConfig(
+            name=("matrix_commander", "bot_access_token"),
+            django_target=("GROUPRISE", "MATRIX_COMMANDER", "BOT_ACCESS_TOKEN"),
+            regex=r"[\w\-]+$",
+        ),
+        MarixRoomIDList(
+            name=("matrix_commander", "admin_rooms"),
+            django_target=("GROUPRISE", "MATRIX_COMMANDER", "ADMIN_ROOMS"),
         ),
         OIDCProviderEnableConfig(
             name=("oidc_provider", "enabled"),

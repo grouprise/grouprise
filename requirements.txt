@@ -30,6 +30,7 @@ feedparser                  # debian: python3-feedparser
 flake8                      # debian: python3-flake8
 html2text                   # debian: python3-html2text
 huey                        # NOT IN DEBIAN
+kien                        # NOT IN DEBIAN
 # incompatible change introduced in https://github.com/Python-Markdown/markdown/commit/d18c3d0acab
 markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN

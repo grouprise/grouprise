@@ -51,7 +51,9 @@ override_dh_auto_test:
 override_dh_installsystemd:
 	dh_installsystemd
 	dh_installsystemd --name=grouprise-tasks
+	dh_installsystemd --name=grouprise-matrix-commander --no-enable
 
 override_dh_installinit:
 	dh_installinit
 	dh_installinit --name=grouprise-tasks
+	dh_installinit --name=grouprise-matrix-commander --no-enable

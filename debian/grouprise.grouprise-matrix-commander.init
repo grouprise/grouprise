@@ -1,0 +1,25 @@
+#!/lib/init/init-d-script
+### BEGIN INIT INFO
+# Provides:          grouprise-matrix-commander
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: grouprise-matrix-commander
+# Description:       grouprise matrix-commander bot for managing the local grouprise instance
+### END INIT INFO
+
+DESC="grouprise matrix-commander"
+NAME=grouprise-matrix-commander
+DAEMON=/usr/bin/grouprisectl
+PIDFILE=/run/grouprise/matrix-commander.pid
+DAEMON_ARGS="matrix_commander"
+START_ARGS="--background --pidfile $PIDFILE --make-pidfile"
+
+
+do_start_prepare() {
+    mkdir -p /run/grouprise
+}
+
+do_stop_cmd_override() {
+    # do not match NAME and DAEMON (being "python3")
+    start-stop-daemon --stop --quiet --remove-pidfile --pidfile "$PIDFILE"
+}

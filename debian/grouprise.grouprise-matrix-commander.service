@@ -1,0 +1,13 @@
+[Unit]
+Description=grouprise matrix-commander bot
+PartOf=grouprise.service
+ReloadPropagatedFrom=grouprise.service
+
+[Service]
+User=_grouprise
+Group=_grouprise
+ExecStart=/usr/bin/grouprisectl matrix_commander
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
