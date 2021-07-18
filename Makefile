@@ -27,7 +27,6 @@ GROUPRISE_MAKEFILES = Makefile $(wildcard make.d/*.mk)
 default-target: build
 
 # include project makefiles
-include make.d/virtualenv.mk
 include make.d/app.mk
 include make.d/ci.mk
 include make.d/doc.mk
