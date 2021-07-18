@@ -38,7 +38,6 @@ def user():
 
 @commander(user, "list", "unused", var("limit", is_optional=True))
 def user_list_unused(limit: int = 5):
-    result = []
     # TODO: verify the following queryset
     for gestalt in Gestalt.objects.filter(
         associations=None,
