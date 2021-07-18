@@ -22,6 +22,11 @@ from .models import (
 
 logger = logging.getLogger(__name__)
 
+# Some tasks should be attempted again in case of temporary failures of the Matrix server.
+# Only tasks that are relevant and that interact with the Matrix server should use this feature.
+MATRIX_CHAT_RETRIES = 2
+MATRIX_CHAT_RETRY_DELAY = 30
+
 
 @receiver(post_save, sender=MatrixChatGestaltSettings)
 def post_matrix_chat_gestalt_settings_save(
@@ -34,7 +39,7 @@ def post_matrix_chat_gestalt_settings_save(
         _send_invitations_for_gestalt(gestalt)
 
 
-@db_task()
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _send_invitations_for_gestalt(gestalt):
     async def _invite_gestalt(gestalt):
         async with MatrixBot() as bot:
@@ -73,7 +78,7 @@ def _sync_rooms_delayed(group):
     asyncio.run(_sync_rooms_async(group))
 
 
-@db_task()
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def send_matrix_room_messages(messages):
     async def _send_room_messages_async(messages):
         async with MatrixBot() as bot:
@@ -157,7 +162,7 @@ def synchronize_matrix_room_memberships(sender, instance, created, **kwargs):
         _invite_to_group_rooms(instance.group)
 
 
-@db_task()
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _invite_to_group_rooms(group):
     async def _invite_to_group_rooms_delayed(group):
         async with MatrixBot() as bot:
@@ -186,7 +191,7 @@ def move_away_from_matrix_room(sender, instance, *args, update_fields=None, **kw
         instance.invitations.all().delete()
 
 
-@db_task()
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _migrate_to_new_room(*args):
     async def _migrate_to_new_room_delayed(
         room_object, old_room_id, room_alias, new_room_id
@@ -219,7 +224,7 @@ def kick_room_members_after_leaving_group(sender, instance, **kwargs):
     _kick_gestalt_from_group_rooms(instance.group, instance.member)
 
 
-@db_task()
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _kick_gestalt_from_group_rooms(group, gestalt):
     async def _kick_gestalt_from_group_rooms_delayed(group, gestalt):
         async with MatrixBot() as bot:
