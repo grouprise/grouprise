@@ -7,8 +7,6 @@ variables:
 .populate_virtualenv: &populate_virtualenv
     - python3 -m venv --system-site-packages "$virtualenv_directory"
     - source "$virtualenv_directory/bin/activate"
-    # TODO: remove as soon as https://github.com/silicann/kien/issues/1 is resolved
-    - pip3 install blessings blinker
     - pip3 install -r requirements.txt
 
 .build_deb_package:
