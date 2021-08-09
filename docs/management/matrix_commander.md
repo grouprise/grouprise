@@ -1,12 +1,12 @@
 # Matrix-Commander
 
 The *Matrix-Commander* is a simple bot for the [Matrix](https://matrix.org/) protocol.
-You may invite it into a room and execute common administrative actions by talking to it.
+You may invite the bot into a room and execute common administrative actions by talking to it.
 
 Communication is rather simple:
 ```
 # request
-grouprise-commander-bot user show alice
+!grouprise user show alice
 
 # response
 Username: alice
@@ -16,8 +16,10 @@ Group memberships: 27
 Latest contribution: 2021-07-12 15:02:33+00:00
 ```
 
-This Matrix bot is not related to the *matrix_chat* feature of *grouprise*.
-The matrix bot can either be an account on you local Matrix server or on any extern Matrix somewhere.
+This [Matrix](https://matrix.org/) bot is not related to the *matrix_chat* feature of *grouprise*.
+The Matrix bot can either be an account on your local Matrix server or on any external Matrix homeserver somewhere else.
+
+You should take care, that only trusted people (responsible for content maintenance of your grouprise instance) are in the same room as the bot.
 
 
 ## Configuration
@@ -57,11 +59,15 @@ Follow these steps:
 
 ## Usage
 
-Whenever you want to talk to the matrix-commander bot, you need to start the line with its name:
-```
-grourise-commander-bot help
-```
+Whenever you want to talk to the matrix-commander bot, you need to start the message with one of the supported prefixes:
 
-You may also use its full name (here: `@grouprise-commander-bot:example.org`) - this can be easily accomplished by relying on the auto-completion feature of your matrix client (e.g. typing `gro` followed by the `tabulator` key).
+* generic command prefix: `!grouprise help`
+* the bot's Matrix ID (optionally followed by a colon): `@grourise-commander-bot@example.org`
+* local part of the bot's Matrix ID (optionally followed by a colon): `grourise-commander-bot`
 
-All available actions of the bot are explained in the output of the `help` command.
+The Matrix ID of the bot can be easily entered by relying on the auto-completion feature of your Matrix client (e.g. typing `gro` followed by the *tabulator* key).
+
+All available actions of the bot are explained in the output of the `help` command:
+```
+!grouprise help
+```

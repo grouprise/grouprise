@@ -27,7 +27,9 @@ class CommanderBot(MatrixBot):
         if command_prefix is None:
             local_part = re.escape(self.bot_id.split(":")[0].lstrip("@"))
             hostname = re.escape(self.bot_id.split(":", 1)[1])
-            self._prefix_regex = re.compile(fr"^@?{local_part}(:{hostname})?:?$")
+            self._prefix_regex = re.compile(
+                fr"^(@?{local_part}(:{hostname})?:?|!grouprise)$"
+            )
         else:
             escaped = re.escape(command_prefix)
             self._prefix_regex = re.compile(fr"^{escaped}$")
