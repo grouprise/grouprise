@@ -16,6 +16,7 @@ Source Setup
 
 #. Download and extract the source release archive.
 #. Stop the grouprise process (e.g. ``service grouprise stop``).
+#. Generate a database backup (`grouprisectl database_dump`).
 #. Run `make install` with the same parameters that you used during the first installation.
 #. Read the release notes for the relevant versions and adjust the settings
    (in ``/etc/grouprise/``) if necessary.
