@@ -2,7 +2,7 @@
   "name": "grouprise",
   "title": "Grouprise",
   "description": "Grouprise is a platform that encourages and enables social action and solidarity",
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=10.21.0"
   },

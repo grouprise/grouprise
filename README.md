@@ -83,7 +83,7 @@ See also [deb.md](./docs/deployment/deb.md).
 
 ## Contributing
 
-The source code of grouprise itself is released under the [AGPLv3](LICENSE),
+The source code of grouprise itself is released under the [AGPL version 3 or later](LICENSE),
 which is included in the [LICENSE](LICENSE) file.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
