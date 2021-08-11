@@ -167,7 +167,7 @@ DJANGO_SETTINGS_EXAMPLE = {
             '<link rel="stylesheet" href="/print.css" media="print">',
             '<script src="/foo.js" />',
             '<script src="/bar.js" async defer />',
-            '<script type="application/json">alert("hello");</script>',
+            '<script type="application/javascript">alert("hello");</script>',
         ],
         "HOOK_SCRIPT_PATHS": ["/usr/local/bin/foo"],
         "MAILINGLIST_ENABLED": False,
