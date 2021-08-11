@@ -150,7 +150,8 @@ def send_contribution_notification_to_matrix_rooms(sender, instance, created, **
                 group = association.entity
                 url = full_url(association.get_absolute_url())
                 summary = f"Diskussionsbeitrag: [{instance.container.subject} ({author})]({url})"
-                messages.append((group, summary, instance.public))
+                is_public = instance.is_public_in_context_of(group)
+                messages.append((group, summary, is_public))
         if messages:
             send_matrix_room_messages(messages)
 
