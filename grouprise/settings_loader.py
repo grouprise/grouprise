@@ -578,7 +578,7 @@ class ScriptsConfig(ListConfig):
                 pattern = self.SCRIPT_PATTERNS_MAP[load_type]
                 raw_lines.append(pattern.format(path=path))
             else:
-                content = item["content"]
+                content = item["content"].strip()
                 csp_hashes.append(self._calculate_csp_hash(content))
                 raw_lines.append(f'<script type="application/javascript">{content}</script>')
         if csp_hashes:
