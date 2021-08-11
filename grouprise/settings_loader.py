@@ -580,7 +580,7 @@ class ScriptsConfig(ListConfig):
             else:
                 content = item["content"]
                 csp_hashes.append(self._calculate_csp_hash(content))
-                raw_lines.append(f'<script type="application/json">{content}</script>')
+                raw_lines.append(f'<script type="application/javascript">{content}</script>')
         if csp_hashes:
             # announce the hashes of our javascript snippets as trustworthy
             settings.setdefault("CSP_SCRIPT_SRC", [])
