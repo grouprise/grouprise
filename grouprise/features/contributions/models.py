@@ -3,6 +3,7 @@ from django.db import models
 import django.utils.timezone
 
 import grouprise.core.models
+from grouprise.features.associations.models import Association
 
 
 class ContributionManager(models.Manager):
@@ -52,6 +53,9 @@ class Contribution(grouprise.core.models.Model):
             'Contribution', null=True, blank=True, related_name='replies',
             on_delete=models.SET_NULL)
     time_created = models.DateTimeField(default=django.utils.timezone.now)
+    # If set to `False`, the contribution is hidden to the public in any case.
+    # If `True`, the container/ association determines the visibility of the contribution.
+    # See is_public_in_context_of() below.
     public = models.BooleanField(default=True)
 
     objects = PublicContributionManager.from_queryset(ContributionQuerySet)()
@@ -62,6 +66,23 @@ class Contribution(grouprise.core.models.Model):
 
     def get_unique_id(self):
         return '{}.{}.contribution.{}'.format(self.container_type, self.container.id, self.id)
+
+    def is_public_in_context_of(self, entity):
+        """Returns True if the contribution is public in the context of an associated entity.
+        A contribution is publicly visible iff it is associated publicly to an entity and is
+        itself public. Returns False for unassociated entities.
+        """
+        is_public = False
+        if self.public:
+            try:
+                if entity.is_group:
+                    association = self.container.associations.get(group=entity)
+                else:
+                    association = self.container.associations.get(gestalt=entity)
+                is_public = association.public
+            except Association.DoesNotExist:
+                pass
+        return is_public
 
 
 class Text(models.Model):
