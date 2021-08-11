@@ -27,7 +27,7 @@ lint_packages:
 test: test_js
 
 # the "test-python" target is provided by makefilet
-test-python: test_py_prepare
+test-python: test_py_prepare app_local_settings
 
 .PHONY: test_py_prepare
 test_py_prepare:
