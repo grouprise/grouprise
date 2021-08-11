@@ -141,19 +141,18 @@ def send_contribution_notification_to_matrix_rooms(sender, instance, created, **
     elif instance.deleted:
         # ignore deleted contributions
         pass
-    elif not instance.container.get_associated_groups():
-        # only sent group messages to matrix rooms
-        pass
     else:
         author = instance.author
         messages = []
         for association in instance.container.associations.all():
             if association.entity.is_group:
+                # send only group messages
                 group = association.entity
                 url = full_url(association.get_absolute_url())
                 summary = f"Diskussionsbeitrag: [{instance.container.subject} ({author})]({url})"
                 messages.append((group, summary, instance.public))
-        send_matrix_room_messages(messages)
+        if messages:
+            send_matrix_room_messages(messages)
 
 
 @receiver(post_save, sender=grouprise.features.memberships.models.Membership)
