@@ -8,13 +8,14 @@
 #    * Depends in package "grouprise"
 #
 aiosmtpd                    # debian: python3-aiosmtpd
+aiosmtplib                  # NOT IN DEBIAN
 bleach                      # debian: python3-bleach
 django<2.3                  # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 # deactivated, see #662
 # django-cachalot             # NOT IN DEBIAN
-django-csp                  # debian: python3-django-csp
 django-cors-middleware      # debian: python3-django-cors-headers
+django-csp                  # debian: python3-django-csp
 # the exact required version is unknown - but at least the Buster version (1.1.0) is too low
 django-filter>=2.0          # debian: python3-django-filters
 django-haystack             # debian: python3-django-haystack
@@ -36,14 +37,13 @@ markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
 pillow                      # debian: python3-pil
 pymdown-extensions<6        # NOT IN DEBIAN
-aiosmtplib                  # NOT IN DEBIAN
-schulze                     # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
-ruamel.yaml                 # debian: python3-ruamel.yaml
-sentry-sdk                  # debian: python3-sentry-sdk
 recommonmark                # debian: python3-recommonmark
 redis                       # debian: python3-redis
+ruamel.yaml                 # debian: python3-ruamel.yaml
 rules                       # debian: python3-django-rules
+schulze                     # NOT IN DEBIAN
+sentry-sdk                  # debian: python3-sentry-sdk
 translitcodec               # NOT IN DEBIAN
 xapian-haystack>=2.1.1      # debian: python3-xapian-haystack
 # xapian-haystack also requires the xapian python bindings that you'll find
