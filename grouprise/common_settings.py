@@ -115,10 +115,6 @@ WSGI_APPLICATION = 'grouprise.wsgi.application'
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'de-de'
-
-TIME_ZONE = 'Europe/Berlin'
-
 USE_I18N = True
 
 USE_L10N = True
@@ -200,8 +196,6 @@ ACCOUNT_ADAPTER = 'grouprise.features.gestalten.adapters.AccountAdapter'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
-
 ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
@@ -233,9 +227,6 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(BASE_DIR, 'xapian_index'),
     },
 }
-
-HAYSTACK_XAPIAN_LANGUAGE = 'german2'
-
 
 HUEY = {
     'huey_class': 'huey.SqliteHuey',

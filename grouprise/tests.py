@@ -120,6 +120,7 @@ DJANGO_SETTINGS_MINIMAL = {
     "SERVER_EMAIL": "noreply@example.org",
     "SESSION_COOKIE_SECURE": True,
     "TEMPLATES": [{"DIRS": []}],
+    "TIME_ZONE": "Europe/Berlin",
 }
 
 # the following settings results from the above CONFIG_EXAMPLE

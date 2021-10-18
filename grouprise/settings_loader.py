@@ -809,7 +809,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         LanguageCodeConfig(
             name="language_code", default="de-de", regex=r"^\w+([-_]\w+)?$"
         ),
-        StringConfig(name="time_zone", django_target="TIME_ZONE"),
+        StringConfig(
+            name="time_zone", default="Europe/Berlin", django_target="TIME_ZONE"
+        ),
         ListConfig(
             name="extra_allowed_hosts", django_target="ALLOWED_HOSTS", append=True
         ),
