@@ -28,6 +28,20 @@ This setting should not be enabled in production.
 
 See [Django's documentation of `DEBUG`](https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEBUG) for details.
 
+### `debug_toolbar_clients`
+Enable [django-debug-toolbar](https://github.com/jazzband/django-debug-toolbar) for a specific list of client addresses.
+
+The *django-debug-toolbar* may be useful for debugging performance issues.
+
+The client list may contain any combination of IPv4/IPv6 addresses or networks.
+
+Example (enabling the toolbar for all clients):
+```yaml
+debug_toolbar_clients:
+- "0.0.0.0/0"
+- "::/0"
+```
+
 ### `domain`
 The name of the domain ([FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name)), which is served by your grouprise instance (e.g. `our-local-community.org`).
 

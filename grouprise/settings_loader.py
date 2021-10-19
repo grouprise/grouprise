@@ -3,6 +3,7 @@ import copy
 from distutils.version import LooseVersion
 import enum
 import importlib.util
+import ipaddress
 import hashlib
 import logging
 import os
@@ -293,6 +294,49 @@ class DatabaseConfig(ConfigBase):
                 dest[out_key] = value[in_key]
         dest["ENGINE"] = DATABASE_ENGINES_MAP[value.get("engine", self.DEFAULT_ENGINE)]
         settings["DATABASES"] = {"default": dest}
+
+
+class DebugToolbarClients(ListConfig):
+    """enable the [django-debug-toolbar](https://github.com/jazzband/django-debug-toolbar)
+
+    The configuration setting may contain a list of acceptable client IP addresses.
+    """
+
+    def validate(self, value):
+        super().validate(value)
+        for item in value:
+            try:
+                ipaddress.ip_network(item)
+            except ValueError as exc:
+                raise ConfigError(
+                    f"Setting '{self.name}' must contain only valid IP addresses"
+                    f" or networks, but '{item}' is malformed: {exc}"
+                )
+
+    def apply_to_settings(self, settings, value):
+        if value:
+            import debug_toolbar
+
+            valid_client_networks = tuple(ipaddress.ip_network(item) for item in value)
+
+            def should_show_debug_toolbar(request):
+                import ipware
+
+                client_ip = ipware.get_client_ip(request)[0]
+                if client_ip is not None:
+                    client = ipaddress.ip_address(client_ip)
+                    for network in valid_client_networks:
+                        if client in network:
+                            return True
+                return False
+
+            toolbar_config = settings.setdefault("DEBUG_TOOLBAR_CONFIG", {})
+            toolbar_config["SHOW_TOOLBAR_CALLBACK"] = should_show_debug_toolbar
+            apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
+            apps.append("debug_toolbar")
+            middleware = _get_nested_dict_value(settings, ["MIDDLEWARE"], [])
+            middleware.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+            settings.setdefault("GROUPRISE_URLS", {})["__debug__/"] = debug_toolbar.urls
 
 
 class EmailBackendConfig(ChoicesConfig):
@@ -806,6 +850,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             default="reverse-proxy",
         ),
         BooleanConfig(name="debug", django_target="DEBUG"),
+        DebugToolbarClients(name="debug_toolbar_clients"),
         LanguageCodeConfig(
             name="language_code", default="de-de", regex=r"^\w+([-_]\w+)?$"
         ),

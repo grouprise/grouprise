@@ -2,7 +2,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
 
-urlpatterns = [
+urlpatterns = []
+
+try:
+    extra_urls = settings.GROUPRISE_URLS
+except AttributeError:
+    pass
+else:
+    urlpatterns += [
+        path(key, include(module_path)) for key, module_path in extra_urls.items()
+    ]
+
+urlpatterns += [
     path('', include('grouprise.core.urls')),
 
     path('', include('grouprise.features.articles.urls')),
