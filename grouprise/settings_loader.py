@@ -159,8 +159,9 @@ class ConfigBase:
             self.django_target(settings, value)
         else:
             raise ValueError(
-                "Internal error: 'django_target' must be a string, a list of strings or a "
-                f"callable: {type(self.django_target)} ('{self.django_target}')"
+                f"Internal error: 'django_target' for '{self.name}' must be a string,"
+                f" a list of strings or a callable: {type(self.django_target)}"
+                f" ('{self.django_target}')"
             )
 
 
