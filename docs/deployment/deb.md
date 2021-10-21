@@ -15,21 +15,10 @@ wget -q -O - https://deb.grouprise.org/keys/repository.asc | gpg --no-default-ke
 echo "deb [signed-by=/etc/grouprise/apt-keyring.gpg] https://deb.grouprise.org/ unstable main" >/etc/apt/sources.list.d/grouprise.list
 ```
 
-Nun kannst du den Paketindex via `apt update` aktualisieren.
-
-Falls das Basis-System *Debian Buster* ist, sind zur Erfüllung aller Abhängigkeiten einige wenige
-*backports*-Pakete erforderlich.  Diese sind in der folgende Quelle zugänglich (zu den Details der Einrichtung des
-Backports-Repositories siehe den Abschnitt *Instructions* auf [backports.debian.org](https://backports.debian.org/)):
-
+*grouprise*-Pakete installieren:
 ```shell
-deb http://deb.debian.org/debian buster-backports main
+apt install grouprise grouprise-db-postgresql
 ```
-
-Pakete installieren:
-```shell
-apt install grouprise python3-django/buster-backports python3-django-filters/buster-backports
-```
-
 
 
 ## Datenbank einrichten

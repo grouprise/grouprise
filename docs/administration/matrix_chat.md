@@ -36,18 +36,12 @@ The web client is accessible via `https://YOUR_DOMAIN/stadt/chat`.
 
 ### Setup
 
-The following steps are based on the [deb-based deployment](../deployment/deb).
+The following steps are based on the [deb-based deployment](../deployment/deb) and require
+Debian Bullseye (or a similar derivative distribution release).
 
-Warning: currently (June 2021) the required Debian packages are not part of a stable Debian
-release (as of now: Debian Buster).
-Thus you may need to wait for the next Debian release (*Bullseye*), if you prefer a setup of
-packages with proper security support.
-
-1. add the `buster-backports` repository to your apt packages sources (see [instructions](https://backports.debian.org/Instructions/))
+1. add the `bullseye-backports` repository to your apt packages sources (see [instructions](https://backports.debian.org/Instructions/))
 1. update the package cache: `apt update`
-1. add the `buster-fasttrack` repository to your apt package sources (see [instructions](https://fasttrack.debian.net/))
-1. update the package cache: `apt update`
-1. install the matrix server: `apt install -t buster-backports matrix-synapse/buster-fasttrack`
+1. install the matrix server: `apt install matrix-synapse/bullseye-backports`
 1. create the postgresql database connection for matrix-synapse:
 ```
 CREATE USER grouprise_matrix WITH password 'YOUR_SECRET_RANDOM_PASSWORD';
@@ -67,7 +61,6 @@ database:
 ```
 1. start matrix-synapse: `service matrix-synapse start`
 1. install the matrix integration package for grouprise: `apt install grouprise-matrix`
-    * before Debian Bullseye, this requires the *testing* repository to be added temporarily and to install `python3-matrix-nio` and `python3-authlib` (for *matrix-synapse*) to be installed manually in advance: `apt install -t buster python3-matrix-nio python3-authlib`
 1. answer the configuration questions during package installation:
     * matrix-synapse:
         * server: the name of your grouprise domain (e.g. `example.org`)
@@ -117,7 +110,8 @@ The *deb* package provided for *grouprise* automatically handles these steps.
 
 * install the Python package *django-oauth-toolkit*:
     * Debian: `apt install python3-django-oauth-toolkit`
-        * *TODO*: sadly v1.5.0 (required for OIDC) is not part of Debian at the moment (Debian *Bullseye*).  Until it is included, the approach via *pip* (see below) is necessary.
+        * At the moment, this package is only available in Debian Testing (*Bookworm*).
+          You need to add this repository to your `sources.list` or use the *pip* approach (see below).
     * *pip* (local Python module installation):
         * `pip3 install --user "django-oauth-toolkit>=1.5.0"`
         * add the line `pythonpath = /root/.local/lib/python3.X/site-packages` to your uwsgi configuration (e.g. `/etc/grouprise/uwsgi.ini`)
@@ -141,7 +135,6 @@ The *deb* package provided for *grouprise* automatically handles these steps.
 
 * `apt install python3-authlib`
     * matrix-synapse requires this module, if OIDC is enabled
-    * This package is available in Debian since *Bullseye*.
 
 ##### Configuration
 

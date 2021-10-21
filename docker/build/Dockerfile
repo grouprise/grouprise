@@ -1,4 +1,4 @@
-FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild:buster as build-deps
+FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild:bullseye as build-deps
 WORKDIR /usr/src/app
 # Create a deb package that contains all the packages from our
 # Build-Depends section in the source package. This way we don’t
@@ -8,7 +8,7 @@ COPY ./debian debian
 RUN mk-build-deps debian/control
 
 
-FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild-python-webdev:buster
+FROM git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild-python-webdev:bullseye
 # Copy the created Build-Depends package from the last build stage,
 # serve it via a local apt repo, and install it so that all build
 # dependencies for our build are available.
@@ -18,7 +18,7 @@ COPY --from=build-deps \
     /srv/local-apt-repository/grouprise-build-deps.deb
 RUN /usr/lib/local-apt-repository/rebuild && \
     apt-get --yes update && \
-    apt-get --yes --target-release=buster-backports install grouprise-build-deps && \
+    apt-get --yes install grouprise-build-deps && \
     apt-get --yes clean
 # compile locales required for example app configuration
 RUN apt-get --yes install locales && \

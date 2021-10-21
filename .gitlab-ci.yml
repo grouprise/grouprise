@@ -1,4 +1,4 @@
-image: git-registry.hack-hro.de:443/grouprise/grouprise/build:buster
+image: git-registry.hack-hro.de:443/grouprise/grouprise/build:bullseye
 variables:
     # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
     # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.

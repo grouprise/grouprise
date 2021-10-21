@@ -85,15 +85,20 @@ grouprise_settings() {
 if [ "$1" = "configure" ]; then
     # the user needs to be created before the configuration (the latter relies on grouprisectl)
     if ! getent group "$PKG_GROUP" >/dev/null; then
-        # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
+        # "--force-badname" is required before Bookworm
         addgroup --quiet --system --force-badname "$PKG_GROUP"
     fi
 
     if ! getent passwd "$PKG_USER" >/dev/null; then
-        # "--force-badname" is required for Buster (the Debian Policy was changed for Bullseye)
-        adduser --quiet --system --disabled-password \
+        # "--force-badname" is required before Bookworm
+        adduser \
             --force-badname \
-            --ingroup "$PKG_GROUP" --home "$DIR_HOME" "$PKG_USER"
+            --quiet \
+            --system \
+            --disabled-password \
+            --ingroup "$PKG_GROUP" \
+            --home "$DIR_HOME" \
+            "$PKG_USER"
     fi
 
     if [ -z "$(grouprise_settings get "secret_key" 2>/dev/null)" ]; then

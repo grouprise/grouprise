@@ -9,16 +9,12 @@ Build-Depends:
  graphviz,
  nodejs,
  python3-flake8,
-# stemmer is only relevant for sphinx in Buster
- python3-stemmer,
-# switch to "sphinx" for Debian Bullseye or later
- python3-sphinx,
 # "wheel" is required for makefilet
  python3-wheel,
  shellcheck,
+ sphinx,
  wget,
-# These should be kept in sync with the dependencies of all
-# related binary packages.
+# These should be kept in sync with the dependencies of all related binary packages.
 # See also: make.d/ci.mk
  python3-all,
  python3-aiosmtpd,
@@ -59,8 +55,7 @@ Depends:
  grouprise-dependencies,
  grouprise-db-postgresql | grouprise-db-sqlite,
  moreutils,
-# Python dependencies should be added to the Build-Depends
-# field of the source package too!
+# Python dependencies should be added to the Build-Depends field of the source package too!
 # See also: make.d/ci.mk
  python3-all,
  python3-bleach,
@@ -164,7 +159,6 @@ Architecture: all
 Depends:
  jq,
  moreutils,
-# this package is not shipped in buster or buster-backports ("bullseye" is necessary)
  python3-matrix-nio,
 Recommends:
  element-web-installer,

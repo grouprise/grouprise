@@ -169,15 +169,7 @@ epub_title = project
 epub_exclude_files = ['search.html']
 
 
-# determine the supported markdown parser interface
-import recommonmark.parser
-if hasattr(recommonmark.parser.CommonMarkParser, 'setup_sections'):
-    # recommonmark v0.6 or later (since Debian Bullseye) supports sphinx's new parser interface
-    source_suffix = {
-        '.rst': 'restructuredtext',
-        '.md': 'markdown',
-    }
-else:
-    # recommonmark before v0.6.0 (e.g. Debian Buster) uses sphinx's older parser interface
-    source_parsers = {'.md': recommonmark.parser.CommonMarkParser}
-    source_suffix = ['.rst', '.md']
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}

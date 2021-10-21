@@ -7,7 +7,7 @@
 
 DOCKER_REGISTRY = git-registry.hack-hro.de:443/grouprise/grouprise
 CI_BUILD_IMAGE_PATH = docker/build/Dockerfile
-CI_BUILD_IMAGE_NAME = build:buster
+CI_BUILD_IMAGE_NAME = build:bullseye
 CI_BUILD_IMAGE = $(DOCKER_REGISTRY)/$(CI_BUILD_IMAGE_NAME)
 CI_BUILD_IMAGE_LOCALES = de_DE.UTF-8 en_US.UTF-8
 
