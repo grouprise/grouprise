@@ -6,15 +6,19 @@ from django.core.exceptions import ObjectDoesNotExist
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
 
-from .forms import MatrixChatGestaltSettingsForm, MatrixChatGroupSettingsForm
 from .models import MatrixChatGestaltSettings
 from .settings import MATRIX_SETTINGS
 
 
 class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.FormView):
     permission_required = "gestalten.change"
-    form_class = MatrixChatGestaltSettingsForm
     template_name = "matrix_chat/update_gestalt_settings.html"
+
+    def get_form_class(self):
+        # Avoid a direct assignment of "form_class", since that module requires an initialized
+        # configuration.
+        from .forms import MatrixChatGestaltSettingsForm
+        return MatrixChatGestaltSettingsForm
 
     def get_group(self):
         return Group.objects.filter(slug=self.request.GET.get("group")).first()
@@ -61,8 +65,13 @@ class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.Form
 
 class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormView):
     permission_required = "groups.change"
-    form_class = MatrixChatGroupSettingsForm
     template_name = "matrix_chat/update_group_settings.html"
+
+    def get_form_class(self):
+        # Avoid a direct assignment of "form_class", since that module requires an initialized
+        # configuration.
+        from .forms import MatrixChatGroupSettingsForm
+        return MatrixChatGroupSettingsForm
 
     def get_group(self):
         return Group.objects.filter(slug=self.request.GET.get("group")).first()
