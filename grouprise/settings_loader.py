@@ -729,7 +729,7 @@ class OIDCProviderEnableConfig(BooleanConfig):
             if not os.path.exists(oidc_key_filename):
                 raise ConfigError(
                     f"Missing OIDC key file ({oidc_key_filename})."
-                    f" You can create it via 'openssl genrsa -out ${oidc_key_filename} 4096'."
+                    f" You can create it via 'openssl genrsa -out {oidc_key_filename} 4096'."
                 )
             try:
                 with open(oidc_key_filename, "r") as key_file:
