@@ -3,7 +3,8 @@ import re
 
 from django.apps import apps
 from django.conf import settings
-from django.db.models import signals
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from taggit.models import Tag
 
 from grouprise.features.tags import RE_TAG_REF
@@ -49,6 +50,7 @@ def build_tags(tag_names):
     return tags
 
 
+@receiver(post_save)
 def tag_entities(sender, instance, *args, **kwargs):
     for conf in Index.index:
         if not isinstance(instance, conf['entity']):
@@ -77,6 +79,3 @@ def tag_entities(sender, instance, *args, **kwargs):
 
         for model in tagged_models:
             model.tags.add(*final_tags)
-
-
-signals.post_save.connect(tag_entities)
