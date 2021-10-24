@@ -51,7 +51,10 @@ def build_tags(tag_names):
 
 
 @receiver(post_save)
-def tag_entities(sender, instance, *args, **kwargs):
+def tag_entities(sender, instance, *args, raw=False, **kwargs):
+    # never process events while loading a fixture
+    if raw:
+        return
     for conf in Index.index:
         if not isinstance(instance, conf['entity']):
             continue

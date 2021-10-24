@@ -6,8 +6,9 @@ from . import models, notifications
 
 
 @receiver(post_save, sender=groups.Group)
-def add_first_member(sender, instance, created, **kwargs):
-    if created:
+def add_first_member(sender, instance, created, raw=False, **kwargs):
+    # ignore this signal processing in case of loading a fixture (raw being True)
+    if created and not raw:
         group = instance
         if group.gestalt_created:
             models.Membership.objects.create(
@@ -16,8 +17,8 @@ def add_first_member(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=models.Membership)
-def send_membership_notification(sender, instance, created, **kwargs):
-    if created:
+def send_membership_notification(sender, instance, created, raw=False, **kwargs):
+    if created and not raw:
         membership = instance
         if membership.created_by != membership.member:
             notifications.MembershipCreated.send_all(membership, force=True)

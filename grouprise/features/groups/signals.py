@@ -63,7 +63,10 @@ def call_hook_script(event_type: str, group: Group, timeout=300):
 
 
 @receiver(post_save, sender=Group)
-def post_group_save(sender, instance, created, **kwargs):
+def post_group_save(sender, instance, created, raw=False, **kwargs):
+    # do nothing, if loading fixtures
+    if raw:
+        return
     if created:
         call_hook_script("created", instance)
     else:

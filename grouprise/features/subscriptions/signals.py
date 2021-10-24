@@ -7,8 +7,8 @@ from grouprise.features.subscriptions.models import Subscription
 
 
 @receiver(post_save, sender=Membership)
-def membership_saved(sender, instance, created, **kwargs):
-    if created:
+def membership_saved(sender, instance, created, raw=False, **kwargs):
+    if created and not raw:
         try:
             instance.member.subscriptions.create(
                     subscribed_to_type=instance.group.content_type,

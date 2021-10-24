@@ -30,9 +30,9 @@ MATRIX_CHAT_RETRY_DELAY = 30
 
 @receiver(post_save, sender=MatrixChatGestaltSettings)
 def post_matrix_chat_gestalt_settings_save(
-    sender, instance, created, update_fields=None, **kwargs
+    sender, instance, created, update_fields=None, raw=False, **kwargs
 ):
-    if created or (update_fields and "matrix_id_override" in update_fields):
+    if not raw and (created or (update_fields and "matrix_id_override" in update_fields)):
         gestalt = instance.gestalt
         # the matrix ID of the user has changed: remove all existing invitations
         MatrixChatGroupRoomInvitations.objects.filter(gestalt=gestalt).delete()
@@ -59,8 +59,8 @@ def _send_invitations_for_gestalt(gestalt):
 
 
 @receiver(post_save, sender=grouprise.features.groups.models.Group)
-def create_matrix_rooms_for_new_group(sender, instance, created, **kwargs):
-    if created:
+def create_matrix_rooms_for_new_group(sender, instance, created, raw=False, **kwargs):
+    if created and not raw:
         _sync_rooms_delayed(instance)
 
 
@@ -97,11 +97,12 @@ def send_matrix_room_messages(messages):
 
 
 @receiver(post_save, sender=grouprise.features.content.models.Content)
-def send_content_notification_to_matrix_rooms(sender, instance, created, **kwargs):
-    # For unknown reasons the instance is not complete at this moment
-    # ("instance.get_associated_groups()" is empty).  Thus we delay the execution slightly by
-    # asking our worker process to process the instance when it is ready.
-    _delayed_send_content_notification_to_matrix_rooms(instance, created)
+def send_content_notification_to_matrix_rooms(sender, instance, created, raw=False, **kwargs):
+    if not raw:
+        # For unknown reasons the instance is not complete at this moment
+        # ("instance.get_associated_groups()" is empty).  Thus we delay the execution slightly by
+        # asking our worker process to process the instance when it is ready.
+        _delayed_send_content_notification_to_matrix_rooms(instance, created)
 
 
 @db_task()
@@ -134,8 +135,11 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
 
 
 @receiver(post_save, sender=grouprise.features.contributions.models.Contribution)
-def send_contribution_notification_to_matrix_rooms(sender, instance, created, **kwargs):
-    if not created:
+def send_contribution_notification_to_matrix_rooms(sender, instance, created, raw=False, **kwargs):
+    if raw:
+        # do not send notifications while loading fixtures
+        pass
+    elif not created:
         # send notifications only for new contributions
         pass
     elif instance.deleted:
@@ -157,8 +161,8 @@ def send_contribution_notification_to_matrix_rooms(sender, instance, created, **
 
 
 @receiver(post_save, sender=grouprise.features.memberships.models.Membership)
-def synchronize_matrix_room_memberships(sender, instance, created, **kwargs):
-    if created:
+def synchronize_matrix_room_memberships(sender, instance, created, raw=False, **kwargs):
+    if created and not raw:
         _invite_to_group_rooms(instance.group)
 
 
@@ -178,8 +182,8 @@ def _invite_to_group_rooms(group):
 
 
 @receiver(pre_save, sender=MatrixChatGroupRoom)
-def move_away_from_matrix_room(sender, instance, *args, update_fields=None, **kwargs):
-    if (instance.id is not None) and update_fields and ("room_id" in update_fields):
+def move_away_from_matrix_room(sender, instance, *args, update_fields=None, raw=False, **kwargs):
+    if not raw and (instance.id is not None) and update_fields and ("room_id" in update_fields):
         previous_room_id = MatrixChatGroupRoom.objects.get(pk=instance.pk).room_id
         _migrate_to_new_room(
             instance,

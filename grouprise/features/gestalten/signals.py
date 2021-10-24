@@ -5,5 +5,6 @@ from django.db.models import signals
 
 
 @dispatch.receiver(signals.post_save, sender=auth.get_user_model())
-def user_post_save(sender, instance, **kwargs):
-    models.Gestalt.objects.get_or_create(user=instance)
+def user_post_save(sender, instance, raw=False, **kwargs):
+    if not raw:
+        models.Gestalt.objects.get_or_create(user=instance)
