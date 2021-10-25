@@ -12,8 +12,7 @@ aiosmtplib                  # NOT IN DEBIAN
 bleach                      # debian: python3-bleach
 django<2.3                  # debian: python3-django
 django-allauth              # debian: python3-django-allauth
-# deactivated, see #662
-# django-cachalot             # NOT IN DEBIAN
+django-cachalot             # NOT IN DEBIAN
 django-cors-middleware      # debian: python3-django-cors-headers
 django-csp                  # debian: python3-django-csp
 django-debug-toolbar        # debian: python3-django-debug-toolbar
