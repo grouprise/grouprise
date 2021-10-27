@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 import django.views.generic
@@ -6,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
 
-from .models import MatrixChatGestaltSettings
+from .models import MatrixChatGestaltSettings, MatrixChatGroupRoom
 from .settings import MATRIX_SETTINGS
 
 
@@ -141,3 +142,24 @@ class ShowMatrixChatHelp(django.views.generic.TemplateView):
         kwargs["matrix_clients_url"] = "https://matrix.org/clients/"
         kwargs["matrix_client_path"] = "/stadt/chat/"
         return super().get_context_data(**kwargs)
+
+
+class RedirectToMatrixRoomGroupPrivate(
+    PermissionMixin, django.views.generic.RedirectView
+):
+    permission_required = "content.group_create"
+    is_private = True
+
+    def get_group_room(self):
+        group = get_object_or_404(Group, slug=self.kwargs.get("group_slug"))
+        return MatrixChatGroupRoom.objects.filter(
+            group=group, is_private=self.is_private
+        ).first()
+
+    def get_redirect_url(self, *args, **kwargs):
+        return self.get_group_room().get_client_url()
+
+
+class RedirectToMatrixRoomGroupPublic(RedirectToMatrixRoomGroupPrivate):
+    permission_required = "content.list"
+    is_private = False

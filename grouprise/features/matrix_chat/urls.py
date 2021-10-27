@@ -22,6 +22,16 @@ if MATRIX_SETTINGS.ENABLED:
             views.ShowMatrixChatHelp.as_view(),
             name="help-matrix-chat",
         ),
+        url(
+            r"^(?P<group_slug>[\w-]+)/-/chat/public/$",
+            views.RedirectToMatrixRoomGroupPublic.as_view(),
+            name="matrix-chat-room-group-public",
+        ),
+        url(
+            r"^(?P<group_slug>[\w-]+)/-/chat/private/$",
+            views.RedirectToMatrixRoomGroupPrivate.as_view(),
+            name="matrix-chat-room-group-private",
+        ),
     ]
 else:
     urlpatterns = []
