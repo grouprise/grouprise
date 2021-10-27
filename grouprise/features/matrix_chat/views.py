@@ -1,3 +1,7 @@
+import json
+import logging
+import urllib.request
+
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -11,6 +15,61 @@ from .models import MatrixChatGestaltSettings, MatrixChatGroupRoom
 from .settings import MATRIX_SETTINGS
 
 
+logger = logging.getLogger(__name__)
+
+
+def get_room_url_for_requester(room_id, request_user):
+    matrix_domain = MATRIX_SETTINGS.DOMAIN
+    # determine the matrix domain of the requesting user
+    if request_user.is_authenticated:
+        user_matrix_id = request_user.gestalt.matrix_chat_settings.get_matrix_id()
+        if ":" in user_matrix_id:
+            matrix_domain = user_matrix_id.lower().split(":", 1)[1]
+    base_path = get_web_client_url_pattern_for_domain(matrix_domain)
+    return base_path.format(room=room_id)
+
+
+def get_web_client_url_pattern_for_domain(domain):
+    """determine the web client URL format string for a matrix domain
+
+    The resulting string contains '{room}' in order to allow string formatting with the 'room'
+    keyword.
+    """
+    if domain == MATRIX_SETTINGS.DOMAIN:
+        # this path is handled by our external web proxy
+        return "/stadt/chat/#/room/{room}"
+    # try to determine the homeserver of the domain
+    try:
+        client_data = urllib.request.urlopen(
+            f"https://{domain}/.well-known/matrix/client"
+        ).read()
+        homeserver_url = json.loads(client_data)["m.homeserver"]["base_url"]
+    except (IOError, ValueError) as exc:
+        logger.info(
+            "Failed to retrieve '/.well-known/matrix/client' for domain '%s': %s",
+            domain,
+            exc,
+        )
+        homeserver_url = f"https://{domain}:8448"
+    # try to retrieve the announced web client (e.g. via synapse's "webclient" interface)
+
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, *args, **kwargs):
+            return None
+
+    opener = urllib.request.build_opener(NoRedirect)
+    try:
+        opener.open(f"{homeserver_url}/_matrix/client/")
+    except urllib.error.HTTPError as exc:
+        if exc.status == 302:
+            web_client_url = exc.headers.get("location")
+            return web_client_url.rstrip("/") + "/#/room/{room}"
+    # Fall back to the matrix.to service for now.
+    # In the future we may want to use the new matrix scheme:
+    #   https://github.com/matrix-org/matrix-doc/pull/2312
+    return "https://matrix.to/#/{room}"
+
+
 class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.FormView):
     permission_required = "gestalten.change"
     template_name = "matrix_chat/update_gestalt_settings.html"
@@ -19,6 +78,7 @@ class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.Form
         # Avoid a direct assignment of "form_class", since that module requires an initialized
         # configuration.
         from .forms import MatrixChatGestaltSettingsForm
+
         return MatrixChatGestaltSettingsForm
 
     def get_group(self):
@@ -72,6 +132,7 @@ class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormVi
         # Avoid a direct assignment of "form_class", since that module requires an initialized
         # configuration.
         from .forms import MatrixChatGroupSettingsForm
+
         return MatrixChatGroupSettingsForm
 
     def get_group(self):
@@ -157,7 +218,8 @@ class RedirectToMatrixRoomGroupPrivate(
         ).first()
 
     def get_redirect_url(self, *args, **kwargs):
-        return self.get_group_room().get_client_url()
+        room = self.get_group_room()
+        return get_room_url_for_requester(room.room_id, self.request.user)
 
 
 class RedirectToMatrixRoomGroupPublic(RedirectToMatrixRoomGroupPrivate):

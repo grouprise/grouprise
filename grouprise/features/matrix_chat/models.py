@@ -16,9 +16,6 @@ class MatrixChatGroupRoom(models.Model):
     is_visible = models.BooleanField(default=True)
     statistics_cache_json = models.CharField(default="{}", max_length=4096)
 
-    def get_client_url(self):
-        return f"/stadt/chat/#/room/{self.room_id}"
-
     def get_statistics(self):
         try:
             return json.loads(self.statistics_cache_json)
