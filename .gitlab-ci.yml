@@ -75,10 +75,11 @@ test_deb_package:
 
 # the exported pages are served (indirectly) via https://docs.grouprise.org/
 pages:
-  script:
-    - make doc
-  only:
-    - lars-tests
-  artifacts:
-    paths:
-      - build/doc/html
+    stage: build
+    script:
+        - make doc
+    only:
+        - master
+    artifacts:
+        paths:
+            - build/doc/html
