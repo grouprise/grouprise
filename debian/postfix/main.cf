@@ -4,7 +4,7 @@ myorigin = YOUR_GROUPRISE_DOMAIN
 relayhost = YOUR_MAIL_GATEWAY_FOR_EXTERNAL_DELIVERY
 
 # permit_mynetworks: accept everything from localhost (i.e. from grouprise)
-# reject_unverified_recipient: verify the recipient's address by asking grouprise-lmtpd 
+# reject_unverified_recipient: verify the recipient's address by asking grouprise-lmtpd
 # reject_unauth_destination: reject non-local requests for relay
 smtpd_recipient_restrictions = permit_mynetworks, reject_unverified_recipient, reject_unauth_destination
 
