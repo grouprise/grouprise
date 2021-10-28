@@ -28,18 +28,9 @@ apt install grouprise grouprise-db-postgresql
 You will be prompted for some details during the package installation procedure.
 
 
-## Database Configuration
+## Database Initialization and Configuration
 
-The following statements are suitable for creating a database in postgreSQL:
-
-```sql
-CREATE USER grouprise WITH PASSWORD 'xxxxx';
-CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER grouprise;
-```
-
-You may need to enable the locale `de_DE.UTF8` before: `dpkg-reconfigure locales`.
-
-Add the corresponding configuration settings somewhere below `/etc/grouprise/conf.d/`.
+See [database initialization](/administration/database/initialization) for details.
 
 
 ## Configuration
