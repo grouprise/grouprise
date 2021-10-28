@@ -58,7 +58,9 @@ General grouprise Settings
 
 ``CLAIMS``
 
-  A list of claims. A random claim is displayed for each request. The default ist ``[]``.
+  A list of claims.
+  A random claim is displayed for each request.
+  The default is ``[]``.
 
 ``ENTITY_SLUG_BLACKLIST``
 
@@ -91,7 +93,8 @@ Special Users and Groups
 
 ``OPERATOR_GROUP_ID``
 
-  ID of the group which is treated as the operator group of the plattform. Defaults to ``1``.
+  ID of the group which is treated as the operator group of the platform.
+  Defaults to ``1``.
 
 ``UNKNOWN_GESTALT_ID``
 

@@ -1,7 +1,7 @@
 Managing a grouprise instance
 =============================
 
-Managment of a *grouprise* instance consists of the following tasks:
+Management of a *grouprise* instance consists of the following tasks:
 
 * moderation of users or content on request
 * helping users with managing their content

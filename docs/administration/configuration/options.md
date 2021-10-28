@@ -202,7 +202,7 @@ This user never receives any kind of notifications, thus it should not be a huma
 Default: `1`
 
 ### `operator_group_id`
-ID of the group which is treated as the operator group of the plattform.
+ID of the group which is treated as the operator group of the platform.
 
 Default: `1`
 
@@ -273,12 +273,12 @@ Default: `[]` (empty)
 Add custom CSS stylesheets in order to override specific layout details.
 The `stylesheets` setting is a list of dictionaries.
 Each item needs to contain a `path` (absolute URL path of the local resource).
-Additionaly a [`media` value](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link) may be specified (e.g. `print`).
+Additionally a [`media` value](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link) may be specified (e.g. `print`).
 
 Default: `[]` (empty)
 
 ### `template_directories`
-You may want to customize grouprise templates in order to add custom widgets or for embedding additional frontend ressources.
+You may want to customize grouprise templates in order to add custom widgets or for embedding additional frontend resources.
 The `template_directories` setting is a list of directory names, which are used for looking up templates.
 Any configured directory has a higher precedence than *grouprise*'s builtin template locations.
 

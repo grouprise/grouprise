@@ -5,7 +5,8 @@ grouprise assets are compiled during build time. If you want to use additional a
 
 ## Adjusting CSP directives
 
-If you add new assets (e.g. scripts oder styles) to your setup, you have to check your CSP setup. See the [Django-CSP documentation](https://django-csp.readthedocs.io/en/latest/configuration.html) for all options.
+If you add new assets (e.g. scripts or styles) to your setup, you have to check your CSP setup.
+See the [Django-CSP documentation](https://django-csp.readthedocs.io/en/latest/configuration.html) for all options.
 
 Local external assets are allowed by default. If you want to add assets from another host, add something to your config like:
 
