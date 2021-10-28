@@ -72,3 +72,13 @@ test_deb_package:
       # install and run autopkgtest
       - apt-get install -y autopkgtest
       - autopkgtest --no-built-binaries build/debian/grouprise*.dsc -- null
+
+# the exported pages are served (indirectly) via https://docs.grouprise.org/
+pages:
+  script:
+    - make doc
+  only:
+    - lars-tests
+  artifacts:
+    paths:
+      - build/doc/html
