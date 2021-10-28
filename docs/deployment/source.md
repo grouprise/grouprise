@@ -1,97 +1,137 @@
-# Installation aus den Quellen
+# Deployment from source
 
-In den meisten Fällen möchtest du grouprise als [deb-Paket installieren](/deployment/deb).
-Falls dies nicht möglich sein sollte oder du spezielle Anforderungen haben solltest, dann folge der untenstehenden Beschreibung zur Installation aus den Quellen.
+This guide describes the manual installation of *grouprise* using the sources.
+Filesystem paths and some commands may be Debian-specific, but should be easily adaptable to other
+Linux or unix-like distributions.
 
 
-## Abhängigkeiten installieren
+## Download the Sources
 
-Folgende Software wird benötigt:
+The latest stable release is available at
+[git.hack-hro.de](https://git.hack-hro.de/grouprise/grouprise/-/tags)
+You can download it as a `zip` or `tar` file (both containing the same content).
 
-* `python3`
-* `pip`
-* `virtualenv`
+Extract the content of the archive into `/usr/local/share/grouprise`.
+
+
+## Install System Dependencies
+
+Dependencies mentioned in this section refer to Debian package names, which
+can be installed with `apt`.
+If you are installing *grouprise* on an operation system other than Debian or one of its many
+derivates like Ubuntu, then you have to find the appropriate equivalents for your system’s package
+manager.
+A good starting point may be the
+[Debian package search](https://www.debian.org/distrib/packages#search_packages), which offers
+information about each package’s sources and website.
+
+The following software is required when installing from sources:
+
+* `make`
 * `nodejs`
+* `npm`
+* `pip`
+* `python3`
+* `virtualenv`
+* `wget`
 
-Hinzu kommt ein passendes DBMS, wir empfehlen `postgresql` mit Python-Bindings (`python3-psycopg2`).
+We recommend to pick a proper DBMS for running *grouprise*.
+Our recommendation is PostgreSQL, but
+[any other option supported by Django](https://docs.djangoproject.com/en/dev/ref/databases/)
+should be fine too.
+Install the following packages:
 
-Außerdem verwenden wir in dieser Anleitung eine Konfiguration mit UWSGI und Nginx:
+* `postgresql`
+* `python3-psycopg2`
 
+Apart from that you will need an application server supporting the WSGI protocol and a web server.
+Our recommendations are [uWSGI](https://uwsgi-docs.readthedocs.io/) and
+[NGINX](https://nginx.org/).
+We ship configuration files for both, in order to minimize the required amount of customization.
+Install the following packages:
+
+* `nginx`
 * `uwsgi`
 * `uwsgi-plugin-python3`
-* `nginx`
-
-Für einige Funktionen von grouprise wird weitere Software benötigt:
-
-* `python3-xapian` (für die Suchfunktion)
-* `redis-server` (für asynchronen Nachrichtenversand)
 
 
-## Quelltext installieren
+## Additional System Dependencies and Functionality
 
-Das aktuelle stabile Release findest du unter [git.hack-hro.de](https://git.hack-hro.de/grouprise/grouprise/tags).
+Even though most of the application dependencies can be handled via the `virtualenv` created in the
+section below, we recommend that you install some of these with your systems package manager.
+Refer to the
+[debian/control file](https://git.hack-hro.de/grouprise/grouprise/-/tree/master/debian/control)
+for a list of packages.
 
-Kopiere den Quelltext in ein passendes Verzeichnis deiner Wahl, wir verwenden hier `/usr/local/share/grouprise`.
+All packages in the `Depends` section, whose names start with `python3-` can and should be
+installed directly from the operating system.
+This approach is not strictly necessary but it is always a good idea to reduce the number of
+manually installed dependencies in order to increase overall security.
+Your operating system ("distribution") usually does a much better job at keeping dependencies up to
+date than a single person ever could.
 
 
-## Virtualenv und Assets installieren
+## Prepare Virtualenv and Static Files
 
-Die folgenden Zeilen verändern ausschließlich Dateien im grouprise-Verzeichnis.
+Unfortunately *grouprise* requires some libraries that are not available as packages in Debian (and
+most likely other distributions).
+A virtualenv is a simple way to install Python libraries without polluting directories that are
+usually under control of the operating system and its package manager.
 
-```bash
+*grouprise* uses *Make* to ease these tasks for you.
+In order to create the virtualenv and all other files necessary to run a proper *grouprise*
+instance you will need to run the default make target in the directory *grouprise* was installed in.
+If you have followed the defaults in the first step this should come down to a few commands:
+
+```shell
 cd /usr/local/share/grouprise
-make virtualenv-update
-. build/venv/bin/activate
-make
+make virtualenv-update VIRTUALENV_CREATE_ARGUMENTS="--system-site-packages"
 ```
 
 
-## Konfigurationsdatei installieren
+## Create Database
 
-Erzeuge eine [Konfigurationsdatei](/administration/configuration/files) unter `/etc/grouprise/conf.d/`.
-
-Falls du PostgreSQL verwendest, helfen dir die folgenden Zeilen beim Einrichten der Datenbank:
+The following statements are suitable for creating a database in postgreSQL:
 
 ```sql
 CREATE USER grouprise WITH PASSWORD 'xxxxx';
 CREATE DATABASE grouprise WITH ENCODING 'UTF8' LC_COLLATE='de_DE.UTF8' LC_CTYPE='de_DE.UTF8' TEMPLATE=template0 OWNER grouprise;
 ```
 
-Eventuell musst du zuvor das Locale `de_DE.UTF8` aktivieren: `dpkg-reconfigure locales`.
+You may need to enable the locale `de_DE.UTF8` before: `dpkg-reconfigure locales`.
 
-Nun kannst du einen Link setzen, damit grouprise die Konfiguration findet und die Datenbank initialisiert:
-
-```bash
-cd /usr/local/share/grouprise
-python manage.py migrate
-```
-
-Anschließend kannst du grouprise zum ersten Mal ausprobieren (`yourhostname.org:8000`):
-
-```bash
-python manage.py runserver 0.0.0.0:8000
-```
-
-(Wenn du temporär in den Einstellungen `DEBUG = True` setzt, sieht die Seite auch hübsch aus. Vergiss nicht, die Einstellung zurückzusetzen!)
+Add the corresponding configuration settings somewhere below `/etc/grouprise/conf.d/`.
 
 
-## UWSGI und Nginx einrichten
+## Configure and Run *grouprise*
 
-* install nginx and UWSGI (being remmomendations of the grouprise package): `apt install nginx uwsgi uwsgi-plugin-python3`
-* create an UWSGI configuration
+The what, how and why of *grouprise* configuration is outlined in the
+[configuration documentation](/administration/configuration/index), but you will need to create a few
+files and symlinks to make it work.
+
+
+The *grouprise* process is managed via `uwsgi`.
+
+1. copy `grouprise.yaml.development` to `/etc/grouprise/conf.d/local.yaml` and adapt the settings
+   according to your needs
+    * add `debug: true`, if you run into problems later
+1. create an uWSGI configuration (e.g. `/etc/grouprise/uwsgi.ini`)
     * see [debian/grouprise.uwsgi.ini](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.uwsgi.ini)
-* create a systemd service for *grouprise*
+1. create a systemd service for *grouprise*
     * see [debian/grouprise.service](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.service)
     * alternative SysVinit script: [debian/grouprise.init](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.init)
-* start the *grouprise* service: `service grouprise start`
-* copy the nginx site example configuration: `cp /usr/share/doc/grouprise/examples/nginx.conf /etc/nginx/sites-available/grouprise`
-* set a suitable `server_name`: `edit /etc/nginx/sites-available/grouprise`
-    * or remove the `default` nginx site (if it is not in use) in order to let the `grouprise` site be picked irrespective of the requested hostname
-* enable the site: `ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/`
-* restart nginx: `service nginx restart`
-* visit the fresh grouprise instance: `http://localhost/` (or use a suitable hostname)
+1. start the *grouprise* service: `service grouprise start`
+1. create an nginx site configuration (e.g. `/etc/nginx/site-available/grouprise`):
+    ```
+    server {
+        server_name YOUR_DOMAIN_NAME;
+        client_max_body_size 10M;
+        include /usr/local/share/grouprise/debian/nginx.conf;
+    }
+    ```
+1. enable the site: `ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/`
+1. restart nginx: `service nginx restart`
+1. visit the fresh grouprise instance: `http://localhost/` (or use a suitable hostname)
 
-
-## Weitere Dienste einrichten
-
-Für einige Funktionen werden weitere Dienste benötigt. Anleitung folgt.
+You may also want to create a separate user and group for running grouprise and set the
+corresponding `uid` setting in the uWSGI configuration.
