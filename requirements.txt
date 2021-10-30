@@ -39,7 +39,6 @@ pillow                      # debian: python3-pil
 pymdown-extensions<6        # NOT IN DEBIAN
 randomcolor                 # NOT IN DEBIAN
 recommonmark                # debian: python3-recommonmark
-redis                       # debian: python3-redis
 ruamel.yaml                 # debian: python3-ruamel.yaml
 rules                       # debian: python3-django-rules
 schulze                     # NOT IN DEBIAN

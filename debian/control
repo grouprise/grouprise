@@ -35,7 +35,6 @@ Build-Depends:
  python3-markdown,
  python3-pil,
  python3-recommonmark,
- python3-redis,
  python3-ruamel.yaml,
  python3-setuptools,
  python3-six,
@@ -75,7 +74,6 @@ Depends:
  python3-markdown,
  python3-pil,
  python3-recommonmark,
- python3-redis,
  python3-requests,
  python3-ruamel.yaml,
  python3-setuptools,
@@ -88,7 +86,6 @@ Depends:
 Recommends:
  ${misc:Recommends},
  ghostscript,
- redis-server,
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
