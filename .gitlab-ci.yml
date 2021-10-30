@@ -78,8 +78,10 @@ pages:
     stage: build
     script:
         - make doc
+        # gitlab's CI feature "pages" requires "public" as the name of content directory
+        - mv build/doc/html public
     only:
         - master
     artifacts:
         paths:
-            - build/doc/html
+            - public
