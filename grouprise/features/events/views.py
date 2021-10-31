@@ -4,6 +4,7 @@ import django.utils.timezone
 import django.views.generic
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
@@ -75,13 +76,21 @@ class Day(List):
 
     def get_queryset(self):
         date = self.get_date()
+        start_of_day = django.utils.timezone.make_aware(
+            datetime.datetime.combine(date, datetime.time.min)
+        )
+        end_of_day = django.utils.timezone.make_aware(
+            datetime.datetime.combine(date, datetime.time.max)
+        )
         return (
             associations.Association.objects.filter_events()
+            .filter(content__time__lte=end_of_day)
             .filter(
-                content__time__gte=datetime.datetime.combine(date, datetime.time.min),
-                content__time__lt=datetime.datetime.combine(
-                    date + datetime.timedelta(days=1), datetime.time.min
-                ),
+                (
+                    Q(content__until_time__isnull=True)
+                    & Q(content__time__gte=start_of_day)
+                )
+                | Q(content__until_time__gte=start_of_day)
             )
             .can_view(self.request.user)
             .order_by("content__time")

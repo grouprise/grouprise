@@ -59,7 +59,13 @@ class Association(models.QuerySet):
         return self.filter(entity_type=groups.Group.content_type)
 
     def filter_upcoming(self, time=None):
-        return self.filter(content__time__gte=time or django.utils.timezone.now())
+        """events which are ongoing or start in the future"""
+        if time is None:
+            time = django.utils.timezone.now()
+        return self.filter(
+            (Q(content__until_time__isnull=True) & Q(content__time__gte=time))
+            | Q(content__until_time__gte=time)
+        )
 
     def filter_user_content(self, user):
         qs = self
