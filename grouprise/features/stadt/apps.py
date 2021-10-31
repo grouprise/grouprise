@@ -2,7 +2,7 @@ from django import apps
 
 
 class StadtConfig(apps.AppConfig):
-    name = 'grouprise.features.stadt'
+    name = "grouprise.features.stadt"
 
     def ready(self):
         # register markdown extensions

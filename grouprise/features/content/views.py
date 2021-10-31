@@ -22,21 +22,25 @@ from . import forms
 
 
 class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
-    permission_required = 'content.list'
+    permission_required = "content.list"
     model = associations.Association
     paginate_by = 10
-    template_name = 'content/list.html'
+    template_name = "content/list.html"
 
     def get_queryset(self):
         return super().get_queryset().prefetch().ordered_user_content(self.request.user)
 
 
-class DetailBase(grouprise.features.associations.views.AssociationMixin,
-                 contributions.ContributionFormMixin, PermissionMixin, generic.DetailView):
-    permission_required = 'content.view'
-    permission_required_post = 'content.comment'
+class DetailBase(
+    grouprise.features.associations.views.AssociationMixin,
+    contributions.ContributionFormMixin,
+    PermissionMixin,
+    generic.DetailView,
+):
+    permission_required = "content.view"
+    permission_required_post = "content.comment"
     model = associations.Association
-    template_name = 'articles/detail.html'
+    template_name = "articles/detail.html"
 
     form_class = ContributionForm
 
@@ -50,7 +54,7 @@ class DetailBase(grouprise.features.associations.views.AssociationMixin,
         gestalt = user.gestalt if user.is_authenticated else None
         content = self.object.container
         qs = Contribution.objects_with_internal.filter(content=content)
-        if not user.has_perm('contributions.view_internal', content):
+        if not user.has_perm("contributions.view_internal", content):
             qs = qs.filter(Q(public=True) | Q(author=gestalt))
         return qs
 
@@ -59,13 +63,13 @@ class DetailBase(grouprise.features.associations.views.AssociationMixin,
 
     def get_template_names(self):
         if self.object.container.is_poll:
-            names = ('polls/detail.html',)
+            names = ("polls/detail.html",)
         elif self.object.container.is_gallery:
-            names = ('galleries/detail.html',)
+            names = ("galleries/detail.html",)
         elif self.object.container.is_file:
-            names = ('files/detail.html',)
+            names = ("files/detail.html",)
         elif self.object.container.is_event:
-            names = ('events/detail.html',)
+            names = ("events/detail.html",)
         else:
             names = super().get_template_names()
         return names
@@ -75,39 +79,42 @@ class Detail(DetailBase):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.container.is_poll:
-            return grouprise.features.polls.views.Detail(kwargs=kwargs, request=request).get(
-                    request, *args, **kwargs)
+            return grouprise.features.polls.views.Detail(
+                kwargs=kwargs, request=request
+            ).get(request, *args, **kwargs)
         return super().get(request, *args, **kwargs)
 
 
 class Permalink(django.views.generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        association = get_association_or_404(pk=kwargs.get('association_pk'))
+        association = get_association_or_404(pk=kwargs.get("association_pk"))
         return django.urls.reverse(
-                'content', args=(association.entity.slug, association.slug))
+            "content", args=(association.entity.slug, association.slug)
+        )
 
 
 class Create(PermissionMixin, generic.CreateView):
-    permission_required = 'content.create'
+    permission_required = "content.create"
     model = associations.Association
     form_class = forms.Create
-    template_name = 'content/create.html'
+    template_name = "content/create.html"
     with_time = False
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['author'] = self.request.user.gestalt
-        kwargs['instance'] = associations.Association(entity=self.entity)
-        kwargs['with_time'] = self.with_time
+        kwargs["author"] = self.request.user.gestalt
+        kwargs["instance"] = associations.Association(entity=self.entity)
+        kwargs["with_time"] = self.with_time
         return kwargs
 
     def get_initial(self):
-        return {'public': True}
+        return {"public": True}
 
     def get_permission_object(self):
-        if 'entity_slug' in self.kwargs:
+        if "entity_slug" in self.kwargs:
             self.entity = shortcuts.get_object_or_404(
-                    groups.Group, slug=self.kwargs['entity_slug'])
+                groups.Group, slug=self.kwargs["entity_slug"]
+            )
         elif self.request.user.is_authenticated:
             self.entity = self.request.user.gestalt
         else:
@@ -117,12 +124,12 @@ class Create(PermissionMixin, generic.CreateView):
     def has_permission(self):
         has_perm = super().has_permission()
         if has_perm and self.entity and self.entity.is_group:
-            has_perm = self.request.user.has_perm('content.group_create', self.entity)
+            has_perm = self.request.user.has_perm("content.group_create", self.entity)
         return has_perm
 
 
 class Update(PermissionMixin, generic.UpdateView):
-    permission_required = 'content.change'
+    permission_required = "content.change"
     model = associations.Association
     form_class = forms.Update
 
@@ -139,39 +146,41 @@ class Update(PermissionMixin, generic.UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['author'] = self.request.user.gestalt
+        kwargs["author"] = self.request.user.gestalt
         return kwargs
 
     def get_initial(self):
         return {
-                'title': self.object.container.title,
-                'image': self.object.container.image,
-                'text': self.object.container.versions.last().text,
-                'place': self.object.container.place,
-                'time': self.object.container.time,
-                'until_time': self.object.container.until_time,
-                'all_day': self.object.container.all_day,
-                }
+            "title": self.object.container.title,
+            "image": self.object.container.image,
+            "text": self.object.container.versions.last().text,
+            "place": self.object.container.place,
+            "time": self.object.container.time,
+            "until_time": self.object.container.until_time,
+            "all_day": self.object.container.all_day,
+        }
 
     def get_object(self):
         try:
-            self.entity = groups.Group.objects.get(slug=self.kwargs['entity_slug'])
+            self.entity = groups.Group.objects.get(slug=self.kwargs["entity_slug"])
         except groups.Group.DoesNotExist:
             self.entity = shortcuts.get_object_or_404(
-                    gestalten.Gestalt, user__username=self.kwargs['entity_slug'])
+                gestalten.Gestalt, user__username=self.kwargs["entity_slug"]
+            )
         return shortcuts.get_object_or_404(
-                associations.Association,
-                entity_id=self.entity.id,
-                entity_type=contenttypes.ContentType.objects.get_for_model(self.entity),
-                slug=self.kwargs['association_slug'])
+            associations.Association,
+            entity_id=self.entity.id,
+            entity_type=contenttypes.ContentType.objects.get_for_model(self.entity),
+            slug=self.kwargs["association_slug"],
+        )
 
     def get_template_names(self):
         if self.object.container.is_poll:
-            name = 'polls/update.html'
+            name = "polls/update.html"
         elif self.object.container.is_gallery:
-            name = 'galleries/update.html'
+            name = "galleries/update.html"
         elif self.object.container.is_file:
-            name = 'files/update.html'
+            name = "files/update.html"
         else:
-            name = 'content/update.html'
+            name = "content/update.html"
         return [name]

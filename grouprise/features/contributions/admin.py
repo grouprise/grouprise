@@ -3,7 +3,6 @@ from . import models
 
 
 class ContributionModelAdmin(admin.ModelAdmin):
-
     def get_queryset(self, request):
         qs = self.model.objects_with_internal.get_queryset()
         ordering = self.get_ordering(request)

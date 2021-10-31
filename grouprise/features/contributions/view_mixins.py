@@ -5,7 +5,9 @@ from . import models
 
 class ContributionFormMixin(django.views.generic.edit.FormMixin):
     def can_post(self):
-        return self.request.user.has_perms((self.permission_required_post,), self.object)
+        return self.request.user.has_perms(
+            (self.permission_required_post,), self.object
+        )
 
     def form_valid(self, form):
         form.save()
@@ -18,16 +20,17 @@ class ContributionFormMixin(django.views.generic.edit.FormMixin):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['contributions'] = self.object.container.contributions
-        kwargs['instance'] = models.Contribution(
-                author=self.request.user.gestalt, container=self.object.container)
+        kwargs["contributions"] = self.object.container.contributions
+        kwargs["instance"] = models.Contribution(
+            author=self.request.user.gestalt, container=self.object.container
+        )
         return kwargs
 
     def has_permission(self):
         self.object = self.get_object()
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             return super().has_permission()
-        elif self.request.method == 'POST':
+        elif self.request.method == "POST":
             return self.can_post()
         else:
             return False

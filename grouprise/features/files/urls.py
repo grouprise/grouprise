@@ -4,7 +4,8 @@ from . import views
 
 urlpatterns = [
     url(
-        r'^(?P<entity_slug>[\w.@+-]+)/files/add/$',
+        r"^(?P<entity_slug>[\w.@+-]+)/files/add/$",
         views.Create.as_view(),
-        name='create-group-file'),
+        name="create-group-file",
+    ),
 ]

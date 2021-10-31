@@ -6,16 +6,14 @@ from grouprise.core.models import PermissionToken
 
 
 class PermissionTokenUserResolver:
-
     def __init__(self, feature_key):
         self.feature_key = feature_key
 
     def _parse_permission_token_from_request(self, request):
-        """ retrieve a permission token (if it was supplied) from the query arguments
-        """
+        """retrieve a permission token (if it was supplied) from the query arguments"""
         query_args = request.GET.copy()
         try:
-            full_token = query_args['token']
+            full_token = query_args["token"]
         except KeyError:
             return None
         try:
@@ -29,8 +27,11 @@ class PermissionTokenUserResolver:
             return None
         if user.username == token_username:
             try:
-                return PermissionToken.objects.get(secret_key=secret_key, gestalt=user.gestalt,
-                                                   feature_key=self.feature_key)
+                return PermissionToken.objects.get(
+                    secret_key=secret_key,
+                    gestalt=user.gestalt,
+                    feature_key=self.feature_key,
+                )
             except PermissionToken.DoesNotExist:
                 return None
         return None
@@ -43,20 +44,22 @@ class PermissionTokenUserResolver:
             return None
 
     def get_url_with_permission_token(self, target, gestalt, url):
-        """ append the secret token to a private resource URL
+        """append the secret token to a private resource URL
 
         A permission token is generated if it did not exist before.
         """
         permission_token = PermissionToken.get_permission_token(
-            gestalt, target, self.feature_key, create_if_missing=True)
+            gestalt, target, self.feature_key, create_if_missing=True
+        )
         # we can safely asssume that usernames and permission tokens need no escaping
-        return "{}?token={}:{}".format(url, gestalt.user.username, permission_token.secret_key)
+        return "{}?token={}:{}".format(
+            url, gestalt.user.username, permission_token.secret_key
+        )
 
 
 class BasicAuthUserResolver:
-
     def resolve_user(self, request, target):
-        """ retrieve a gestalt that was authenticated via HTTP authentication
+        """retrieve a gestalt that was authenticated via HTTP authentication
 
         Fail silently and return None if no HTTP authentication data was transmitted. An HTTP
         authentication can be forced later by responding with a 401 HTTP status code. This relaxed
@@ -74,7 +77,6 @@ class BasicAuthUserResolver:
 
 
 class ChainUserResolver:
-
     def __init__(self, resolvers):
         self.resolvers = tuple(resolvers)
 
@@ -88,9 +90,13 @@ class ChainUserResolver:
     def get_url_with_permission_token(self, target, gestalt, url):
         for resolver in self.resolvers:
             if hasattr(resolver, "get_url_with_permission_token"):
-                return getattr(resolver, "get_url_with_permission_token")(target, gestalt, url)
+                return getattr(resolver, "get_url_with_permission_token")(
+                    target, gestalt, url
+                )
         raise NotImplementedError
 
 
 def get_user_resolver(feature_key):
-    return ChainUserResolver([BasicAuthUserResolver(), PermissionTokenUserResolver(feature_key)])
+    return ChainUserResolver(
+        [BasicAuthUserResolver(), PermissionTokenUserResolver(feature_key)]
+    )

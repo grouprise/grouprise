@@ -16,11 +16,17 @@ class Content(grouprise.core.models.Model):
 
     # FIXME: remove when django bug #28988 is fixed
     poll = models.OneToOneField(
-            'polls.WorkaroundPoll', null=True, blank=True, related_name='content',
-            on_delete=models.CASCADE)
+        "polls.WorkaroundPoll",
+        null=True,
+        blank=True,
+        related_name="content",
+        on_delete=models.CASCADE,
+    )
 
     title = models.CharField(max_length=255)
-    image = models.ForeignKey('images.Image', blank=True, null=True, on_delete=models.SET_NULL)
+    image = models.ForeignKey(
+        "images.Image", blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     place = models.CharField(blank=True, max_length=255)
 
@@ -31,23 +37,26 @@ class Content(grouprise.core.models.Model):
     tags = TaggableManager()
 
     associations = contenttypes.GenericRelation(
-            'associations.Association',
-            content_type_field='container_type',
-            object_id_field='container_id',
-            related_query_name='content')
+        "associations.Association",
+        content_type_field="container_type",
+        object_id_field="container_id",
+        related_query_name="content",
+    )
 
     contributions = contenttypes.GenericRelation(
-            'contributions.Contribution',
-            content_type_field='container_type',
-            object_id_field='container_id',
-            related_query_name='content')
+        "contributions.Contribution",
+        content_type_field="container_type",
+        object_id_field="container_id",
+        related_query_name="content",
+    )
 
     def __str__(self):
         return self.title
 
     def get_authors(self):
         return gestalten.Gestalt.objects.filter(
-                Q(versions__content=self) | Q(contributions__content=self)).distinct()
+            Q(versions__content=self) | Q(contributions__content=self)
+        ).distinct()
 
     def get_version_authors(self):
         return gestalten.Gestalt.objects.filter(versions__content=self).distinct()
@@ -59,11 +68,12 @@ class Content(grouprise.core.models.Model):
         return groups.Group.objects.filter(associations__content=self)
 
     def get_unique_id(self):
-        return 'content.{}'.format(self.id)
+        return "content.{}".format(self.id)
 
     def get_url_for(self, association):
         return django.urls.reverse(
-                'content', args=[association.entity.slug, association.slug])
+            "content", args=[association.entity.slug, association.slug]
+        )
 
     @property
     def is_event(self):
@@ -90,11 +100,14 @@ class Content(grouprise.core.models.Model):
 
 class Version(models.Model):
     class Meta:
-        ordering = ('time_created',)
+        ordering = ("time_created",)
 
-    content = models.ForeignKey('Content', related_name='versions', on_delete=models.CASCADE)
+    content = models.ForeignKey(
+        "Content", related_name="versions", on_delete=models.CASCADE
+    )
 
     author = models.ForeignKey(
-            'gestalten.Gestalt', related_name='versions', on_delete=models.PROTECT)
+        "gestalten.Gestalt", related_name="versions", on_delete=models.PROTECT
+    )
     text = models.TextField()
     time_created = models.DateTimeField(default=django.utils.timezone.now)

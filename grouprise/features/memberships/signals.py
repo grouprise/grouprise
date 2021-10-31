@@ -12,8 +12,10 @@ def add_first_member(sender, instance, created, raw=False, **kwargs):
         group = instance
         if group.gestalt_created:
             models.Membership.objects.create(
-                    created_by=group.gestalt_created,
-                    group=group, member=group.gestalt_created)
+                created_by=group.gestalt_created,
+                group=group,
+                member=group.gestalt_created,
+            )
 
 
 @receiver(post_save, sender=models.Membership)

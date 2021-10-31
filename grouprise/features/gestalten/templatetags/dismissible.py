@@ -7,10 +7,10 @@ from django.template import Library, loader
 register = Library()
 
 
-@register.simple_tag(name='dismiss', takes_context=True)
-def do_dismiss(context, name, category='dismissible', type='button'):
-    template_name = 'dismissible/%s.html' % type
-    options = {'name': name, 'category': category, 'value': 'dismissed'}
+@register.simple_tag(name="dismiss", takes_context=True)
+def do_dismiss(context, name, category="dismissible", type="button"):
+    template_name = "dismissible/%s.html" % type
+    options = {"name": name, "category": category, "value": "dismissed"}
 
     try:
         dismissible_template = loader.get_template(template_name)
@@ -19,27 +19,25 @@ def do_dismiss(context, name, category='dismissible', type='button'):
         raise template.TemplateSyntaxError(message) from err
 
     try:
-        options['gestalt'] = context['user'].gestalt.id
+        options["gestalt"] = context["user"].gestalt.id
     except (AttributeError, KeyError):
         # no user is present, settings cannot be saved
-        return ''
+        return ""
 
-    return dismissible_template.render({
-        'payload': json.dumps(options)
-    })
+    return dismissible_template.render({"payload": json.dumps(options)})
 
 
-@register.tag(name='dismissible')
+@register.tag(name="dismissible")
 def do_dismissible(parser, token):
-    nodelist = parser.parse(('enddismissible',))
+    nodelist = parser.parse(("enddismissible",))
     parser.delete_first_token()
 
     try:
         name = token.split_contents()[1]
     except IndexError:
-        raise template.TemplateSyntaxError('please provide a name for the dismissible')
+        raise template.TemplateSyntaxError("please provide a name for the dismissible")
 
-    if name[0] in ['\'', '"']:
+    if name[0] in ["'", '"']:
         name = name[1:-1]
 
     return DismissibleNode(name, nodelist)
@@ -52,12 +50,12 @@ class DismissibleNode(template.Node):
 
     def render(self, context):
         try:
-            setting = context['user'].gestalt.settings.get(name=self.name)
-            should_render = setting.value != 'dismissed'
+            setting = context["user"].gestalt.settings.get(name=self.name)
+            should_render = setting.value != "dismissed"
         except (AttributeError, KeyError, models.ObjectDoesNotExist):
             should_render = True
 
         if should_render:
             return '<div class="dismissible">%s</div>' % self.nodelist.render(context)
         else:
-            return ''
+            return ""

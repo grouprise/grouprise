@@ -3,6 +3,6 @@ from . import forms
 
 
 class Create(grouprise.features.content.views.Create):
-    template_name = 'files/create.html'
+    template_name = "files/create.html"
 
     form_class = forms.Create

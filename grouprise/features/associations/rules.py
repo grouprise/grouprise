@@ -13,14 +13,17 @@ def is_creator(user, association):
 def is_long_standing_group_member(user, association):
     if not association.entity.is_group:
         return False
-    membership = Membership.objects.filter(group=association.entity, member=user.gestalt) \
-                                   .first()
+    membership = Membership.objects.filter(
+        group=association.entity, member=user.gestalt
+    ).first()
     if not membership:
         return False
     return membership.date_joined < date.today() - timedelta(weeks=1)
 
 
-add_perm('associations.delete',
-         is_authenticated & (is_creator | is_long_standing_group_member))
+add_perm(
+    "associations.delete",
+    is_authenticated & (is_creator | is_long_standing_group_member),
+)
 
-add_perm('associations.list_activity', is_authenticated)
+add_perm("associations.list_activity", is_authenticated)

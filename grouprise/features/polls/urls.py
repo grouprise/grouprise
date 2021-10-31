@@ -3,18 +3,15 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    url(r"^stadt/polls/add/$", views.Create.as_view(), name="create-poll"),
     url(
-        r'^stadt/polls/add/$',
+        r"^(?P<entity_slug>[\w-]+)/polls/add/$",
         views.Create.as_view(),
-        name='create-poll'),
-
+        name="create-group-poll",
+    ),
     url(
-        r'^(?P<entity_slug>[\w-]+)/polls/add/$',
-        views.Create.as_view(),
-        name='create-group-poll'),
-
-    url(
-        r'^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/vote/$',
+        r"^(?P<entity_slug>[\w-]+)/(?P<association_slug>[\w-]+)/vote/$",
         views.Vote.as_view(),
-        name='vote'),
+        name="vote",
+    ),
 ]

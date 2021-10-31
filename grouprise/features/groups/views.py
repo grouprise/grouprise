@@ -24,97 +24,102 @@ from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 
 
 class Create(PermissionMixin, CreateView):
-    permission_required = 'groups.create_group'
+    permission_required = "groups.create_group"
     model = Group
-    fields = ('name',)
-    template_name = 'groups/create.html'
+    fields = ("name",)
+    template_name = "groups/create.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if self.request.user.is_authenticated:
-            kwargs['instance'] = Group(gestalt_created=self.request.user.gestalt)
+            kwargs["instance"] = Group(gestalt_created=self.request.user.gestalt)
         return kwargs
 
 
 class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailView):
-    permission_required = 'groups.view'
+    permission_required = "groups.view"
     model = models.Group
     filterset_class = ContentFilterSet
     paginate_by = 10
-    template_name = 'groups/detail.html'
+    template_name = "groups/detail.html"
 
     def get_queryset(self):
         return self.object.associations.ordered_user_content(self.request.user)
 
     def get_context_data(self, **kwargs):
         associations = self.get_queryset()
-        intro_associations = associations.filter(pinned=True).order_by('time_created')
-        intro_gallery = intro_associations.filter_galleries().filter(public=True).first()
+        intro_associations = associations.filter(pinned=True).order_by("time_created")
+        intro_gallery = (
+            intro_associations.filter_galleries().filter(public=True).first()
+        )
         if intro_gallery:
             intro_associations = intro_associations.exclude(pk=intro_gallery.pk)
-        kwargs['feed_url'] = self.request.build_absolute_uri(
-                reverse('group-feed', args=(self.object.pk,)))
+        kwargs["feed_url"] = self.request.build_absolute_uri(
+            reverse("group-feed", args=(self.object.pk,))
+        )
         if MATRIX_SETTINGS.ENABLED:
             all_rooms = self.object.matrix_rooms
-            kwargs['public_chat_room'] = all_rooms.filter(is_private=False).first()
-            kwargs['private_chat_room'] = all_rooms.filter(is_private=True).first()
+            kwargs["public_chat_room"] = all_rooms.filter(is_private=False).first()
+            kwargs["private_chat_room"] = all_rooms.filter(is_private=True).first()
         return super().get_context_data(
-                GROUPRISE_MAILINGLIST_ENABLED=CORE_SETTINGS.MAILINGLIST_ENABLED,
-                associations=associations,
-                intro_associations=intro_associations,
-                intro_gallery=intro_gallery,
-                group=self.object,
-                site=get_current_site(self.request),
-                **kwargs)
+            GROUPRISE_MAILINGLIST_ENABLED=CORE_SETTINGS.MAILINGLIST_ENABLED,
+            associations=associations,
+            intro_associations=intro_associations,
+            intro_gallery=intro_gallery,
+            group=self.object,
+            site=get_current_site(self.request),
+            **kwargs,
+        )
 
     def get_object(self):
         return self.object
 
 
 class List(PermissionMixin, FilterView):
-    permission_required = 'groups.view_list'
+    permission_required = "groups.view_list"
     filterset_class = filters.Group
     paginate_by = 10
     strict = False
 
     def get_content(self):
         return associations.Association.objects.filter_group_containers().can_view(
-                self.request.user)
+            self.request.user
+        )
 
     def get_queryset(self):
-        return models.Group.objects.order_by('-score')
+        return models.Group.objects.order_by("-score")
 
 
 class Update(PermissionMixin, UpdateView):
-    permission_required = 'groups.change'
+    permission_required = "groups.change"
     model = models.Group
     form_class = forms.Update
-    template_name = 'groups/update.html'
+    template_name = "groups/update.html"
 
     def get_object(self):
-        return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
+        return get_object_or_404(models.Group, slug=self.request.GET.get("group"))
 
 
 class ImageUpdate(PermissionMixin, UpdateView):
-    permission_required = 'groups.change'
+    permission_required = "groups.change"
     model = models.Group
-    fields = ('avatar', 'logo')
-    template_name = 'groups/update_images.html'
+    fields = ("avatar", "logo")
+    template_name = "groups/update_images.html"
 
     def get_object(self):
-        return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
+        return get_object_or_404(models.Group, slug=self.request.GET.get("group"))
 
 
 class SubscriptionsMemberships(PermissionMixin, TemplateView):
-    permission_required = 'groups.change_subscriptions_memberships'
-    template_name = 'groups/subscriptions_memberships.html'
+    permission_required = "groups.change_subscriptions_memberships"
+    template_name = "groups/subscriptions_memberships.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['group'] = self.group
+        kwargs["group"] = self.group
         return super().get_context_data(**kwargs)
 
     def get_object(self):
-        return get_object_or_404(models.Group, slug=self.request.GET.get('group'))
+        return get_object_or_404(models.Group, slug=self.request.GET.get("group"))
 
     def get_permission_object(self):
         self.group = super().get_permission_object()
@@ -123,11 +128,11 @@ class SubscriptionsMemberships(PermissionMixin, TemplateView):
 
 class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, FormView):
     model = Group
-    slug_url_kwarg = 'group'
-    permission_required = 'groups.recommend'
+    slug_url_kwarg = "group"
+    permission_required = "groups.recommend"
     form_class = RecommendForm
-    template_name = 'groups/recommend.html'
-    success_message = 'Die Empfehlungen wurden versendet.'
+    template_name = "groups/recommend.html"
+    success_message = "Die Empfehlungen wurden versendet."
 
     def get(self, *args, **kwargs):
         self.object = self.get_object()
@@ -139,16 +144,14 @@ class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, For
 
     def get_initial(self):
         context = dict(
-            group=self.object,
-            site=get_grouprise_site(),
-            user=self.request.user
+            group=self.object, site=get_grouprise_site(), user=self.request.user
         )
-        template = get_template('groups/recommend.txt')
+        template = get_template("groups/recommend.txt")
         return dict(text=template.render(context).strip())
 
     def form_valid(self, form):
-        recipients = self.get_recipients(form.cleaned_data['recipients'])
-        self.send_recommendations(recipients, form.cleaned_data['text'])
+        recipients = self.get_recipients(form.cleaned_data["recipients"])
+        self.send_recommendations(recipients, form.cleaned_data["text"])
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -156,11 +159,12 @@ class RecommendView(PermissionMixin, SingleObjectMixin, SuccessMessageMixin, For
 
     def get_recipients(self, data: str) -> list:
         email_pattern = re.compile(
-                r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', flags=re.IGNORECASE)
-        gestalt_pattern = re.compile(r'@([\w-]+)')
+            r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", flags=re.IGNORECASE
+        )
+        gestalt_pattern = re.compile(r"@([\w-]+)")
 
         # get a list of usernames
-        data_without_emails = email_pattern.sub('', data)
+        data_without_emails = email_pattern.sub("", data)
         gestalten = gestalt_pattern.findall(data_without_emails)
 
         # recipients are the explicitly given email addresses + the email addresses of the

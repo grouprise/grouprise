@@ -21,7 +21,7 @@ class Entity(grouprise.core.views.PermissionMixin, django.views.generic.View):
         return self.view.render_to_response(context)
 
     def get_object(self):
-        slug = self.kwargs.get('entity_slug')
+        slug = self.kwargs.get("entity_slug")
         try:
             return Group.objects.get(slug=slug)
         except Group.DoesNotExist:
@@ -49,21 +49,27 @@ class Entity(grouprise.core.views.PermissionMixin, django.views.generic.View):
 
 
 class Help(CreateGroupConversation):
-    template_name = 'stadt/help.html'
+    template_name = "stadt/help.html"
 
     def get_context_data(self, **kwargs):
-        intro = self.entity.associations.ordered_user_content(self.request.user) \
-                .filter(pinned=True).order_by('time_created')
+        intro = (
+            self.entity.associations.ordered_user_content(self.request.user)
+            .filter(pinned=True)
+            .order_by("time_created")
+        )
         intro_gallery = intro.filter_galleries().filter(public=True).first()
         if intro_gallery:
             intro = intro.exclude(pk=intro_gallery.pk)
         about_text = intro.first()
-        tools_text = self.entity.associations.ordered_user_content(self.request.user) \
-            .filter(slug='tools').first()
+        tools_text = (
+            self.entity.associations.ordered_user_content(self.request.user)
+            .filter(slug="tools")
+            .first()
+        )
         if about_text:
-            kwargs['about_text'] = about_text
+            kwargs["about_text"] = about_text
             if tools_text and tools_text != about_text:
-                kwargs['tools_text'] = tools_text
+                kwargs["tools_text"] = tools_text
         return super().get_context_data(**kwargs)
 
     def get_permission_object(self):
@@ -72,26 +78,26 @@ class Help(CreateGroupConversation):
 
 
 class Index(content.List):
-    template_name = 'stadt/index.html'
+    template_name = "stadt/index.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['feed_url'] = self.request.build_absolute_uri(reverse('feed'))
+        kwargs["feed_url"] = self.request.build_absolute_uri(reverse("feed"))
         return super().get_context_data(**kwargs)
 
 
 class Privacy(django.views.generic.TemplateView):
-    permission_required = 'stadt.view_privacy'
-    template_name = 'stadt/privacy.html'
-    title = 'Datenschutz'
+    permission_required = "stadt.view_privacy"
+    template_name = "stadt/privacy.html"
+    title = "Datenschutz"
 
 
 class Search(PermissionMixin, ListView):
-    permission_required = 'stadt.search'
+    permission_required = "stadt.search"
     paginate_by = 10
-    template_name = 'stadt/search.html'
+    template_name = "stadt/search.html"
 
     def get_queryset(self):
-        self.query_string = re.sub(r'[^\w ]', '', self.request.GET.get('q', ''))
+        self.query_string = re.sub(r"[^\w ]", "", self.request.GET.get("q", ""))
         if self.query_string:
             return SearchQuerySet().filter(content=AutoQuery(self.query_string))
         else:

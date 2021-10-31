@@ -26,29 +26,32 @@ from .utils import get_requested_time
 
 
 class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
-    permission_required = 'events.view_list'
+    permission_required = "events.view_list"
     model = associations.Association
-    template_name = 'events/list.html'
+    template_name = "events/list.html"
     paginate_by = 10
 
     def get_content(self):
         return associations.Association.objects.can_view(self.request.user)
 
     def get_queryset(self):
-        return super().get_queryset()\
-            .filter_events()\
-            .filter_upcoming(get_requested_time(self.request))\
-            .can_view(self.request.user)\
-            .order_by('content__time')
+        return (
+            super()
+            .get_queryset()
+            .filter_events()
+            .filter_upcoming(get_requested_time(self.request))
+            .can_view(self.request.user)
+            .order_by("content__time")
+        )
 
 
 class Create(grouprise.features.content.views.Create):
     form_class = forms.EventCreateForm
-    template_name = 'content/create.html'
+    template_name = "content/create.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['with_time'] = True
+        kwargs["with_time"] = True
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -58,33 +61,47 @@ class Create(grouprise.features.content.views.Create):
 
 
 class Day(List):
-    permission_required = 'events.view_day'
+    permission_required = "events.view_day"
 
     def get_date(self):
         return django.views.generic.dates._date_from_string(
-                self.kwargs['year'], '%Y',
-                self.kwargs['month'], '%m',
-                self.kwargs['day'], '%d')
+            self.kwargs["year"],
+            "%Y",
+            self.kwargs["month"],
+            "%m",
+            self.kwargs["day"],
+            "%d",
+        )
 
     def get_queryset(self):
         date = self.get_date()
-        return associations.Association.objects.filter_events().filter(
+        return (
+            associations.Association.objects.filter_events()
+            .filter(
                 content__time__gte=datetime.datetime.combine(date, datetime.time.min),
                 content__time__lt=datetime.datetime.combine(
-                    date + datetime.timedelta(days=1), datetime.time.min)
-                ).can_view(self.request.user).order_by('content__time')
+                    date + datetime.timedelta(days=1), datetime.time.min
+                ),
+            )
+            .can_view(self.request.user)
+            .order_by("content__time")
+        )
 
 
-class Attendance(grouprise.core.views.PermissionMixin,
-                 grouprise.features.associations.views.AssociationMixin,
-                 django.views.generic.View):
+class Attendance(
+    grouprise.core.views.PermissionMixin,
+    grouprise.features.associations.views.AssociationMixin,
+    django.views.generic.View,
+):
     # TODO: remove the GET request as soon as we emit a real DELETE request via javascript
-    http_method_names = ['get', 'delete', 'post']
-    permission_required = 'events.can_change_attendance'
+    http_method_names = ["get", "delete", "post"]
+    permission_required = "events.can_change_attendance"
 
     def get_association(self):
-        association_pk = self.kwargs.get('association_pk')
-        return django.shortcuts.get_object_or_404(associations.Association, pk=association_pk)
+        association_pk = self.kwargs.get("association_pk")
+        return django.shortcuts.get_object_or_404(
+            associations.Association, pk=association_pk
+        )
 
     def get_permission_object(self):
         return self.get_association()
@@ -92,25 +109,25 @@ class Attendance(grouprise.core.views.PermissionMixin,
     def get_success_redirect(self):
         association = self.get_association()
         request = self.request
-        if request.method == 'GET':
-            redirect_url = request.GET.get('redirect_url')
-        elif request.method == 'POST':
-            redirect_url = request.POST.get('redirect_url')
-        elif request.method == 'DELETE':
-            redirect_url = request.DELETE.get('redirect_url')
+        if request.method == "GET":
+            redirect_url = request.GET.get("redirect_url")
+        elif request.method == "POST":
+            redirect_url = request.POST.get("redirect_url")
+        elif request.method == "DELETE":
+            redirect_url = request.DELETE.get("redirect_url")
         else:
             redirect_url = None
         if redirect_url is None:
-            redirect_url = reverse('content-permalink', args=[association.pk])
+            redirect_url = reverse("content-permalink", args=[association.pk])
         return HttpResponseRedirect(redirect_url)
 
     def get_attendee(self, request):
-        if request.method == 'GET':
-            other_pk = request.GET.get('other_gestalt')
-        elif request.method == 'POST':
-            other_pk = request.POST.get('other_gestalt')
-        elif request.method == 'DELETE':
-            other_pk = request.DELETE.get('other_gestalt')
+        if request.method == "GET":
+            other_pk = request.GET.get("other_gestalt")
+        elif request.method == "POST":
+            other_pk = request.POST.get("other_gestalt")
+        elif request.method == "DELETE":
+            other_pk = request.DELETE.get("other_gestalt")
         else:
             other_pk = None
         try:
@@ -126,8 +143,9 @@ class Attendance(grouprise.core.views.PermissionMixin,
         gestalt = self.get_attendee(request)
         association = self.get_association()
         try:
-            return models.AttendanceStatement.objects.filter(attendee=gestalt,
-                                                             content=association.container).first()
+            return models.AttendanceStatement.objects.filter(
+                attendee=gestalt, content=association.container
+            ).first()
         except models.AttendanceStatement.DoesNotExist:
             # we tolerate duplicate calls
             return None
@@ -147,7 +165,9 @@ class Attendance(grouprise.core.views.PermissionMixin,
         if statement is None:
             gestalt = self.get_attendee(request)
             association = self.get_association()
-            models.AttendanceStatement(attendee=gestalt, content=association.container).save()
+            models.AttendanceStatement(
+                attendee=gestalt, content=association.container
+            ).save()
         return self.get_success_redirect()
 
 
@@ -164,7 +184,7 @@ class BaseCalendarFeed(ICalFeed):
             response = HttpResponse()
             response.status_code = 401
             domain = get_grouprise_site().domain
-            response['WWW-Authenticate'] = 'Basic realm="{}"'.format(domain)
+            response["WWW-Authenticate"] = 'Basic realm="{}"'.format(domain)
             return response
 
     def get_queryset(self):
@@ -172,21 +192,27 @@ class BaseCalendarFeed(ICalFeed):
         filter_dict = {}
         self.assemble_content_filter_dict(filter_dict)
         if user is None:
-            if filter_dict['public']:
-                return associations.Association.objects.filter_upcoming().filter(**filter_dict)
+            if filter_dict["public"]:
+                return associations.Association.objects.filter_upcoming().filter(
+                    **filter_dict
+                )
             else:
                 # non-public items cannot be accessed without being authorized
                 raise PermissionDenied
         else:
-            return associations.Association.objects.filter_upcoming().can_view(user).filter(
-                    **filter_dict)
+            return (
+                associations.Association.objects.filter_upcoming()
+                .can_view(user)
+                .filter(**filter_dict)
+            )
 
     def assemble_content_filter_dict(self, filter_dict):
-        filter_dict['public'] = (self.kwargs.get('domain', 'public') == 'public')
+        filter_dict["public"] = self.kwargs.get("domain", "public") == "public"
 
     def get_authorized_user(self):
-        authenticated_gestalt = self.user_resolver.resolve_user(self.request,
-                                                                self.get_calendar_owner())
+        authenticated_gestalt = self.user_resolver.resolve_user(
+            self.request, self.get_calendar_owner()
+        )
         if authenticated_gestalt:
             if self.check_authorization(authenticated_gestalt):
                 return authenticated_gestalt.user
@@ -195,19 +221,19 @@ class BaseCalendarFeed(ICalFeed):
     # the following methods describe ICAL properties
     # See http://django-ical.readthedocs.io/en/latest/usage.html#property-reference-and-extensions
     def product_id(self):
-        return 'PRODID:-//{}//grouprise//DE'.format(Site.objects.get_current().domain)
+        return "PRODID:-//{}//grouprise//DE".format(Site.objects.get_current().domain)
 
     def timezone(self):
         return django.utils.timezone.get_default_timezone_name()
 
     def items(self):
-        return self.get_queryset().order_by('-content__time')
+        return self.get_queryset().order_by("-content__time")
 
     def item_class(self, item):
         if item.content.first().associations.first().public:
-            return 'PUBLIC'
+            return "PUBLIC"
         else:
-            return 'PRIVATE'
+            return "PRIVATE"
 
     def item_title(self, item):
         return item.content.first().title
@@ -232,27 +258,23 @@ class BaseCalendarFeed(ICalFeed):
 
 
 class GroupCalendarFeed(BaseCalendarFeed):
-
     def get_group(self):
-        for attr in ('object', 'related_object'):
+        for attr in ("object", "related_object"):
             if hasattr(self, attr):
                 instance = getattr(self, attr)
                 if isinstance(instance, Group):
                     return instance
-                if hasattr(instance, 'group'):
+                if hasattr(instance, "group"):
                     return instance.group
-                if hasattr(instance, 'groups'):
+                if hasattr(instance, "groups"):
                     return instance.groups.first()
         try:
-            if 'group_pk' in self.kwargs:
-                return Group.objects.get(
-                        pk=self.kwargs['group_pk'])
-            if 'group_slug' in self.kwargs:
-                return Group.objects.get(
-                        slug=self.kwargs['group_slug'])
-            if 'group' in self.request.GET:
-                return Group.objects.get(
-                        slug=self.request.GET['group'])
+            if "group_pk" in self.kwargs:
+                return Group.objects.get(pk=self.kwargs["group_pk"])
+            if "group_slug" in self.kwargs:
+                return Group.objects.get(slug=self.kwargs["group_slug"])
+            if "group" in self.request.GET:
+                return Group.objects.get(slug=self.request.GET["group"])
         except Group.DoesNotExist:
             pass
         return None
@@ -263,11 +285,13 @@ class GroupCalendarFeed(BaseCalendarFeed):
         if group is None:
             return None
         else:
-            return '{} ({})'.format(group.name, site_name)
+            return "{} ({})".format(group.name, site_name)
 
     def items(self):
-        filter_dict = {'group': self.get_group(),
-                       'public': (self.kwargs['domain'] == "public")}
+        filter_dict = {
+            "group": self.get_group(),
+            "public": (self.kwargs["domain"] == "public"),
+        }
         return super().items().filter(**filter_dict)
 
     def item_guid(self, item):
@@ -276,14 +300,15 @@ class GroupCalendarFeed(BaseCalendarFeed):
         if group is None:
             return None
         else:
-            return '{}.{}@{}'.format(group.name, item.id, domain)
+            return "{}.{}@{}".format(group.name, item.id, domain)
 
     def get_calendar_owner(self):
         return self.get_group()
 
     def check_authorization(self, authenticated_gestalt):
-        return ((authenticated_gestalt is not None)
-                and is_member_of(authenticated_gestalt.user, self.get_group()))
+        return (authenticated_gestalt is not None) and is_member_of(
+            authenticated_gestalt.user, self.get_group()
+        )
 
 
 class SiteCalendarFeed(BaseCalendarFeed):
@@ -293,7 +318,7 @@ class SiteCalendarFeed(BaseCalendarFeed):
     def item_title(self, item):
         entity = item.content.first().associations.first().entity
         if entity.is_group:
-            return '[{}] {}'.format(entity.slug, item.content.first().title)
+            return "[{}] {}".format(entity.slug, item.content.first().title)
         else:
             return super().item_title(item)
 
@@ -303,34 +328,44 @@ class SiteCalendarFeed(BaseCalendarFeed):
 
 class CalendarExport(generic.DetailView):
     sidebar = tuple()
-    template_name = 'events/export.html'
+    template_name = "events/export.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['public_export_url'] = self.request.build_absolute_uri(
-            reverse(self.feed_route, kwargs={
-                self.slug_url_kwarg: self.get_object().slug,
-                'domain': 'public'
-            })
+        context["public_export_url"] = self.request.build_absolute_uri(
+            reverse(
+                self.feed_route,
+                kwargs={
+                    self.slug_url_kwarg: self.get_object().slug,
+                    "domain": "public",
+                },
+            )
         )
         if self.has_private_access():
-            relative_url = reverse(self.feed_route,
-                                   kwargs={self.slug_url_kwarg: self.get_object().slug,
-                                           'domain': 'private'})
+            relative_url = reverse(
+                self.feed_route,
+                kwargs={
+                    self.slug_url_kwarg: self.get_object().slug,
+                    "domain": "private",
+                },
+            )
             user_resolver = BaseCalendarFeed.user_resolver
             url_with_token = user_resolver.get_url_with_permission_token(
-                self.get_object(), self.request.user.gestalt, relative_url)
-            context['private_export_url'] = self.request.build_absolute_uri(url_with_token)
+                self.get_object(), self.request.user.gestalt, relative_url
+            )
+            context["private_export_url"] = self.request.build_absolute_uri(
+                url_with_token
+            )
         return context
 
 
 class GroupCalendarExport(CalendarExport):
     model = grouprise.features.groups.models.Group
-    slug_url_kwarg = 'group_slug'
-    permission_required = 'groups.view'
+    slug_url_kwarg = "group_slug"
+    permission_required = "groups.view"
     title = _("Export of group's calendars")
-    parent = 'group'
-    feed_route = 'group-events-feed'
+    parent = "group"
+    feed_route = "group-events-feed"
 
     def get_parent(self):
         return self.get_group()
@@ -343,56 +378,57 @@ class GroupCalendarExport(CalendarExport):
 
 
 class SiteCalendarExport(generic.TemplateView):
-    permission_required = 'stadt.view_index'
-    title = _('Export of calendars')
-    feed_route = 'site-events-feed'
-    template_name = 'events/export.html'
+    permission_required = "stadt.view_index"
+    title = _("Export of calendars")
+    feed_route = "site-events-feed"
+    template_name = "events/export.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['public_export_url'] = self.request.build_absolute_uri(
-            reverse(self.feed_route))
+        context["public_export_url"] = self.request.build_absolute_uri(
+            reverse(self.feed_route)
+        )
         return context
 
 
 class GestaltCalendarFeed(BaseCalendarFeed):
-
     def get_calendar_owner(self):
         return django.shortcuts.get_object_or_404(
-                gestalten.Gestalt, user__username=self.kwargs.get('gestalt_slug'))
+            gestalten.Gestalt, user__username=self.kwargs.get("gestalt_slug")
+        )
 
     def check_authorization(self, authenticated_gestalt):
         return authenticated_gestalt == self.get_calendar_owner()
 
     def assemble_content_filter_dict(self, filter_dict):
-        filter_dict['gestalt'] = self.get_gestalt()
+        filter_dict["gestalt"] = self.get_gestalt()
         super().assemble_content_filter_dict(filter_dict)
 
 
 class GestaltCalendarExport(generic.DetailView):
     model = gestalten.Gestalt
-    slug_url_kwarg = 'gestalt_slug'
+    slug_url_kwarg = "gestalt_slug"
     sidebar = tuple()
-    permission = 'gestalten.view'
+    permission = "gestalten.view"
     title = _("Export of figure's calendars")
-    template_name = 'gestalten/events_export.html'
-    parent = 'gestalt-index'
+    template_name = "gestalten/events_export.html"
+    parent = "gestalt-index"
 
     def get_parent(self):
         return self.get_gestalt()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['public_export_url'] = self.request.build_absolute_uri(
-            reverse('gestalt-events-feed', kwargs={
-                'gestalt_slug': self.get_object().slug,
-                'domain': 'public'
-            })
+        context["public_export_url"] = self.request.build_absolute_uri(
+            reverse(
+                "gestalt-events-feed",
+                kwargs={"gestalt_slug": self.get_object().slug, "domain": "public"},
+            )
         )
-        context['private_export_url'] = self.request.build_absolute_uri(
-            reverse('gestalt-events-feed', kwargs={
-                'gestalt_slug': self.get_object().slug,
-                'domain': 'private'
-            })
+        context["private_export_url"] = self.request.build_absolute_uri(
+            reverse(
+                "gestalt-events-feed",
+                kwargs={"gestalt_slug": self.get_object().slug, "domain": "private"},
+            )
         )
         return context

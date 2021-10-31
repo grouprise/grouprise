@@ -7,7 +7,7 @@ from django.utils import timezone
 
 def get_requested_time(request):
     query = request.GET
-    month, year = query.get('month', None), query.get('year', None)
+    month, year = query.get("month", None), query.get("year", None)
 
     if month and year:
         try:
@@ -25,27 +25,30 @@ class EventCalendar(LocaleHTMLCalendar):
 
     def formatday(self, thedate, themonth):
         events = self.events.get(thedate, [])
-        url = ''
+        url = ""
         if len(events) == 1:
             url = events[0].get_absolute_url()
         elif len(events) > 1:
             url = urls.reverse(
-                    'day-events', args=['{{:%{}}}'.format(c).format(thedate) for c in 'Ymd'])
+                "day-events", args=["{{:%{}}}".format(c).format(thedate) for c in "Ymd"]
+            )
         return {
-                'day': thedate.day,
-                'events': events,
-                'in_month': thedate.month == themonth,
-                'today': thedate == self.today,
-                'url': url,
-                }
+            "day": thedate.day,
+            "events": events,
+            "in_month": thedate.month == themonth,
+            "today": thedate == self.today,
+            "url": url,
+        }
 
     def formatmonthname(self, theyear, themonth):
         with different_locale(self.locale):
-            return '%s %s' % (month_name[themonth], theyear)
+            return "%s %s" % (month_name[themonth], theyear)
 
     def formatmonthweeks(self, theyear, themonth):
-        return [self.formatweek(week, themonth)
-                for week in self.monthdatescalendar(theyear, themonth)]
+        return [
+            self.formatweek(week, themonth)
+            for week in self.monthdatescalendar(theyear, themonth)
+        ]
 
     def formatweek(self, theweek, themonth):
         return [self.formatday(d, themonth) for d in theweek]

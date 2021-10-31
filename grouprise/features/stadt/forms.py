@@ -14,8 +14,10 @@ def validate_entity_slug(slug, entity=None):
     # validate by blacklist
     if slug.lower() in CORE_SETTINGS.ENTITY_SLUG_BLACKLIST:
         raise ValidationError(
-                'Die Adresse \'%(slug)s\' ist reserviert und darf nicht verwendet werden.',
-                params={'slug': slug}, code='reserved')
+            "Die Adresse '%(slug)s' ist reserviert und darf nicht verwendet werden.",
+            params={"slug": slug},
+            code="reserved",
+        )
 
     # validate existing slugs
     gestalten = Gestalt.objects
@@ -25,8 +27,12 @@ def validate_entity_slug(slug, entity=None):
             groups = groups.exclude(pk=entity.pk)
         else:
             gestalten = gestalten.exclude(pk=entity.pk)
-    if (groups.filter(slug__iexact=slug).exists()
-            or gestalten.filter(user__username__iexact=slug).exists()):
+    if (
+        groups.filter(slug__iexact=slug).exists()
+        or gestalten.filter(user__username__iexact=slug).exists()
+    ):
         raise ValidationError(
-                'Die Adresse \'%(slug)s\' ist bereits vergeben.',
-                params={'slug': slug}, code='in-use')
+            "Die Adresse '%(slug)s' ist bereits vergeben.",
+            params={"slug": slug},
+            code="in-use",
+        )

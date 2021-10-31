@@ -114,7 +114,7 @@ def load_settings_from_yaml_files(locations=None):
 
 
 class ConfigError(ValueError):
-    """ any kind of configuration error """
+    """any kind of configuration error"""
 
 
 class ConfigBase:
@@ -380,7 +380,7 @@ class DirectoryConfig(StringConfig):
             )
 
     def apply_to_settings(self, settings, value):
-        """ store an absolute path in the configuration """
+        """store an absolute path in the configuration"""
         abspath = os.path.abspath(value)
         super().apply_to_settings(settings, abspath)
 
@@ -625,7 +625,9 @@ class ScriptsConfig(ListConfig):
             else:
                 content = item["content"].strip()
                 csp_hashes.append(self._calculate_csp_hash(content))
-                raw_lines.append(f'<script type="application/javascript">{content}</script>')
+                raw_lines.append(
+                    f'<script type="application/javascript">{content}</script>'
+                )
         if csp_hashes:
             # announce the hashes of our javascript snippets as trustworthy
             settings.setdefault("CSP_SCRIPT_SRC", [])
@@ -764,7 +766,7 @@ def _get_nested_dict_value(data, path, default=None, remove=False):
 
 
 def recursivly_normalize_dict_keys_to_lower_case(data):
-    """ walk through the data (through dicts and lists) and change all dict keys to lower case """
+    """walk through the data (through dicts and lists) and change all dict keys to lower case"""
     if isinstance(data, dict):
         return {
             key.lower(): recursivly_normalize_dict_keys_to_lower_case(value)

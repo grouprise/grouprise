@@ -13,16 +13,18 @@ class Conversation(grouprise.core.models.Model):
     subject = models.CharField(max_length=255)
 
     associations = contenttypes.GenericRelation(
-            'associations.Association',
-            content_type_field='container_type',
-            object_id_field='container_id',
-            related_query_name='conversation')
+        "associations.Association",
+        content_type_field="container_type",
+        object_id_field="container_id",
+        related_query_name="conversation",
+    )
 
     contributions = contenttypes.GenericRelation(
-            'contributions.Contribution',
-            content_type_field='container_type',
-            object_id_field='container_id',
-            related_query_name='conversation')
+        "contributions.Contribution",
+        content_type_field="container_type",
+        object_id_field="container_id",
+        related_query_name="conversation",
+    )
 
     @classmethod
     def get_content_type(cls):
@@ -32,7 +34,9 @@ class Conversation(grouprise.core.models.Model):
         return self.subject
 
     def get_authors(self):
-        return gestalten.Gestalt.objects.filter(contributions__conversation=self).distinct()
+        return gestalten.Gestalt.objects.filter(
+            contributions__conversation=self
+        ).distinct()
 
     def get_associated_gestalten(self):
         return gestalten.Gestalt.objects.filter(associations__conversation=self)
@@ -44,4 +48,4 @@ class Conversation(grouprise.core.models.Model):
         return self.contributions.first().get_unique_id()
 
     def get_url_for(self, association):
-        return django.urls.reverse('conversation', args=[association.pk])
+        return django.urls.reverse("conversation", args=[association.pk])

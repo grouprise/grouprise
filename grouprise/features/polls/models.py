@@ -9,8 +9,8 @@ import grouprise.core.models
 
 
 class VoteType(enum.Enum):
-    SIMPLE = 'simple'
-    CONDORCET = 'condorcet'
+    SIMPLE = "simple"
+    CONDORCET = "condorcet"
 
     def __str__(self):
         return str(self.value)
@@ -32,11 +32,7 @@ def _resolve_condorcet_vote(votes):
         ranking = []
         winner = None
 
-    data = {
-        'votes': votes_dict,
-        'winner': winner,
-        'ranking': ranking
-    }
+    data = {"votes": votes_dict, "winner": winner, "ranking": ranking}
     return data
 
 
@@ -58,17 +54,15 @@ def _resolve_simple_vote(votes):
 
         @property
         def score(self):
-            return self.yes + self.maybe * .33334
+            return self.yes + self.maybe * 0.33334
 
         def serialize(self):
-            return {key: getattr(self, key) for key in ['yes', 'no', 'maybe']}
+            return {key: getattr(self, key) for key in ["yes", "no", "maybe"]}
 
     def get_winner(vote_count: dict):
         result = []
         for option, votes in vote_count.items():
-            result.append(
-                (option, votes.score)
-            )
+            result.append((option, votes.score))
         try:
             return sorted(result, key=lambda item: item[1], reverse=True)[0][0]
         except IndexError:
@@ -80,14 +74,14 @@ def _resolve_simple_vote(votes):
         vote_count[vote.option] += vote.simplevote.endorse
         if vote.voter:
             votes_dict[vote.voter][vote.option] = vote
-            votes_dict[vote.voter]['latest'] = vote
+            votes_dict[vote.voter]["latest"] = vote
         else:
             votes_dict[vote.anonymous][vote.option] = vote
-            votes_dict[vote.anonymous]['latest'] = vote
+            votes_dict[vote.anonymous]["latest"] = vote
     return {
-        'votes': votes_dict,
-        'vote_count': vote_count,
-        'winner': get_winner(vote_count)
+        "votes": votes_dict,
+        "vote_count": vote_count,
+        "winner": get_winner(vote_count),
     }
 
 
@@ -125,24 +119,25 @@ class WorkaroundPoll(grouprise.core.models.Model):
 
 class Option(grouprise.core.models.Model):
     poll = models.ForeignKey(
-            'WorkaroundPoll', related_name='options', on_delete=models.CASCADE, null=True)
+        "WorkaroundPoll", related_name="options", on_delete=models.CASCADE, null=True
+    )
 
     def __str__(self):
-        if hasattr(self, 'simpleoption'):
+        if hasattr(self, "simpleoption"):
             return self.simpleoption.__str__()
-        elif hasattr(self, 'eventoption'):
+        elif hasattr(self, "eventoption"):
             return self.eventoption.__str__()
         return super().__str__()
 
     def __lt__(self, other):
-        if hasattr(self, 'simpleoption'):
+        if hasattr(self, "simpleoption"):
             return self.simpleoption.__lt__(other.simpleoption)
-        elif hasattr(self, 'eventoption'):
+        elif hasattr(self, "eventoption"):
             return self.eventoption.__lt__(other.eventoption)
         return super().__lt__(other)
 
     class Meta:
-        ordering = ('id', )
+        ordering = ("id",)
 
 
 class SimpleOption(Option):
@@ -163,17 +158,17 @@ class EventOption(Option):
         time = timezone.localtime(self.time)
         until_time = timezone.localtime(self.until_time) if self.until_time else None
         if time and until_time is None:
-            return time.strftime('%d. %m.\n%H:%M')
+            return time.strftime("%d. %m.\n%H:%M")
         if time.date() == until_time.date():
-            return '{date}\n{time_start} bis {time_end}'.format(
-                date=time.strftime('%d. %m.'),
-                time_start=time.strftime('%H:%M'),
-                time_end=until_time.strftime('%H:%M'),
+            return "{date}\n{time_start} bis {time_end}".format(
+                date=time.strftime("%d. %m."),
+                time_start=time.strftime("%H:%M"),
+                time_end=until_time.strftime("%H:%M"),
             )
         else:
-            return '{time_start} bis\n{time_end}'.format(
-                time_start=time.strftime('%d. %m. %H:%M'),
-                time_end=until_time.strftime('%d. %m. %H:%M'),
+            return "{time_start} bis\n{time_end}".format(
+                time_start=time.strftime("%d. %m. %H:%M"),
+                time_end=until_time.strftime("%d. %m. %H:%M"),
             )
 
     def __lt__(self, other):
@@ -181,15 +176,16 @@ class EventOption(Option):
 
 
 class Vote(grouprise.core.models.Model):
-    option = models.ForeignKey('Option', on_delete=models.CASCADE)
+    option = models.ForeignKey("Option", on_delete=models.CASCADE)
     voter = models.ForeignKey(
-            'gestalten.Gestalt', null=True, related_name='votes', on_delete=models.PROTECT)
+        "gestalten.Gestalt", null=True, related_name="votes", on_delete=models.PROTECT
+    )
     anonymous = models.CharField(max_length=63, blank=True, null=True)
     time_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = (('option', 'voter'), ('option', 'anonymous'))
-        ordering = ('time_updated', )
+        unique_together = (("option", "voter"), ("option", "anonymous"))
+        ordering = ("time_updated",)
 
 
 class SimpleVote(Vote):

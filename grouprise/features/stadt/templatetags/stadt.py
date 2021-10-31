@@ -12,4 +12,4 @@ def target_audience():
     try:
         return settings.GROUPRISE["TARGET_AUDIENCE"]
     except (KeyError, AttributeError):
-        return _('all')
+        return _("all")

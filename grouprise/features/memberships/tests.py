@@ -6,23 +6,23 @@ from grouprise.core.models import PermissionToken
 from grouprise.features.memberships.test_mixins import MemberMixin
 from . import models
 
-TEST_EMAIL = 'test.membership@test.local'
+TEST_EMAIL = "test.membership@test.local"
 
 
 class Membership(MemberMixin, TestCase):
     def test_memberships(self):
         # join form renders ok
-        join_request_url = reverse('join-request', args=(self.group.slug,))
+        join_request_url = reverse("join-request", args=(self.group.slug,))
         r = self.client.get(join_request_url)
         self.assertEquals(r.status_code, 200)
 
         # join succeeds with email address
-        r = self.client.post(join_request_url, {'member': TEST_EMAIL})
+        r = self.client.post(join_request_url, {"member": TEST_EMAIL})
         self.assertRedirects(r, self.group.get_absolute_url())
 
         # email with link to join confirmation is sent
-        token = PermissionToken.objects.get(feature_key='group-join')
-        join_confirm_url = reverse('join-confirm', args=(token.secret_key,))
+        token = PermissionToken.objects.get(feature_key="group-join")
+        join_confirm_url = reverse("join-confirm", args=(token.secret_key,))
         self.assertEqual(len(mail.outbox), 1)
         self.assertTrue(join_confirm_url in mail.outbox[0].body)
 
@@ -34,7 +34,7 @@ class Membership(MemberMixin, TestCase):
         num_memberships = models.Membership.objects.count()
         r = self.client.post(join_confirm_url)
         self.assertRedirects(r, self.group.get_absolute_url())
-        self.assertEqual(models.Membership.objects.count(), num_memberships+1)
+        self.assertEqual(models.Membership.objects.count(), num_memberships + 1)
 
         # cleanup
         mail.outbox = []
@@ -42,8 +42,9 @@ class Membership(MemberMixin, TestCase):
         # member gets notified on group content
         self.client.force_login(self.gestalt.user)
         self.client.post(
-                reverse('create-group-article', args=(self.group.slug,)),
-                {'title': 'Test', 'text': 'Test', 'public': True})
+            reverse("create-group-article", args=(self.group.slug,)),
+            {"title": "Test", "text": "Test", "public": True},
+        )
         self.assertTrue(mail.outbox)
         for email_obj in mail.outbox:
             if email_obj.to[0].find(TEST_EMAIL) >= 0:
@@ -55,21 +56,23 @@ class Membership(MemberMixin, TestCase):
         self.client.logout()
 
         # notification contains link to unsubscribe form
-        unsubscribe_request_url = reverse('group-unsubscribe-request', args=(self.group.pk,))
+        unsubscribe_request_url = reverse(
+            "group-unsubscribe-request", args=(self.group.pk,)
+        )
         self.assertTrue(unsubscribe_request_url in email_obj.body)
 
         # resign form (not used at the moment) renders ok
-        resign_request_url = reverse('resign-request', args=(self.group.pk,))
+        resign_request_url = reverse("resign-request", args=(self.group.pk,))
         r = self.client.get(resign_request_url)
         self.assertEquals(r.status_code, 200)
 
         # resign succeeds with email address
-        r = self.client.post(resign_request_url, {'member': TEST_EMAIL})
+        r = self.client.post(resign_request_url, {"member": TEST_EMAIL})
         self.assertRedirects(r, self.group.get_absolute_url())
 
         # member gets email with link to resign confirmation
-        token = PermissionToken.objects.get(feature_key='group-resign')
-        resign_confirm_url = reverse('resign-confirm', args=(token.secret_key,))
+        token = PermissionToken.objects.get(feature_key="group-resign")
+        resign_confirm_url = reverse("resign-confirm", args=(token.secret_key,))
         self.assertEqual(len(mail.outbox), 1)
         self.assertTrue(resign_confirm_url in mail.outbox[0].body)
 
@@ -81,4 +84,4 @@ class Membership(MemberMixin, TestCase):
         num_memberships = models.Membership.objects.count()
         r = self.client.post(resign_confirm_url)
         self.assertRedirects(r, self.group.get_absolute_url())
-        self.assertEqual(models.Membership.objects.count(), num_memberships-1)
+        self.assertEqual(models.Membership.objects.count(), num_memberships - 1)

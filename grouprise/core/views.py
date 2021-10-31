@@ -21,14 +21,21 @@ class TemplateFilterMixin(FilterMixin):
         filterset_class = self.get_filterset_class()
         self.filterset = self.get_filterset(filterset_class)
 
-        if not self.filterset.is_bound or self.filterset.is_valid() or not self.get_strict():
+        if (
+            not self.filterset.is_bound
+            or self.filterset.is_valid()
+            or not self.get_strict()
+        ):
             self.object_list = self.filterset.qs
         else:
             self.object_list = self.filterset.queryset.none()
 
         return super().get_context_data(
-                filter=self.filterset, object_list=self.object_list,
-                show_filter=bool(self.object_list or self.filterset.is_bound), **kwargs)
+            filter=self.filterset,
+            object_list=self.object_list,
+            show_filter=bool(self.object_list or self.filterset.is_bound),
+            **kwargs,
+        )
 
 
 class AppConfig:
@@ -55,7 +62,7 @@ app_config = AppConfig()
 
 
 class Markdown(django.views.generic.TemplateView):
-    template_name = 'core/markdown.html'
+    template_name = "core/markdown.html"
 
 
 class LogoRedirects(RedirectView):

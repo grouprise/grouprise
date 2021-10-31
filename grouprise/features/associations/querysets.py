@@ -18,19 +18,23 @@ class Association(models.QuerySet):
         query = models.Q(public=True)
         # authenticated users can view associations for entities they are members in
         if user.is_authenticated:
-            gestalt_type = contenttypes.ContentType.objects.get_for_model(gestalten.Gestalt)
+            gestalt_type = contenttypes.ContentType.objects.get_for_model(
+                gestalten.Gestalt
+            )
             group_type = contenttypes.ContentType.objects.get_for_model(groups.Group)
-            gestalt_groups = groups.Group.objects.filter(memberships__member=user.gestalt)
+            gestalt_groups = groups.Group.objects.filter(
+                memberships__member=user.gestalt
+            )
             query |= (
-                    (models.Q(entity_type=group_type)
-                        & models.Q(entity_id__in=gestalt_groups))
-                    | (models.Q(entity_type=gestalt_type)
-                        & models.Q(entity_id=user.gestalt.id))
-                    )
+                models.Q(entity_type=group_type)
+                & models.Q(entity_id__in=gestalt_groups)
+            ) | (
+                models.Q(entity_type=gestalt_type) & models.Q(entity_id=user.gestalt.id)
+            )
             # if given a container we can allow access to associations for which the user
             # authored a contribution (e.g. for container='conversation')
             if container:
-                author_query_string = '{}__contributions__author'.format(container)
+                author_query_string = "{}__contributions__author".format(container)
                 query |= models.Q(**{author_query_string: user.gestalt})
         return self.exclude_deleted().filter(query)
 
@@ -65,8 +69,8 @@ class Association(models.QuerySet):
 
     def order_content_by_time_created(self, ascending=True):
         qs = self
-        qs = qs.annotate(time_created=Min('content__versions__time_created'))
-        qs = qs.order_by('time_created' if ascending else '-time_created')
+        qs = qs.annotate(time_created=Min("content__versions__time_created"))
+        qs = qs.order_by("time_created" if ascending else "-time_created")
         return qs
 
     def ordered_user_content(self, user):
@@ -77,27 +81,35 @@ class Association(models.QuerySet):
 
     def ordered_user_conversations(self, user):
         qs = self
-        qs = qs.can_view(user, container='conversation')
+        qs = qs.can_view(user, container="conversation")
         qs = qs.filter(container_type=conversations.Conversation.content_type)
-        qs = qs.annotate(last_activity=Max('conversation__contributions__time_created'))
-        qs = qs.order_by('-last_activity')
+        qs = qs.annotate(last_activity=Max("conversation__contributions__time_created"))
+        qs = qs.order_by("-last_activity")
         return qs
 
     def ordered_user_associations(self, user):
         qs = self
         qs = qs.exclude(
-                Q(public=True) & (
-                    Q(entity_type=Gestalt.content_type)
-                    | (Q(entity_type=Group.content_type)
-                        & ~Q(entity_id__in=user.gestalt.groups.values('id')))))
-        qs = qs.can_view(user, container='conversation')
-        qs = qs.annotate(last_answer=Max('conversation__contributions__time_created'))
-        qs = qs.annotate(last_comment=Max('content__contributions__time_created'))
-        qs = qs.annotate(first_version=Min('content__versions__time_created'))
-        qs = qs.annotate(last_activity=Coalesce(
-            'last_answer',
-            Greatest('first_version', Coalesce('last_comment', 'first_version'))))
-        qs = qs.order_by('-last_activity')
+            Q(public=True)
+            & (
+                Q(entity_type=Gestalt.content_type)
+                | (
+                    Q(entity_type=Group.content_type)
+                    & ~Q(entity_id__in=user.gestalt.groups.values("id"))
+                )
+            )
+        )
+        qs = qs.can_view(user, container="conversation")
+        qs = qs.annotate(last_answer=Max("conversation__contributions__time_created"))
+        qs = qs.annotate(last_comment=Max("content__contributions__time_created"))
+        qs = qs.annotate(first_version=Min("content__versions__time_created"))
+        qs = qs.annotate(
+            last_activity=Coalesce(
+                "last_answer",
+                Greatest("first_version", Coalesce("last_comment", "first_version")),
+            )
+        )
+        qs = qs.order_by("-last_activity")
         return qs
 
     def active_ordered_user_associations(self, user):
@@ -108,9 +120,9 @@ class Association(models.QuerySet):
 
     def prefetch(self):
         qs = self
-        qs = qs.prefetch_related('entity')
-        qs = qs.prefetch_related('container')
-        qs = qs.prefetch_related('container__contributions')
-        qs = qs.prefetch_related('container__versions')
-        qs = qs.prefetch_related('container__gallery_images')
+        qs = qs.prefetch_related("entity")
+        qs = qs.prefetch_related("container")
+        qs = qs.prefetch_related("container__contributions")
+        qs = qs.prefetch_related("container__versions")
+        qs = qs.prefetch_related("container__gallery_images")
         return qs

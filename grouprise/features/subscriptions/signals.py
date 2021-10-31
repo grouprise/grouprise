@@ -11,8 +11,9 @@ def membership_saved(sender, instance, created, raw=False, **kwargs):
     if created and not raw:
         try:
             instance.member.subscriptions.create(
-                    subscribed_to_type=instance.group.content_type,
-                    subscribed_to_id=instance.group.id)
+                subscribed_to_type=instance.group.content_type,
+                subscribed_to_id=instance.group.id,
+            )
         except IntegrityError:
             pass
 
@@ -21,8 +22,9 @@ def membership_saved(sender, instance, created, raw=False, **kwargs):
 def membership_deleted(sender, instance, **kwargs):
     try:
         subscription = instance.member.subscriptions.get(
-                subscribed_to_type=instance.group.content_type,
-                subscribed_to_id=instance.group.id)
+            subscribed_to_type=instance.group.content_type,
+            subscribed_to_id=instance.group.id,
+        )
         subscription.delete()
     except Subscription.DoesNotExist:
         pass

@@ -11,7 +11,7 @@ class Apply(forms.ModelForm):
         fields = []
 
     def __init__(self, **kwargs):
-        self.contribution = kwargs.pop('contribution')
+        self.contribution = kwargs.pop("contribution")
         super().__init__(**kwargs)
 
     def save(self, commit=True):
@@ -27,13 +27,15 @@ class CreateMembershipForm(forms.ModelForm):
         model = Membership
         fields = []
 
-    member_email = forms.EmailField(label='E-Mail-Adresse')
+    member_email = forms.EmailField(label="E-Mail-Adresse")
 
     def save(self, commit=True):
-        member = Gestalt.objects.get_or_create_by_email(self.cleaned_data['member_email'])
+        member = Gestalt.objects.get_or_create_by_email(
+            self.cleaned_data["member_email"]
+        )
         self.instance.member = member
         return super().save(commit)
 
 
 class Request(forms.Form):
-    member = forms.EmailField(label='E-Mail-Adresse')
+    member = forms.EmailField(label="E-Mail-Adresse")

@@ -16,11 +16,13 @@ from . import forms, notifications
 
 
 class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
-    permission_required = 'subscriptions.create'
+    permission_required = "subscriptions.create"
     form_class = forms.Subscribe
-    template_name = 'subscriptions/create.html'
-    success_message = 'Du erhältst zukünftig Benachrichtigungen für Beiträge dieser Gruppe.'
-    already_subscribed_message = 'Du hast diese Gruppe bereits abonniert.'
+    template_name = "subscriptions/create.html"
+    success_message = (
+        "Du erhältst zukünftig Benachrichtigungen für Beiträge dieser Gruppe."
+    )
+    already_subscribed_message = "Du hast diese Gruppe bereits abonniert."
 
     def form_valid(self, form):
         try:
@@ -31,7 +33,7 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_instance()
+        kwargs["instance"] = self.get_instance()
         return kwargs
 
     def get_instance(self):
@@ -42,15 +44,16 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
         return instance
 
     def get_permission_object(self):
-        self.group = get_object_or_404(Group, slug=self.kwargs.get('group'))
+        self.group = get_object_or_404(Group, slug=self.kwargs.get("group"))
         return self.group
 
     def get_success_url(self):
         return self.group.get_absolute_url()
 
     def handle_no_permission(self):
-        if (self.request.user.is_authenticated
-                and is_subscribed(self.request.user, self.group)):
+        if self.request.user.is_authenticated and is_subscribed(
+            self.request.user, self.group
+        ):
             info(self.request, self.already_subscribed_message)
             return HttpResponseRedirect(self.get_success_url())
         else:
@@ -58,24 +61,28 @@ class GroupSubscribe(SuccessMessageMixin, PermissionMixin, CreateView):
 
 
 class GroupUnsubscribe(PermissionMixin, DeleteView):
-    permission_required = 'subscriptions.delete'
+    permission_required = "subscriptions.delete"
     model = Subscription
-    template_name = 'subscriptions/delete.html'
+    template_name = "subscriptions/delete.html"
 
     def delete(self, *args, **kwargs):
         success(
-                self.request,
-                'Du erhältst zukünftig keine Benachrichtigungen mehr für Beiträge dieser '
-                'Gruppe.')
+            self.request,
+            "Du erhältst zukünftig keine Benachrichtigungen mehr für Beiträge dieser "
+            "Gruppe.",
+        )
         return super().delete(*args, **kwargs)
 
     def get_object(self):
         return self.gestalt.subscriptions.filter(
-                subscribed_to_type=self.group.content_type, subscribed_to_id=self.group.id)
+            subscribed_to_type=self.group.content_type, subscribed_to_id=self.group.id
+        )
 
     def get_permission_object(self):
-        self.gestalt = self.request.user.gestalt if self.request.user.is_authenticated else None
-        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        self.gestalt = (
+            self.request.user.gestalt if self.request.user.is_authenticated else None
+        )
+        self.group = get_object_or_404(Group, pk=self.kwargs.get("group_pk"))
         return self.group
 
     def get_success_url(self):
@@ -89,8 +96,10 @@ class GroupUnsubscribeConfirm(GroupUnsubscribe):
 
     def get_permission_object(self):
         self.token = get_object_or_404(
-                PermissionToken, feature_key='group-unsubscribe',
-                secret_key=self.kwargs.get('secret_key'))
+            PermissionToken,
+            feature_key="group-unsubscribe",
+            secret_key=self.kwargs.get("secret_key"),
+        )
         self.gestalt = self.token.gestalt
         self.group = self.token.target
         return self.group
@@ -102,29 +111,30 @@ class GroupUnsubscribeConfirm(GroupUnsubscribe):
 
 
 class GroupUnsubscribeRequest(PermissionMixin, FormView):
-    permission_required = 'subscriptions.delete_request'
+    permission_required = "subscriptions.delete_request"
     form_class = forms.UnsubscribeRequest
-    template_name = 'subscriptions/delete_request.html'
+    template_name = "subscriptions/delete_request.html"
 
     def form_valid(self, form):
-        email = form.cleaned_data['subscriber']
+        email = form.cleaned_data["subscriber"]
         try:
             subscriber = self.group.subscribers.get_by_email(email)
             notification = notifications.Subscriber(self.group)
             notification.token = PermissionToken.objects.create(
-                    gestalt=subscriber, target=self.group, feature_key='group-unsubscribe')
+                gestalt=subscriber, target=self.group, feature_key="group-unsubscribe"
+            )
             notification.send(subscriber)
         except Gestalt.DoesNotExist:
             notifications.NoSubscriber(self.group).send(email)
-        info(self.request, 'Es wurde eine E-Mail an die angebene Adresse versendet.')
+        info(self.request, "Es wurde eine E-Mail an die angebene Adresse versendet.")
         return super().form_valid(form)
 
     def get_permission_object(self):
-        self.group = get_object_or_404(Group, pk=self.kwargs.get('group_pk'))
+        self.group = get_object_or_404(Group, pk=self.kwargs.get("group_pk"))
         return self.group
 
     def get_success_url(self):
         return self.group.get_absolute_url()
 
     def handle_no_permission(self) -> HttpResponseRedirect:
-        return HttpResponseRedirect(reverse('group-unsubscribe', args=[self.group.pk]))
+        return HttpResponseRedirect(reverse("group-unsubscribe", args=[self.group.pk]))

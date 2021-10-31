@@ -140,7 +140,7 @@ class Command(BaseCommand):
             "Wiki",
             "# Further Possibilities\n"
             "* Add a description to this group, it will be displayed in the site footer.\n"
-            "* Configure \"Claims\" (see `CLAIMS` in the "
+            '* Configure "Claims" (see `CLAIMS` in the '
             "[options](https://docs.grouprise.org/configuration/options.html#grouprise-options)).",
             public=False,
             pinned=True,

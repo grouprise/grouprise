@@ -221,7 +221,7 @@ def get_modified_dict(baseset, remove_keys=None, **kwargs):
 
 
 class ContentFile:
-    """ generate a content file on demand """
+    """generate a content file on demand"""
 
     def __init__(self, path, mode=None, content=None):
         self._path = path
@@ -272,7 +272,7 @@ class SettingsLoaderTest(TestCase):
         self.assertEqual(DJANGO_SETTINGS_MINIMAL, target)
 
     def test_list_append(self):
-        """ verify that items can be added to existing lists """
+        """verify that items can be added to existing lists"""
         stylesheet_pattern = '<link rel="stylesheet" href="/{}">'
         target = {"GROUPRISE": {"HEADER_ITEMS": [stylesheet_pattern.format("foo")]}}
         import_settings_from_dict(target, {"stylesheets": [{"path": "/bar"}]})
@@ -285,7 +285,7 @@ class SettingsLoaderTest(TestCase):
         self.assertEqual(wanted_result, target)
 
     def test_invalid_structure(self):
-        """ test various bad configuration input values """
+        """test various bad configuration input values"""
         for label, input_data in (
             ("Mismatched regular expression", {"domain": "foo*"}),
             ("Missing directory", {"media_root": "/nonexistent"}),

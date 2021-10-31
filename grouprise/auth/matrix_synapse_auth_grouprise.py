@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConfigurationError(Exception):
-    """ Any kind of problem related to loading and using the configuration """
+    """Any kind of problem related to loading and using the configuration"""
 
 
 def _get_grouprise_configuration(filename=None):

@@ -9,23 +9,20 @@ from simplemathcaptcha.utils import hash_answer
 from grouprise.core.settings import get_grouprise_site
 
 
-HTTP_GET = 'get'
-HTTP_POST = 'post'
+HTTP_GET = "get"
+HTTP_POST = "post"
 
-HTTP_FORBIDDEN_OR_LOGIN = 'forbidden_or_login'
-HTTP_REDIRECTS = 'redirects'
-HTTP_OK = 'ok'
+HTTP_FORBIDDEN_OR_LOGIN = "forbidden_or_login"
+HTTP_REDIRECTS = "redirects"
+HTTP_OK = "ok"
 
 
 def get_url(url, *args):
     return django.urls.reverse(url, args=args)
 
 
-def with_captcha(data, answer=10, field_name='captcha'):
-    data.update({
-        field_name + '_0': answer,
-        field_name + '_1': hash_answer(answer)
-    })
+def with_captcha(data, answer=10, field_name="captcha"):
+    data.update({field_name + "_0": answer, field_name + "_1": hash_answer(answer)})
     return data
 
 
@@ -48,11 +45,11 @@ class Test(test.TestCase):
     def assertNotExists(self, model, **kwargs):
         self.assertFalse(model.objects.filter(**kwargs))
 
-    def assertForbidden(self, url=None, method='get'):
+    def assertForbidden(self, url=None, method="get"):
         response = getattr(self.client, method)(url)
         self.assertEqual(response.status_code, 403)
 
-    def assertLogin(self, url=None, url_name=None, url_args=[], method='get'):
+    def assertLogin(self, url=None, url_name=None, url_args=[], method="get"):
         if url is None:
             url = django.urls.reverse(url_name, args=url_args)
         response = getattr(self.client, method)(url)
@@ -86,11 +83,16 @@ class Test(test.TestCase):
         self.assertEqual(self._count_notifications_for_recipient(gestalt), 0)
 
     def assertNotificationSenderAnonymous(self):
-        self.assertTrue(self.get_latest_notification().from_email.startswith(
-            get_grouprise_site().name))
+        self.assertTrue(
+            self.get_latest_notification().from_email.startswith(
+                get_grouprise_site().name
+            )
+        )
 
     def assertNotificationSenderName(self, gestalt):
-        self.assertTrue(self.get_latest_notification().from_email.startswith(str(gestalt)))
+        self.assertTrue(
+            self.get_latest_notification().from_email.startswith(str(gestalt))
+        )
 
     def assertNotificationHeaderContent(self, header, content):
         self.assertTrue(content in self.get_latest_notification().extra_headers[header])
@@ -110,10 +112,11 @@ class Test(test.TestCase):
     def assertRequest(self, methods=[HTTP_GET], **kwargs):
         for method in methods:
             response = self.request(method, **kwargs)
-            tests = kwargs['response']
+            tests = kwargs["response"]
             if HTTP_FORBIDDEN_OR_LOGIN in tests:
-                self.assertForbiddenOrLogin(response, self.get_url(
-                    kwargs['url'], kwargs.get('key')))
+                self.assertForbiddenOrLogin(
+                    response, self.get_url(kwargs["url"], kwargs.get("key"))
+                )
             if HTTP_REDIRECTS in tests:
                 url = tests[HTTP_REDIRECTS]
                 if isinstance(url, tuple):
@@ -126,7 +129,7 @@ class Test(test.TestCase):
         return 'href="{}"'.format(url)
 
     def get_login_url(self, next_url):
-        return '{}?next={}'.format(urls.reverse('account_login'), next_url)
+        return "{}?next={}".format(urls.reverse("account_login"), next_url)
 
     def get_response(self, method, url):
         return getattr(self.client, method)(url)
@@ -141,11 +144,10 @@ class Test(test.TestCase):
             args = key
         else:
             args = [key]
-        return urls.reverse(
-                '{}'.format(url), args=args)
+        return urls.reverse("{}".format(url), args=args)
 
     def request(self, method, **kwargs):
-        url = self.get_url(kwargs['url'], kwargs.get('key'))
+        url = self.get_url(kwargs["url"], kwargs.get("key"))
         return self.get_response(method, url)
 
     def setUp(self):

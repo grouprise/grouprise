@@ -29,7 +29,7 @@ MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST = (
 
 
 class MailProcessingFailure(Exception):
-    """ processing failures that should be reported """
+    """processing failures that should be reported"""
 
 
 def get_sender_gestalt(from_address):
@@ -131,7 +131,7 @@ class ParsedMailMessage(
 
     @classmethod
     def from_email_object(cls, email_obj, from_address=None):
-        """ convert an email.message.EmailMessage into a ParsedMailMessage """
+        """convert an email.message.EmailMessage into a ParsedMailMessage"""
         if from_address is None:
             from_address = email_obj.get("From")
         if email_obj.is_multipart():
@@ -203,7 +203,7 @@ class ContributionMailProcessor:
             return False
 
     def parse_authentication_token_text(self, address):
-        """ parse a potential authentication token from a recipient address without checking it """
+        """parse a potential authentication token from a recipient address without checking it"""
         match = self.auth_token_regex.match(address)
         return match.groups()[0] if match else None
 

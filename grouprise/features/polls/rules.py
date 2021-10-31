@@ -9,10 +9,7 @@ def has_voted(user, association):
 
 
 rules.add_perm(
-        'polls.vote',
-        (associations.is_public
-            | (rules.is_authenticated
-                & associations.is_member))
-        & (~rules.is_authenticated
-            | ~has_voted)
-        )
+    "polls.vote",
+    (associations.is_public | (rules.is_authenticated & associations.is_member))
+    & (~rules.is_authenticated | ~has_voted),
+)

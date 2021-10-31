@@ -14,15 +14,27 @@ from grouprise.features.galleries.models import GalleryImage
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 from grouprise.features.images.models import Image
 from grouprise.features.memberships.models import Membership
-from grouprise.features.polls.models import CondorcetVote, Option, SimpleVote, Vote, \
-        VoteType, WorkaroundPoll
+from grouprise.features.polls.models import (
+    CondorcetVote,
+    Option,
+    SimpleVote,
+    Vote,
+    VoteType,
+    WorkaroundPoll,
+)
 from .filters import GroupFilter, ImageFilter
-from .serializers import GestaltSerializer, GestaltSettingSerializer, GroupSerializer, \
-        ImageSerializer, PollSerializer, PollVoteSerializer
+from .serializers import (
+    GestaltSerializer,
+    GestaltSettingSerializer,
+    GroupSerializer,
+    ImageSerializer,
+    PollSerializer,
+    PollVoteSerializer,
+)
 
 _PRESETS = {
-    'content': {
-        'heading_baselevel': 2,
+    "content": {
+        "heading_baselevel": 2,
     },
 }
 
@@ -30,17 +42,18 @@ _PRESETS = {
 def permission(path):
     class UserPermission(permissions.BasePermission):
         def has_permission(self, request, view):
-            gestalt_id = request.resolver_match.kwargs.get('gestalt')
+            gestalt_id = request.resolver_match.kwargs.get("gestalt")
             return request.user.gestalt.id == int(gestalt_id)
 
         def has_object_permission(self, request, view, obj):
             return request.user.gestalt == path(obj)
+
     return UserPermission
 
 
 class GestaltSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GestaltSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
@@ -49,23 +62,32 @@ class GestaltSet(viewsets.ReadOnlyModelViewSet):
 
 class GestaltSettingSet(viewsets.ModelViewSet):
     serializer_class = GestaltSettingSerializer
-    permission_classes = (permissions.IsAuthenticated, permission(lambda setting: setting.gestalt))
+    permission_classes = (
+        permissions.IsAuthenticated,
+        permission(lambda setting: setting.gestalt),
+    )
 
     def get_queryset(self):
-        return GestaltSetting.objects.filter(gestalt=self.kwargs['gestalt'])
+        return GestaltSetting.objects.filter(gestalt=self.kwargs["gestalt"])
 
 
-@permission_classes((permissions.AllowAny, ))
+@permission_classes((permissions.AllowAny,))
 class GroupSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
-    filter_fields = ('id', 'name', 'slug', )
+    filter_fields = (
+        "id",
+        "name",
+        "slug",
+    )
     filter_class = GroupFilter
     queryset = Group.objects.all()
 
 
-class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
+class ImageSet(
+    mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
+):
     serializer_class = ImageSerializer
-    filter_fields = ('id', 'creator')
+    filter_fields = ("id", "creator")
     filter_class = ImageFilter
 
     def get_queryset(self):
@@ -82,14 +104,15 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
         associations = Association.objects.filter(
             container_type=ContentType.objects.get_for_model(Content),
             entity_type=ContentType.objects.get_for_model(Group),
-            entity_id__in=groups
+            entity_id__in=groups,
         )
         group_content = Content.objects.filter(associations__in=associations)
         gallery_images = GalleryImage.objects.filter(
-            gallery__in=group_content.filter(gallery_images__isnull=False))
-        gallery_image_ids = gallery_images.values_list('image', flat=True)
+            gallery__in=group_content.filter(gallery_images__isnull=False)
+        )
+        gallery_image_ids = gallery_images.values_list("image", flat=True)
         preview_images = group_content.filter(image__isnull=False)
-        preview_image_ids = preview_images.values_list('image', flat=True)
+        preview_image_ids = preview_images.values_list("image", flat=True)
 
         return Image.objects.filter(
             Q(creator__user=user)  # own images
@@ -99,51 +122,55 @@ class ImageSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOn
 
     def has_permission(self):
         if self.request.user.is_authenticated:
-            if self.action == 'create':
+            if self.action == "create":
                 return True
-            elif self.action == 'list':
+            elif self.action == "list":
                 return True
-            elif self.action == 'retrieve':
+            elif self.action == "retrieve":
                 image = self.get_object()
-                return self.request.user.has_perm('images.view', image)
-            elif self.action == 'update':
+                return self.request.user.has_perm("images.view", image)
+            elif self.action == "update":
                 image = self.get_object()
                 return image.creator == self.request.user
         return False
 
 
 class MarkdownView(viewsets.ViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        preset = _PRESETS[request.data.get('preset', 'content')]
-        text = request.data.get('content')
-        return Response({
-            'content': str(markdown(text, **preset))
-        })
+        preset = _PRESETS[request.data.get("preset", "content")]
+        text = request.data.get("content")
+        return Response({"content": str(markdown(text, **preset))})
 
 
 @permission_classes((permissions.AllowAny,))
 class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = PollSerializer
-    filter_fields = ('id',)
+    filter_fields = ("id",)
     queryset = WorkaroundPoll.objects.all()
 
-    @action(['POST'], detail=True, permission_classes=[permissions.AllowAny])
+    @action(["POST"], detail=True, permission_classes=[permissions.AllowAny])
     def vote(self, request, pk):
         poll = self.get_object()
         payload = PollVoteSerializer().to_internal_value(request.data)
 
-        can_vote = request.user.has_perm('polls.vote', poll.content.associations.first())
-        can_anon_vote = not request.user.is_anonymous or Vote.objects \
-            .filter(option__in=poll.options.all(), anonymous=payload['gestalt']['name']) \
-            .count() == 0
+        can_vote = request.user.has_perm(
+            "polls.vote", poll.content.associations.first()
+        )
+        can_anon_vote = (
+            not request.user.is_anonymous
+            or Vote.objects.filter(
+                option__in=poll.options.all(), anonymous=payload["gestalt"]["name"]
+            ).count()
+            == 0
+        )
 
         if not (can_vote and can_anon_vote):
             if can_anon_vote:
-                raise PermissionDenied('VOTE_ERR_ANON_VOTED')
+                raise PermissionDenied("VOTE_ERR_ANON_VOTED")
             else:
-                raise PermissionDenied('VOTE_ERR_GESTALT_VOTED')
+                raise PermissionDenied("VOTE_ERR_GESTALT_VOTED")
 
         @contextmanager
         def create_vote(base_model, option: Option):
@@ -152,18 +179,18 @@ class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
             try:
                 new_vote.voter = request.user.gestalt
             except AttributeError:
-                new_vote.anonymous = payload['gestalt']['name']
+                new_vote.anonymous = payload["gestalt"]["name"]
             yield new_vote
             new_vote.save()
 
         if poll.vote_type is VoteType.CONDORCET:
-            num_options = len(payload['ranking'])
-            for (ranking, option) in enumerate(payload['ranking']):
+            num_options = len(payload["ranking"])
+            for (ranking, option) in enumerate(payload["ranking"]):
                 with create_vote(CondorcetVote, option) as condorcet_vote:
                     condorcet_vote.rank = num_options - ranking
         elif poll.vote_type is VoteType.SIMPLE:
-            for vote in payload['endorsements']:
-                with create_vote(SimpleVote, vote['option']) as simple_vote:
-                    simple_vote.endorse = vote['endorsement']
+            for vote in payload["endorsements"]:
+                with create_vote(SimpleVote, vote["option"]) as simple_vote:
+                    simple_vote.endorse = vote["endorsement"]
 
         return Response(status=200)

@@ -10,21 +10,23 @@ from ..feeds import import_from_feed, parse_feed_url_from_website_content
 
 
 FEED_LINK_EXAMPLES = (
-    (b'<link rel="alternate" type="application/rss+xml" title="Peter Weiss Haus &raquo; Feed" '
+    (
+        b'<link rel="alternate" type="application/rss+xml" title="Peter Weiss Haus &raquo; Feed" '
         b'href="https://peterweisshaus.de/feed/" />"',
-     'https://peterweisshaus.de/feed/'),
+        "https://peterweisshaus.de/feed/",
+    ),
 )
 
 FEED_CONTENT_TEMPLATE = (
     '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0">'
-    '<channel><title>Channel Title</title><link>https://example.org</link>'
-    '<item><title>{title}</title><link>{url}</link><pubDate>{date}</pubDate>'
-    '<description>{description}</description><content>Some Content</content>'
-    '</item></channel></rss>')
+    "<channel><title>Channel Title</title><link>https://example.org</link>"
+    "<item><title>{title}</title><link>{url}</link><pubDate>{date}</pubDate>"
+    "<description>{description}</description><content>Some Content</content>"
+    "</item></channel></rss>"
+)
 
 
 class DetectFeedURL(tests.Test):
-
     def test_references(self):
         for snippet, feed_url in FEED_LINK_EXAMPLES:
             with self.subTest(feed_url=feed_url):
@@ -34,8 +36,10 @@ class DetectFeedURL(tests.Test):
 class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
 
     FEED_DEFAULTS = {
-        "title": "First Title", "url": "https://example.org/1/2",
-        "date": "Tue, 05 Jun 2018 07:55:15 +0000", "description": "Some Description",
+        "title": "First Title",
+        "url": "https://example.org/1/2",
+        "date": "Tue, 05 Jun 2018 07:55:15 +0000",
+        "description": "Some Description",
         "content": "Some Content",
     }
 
@@ -55,7 +59,9 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
     def test_content(self):
         now = self._get_now()
         import_from_feed(self._get_feed_content(date=now), self.gestalt, self.group)
-        association = associations.Association.objects.filter(content__title="First Title").first()
+        association = associations.Association.objects.filter(
+            content__title="First Title"
+        ).first()
         self.assertIsNotNone(association)
         # FIXME: compare date and time of created versions
 
@@ -66,11 +72,14 @@ class ImportFeedItems(MemberMixin, OtherMemberMixin, tests.Test):
         self.assertEqual(associations.Association.objects.count(), 1)
 
     def test_notifications_all(self):
-        with CORE_SETTINGS.temporary_override(FEED_IMPORTER_GESTALT_ID=self.other_gestalt.id):
+        with CORE_SETTINGS.temporary_override(
+            FEED_IMPORTER_GESTALT_ID=self.other_gestalt.id
+        ):
             self.assertEqual(associations.Association.objects.count(), 0)
             # send a "new" (recent date) feed entry: otherwise its notification is skipped
-            import_from_feed(self._get_feed_content(date=self._get_now()),
-                             self.gestalt, self.group)
+            import_from_feed(
+                self._get_feed_content(date=self._get_now()), self.gestalt, self.group
+            )
             self.assertEqual(associations.Association.objects.count(), 1)
             self.assertNotificationRecipient(self.gestalt)
             # the "other_gestalt" receives no notifications (see FEED_IMPORTER_GESTALT_ID)

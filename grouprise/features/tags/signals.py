@@ -13,11 +13,7 @@ from grouprise.features.tags.utils import get_slug
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_CONF = {
-    'tag_self': False,
-    'constraint': lambda *args: True,
-    'tag_related': []
-}
+_DEFAULT_CONF = {"tag_self": False, "constraint": lambda *args: True, "tag_related": []}
 
 
 class Index:
@@ -30,8 +26,8 @@ class Index:
             mconf = {}
             mconf.update(_DEFAULT_CONF)
             mconf.update(conf)
-            entity = apps.get_model(mconf['entity'])
-            mconf['entity'] = entity
+            entity = apps.get_model(mconf["entity"])
+            mconf["entity"] = entity
             cls.index.append(mconf)
 
     @classmethod
@@ -45,7 +41,7 @@ def build_tags(tag_names):
     for tag_name in tag_names:
         tag_map[get_slug(tag_name)] = tag_name
     for slug, name in tag_map.items():
-        tag = Tag.objects.get_or_create(slug=slug, defaults={'name': name})[0]
+        tag = Tag.objects.get_or_create(slug=slug, defaults={"name": name})[0]
         tags.append(tag)
     return tags
 
@@ -56,16 +52,16 @@ def tag_entities(sender, instance, *args, raw=False, **kwargs):
     if raw:
         return
     for conf in Index.index:
-        if not isinstance(instance, conf['entity']):
+        if not isinstance(instance, conf["entity"]):
             continue
 
-        if not conf['constraint'](instance):
+        if not conf["constraint"](instance):
             continue
 
         tags = []
-        for prop in conf['props']:
+        for prop in conf["props"]:
             attr = instance
-            for e in prop.split('__'):
+            for e in prop.split("__"):
                 attr = getattr(attr, e)
             tags.extend(re.findall(RE_TAG_REF, attr))
 
@@ -75,9 +71,9 @@ def tag_entities(sender, instance, *args, raw=False, **kwargs):
         final_tags = build_tags(tags)
 
         tagged_models = []
-        if conf['tag_self']:
+        if conf["tag_self"]:
             tagged_models.append(instance)
-        for related in conf['tag_related']:
+        for related in conf["tag_related"]:
             tagged_models.append(related(instance))
 
         for model in tagged_models:

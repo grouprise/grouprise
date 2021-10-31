@@ -100,7 +100,7 @@ class Command(BaseCommand):
         )
 
     def request_admin_user_via_api(self, api, username, registration_token):
-        """generate a user with admin privileges """
+        """generate a user with admin privileges"""
         # get a registration nonce
         register_api_path = "_synapse/admin/v1/register"
         nonce = api.request_get(register_api_path)["nonce"]

@@ -12,9 +12,11 @@ from grouprise.core.settings import CORE_SETTINGS
 
 
 IMAGE_FIELD_HELP_TEXT = (
-        'Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- '
-        'oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt {} MB.'.format(
-            CORE_SETTINGS.UPLOAD_MAX_FILE_SIZE))
+    "Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- "
+    "oder SVG-Dateien. Die maximal erlaubte Dateigröße beträgt {} MB.".format(
+        CORE_SETTINGS.UPLOAD_MAX_FILE_SIZE
+    )
+)
 
 PERMISSION_TOKEN_LENGTH = 15
 
@@ -22,15 +24,15 @@ PERMISSION_TOKEN_LENGTH = 15
 def validate_file_size(f):
     try:
         if f._size > CORE_SETTINGS.UPLOAD_MAX_FILE_SIZE * 1024 * 1024:
-            raise django.forms.ValidationError('Die Datei ist zu groß.')
+            raise django.forms.ValidationError("Die Datei ist zu groß.")
     except AttributeError:
         pass
 
 
 class ImageField(models.ImageField):
     def __init__(self, *args, **kwargs):
-        if 'help_text' not in kwargs:
-            kwargs['help_text'] = IMAGE_FIELD_HELP_TEXT
+        if "help_text" not in kwargs:
+            kwargs["help_text"] = IMAGE_FIELD_HELP_TEXT
         super().__init__(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
@@ -40,8 +42,13 @@ class ImageField(models.ImageField):
 
 
 def get_unique_slug(
-        cls, fields, reserved_slugs=[], reserved_slug_qs=None, reserved_slug_qs_field='slug',
-        slug_field_name='slug'):
+    cls,
+    fields,
+    reserved_slugs=[],
+    reserved_slug_qs=None,
+    reserved_slug_qs_field="slug",
+    slug_field_name="slug",
+):
     def replace(d, key, repl):
         result = d.copy()
         result[key] = repl
@@ -51,17 +58,23 @@ def get_unique_slug(
     for i in itertools.count():
         slug = fields[slug_field_name][:length]
         if i:
-            suffix = '-{}'.format(i)
+            suffix = "-{}".format(i)
             if len(slug) + len(suffix) <= length:
                 slug = slug + suffix
             else:
-                slug = slug[:-(len(slug)+len(suffix)-length)] + suffix
-        if (slug not in reserved_slugs
-                and (
-                    reserved_slug_qs is None
-                    or not reserved_slug_qs.filter(**{reserved_slug_qs_field: slug}).exists())
-                and not cls._default_manager.filter(
-                    **replace(fields, slug_field_name, slug)).exists()):
+                slug = slug[: -(len(slug) + len(suffix) - length)] + suffix
+        if (
+            slug not in reserved_slugs
+            and (
+                reserved_slug_qs is None
+                or not reserved_slug_qs.filter(
+                    **{reserved_slug_qs_field: slug}
+                ).exists()
+            )
+            and not cls._default_manager.filter(
+                **replace(fields, slug_field_name, slug)
+            ).exists()
+        ):
             return slug
 
 
@@ -71,18 +84,22 @@ class Model(models.Model):
 
     class ContentType:
         def __get__(self, instance, owner):
-            return django.contrib.contenttypes.models.ContentType.objects.get_for_model(owner)
+            return django.contrib.contenttypes.models.ContentType.objects.get_for_model(
+                owner
+            )
 
     content_type = ContentType()
 
 
 def generate_token():
-    return crypto.get_random_string(length=PERMISSION_TOKEN_LENGTH,
-                                    allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
+    return crypto.get_random_string(
+        length=PERMISSION_TOKEN_LENGTH,
+        allowed_chars="abcdefghijklmnopqrstuvwxyz0123456789",
+    )
 
 
 class PermissionToken(models.Model):
-    """ permission token are bound to a user and a specific resource
+    """permission token are bound to a user and a specific resource
 
     Permission tokens are used for accessing resources like non-public calendars without exposing
     an account password.
@@ -95,27 +112,40 @@ class PermissionToken(models.Model):
     After retrieving a permission token for a specific purpose, you need to verify that the
     authenticated user is really allowed to access the given resource.
     """
-    gestalt = models.ForeignKey('gestalten.Gestalt', on_delete=models.CASCADE)
+
+    gestalt = models.ForeignKey("gestalten.Gestalt", on_delete=models.CASCADE)
     secret_key = models.CharField(
-            max_length=PERMISSION_TOKEN_LENGTH, default=generate_token, unique=True)
+        max_length=PERMISSION_TOKEN_LENGTH, default=generate_token, unique=True
+    )
     time_created = models.DateTimeField(default=django.utils.timezone.now)
     # Every feature (e.g. the calendar) defines its own unique string describing its permission
     # token (e.g. "calendar-read").
     feature_key = models.CharField(max_length=32)
-    target_type = models.ForeignKey(contenttypes_models.ContentType, on_delete=models.CASCADE)
+    target_type = models.ForeignKey(
+        contenttypes_models.ContentType, on_delete=models.CASCADE
+    )
     target_id = models.PositiveIntegerField()
-    target = GenericForeignKey('target_type', 'target_id')
+    target = GenericForeignKey("target_type", "target_id")
 
     @classmethod
-    def get_permission_token(cls, gestalt, target, feature_key, create_if_missing=False):
-        target_object_type = contenttypes_models.ContentType.objects.get_for_model(target)
-        token = PermissionToken.objects.filter(gestalt=gestalt, feature_key=feature_key,
-                                               target_type=target_object_type.id,
-                                               target_id=target.id).first()
+    def get_permission_token(
+        cls, gestalt, target, feature_key, create_if_missing=False
+    ):
+        target_object_type = contenttypes_models.ContentType.objects.get_for_model(
+            target
+        )
+        token = PermissionToken.objects.filter(
+            gestalt=gestalt,
+            feature_key=feature_key,
+            target_type=target_object_type.id,
+            target_id=target.id,
+        ).first()
         if token:
             return token
         elif create_if_missing:
-            new_obj = PermissionToken(gestalt=gestalt, target=target, feature_key=feature_key)
+            new_obj = PermissionToken(
+                gestalt=gestalt, target=target, feature_key=feature_key
+            )
             new_obj.save()
             return new_obj
         else:
@@ -129,9 +159,9 @@ class PermissionToken(models.Model):
 
 
 class RepeatableTask(models.Model):
-    '''
+    """
     Saves parameters for tasks (actions) that might want to be repeated in case of failure.
-    '''
+    """
 
     created_time = models.DateTimeField(auto_now_add=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)

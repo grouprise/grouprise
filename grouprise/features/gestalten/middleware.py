@@ -11,8 +11,6 @@ class GestaltAppConfigMiddleware:
         except AttributeError:
             gestalt_id = None
 
-        app_config.add_setting('gestalt', {
-            'id': gestalt_id
-        })
+        app_config.add_setting("gestalt", {"id": gestalt_id})
 
         return self.get_response(request)

@@ -20,9 +20,8 @@ def is_member_of(user, group):
     if group:
         try:
             return models.Membership.objects.filter(
-                    group=group,
-                    member=user.gestalt
-                    ).exists()
+                group=group, member=user.gestalt
+            ).exists()
         except AttributeError:
             return None
 

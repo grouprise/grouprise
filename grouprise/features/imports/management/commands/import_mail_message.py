@@ -99,7 +99,8 @@ class Command(BaseCommand):
                     raise ValueError(
                         "Rejecting the mail, since its envelope address ({}) does not match the "
                         "expected mailbox address (COLLECTOR_MAILBOX_ADDRESS='{}').".format(
-                            delivered_to_address, CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS
+                            delivered_to_address,
+                            CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS,
                         )
                     )
             else:

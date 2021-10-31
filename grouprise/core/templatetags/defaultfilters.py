@@ -11,13 +11,13 @@ from . import Link
 
 register = template.Library()
 
-HAS_HTTP_PROTOCOL_REGEX = re.compile(r'^https?://')
+HAS_HTTP_PROTOCOL_REGEX = re.compile(r"^https?://")
 
 
 @register.filter
 def filename(value, include_ext=True):
     """Split the filename off the given path."""
-    base = os.path.basename(getattr(value, 'name', value))
+    base = os.path.basename(getattr(value, "name", value))
     return base if include_ext else os.path.splitext(base)[0]
 
 
@@ -35,14 +35,14 @@ def startswith(value: str, search):
 def cuttrailing(s1, s2):
     """Remove a string at the end of a string."""
     if s1.endswith(s2):
-        return s1[:-len(s2)]
+        return s1[: -len(s2)]
     return s1
 
 
 @register.filter
 def nolinebreaks(value):
     """Replace line breaks by spaces."""
-    return ' '.join(str(value).split('\n'))
+    return " ".join(str(value).split("\n"))
 
 
 @register.filter
@@ -53,20 +53,20 @@ def link_to(text, url):
 
 @register.filter
 def url_for_user(model, user):
-    "Return the result of get_absolute_url_for_user()."""
+    "Return the result of get_absolute_url_for_user()." ""
     return model.get_absolute_url_for_user(user)
 
 
 @register.filter
-def html2text(html_text, preset='mail'):
+def html2text(html_text, preset="mail"):
     text_maker = python_html2text.HTML2Text(baseurl=get_grouprise_baseurl())
     text_maker.body_width = 0
-    if preset == 'mail':
+    if preset == "mail":
         text_maker.inline_links = False
         text_maker.links_each_paragraph = True
         text_maker.use_automatic_links = True
         text_maker.ignore_images = True
-    elif preset == 'import':
+    elif preset == "import":
         text_maker.escape_snob = True
     return html.unescape(text_maker.handle(html_text)).rstrip()
 
@@ -77,4 +77,4 @@ def full_url(path):
         # path already is an absolute URL
         return path
     else:
-        return '{baseurl}{path}'.format(baseurl=get_grouprise_baseurl(), path=path)
+        return "{baseurl}{path}".format(baseurl=get_grouprise_baseurl(), path=path)

@@ -11,41 +11,53 @@ from . import models
 
 
 class Create(forms.ModelForm):
-    author = forms.EmailField(label='E-Mail-Adresse')
+    author = forms.EmailField(label="E-Mail-Adresse")
     captcha = CaptchaField()
-    subject = forms.CharField(label='Thema', max_length=255)
-    text = forms.CharField(label='Nachricht', widget=forms.Textarea(
-        {'rows': 5, 'data-component': 'keysubmit autosize'}))
+    subject = forms.CharField(label="Thema", max_length=255)
+    text = forms.CharField(
+        label="Nachricht",
+        widget=forms.Textarea({"rows": 5, "data-component": "keysubmit autosize"}),
+    )
 
     class Meta:
         model = associations.Association
         fields = []
 
     def __init__(self, *args, **kwargs):
-        self.has_author = kwargs.pop('has_author')
-        self.contribution = kwargs.pop('contribution')
-        self.with_membership_application = kwargs.pop('with_membership_application', False)
+        self.has_author = kwargs.pop("has_author")
+        self.contribution = kwargs.pop("contribution")
+        self.with_membership_application = kwargs.pop(
+            "with_membership_application", False
+        )
         super().__init__(*args, **kwargs)
         if self.has_author:
-            del self.fields['author']
-            del self.fields['captcha']
+            del self.fields["author"]
+            del self.fields["captcha"]
 
     def clean(self):
-        if 'author' in self.cleaned_data:
+        if "author" in self.cleaned_data:
             try:
                 gestalt = gestalten.Gestalt.objects.get(
-                        user__email=self.cleaned_data['author'])
+                    user__email=self.cleaned_data["author"]
+                )
                 if gestalt.user.has_usable_password():
-                    self.add_error('author', forms.ValidationError(
-                        'Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte '
-                        'melde Dich mit E-Mail-Adresse und Kennwort an.', code='existing'))
+                    self.add_error(
+                        "author",
+                        forms.ValidationError(
+                            "Es gibt bereits ein Benutzerkonto mit dieser E-Mail-Adresse. Bitte "
+                            "melde Dich mit E-Mail-Adresse und Kennwort an.",
+                            code="existing",
+                        ),
+                    )
             except gestalten.Gestalt.DoesNotExist:
                 pass
         return super().clean()
 
     def save(self, commit=True):
         # create conversation
-        conversation = models.Conversation.objects.create(subject=self.cleaned_data['subject'])
+        conversation = models.Conversation.objects.create(
+            subject=self.cleaned_data["subject"]
+        )
 
         # create association
         self.instance.container = conversation
@@ -55,16 +67,19 @@ class Create(forms.ModelForm):
         # contribution creation signal)
         self.contribution.container = conversation
         self.contribution.contribution = contributions_models.Text.objects.create(
-                text=self.cleaned_data['text'])
-        if 'author' in self.cleaned_data:
+            text=self.cleaned_data["text"]
+        )
+        if "author" in self.cleaned_data:
             self.contribution.author = gestalten.Gestalt.objects.get_or_create_by_email(
-                    self.cleaned_data['author'])
+                self.cleaned_data["author"]
+            )
         self.contribution.save()
 
         # create membership application for closed groups
         if self.with_membership_application:
             application = Application.objects.create(
-                    group=association.entity, attached_to=self.contribution)
+                group=association.entity, attached_to=self.contribution
+            )
             application_contribution = Contribution(author=self.contribution.author)
             application_contribution.container = conversation
             application_contribution.contribution = application
@@ -72,6 +87,7 @@ class Create(forms.ModelForm):
 
         # send contribution creation signal
         grouprise.core.signals.post_create.send(
-                sender=self.__class__, instance=self.contribution)
+            sender=self.__class__, instance=self.contribution
+        )
 
         return association

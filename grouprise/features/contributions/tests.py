@@ -13,9 +13,12 @@ from . import models
 class ContributionMixin(grouprise.features.articles.tests.ArticleMixin):
     def create_contribution(self):
         self.client.post(
-                reverse('content', args=[self.association.entity.slug, self.association.slug]),
-                {'text': 'Test Comment'})
-        return models.Contribution.objects.get(text__text='Test Comment')
+            reverse(
+                "content", args=[self.association.entity.slug, self.association.slug]
+            ),
+            {"text": "Test Comment"},
+        )
+        return models.Contribution.objects.get(text__text="Test Comment")
 
     def setUp(self):
         super().setUp()
@@ -25,15 +28,20 @@ class ContributionMixin(grouprise.features.articles.tests.ArticleMixin):
 class Delete(ContributionMixin, TestCase):
     def test_delete_contribution(self):
         delete_url = reverse(
-                'delete-contribution',
-                args=[
-                    self.association.entity.slug, self.association.slug, self.contribution.pk])
+            "delete-contribution",
+            args=[
+                self.association.entity.slug,
+                self.association.slug,
+                self.contribution.pk,
+            ],
+        )
         article_url = reverse(
-                'content', args=[self.association.entity.slug, self.association.slug])
+            "content", args=[self.association.entity.slug, self.association.slug]
+        )
 
         # article contains comment
         r = self.client.get(article_url)
-        self.assertContains(r, 'Test Comment')
+        self.assertContains(r, "Test Comment")
 
         # find delete link on article page
         self.assertContains(r, 'href="{}"'.format(delete_url))
@@ -48,17 +56,19 @@ class Delete(ContributionMixin, TestCase):
 
         # article contains comment
         r = self.client.get(article_url)
-        self.assertNotContains(r, 'Test Comment')
+        self.assertNotContains(r, "Test Comment")
 
 
 class ReplyToAuthor(AuthenticatedMemberMixin, TestCase):
     def test_reply_to_author(self):
         r = self.client.post(
-                reverse('create-group-conversation', args=[self.group.pk]),
-                {'subject': 'Test', 'text': 'Test'}, follow=True)
+            reverse("create-group-conversation", args=[self.group.pk]),
+            {"subject": "Test", "text": "Test"},
+            follow=True,
+        )
         association = Association.objects.last()
         contribution = Contribution.objects.last()
-        reply_url = reverse('reply-to-author', args=[association.pk, contribution.pk])
+        reply_url = reverse("reply-to-author", args=[association.pk, contribution.pk])
 
         # conversation page contains reply link
         self.assertContains(r, 'href="{}"'.format(reply_url))
@@ -71,6 +81,6 @@ class ReplyToAuthor(AuthenticatedMemberMixin, TestCase):
         self.assertEqual(r.status_code, 200)
 
         # posting reply generates new conversation
-        r = self.client.post(reply_url, {'subject': 'Reply', 'text': 'Test'})
-        association = Conversation.objects.get(subject='Reply').associations.first()
-        self.assertRedirects(r, reverse('conversation', args=[association.pk]))
+        r = self.client.post(reply_url, {"subject": "Reply", "text": "Test"})
+        association = Conversation.objects.get(subject="Reply").associations.first()
+        self.assertRedirects(r, reverse("conversation", args=[association.pk]))

@@ -8,7 +8,8 @@ class MemberMixin(gestalten.GestaltMixin, GroupMixin):
     def setUpTestData(cls):
         super().setUpTestData()
         models.Membership.objects.create(
-                created_by=cls.gestalt, group=cls.group, member=cls.gestalt)
+            created_by=cls.gestalt, group=cls.group, member=cls.gestalt
+        )
 
 
 class OtherMemberMixin(gestalten.OtherGestaltMixin, GroupMixin):
@@ -16,9 +17,8 @@ class OtherMemberMixin(gestalten.OtherGestaltMixin, GroupMixin):
     def setUpTestData(cls):
         super().setUpTestData()
         models.Membership.objects.create(
-                created_by=cls.other_gestalt,
-                group=cls.group,
-                member=cls.other_gestalt)
+            created_by=cls.other_gestalt, group=cls.group, member=cls.other_gestalt
+        )
 
 
 class AuthenticatedMemberMixin(MemberMixin):

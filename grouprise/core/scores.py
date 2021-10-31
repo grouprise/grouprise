@@ -3,7 +3,9 @@ from django.utils import module_loading
 
 
 def get_score_processors():
-    return [module_loading.import_string(s) for s in settings.GROUPRISE_SCORE_PROCESSORS]
+    return [
+        module_loading.import_string(s) for s in settings.GROUPRISE_SCORE_PROCESSORS
+    ]
 
 
 def update(model):

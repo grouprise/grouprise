@@ -2,7 +2,7 @@ from grouprise.features.content.forms import Create as ContentCreateForm
 
 
 class EventCreateForm(ContentCreateForm):
-    """ model form for creating event content
+    """model form for creating event content
 
     Sends post_create signal after successful creation.
     """

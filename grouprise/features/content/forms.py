@@ -93,33 +93,42 @@ class Create(forms.ModelForm):
 
     class Meta:
         model = associations.Association
-        fields = ('pinned', 'public')
+        fields = ("pinned", "public")
 
     group = forms.ModelChoiceField(
-            label='Veröffentlichen als', queryset=groups.Group.objects.none(), required=False,
-            widget=grouprise.core.forms.GroupSelect)
+        label="Veröffentlichen als",
+        queryset=groups.Group.objects.none(),
+        required=False,
+        widget=grouprise.core.forms.GroupSelect,
+    )
     as_gestalt = forms.BooleanField(
-        label="Veröffentlichung unter persönlichem Profil", required=False,
+        label="Veröffentlichung unter persönlichem Profil",
+        required=False,
         help_text=mark_safe(
             "Der Beitrag wird nicht von einer Gruppe, sondern von dir als <em>Gestalt</em> "
             "veröffentlicht. Einige Funktionen wie beispielsweise <em>Abonnieren</em> stehen "
             "nicht zur Verfügung."
         ),
     )
-    text = forms.CharField(label='Text', widget=grouprise.core.forms.EditorTextarea)
-    title = forms.CharField(label='Titel')
+    text = forms.CharField(label="Text", widget=grouprise.core.forms.EditorTextarea)
+    title = forms.CharField(label="Titel")
     image = forms.ModelChoiceField(
-            label='Beitragsbild', queryset=None, required=False,
-            widget=forms.Select(attrs={'data-component': 'image-picker'}),
-            help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
-            'Vorschau des Beitrags angezeigt.')
+        label="Beitragsbild",
+        queryset=None,
+        required=False,
+        widget=forms.Select(attrs={"data-component": "image-picker"}),
+        help_text="Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der "
+        "Vorschau des Beitrags angezeigt.",
+    )
 
-    place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
-    time = forms.DateTimeField(label='Beginn')
-    until_time = forms.DateTimeField(label='Ende', required=False)
+    place = forms.CharField(label="Veranstaltungsort / Anschrift", max_length=255)
+    time = forms.DateTimeField(label="Beginn")
+    until_time = forms.DateTimeField(label="Ende", required=False)
     all_day = forms.BooleanField(
-            label='ganztägig', help_text='Die Veranstaltung dauert den ganzen Tag.',
-            required=False)
+        label="ganztägig",
+        help_text="Die Veranstaltung dauert den ganzen Tag.",
+        required=False,
+    )
     time_repetitions_period = forms.ChoiceField(
         label="Häufigkeit der Veranstaltung",
         help_text="Ereignisse können wiederholt stattfinden.",
@@ -142,25 +151,26 @@ class Create(forms.ModelForm):
     )
 
     def __init__(self, **kwargs):
-        self.author = kwargs.pop('author')
-        with_time = kwargs.pop('with_time')
+        self.author = kwargs.pop("author")
+        with_time = kwargs.pop("with_time")
         super().__init__(**kwargs)
-        self.fields['image'].queryset = self.author.images
+        self.fields["image"].queryset = self.author.images
         if self.instance.entity.is_group:
-            del self.fields['group']
-            del self.fields['as_gestalt']
+            del self.fields["group"]
+            del self.fields["as_gestalt"]
         else:
-            self.fields['group'].queryset = groups.Group.objects.filter(
-                    memberships__member=self.author)
+            self.fields["group"].queryset = groups.Group.objects.filter(
+                memberships__member=self.author
+            )
         if not with_time:
-            del self.fields['place']
-            del self.fields['time']
-            del self.fields['until_time']
-            del self.fields['all_day']
-            del self.fields['time_repetitions_period']
-            del self.fields['time_repetitions_count']
+            del self.fields["place"]
+            del self.fields["time"]
+            del self.fields["until_time"]
+            del self.fields["all_day"]
+            del self.fields["time_repetitions_period"]
+            del self.fields["time_repetitions_count"]
         else:
-            del self.fields['image']
+            del self.fields["image"]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -234,28 +244,32 @@ class Create(forms.ModelForm):
 
     def save(self, commit=True):
         with django.db.transaction.atomic():
-            if not self.instance.entity.is_group and self.cleaned_data['group']:
-                self.instance.entity = self.cleaned_data['group']
+            if not self.instance.entity.is_group and self.cleaned_data["group"]:
+                self.instance.entity = self.cleaned_data["group"]
             # keep the following lines in sync with the method "_create_time_based_repetitions"
             self.instance.slug = grouprise.core.models.get_unique_slug(
-                    associations.Association, {
-                        'entity_id': self.instance.entity_id,
-                        'entity_type': self.instance.entity_type,
-                        'slug': slugify(self.cleaned_data['title']),
-                        })
+                associations.Association,
+                {
+                    "entity_id": self.instance.entity_id,
+                    "entity_type": self.instance.entity_type,
+                    "slug": slugify(self.cleaned_data["title"]),
+                },
+            )
             container = self.container_class.objects.create(
-                    title=self.cleaned_data['title'],
-                    image=self.cleaned_data.get('image'),
-                    place=self.cleaned_data.get('place', ''),
-                    time=self.cleaned_data.get('time'),
-                    until_time=self.cleaned_data.get('until_time'),
-                    all_day=self.cleaned_data.get('all_day', False))
-            if not hasattr(container, 'content_ptr'):
+                title=self.cleaned_data["title"],
+                image=self.cleaned_data.get("image"),
+                place=self.cleaned_data.get("place", ""),
+                time=self.cleaned_data.get("time"),
+                until_time=self.cleaned_data.get("until_time"),
+                all_day=self.cleaned_data.get("all_day", False),
+            )
+            if not hasattr(container, "content_ptr"):
                 self.instance.container = container
             else:
                 self.instance.container = container.content_ptr
             self.instance.container.versions.create(
-                    author=self.author, text=self.cleaned_data['text'])
+                author=self.author, text=self.cleaned_data["text"]
+            )
             self.save_content_relations(commit)
             # create the item (for repetitions: only the first item)
             result = super().save(commit)
@@ -294,66 +308,78 @@ class Create(forms.ModelForm):
 
     def send_post_create(self, instance=None):
         post_create.send(
-                sender=self.__class__,
-                instance=instance if instance else self.instance.container)
+            sender=self.__class__,
+            instance=instance if instance else self.instance.container,
+        )
 
 
 class Update(forms.ModelForm):
     class Meta:
         model = associations.Association
-        fields = ('pinned', 'public', 'slug')
+        fields = ("pinned", "public", "slug")
 
-    title = forms.CharField(label='Titel')
-    text = forms.CharField(label='Text', widget=grouprise.core.forms.EditorTextarea())
+    title = forms.CharField(label="Titel")
+    text = forms.CharField(label="Text", widget=grouprise.core.forms.EditorTextarea())
     image = forms.ModelChoiceField(
-            label='Beitragsbild', queryset=None, required=False,
-            widget=forms.Select(attrs={'data-component': 'image-picker'}),
-            help_text='Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der '
-            'Vorschau des Beitrags angezeigt.')
+        label="Beitragsbild",
+        queryset=None,
+        required=False,
+        widget=forms.Select(attrs={"data-component": "image-picker"}),
+        help_text="Das Beitragsbild wird beispielsweise auf Übersichtsseiten in der "
+        "Vorschau des Beitrags angezeigt.",
+    )
 
-    place = forms.CharField(label='Veranstaltungsort / Anschrift', max_length=255)
-    time = forms.DateTimeField(label='Beginn')
-    until_time = forms.DateTimeField(label='Ende', required=False)
+    place = forms.CharField(label="Veranstaltungsort / Anschrift", max_length=255)
+    time = forms.DateTimeField(label="Beginn")
+    until_time = forms.DateTimeField(label="Ende", required=False)
     all_day = forms.BooleanField(
-            label='ganztägig', help_text='Die Veranstaltung dauert den ganzen Tag.',
-            required=False)
+        label="ganztägig",
+        help_text="Die Veranstaltung dauert den ganzen Tag.",
+        required=False,
+    )
 
     def __init__(self, **kwargs):
-        self.author = kwargs.pop('author')
+        self.author = kwargs.pop("author")
         super().__init__(**kwargs)
         q = Q(creator=self.author)
-        if self.initial['image']:
-            q |= Q(pk=self.initial['image'].pk)
-        self.fields['image'].queryset = Image.objects.filter(q)
+        if self.initial["image"]:
+            q |= Q(pk=self.initial["image"].pk)
+        self.fields["image"].queryset = Image.objects.filter(q)
         if not self.instance.entity.is_group:
-            del self.fields['pinned']
-        if not self.initial['time']:
-            del self.fields['place']
-            del self.fields['time']
-            del self.fields['until_time']
-            del self.fields['all_day']
+            del self.fields["pinned"]
+        if not self.initial["time"]:
+            del self.fields["place"]
+            del self.fields["time"]
+            del self.fields["until_time"]
+            del self.fields["all_day"]
         else:
-            del self.fields['image']
+            del self.fields["image"]
 
     def clean_slug(self):
         q = associations.Association.objects.filter(
-                entity_type=self.instance.entity_type, entity_id=self.instance.entity_id,
-                slug=self.cleaned_data['slug'])
+            entity_type=self.instance.entity_type,
+            entity_id=self.instance.entity_id,
+            slug=self.cleaned_data["slug"],
+        )
         if q.exists() and q.get() != self.instance:
-            raise forms.ValidationError('Der Kurzname ist bereits vergeben.', code='unique')
-        return self.cleaned_data['slug']
+            raise forms.ValidationError(
+                "Der Kurzname ist bereits vergeben.", code="unique"
+            )
+        return self.cleaned_data["slug"]
 
     def save(self, commit=True):
         association = super().save(commit)
-        association.container.title = self.cleaned_data['title']
-        association.container.image = self.cleaned_data.get('image')
-        if self.initial['time']:
-            association.container.place = self.cleaned_data['place']
-            association.container.time = self.cleaned_data['time']
-            association.container.until_time = self.cleaned_data['until_time']
-            association.container.all_day = self.cleaned_data['all_day']
+        association.container.title = self.cleaned_data["title"]
+        association.container.image = self.cleaned_data.get("image")
+        if self.initial["time"]:
+            association.container.place = self.cleaned_data["place"]
+            association.container.time = self.cleaned_data["time"]
+            association.container.until_time = self.cleaned_data["until_time"]
+            association.container.all_day = self.cleaned_data["all_day"]
         association.container.save()
-        association.container.versions.create(author=self.author, text=self.cleaned_data['text'])
+        association.container.versions.create(
+            author=self.author, text=self.cleaned_data["text"]
+        )
         self.save_content_relations(commit)
         return association
 

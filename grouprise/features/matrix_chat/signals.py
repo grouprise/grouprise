@@ -32,7 +32,9 @@ MATRIX_CHAT_RETRY_DELAY = 30
 def post_matrix_chat_gestalt_settings_save(
     sender, instance, created, update_fields=None, raw=False, **kwargs
 ):
-    if not raw and (created or (update_fields and "matrix_id_override" in update_fields)):
+    if not raw and (
+        created or (update_fields and "matrix_id_override" in update_fields)
+    ):
         gestalt = instance.gestalt
         # the matrix ID of the user has changed: remove all existing invitations
         MatrixChatGroupRoomInvitations.objects.filter(gestalt=gestalt).delete()
@@ -97,7 +99,9 @@ def send_matrix_room_messages(messages):
 
 
 @receiver(post_save, sender=grouprise.features.content.models.Content)
-def send_content_notification_to_matrix_rooms(sender, instance, created, raw=False, **kwargs):
+def send_content_notification_to_matrix_rooms(
+    sender, instance, created, raw=False, **kwargs
+):
     if not raw:
         # For unknown reasons the instance is not complete at this moment
         # ("instance.get_associated_groups()" is empty).  Thus we delay the execution slightly by
@@ -135,7 +139,9 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
 
 
 @receiver(post_save, sender=grouprise.features.contributions.models.Contribution)
-def send_contribution_notification_to_matrix_rooms(sender, instance, created, raw=False, **kwargs):
+def send_contribution_notification_to_matrix_rooms(
+    sender, instance, created, raw=False, **kwargs
+):
     if raw:
         # do not send notifications while loading fixtures
         pass
@@ -182,8 +188,15 @@ def _invite_to_group_rooms(group):
 
 
 @receiver(pre_save, sender=MatrixChatGroupRoom)
-def move_away_from_matrix_room(sender, instance, *args, update_fields=None, raw=False, **kwargs):
-    if not raw and (instance.id is not None) and update_fields and ("room_id" in update_fields):
+def move_away_from_matrix_room(
+    sender, instance, *args, update_fields=None, raw=False, **kwargs
+):
+    if (
+        not raw
+        and (instance.id is not None)
+        and update_fields
+        and ("room_id" in update_fields)
+    ):
         previous_room_id = MatrixChatGroupRoom.objects.get(pk=instance.pk).room_id
         _migrate_to_new_room(
             instance,

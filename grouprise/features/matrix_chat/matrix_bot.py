@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class MatrixError(Exception):
-    """ an error occurred while communicating with the matrix server """
+    """an error occurred while communicating with the matrix server"""
 
 
 class MatrixClient(nio.AsyncClient):
@@ -83,7 +83,7 @@ class MatrixBot:
                 raise MatrixError(f"Failed to send message: {response}")
 
     async def synchronize_rooms_of_group(self, group):
-        """ create rooms for the group and synchronize their avatar with the grouprise avatar """
+        """create rooms for the group and synchronize their avatar with the grouprise avatar"""
         for is_private in (False, True):
             try:
                 room, created = await self._get_or_create_room(group, is_private)

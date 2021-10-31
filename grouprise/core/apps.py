@@ -5,7 +5,7 @@ from grouprise import __release__
 
 
 class CoreConfig(AppConfig):
-    name = 'grouprise.core'
+    name = "grouprise.core"
 
     def ready(self):
         self.module.autodiscover()
@@ -14,10 +14,11 @@ class CoreConfig(AppConfig):
         if settings.SENTRY_DSN:
             import sentry_sdk
             from sentry_sdk.integrations.django import DjangoIntegration
+
             sentry_sdk.init(
                 dsn=settings.SENTRY_DSN,
                 integrations=[DjangoIntegration()],
                 send_default_pii=True,
                 environment=settings.ENVIRONMENT,
-                release=f'grouprise@{__release__}',
+                release=f"grouprise@{__release__}",
             )

@@ -86,7 +86,9 @@ def import_from_feed(feed_url, submitter, target_group):
 def run_feed_import_for_groups():
     processed_feeds = []
     if CORE_SETTINGS.FEED_IMPORTER_GESTALT_ID is not None:
-        author = gestalten.Gestalt.objects.get(id=CORE_SETTINGS.FEED_IMPORTER_GESTALT_ID)
+        author = gestalten.Gestalt.objects.get(
+            id=CORE_SETTINGS.FEED_IMPORTER_GESTALT_ID
+        )
         for group in groups.Group.objects.filter(url_import_feed=True):
             if group.url:
                 request = urllib.request.Request(

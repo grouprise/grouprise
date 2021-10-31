@@ -8,37 +8,49 @@ from . import querysets
 
 class Membership(models.Model):
     class Meta:
-        unique_together = ('group', 'member')
+        unique_together = ("group", "member")
 
     created_by = models.ForeignKey(
-            'gestalten.Gestalt', related_name='memberships_created', on_delete=models.PROTECT)
+        "gestalten.Gestalt",
+        related_name="memberships_created",
+        on_delete=models.PROTECT,
+    )
     date_joined = models.DateField(default=datetime.date.today)
     group = models.ForeignKey(
-            'groups.Group', related_name='memberships', on_delete=models.CASCADE)
+        "groups.Group", related_name="memberships", on_delete=models.CASCADE
+    )
     member = models.ForeignKey(
-            'gestalten.Gestalt', related_name='memberships', on_delete=models.CASCADE)
+        "gestalten.Gestalt", related_name="memberships", on_delete=models.CASCADE
+    )
 
     objects = models.Manager.from_queryset(querysets.MembershipQuerySet)()
 
     def __str__(self):
         return "%s is member of %s since %s" % (
             str(self.member.user.get_username()),
-            str(self.group.slug), str(self.date_joined)
+            str(self.group.slug),
+            str(self.date_joined),
         )
 
 
 class Application(models.Model):
     group = models.ForeignKey(
-            'groups.Group', related_name='applications', on_delete=models.CASCADE)
+        "groups.Group", related_name="applications", on_delete=models.CASCADE
+    )
     attached_to = models.ForeignKey(
-            'contributions.Contribution', null=True, related_name='attached_applications',
-            on_delete=models.SET_NULL, blank=True)
+        "contributions.Contribution",
+        null=True,
+        related_name="attached_applications",
+        on_delete=models.SET_NULL,
+        blank=True,
+    )
 
     contributions = contenttypes.GenericRelation(
-            'contributions.Contribution',
-            content_type_field='contribution_type',
-            object_id_field='contribution_id',
-            related_query_name='membership_application')
+        "contributions.Contribution",
+        content_type_field="contribution_type",
+        object_id_field="contribution_id",
+        related_query_name="membership_application",
+    )
 
     @property
     def contribution(self):

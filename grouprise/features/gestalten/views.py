@@ -59,7 +59,7 @@ class Detail(
             gestalt=self.object,
             object_list=associations,
             site=get_current_site(self.request),
-            **kwargs
+            **kwargs,
         )
 
     def get_object(self):

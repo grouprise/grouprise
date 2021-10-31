@@ -63,7 +63,7 @@ class LazySettingsResolver:
 
     @contextlib.contextmanager
     def temporary_override(self, **kwargs):
-        """ Allow temporary manipulation of specific settings (e.g. for tests) """
+        """Allow temporary manipulation of specific settings (e.g. for tests)"""
         previous_content = {}
         for key, value in kwargs.items():
             previous_content[key] = getattr(self, key)
