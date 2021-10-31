@@ -22,6 +22,7 @@ ask_debconf_question() {
     local priority="$2"
     local default_value="${3:-}"
     local RET
+    # shellcheck disable=SC2030
     if [ -n "$default_value" ] && ( ! db_get "$question" || [ -z "$RET" ] ); then
         # the value is not configured via debconf, yet
         db_set "$question" "$default_value"
@@ -30,6 +31,7 @@ ask_debconf_question() {
     # shellcheck disable=SC2119
     db_go || true
     db_get "$question" || true
+    # shellcheck disable=SC2031
     printf '%s' "$RET"
 }
 

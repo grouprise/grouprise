@@ -16,6 +16,7 @@
 DESTDIR ?= /
 # we need access to the site packages in order to use "xapian"
 VIRTUALENV_CREATE_ARGUMENTS ?= --system-site-packages
+SHELL_FILES_ALL ?= $(shell find debian/ -type f -perm /a+x | grep -vE "^debian/tests/" | xargs grep -lI '^\#!/bin/.*sh')
 
 # load makefilet
 include make.d/makefilet-download-ondemand.mk
