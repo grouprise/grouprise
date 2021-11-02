@@ -1,4 +1,4 @@
-# grouprise Deployment
+# Deployment via "deb" packages
 
 This guide helps you to install *grouprise* on Debian or one of its derivates like Ubuntu.
 If you do not want to use a Debian-based system or wish to install *grouprise* manually, then you
