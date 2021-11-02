@@ -14,6 +14,8 @@ database:
 The supported engines are:
 
 * `mysql`
+* `postgis`
+    * `postgresql` with GIS extension (for locations) - only relevent, if *grouprise* is combined with a GIS-related Django application
 * `postgresql`
 * `sqlite`
 

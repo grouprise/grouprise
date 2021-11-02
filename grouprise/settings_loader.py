@@ -23,6 +23,7 @@ MINIMUM_OAUTH2_VERSION = "1.5.0"
 # from user configuration name to the name used by django
 DATABASE_ENGINES_MAP = {
     "mysql": "django.db.backends.mysql",
+    "postgis": "django.contrib.gis.db.backends.postgis",
     "postgresql": "django.db.backends.postgresql",
     "sqlite": "django.db.backends.sqlite3",
 }
