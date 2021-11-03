@@ -26,9 +26,9 @@ The [merge of a feature branch](https://www.endoflineblog.com/oneflow-a-git-bran
 
 In case of TL;DR:
 
-* There is only one permanent branch (`master`).  Release commits are branched, tagged and merged back into `master`.
-* Feature branches are based on the `master` branch.  They are merged back into `master` via *rebase* or *rebase + merge no-fastforward*.
-* Hot fixes start at a release tag.  After tagging they are merged back into `master`.
+* There is only one permanent branch (`main`).  Release commits are branched, tagged and merged back into `main`.
+* Feature branches are based on the `main` branch.  They are merged back into `main` via *rebase* or *rebase + merge no-fastforward*.
+* Hot fixes start at a release tag.  After tagging they are merged back into `main`.
 
 Only the most recent release is supported (for hot fixes).
 
@@ -37,11 +37,11 @@ Only the most recent release is supported (for hot fixes).
 
 To create a new release take the following steps:
 
-1. checkout the master branch
+1. checkout the `main` branch
 2. create a release notes document (below `docs/releases/`) and add it to `docs/releases/index.rst`
 3. commit your changes
 4. run `make release-major`, `make release-minor` or `make release-patch`
-5. push your updated master branch (`git push`) and tags (`git push --tags`)¹
+5. push your updated `main` branch (`git push`) and tags (`git push --tags`)¹
 6. done
 
 ¹ you might also want to apply `git config --global push.followTags true` ;)

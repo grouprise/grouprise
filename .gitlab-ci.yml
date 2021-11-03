@@ -37,7 +37,7 @@ make_test:
     needs: []
 
 # The latest built deb package is available under the following URL:
-#   https://git.hack-hro.de/grouprise/grouprise/builds/artifacts/master/raw/build/debian/export/grouprise.deb?job=deb-package
+#   https://git.hack-hro.de/grouprise/grouprise/builds/artifacts/main/raw/build/debian/export/grouprise.deb?job=deb-package
 make_deb_package:
     extends: .build_deb_package
     stage: build
@@ -81,7 +81,7 @@ pages:
         # gitlab's CI feature "pages" requires "public" as the name of content directory
         - mv build/doc/html public
     only:
-        - master
+        - main
     artifacts:
         paths:
             - public

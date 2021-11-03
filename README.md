@@ -5,7 +5,7 @@ grouprise is a platform destined to encourage and enable social action and solid
 ## Quick Setup
 
 ### For administrators
-You may want to install the latest [release](./-/blob/master/docs/deployment/deb.md) or a [snapshot build](https://git.hack-hro.de/grouprise/grouprise/builds/artifacts/master/raw/build/debian/export/grouprise.deb?job=deb-package) as deb packages.
+You may want to install the latest [release](./-/blob/main/docs/deployment/deb.md) or a [snapshot build](https://git.hack-hro.de/grouprise/grouprise/builds/artifacts/main/raw/build/debian/export/grouprise.deb?job=deb-package) as deb packages.
 
 ### For developers
 
@@ -21,7 +21,7 @@ The *system in docker* approach is helpful for developing integrations with othe
 #### System in Docker
 
 1. generate and run a docker image containing a prepared Debian Bullseye image. It is ready for installing
-grouprise's [deb packages](./-/blob/master/docs/deployment/deb.md) from grouprise's apt repository
+grouprise's [deb packages](./-/blob/main/docs/deployment/deb.md) from grouprise's apt repository
 or for testing locally built deb packages:
 ```shell
 make run-docker-deb-prepared

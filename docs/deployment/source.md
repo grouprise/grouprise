@@ -60,7 +60,7 @@ Install the following packages:
 Even though most of the application dependencies can be handled via the `virtualenv` created in the
 section below, we recommend that you install some of these with your systems package manager.
 Refer to the
-[debian/control file](https://git.hack-hro.de/grouprise/grouprise/-/tree/master/debian/control)
+[debian/control file](https://git.hack-hro.de/grouprise/grouprise/-/tree/main/debian/control)
 for a list of packages.
 
 All packages in the `Depends` section, whose names start with `python3-` can and should be
@@ -107,10 +107,10 @@ The *grouprise* process is managed via `uwsgi`.
    according to your needs
     * add `debug: true`, if you run into problems later
 1. create an uWSGI configuration (e.g. `/etc/grouprise/uwsgi.ini`)
-    * see [debian/grouprise.uwsgi.ini](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.uwsgi.ini)
+    * see [debian/grouprise.uwsgi.ini](https://git.hack-hro.de/grouprise/grouprise/-/blob/main/debian/grouprise.uwsgi.ini)
 1. create a systemd service for *grouprise*
-    * see [debian/grouprise.service](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.service)
-    * alternative SysVinit script: [debian/grouprise.init](https://git.hack-hro.de/grouprise/grouprise/-/blob/master/debian/grouprise.init)
+    * see [debian/grouprise.service](https://git.hack-hro.de/grouprise/grouprise/-/blob/main/debian/grouprise.service)
+    * alternative SysVinit script: [debian/grouprise.init](https://git.hack-hro.de/grouprise/grouprise/-/blob/main/debian/grouprise.init)
 1. start the *grouprise* service: `service grouprise start`
 1. create an nginx site configuration (e.g. `/etc/nginx/site-available/grouprise`):
     ```
