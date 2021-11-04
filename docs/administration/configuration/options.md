@@ -241,22 +241,21 @@ Default: `1`
 ## Theme and content customizations
 
 ### `branding → logo_backdrop`
-This logo is used on the left hand side of the footer.
+This logo (specified by its URL) is used on the left hand side of the footer.
 Generally you should use a type of white mask graphic here.
 See the default grouprise backdrop logo for reference.
 
 ### `branding → logo_favicon`
-This logo is used as the applications favicon that is usually visible on the left hand side of the browser tab right next to the title of the webpage.
+This logo (specified by its URL) is used as the applications favicon that is usually visible on the left hand side of the browser tab right next to the title of the webpage.
 We recommend that you use a PNG file for the favicon as support for SVG favicons is still spotty (as of Aug 2020).
 You can set this to `None` if you want to embed the favicon through other means.
 
 ### `branding → logo_square`
-This logo is used in various places like the login form, menus, help pages and other places.
+This logo (specified by its URL) is used in various places like the login form, menus, help pages and other places.
 As the name states this logo should be a square image.
-Please use an absolute URL if you override this logo as it will be used by external services to reference your site.
 
 ### `branding → logo_text`
-This logo file is used in the main menu on the top left part of the screen.
+This logo (specified by its URL) is used in the main menu on the top left part of the screen.
 It has a fixed height of around 44 pixels and should not occupy more than 230 pixels of width.
 
 ### `branding → theme_color`
