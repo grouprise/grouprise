@@ -1,5 +1,7 @@
 import asyncio
+import collections
 import logging
+from typing import Iterable, Sequence
 
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
@@ -10,7 +12,7 @@ from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.core.templatetags.defaultfilters import full_url
 import grouprise.features.content.models
 import grouprise.features.contributions.models
-import grouprise.features.groups.models
+from grouprise.features.groups.models import Group
 import grouprise.features.memberships.models
 from .matrix_bot import MatrixBot, MatrixError
 from .models import (
@@ -26,6 +28,9 @@ logger = logging.getLogger(__name__)
 # Only tasks that are relevant and that interact with the Matrix server should use this feature.
 MATRIX_CHAT_RETRIES = 2
 MATRIX_CHAT_RETRY_DELAY = 30
+
+
+MatrixMessage = collections.namedtuple("MatrixMessage", ("room_id", "text"))
 
 
 @receiver(post_save, sender=MatrixChatGestaltSettings)
@@ -60,7 +65,7 @@ def _send_invitations_for_gestalt(gestalt):
     asyncio.run(_invite_gestalt(gestalt))
 
 
-@receiver(post_save, sender=grouprise.features.groups.models.Group)
+@receiver(post_save, sender=Group)
 def create_matrix_rooms_for_new_group(sender, instance, created, raw=False, **kwargs):
     if created and not raw:
         _sync_rooms_delayed(instance)
@@ -80,22 +85,35 @@ def _sync_rooms_delayed(group):
     asyncio.run(_sync_rooms_async(group))
 
 
-@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
-def send_matrix_room_messages(messages):
-    async def _send_room_messages_async(messages):
-        async with MatrixBot() as bot:
-            for group, message, is_public in messages:
-                for room in MatrixChatGroupRoom.objects.filter(group=group):
-                    # send private messages only to the internal room
-                    if is_public or room.is_private:
-                        try:
-                            await bot.send_text(room.room_id, message)
-                        except MatrixError as exc:
-                            logger.warning(
-                                f"Failed to send matrix notification for contribution: {exc}"
-                            )
+def _get_matrix_messages_for_group(
+    group: Group, text: str, is_public: bool
+) -> Iterable[MatrixMessage]:
+    """return a generator of MatrixMessage instances for the given group
 
-    asyncio.run(_send_room_messages_async(messages))
+    Zero or more MatrixMessage instances can be returned - based the Matrix rooms of the group and
+    the "is_public" flag.
+
+    @param group: the target group for the message
+    @param text: the message to be sent
+    @param is_public: the public attribute of the source content or contribution
+    """
+    for room in group.matrix_rooms.all():
+        # send private messages only to the internal room
+        if is_public or room.is_private:
+            yield MatrixMessage(room.room_id, text)
+
+
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
+def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -> None:
+    async def _send_room_messages_async():
+        async with MatrixBot() as bot:
+            for message in messages:
+                try:
+                    await bot.send_text(message.room_id, message.text)
+                except MatrixError as exc:
+                    logger.warning(f"Failed to send {message_type}: {exc}")
+
+    asyncio.run(_send_room_messages_async())
 
 
 @receiver(post_save, sender=grouprise.features.content.models.Content)
@@ -134,8 +152,10 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
                 group = association.entity
                 url = full_url(association.get_absolute_url())
                 summary = f"{content_type} ({change_type}): [{instance.subject} ({author})]({url})"
-                messages.append((group, summary, association.public))
-        send_matrix_room_messages(messages)
+                messages.extend(
+                    _get_matrix_messages_for_group(group, summary, association.public)
+                )
+        send_matrix_messages(messages, "matrix notification for content")
 
 
 @receiver(post_save, sender=grouprise.features.contributions.models.Contribution)
@@ -161,9 +181,11 @@ def send_contribution_notification_to_matrix_rooms(
                 url = full_url(association.get_absolute_url())
                 summary = f"Diskussionsbeitrag: [{instance.container.subject} ({author})]({url})"
                 is_public = instance.is_public_in_context_of(group)
-                messages.append((group, summary, is_public))
+                messages.extend(
+                    _get_matrix_messages_for_group(group, summary, is_public)
+                )
         if messages:
-            send_matrix_room_messages(messages)
+            send_matrix_messages(messages, "matrix notification for contribution")
 
 
 @receiver(post_save, sender=grouprise.features.memberships.models.Membership)
