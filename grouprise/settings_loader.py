@@ -1050,6 +1050,10 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             django_target=("GROUPRISE", "MATRIX_CHAT", "BOT_ACCESS_TOKEN"),
             regex=r"[\w\-]+$",
         ),
+        MarixRoomIDList(
+            name=("matrix_chat", "public_listener_rooms"),
+            django_target=("GROUPRISE", "MATRIX_CHAT", "PUBLIC_LISTENER_ROOMS"),
+        ),
         DjangoAppEnableConfig(
             name=("matrix_commander", "enabled"),
             django_target=("GROUPRISE", "MATRIX_COMMANDER", "ENABLED"),

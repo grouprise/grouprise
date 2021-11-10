@@ -20,6 +20,7 @@ from .models import (
     MatrixChatGroupRoom,
     MatrixChatGroupRoomInvitations,
 )
+from .settings import MATRIX_SETTINGS
 
 
 logger = logging.getLogger(__name__)
@@ -148,13 +149,19 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
         change_type = "neu" if created else "aktualisiert"
         messages = []
         for association in instance.associations.all():
+            url = full_url(association.get_absolute_url())
+            summary = f"{content_type} ({change_type}): [{instance.subject} ({author})]({url})"
             if association.entity.is_group:
-                group = association.entity
-                url = full_url(association.get_absolute_url())
-                summary = f"{content_type} ({change_type}): [{instance.subject} ({author})]({url})"
                 messages.extend(
-                    _get_matrix_messages_for_group(group, summary, association.public)
+                    _get_matrix_messages_for_group(
+                        association.entity, summary, association.public
+                    )
                 )
+            if created and association.public:
+                # Send a notification to the configured listener rooms, if the content is new and
+                # public.  This creates a behaviour similar to an RSS feed or the front page.
+                for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
+                    messages.append(MatrixMessage(room_id, summary))
         send_matrix_messages(messages, "matrix notification for content")
 
 

@@ -85,6 +85,10 @@ They are configured automatically during the deb package configuration.
   `select token from access_tokens where user_id='@USERNAME:MATRIX_DOMAIN';`.
 * `admin_api_url`: An API URL of the Matrix instance, which accepts Synapse admin requests
   (e.g. `/_synapse/admin`).  Defaults to `http://localhost:8008`.
+* `public_listener_rooms`: A list of Matrix room identifiers (ID or alias).
+  Public content (e.g.  articles or events) is announced in these Matrix rooms.
+  The Matrix bot needs to be a member of these rooms.
+  Defaults to an empty list.
 
 Example:
 ```yaml
