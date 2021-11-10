@@ -132,8 +132,6 @@ def send_content_notification_to_matrix_rooms(
 def _delayed_send_content_notification_to_matrix_rooms(instance, created):
     # only sent group messages to matrix rooms
     if instance.get_associated_groups():
-        version = instance.versions.last()
-        author = version.author
         if instance.is_event:
             content_type = "Termin"
         elif instance.is_file:
@@ -150,8 +148,8 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
         messages = []
         for association in instance.associations.all():
             url = full_url(association.get_absolute_url())
-            summary = f"{content_type} ({change_type}): [{instance.subject} ({author})]({url})"
             if association.entity.is_group:
+                summary = f"{content_type} ({change_type}): [{instance.subject}]({url})"
                 messages.extend(
                     _get_matrix_messages_for_group(
                         association.entity, summary, association.public
@@ -160,6 +158,8 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
             if created and association.public:
                 # Send a notification to the configured listener rooms, if the content is new and
                 # public.  This creates a behaviour similar to an RSS feed or the front page.
+                source = association.entity.name
+                summary = f"[{source}] {content_type}: [{instance.subject}]({url})"
                 for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
                     messages.append(MatrixMessage(room_id, summary))
         send_matrix_messages(messages, "matrix notification for content")
@@ -179,14 +179,13 @@ def send_contribution_notification_to_matrix_rooms(
         # ignore deleted contributions
         pass
     else:
-        author = instance.author
         messages = []
         for association in instance.container.associations.all():
             if association.entity.is_group:
                 # send only group messages
                 group = association.entity
                 url = full_url(association.get_absolute_url())
-                summary = f"Diskussionsbeitrag: [{instance.container.subject} ({author})]({url})"
+                summary = f"Diskussionsbeitrag: [{instance.container.subject}]({url})"
                 is_public = instance.is_public_in_context_of(group)
                 messages.extend(
                     _get_matrix_messages_for_group(group, summary, is_public)
