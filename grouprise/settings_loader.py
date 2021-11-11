@@ -127,7 +127,10 @@ class ConfigError(ValueError):
 
 class ConfigBase:
 
-    DEFAULT = None
+    # A child class may override this attribute in order to indicate, that it expects a dictionary
+    # and that the dictionary is not supposed other keys besides the listed ones.
+    # A warning is emitted in case of violations.
+    EXPECTED_SUB_KEYS = None
 
     def __init__(self, name=None, django_target=None, default=None):
         if (
@@ -147,7 +150,19 @@ class ConfigBase:
         self.django_target = django_target
 
     def validate(self, value):
-        pass
+        if self.EXPECTED_SUB_KEYS is not None:
+            if not isinstance(value, dict):
+                raise ConfigError(
+                    f"Configuration directive '{self.name}' must be a dict:"
+                    f"{value} (type: {type(value)})"
+                )
+            unused_keys = set(value).difference(self.EXPECTED_SUB_KEYS)
+            if unused_keys:
+                logger.warning(
+                    "Some attributes were unused below configuration directive '%s': %s",
+                    self.name,
+                    unused_keys,
+                )
 
     def apply_to_settings(self, settings, value):
         if isinstance(self.django_target, str):
@@ -280,6 +295,8 @@ class ListConfig(ConfigBase):
 
 class DatabaseConfig(ConfigBase):
 
+    EXPECTED_SUB_KEYS = {"engine", "host", "name", "password", "port", "user"}
+
     def validate(self, value):
         super().validate(value)
         engine = value.get("engine", self.default["engine"])
@@ -306,6 +323,9 @@ class DatabaseConfig(ConfigBase):
 
 
 class CacheStorageConfig(ConfigBase):
+
+    EXPECTED_SUB_KEYS = {"backend", "location"}
+
     def validate(self, value):
         super().validate(value)
         backend = value.get("backend", self.default["backend"])
