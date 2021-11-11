@@ -32,6 +32,13 @@ EMAIL_BACKENDS_MAP = {
     "dummy": "django.core.mail.backends.dummy.EmailBackend",
     "smtp": "django.core.mail.backends.smtp.EmailBackend",
 }
+CACHE_BACKENDS_MAP = {
+    "dummy": "django.core.cache.backends.dummy.DummyCache",
+    "filesystem": "django.core.cache.backends.filebased.FileBasedCache",
+    "local_memory": "django.core.cache.backends.locmem.LocMemCache",
+    "memcache": "django.core.cache.backends.memcached.MemcachedCache",
+    "pylibmc": "django.core.cache.backends.memcached.PyLibMCCache",
+}
 
 
 class EmailSubmissionEncryption(enum.Enum):
@@ -296,6 +303,27 @@ class DatabaseConfig(ConfigBase):
                 dest[out_key] = value[in_key]
         dest["ENGINE"] = DATABASE_ENGINES_MAP[value.get("engine", self.DEFAULT_ENGINE)]
         settings["DATABASES"] = {"default": dest}
+
+
+class CacheStorageConfig(ConfigBase):
+    def validate(self, value):
+        super().validate(value)
+        backend = value.get("backend", self.default["backend"])
+        if backend not in CACHE_BACKENDS_MAP:
+            raise ConfigError(
+                f"Invalid cache backend: '{backend}' "
+                f"(supported: {CACHE_BACKENDS_MAP.keys()})"
+            )
+
+    def apply_to_settings(self, settings, value):
+        dest = {}
+        try:
+            dest["LOCATION"] = value["location"]
+        except KeyError:
+            pass
+        backend = value.get("backend", self.default["backend"])
+        dest["BACKEND"] = CACHE_BACKENDS_MAP[backend]
+        settings["CACHES"] = {"default": dest}
 
 
 class DebugToolbarClients(ListConfig):
@@ -845,6 +873,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
                 "name": os.path.expanduser("~/grouprise.sqlite3"),
             },
         ),
+        CacheStorageConfig(name="cache_storage", default={"backend": "local_memory"}),
         IntegerConfig(
             name="session_cookie_age", django_target="SESSION_COOKIE_AGE", minimum=0
         ),

@@ -102,6 +102,7 @@ DJANGO_SETTINGS_MINIMAL = {
     "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "https",
     "ALLOWED_HOSTS": ["example.org"],
     "CSRF_COOKIE_SECURE": True,
+    "CACHES": {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}},
     "DATABASES": {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -128,6 +129,7 @@ DJANGO_SETTINGS_EXAMPLE = {
     "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "http",
     "ADMINS": [("", "admin@example.org")],
     "ALLOWED_HOSTS": ["example.net", "www.example.net"],
+    "CACHES": {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}},
     "CSP_CONNECT_SRC": ["https://tracker.example.net"],
     "CSP_DEFAULT_SRC": ["https://tracker.example.org"],
     "CSP_SCRIPT_SRC": [

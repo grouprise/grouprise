@@ -338,6 +338,28 @@ Backups are created automatically in this directory during [package upgrades](/d
 
 Default: current directory (depending on the context of process execution)
 
+### `cache_storage`
+Specify the storage method for caches used by Django (e.g. for templates and database query results).
+By default *local memory* (restricted to the local process) is used.
+This default is suitable for setups with only a single process serving the grouprise instance.
+If you are running multiple processes on one host, then you need to use at least the `filesystem`-based storage (this is the default setup of the [deb-based deployment](/deployment/deb)).
+The [memcached](http://memcached.org/)-based storages (`memcache` and `pylibmc`) are suitable for all deployment setups.
+
+| Cache Storage | One Host with one Process | One Host with multiple Processes | Multiple Hosts |
+|---------------|---------------------------|----------------------------------|----------------|
+| `dummy` | Yes | Yes | Yes |
+| `local_memory` | Yes | No | No |
+| `filesystem` | Yes | Yes | No |
+| `memcache` | Yes | Yes | Yes |
+| `pylibmc` | Yes | Yes | Yes |
+
+The use of an unsuitable cache storage results in partially stale caches, since cache invalidation cannot reach all caches.
+
+Most storages require a `location` attribute.
+See the [Django documentation](https://docs.djangoproject.com/en/dev/topics/cache/) for details.
+
+Default: `{"backend": "local_memory"}`
+
 ### `extra_django_settings_filenames`
 Names of files to be read during startup.
 The files are supposed to contain Django-style configuration settings (see [Django documentation](https://docs.djangoproject.com/en/stable/ref/settings/) for details).
