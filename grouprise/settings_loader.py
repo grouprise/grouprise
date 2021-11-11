@@ -280,11 +280,10 @@ class ListConfig(ConfigBase):
 
 class DatabaseConfig(ConfigBase):
 
-    DEFAULT_ENGINE = "sqlite"
-
     def validate(self, value):
         super().validate(value)
-        if not value.get("engine", self.DEFAULT_ENGINE) in DATABASE_ENGINES_MAP:
+        engine = value.get("engine", self.default["engine"])
+        if engine not in DATABASE_ENGINES_MAP:
             raise ConfigError(
                 f"Invalid database engine: '{value['engine']}' "
                 f"(supported: {DATABASE_ENGINES_MAP.keys()})"
@@ -301,7 +300,8 @@ class DatabaseConfig(ConfigBase):
         ):
             if in_key in value:
                 dest[out_key] = value[in_key]
-        dest["ENGINE"] = DATABASE_ENGINES_MAP[value.get("engine", self.DEFAULT_ENGINE)]
+        engine = value.get("engine", self.default["engine"])
+        dest["ENGINE"] = DATABASE_ENGINES_MAP[engine]
         settings["DATABASES"] = {"default": dest}
 
 
