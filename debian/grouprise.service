@@ -4,6 +4,7 @@ After=syslog.target
 
 [Service]
 ExecStartPre=mkdir -p /var/log/grouprise
+ExecStartPre=mkdir -p /run/grouprise/django-cache && chown _grouprise: /run/grouprise/django-cache
 ExecStart=/usr/bin/uwsgi --ini /etc/grouprise/uwsgi.ini
 RuntimeDirectory=grouprise
 Restart=always
