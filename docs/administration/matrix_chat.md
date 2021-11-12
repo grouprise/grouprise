@@ -20,6 +20,8 @@ Matrix homeserver):
 * all members of a grouprise group are automatically invited to the group's rooms
 * new content (articles, events, discussions, ...) are mentioned (with a link) in their
   corresponding Matrix rooms (internal messages are announced in the private room, only)
+* personal messages from other users trigger Matrix notifications, which are sent directly to the
+  user
 * the group overview page in grouprise provides links to the group's Matrix rooms
 
 Additionally the usual benefits of the Matrix system are available:

@@ -228,6 +228,22 @@ class MatrixBot:
                 f"Failed to raise default role for new members ({room_alias})"
             )
 
+    async def create_private_room(self, room_title, room_description):
+        try:
+            response = await self.client.room_create(
+                name=room_title,
+                topic=room_description,
+                preset=nio.api.RoomPreset.private_chat,
+                visibility=nio.api.RoomVisibility.private,
+            )
+        except nio.exceptions.ProtocolError as exc:
+            raise MatrixError(f"Failed to create room '{room_title}': {exc}")
+        if not isinstance(response, nio.responses.RoomCreateResponse):
+            raise MatrixError(
+                f"Create room requested for '{room_title}' was rejected: {response}"
+            )
+        return response.room_id
+
     async def remove_room_alias(self, room_id: str, room_alias: str):
         canonical_state = await self._get_room_state(room_id, "m.room.canonical_alias")
         if canonical_state and (canonical_state["alias"] == room_alias):

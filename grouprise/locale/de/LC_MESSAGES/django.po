@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-22 21:11+0200\n"
+"POT-Creation-Date: 2021-11-12 03:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -443,6 +443,14 @@ msgstr "Zeige Verweise auf den internen Chat-Raum"
 
 msgid "Private chat room"
 msgstr "Privater Chat-Raum"
+
+#, python-brace-format
+msgid "{site_name} - notifications"
+msgstr "{site_name} - Benachrichtigungen"
+
+#, python-brace-format
+msgid "Notifications for private messages from {site_url}"
+msgstr "Benachrichtigungen für private Nachrichten von {site_url}"
 
 #, python-brace-format
 msgid ""

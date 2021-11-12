@@ -3,15 +3,17 @@ import collections
 import logging
 from typing import Iterable, Sequence
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from huey.contrib.djhuey import db_task
 
-from grouprise.core.settings import get_grouprise_baseurl
+from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url
 import grouprise.features.content.models
 import grouprise.features.contributions.models
+from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 from grouprise.features.groups.models import Group
 import grouprise.features.memberships.models
 from .matrix_bot import MatrixBot, MatrixError
@@ -29,6 +31,8 @@ logger = logging.getLogger(__name__)
 # Only tasks that are relevant and that interact with the Matrix server should use this feature.
 MATRIX_CHAT_RETRIES = 2
 MATRIX_CHAT_RETRY_DELAY = 30
+GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM = "private_notifications_room_id"
+GESTALT_SETTINGS_CATEGORY_MATRIX = "matrix_chat"
 
 
 MatrixMessage = collections.namedtuple("MatrixMessage", ("room_id", "text"))
@@ -45,6 +49,11 @@ def post_matrix_chat_gestalt_settings_save(
         # the matrix ID of the user has changed: remove all existing invitations
         MatrixChatGroupRoomInvitations.objects.filter(gestalt=gestalt).delete()
         _send_invitations_for_gestalt(gestalt)
+        # forget the old room for private messages (the former Matrix account still occupies it)
+        GestaltSetting.objects.filter(
+            name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
+            category=GESTALT_SETTINGS_CATEGORY_MATRIX,
+        ).delete()
 
 
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
@@ -165,6 +174,55 @@ def _delayed_send_content_notification_to_matrix_rooms(instance, created):
         send_matrix_messages(messages, "matrix notification for content")
 
 
+@db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
+def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
+    """send the message to the target gestalt
+
+    If this is the first message being sent, then we need to invite the gestalt into a new room
+    first.
+    This private room is memorized as a setting of the gestalt.
+    """
+
+    async def invite_and_send():
+        async with MatrixBot() as bot:
+            try:
+                room_id = gestalt.settings.get(
+                    name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
+                    category=GESTALT_SETTINGS_CATEGORY_MATRIX,
+                ).value
+            except ObjectDoesNotExist:
+                # we need to invite the user into a new room and store the room ID
+                room_title = _("{site_name} - notifications").format(
+                    site_name=get_grouprise_site().name
+                )
+                room_description = _(
+                    "Notifications for private messages from {site_url}"
+                ).format(site_url=get_grouprise_baseurl())
+                # the label is used for log messages only
+                room_label = f"notifications for {gestalt}"
+                # create the room
+                room_id = await bot.create_private_room(room_title, room_description)
+                # raise the default power level for new members to "moderator"
+                await bot._change_room_state(
+                    room_id,
+                    {"users_default": 50},
+                    "m.room.power_levels",
+                    room_label=room_label,
+                )
+                # invite the target user
+                is_invited = await bot.invite_into_room(room_id, gestalt, room_label)
+                if is_invited:
+                    GestaltSetting.objects.create(
+                        name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
+                        category=GESTALT_SETTINGS_CATEGORY_MATRIX,
+                        value=room_id,
+                        gestalt=gestalt,
+                    )
+            await bot.send_text(room_id, text)
+
+    asyncio.run(invite_and_send())
+
+
 @receiver(post_save, sender=grouprise.features.contributions.models.Contribution)
 def send_contribution_notification_to_matrix_rooms(
     sender, instance, created, raw=False, **kwargs
@@ -181,15 +239,19 @@ def send_contribution_notification_to_matrix_rooms(
     else:
         messages = []
         for association in instance.container.associations.all():
+            url = full_url(association.get_absolute_url())
             if association.entity.is_group:
-                # send only group messages
+                # send a message to the group's rooms
                 group = association.entity
-                url = full_url(association.get_absolute_url())
                 summary = f"Diskussionsbeitrag: [{instance.container.subject}]({url})"
                 is_public = instance.is_public_in_context_of(group)
                 messages.extend(
                     _get_matrix_messages_for_group(group, summary, is_public)
                 )
+            else:
+                # send a private message to a user's room
+                summary = f"[{instance.author}] Nachricht: [{instance.container.subject}]({url})"
+                send_private_message_to_gestalt(summary, association.entity)
         if messages:
             send_matrix_messages(messages, "matrix notification for contribution")
 
