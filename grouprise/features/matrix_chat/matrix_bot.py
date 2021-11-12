@@ -333,27 +333,29 @@ class MatrixBot:
                     if gestalt.id not in invited_members
                 ]
             for gestalt in invitees:
-                gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
-                try:
-                    result = await self.client.room_invite(
-                        room.room_id, gestalt_matrix_id
-                    )
-                except nio.exceptions.ProtocolError as exc:
-                    logger.warning(f"Failed to invite {gestalt} into {room}: {exc}")
-                else:
-                    if isinstance(result, nio.responses.RoomInviteResponse) or (
-                        isinstance(result, nio.responses.RoomInviteError)
-                        and (result.status_code == "M_FORBIDDEN")
-                    ):
-                        # "forbidden" is used for "is already in the room" - we remember this
-                        MatrixChatGroupRoomInvitations.objects.create(
-                            room=room, gestalt=gestalt
-                        )
-                        yield room, gestalt
-                    else:
-                        logger.warning(
-                            f"Invite request for {gestalt} into {room} was rejected: {result}"
-                        )
+                if self.invite_into_room(room.room_id, gestalt, str(room)):
+                    yield room, gestalt
+
+    async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> bool:
+        gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
+        try:
+            result = await self.client.room_invite(room_id, gestalt_matrix_id)
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to invite {gestalt} into {room_label}: {exc}")
+            return False
+        else:
+            if isinstance(result, nio.responses.RoomInviteResponse):
+                return True
+            elif isinstance(result, nio.responses.RoomInviteError) and (
+                result.status_code == "M_FORBIDDEN"
+            ):
+                # "forbidden" indicates that the invitee is already in the room
+                return True
+            else:
+                logger.warning(
+                    f"Invite request for {gestalt} into {room_label} was rejected: {result}"
+                )
+                return False
 
     async def kick_gestalt_from_group_rooms(self, group, gestalt, reason=None):
         gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
