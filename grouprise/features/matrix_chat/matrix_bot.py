@@ -281,7 +281,7 @@ class MatrixBot:
     async def _change_room_state(
         self, room_id: str, changes: dict, state_key: str, room_label=None
     ):
-        """configure the power levels in a room
+        """configure the power levels, aliases and other attributes of a room
 
         The procedure is a bit complicated, since we need to send a full state dictionary.
         Thus we retrieve the current state first and merge it with the wanted changes.
