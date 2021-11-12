@@ -34,7 +34,7 @@ class MatrixClient(nio.AsyncClient):
             except MatrixChatGroupRoom.DoesNotExist:
                 pass
             else:
-                await self.matrix_bot.configure_room(room_object)
+                await self.matrix_bot.configure_group_room(room_object)
 
 
 class MatrixBot:
@@ -86,15 +86,15 @@ class MatrixBot:
         """create rooms for the group and synchronize their avatar with the grouprise avatar"""
         for is_private in (False, True):
             try:
-                room, created = await self._get_or_create_room(group, is_private)
+                room, created = await self._get_or_create_group_room(group, is_private)
             except MatrixError as exc:
                 logger.error(f"Failed to create room: {exc}")
             else:
                 if created:
                     yield room
-                await self.configure_room(room)
+                await self.configure_group_room(room)
 
-    async def _get_or_create_room(self, group, is_private):
+    async def _get_or_create_group_room(self, group, is_private):
         try:
             room = MatrixChatGroupRoom.objects.get(group=group, is_private=is_private)
             return room, False
@@ -138,7 +138,7 @@ class MatrixBot:
         # respond with success, even though the alias assignment may have failed
         return room, True
 
-    async def configure_room(self, room):
+    async def configure_group_room(self, room):
         room_alias = room.get_default_room_alias()
         # try to set the visibility of the room in the public room directory
         try:
