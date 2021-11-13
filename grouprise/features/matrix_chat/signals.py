@@ -3,7 +3,6 @@ import collections
 import logging
 from typing import Iterable, Sequence
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
@@ -13,7 +12,7 @@ from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url
 import grouprise.features.content.models
 import grouprise.features.contributions.models
-from grouprise.features.gestalten.models import Gestalt, GestaltSetting
+from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 import grouprise.features.memberships.models
 from .matrix_bot import MatrixBot, MatrixError
@@ -23,6 +22,11 @@ from .models import (
     MatrixChatGroupRoomInvitations,
 )
 from .settings import MATRIX_SETTINGS
+from .utils import (
+    delete_gestalt_matrix_notification_room,
+    get_gestalt_matrix_notification_room,
+    set_gestalt_matrix_notification_room,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -31,8 +35,6 @@ logger = logging.getLogger(__name__)
 # Only tasks that are relevant and that interact with the Matrix server should use this feature.
 MATRIX_CHAT_RETRIES = 2
 MATRIX_CHAT_RETRY_DELAY = 30
-GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM = "private_notifications_room_id"
-GESTALT_SETTINGS_CATEGORY_MATRIX = "matrix_chat"
 
 
 MatrixMessage = collections.namedtuple("MatrixMessage", ("room_id", "text"))
@@ -50,10 +52,7 @@ def post_matrix_chat_gestalt_settings_save(
         MatrixChatGroupRoomInvitations.objects.filter(gestalt=gestalt).delete()
         _send_invitations_for_gestalt(gestalt)
         # forget the old room for private messages (the former Matrix account still occupies it)
-        GestaltSetting.objects.filter(
-            name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
-            category=GESTALT_SETTINGS_CATEGORY_MATRIX,
-        ).delete()
+        delete_gestalt_matrix_notification_room(gestalt)
 
 
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
@@ -185,12 +184,8 @@ def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
 
     async def invite_and_send():
         async with MatrixBot() as bot:
-            try:
-                room_id = gestalt.settings.get(
-                    name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
-                    category=GESTALT_SETTINGS_CATEGORY_MATRIX,
-                ).value
-            except ObjectDoesNotExist:
+            room_id = get_gestalt_matrix_notification_room(gestalt)
+            if room_id is None:
                 # we need to invite the user into a new room and store the room ID
                 room_title = _("{site_name} - notifications").format(
                     site_name=get_grouprise_site().name
@@ -212,12 +207,7 @@ def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
                 # invite the target user
                 is_invited = await bot.invite_into_room(room_id, gestalt, room_label)
                 if is_invited:
-                    GestaltSetting.objects.create(
-                        name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
-                        category=GESTALT_SETTINGS_CATEGORY_MATRIX,
-                        value=room_id,
-                        gestalt=gestalt,
-                    )
+                    set_gestalt_matrix_notification_room(gestalt, room_id)
             await bot.send_text(room_id, text)
 
     asyncio.run(invite_and_send())
