@@ -48,6 +48,15 @@ class EmailSubmissionEncryption(enum.Enum):
     SSL = "ssl"
 
 
+class TransportSecurity(enum.Enum):
+    # a django app is used for providing SSL encryption (e.g. "sslserver")
+    INTEGRATED = "integrated"
+    # a reverse proxy is providing transport layer security
+    REVERSE_PROXY = "reverse-proxy"
+    # the site is published via http-only
+    DISABLED = "disabled"
+
+
 def get_configuration_path_candidates():
     """return a list locations where grouprise configuration files may be looked for
 
@@ -265,11 +274,18 @@ class ChoicesConfig(ConfigBase):
 
     def validate(self, value):
         value = super().validate(value)
-        if value not in self.choices:
+        if isinstance(self.choices, enum.EnumMeta):
+            real_choices = {item.value for item in self.choices}
+        else:
+            real_choices = set(self.choices)
+        if value not in real_choices:
             raise ConfigError(
-                f"Setting '{self.name}' must be one of {self.choices}: {value}"
+                f"Setting '{self.name}' must be one of {real_choices}: {value}"
             )
-        return value
+        if isinstance(self.choices, enum.EnumMeta):
+            return self.choices(value)
+        else:
+            return value
 
 
 class ListConfig(ConfigBase):
@@ -413,12 +429,12 @@ class EmailSubmissionEncryptionConfig(ChoicesConfig):
         value = EmailSubmissionEncryption(value)
         use_tls = False
         use_ssl = False
-        if value is EmailSubmissionEncryption.PLAIN:
+        if value == EmailSubmissionEncryption.PLAIN:
             port = 25
-        elif value is EmailSubmissionEncryption.SSL:
+        elif value == EmailSubmissionEncryption.SSL:
             use_ssl = True
             port = 465
-        elif value is EmailSubmissionEncryption.STARTTLS:
+        elif value == EmailSubmissionEncryption.STARTTLS:
             use_tls = True
             port = 587
         else:
@@ -518,23 +534,17 @@ class LanguageCodeConfig(StringConfig):
 
 
 class TransportSecurityConfig(ChoicesConfig):
-
-    # integrated: a django app is used for providing SSL encryption (e.g. "sslserver")
-    # reverse-proxy: a reverse proxy is providing transport layer security
-    # disabled: the site is published via http-only
-    choices = {"integrated", "reverse-proxy", "disabled"}
-
-    def apply_to_settings(self, settings, value):
-        if value in {"integrated", "reverse-proxy"}:
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
+        if value in {TransportSecurity.INTEGRATED, TransportSecurity.REVERSE_PROXY}:
             settings["SECURE_HSTS_SECONDS"] = 365 * 24 * 3600
             settings["SESSION_COOKIE_SECURE"] = True
             settings["CSRF_COOKIE_SECURE"] = True
             settings["SECURE_SSL_REDIRECT"] = True
             settings["ACCOUNT_DEFAULT_HTTP_PROTOCOL"] = "https"
-        if value == "reverse-proxy":
+        if value == TransportSecurity.REVERSE_PROXY:
             # it is reasonable to assume that this typical header is configured on the proxy
             settings["SECURE_PROXY_SSL_HEADER"] = ("HTTP_X_FORWARDED_PROTO", "https")
-        if value == "disabled":
+        if value == TransportSecurity.DISABLED:
             settings["ACCOUNT_DEFAULT_HTTP_PROTOCOL"] = "http"
 
 
@@ -921,7 +931,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ),
         TransportSecurityConfig(
             name="transport_security",
-            choices={"disabled", "reverse-proxy", "integrated"},
+            choices=TransportSecurity,
             default="reverse-proxy",
         ),
         BooleanConfig(name="debug", django_target="DEBUG"),
@@ -941,7 +951,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         # encryption needs to be applied *before* "EMAIL_PORT", since it selects a default port
         EmailSubmissionEncryptionConfig(
             name=("email_submission", "encryption"),
-            choices={item.value for item in EmailSubmissionEncryption},
+            choices=EmailSubmissionEncryption,
             default="plain",
         ),
         StringConfig(name=("email_submission", "host"), django_target="EMAIL_HOST"),
