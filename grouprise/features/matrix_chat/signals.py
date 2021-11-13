@@ -239,9 +239,19 @@ def send_contribution_notification_to_matrix_rooms(
                     _get_matrix_messages_for_group(group, summary, is_public)
                 )
             else:
+                # determine the recipient for the notification
+                recipients = {
+                    # initial sender
+                    instance.container.contributions.first().author,
+                    # initial recipient
+                    association.entity,
+                }
+                # do not inform the author of this new contribution
+                recipients.difference_update({instance.author})
                 # send a private message to a user's room
                 summary = f"[{instance.author}] Nachricht: [{instance.container.subject}]({url})"
-                send_private_message_to_gestalt(summary, association.entity)
+                for recipient in recipients:
+                    send_private_message_to_gestalt(summary, recipient)
         if messages:
             send_matrix_messages(messages, "matrix notification for contribution")
 
