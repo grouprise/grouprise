@@ -91,6 +91,11 @@ They are configured automatically during the deb package configuration.
   Public content (e.g.  articles or events) is announced in these Matrix rooms.
   The Matrix bot needs to be a member of these rooms.
   Defaults to an empty list.
+* `backend`: Choose the backend for sending the message.
+  The default is `nio` - the [matrix-nio](https://github.com/poljar/matrix-nio) client library.
+  The alternative backend `console` may be used for testing.
+  It does not require a real matrix server.
+  Instead it just prints all relevant actions and messages to stdout.
 
 Example:
 ```yaml

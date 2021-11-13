@@ -13,6 +13,8 @@ from typing import Any
 
 import ruamel.yaml
 
+from grouprise.features.matrix_chat import MatrixBackend
+
 
 logger = logging.getLogger(__name__)
 
@@ -1110,6 +1112,11 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name=("matrix_chat", "enabled"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "ENABLED"),
             app_name="grouprise.features.matrix_chat",
+        ),
+        ChoicesConfig(
+            name=("matrix_chat", "backend"),
+            django_target=("GROUPRISE", "MATRIX_CHAT", "BACKEND"),
+            choices=MatrixBackend,
         ),
         StringConfig(
             name=("matrix_chat", "domain"),
