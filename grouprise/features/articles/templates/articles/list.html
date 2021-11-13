@@ -1,4 +1,5 @@
 {% extends 'stadt/stadt.html' %}
+{% load i18n %}
 {% load events groups rules %}
 
 {% block title %}Artikel - {{ block.super }}{% endblock %}
@@ -29,6 +30,6 @@
             {% endfor %}
         </ol>
 
-        {% pagination 'Weitere Artikel' %}
+        {% pagination _('More Articles') %}
     </div>
 {% endblock %}

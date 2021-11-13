@@ -2,7 +2,7 @@
     <div class="btn-toolbar btn-toolbar-centered">
         {% if page_obj.has_next %}
             <a href="?{% get_parameters page=page_obj.next_page_number %}" class="btn btn-default">
-                {{ pagination_label|default:'Weitere Beiträge' }}
+                {{ pagination_label }}
             </a>
         {% endif %}
     </div>

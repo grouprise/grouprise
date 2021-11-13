@@ -1,4 +1,5 @@
 {% extends 'stadt/stadt.html' %}
+{% load i18n %}
 
 {% block title %}Suche - {{ block.super }}{% endblock %}
 {% block heading_title %}
@@ -30,7 +31,7 @@
                     </li>
                 {% endfor %}
             </ol>
-            {% pagination 'Weitere Beiträge' %}
+            {% pagination _('More Items') %}
         {% else %}
             <div class="alert alert-flex alert-default">
                 <div class="alert-image">

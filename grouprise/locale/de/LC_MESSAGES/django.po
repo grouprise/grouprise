@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-12 03:44+0100\n"
+"POT-Creation-Date: 2021-11-13 23:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,6 +51,9 @@ msgstr "Artikel"
 msgid "Persons"
 msgstr "Gestalten"
 
+msgid "More Articles"
+msgstr "Weitere Artikel"
+
 msgid "Attach to the intro of the group"
 msgstr "Im Intro der Gruppe anheften"
 
@@ -85,6 +88,9 @@ msgstr ""
 msgid "more Persons"
 msgstr "weitere Gestalten"
 
+msgid "More Activities"
+msgstr "Weitere Aktivität"
+
 msgid "Contribution"
 msgstr "Beitrag"
 
@@ -106,16 +112,19 @@ msgstr "um über zukünftige Beiträge der Gruppe"
 msgid "by e-mail"
 msgstr "per E-Mail"
 
+msgid "More Items"
+msgstr "Weitere Beiträge"
+
 msgid "Discussions"
 msgstr "Gespräche"
 
 msgid "Discussion"
-msgstr "Gespräche"
+msgstr "Gespräch"
 
 msgid "Discussions are only visible to group members."
 msgstr "Gespräche sind nur für Gruppenmitglieder zugänglich."
 
-msgid "More discussions"
+msgid "More Discussions"
 msgstr "Weitere Gespräche"
 
 #, python-format
@@ -145,6 +154,9 @@ msgstr "Anmeldungen"
 msgctxt "attendance registrations"
 msgid "Notifications"
 msgstr "Anmeldungen"
+
+msgid "More Events"
+msgstr "Weitere Veranstaltungen"
 
 msgid "Export of group's calendars"
 msgstr "Exportmöglichkeiten für Gruppenkalender"
@@ -290,6 +302,9 @@ msgstr ""
 msgid "You can change this setting in your profile."
 msgstr "Du kannst dieses Verhalten in deinem Profil ändern."
 
+msgid "More Persons"
+msgstr "Weitere Gestalten"
+
 msgid "verified"
 msgstr "geprüft"
 
@@ -408,7 +423,7 @@ msgstr ""
 msgid "Search for groups"
 msgstr "Gruppen suchen"
 
-msgid "More groups"
+msgid "More Groups"
 msgstr "Weitere Gruppen"
 
 #, python-brace-format
@@ -836,6 +851,9 @@ msgid ""
 msgstr ""
 "Falls Du in der <em>echten Welt</em> noch nicht Mitglied in der Gruppe bist "
 "und es werden möchtest, sprich bitte die anderen Gruppenmitglieder an."
+
+msgid "More Members"
+msgstr "Weitere Mitglieder"
 
 msgid "is based on the free software"
 msgstr "basiert auf der Freien Software"

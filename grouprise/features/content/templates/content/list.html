@@ -1,4 +1,5 @@
 {% extends 'stadt/stadt.html' %}
+{% load i18n %}
 {% load events groups rules %}
 
 {% block heading_title %}
@@ -38,6 +39,6 @@
     {% endcomment %}
     <div class="content-list">
         {% include 'content/_list.html' with associations=object_list %}
-        {% pagination 'Weitere Beiträge' %}
+        {% pagination _('More Items') %}
     </div>
 {% endblock %}
