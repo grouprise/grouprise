@@ -180,7 +180,7 @@ class ConfigBase:
                 )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         if isinstance(self.django_target, str):
             settings[self.django_target] = value
         elif isinstance(self.django_target, (list, tuple)):
@@ -305,7 +305,7 @@ class ListConfig(ConfigBase):
             )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         if self.append:
             # normalize the target to a list
             if isinstance(self.django_target, (list, tuple)):
@@ -335,7 +335,7 @@ class DatabaseConfig(ConfigBase):
             )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         dest = {}
         for in_key, out_key in (
             ("host", "HOST"),
@@ -365,7 +365,7 @@ class CacheStorageConfig(ConfigBase):
             )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         dest = {}
         try:
             dest["LOCATION"] = value["location"]
@@ -395,7 +395,7 @@ class DebugToolbarClients(ListConfig):
                 )
         return valid_networks
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         if value:
             import debug_toolbar
 
@@ -420,12 +420,12 @@ class DebugToolbarClients(ListConfig):
 
 
 class EmailBackendConfig(ChoicesConfig):
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         settings["EMAIL_BACKEND"] = EMAIL_BACKENDS_MAP[value]
 
 
 class EmailSubmissionEncryptionConfig(ChoicesConfig):
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         value = EmailSubmissionEncryption(value)
         use_tls = False
         use_ssl = False
@@ -459,7 +459,7 @@ class DirectoryConfig(StringConfig):
             )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         """store an absolute path in the configuration"""
         abspath = os.path.abspath(value)
         super().apply_to_settings(settings, abspath)
@@ -525,7 +525,7 @@ class LanguageCodeConfig(StringConfig):
         "tr": "turkish",
     }
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         settings["LANGUAGE_CODE"] = value
         primary_tag = value.lower().replace("_", "-").split("-")[0]
         xapian_language = self.XAPIAN_LANGUAGE_MAP.get(primary_tag, self.default)
@@ -562,7 +562,7 @@ class TemplateDirectoriesConfig(ListConfig):
                 )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         # create a dummy "TEMPLATES" attribute, if it is missing (useful only for tests)
         templates = _get_nested_dict_value(settings, ["TEMPLATES"], [])
         if not templates:
@@ -612,7 +612,7 @@ class StylesheetsConfig(ListConfig):
                 )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         raw_lines = []
         for item in value:
             path = item["path"]
@@ -692,7 +692,7 @@ class ScriptsConfig(ListConfig):
                 )
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         raw_lines = []
         csp_hashes = []
         for item in value:
@@ -722,7 +722,7 @@ class AdministratorEmailsConfig(ListConfig):
                 raise ConfigError(f"Malformed email address in '{self.name}': {item}")
         return value
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         settings["ADMINS"] = [("", item) for item in value]
 
 
@@ -731,7 +731,7 @@ class DjangoAppEnableConfig(BooleanConfig):
         super().__init__(*args, **kwargs)
         self.app_name = app_name
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         # store the boolean value
         super().apply_to_settings(settings, value)
         if value:
@@ -757,7 +757,7 @@ class OIDCProviderEnableConfig(BooleanConfig):
         self.config_base_directory = config_base_directory
         super().__init__(*args, **kwargs)
 
-    def apply_to_settings(self, settings, value):
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
         # store the boolean value
         super().apply_to_settings(settings, value)
         if value:
