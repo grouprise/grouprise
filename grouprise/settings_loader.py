@@ -9,6 +9,7 @@ import logging
 import os
 import re
 import types
+from typing import Any
 
 import ruamel.yaml
 
@@ -149,7 +150,12 @@ class ConfigBase:
         self.default = default
         self.django_target = django_target
 
-    def validate(self, value):
+    def validate(self, value: Any) -> Any:
+        """validate an input value and return a coerced (valid) value
+
+        A ConfigError is raised in case of errors.
+        Warnings are indicated by log messages.
+        """
         if self.EXPECTED_SUB_KEYS is not None:
             if not isinstance(value, dict):
                 raise ConfigError(
@@ -163,6 +169,7 @@ class ConfigBase:
                     self.name,
                     unused_keys,
                 )
+        return value
 
     def apply_to_settings(self, settings, value):
         if isinstance(self.django_target, str):
@@ -198,7 +205,7 @@ class StringConfig(ConfigBase):
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not isinstance(value, str):
             raise ConfigError(
                 f"Setting '{self.name}' must be a string: {value} (type: {type(value)})"
@@ -215,15 +222,17 @@ class StringConfig(ConfigBase):
                     f"Setting '{self.name}' does not match the required regular expression"
                     f" ({self.regex.pattern}): {value}"
                 )
+        return value
 
 
 class BooleanConfig(ConfigBase):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not isinstance(value, bool):
             raise ConfigError(
                 f"Setting '{self.name}' must be a boolean value: {value} (type: {type(value)})"
             )
+        return value
 
 
 class IntegerConfig(ConfigBase):
@@ -233,7 +242,7 @@ class IntegerConfig(ConfigBase):
         self.maximum = maximum
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not isinstance(value, int):
             raise ConfigError(
                 f"Setting '{self.name}' must be an integer value: {value} (type: {type(value)})"
@@ -246,6 +255,7 @@ class IntegerConfig(ConfigBase):
             raise ConfigError(
                 f"Setting '{self.name}' is too big (greater than {self.maximum}: {value}"
             )
+        return value
 
 
 class ChoicesConfig(ConfigBase):
@@ -254,11 +264,12 @@ class ChoicesConfig(ConfigBase):
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if value not in self.choices:
             raise ConfigError(
                 f"Setting '{self.name}' must be one of {self.choices}: {value}"
             )
+        return value
 
 
 class ListConfig(ConfigBase):
@@ -271,11 +282,12 @@ class ListConfig(ConfigBase):
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not isinstance(value, list):
             raise ConfigError(
                 f"Setting '{self.name}' must be a list: {value} (type: {type(value)})"
             )
+        return value
 
     def apply_to_settings(self, settings, value):
         if self.append:
@@ -298,13 +310,14 @@ class DatabaseConfig(ConfigBase):
     EXPECTED_SUB_KEYS = {"engine", "host", "name", "password", "port", "user"}
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         engine = value.get("engine", self.default["engine"])
         if engine not in DATABASE_ENGINES_MAP:
             raise ConfigError(
                 f"Invalid database engine: '{value['engine']}' "
                 f"(supported: {DATABASE_ENGINES_MAP.keys()})"
             )
+        return value
 
     def apply_to_settings(self, settings, value):
         dest = {}
@@ -327,13 +340,14 @@ class CacheStorageConfig(ConfigBase):
     EXPECTED_SUB_KEYS = {"backend", "location"}
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         backend = value.get("backend", self.default["backend"])
         if backend not in CACHE_BACKENDS_MAP:
             raise ConfigError(
                 f"Invalid cache backend: '{backend}' "
                 f"(supported: {CACHE_BACKENDS_MAP.keys()})"
             )
+        return value
 
     def apply_to_settings(self, settings, value):
         dest = {}
@@ -353,21 +367,21 @@ class DebugToolbarClients(ListConfig):
     """
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
+        valid_networks = []
         for item in value:
             try:
-                ipaddress.ip_network(item)
+                valid_networks.append(ipaddress.ip_network(item))
             except ValueError as exc:
                 raise ConfigError(
                     f"Setting '{self.name}' must contain only valid IP addresses"
                     f" or networks, but '{item}' is malformed: {exc}"
                 )
+        return valid_networks
 
     def apply_to_settings(self, settings, value):
         if value:
             import debug_toolbar
-
-            valid_client_networks = tuple(ipaddress.ip_network(item) for item in value)
 
             def should_show_debug_toolbar(request):
                 import ipware
@@ -375,7 +389,7 @@ class DebugToolbarClients(ListConfig):
                 client_ip = ipware.get_client_ip(request)[0]
                 if client_ip is not None:
                     client = ipaddress.ip_address(client_ip)
-                    for network in valid_client_networks:
+                    for network in value:
                         if client in network:
                             return True
                 return False
@@ -418,7 +432,7 @@ class EmailSubmissionEncryptionConfig(ChoicesConfig):
 
 class DirectoryConfig(StringConfig):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not os.path.exists(value):
             raise ConfigError(
                 f"The configured directory ({self.name}={value}) does not exist"
@@ -427,6 +441,7 @@ class DirectoryConfig(StringConfig):
             raise ConfigError(
                 f"The configured path ({self.name}={value}) is not a directory"
             )
+        return value
 
     def apply_to_settings(self, settings, value):
         """store an absolute path in the configuration"""
@@ -436,16 +451,17 @@ class DirectoryConfig(StringConfig):
 
 class WritableDirectoryConfig(DirectoryConfig):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not os.access(value, os.W_OK):
             raise ConfigError(
                 f"The configured directory ({self.name}={value}) is not writable"
             )
+        return value
 
 
 class ReadableFileConfig(StringConfig):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         if not os.path.exists(value):
             raise ConfigError(
                 f"The configured file ({self.name}={value}) does not exist"
@@ -458,6 +474,7 @@ class ReadableFileConfig(StringConfig):
             raise ConfigError(
                 f"The configured file ({self.name}={value}) is not readable"
             )
+        return value
 
 
 class LanguageCodeConfig(StringConfig):
@@ -523,7 +540,7 @@ class TransportSecurityConfig(ChoicesConfig):
 
 class TemplateDirectoriesConfig(ListConfig):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         for item in value:
             if not os.path.exists(item):
                 raise ConfigError(
@@ -533,6 +550,7 @@ class TemplateDirectoriesConfig(ListConfig):
                 raise ConfigError(
                     f"Configured template location is not a directory: {item}"
                 )
+        return value
 
     def apply_to_settings(self, settings, value):
         # create a dummy "TEMPLATES" attribute, if it is missing (useful only for tests)
@@ -544,7 +562,7 @@ class TemplateDirectoriesConfig(ListConfig):
 
 class StylesheetsConfig(ListConfig):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         for item in value:
             if not isinstance(item, dict):
                 raise ConfigError(
@@ -582,6 +600,7 @@ class StylesheetsConfig(ListConfig):
                     self.name,
                     item,
                 )
+        return value
 
     def apply_to_settings(self, settings, value):
         raw_lines = []
@@ -612,7 +631,7 @@ class ScriptsConfig(ListConfig):
         return f"'{hash_algorithm}-{base64_hash}'"
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         for item in value:
             if not isinstance(item, dict):
                 raise ConfigError(
@@ -661,6 +680,7 @@ class ScriptsConfig(ListConfig):
                     self.name,
                     item,
                 )
+        return value
 
     def apply_to_settings(self, settings, value):
         raw_lines = []
@@ -686,10 +706,11 @@ class ScriptsConfig(ListConfig):
 
 class AdministratorEmailsConfig(ListConfig):
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         for item in value:
             if not re.match(r"[\w\-.@]*$", item):
                 raise ConfigError(f"Malformed email address in '{self.name}': {item}")
+        return value
 
     def apply_to_settings(self, settings, value):
         settings["ADMINS"] = [("", item) for item in value]
@@ -712,12 +733,13 @@ class MarixRoomIDList(ListConfig):
     ROOM_ID_REGEX = re.compile(r"^(![\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$")
 
     def validate(self, value):
-        super().validate(value)
+        value = super().validate(value)
         for item in value:
             if not self.ROOM_ID_REGEX.match(item):
                 raise ConfigError(
                     f"A matrix room ID ({self.name}) contains invalid characters: {item}"
                 )
+        return value
 
 
 class OIDCProviderEnableConfig(BooleanConfig):
@@ -1139,7 +1161,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
                 f"Please verify the dict datatype for all steps along the path."
             ) from exc
         if value is not None:
-            parser.validate(value)
+            value = parser.validate(value)
             parser.apply_to_settings(settings, value)
     # allow direct overrides of django configuration settings via python scripts
     django_settings_parser = ReadableFileConfig(name="extra_django_settings_filenames")
