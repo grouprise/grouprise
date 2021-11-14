@@ -18,6 +18,13 @@ if os.path.exists(LEGACY_CONFIG_FILENAME):
 else:
     # use the new configuration format
     from grouprise.common_settings import *  # noqa: F401 F403
-    from grouprise.settings_loader import import_settings_from_yaml
+    from grouprise.settings_loader import import_settings_from_yaml, ConfigError
 
-    import_settings_from_yaml(locals(), error_if_missing=True)
+    try:
+        import_settings_from_yaml(locals(), error_if_missing=True)
+    except ConfigError as exc:
+        if os.getenv("GROUPRISE_EXIT_ON_CONFIG_ERROR", "1") == "1":
+            print(f"[grouprise] {exc}", file=sys.stderr)
+            sys.exit(1)
+        else:
+            raise
