@@ -113,8 +113,17 @@ def get_configuration_filenames(location_candidates=None):
         return []
 
 
-def load_settings_from_yaml_files(locations=None):
+def load_settings_from_yaml_files(locations=None, error_if_missing=False):
     config_filenames = get_configuration_filenames(location_candidates=locations)
+    if error_if_missing and not config_filenames:
+        candidates = (
+            get_configuration_path_candidates() if locations is None else locations
+        )
+        raise ConfigError(
+            f"No suitable configuration files was found."
+            f" Please ensure, that a configuration file exists in one of the following locations:"
+            f" {' '.join(candidates)}"
+        )
     combined_configuration = {}
     loader = ruamel.yaml.YAML()
     for config_filename in config_filenames:
@@ -883,7 +892,7 @@ def get_config_base_directory(locations=None):
         return None
 
 
-def import_settings_from_yaml(settings, locations=None):
+def import_settings_from_yaml(settings, locations=None, error_if_missing=False):
     """import grouprise settings from one or more yaml-formatted setting files
 
     The setting filenames are discovered based on the given list of suggested location candidates.
@@ -894,7 +903,7 @@ def import_settings_from_yaml(settings, locations=None):
     filenames, that will be loaded as python modules.
     See "import_settings_from_python" for details.
     """
-    config = load_settings_from_yaml_files(locations)
+    config = load_settings_from_yaml_files(locations, error_if_missing=error_if_missing)
     base_directory = get_config_base_directory(locations)
     return import_settings_from_dict(settings, config, base_directory=base_directory)
 
