@@ -115,6 +115,16 @@ msgstr "per E-Mail"
 msgid "More Items"
 msgstr "Weitere Beiträge"
 
+msgid ""
+"Visit the Matrix chat room and receive notifications for any new public "
+"content"
+msgstr ""
+"Besuche den Matrix-Chat-Raum und erhalte Benachrichtigungen für alle neuen "
+"öffentlichen Inhalte"
+
+msgid "Receive Chat Notifications for new Content"
+msgstr "Empfange Chat-Benachrichtigungen für neue Beiträge"
+
 msgid "Discussions"
 msgstr "Gespräche"
 

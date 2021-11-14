@@ -41,4 +41,12 @@
         {% include 'content/_list.html' with associations=object_list %}
         {% pagination _('More Items') %}
     </div>
+    {% test_rule "matrix_chat.can_view_public_feed" as matrix_chat_show_public_feed_link %}
+    {% if matrix_chat_show_public_feed_link %}
+        <div style="text-align:center; margin:1em">
+            <a href="/stadt/chat-rooms/public-feed/" alt="{% trans 'Visit the Matrix chat room and receive notifications for any new public content' %}">
+                {% trans 'Receive Chat Notifications for new Content' %}
+            </a>
+        </div>
+    {% endif %}
 {% endblock %}

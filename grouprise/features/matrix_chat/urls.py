@@ -32,6 +32,11 @@ if MATRIX_SETTINGS.ENABLED:
             views.RedirectToMatrixRoomGroupPrivate.as_view(),
             name="matrix-chat-room-group-private",
         ),
+        url(
+            r"^stadt/chat-rooms/public-feed/$",
+            views.RedirectToMatrixRoomPublicFeed.as_view(),
+            name="matrix-chat-public-feed",
+        ),
     ]
 else:
     urlpatterns = []

@@ -2,6 +2,7 @@ import json
 import logging
 import urllib.request
 
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -225,3 +226,13 @@ class RedirectToMatrixRoomGroupPrivate(
 class RedirectToMatrixRoomGroupPublic(RedirectToMatrixRoomGroupPrivate):
     permission_required = "content.list"
     is_private = False
+
+
+class RedirectToMatrixRoomPublicFeed(django.views.generic.RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        try:
+            room_id = MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS[0]
+        except IndexError:
+            raise Http404("No public matrix chat room is configured")
+        else:
+            return get_room_url_for_requester(room_id, self.request.user)
