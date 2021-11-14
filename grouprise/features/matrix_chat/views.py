@@ -22,7 +22,7 @@ def get_room_url_for_requester(room_id, request_user):
     matrix_domain = MATRIX_SETTINGS.DOMAIN
     # determine the matrix domain of the requesting user
     if request_user.is_authenticated:
-        user_matrix_id = request_user.gestalt.matrix_chat_settings.get_matrix_id()
+        user_matrix_id = request_user.gestalt.matrix_chat_settings.matrix_id
         if ":" in user_matrix_id:
             matrix_domain = user_matrix_id.lower().split(":", 1)[1]
     base_path = get_web_client_url_pattern_for_domain(matrix_domain)
