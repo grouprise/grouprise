@@ -34,10 +34,9 @@ do_restart_prepare() {
 }
 
 do_start_prepare() {
-    mkdir -p /run/grouprise
-    mkdir -p /var/log/grouprise
     mkdir -p /run/grouprise/django-cache
-    chown _grouprise: /run/grouprise/django-cache
+    mkdir -p /var/log/grouprise
+    chown -R _grouprise: /run/grouprise /var/log/grouprise
     /usr/sbin/service grouprise-tasks start
     if [ "$GROUPRISE_LMTPD_IS_RUNNING" = 1 ]; then
         /usr/sbin/service grouprise-lmtpd start
