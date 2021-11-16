@@ -11,7 +11,7 @@ DESC="grouprise web service"
 NAME=grouprise
 DAEMON=/usr/bin/uwsgi
 PIDFILE=/run/grouprise/uwsgi.pid
-DAEMON_ARGS="--pidfile $PIDFILE --daemonize --ini /etc/grouprise/uwsgi.ini"
+DAEMON_ARGS="--pidfile $PIDFILE --chuid _grouprise --daemonize --ini /etc/grouprise/uwsgi.ini"
 
 GROUPRISE_LMTPD_IS_RUNNING=$(if service grouprise-lmtpd status >/dev/null 2>&1; then echo 1; else echo 0; fi)
 
