@@ -11,7 +11,9 @@ DESC="grouprise web service"
 NAME=grouprise
 DAEMON=/usr/bin/uwsgi
 PIDFILE=/run/grouprise/uwsgi.pid
-DAEMON_ARGS="--pidfile $PIDFILE --chuid _grouprise --daemonize --ini /etc/grouprise/uwsgi.ini"
+RUN_USER=_grouprise
+DAEMON_ARGS="--pidfile $PIDFILE --daemonize --ini /etc/grouprise/uwsgi.ini"
+START_ARGS="--chuid $RUN_USER"
 
 GROUPRISE_LMTPD_IS_RUNNING=$(if service grouprise-lmtpd status >/dev/null 2>&1; then echo 1; else echo 0; fi)
 
@@ -44,5 +46,5 @@ do_start_prepare() {
 
 do_stop_cmd_override() {
     # do not match NAME and DAEMON (being "uwsgi") and send QUIT on stop
-    start-stop-daemon --stop --quiet --signal QUIT --remove-pidfile --pidfile "$PIDFILE"
+    start-stop-daemon --stop --quiet --signal QUIT --user "$RUN_USER" --remove-pidfile --pidfile "$PIDFILE"
 }
