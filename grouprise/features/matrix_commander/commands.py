@@ -1,7 +1,10 @@
 import difflib
 import os
 
+from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.groups.models import Group
+from grouprise.core.settings import get_grouprise_baseurl
 
 from kien import create_commander, var, CommandResult
 import kien.command.help as help_command
@@ -78,6 +81,72 @@ def remove_user(username):
     else:
         gestalt.delete()
         yield CommandResult(f"Removed user '{gestalt}'")
+
+
+@commander("content", is_abstract=True)
+def content():
+    pass
+
+
+def get_association_by_url(url):
+    base_url = get_grouprise_baseurl().rstrip("/")
+    url = url.rstrip("/")
+    if url.startswith(base_url):
+        url = url[len(base_url) :].lstrip("/")
+    tokens = url.split("/")
+    if (len(tokens) == 3) and (tokens[0] == "stadt") and (tokens[1] == "content"):
+        # see URL "content-permalink"
+        try:
+            association_pk = int(tokens[2])
+        except ValueError:
+            return None
+        else:
+            return Association.objects.get(pk=association_pk)
+    elif len(tokens) == 2:
+        # see URL "content"
+        entity_slug = tokens[0]
+        association_slug = tokens[1]
+        try:
+            entity = Group.objects.get(slug=entity_slug)
+        except Group.DoesNotExist:
+            try:
+                entity = Gestalt.objects.get(slug=entity_slug)
+            except Gestalt.DoesNotExist:
+                return None
+        for association in Association.objects.filter(slug=association_slug):
+            if association.entity == entity:
+                return association
+        else:
+            return None
+    else:
+        return None
+
+
+@commander(content, "visibility", var("url"), var("state"))
+def change_content_visibility(url, state):
+    if state.lower() == "public":
+        should_go_public = True
+    elif state.lower() == "private":
+        should_go_public = False
+    else:
+        yield CommandResult(
+            f"Invalid target state: {state} (should be 'public' or 'private')"
+        )
+        return
+    association = get_association_by_url(url)
+    if association is None:
+        yield CommandResult(
+            f"Failed to find content based on URL ('{url}'). Maybe try the permanent link?"
+        )
+    else:
+        if should_go_public:
+            association.public = True
+        else:
+            association.public = False
+        association.save()
+        yield CommandResult(
+            f"Changed visibility to {'public' if should_go_public else 'private'}"
+        )
 
 
 class MatrixCommander:
