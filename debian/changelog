@@ -1,3 +1,9 @@
+grouprise (4.4.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Lars Kruse <devel@sumpfralle.de>  Wed, 17 Nov 2021 14:13:39 +0100
+
 grouprise (4.4.0-1) unstable; urgency=medium
 
   * New upstream release
