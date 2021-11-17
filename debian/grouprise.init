@@ -12,7 +12,7 @@ NAME=grouprise
 DAEMON=/usr/bin/uwsgi
 PIDFILE=/run/grouprise/uwsgi.pid
 RUN_USER=_grouprise
-DAEMON_ARGS="--pidfile $PIDFILE --daemonize --ini /etc/grouprise/uwsgi.ini"
+DAEMON_ARGS="--pidfile $PIDFILE --daemonize2 /var/log/grouprise/uwsgi.log --ini /etc/grouprise/uwsgi.ini"
 START_ARGS="--chuid $RUN_USER"
 
 GROUPRISE_LMTPD_IS_RUNNING=$(if service grouprise-lmtpd status >/dev/null 2>&1; then echo 1; else echo 0; fi)
@@ -34,9 +34,8 @@ do_restart_prepare() {
 }
 
 do_start_prepare() {
-    mkdir -p /run/grouprise/django-cache
-    mkdir -p /var/log/grouprise
-    chown -R _grouprise: /run/grouprise /var/log/grouprise
+    mkdir -p /run/grouprise/django-cache /var/log/grouprise
+    chown _grouprise: /run/grouprise /run/grouprise/django-cache /var/log/grouprise
     /usr/sbin/service grouprise-tasks start
     if [ "$GROUPRISE_LMTPD_IS_RUNNING" = 1 ]; then
         /usr/sbin/service grouprise-lmtpd start
