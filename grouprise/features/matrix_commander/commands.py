@@ -5,6 +5,7 @@ import os
 from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
+from grouprise.features.memberships.models import Membership
 from grouprise.core.settings import get_grouprise_baseurl
 
 from kien import create_commander, var, CommandResult
@@ -104,6 +105,35 @@ def get_group(slug_or_url: str) -> Group:
 @commander("user", is_abstract=True)
 def user():
     pass
+
+
+@commander(user, "join", var("username"), var("groupname"))
+@inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
+@inject_resolved(source="groupname", target="group", resolvers=[get_group])
+def user_join_group(gestalt: Gestalt, group: Group):
+    if not Membership.objects.filter(member=gestalt, group=group).exists():
+        Membership.objects.create(member=gestalt, group=group, created_by=gestalt)
+        yield CommandResult(f"Added '{gestalt}' to group '{group}'")
+    else:
+        yield CommandResult(
+            f"Warning: user '{gestalt}' is already a member of group '{group}'",
+            success=False,
+        )
+
+
+@commander(user, "leave", var("username"), var("groupname"))
+@inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
+@inject_resolved(source="groupname", target="group", resolvers=[get_group])
+def user_leave_group(gestalt: Gestalt, group: Group):
+    queryset = Membership.objects.filter(member=gestalt, group=group)
+    if queryset.exists():
+        queryset.delete()
+        yield CommandResult(f"Removed '{gestalt}' from group '{group}'")
+    else:
+        yield CommandResult(
+            f"Failure: user '{gestalt}' is not a member of group '{group}'",
+            success=False,
+        )
 
 
 @commander(user, "list", "unused", var("limit", is_optional=True))
