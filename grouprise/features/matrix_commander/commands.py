@@ -257,6 +257,44 @@ def change_content_ownership(association: Association, entity: Union[Gestalt, Gr
         )
 
 
+@commander(user, "admin", "list")
+def list_admins():
+    for gestalt in Gestalt.objects.filter(
+        user__is_staff=True, user__is_superuser=True
+    ).only("user"):
+        yield CommandResult(f"{gestalt.user.username}")
+
+
+@commander(user, "admin", "grant", var("username"))
+@inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
+def grant_admin(gestalt):
+    user = gestalt.user
+    if user.is_staff and user.is_superuser:
+        yield CommandResult(
+            f"Warning: the user '{gestalt}' is already privileged", success=False
+        )
+    else:
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        yield CommandResult(f"Granted privileges to user '{gestalt}'")
+
+
+@commander(user, "admin", "revoke", var("username"))
+@inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
+def revoke_admin(gestalt):
+    user = gestalt.user
+    if not user.is_staff and not user.is_superuser:
+        yield CommandResult(
+            f"Warning: the user '{gestalt}' is not privileged", success=False
+        )
+    else:
+        user.is_staff = False
+        user.is_superuser = False
+        user.save()
+        yield CommandResult(f"Revoked privileges from user '{gestalt}'")
+
+
 class MatrixCommander:
     def __init__(self):
         self._commander = create_commander("root")
