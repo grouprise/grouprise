@@ -1,4 +1,3 @@
-import asyncio
 import collections
 import logging
 from typing import Iterable, Sequence
@@ -10,6 +9,7 @@ from huey.contrib.djhuey import db_task
 
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url
+from grouprise.core.utils import run_async
 import grouprise.features.content.models
 import grouprise.features.contributions.models
 from grouprise.features.gestalten.models import Gestalt
@@ -71,7 +71,7 @@ def _send_invitations_for_gestalt(gestalt):
                         f"Failed to invite {gestalt} to matrix rooms of group {group}: {exc}"
                     )
 
-    asyncio.run(_invite_gestalt(gestalt))
+    run_async(_invite_gestalt(gestalt))
 
 
 @receiver(post_save, sender=Group)
@@ -91,7 +91,7 @@ def _sync_rooms_delayed(group):
                     f"Failed to synchronize group ({group}) with matrix rooms: {exc}"
                 )
 
-    asyncio.run(_sync_rooms_async(group))
+    run_async(_sync_rooms_async(group))
 
 
 def _get_matrix_messages_for_group(
@@ -122,7 +122,7 @@ def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -
                 except MatrixError as exc:
                     logger.warning(f"Failed to send {message_type}: {exc}")
 
-    asyncio.run(_send_room_messages_async())
+    run_async(_send_room_messages_async())
 
 
 @receiver(post_save, sender=grouprise.features.content.models.Content)
@@ -210,7 +210,7 @@ def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
                     set_gestalt_matrix_notification_room(gestalt, room_id)
             await bot.send_text(room_id, text)
 
-    asyncio.run(invite_and_send())
+    run_async(invite_and_send())
 
 
 @receiver(post_save, sender=grouprise.features.contributions.models.Contribution)
@@ -274,7 +274,7 @@ def _invite_to_group_rooms(group):
                     f"Failed to invite new group members ({group}) to matrix rooms: {exc}"
                 )
 
-    asyncio.run(_invite_to_group_rooms_delayed(group))
+    run_async(_invite_to_group_rooms_delayed(group))
 
 
 @receiver(pre_save, sender=MatrixChatGroupRoom)
@@ -323,7 +323,7 @@ def _migrate_to_new_room(*args):
                     f"Failed to send goodbye message to {old_room_id}: {exc}"
                 )
 
-    asyncio.run(_migrate_to_new_room_delayed(*args))
+    run_async(_migrate_to_new_room_delayed(*args))
 
 
 @receiver(post_delete, sender=grouprise.features.memberships.models.Membership)
@@ -342,4 +342,4 @@ def _kick_gestalt_from_group_rooms(group, gestalt):
                     f"Failed to kick previous group members ({group}) from matrix rooms: {exc}"
                 )
 
-    asyncio.run(_kick_gestalt_from_group_rooms_delayed(group, gestalt))
+    run_async(_kick_gestalt_from_group_rooms_delayed(group, gestalt))

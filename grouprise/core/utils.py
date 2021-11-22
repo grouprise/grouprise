@@ -1,3 +1,4 @@
+import asyncio
 from calendar import different_locale
 import locale
 
@@ -39,3 +40,15 @@ def get_verified_locale(request=None):
             pass
     else:
         return None
+
+
+def run_async(async_func):
+    """schedule an async callable in the current loop (if available) or run it now in a new loop"""
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        # no loop is running: create a new one
+        asyncio.run(async_func)
+    else:
+        # there is a running loop: just schedule the async
+        loop.call_soon(async_func)

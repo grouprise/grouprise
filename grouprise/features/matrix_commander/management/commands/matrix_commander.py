@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 import kien.command.help
@@ -7,6 +6,7 @@ from kien.runner import ConsoleRunner
 
 from django.core.management.base import BaseCommand
 
+from grouprise.core.utils import run_async
 from grouprise.features.matrix_commander.commands import commander
 from grouprise.features.matrix_commander.matrix_bot import CommanderBot
 
@@ -40,7 +40,7 @@ class Command(BaseCommand):
             self.serve_console()
         else:
             bot = CommanderBot()
-            asyncio.run(bot.serve_forever())
+            run_async(bot.serve_forever())
 
     def serve_console(self):
         console = CommanderConsole()

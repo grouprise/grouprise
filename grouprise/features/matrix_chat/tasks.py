@@ -1,9 +1,9 @@
-import asyncio
 import logging
 
 from huey import crontab
 from huey.contrib.djhuey import db_periodic_task
 
+from grouprise.core.utils import run_async
 from grouprise.features.groups.models import Group
 from .matrix_bot import MatrixBot
 
@@ -19,7 +19,7 @@ def update_matrix_chat_statiscs():
         async with MatrixBot() as bot:
             await bot.update_statistics()
 
-    asyncio.run(update())
+    run_async(update())
 
 
 @db_periodic_task(crontab(minute="39"))
@@ -37,4 +37,4 @@ def synchronize_matrix_rooms():
                 [_ async for _ in bot.synchronize_rooms_of_group(group)]
                 [_ async for _ in bot.send_invitations_to_group_members(group)]
 
-    asyncio.run(synchronize())
+    run_async(synchronize())
