@@ -1,6 +1,7 @@
 import difflib
 import functools
 import os
+from typing import Union
 
 from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt
@@ -234,6 +235,26 @@ def change_content_visibility(association: Association, state: str):
     yield CommandResult(
         f"Changed visibility to {'public' if should_go_public else 'private'}"
     )
+
+
+@commander(content, "ownership", var("url"), var("group_or_user"))
+@inject_resolved(source="url", target="association", resolvers=[get_association_by_url])
+@inject_resolved(
+    source="group_or_user", target="entity", resolvers=[get_group, get_gestalt]
+)
+def change_content_ownership(association: Association, entity: Union[Gestalt, Group]):
+    previous_owner = association.entity
+    if previous_owner == entity:
+        yield CommandResult(
+            f"Warning: the content '{association}' already belongs to '{entity}'",
+            success=False,
+        )
+    else:
+        association.entity = entity
+        association.save()
+        yield CommandResult(
+            f"Changed ownership of '{association}' from '{previous_owner}' to '{entity}'"
+        )
 
 
 class MatrixCommander:
