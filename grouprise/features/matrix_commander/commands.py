@@ -16,11 +16,6 @@ import kien.error
 commander = create_commander("grouprise-commander")
 
 
-class MultilineResult(CommandResult):
-    def __init__(self, response_lines, *args, **kwargs):
-        super().__init__(os.linesep.join(response_lines), *args, **kwargs)
-
-
 class ResolveException(Exception):
     def __init__(self, message_lines, *args, **kwargs):
         if isinstance(message_lines, str):
