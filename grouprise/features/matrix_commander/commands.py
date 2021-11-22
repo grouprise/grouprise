@@ -185,8 +185,8 @@ def get_association_by_url(url):
     base_url = get_grouprise_baseurl().rstrip("/")
     url = url.rstrip("/")
     if url.startswith(base_url):
-        url = url[len(base_url) :].lstrip("/")
-    tokens = url.split("/")
+        url = url[len(base_url) :]
+    tokens = url.lstrip("/").split("/")
     if (len(tokens) == 3) and (tokens[0] == "stadt") and (tokens[1] == "content"):
         # see URL "content-permalink"
         try:
@@ -203,7 +203,7 @@ def get_association_by_url(url):
             entity = Group.objects.get(slug=entity_slug)
         except Group.DoesNotExist:
             try:
-                entity = Gestalt.objects.get(slug=entity_slug)
+                entity = Gestalt.objects.get(user__username=entity_slug)
             except Gestalt.DoesNotExist:
                 raise not_found_exception
         for association in Association.objects.filter(slug=association_slug):
