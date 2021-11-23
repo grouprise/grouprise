@@ -3,7 +3,6 @@ from django.db import models
 import django.utils.timezone
 
 import grouprise.core.models
-from grouprise.features.associations.models import Association
 
 
 class ContributionManager(models.Manager):
@@ -74,6 +73,7 @@ class Contribution(grouprise.core.models.Model):
 
     objects = PublicContributionManager.from_queryset(ContributionQuerySet)()
     objects_with_internal = ContributionManager.from_queryset(ContributionQuerySet)()
+    objects_with_deleted = models.Manager.from_queryset(ContributionQuerySet)()
 
     class Meta:
         ordering = ("time_created",)
@@ -95,7 +95,7 @@ class Contribution(grouprise.core.models.Model):
                 else:
                     association = self.container.associations.get(gestalt=entity)
                 return association.public
-            except Association.DoesNotExist:
+            except models.Model.DoesNotExist:
                 return False
         else:
             return False

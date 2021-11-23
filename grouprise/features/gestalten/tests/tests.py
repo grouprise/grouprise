@@ -1,52 +1,14 @@
 from django.contrib import auth
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 
-from . import models
-
-
-class GestaltMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.gestalt = (
-            auth.get_user_model()
-            .objects.create(email="test@example.org", username="test")
-            .gestalt
-        )
-        cls.gestalt.public = True
-        cls.gestalt.save()
-        cls.gestalt.user.emailaddress_set.create(email="test@example.org")
+from grouprise.features.contributions.tests import ContributionMixin
+from grouprise.features.gestalten import models
+from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.gestalten.tests.mixins import GestaltMixin, AuthenticatedMixin
 
 
-class OtherGestaltMixin:
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.other_gestalt = (
-            auth.get_user_model()
-            .objects.create(email="test2@example.org", username="test2")
-            .gestalt
-        )
-
-
-class AuthenticatedMixin(GestaltMixin):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(
-            self.gestalt.user, "django.contrib.auth.backends.ModelBackend"
-        )
-
-
-class OtherAuthenticatedMixin(OtherGestaltMixin):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(
-            self.other_gestalt.user, "django.contrib.auth.backends.ModelBackend"
-        )
-
-
-class Gestalt(GestaltMixin, TestCase):
+class GestaltTestCase(GestaltMixin, TestCase):
     def test_private_gestalt_page(self):
         self.gestalt.public = False
         self.gestalt.save()
@@ -62,6 +24,19 @@ class Gestalt(GestaltMixin, TestCase):
         gestalt_url = reverse("entity", args=(self.gestalt.user.username,))
         r = self.client.get(gestalt_url)
         self.assertEqual(r.status_code, 200)
+
+
+class DeleteGestaltTestCase(ContributionMixin, GestaltMixin, TestCase):
+    def test_delete_gestalt_with_deleted_contribution(self):
+        """
+        Deleting a gestalt who authors a deleted contribution should succeed.
+
+        Regression test for #753.
+        """
+        self.mark_contribution_deleted()
+        num_gestalten = Gestalt.objects.count()
+        self.gestalt.delete()
+        self.assertEqual(Gestalt.objects.count(), num_gestalten - 1)
 
 
 class Settings(TestCase):

@@ -11,6 +11,7 @@ from imagekit.processors import SmartResize, Transpose
 import grouprise.core
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.utils import get_random_color
+from grouprise.features.contributions.models import Contribution
 
 
 class GestaltQuerySet(models.QuerySet):
@@ -127,7 +128,7 @@ class Gestalt(grouprise.core.models.Model):
         data["settings"] = self.settings
 
         data["associations"] = self.associations
-        data["contributions"] = self.contributions
+        data["contributions"] = Contribution.objects_with_deleted.filter(author=self)
         data["images"] = self.images
         data["memberships_created"] = self.memberships_created
         data["versions"] = self.versions

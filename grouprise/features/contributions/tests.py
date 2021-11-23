@@ -1,6 +1,7 @@
 from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 import grouprise.features.articles.tests
 from grouprise.features.associations.models import Association
@@ -23,6 +24,10 @@ class ContributionMixin(grouprise.features.articles.tests.ArticleMixin):
     def setUp(self):
         super().setUp()
         self.contribution = self.create_contribution()
+
+    def mark_contribution_deleted(self):
+        self.contribution.deleted = timezone.now()
+        self.contribution.save()
 
 
 class Delete(ContributionMixin, TestCase):
