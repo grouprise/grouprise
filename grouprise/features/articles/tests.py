@@ -1,5 +1,6 @@
 import django
 from django.urls import reverse
+from django.utils import timezone
 
 import grouprise.core
 import grouprise.core.tests
@@ -23,6 +24,10 @@ class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin)
 
     def get_perma_url(self):
         return self.get_url("content-permalink", (self.association.pk))
+
+    def mark_article_deleted(self):
+        self.association.deleted = timezone.now()
+        self.association.save()
 
     def setUp(self):
         super().setUp()

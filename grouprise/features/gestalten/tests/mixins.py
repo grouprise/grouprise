@@ -5,20 +5,21 @@ class GestaltMixin:
     @classmethod
     def create_gestalt(cls, name="test"):
         email = f"{name}@example.org"
-        cls.gestalt = (
+        gestalt = (
             auth.get_user_model().objects.create(email=email, username=name).gestalt
         )
-        cls.gestalt.public = True
-        cls.gestalt.save()
-        cls.gestalt.user.emailaddress_set.create(email=email)
+        gestalt.public = True
+        gestalt.save()
+        gestalt.user.emailaddress_set.create(email=email)
+        return gestalt
 
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
         # create an initial gestalt which is used as special user
         # (imports, unknown etc.)
-        cls.create_gestalt(name="inital")
-        cls.create_gestalt()
+        cls.unknown_gestalt = cls.create_gestalt(name="inital")
+        cls.gestalt = cls.create_gestalt()
 
 
 class OtherGestaltMixin:

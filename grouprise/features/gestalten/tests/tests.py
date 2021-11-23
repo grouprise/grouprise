@@ -2,6 +2,7 @@ from django.contrib import auth
 from django.test import TestCase
 from django.urls import reverse
 
+from grouprise.features.articles.tests import ArticleMixin
 from grouprise.features.contributions.tests import ContributionMixin
 from grouprise.features.gestalten import models
 from grouprise.features.gestalten.models import Gestalt
@@ -26,7 +27,7 @@ class GestaltTestCase(GestaltMixin, TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-class DeleteGestaltTestCase(ContributionMixin, GestaltMixin, TestCase):
+class GestaltWithContributionTestCase(ContributionMixin, GestaltMixin, TestCase):
     def test_delete_gestalt_with_deleted_contribution(self):
         """
         Deleting a gestalt who authors a deleted contribution should succeed.
@@ -36,7 +37,20 @@ class DeleteGestaltTestCase(ContributionMixin, GestaltMixin, TestCase):
         self.mark_contribution_deleted()
         num_gestalten = Gestalt.objects.count()
         self.gestalt.delete()
+        self.contribution.refresh_from_db()
         self.assertEqual(Gestalt.objects.count(), num_gestalten - 1)
+        self.assertEqual(self.contribution.author, self.unknown_gestalt)
+
+
+class GestaltWithArticleTestCase(ArticleMixin, GestaltMixin, TestCase):
+    def test_delete_gestalt_with_deleted_association(self):
+        """Deleting a gestalt who authors a deleted article should succeed."""
+        self.mark_article_deleted()
+        num_gestalten = Gestalt.objects.count()
+        self.gestalt.delete()
+        self.association.refresh_from_db()
+        self.assertEqual(Gestalt.objects.count(), num_gestalten - 1)
+        self.assertEqual(self.association.entity, self.unknown_gestalt)
 
 
 class Settings(TestCase):
