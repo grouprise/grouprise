@@ -59,6 +59,8 @@ Follow these steps:
 
 ## Usage
 
+### Matrix Client
+
 Whenever you want to talk to the matrix-commander bot, you need to start the message with one of the supported prefixes:
 
 * generic command prefix: `!grouprise help`
@@ -70,4 +72,12 @@ The Matrix ID of the bot can be easily entered by relying on the auto-completion
 All available actions of the bot are explained in the output of the `help` command:
 ```
 !grouprise help
+```
+
+
+### Local Console
+
+Instead of using a Matrix client for issuing commands, you can also run *Matrix Commander* locally in a shell:
+```shell
+grouprisectl matrix_commander --console
 ```
