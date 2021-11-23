@@ -1,9 +1,10 @@
-from . import models
-from grouprise.features.gestalten import tests as gestalten
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.features.groups.tests.mixins import GroupMixin
+from . import models
 
 
-class MemberMixin(gestalten.GestaltMixin, GroupMixin):
+class MemberMixin(grouprise.features.gestalten.tests.mixins.GestaltMixin, GroupMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -12,7 +13,9 @@ class MemberMixin(gestalten.GestaltMixin, GroupMixin):
         )
 
 
-class OtherMemberMixin(gestalten.OtherGestaltMixin, GroupMixin):
+class OtherMemberMixin(
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin, GroupMixin
+):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()

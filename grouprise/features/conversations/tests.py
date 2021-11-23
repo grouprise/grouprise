@@ -1,16 +1,20 @@
 from django.contrib.contenttypes import models as contenttypes
 
 import grouprise.core
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
-from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.groups.tests import mixins as groups
 from grouprise.features.memberships import test_mixins as memberships
 from . import models
 
 
-class GestaltConversation(gestalten.GestaltMixin, gestalten.OtherGestaltMixin):
+class GestaltConversation(
+    grouprise.features.gestalten.tests.mixins.GestaltMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
+):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -24,7 +28,9 @@ class GestaltConversation(gestalten.GestaltMixin, gestalten.OtherGestaltMixin):
         )
 
 
-class GroupConversation(gestalten.GestaltMixin, groups.GroupMixin):
+class GroupConversation(
+    grouprise.features.gestalten.tests.mixins.GestaltMixin, groups.GroupMixin
+):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -297,7 +303,7 @@ class Authenticated(
     CanViewGestaltConversation,
     GestaltConversation,
     GroupConversation,
-    gestalten.AuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
     tests.Test,
 ):
     """
@@ -315,7 +321,7 @@ class GroupMember(
     CanReplyToConversation,
     GroupConversation,
     memberships.AuthenticatedMemberMixin,
-    gestalten.OtherGestaltMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     tests.Test,
 ):
     """

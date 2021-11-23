@@ -2,9 +2,10 @@ import django.core.mail
 from django.urls import reverse
 
 import grouprise.core.tests
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
-from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.memberships import test_mixins as memberships
 
 
@@ -35,7 +36,7 @@ def get_vote_data(anon=None):
     return data
 
 
-class PollMixin(gestalten.AuthenticatedMixin):
+class PollMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin):
     def get_post_data(self):
         return get_post_data()
 

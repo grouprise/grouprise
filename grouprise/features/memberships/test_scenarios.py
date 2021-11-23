@@ -1,6 +1,7 @@
 import grouprise.core
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
-from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.groups import models as groups_models
 from grouprise.features.groups.tests import mixins as groups
 from . import models, test_memberships as memberships, test_mixins as mixins
@@ -38,7 +39,7 @@ class GroupAuthenticated(
     memberships.ResignForbidden,
     memberships.MemberListForbidden,
     memberships.MemberCreateForbidden,
-    gestalten.AuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
     groups.GroupMixin,
     tests.Test,
 ):
@@ -51,7 +52,7 @@ class GroupClosed(
     memberships.ResignForbidden,
     memberships.MemberListForbidden,
     memberships.MemberCreateForbidden,
-    gestalten.AuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
     groups.ClosedGroupMixin,
     tests.Test,
 ):
@@ -65,7 +66,7 @@ class GroupMember(
     memberships.MemberListNoCreateLink,
     memberships.MemberCreateForbidden,
     mixins.AuthenticatedMemberMixin,
-    gestalten.OtherGestaltMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     tests.Test,
 ):
     pass
@@ -80,7 +81,7 @@ class GroupClosedMember(
     memberships.MemberCreateSendsNotification,
     mixins.AuthenticatedMemberMixin,
     groups.ClosedGroupMixin,
-    gestalten.OtherGestaltMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     tests.Test,
 ):
     pass
@@ -94,7 +95,9 @@ class AnonymousUserCreatesGroup(CreatedGroupHasNoMembers, tests.Test):
 
 
 class GestaltCreatesGroup(
-    CreatedGroupHasGestaltMember, gestalten.AuthenticatedMixin, tests.Test
+    CreatedGroupHasGestaltMember,
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
+    tests.Test,
 ):
     """
     If a gestalt wants to create a group:
@@ -110,7 +113,10 @@ class TestUrls(grouprise.core.tests.Test):
         self.assertEqual(r.status_code, 404)
 
 
-class AuthenticatedTestUrls(gestalten.AuthenticatedMixin, grouprise.core.tests.Test):
+class AuthenticatedTestUrls(
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
+    grouprise.core.tests.Test,
+):
     def test_member_auth_404(self):
         # r = self.client.get(self.get_url('join', 0))
         # self.assertEqual(r.status_code, 404)

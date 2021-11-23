@@ -2,9 +2,10 @@ from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
-from grouprise.features.gestalten import tests as gestalten
-from grouprise.features.gestalten.tests import AuthenticatedMixin
+from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin
 from grouprise.features.groups import models
 from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
@@ -37,7 +38,10 @@ class CreateAnonymous(HasSidebarAndGroupsLinks, CreateIsAllowed, tests.Test):
 
 
 class CreateAuthenticated(
-    HasSidebarAndGroupsLinks, CreateIsAllowed, gestalten.AuthenticatedMixin, tests.Test
+    HasSidebarAndGroupsLinks,
+    CreateIsAllowed,
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
+    tests.Test,
 ):
     """
     If a gestalt wants to create a group:

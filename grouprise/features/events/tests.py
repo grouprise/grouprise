@@ -4,6 +4,8 @@ import django
 
 import grouprise.core
 import grouprise.features
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
@@ -235,7 +237,7 @@ class TwoGestalten(
 
 class GroupCalendarExportMember(
     memberships.AuthenticatedMemberMixin,
-    grouprise.features.gestalten.tests.OtherGestaltMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     tests.Test,
 ):
     def create_group_event(self, **kwargs):
@@ -329,7 +331,7 @@ class GroupCalendarExportMember(
 
 class GroupCalendarExportNonMember(
     memberships.MemberMixin,
-    grouprise.features.gestalten.tests.OtherAuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.OtherAuthenticatedMixin,
     tests.Test,
 ):
     def test_rejected_access_private_calendar(self):

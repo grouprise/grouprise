@@ -3,11 +3,12 @@ import shutil
 
 import django.conf
 
-from grouprise.features.gestalten import tests as gestalten
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from . import models
 
 
-class ImageMixin(gestalten.GestaltMixin):
+class ImageMixin(grouprise.features.gestalten.tests.mixins.GestaltMixin):
     def setUp(self):
         super().setUp()
         test_image = os.path.join(

@@ -3,13 +3,14 @@ from django.urls import reverse
 
 import grouprise.core
 import grouprise.core.tests
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.features.associations.models import Association
 from grouprise.features.contributions import models as contributions
-from grouprise.features.gestalten import tests as gestalten
 from grouprise.features.memberships import test_mixins as memberships
 
 
-class ArticleMixin(gestalten.AuthenticatedMixin):
+class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin):
     def create_article(self, **kwargs):
         kwargs.update({"title": "Test", "text": "Test", "as_gestalt": True})
         self.client.post(reverse("create-article"), kwargs)

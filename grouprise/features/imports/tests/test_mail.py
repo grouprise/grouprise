@@ -1,26 +1,27 @@
 import contextlib
 import email.message
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
 import os
 import re
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from aiosmtplib.errors import SMTPDataError
 from django.core import mail
 from django.urls import reverse
 
+import grouprise.features.gestalten.tests
+import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
 from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models
-from grouprise.features.imports.management.commands.run_lmtpd import ContributionLMTPD
 from grouprise.features.imports.mails import (
     ContributionMailProcessor,
     ParsedMailMessage,
     MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST,
 )
-from grouprise.features.gestalten import tests as gestalten
+from grouprise.features.imports.management.commands.run_lmtpd import ContributionLMTPD
 from grouprise.features.memberships import test_mixins as memberships
 
 
@@ -432,8 +433,8 @@ class ConversationInitiateByEmailViaLMTP(
 
 
 class ConversationReplyByEmailViaLMTP(
-    gestalten.AuthenticatedMixin,
-    gestalten.OtherGestaltMixin,
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     MailInjectLMTPMixin,
     tests.Test,
 ):
