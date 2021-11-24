@@ -6,7 +6,7 @@ from typing import List
 import django
 import django.core.files
 
-from grouprise.core.fields import ProtectedFileField
+from grouprise.core.fields import DownloadFileField
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
@@ -69,7 +69,7 @@ class FileManager(models.Manager):
 
 
 class File(grouprise.core.models.Model):
-    file = ProtectedFileField()
+    file = DownloadFileField()
     filename = models.CharField(max_length=255, blank=True, null=True)
 
     contribution = django.contrib.contenttypes.fields.GenericRelation(

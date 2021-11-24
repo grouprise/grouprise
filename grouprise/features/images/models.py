@@ -2,9 +2,11 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, SmartResize, Transpose
 
+from grouprise.core.fields import DownloadImageField
+
 
 class Image(models.Model):
-    file = models.ImageField("Datei")
+    file = DownloadImageField("Datei")
     creator = models.ForeignKey(
         "gestalten.Gestalt", related_name="images", on_delete=models.PROTECT
     )
