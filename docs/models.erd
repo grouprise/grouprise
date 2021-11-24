@@ -1,0 +1,108 @@
+# Nice colors from Erwiz:
+# red #fcecec
+# blue #ececfc
+# green #d0e0d0
+# yellow #fbfbdb
+# orange #eee0a0
+
+
+[Association] {bgcolor: "#fcecec"}
+deleted {label: "bool"}
+pinned {label: "bool"}
+public {label: "bool"}
+slug {label: "str"}
+
+[Content] {bgcolor: "#d0e0d0"}
+all_day {label: "bool"}
+image {label: "image"}
+place {label: "str"}
+time {label: "date_time"}
+title {label: "str"}
+until_time {label: "date_time"}
+
+[Contribution] {bgcolor: "#d0e0d0"}
+deleted {label: "bool"}
+public {label: "bool"}
+time_created {label: "date_time"}
+
+[Conversation] {bgcolor: "#d0e0d0"}
+subject {label: "str"}
+
+[File] {bgcolor: "#d0e0d0"}
+file {label: "file"}
+filename {label: "str"}
+
+[GalleryImage] {bgcolor: "#d0e0d0"}
+
+[Gestalt] {bgcolor: "#ececfc"}
+about {label: "text"}
+activity_bookmark_time {label: "date_time"}
+avatar {label: "image"}
+background {label: "image"}
+is_email_blocker {label: "bool"}
+public {label: "bool"}
+score {label: "int"}
+
+[Group] {bgcolor: "#ececfc"}
+address {label: "text"}
+avatar {label: "image"}
+closed {label: "bool"}
+date_created {label: "date"}
+date_founded {label: "date"}
+description {label: "text"}
+logo {label: "image"}
+name {label: "str"}
+score {label: "int"}
+slug {label: "str"}
+time_modified {label: "date_time"}
+url {label: "str"}
+url_import_feed {label: "bool"}
+
+[Image] {bgcolor: "#fbfbdb"}
+file {label: "image"}
+
+[Membership] {bgcolor: "#ececfc"}
+date_joined {label: "date"}
+
+[Poll] {bgcolor: "#d0e0d0"}
+
+[Subscription] {bgcolor: "#ececfc"}
+
+[Tag] {bgcolor: "#fbfbdb"}
+
+[Text] {bgcolor: "#d0e0d0"}
+
+[User] {bgcolor: "#ececfc"}
+
+[Version] {bgcolor: "#d0e0d0"}
+text {label: "text"}
+time_created {label: "date_time"}
+
+
+# Relationships
+
+Association *--? Gestalt {label: "entity / gestalt - entity_associations / associations"}
+Association *--? Group {label: "entity / group - entity_associations / associations"}
+Association *--? Content {label: "container / content - container_associations / associations"}
+Association *--? Conversation {label: "container / conversation - container_associations / associations"}
+Content 1--? Poll {label: "poll - content"}
+Content *--* Tag {label: "tags -"}
+Content ?--* Contribution {label: "contributions - container / content"}
+Contribution ?--? File {label: "contribution / file - contribution"}
+Contribution 1--? Text {label: "contribution / text - contribution"}
+Contribution *--1 Gestalt {label: "author - contributions"}
+Conversation ?--* Contribution {label: "+ / contributions - container / conversation"}
+File ?--? Version {label: "version - file"}
+GalleryImage *--1 Content {label: "gallery - gallery_images"}
+GalleryImage *--1 Image {label: "image - +"}
+Gestalt 1--1 User {label: "user - gestalt"}
+Group *--? Gestalt {label: "gestalt_created - +"}
+Group *--* Tag {label: "tags -"}
+Image *--1 Gestalt {label: "creator - images"}
+Membership *--1 Gestalt {label: "created_by - memberships_created"}
+Membership *--1 Group {label: "group - memberships"}
+Membership *--1 Gestalt {label: "member - memberships"}
+Subscription *--? Group {label: "subscribed_to / group - subscriptions"}
+Subscription *--1 Gestalt {label: "subscriber - subscriptions"}
+Version *--1 Content {label: "content - versions"}
+Version *--1 Gestalt {label: "author - versions"}
