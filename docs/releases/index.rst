@@ -4,6 +4,7 @@ Release Notes
 .. toctree::
    :maxdepth: 1
 
+   4.5.1
    4.5
    4.4.1
    4.4

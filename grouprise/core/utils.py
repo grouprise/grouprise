@@ -47,8 +47,10 @@ def run_async(async_func):
     try:
         loop = asyncio.get_event_loop()
     except RuntimeError:
-        # no loop is running: create a new one
-        asyncio.run(async_func)
-    else:
+        loop = None
+    if loop and loop.is_running():
         # there is a running loop: just schedule the async
         loop.call_soon(async_func)
+    else:
+        # no loop is running: create a new one
+        asyncio.run(async_func)
