@@ -17,6 +17,7 @@ django-cachalot>=2.4.4      # NOT IN DEBIAN
 django-cors-middleware      # debian: python3-django-cors-headers
 django-csp                  # debian: python3-django-csp
 django-debug-toolbar        # debian: python3-django-debug-toolbar
+django-downloadview         # debian: python3-django-downloadview
 django-filter               # debian: python3-django-filters
 django-haystack             # debian: python3-django-haystack
 django-ical                 # debian: python3-django-ical
