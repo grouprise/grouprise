@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+..
+   Please note: *always* use the full (three-digit) version number for the filename (the title
+   may differ).  This is required for the automatic creation of gitlab releases in the CI pipeline.
+   The old filenames below are just kept for preserving stable links.
+   Maybe we should switch to one of sphinx's redirect extensions somewhen.
+
 .. toctree::
    :maxdepth: 1
 
