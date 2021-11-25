@@ -88,3 +88,21 @@ pages:
     artifacts:
         paths:
             - public
+
+# create gitlab releases based on tags
+release_job:
+  stage: deploy
+  # the image maintained by gitlab.com contains the "release-cli" executable
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - 'echo "running release_job: $CI_COMMIT_TAG"'
+    # show the current build artifacts (may we should add these to the release as assets)
+    - find build/debian || true
+  release:
+    name: 'Release $CI_COMMIT_TAG'
+    # we assume, that release notes for this tag were created before (omitting the "v" prefix)
+    description: 'docs/releases/${CI_COMMIT_TAG#v}.md'
+    tag_name: '$CI_COMMIT_TAG'
+    ref: '$CI_COMMIT_TAG'
