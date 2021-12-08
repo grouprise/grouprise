@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from grouprise.core.settings import LazySettingsResolver, get_grouprise_site
+from grouprise.features.matrix_chat import MatrixBackend
 
 
 try:
@@ -16,7 +17,7 @@ MATRIX_SETTINGS = LazySettingsResolver(
     BOT_USERNAME=_MATRIX_SETTINGS.get("BOT_USERNAME", "grouprise-bot"),
     BOT_ACCESS_TOKEN=_MATRIX_SETTINGS.get("BOT_ACCESS_TOKEN", None),
     PUBLIC_LISTENER_ROOMS=_MATRIX_SETTINGS.get("PUBLIC_LISTENER_ROOMS", []),
-    BACKEND=_MATRIX_SETTINGS.get("BACKEND", "nio"),
+    BACKEND=_MATRIX_SETTINGS.get("BACKEND", MatrixBackend.NIO),
 )
 
 
