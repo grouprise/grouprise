@@ -66,7 +66,7 @@ class ContributionLMTPD:
 
     def serve_forever(self, host, port):
         """block execution and run the LMTP daemon until it is stopped via signal or CTRL-C"""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         server = loop.run_until_complete(
             loop.create_server(
                 functools.partial(LMTP, self._handler), host=host, port=port
@@ -100,7 +100,7 @@ class ContributionLMTPD:
         host = "localhost"
         port = random.randint(16384, 32767)
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         self._server = loop.run_until_complete(
             loop.create_server(
                 functools.partial(LMTP, self._handler), host=host, port=port
