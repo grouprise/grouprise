@@ -1,6 +1,7 @@
 import asyncio
 from calendar import different_locale
 import locale
+import threading
 
 import randomcolor
 import codecs
@@ -43,14 +44,22 @@ def get_verified_locale(request=None):
 
 
 def run_async(async_func):
-    """schedule an async callable in the current loop (if available) or run it now in a new loop"""
+    """run an async callable in a new loop (if there is no running loop) or in a separate thread
+
+    The result of the async callable is returned.
+    """
     try:
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
     except RuntimeError:
         loop = None
     if loop and loop.is_running():
-        # there is a running loop: just schedule the async
-        loop.call_soon(async_func)
+        # there is a running loop (probably we are within a huey task)
+        result = []
+        # execute the function in a separate thread (nested loops are not supported in Python)
+        thread = threading.Thread(target=lambda: result.append(asyncio.run(async_func)))
+        thread.start()
+        thread.join()
+        return result[0]
     else:
         # no loop is running: create a new one
-        asyncio.run(async_func)
+        return asyncio.run(async_func)
