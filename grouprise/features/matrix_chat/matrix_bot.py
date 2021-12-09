@@ -259,6 +259,26 @@ class MatrixBot:
             )
         return response.room_id
 
+    async def get_public_room_name(self, room_id: str):
+        """try to determine a "routable" room name
+
+        Room IDs should be treated as internal implementation details and should not be used in
+        URLs, if possible (see https://github.com/vector-im/element-web/issues/2925).
+        Instead one of the room's aliases should be used.
+        This function returns the canonical alias (if it exists) or the first (alphabetically) of
+        the other aliases.
+        Returns 'None' if no alias is found.
+        """
+        canonical_state = await self._get_room_state(room_id, "m.room.canonical_alias")
+        if canonical_state:
+            return canonical_state["alias"]
+        else:
+            aliases_state = await self._get_room_state(room_id, "m.room.aliases")
+            if aliases_state and aliases_state["alias"]:
+                return sorted(aliases_state["alias"])[0]
+            else:
+                return None
+
     async def remove_room_alias(self, room_id: str, room_alias: str):
         canonical_state = await self._get_room_state(room_id, "m.room.canonical_alias")
         if canonical_state and (canonical_state["alias"] == room_alias):

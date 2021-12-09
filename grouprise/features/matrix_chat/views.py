@@ -9,9 +9,11 @@ from django.utils.translation import gettext as _
 import django.views.generic
 
 from django.core.exceptions import ObjectDoesNotExist
+from grouprise.core.utils import run_async
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
 
+from .matrix_bot import MatrixBot
 from .models import MatrixChatGestaltSettings, MatrixChatGroupRoom
 from .settings import MATRIX_SETTINGS
 
@@ -27,7 +29,17 @@ def get_room_url_for_requester(room_id, request_user):
         if ":" in user_matrix_id:
             matrix_domain = user_matrix_id.lower().split(":", 1)[1]
     base_path = get_web_client_url_pattern_for_domain(matrix_domain)
-    return base_path.format(room=room_id)
+
+    # We need to refer to the room alias (instead of the room ID), since Matrix room IDs are
+    # supposed to be implementation details and should not be used in public.
+    # See https://github.com/vector-im/element-web/issues/2925
+    async def retrieve_room_alias():
+        async with MatrixBot() as bot:
+            return await bot.get_public_room_name(room_id)
+
+    room_alias = run_async(retrieve_room_alias())
+    room_name = room_id if room_alias is None else room_alias
+    return base_path.format(room=room_name)
 
 
 def get_web_client_url_pattern_for_domain(domain):
