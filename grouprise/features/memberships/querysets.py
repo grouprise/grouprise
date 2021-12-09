@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, When, Value, IntegerField, Sum
+from django.db.models import Case, IntegerField, Sum, Value, When
 from django.utils.timezone import now, timedelta
 
 

@@ -3,12 +3,12 @@ from django.urls import path, re_path
 from grouprise.features.events.views import (
     Attendance,
     Create,
-    List,
-    SiteCalendarExport,
-    SiteCalendarFeed,
     Day,
     GroupCalendarExport,
     GroupCalendarFeed,
+    List,
+    SiteCalendarExport,
+    SiteCalendarFeed,
 )
 
 urlpatterns = [

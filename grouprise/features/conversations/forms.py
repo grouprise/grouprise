@@ -1,12 +1,13 @@
 from django import forms
 
-from grouprise.core.forms import CaptchaField
 import grouprise.features
-from grouprise.features.gestalten import models as gestalten
+from grouprise.core.forms import CaptchaField
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions_models
 from grouprise.features.contributions.models import Contribution
+from grouprise.features.gestalten import models as gestalten
 from grouprise.features.memberships.models import Application
+
 from . import models
 
 

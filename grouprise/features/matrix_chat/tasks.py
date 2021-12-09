@@ -5,8 +5,8 @@ from huey.contrib.djhuey import db_periodic_task
 
 from grouprise.core.utils import run_async
 from grouprise.features.groups.models import Group
-from .matrix_bot import MatrixBot
 
+from .matrix_bot import MatrixBot
 
 logger = logging.getLogger(__name__)
 

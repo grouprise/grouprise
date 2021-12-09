@@ -5,7 +5,6 @@ from huey.contrib.djhuey import db_periodic_task
 
 from grouprise.features.imports.feeds import run_feed_import_for_groups
 
-
 logger = logging.getLogger(__name__)
 
 

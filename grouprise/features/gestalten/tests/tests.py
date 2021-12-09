@@ -6,7 +6,7 @@ from grouprise.features.articles.tests import ArticleMixin
 from grouprise.features.contributions.tests import ContributionMixin
 from grouprise.features.gestalten import models
 from grouprise.features.gestalten.models import Gestalt
-from grouprise.features.gestalten.tests.mixins import GestaltMixin, AuthenticatedMixin
+from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin, GestaltMixin
 
 
 class GestaltTestCase(GestaltMixin, TestCase):

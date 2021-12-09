@@ -5,8 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand, CommandError
 
-from grouprise.features.contributions.models import Contribution
 from grouprise.features.content.models import Version
+from grouprise.features.contributions.models import Contribution
 
 
 class Command(BaseCommand):

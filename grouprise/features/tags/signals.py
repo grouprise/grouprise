@@ -10,7 +10,6 @@ from taggit.models import Tag
 from grouprise.features.tags import RE_TAG_REF
 from grouprise.features.tags.utils import get_slug
 
-
 logger = logging.getLogger(__name__)
 
 _DEFAULT_CONF = {"tag_self": False, "constraint": lambda *args: True, "tag_related": []}

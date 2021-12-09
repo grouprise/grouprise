@@ -14,7 +14,6 @@ from grouprise.features.imports.mails import (
     ParsedMailMessage,
 )
 
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 

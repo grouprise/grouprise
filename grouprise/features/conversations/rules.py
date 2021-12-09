@@ -1,8 +1,9 @@
+import rules
+
 from grouprise.features.associations import models as associations
 from grouprise.features.gestalten import rules as gestalten
 from grouprise.features.groups.rules import is_closed
 from grouprise.features.memberships.predicates import is_member_of
-import rules
 
 
 @rules.predicate

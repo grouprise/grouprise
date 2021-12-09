@@ -1,7 +1,7 @@
 import re
 
 from django import urls
-from markdown import inlinepatterns, Extension
+from markdown import Extension, inlinepatterns
 
 from grouprise.core.markdown import ExtendedLinkPattern, markdown_extensions
 from grouprise.features.tags import RE_TAG_REF

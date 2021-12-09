@@ -4,7 +4,6 @@ import django
 from django.http import Http404
 from django.views.generic.base import RedirectView
 from django_filters.views import FilterMixin
-
 from rules.contrib.views import PermissionRequiredMixin
 
 from grouprise.core.settings import CORE_SETTINGS

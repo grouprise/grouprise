@@ -1,4 +1,4 @@
-from calendar import day_abbr, different_locale, month_name, LocaleHTMLCalendar
+from calendar import LocaleHTMLCalendar, day_abbr, different_locale, month_name
 from datetime import date
 
 from django import urls

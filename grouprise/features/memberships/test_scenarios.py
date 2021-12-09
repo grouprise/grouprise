@@ -4,7 +4,10 @@ import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
 from grouprise.features.groups import models as groups_models
 from grouprise.features.groups.tests import mixins as groups
-from . import models, test_memberships as memberships, test_mixins as mixins
+
+from . import models
+from . import test_memberships as memberships
+from . import test_mixins as mixins
 
 
 class CreatedGroupHasNoMembers:

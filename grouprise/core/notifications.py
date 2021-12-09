@@ -1,8 +1,8 @@
 import datetime
-from email.utils import formatdate
 import hashlib
 import logging
 import uuid
+from email.utils import formatdate
 
 from django.apps import apps
 from django.conf import settings

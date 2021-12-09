@@ -1,6 +1,7 @@
+import rules
+
 from grouprise.features.groups import rules as groups
 from grouprise.features.memberships import predicates as memberships
-import rules
 
 
 @rules.predicate

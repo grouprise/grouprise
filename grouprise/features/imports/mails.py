@@ -4,9 +4,9 @@ import email.parser
 import logging
 import re
 
-from django.conf import settings
 import django.utils.timezone
 import html2text
+from django.conf import settings
 
 import grouprise.core.models
 from grouprise.core.settings import CORE_SETTINGS

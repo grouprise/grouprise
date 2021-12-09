@@ -8,7 +8,6 @@ import grouprise.core.scores
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 
-
 logger = logging.getLogger(__name__)
 
 

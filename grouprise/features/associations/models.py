@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 import grouprise.core.models
+
 from . import querysets
 
 

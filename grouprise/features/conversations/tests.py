@@ -8,6 +8,7 @@ from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
 from grouprise.features.groups.tests import mixins as groups
 from grouprise.features.memberships import test_mixins as memberships
+
 from . import models
 
 

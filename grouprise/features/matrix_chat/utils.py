@@ -2,7 +2,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from grouprise.features.gestalten.models import GestaltSetting
 
-
 GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM = "private_notifications_room_id"
 GESTALT_SETTINGS_CATEGORY_MATRIX = "matrix_chat"
 

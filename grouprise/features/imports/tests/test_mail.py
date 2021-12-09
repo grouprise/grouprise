@@ -17,9 +17,9 @@ from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models
 from grouprise.features.imports.mails import (
+    MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST,
     ContributionMailProcessor,
     ParsedMailMessage,
-    MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST,
 )
 from grouprise.features.imports.management.commands.run_lmtpd import ContributionLMTPD
 from grouprise.features.memberships import test_mixins as memberships

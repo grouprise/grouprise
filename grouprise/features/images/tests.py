@@ -5,6 +5,7 @@ import django.conf
 
 import grouprise.features.gestalten.tests
 import grouprise.features.gestalten.tests.mixins
+
 from . import models
 
 

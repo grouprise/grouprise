@@ -8,8 +8,8 @@ import django
 import feedparser
 
 import grouprise.core
-from grouprise.core.signals import post_create
 from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.signals import post_create
 from grouprise.core.templatetags.defaultfilters import html2text
 from grouprise.core.utils import slugify
 from grouprise.features.associations import models as associations
@@ -17,7 +17,6 @@ from grouprise.features.content import models as content
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.groups import models as groups
 from grouprise.features.imports import models
-
 
 FEED_RE = re.compile(
     br"<link\s+[^>]*"

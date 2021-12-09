@@ -10,6 +10,7 @@ from grouprise.core.views import PermissionMixin
 from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
+
 from . import models
 
 

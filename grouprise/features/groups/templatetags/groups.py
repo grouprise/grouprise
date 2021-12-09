@@ -1,5 +1,6 @@
-from .. import models
 from django import template
+
+from .. import models
 
 register = template.Library()
 

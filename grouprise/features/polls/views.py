@@ -2,6 +2,7 @@ import django
 
 import grouprise.core
 import grouprise.features
+
 from . import forms, models
 
 

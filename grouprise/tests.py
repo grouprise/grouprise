@@ -6,8 +6,7 @@ from unittest import TestCase
 
 import ruamel.yaml
 
-from .settings_loader import import_settings_from_dict, ConfigError
-
+from .settings_loader import ConfigError, import_settings_from_dict
 
 DEFAULT_SLUG_DENYLIST = (
     "all",

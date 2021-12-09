@@ -1,11 +1,11 @@
 import django.apps
-from django.urls import include, path, re_path
 from django.conf.urls import url
+from django.urls import include, path, re_path
 
 from grouprise.features.content.views import Detail as AssociationDetailView
 from grouprise.features.stadt.views import Help
-from . import feeds, views
 
+from . import feeds, views
 
 urlpatterns = [
     url(r"^$", views.Index.as_view(), name="index"),

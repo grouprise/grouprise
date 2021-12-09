@@ -2,15 +2,14 @@ import copy
 import getpass
 
 import ruamel.yaml
-
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 from django.core.management.utils import get_random_secret_key
 
+from grouprise.core.settings import get_grouprise_site
 from grouprise.features.associations.models import Association
 from grouprise.features.content.models import Content
 from grouprise.features.groups.models import Group
-from grouprise.core.settings import get_grouprise_site
 from grouprise.settings_loader import load_settings_from_yaml_files
 
 

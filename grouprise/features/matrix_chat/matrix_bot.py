@@ -6,20 +6,20 @@ import string
 import sys
 import time
 
-from django.core.exceptions import ObjectDoesNotExist
 import markdown
 import nio
+from django.core.exceptions import ObjectDoesNotExist
 
 from grouprise.core.templatetags.defaultfilters import full_url
+
+from . import MatrixBackend
 from .models import (
     MatrixChatGestaltSettings,
     MatrixChatGroupRoom,
     MatrixChatGroupRoomInvitations,
 )
-from . import MatrixBackend
 from .settings import MATRIX_SETTINGS
 from .utils import get_matrix_notification_room_queryset
-
 
 logger = logging.getLogger(__name__)
 

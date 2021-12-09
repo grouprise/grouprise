@@ -1,20 +1,19 @@
 import base64
 import copy
-from distutils.version import LooseVersion
 import enum
+import hashlib
 import importlib.util
 import ipaddress
-import hashlib
 import logging
 import os
 import re
 import types
+from distutils.version import LooseVersion
 from typing import Any
 
 import ruamel.yaml
 
 from grouprise.features.matrix_chat import MatrixBackend
-
 
 logger = logging.getLogger(__name__)
 

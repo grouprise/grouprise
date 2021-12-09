@@ -4,15 +4,14 @@ import tempfile
 from typing import List
 
 import django
-from django.db import models
 import django.core.files
-from grouprise.features.imports.mails import ParsedMailAttachment
+from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
 
 import grouprise.core
 from grouprise.features.contributions import models as contributions
-
+from grouprise.features.imports.mails import ParsedMailAttachment
 
 IGNORE_CONTENT_TYPES = {"application/pgp-signature"}
 

@@ -1,4 +1,5 @@
 import re
+
 from haystack import indexes
 from haystack.indexes import Indexable, NgramField, SearchIndex
 

@@ -3,11 +3,10 @@ import enum
 import os
 import tarfile
 
-from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 from grouprise.core.settings import CORE_SETTINGS
-
 
 EXCLUDE_FILENAMES = {"CACHE", ".gitkeep"}
 

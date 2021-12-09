@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.templatetags.static import static
 
-
 try:
     _GR = settings.GROUPRISE
 except AttributeError:

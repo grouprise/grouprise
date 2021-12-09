@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views import generic
 
 from grouprise.core.views import PermissionMixin
+
 from . import forms
 
 

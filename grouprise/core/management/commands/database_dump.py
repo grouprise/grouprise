@@ -1,10 +1,10 @@
-import getpass
 import datetime
+import getpass
 import os
 import subprocess
 
-from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 from grouprise.core.settings import CORE_SETTINGS
 

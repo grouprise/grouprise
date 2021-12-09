@@ -24,14 +24,13 @@ Configuration:
 import logging
 import types
 
+import django.conf
+from django.contrib.auth import authenticate
+
 from grouprise.settings_loader import (
     import_settings_from_yaml,
     load_settings_from_yaml_files,
 )
-
-import django.conf
-from django.contrib.auth import authenticate
-
 
 logger = logging.getLogger(__name__)
 

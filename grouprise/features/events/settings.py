@@ -2,7 +2,6 @@ from django.conf import settings
 
 from grouprise.core.settings import LazySettingsResolver
 
-
 try:
     _EVENT_SETTINGS_RAW = settings.GROUPRISE["EVENTS"]
 except (AttributeError, KeyError):

@@ -6,7 +6,6 @@ import os
 import sys
 
 import ruamel.yaml
-
 from django.core.management.base import BaseCommand, CommandError
 
 from grouprise.settings_loader import load_settings_from_yaml_files

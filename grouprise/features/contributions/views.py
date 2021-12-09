@@ -11,6 +11,7 @@ from grouprise.features.associations.models import Association
 from grouprise.features.associations.views import AssociationMixin
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.conversations.views import CreateGestaltConversation
+
 from . import models
 
 

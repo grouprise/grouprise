@@ -1,7 +1,8 @@
 from django.core import mail
 from django.urls import reverse
 
-from grouprise.core.tests import Test, get_url as u
+from grouprise.core.tests import Test
+from grouprise.core.tests import get_url as u
 from grouprise.features.associations.models import Association
 from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.imports.tests.test_mail import MailInjectLMTPMixin

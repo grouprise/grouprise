@@ -3,17 +3,16 @@ import functools
 import os
 from typing import Union
 
+import kien.command.help as help_command
+import kien.error
+from kien import CommandResult, create_commander, var
+from kien.utils import strip_tags
+
+from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships.models import Membership
-from grouprise.core.settings import get_grouprise_baseurl
-
-from kien import create_commander, var, CommandResult
-import kien.command.help as help_command
-from kien.utils import strip_tags
-import kien.error
-
 
 commander = create_commander("grouprise-commander")
 

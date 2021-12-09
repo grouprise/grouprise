@@ -1,15 +1,15 @@
 import datetime
 import itertools
 
-from django.db.models import BooleanField
 import django.utils.formats
 import django.utils.timezone
 from django import template
+from django.db.models import BooleanField
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from grouprise.core.utils import get_verified_locale
-from grouprise.features.events.utils import get_requested_time, EventCalendar
+from grouprise.features.events.utils import EventCalendar, get_requested_time
 
 register = template.Library()
 

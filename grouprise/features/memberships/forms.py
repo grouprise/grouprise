@@ -2,6 +2,7 @@ from django import forms
 
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.memberships.models import Membership
+
 from . import models
 
 

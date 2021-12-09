@@ -1,6 +1,6 @@
-from django.db import IntegrityError
-from django.contrib.messages import success, info
+from django.contrib.messages import info, success
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -12,6 +12,7 @@ from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 from grouprise.features.subscriptions.models import Subscription
 from grouprise.features.subscriptions.rules import is_subscribed
+
 from . import forms, notifications
 
 

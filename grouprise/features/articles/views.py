@@ -3,6 +3,7 @@ from django.views import generic
 import grouprise.features.content.views
 from grouprise.core.views import PermissionMixin
 from grouprise.features.associations import models as associations
+
 from . import forms
 
 

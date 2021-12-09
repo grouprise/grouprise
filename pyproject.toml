@@ -3,3 +3,6 @@ target-version = ["py38"]
 exclude = """
 ^/docs/conf.py
 """
+
+[tool.isort]
+profile = "black"

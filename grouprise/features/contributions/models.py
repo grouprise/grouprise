@@ -1,6 +1,6 @@
+import django.utils.timezone
 from django.contrib.contenttypes import fields as contenttypes
 from django.db import models
-import django.utils.timezone
 
 import grouprise.core.models
 

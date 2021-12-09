@@ -1,6 +1,6 @@
-from .settings import MATRIX_SETTINGS
-
 import rules
+
+from .settings import MATRIX_SETTINGS
 
 
 @rules.predicate

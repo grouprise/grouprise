@@ -10,15 +10,14 @@ from grouprise.core.models import PermissionToken
 from grouprise.core.views import PermissionMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
-from grouprise.features.gestalten import (
-    models as gestalten_models,
-    views as gestalten_views,
-)
+from grouprise.features.gestalten import models as gestalten_models
+from grouprise.features.gestalten import views as gestalten_views
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups import models as groups_models
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships.forms import CreateMembershipForm
 from grouprise.features.memberships.models import Membership
+
 from . import forms, models, notifications
 
 

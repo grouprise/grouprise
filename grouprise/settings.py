@@ -18,7 +18,7 @@ if os.path.exists(LEGACY_CONFIG_FILENAME):
 else:
     # use the new configuration format
     from grouprise.common_settings import *  # noqa: F401 F403
-    from grouprise.settings_loader import import_settings_from_yaml, ConfigError
+    from grouprise.settings_loader import ConfigError, import_settings_from_yaml
 
     try:
         import_settings_from_yaml(locals(), error_if_missing=True)

@@ -4,8 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from grouprise.features.content import forms as content
 from grouprise.features.content.models import Content
-from . import models
 
+from . import models
 
 SimpleOptionFormSet = forms.modelformset_factory(
     models.SimpleOption,

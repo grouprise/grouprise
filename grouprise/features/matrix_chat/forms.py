@@ -3,7 +3,6 @@ from django.utils.translation import gettext as _
 
 from .settings import MATRIX_SETTINGS
 
-
 # see https://matrix.org/docs/spec/appendices#user-identifiers
 MATRIX_USER_ID_REGEX = r"^(@[\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$"
 MATRIX_ROOM_REFERENCE_REGEX = r"^([!#][\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$"

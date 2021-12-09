@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+
 from rules import add_perm, is_authenticated, predicate
 
 from grouprise.features.memberships.models import Membership

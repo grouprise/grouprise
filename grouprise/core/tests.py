@@ -8,7 +8,6 @@ from simplemathcaptcha.utils import hash_answer
 
 from grouprise.core.settings import get_grouprise_site
 
-
 HTTP_GET = "get"
 HTTP_POST = "post"
 

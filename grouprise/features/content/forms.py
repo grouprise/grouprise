@@ -10,10 +10,11 @@ from django.utils.safestring import mark_safe
 import grouprise.core.forms
 from grouprise.core.signals import post_create
 from grouprise.core.utils import slugify
-from . import models
 from grouprise.features.associations import models as associations
 from grouprise.features.groups import models as groups
 from grouprise.features.images.models import Image
+
+from . import models
 
 
 class RepetitionPeriod(enum.Enum):

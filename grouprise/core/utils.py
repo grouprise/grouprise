@@ -1,13 +1,12 @@
 import asyncio
-from calendar import different_locale
+import codecs
 import locale
 import threading
-
-import randomcolor
-import codecs
-import translitcodec  # noqa: F401, used indirectly via "translit/"
+from calendar import different_locale
 
 import django.utils.text
+import randomcolor
+import translitcodec  # noqa: F401, used indirectly via "translit/"
 from django.utils.translation import get_language, get_language_from_request, to_locale
 
 

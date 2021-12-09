@@ -2,13 +2,13 @@ import json
 import logging
 import urllib.request
 
+import django.views.generic
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
-import django.views.generic
 
-from django.core.exceptions import ObjectDoesNotExist
 from grouprise.core.utils import run_async
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
@@ -16,7 +16,6 @@ from grouprise.features.groups.models import Group
 from .matrix_bot import MatrixBot
 from .models import MatrixChatGestaltSettings, MatrixChatGroupRoom
 from .settings import MATRIX_SETTINGS
-
 
 logger = logging.getLogger(__name__)
 

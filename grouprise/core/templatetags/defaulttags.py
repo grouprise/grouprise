@@ -4,14 +4,16 @@ import random
 
 import bleach as python_bleach
 import markdown as python_markdown
-from grouprise.core import markdown as core_markdown
-from grouprise.core.views import app_config
 from django import template
 from django.template import defaultfilters
 from django.template.base import FilterExpression
 from django.template.loader import get_template
-from django.utils import html as django_html, safestring
+from django.utils import html as django_html
+from django.utils import safestring
 from markdown.extensions import toc
+
+from grouprise.core import markdown as core_markdown
+from grouprise.core.views import app_config
 
 from . import Link
 

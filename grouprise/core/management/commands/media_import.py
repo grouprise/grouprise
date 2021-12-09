@@ -2,8 +2,8 @@ import os
 import shutil
 import tarfile
 
-from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):

@@ -5,7 +5,6 @@ import django
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 
-
 EMAIL_RE = r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-.]+"
 
 

@@ -2,21 +2,19 @@ import atexit
 import hashlib
 import hmac
 import os
-import subprocess
 import random
 import string
+import subprocess
 import sys
 import tempfile
 import time
 import urllib.error
 
 import ruamel.yaml
-
 from django.core.management.base import BaseCommand
 
 from grouprise.features.matrix_chat.matrix_admin import MatrixAdmin
 from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
-
 
 DEFAULT_MATRIX_CONFIG_LOCATIONS = [
     "/etc/matrix-synapse/homeserver.yaml",

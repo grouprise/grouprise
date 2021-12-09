@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -9,9 +10,9 @@ from rest_framework.response import Response
 from grouprise.core.templatetags.defaulttags import markdown
 from grouprise.features.associations.models import Association
 from grouprise.features.content.models import Content
-from grouprise.features.groups.models import Group
 from grouprise.features.galleries.models import GalleryImage
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
+from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
 from grouprise.features.memberships.models import Membership
 from grouprise.features.polls.models import (
@@ -22,6 +23,7 @@ from grouprise.features.polls.models import (
     VoteType,
     WorkaroundPoll,
 )
+
 from .filters import GroupFilter, ImageFilter
 from .serializers import (
     GestaltSerializer,

@@ -1,9 +1,10 @@
 from django.core import mail
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from grouprise.core.models import PermissionToken
 from grouprise.features.memberships.test_mixins import MemberMixin
+
 from . import models
 
 TEST_EMAIL = "test.membership@test.local"

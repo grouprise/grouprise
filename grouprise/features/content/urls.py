@@ -1,5 +1,6 @@
-from . import views
 from django.conf import urls
+
+from . import views
 
 urlpatterns = [
     # This route is used in the content/_meta.html template. If there is a change in how

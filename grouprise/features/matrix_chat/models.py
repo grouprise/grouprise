@@ -1,7 +1,7 @@
 import json
 
-from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 
 from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 

@@ -1,18 +1,18 @@
 import email.utils
-from grouprise.features.gestalten.models import Gestalt
-from grouprise.features.associations.models import Association
 import os
 
 import django
-from django.db import models
 import django.utils.timezone
+from django.db import models
 from django.urls import reverse
 
 from grouprise.core.notifications import Notification
 from grouprise.core.templatetags.defaulttags import ref
+from grouprise.features.associations.models import Association
 from grouprise.features.content.models import Content
 from grouprise.features.contributions import models as contributions
 from grouprise.features.conversations.models import Conversation
+from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships import models as memberships
 

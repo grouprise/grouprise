@@ -5,7 +5,6 @@ import django.conf
 import django.utils.timezone
 
 from grouprise.core.settings import CORE_SETTINGS
-
 from grouprise.features.content import models as content
 from grouprise.features.contributions import models as contributions
 from grouprise.features.gestalten import models as gestalten

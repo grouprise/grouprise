@@ -1,6 +1,7 @@
 import grouprise.features.gestalten.tests
 import grouprise.features.gestalten.tests.mixins
 from grouprise.features.groups.tests.mixins import GroupMixin
+
 from . import models
 
 

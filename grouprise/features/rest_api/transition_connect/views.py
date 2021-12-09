@@ -1,13 +1,14 @@
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import permission_classes
 
 from grouprise.features.associations.models import Association
 from grouprise.features.groups.models import Group
+
 from .serializers import (
     EventListSerializer,
     EventRetrieveSerializer,
-    GroupSerializer,
     GroupListSerializer,
+    GroupSerializer,
 )
 
 

@@ -1,7 +1,7 @@
 import contextlib
 import os
-import unittest
 import tempfile
+import unittest
 
 import django
 

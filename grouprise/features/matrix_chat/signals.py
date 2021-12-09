@@ -7,14 +7,15 @@ from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from huey.contrib.djhuey import db_task
 
+import grouprise.features.content.models
+import grouprise.features.contributions.models
+import grouprise.features.memberships.models
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.core.utils import run_async
-import grouprise.features.content.models
-import grouprise.features.contributions.models
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
-import grouprise.features.memberships.models
+
 from .matrix_bot import MatrixBot, MatrixError
 from .models import (
     MatrixChatGestaltSettings,
@@ -27,7 +28,6 @@ from .utils import (
     get_gestalt_matrix_notification_room,
     set_gestalt_matrix_notification_room,
 )
-
 
 logger = logging.getLogger(__name__)
 

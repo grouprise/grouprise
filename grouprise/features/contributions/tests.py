@@ -8,6 +8,7 @@ from grouprise.features.associations.models import Association
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.conversations.models import Conversation
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
+
 from . import models
 
 

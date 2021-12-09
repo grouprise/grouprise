@@ -1,11 +1,11 @@
 from itertools import filterfalse
 
 from django.core import mail
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from grouprise.core.models import PermissionToken
-from grouprise.features.gestalten.tests.mixins import GestaltMixin, AuthenticatedMixin
+from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin, GestaltMixin
 from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.memberships.test_mixins import (
     AuthenticatedMemberMixin,

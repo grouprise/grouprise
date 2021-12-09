@@ -1,10 +1,9 @@
 import allauth
-from django import forms
-
 import allauth.account
-import allauth.account.forms
 import allauth.account.adapter
+import allauth.account.forms
 import allauth.account.utils
+from django import forms
 
 
 class Login(allauth.account.forms.LoginForm):

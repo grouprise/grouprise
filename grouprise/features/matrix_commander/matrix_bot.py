@@ -9,7 +9,6 @@ from grouprise.features.matrix_chat.matrix_bot import MatrixBot
 from .commands import MatrixCommander
 from .settings import MATRIX_COMMANDER_SETTINGS
 
-
 logger = logging.getLogger(__name__)
 
 

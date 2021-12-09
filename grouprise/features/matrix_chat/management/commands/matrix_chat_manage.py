@@ -3,7 +3,6 @@ import io
 import sys
 
 import ruamel.yaml
-
 from django.core.management.base import BaseCommand
 
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site

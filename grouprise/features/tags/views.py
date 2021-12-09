@@ -7,6 +7,7 @@ from taggit.models import Tag
 from grouprise.core.views import PermissionMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.groups.models import Group
+
 from . import forms
 
 

@@ -3,15 +3,16 @@ import logging
 import shlex
 import subprocess
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.utils import slugify
 from grouprise.features.gestalten import models as gestalten
-from .models import Group
+
 from ...core.models import get_unique_slug
+from .models import Group
 
 logger = logging.getLogger(__name__)
 

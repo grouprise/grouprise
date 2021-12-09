@@ -5,16 +5,16 @@ import django.views.generic
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views import generic
 from django_ical.views import ICalFeed
-from django.utils.translation import gettext as _
 
-from grouprise.core.settings import get_grouprise_site
 import grouprise.core.views
 import grouprise.features.content.views
 import grouprise.features.groups.views
+from grouprise.core.settings import get_grouprise_site
 from grouprise.features.associations import models as associations
 from grouprise.features.gestalten import models as gestalten
 from grouprise.features.gestalten.auth.resolvers import get_user_resolver

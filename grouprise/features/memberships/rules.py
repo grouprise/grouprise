@@ -5,8 +5,8 @@ from rules import add_perm, is_authenticated
 from grouprise.features.groups import rules as groups
 from grouprise.features.groups.rules import is_closed
 from grouprise.features.memberships.predicates import is_member_of
-from . import predicates as memberships
 
+from . import predicates as memberships
 
 add_perm("memberships.join", is_authenticated & ~is_closed & ~is_member_of)
 

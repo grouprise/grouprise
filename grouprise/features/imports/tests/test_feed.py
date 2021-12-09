@@ -6,8 +6,8 @@ from grouprise.core import tests
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.associations import models as associations
 from grouprise.features.memberships.test_mixins import MemberMixin, OtherMemberMixin
-from ..feeds import import_from_feed, parse_feed_url_from_website_content
 
+from ..feeds import import_from_feed, parse_feed_url_from_website_content
 
 FEED_LINK_EXAMPLES = (
     (

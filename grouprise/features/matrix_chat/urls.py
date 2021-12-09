@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from .settings import MATRIX_SETTINGS
 
-
 if MATRIX_SETTINGS.ENABLED:
     from . import views
 

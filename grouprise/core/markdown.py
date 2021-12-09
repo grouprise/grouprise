@@ -1,12 +1,12 @@
 import re
+from xml.etree import ElementTree
 
 import bleach
 import markdown
 from markdown import blockprocessors, inlinepatterns, util
-from markdown.extensions import nl2br, sane_lists, fenced_code
+from markdown.extensions import fenced_code, nl2br, sane_lists
 from mdx_unimoji import UnimojiExtension
 from pymdownx import magiclink
-from xml.etree import ElementTree
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):

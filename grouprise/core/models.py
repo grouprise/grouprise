@@ -1,15 +1,14 @@
 import itertools
 
 import django.contrib.contenttypes.models
+import django.utils.timezone
 from django.contrib.contenttypes import models as contenttypes_models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import crypto
-import django.utils.timezone
 
 from grouprise.core.settings import CORE_SETTINGS
-
 
 IMAGE_FIELD_HELP_TEXT = (
     "Mögliche Formate sind JPEG, PNG und viele weitere. Nicht unterstützt werden PDF- "

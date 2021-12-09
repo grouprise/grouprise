@@ -2,7 +2,6 @@ from django.conf import settings
 
 from grouprise.core.settings import LazySettingsResolver, get_grouprise_site
 
-
 try:
     _SETTINGS = settings.GROUPRISE["MATRIX_COMMANDER"]
 except (KeyError, AttributeError):

@@ -1,5 +1,6 @@
 from grouprise.core import tests
 from grouprise.core.tests import get_url as u
+
 from . import models
 
 

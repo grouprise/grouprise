@@ -9,11 +9,11 @@ import smtplib
 import sys
 import traceback
 
+import django
+import django.db
 from aiosmtpd.lmtp import LMTP
 from aiosmtplib.errors import SMTPRecipientsRefused, SMTPResponseException
 from aiosmtplib.smtp import SMTP
-import django
-import django.db
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
