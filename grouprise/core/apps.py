@@ -11,7 +11,7 @@ class CoreConfig(AppConfig):
         self.module.autodiscover()
 
         # configure sentry if DSN has been defined
-        sentry_dsn = getattr(settings, "SENTRY_DSN")
+        sentry_dsn = getattr(settings, "SENTRY_DSN", None)
         if sentry_dsn:
             import sentry_sdk
             from sentry_sdk.integrations.django import DjangoIntegration

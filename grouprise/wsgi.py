@@ -17,7 +17,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "grouprise.settings")
 application = get_wsgi_application()
 
 # configure sentry if DSN has been defined
-if getattr(settings, "SENTRY_DSN"):
+if getattr(settings, "SENTRY_DSN", None):
     from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
 
     application = SentryWsgiMiddleware(application)
