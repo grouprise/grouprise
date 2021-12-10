@@ -24,6 +24,11 @@ from .utils import get_matrix_notification_room_queryset
 logger = logging.getLogger(__name__)
 
 
+# this variable serves as a trivial per-process cache for the latest sync timestamp
+# see https://git.hack-hro.de/grouprise/grouprise/-/issues/755
+_latest_sync_token = None
+
+
 class MatrixError(Exception):
     """an error occurred while communicating with the matrix server"""
 
@@ -62,8 +67,11 @@ class MatrixBot:
         self.client.matrix_bot = self
         self.client.access_token = MATRIX_SETTINGS.BOT_ACCESS_TOKEN
 
-    async def sync(self, set_presence="online"):
-        sync_result = await self.client.sync(set_presence=set_presence)
+    async def sync(self, set_presence="online", since=None):
+        global _latest_sync_token
+        if since is None:
+            since = _latest_sync_token
+        sync_result = await self.client.sync(set_presence=set_presence, since=since)
         if isinstance(sync_result, nio.responses.SyncError):
             raise MatrixError(
                 f"Failed to synchronize state with homeserver: {sync_result}"
@@ -73,6 +81,7 @@ class MatrixBot:
                 "Failed to login. There is a problem with the matrix server or the configured "
                 "account settings are invalid."
             )
+        _latest_sync_token = sync_result.next_batch
 
     async def __aenter__(self):
         await self.sync()
@@ -543,7 +552,7 @@ class MatrixConsoleClient:
     def _log(self, message):
         self._stream.write(message + "\n")
 
-    async def sync(self, set_presence=None):
+    async def sync(self, set_presence=None, since=None):
         pass
 
     async def close(self):
