@@ -277,6 +277,16 @@ class IntegerConfig(ConfigBase):
         return value
 
 
+class DictConfig(ConfigBase):
+    def validate(self, value):
+        value = super().validate(value)
+        if not isinstance(value, dict):
+            raise ConfigError(
+                f"Setting '{self.name}' must be a dict value: {value} (type: {type(value)})"
+            )
+        return copy.deepcopy(value)
+
+
 class ChoicesConfig(ConfigBase):
     def __init__(self, *args, choices=None, **kwargs):
         self.choices = choices
@@ -1167,6 +1177,14 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         MarixRoomIDList(
             name=("matrix_commander", "admin_rooms"),
             django_target=("GROUPRISE", "MATRIX_COMMANDER", "ADMIN_ROOMS"),
+        ),
+        StringConfig(
+            name=("sentry", "dsn"),
+            django_target="SENTRY_DSN",
+        ),
+        DictConfig(
+            name=("sentry", "init_options"),
+            django_target="SENTRY_INIT_OPTIONS",
         ),
         OIDCProviderEnableConfig(
             name=("oidc_provider", "enabled"),

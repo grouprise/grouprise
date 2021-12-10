@@ -11,14 +11,15 @@ class CoreConfig(AppConfig):
         self.module.autodiscover()
 
         # configure sentry if DSN has been defined
-        if settings.SENTRY_DSN:
+        sentry_dsn = getattr(settings, "SENTRY_DSN")
+        if sentry_dsn:
             import sentry_sdk
             from sentry_sdk.integrations.django import DjangoIntegration
 
-            sentry_sdk.init(
-                dsn=settings.SENTRY_DSN,
-                integrations=[DjangoIntegration()],
-                send_default_pii=True,
-                environment=settings.ENVIRONMENT,
-                release=f"grouprise@{__release__}",
-            )
+            init_options = {
+                "integrations": [DjangoIntegration()],
+                "send_default_pii": True,
+                "release": f"grouprise@{__release__}",
+            }
+            init_options.update(getattr(settings, "SENTRY_INIT_OPTIONS", {}))
+            sentry_sdk.init(dsn=sentry_dsn, **init_options)

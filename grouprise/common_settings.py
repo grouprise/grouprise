@@ -254,9 +254,6 @@ CSP_CONNECT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg='")
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 
-# Sentry Configuration
-SENTRY_DSN = None
-
 
 # grouprise Score Processors
 

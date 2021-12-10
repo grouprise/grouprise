@@ -393,6 +393,23 @@ Example data looks like this:
 
 Default: `[]` (empty)
 
+### `sentry`
+Enable the [Sentry](https://sentry.io) client for improved debugging.
+Errors (e.g. unhandled exceptions) are reported to a Sentry-compatible backend
+(e.g. [Sentry](https://github.com/getsentry/sentry)
+or [gitlab's integrated error tracking](https://docs.gitlab.com/ee/operations/error_tracking.html#integrated-error-tracking)).
+
+* `sentry → dsn`: Specify the submission URL of an Sentry-compatible backend. Sentry support is disabled, if this this string is empty. Default: `""` (empty).
+* `sentry → init_options`: Add extra arguments for the [`sentry_sdk.init` function](https://docs.sentry.io/platforms/python/) as a dictionary.  A commonly used option is `environment` (containing a string like *production* or *development*). Default: `{}` (empty).
+
+Example:
+```yaml
+sentry:
+  dsn: https://my-private-dsn@my-sentry-server.example.org/project_id
+  init_options:
+    environment: production
+```
+
 ### `upload_max_file_size`
 File size in MB to which uploads are restricted.
 Set the value allowed by the webserver to a higher value.
