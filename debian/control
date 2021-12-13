@@ -7,6 +7,7 @@ Build-Depends:
  dh-exec,
  dh-python,
  graphviz,
+ libsqlite3-mod-spatialite,
  nodejs,
  python3-flake8,
  python3-sphinx-markdown-tables,
@@ -55,7 +56,6 @@ Depends:
  debconf,
  grouprise-dependencies,
  grouprise-db-postgresql | grouprise-db-sqlite,
- libsqlite3-mod-spatialite,
  moreutils,
 # Python dependencies should be added to the Build-Depends field of the source package too!
 # See also: make.d/ci.mk
@@ -89,6 +89,7 @@ Depends:
 Recommends:
  ${misc:Recommends},
  ghostscript,
+ python3-gdal,
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
@@ -107,6 +108,7 @@ Description: Web platform that enables social action and solidarity
 Package: grouprise-db-postgresql
 Architecture: all
 Depends: grouprise, postgresql-client, python3-psycopg2
+Recommends: postgresql-postgis
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
@@ -117,6 +119,7 @@ Description: Web platform that enables social action and solidarity
 Package: grouprise-db-sqlite
 Architecture: all
 Depends: grouprise, sqlite3
+Recommends: libsqlite3-mod-spatialite,
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
