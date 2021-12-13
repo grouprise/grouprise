@@ -32,6 +32,7 @@ Build-Depends:
  python3-django-taggit,
  python3-djangorestframework (>= 3.9),
  python3-feedparser,
+ python3-gdal,
  python3-html2text,
  python3-markdown,
  python3-pil,
@@ -54,6 +55,7 @@ Depends:
  debconf,
  grouprise-dependencies,
  grouprise-db-postgresql | grouprise-db-sqlite,
+ libsqlite3-mod-spatialite,
  moreutils,
 # Python dependencies should be added to the Build-Depends field of the source package too!
 # See also: make.d/ci.mk
