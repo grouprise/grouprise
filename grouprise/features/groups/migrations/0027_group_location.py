@@ -7,13 +7,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('groups', '0026_auto_20210419_0947'),
+        ("groups", "0026_auto_20210419_0947"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='group',
-            name='location',
+            model_name="group",
+            name="location",
             field=django.contrib.gis.db.models.fields.PointField(null=True, srid=4326),
         ),
     ]
