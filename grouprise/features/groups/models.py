@@ -3,6 +3,7 @@ import datetime
 import django
 from django import urls
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.gis.db.models import PointField
 from django.db import models
 from django.utils.translation import gettext as _
 from imagekit.models import ImageSpecField
@@ -33,6 +34,7 @@ class Group(grouprise.core.models.Model):
         related_name="+",
         on_delete=models.SET_NULL,
     )
+    location = PointField(null=True)
     name = models.CharField("Name", max_length=255)
     score = models.IntegerField(default=0)
     slug = EntitySlugField(

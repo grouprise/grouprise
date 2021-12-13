@@ -28,6 +28,7 @@ DATABASE_ENGINES_MAP = {
     "mysql": "django.db.backends.mysql",
     "postgis": "django.contrib.gis.db.backends.postgis",
     "postgresql": "django.db.backends.postgresql",
+    "spatialite": "django.contrib.gis.db.backends.spatialite",
     "sqlite": "django.db.backends.sqlite3",
 }
 EMAIL_BACKENDS_MAP = {
