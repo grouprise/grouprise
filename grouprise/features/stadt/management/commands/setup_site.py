@@ -59,10 +59,13 @@ class Command(BaseCommand):
         site_short_name = get_input("Site's short name")
 
         # admin user
-        admin_first_name = get_input("Admin first name")
-        admin_username = get_input("Admin username", default=admin_first_name.lower())
-        admin_email = get_input("Admin email")
-        admin_password = getpass.getpass("Admin password: ")
+        admin_first_name = get_input("Admin first name (empty -> skip)")
+        if admin_first_name:
+            admin_username = get_input(
+                "Admin username", default=admin_first_name.lower()
+            )
+            admin_email = get_input("Admin email")
+            admin_password = getpass.getpass("Admin password: ")
 
         # unknown user
         unknown_name = get_input(
@@ -91,7 +94,10 @@ class Command(BaseCommand):
 
         operator_group, _ = Group.objects.get_or_create(name=site_short_name)
 
-        if not User.objects.filter(username=admin_username).first():
+        if (
+            admin_first_name
+            and not User.objects.filter(username=admin_username).first()
+        ):
             User.objects.create_superuser(
                 username=admin_username,
                 first_name=admin_first_name,
