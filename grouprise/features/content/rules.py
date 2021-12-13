@@ -1,5 +1,5 @@
 import rules
-from rules import is_authenticated
+from rules import is_authenticated, predicate
 
 from grouprise.features.associations import models as associations_models
 from grouprise.features.associations import predicates as associations_rules
@@ -14,6 +14,14 @@ def can_view(user, association):
         .filter(pk=association.pk)
         .exists()
     )
+
+
+@predicate
+def can_view_version(user, version):
+    for association in version.content.associations.all():
+        if can_view(user, association):
+            return True
+    return False
 
 
 @rules.predicate

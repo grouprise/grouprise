@@ -1,9 +1,8 @@
 from django.conf.urls import url
 from django.urls import path
-from django_downloadview import ObjectDownloadView
 
 from . import views
-from .models import File
+from .views import FileDownloadView
 
 urlpatterns = [
     url(
@@ -13,7 +12,7 @@ urlpatterns = [
     ),
     path(
         "stadt/files/<int:pk>/",
-        ObjectDownloadView.as_view(model=File),
+        FileDownloadView.as_view(),
         name="download-file",
     ),
 ]
