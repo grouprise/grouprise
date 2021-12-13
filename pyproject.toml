@@ -1,8 +1,9 @@
 [tool.black]
 target-version = ["py39"]
-exclude = """
-^/docs/conf.py
-"""
+extend-exclude = '''
+    ^/docs/conf\.py$
+    | /migrations/[^/]+\.py$
+'''
 
 [tool.isort]
 profile = "black"
