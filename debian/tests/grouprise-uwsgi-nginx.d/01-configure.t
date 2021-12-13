@@ -59,7 +59,7 @@ test_expect_success "restart nginx" '
 
 test_expect_success "start grouprise" '
   # we cannot prevent uwsgi from emitting "getting INI configuration from ..." to stderr
-  service grouprise start 2>&1
+  service grouprise start 2>&1 || { cat /var/log/grouprise/uwsgi.log; false; }
 '
 
 test_done
