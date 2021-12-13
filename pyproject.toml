@@ -1,5 +1,8 @@
 [tool.black]
-target-version = ["py39"]
+# Don’t bump to py39, because we’d break support for black shipped with Debian bullseye.
+# We may want to revisit that decision if a more recent version of black comes with new formatting rules
+# that would produce conflicting code with black shipped in bullseye.
+target-version = ["py38"]
 extend-exclude = '''
     ^/docs/conf\.py$
     | /migrations/[^/]+\.py$
