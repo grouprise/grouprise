@@ -31,6 +31,7 @@
 
 <script>
   export default {
+    name: 'GroupriseSwitch',
     props: {
       trueLabel: {
         type: String,

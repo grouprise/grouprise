@@ -25,6 +25,7 @@
   import randomId from 'random-id'
 
   export default {
+    name: 'GroupriseInput',
     props: {
       value: String,
       type: {

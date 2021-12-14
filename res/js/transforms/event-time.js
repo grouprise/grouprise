@@ -23,18 +23,6 @@ export default el => {
 
   const vue = new Vue({
     el: `#${container.id}`,
-    render (h) {
-      return h(EventTime, {
-        props: {
-          start: this.start,
-          end: this.end,
-          allDay: this.allDay
-        },
-        on: {
-          change: this.set
-        }
-      })
-    },
     data: {
       start: convertDate(elStart.value),
       end: convertDate(elEnd.value),
@@ -47,6 +35,18 @@ export default el => {
         elAllDay.checked = !!data.allDay
         Object.assign(this, data)
       }
+    },
+    render (h) {
+      return h(EventTime, {
+        props: {
+          start: this.start,
+          end: this.end,
+          allDay: this.allDay
+        },
+        on: {
+          change: this.set
+        }
+      })
     }
   })
 

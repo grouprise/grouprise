@@ -1,4 +1,7 @@
 <template>
+  <!-- eslint-disable vue/no-mutating-props -->
+  <!-- TODO: fix prop mutation */ -->
+
   <div class="datetime-row">
     <sg-datetime
       v-model="answer.start"
@@ -29,7 +32,11 @@
 </template>
 
 <script>
+  /* eslint-disable vue/no-mutating-props */
+  /* TODO: fix prop mutation */
+
   export default {
+    name: 'GroupriseAppointmentPollEditorAnswer',
     model: {
       prop: 'answer'
     },

@@ -23,6 +23,7 @@
 
 <script>
   export default {
+    name: 'GroupriseUser',
     props: {
       user: Object,
       avatarAttribs: Object

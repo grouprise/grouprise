@@ -67,6 +67,8 @@
   import { danger, success } from '../../util/notify'
 
   export default {
+    name: 'GrouprisePollVoter',
+    inject: ['controller'],
     props: {
       poll: Object,
       canVote: Boolean,
@@ -97,7 +99,6 @@
             : `Es ${numVotes === 1 ? 'hat' : 'haben'} bisher ${numVotes > 1 ? `${numVotes} Personen` : 'eine Person'} ihre Stimme abgegeben. ${allowVote ? 'Sei die nächste!' : 'Du hast bereits abgestimmt.'}`
       }
     },
-    inject: ['controller'],
     watch: {
       user () {
         this.$emit('user', this.user)
@@ -142,4 +143,3 @@
     }
   }
 </script>
-

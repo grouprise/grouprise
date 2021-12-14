@@ -1,4 +1,7 @@
 <template>
+  <!-- eslint-disable vue/no-mutating-props -->
+  <!-- TODO: fix prop mutation */ -->
+
   <div>
     <div
       v-if="voteType.getType() !== 'hidden'"
@@ -65,6 +68,7 @@
   import PollVoteType from './poll-votetype.vue'
 
   export default {
+    name: 'GrouprisePollEditor',
     components: {
       Tabs,
       Tab,
@@ -102,14 +106,14 @@
             name: 'Meiste Stimmen',
             icon: 'poll-votetype-simple',
             description: `Es wird mit Ja, Nein und Vielleicht abgestimmt. Der Vorschlag mit
-            den meisten Ja-Stimmen gewinnt. Super für Termine und klare Entscheidungen.`
+              den meisten Ja-Stimmen gewinnt. Super für Termine und klare Entscheidungen.`
           },
           {
             value: 'condorcet',
             name: 'Größte Gemeinsamkeit (Condorcet)',
             icon: 'poll-votetype-condorcet',
             description: `Antworten werden nach Vorliebe geordnet. Vorschläge mit dem größten
-          Konsens gewinnen. Gut für Richtungsentscheidungen und Stimmungsbilder.`
+              Konsens gewinnen. Gut für Richtungsentscheidungen und Stimmungsbilder.`
           }
         ]
       }
