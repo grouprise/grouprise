@@ -2,6 +2,7 @@ import copy
 import getpass
 
 import ruamel.yaml
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 from django.core.management.utils import get_random_secret_key
@@ -13,18 +14,39 @@ from grouprise.features.groups.models import Group
 from grouprise.settings_loader import load_settings_from_yaml_files
 
 
-def get_input(prompt, default=None):
-    result = input("{}{}: ".format(prompt, f" ({default})" if default else ""))
-    return result if result else default
+def get_input(prompt, default=None, previous=None):
+    preset = previous if previous is not None else default
+    if preset:
+        formatted_prompt = f"{prompt} ({preset}): "
+    else:
+        formatted_prompt = f"{prompt}: "
+    result = input(formatted_prompt)
+    return result if result else preset
 
 
 def create_article(author, group, slug, title, text, public=True, pinned=False):
-    article = Content.objects.create(title=title)
-    article.versions.create(author=author, text=text)
-    association = Association(slug=slug, public=public, pinned=pinned)
-    association.entity = group
-    association.container = article
-    association.save()
+    # look for an existing article
+    for assoc in Association.objects.filter(slug=slug, public=public, pinned=pinned):
+        if assoc.entity == group:
+            return
+    else:
+        # the article does not exist, yet
+        article = Content.objects.create(title=title)
+        article.versions.create(author=author, text=text)
+        association = Association(slug=slug, public=public, pinned=pinned)
+        association.entity = group
+        association.container = article
+        association.save()
+
+
+def get_entity_if_exists(model, entity_id):
+    if entity_id is None:
+        return None
+    else:
+        try:
+            return model.objects.get(pk=entity_id)
+        except model.DoesNotExist:
+            return None
 
 
 class Command(BaseCommand):
@@ -50,39 +72,86 @@ class Command(BaseCommand):
         target_settings = load_settings_from_yaml_files([options["modifiable_config"]])
         original_target_settings = copy.copy(target_settings)
 
+        current_operator_group = get_entity_if_exists(
+            Group, original_settings.get("operator_group_id")
+        )
+        current_unknown_user = get_entity_if_exists(
+            User, original_settings.get("unknown_gestalt_id")
+        )
+        current_import_user = get_entity_if_exists(
+            User, original_settings.get("feed_importer_gestalt_id")
+        )
+        current_admin_user = (
+            User.objects.filter(is_superuser=True, is_staff=True)
+            .order_by("username")
+            .first()
+        )
+
         site = get_grouprise_site()
         # site settings
         site_domain = get_input(
             "Site's domain", default=original_settings.get("domain", site.domain)
         )
         site_name = get_input("Site's (long) name", default=site.name)
-        site_short_name = get_input("Site's short name")
+        site_short_name = get_input(
+            "Site's short name",
+            previous=getattr(current_operator_group, "name", None),
+        )
 
         # admin user
-        admin_first_name = get_input("Admin first name (empty -> skip)")
+        admin_first_name = get_input(
+            "Admin first name (empty -> skip)",
+            previous=getattr(current_admin_user, "first_name", None),
+        )
         if admin_first_name:
-            admin_username = get_input(
-                "Admin username", default=admin_first_name.lower()
-            )
-            admin_email = get_input("Admin email")
-            admin_password = getpass.getpass("Admin password: ")
+            if current_admin_user and (
+                current_admin_user.first_name == admin_first_name
+            ):
+                default_admin_username = current_admin_user.username
+                default_admin_email = current_admin_user.email
+            else:
+                default_admin_username = admin_first_name.lower()
+                default_admin_email = ""
+            admin_username = get_input("Admin username", default=default_admin_username)
+            admin_email = get_input("Admin email", default=default_admin_email)
+            if current_admin_user:
+                password_prompt = "Admin password (empty -> do not change): "
+            else:
+                password_prompt = "Admin password: "
+            admin_password = getpass.getpass(password_prompt)
 
         # unknown user
         unknown_name = get_input(
-            "Unknown user's display name", default="Unbekannte Gestalt"
+            "Unknown user's display name",
+            default="Unbekannte Gestalt",
+            previous=getattr(current_unknown_user, "first_name", None),
         )
-        unknown_username = get_input("Unknown user's username", default="unknown")
+        unknown_username = get_input(
+            "Unknown user's username",
+            default="unknown",
+            previous=getattr(current_unknown_user, "username", None),
+        )
         unknown_email = get_input(
-            "Unknown user's email", default=f"{unknown_username}@{site_domain}"
+            "Unknown user's email",
+            default=f"{unknown_username}@{site_domain}",
+            previous=getattr(current_unknown_user, "email", None),
         )
 
         # import user
         import_name = get_input(
-            "Import user's display name", default="Automatischer Import"
+            "Import user's display name",
+            default="Automatischer Import",
+            previous=getattr(current_import_user, "first_name", None),
         )
-        import_username = get_input("Import user's username", default="import")
+        import_username = get_input(
+            "Import user's username",
+            default="import",
+            previous=getattr(current_import_user, "username", None),
+        )
         import_email = get_input(
-            "Import user's email", default=f"{import_username}@{site_domain}"
+            "Import user's email",
+            default=f"{import_username}@{site_domain}",
+            previous=getattr(current_import_user, "email", None),
         )
 
         secret_key = original_settings.get("secret_key", get_random_secret_key())
@@ -94,16 +163,20 @@ class Command(BaseCommand):
 
         operator_group, _ = Group.objects.get_or_create(name=site_short_name)
 
-        if (
-            admin_first_name
-            and not User.objects.filter(username=admin_username).first()
-        ):
-            User.objects.create_superuser(
-                username=admin_username,
-                first_name=admin_first_name,
-                email=admin_email,
-                password=admin_password,
-            )
+        if admin_first_name:
+            if not User.objects.filter(username=admin_username).first():
+                # create a new user
+                User.objects.create_superuser(
+                    username=admin_username,
+                    first_name=admin_first_name,
+                    email=admin_email,
+                    password=admin_password,
+                )
+            elif admin_password:
+                # update the password
+                admin_user = User.objects.get(username=admin_username)
+                admin_user.password = make_password(admin_password)
+                admin_user.save()
 
         unknown_user, _ = User.objects.get_or_create(
             username=unknown_username, email=unknown_email, first_name=unknown_name
@@ -113,7 +186,6 @@ class Command(BaseCommand):
             username=import_username, email=import_email, first_name=import_name
         )
 
-        # TODO: allow multiple runs (idempotency) without throwing `IntegrityError`
         create_article(
             unknown_user.gestalt,
             operator_group,
@@ -161,7 +233,11 @@ class Command(BaseCommand):
         }.items():
             if original_settings.get(key) != value:
                 target_settings[key] = value
-        if admin_email not in original_settings.get("log_recipient_emails", []):
+        if (
+            admin_first_name
+            and admin_email
+            and (admin_email not in original_settings.get("log_recipient_emails", []))
+        ):
             target_settings.setdefault("log_recipient_emails", [])
             target_settings["log_recipient_emails"].append(admin_email)
 
