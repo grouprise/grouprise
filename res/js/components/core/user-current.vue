@@ -28,7 +28,7 @@
   import { memoize, get } from 'lodash'
   import { gestalt } from '../../adapters/api'
   import { createInitials } from '../../util/strings'
-  import randomColor from 'random-color'
+  import randomColor from 'randomcolor'
 
   const getCurrentUser = memoize(() => {
     const userId = get(window.app.conf, 'gestalt.id')
@@ -36,6 +36,7 @@
   })
 
   export default {
+    name: 'GroupriseCurrentUser',
     props: {
       anonymousEdit: Boolean,
       anonymousLogin: Boolean,
@@ -45,7 +46,7 @@
       return {
         userModel: null,
         username: null,
-        anonymousColor: randomColor().hexString()
+        anonymousColor: randomColor()
       }
     },
     computed: {

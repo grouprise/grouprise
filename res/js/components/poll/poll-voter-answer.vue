@@ -35,6 +35,7 @@
 
 <script>
   export default {
+    name: 'GrouprisePollVoterAnswer',
     props: {
       option: Object
     }

@@ -72,6 +72,7 @@
   )
 
   export default {
+    name: 'GroupriseConfigurator',
     mixins: [onClickOutside],
     data () {
       return {

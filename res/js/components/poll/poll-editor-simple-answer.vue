@@ -1,4 +1,7 @@
 <template>
+  <!-- eslint-disable vue/no-mutating-props -->
+  <!-- TODO: fix prop mutation */ -->
+
   <sg-input
     v-model="answer.title"
     label="Antwort"
@@ -7,6 +10,7 @@
 
 <script>
   export default {
+    name: 'GroupriseSimplePollEditorAnswer',
     model: {
       prop: 'answer'
     },

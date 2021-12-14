@@ -112,6 +112,7 @@
   import { rankedIndexOf, rankOptions, pollVoterMixin } from './poll-helpers'
 
   export default {
+    name: 'GrouprisePollCondorcetVoter',
     components: { PollVoter, PollVoterAnswer },
     mixins: [pollVoterMixin],
     data () {

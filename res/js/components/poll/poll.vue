@@ -12,6 +12,14 @@
   import VoterSimple from './poll-voter-simple.vue'
 
   export default {
+    name: 'GrouprisePoll',
+    provide () {
+      return {
+        controller: {
+          refreshPoll: this.refreshPoll
+        }
+      }
+    },
     props: {
       pollId: Number,
       canVote: Boolean,
@@ -29,13 +37,6 @@
           case 'condorcet': return VoterCondorcet
         }
         return null
-      }
-    },
-    provide () {
-      return {
-        controller: {
-          refreshPoll: this.refreshPoll
-        }
       }
     },
     async created () {

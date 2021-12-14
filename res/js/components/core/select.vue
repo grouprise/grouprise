@@ -131,7 +131,7 @@
   }
 
   export default {
-    name: 'Choice',
+    name: 'GroupriseSelect',
     mixins: [onClickOutside],
     props: {
       id: {

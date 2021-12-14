@@ -6,7 +6,6 @@ DIR_NODE_BIN ?= $(DIR_NODE)/.bin
 STAMP_NODE_MODULES = $(DIR_NODE)/.stamp-install
 
 BIN_NPM ?= npm
-BIN_STANDARD = $(DIR_NODE_BIN)/standard
 BIN_WEBPACK = $(DIR_NODE_BIN)/webpack
 BIN_FONTDUMP = $(DIR_NODE_BIN)/fontdump
 

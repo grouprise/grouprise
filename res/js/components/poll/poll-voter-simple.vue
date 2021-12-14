@@ -113,6 +113,7 @@
   import { rankOptions, pollVoterMixin } from './poll-helpers'
 
   export default {
+    name: 'GrouprisePollSimpleVoter',
     components: { PollVoter, PollVoterAnswer },
     mixins: [pollVoterMixin],
     data () {

@@ -38,6 +38,7 @@
   }
 
   export default {
+    name: 'GrouprisePieChart',
     props: {
       data: Array,
       size: {
