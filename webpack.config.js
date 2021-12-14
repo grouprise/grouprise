@@ -22,13 +22,17 @@ const postCss = {
   loader: 'postcss-loader',
   options: {
     sourceMap: true,
-    ident: 'postcss',
-    plugins: () => [
-      require('autoprefixer'),
-      require('cssnano')(),
-      require('postcss-banner')({ banner }),
-      require('postcss-preset-env')()
-    ]
+    postcssOptions: {
+      plugins: [
+        require('autoprefixer'),
+        require('cssnano')(),
+        require('postcss-banner')({ banner }),
+        require('postcss-custom-properties')({
+          preserve: true
+        }),
+        require('postcss-preset-env')(),
+      ]
+    }
   }
 }
 
@@ -40,7 +44,7 @@ module.exports = {
   output: {
     publicPath: `${isDebug ? devServerURL.origin : ''}/stadt/static/core/base/`,
     path: path.join(__dirname, 'build', 'static'),
-    filename: '[name].[hash].js'
+    filename: '[name].[fullhash].js'
   },
   resolve: {
     alias: {
@@ -49,12 +53,13 @@ module.exports = {
     }
   },
   devServer: {
-    contentBase: './dist',
+    static: './dist',
     port: devServerURL.port,
     host: ['localhost', '127.0.0.1'].includes(devServerURL.hostname) ? 'localhost' : '0.0.0.0',
-    public: isDebug ? devServerURL.host : null,
     hot: true,
-    overlay: true,
+    client: {
+      overlay: true
+    },
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -90,6 +95,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
+              url: false,
               sourceMap: true
             }
           },
@@ -127,12 +133,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|webp|ttf|otf|woff2?|eot)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {}
-          }
-        ]
+        type: 'asset'
       },
       {
         test: /\.html$/,
@@ -154,8 +155,8 @@ module.exports = {
             options: {
               sourceMap: true,
               plugins: [
-                { removeUselessDefs: false },
-                { cleanupIDs: false }
+                { name: 'removeUselessDefs' },
+                { name: 'cleanupIDs' }
               ]
             }
           }
@@ -166,17 +167,23 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.BannerPlugin(banner),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: false,
-      generateStatsFile: true,
-      reportFilename: path.join(reportsDir, 'webpack-report.html'),
-      statsFilename: path.join(reportsDir, 'webpack-report-stats.json')
-    }),
+    ...(
+      isDebug
+        ? []
+        : [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            openAnalyzer: false,
+            generateStatsFile: true,
+            reportFilename: path.join(reportsDir, 'webpack-report.html'),
+            statsFilename: path.join(reportsDir, 'webpack-report-stats.json')
+          })
+        ]
+    ),
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
-      chunkFilename: isDebug ? '[id].[hash].css' : '[id].css'
+      filename: '[name].[fullhash].css',
+      chunkFilename: isDebug ? '[id].[fullhash].css' : '[id].css'
     }),
     new LodashModuleReplacementPlugin({
       collections: true,

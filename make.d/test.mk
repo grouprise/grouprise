@@ -7,8 +7,8 @@ LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT
 lint: lint_js lint_packages
 
 .PHONY: lint_js
-lint_js: $(STAMP_NODE_MODULES) $(BIN_NPM)
-	$(RUN_NODE) "$(BIN_NPM)" run lint
+lint_js: $(STAMP_NODE_MODULES)
+	"$(BIN_NPM)" run lint
 
 .PHONY: lint_packages
 lint_packages:
@@ -49,8 +49,8 @@ test_py_prepare:
 	touch grouprise/core/templates/core/_assets.html
 
 .PHONY: test_js
-test_js: $(STAMP_NODE_MODULES) $(BIN_NPM) lint_js
-	$(RUN_NODE) "$(BIN_NPM)" run test
+test_js: $(STAMP_NODE_MODULES) lint_js
+	"$(BIN_NPM)" run test
 
 .PHONY: report-python-coverage
 coverage_py: $(ACTIVATE_VIRTUALENV) $(VIRTUALENV_UPDATE_STAMP)
