@@ -392,7 +392,14 @@ class CacheStorageConfig(ConfigBase):
         except KeyError:
             pass
         backend = value.get("backend", self.default["backend"])
-        dest["BACKEND"] = CACHE_BACKENDS_MAP[backend]
+        if (backend == "filesystem") and (os.geteuid() == 0):
+            # The filesystem backend may not be enabled for a privileged user.  Otherwise files
+            # and directories in the cache could end up with the wrong permissions and ownership.
+            dest = {"BACKEND": CACHE_BACKENDS_MAP["local_memory"]}
+            logger.info("Disabling filesystem-based cache for privileged user")
+        else:
+            # unprivileged user: accept the chosen backend
+            dest["BACKEND"] = CACHE_BACKENDS_MAP[backend]
         settings["CACHES"] = {"default": dest}
 
 
