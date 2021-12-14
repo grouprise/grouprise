@@ -161,7 +161,7 @@ Depends:
 Recommends:
  element-web-installer,
  matrix-synapse,
- # the authlib module is required by matrix-synapse, if OIDC is enabled via grouprise
+# the authlib module is required by matrix-synapse, if OIDC is enabled via grouprise
  python3-authlib,
 Description: Matrix integration for grouprise platform
  Grouprise is a web-based platform providing tools for groups and
