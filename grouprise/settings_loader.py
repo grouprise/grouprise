@@ -787,16 +787,16 @@ class AdministratorEmailsConfig(ListConfig):
 
 
 class DjangoAppEnableConfig(BooleanConfig):
-    def __init__(self, app_name, *args, **kwargs):
+    def __init__(self, app_names: Union[list[str], tuple[str, ...]], *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.app_name = app_name
+        self.app_names = app_names
 
     def apply_to_settings(self, settings: dict, value: Any) -> None:
         # store the boolean value
         super().apply_to_settings(settings, value)
         if value:
             apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
-            apps.append(self.app_name)
+            apps.extend(self.app_names)
 
 
 class MarixRoomIDList(ListConfig):
@@ -1169,7 +1169,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         DjangoAppEnableConfig(
             name=("matrix_chat", "enabled"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "ENABLED"),
-            app_name="grouprise.features.matrix_chat",
+            app_names=("grouprise.features.matrix_chat",),
         ),
         ChoicesConfig(
             name=("matrix_chat", "backend"),
@@ -1203,7 +1203,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         DjangoAppEnableConfig(
             name=("matrix_commander", "enabled"),
             django_target=("GROUPRISE", "MATRIX_COMMANDER", "ENABLED"),
-            app_name="grouprise.features.matrix_commander",
+            app_names=("grouprise.features.matrix_commander",),
         ),
         StringConfig(
             name=("matrix_commander", "bot_id"),
