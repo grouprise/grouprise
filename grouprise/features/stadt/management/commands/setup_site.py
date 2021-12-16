@@ -39,7 +39,18 @@ def create_article(author, group, slug, title, text, public=True, pinned=False):
         association.save()
 
 
-def get_entity_if_exists(model, entity_id):
+def create_or_update_user(username: str, email: str, first_name: str) -> User:
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User(username=username)
+    user.email = email
+    user.first_name = first_name
+    user.save()
+    return user
+
+
+def get_entity_if_exists(model, entity_id: int):
     if entity_id is None:
         return None
     else:
@@ -178,13 +189,11 @@ class Command(BaseCommand):
                 admin_user.password = make_password(admin_password)
                 admin_user.save()
 
-        unknown_user, _ = User.objects.get_or_create(
-            username=unknown_username, email=unknown_email, first_name=unknown_name
+        unknown_user = create_or_update_user(
+            unknown_username, unknown_email, unknown_name
         )
 
-        import_user, _ = User.objects.get_or_create(
-            username=import_username, email=import_email, first_name=import_name
-        )
+        import_user = create_or_update_user(import_username, import_email, import_name)
 
         create_article(
             unknown_user.gestalt,
