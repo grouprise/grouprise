@@ -1,5 +1,6 @@
 import base64
 import copy
+from distutils.version import LooseVersion
 import enum
 import hashlib
 import importlib.util
@@ -8,7 +9,6 @@ import logging
 import os
 import re
 import types
-from distutils.version import LooseVersion
 from typing import Any, Optional
 import urllib.parse
 
