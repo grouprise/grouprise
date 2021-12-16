@@ -9,7 +9,8 @@ import os
 import re
 import types
 from distutils.version import LooseVersion
-from typing import Any
+from typing import Any, Optional
+import urllib.parse
 
 import ruamel.yaml
 
@@ -240,6 +241,38 @@ class StringConfig(ConfigBase):
                 raise ConfigError(
                     f"Setting '{self.name}' does not match the required regular expression"
                     f" ({self.regex.pattern}): {value}"
+                )
+        return value
+
+
+class URLConfig(StringConfig):
+    def __init__(
+        self,
+        *args,
+        regex=None,
+        min_length=None,
+        sensible: bool = True,
+        allowed_schemes: Optional[set[str]] = None,
+        **kwargs,
+    ):
+        super().__init__(*args, regex=regex, min_length=min_length, **kwargs)
+        self.sensible = sensible
+        self.allowed_schemes = allowed_schemes
+
+    def validate(self, value):
+        value = super().validate(value)
+        url = urllib.parse.urlparse(value)
+        if self.sensible:
+            if not url.scheme or not url.netloc:
+                raise ConfigError(
+                    f"URL configured for setting '{self.name}' doesn’t look right. "
+                    f"Scheme and host are missing."
+                )
+        if self.allowed_schemes:
+            if url.scheme not in self.allowed_schemes:
+                raise ConfigError(
+                    f"URL configured for setting '{self.name}' uses an unsupported scheme. "
+                    f"One of {', '.join(self.allowed_schemes)} is required."
                 )
         return value
 
