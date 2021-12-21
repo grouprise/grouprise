@@ -111,10 +111,11 @@ class Command(BaseCommand):
 
         # admin user
         admin_first_name = get_input(
-            "Admin first name (empty -> skip)",
+            "Admin first name ('none' -> skip)",
             previous=getattr(current_admin_user, "first_name", None),
         )
-        if admin_first_name:
+        skip_admin = admin_first_name == 'none'
+        if not skip_admin:
             if current_admin_user and (
                 current_admin_user.first_name == admin_first_name
             ):
@@ -174,7 +175,7 @@ class Command(BaseCommand):
 
         operator_group, _ = Group.objects.get_or_create(name=site_short_name)
 
-        if admin_first_name:
+        if not skip_admin:
             if not User.objects.filter(username=admin_username).first():
                 # create a new user
                 User.objects.create_superuser(
@@ -243,7 +244,7 @@ class Command(BaseCommand):
             if original_settings.get(key) != value:
                 target_settings[key] = value
         if (
-            admin_first_name
+            not skip_admin
             and admin_email
             and (admin_email not in original_settings.get("log_recipient_emails", []))
         ):
