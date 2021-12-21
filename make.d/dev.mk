@@ -9,6 +9,7 @@ help-grouprise:
 	@echo "    app_local_settings  - generate a local django configuration file"
 	@echo "    app_migrate         - run django migrations for a local setup"
 	@echo "    app_run             - run django server locally"
+	@echo "    app_translate       - extract translatable strings, update catalogs and compile MO files"
 	@echo "    assets              - build assets (fonts and webpack)"
 	@echo "    assets_fonts        - build font assets"
 	@echo "    assets_webpack      - build webpack assets"
@@ -20,8 +21,10 @@ help-grouprise:
 	@echo "    ci_docker_logout    - log out of docker registry (remove locally stored credentials)"
 	@echo "    doc                 - build documentation"
 	@echo "    install-grouprise   - install all grouprise components"
+	@echo "    lint                - run linting checks for code style"
 	@echo "    run-docker-deb-prepared  - enter a local docker instance prepared for installing deb packages"
 	@echo "    tags                - generate tags file for grouprise code"
+	@echo "    test                - run tests locally"
 	@echo
 
 help: help-grouprise
