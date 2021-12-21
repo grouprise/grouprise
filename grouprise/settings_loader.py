@@ -923,6 +923,15 @@ def recursively_normalize_dict_keys_to_lower_case(data):
         return data
 
 
+def remove_empty_dicts(_dict: dict):
+    """removes empty dicts in a nested dict structure"""
+    for key in list(_dict.keys()):
+        if isinstance(_dict[key], dict):
+            remove_empty_dicts(_dict[key])
+            if not _dict[key]:
+                _dict.pop(key)
+
+
 def get_config_base_directory(locations=None):
     """Try to determine, which directory could be regarded as the base configuration directory.
 
@@ -1255,13 +1264,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
     for filename in config.pop(django_settings_parser.name, []):
         django_settings_parser.validate(filename)
         import_settings_from_python(settings, filename)
-    # report unprocessed values
-    # remove all empty dictionaries (traversing only one nesting level - we do not use more depth)
-    config = {
-        key: value
-        for key, value in config.items()
-        if not (isinstance(value, dict) and not value)
-    }
+    # remove all empty dictionaries, so we can report any remaining data
+    # as unprocessed configuration options
+    remove_empty_dicts(config)
     if config:
         logger.warning(
             "Some configuration settings were not processed (%s)."
