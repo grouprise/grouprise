@@ -4,7 +4,7 @@
 
 ### `database`
 Configure the database connection to be used for storing grouprise's data.
-By default an [sqlite](https://sqlite.org/) database is configured:
+By default, an [SQLite](https://sqlite.org/) database is configured:
 ```yaml
 database:
   engine: sqlite
@@ -15,7 +15,7 @@ The supported engines are:
 
 * `mysql`
 * `postgis`
-    * `postgresql` with GIS extension (for locations) - only relevent, if *grouprise* is combined with a GIS-related Django application
+    * `postgresql` with GIS extension (for locations) - only relevant, if *grouprise* is combined with a GIS-related Django application
 * `postgresql`
 * `sqlite`
 
@@ -50,7 +50,7 @@ The name of the domain ([FQDN](https://en.wikipedia.org/wiki/Fully_qualified_dom
 ### `extra_allowed_hosts`
 Additional domain names, that should be tolerated by Django's request handler.
 Django's related `ALLOWED_HOSTS` list is pre-filled with the `domain` setting (see above).
-Thus this setting is rarely necessary.
+Thus, this setting is rarely necessary.
 
 See [Django's documentation of `ALLOWED_HOSTS`](https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-ALLOWED_HOSTS) for details.
 
@@ -73,7 +73,7 @@ See [Django's documentation of `SECRET_KEY`](https://docs.djangoproject.com/en/s
 
 ### `session_cookie_age`
 Expiry time of cookie-based sessions in seconds.
-By default the expiration period is two weeks (1209600 seconds).
+By default, the expiration period is two weeks (1209600 seconds).
 
 ### `time_zone`
 Specify the time zone used for storing timestamps in the database and for visualizing dates and times.
@@ -103,7 +103,7 @@ Default: `reverse-proxy`
 ## Email: delivery of outgoing messages
 ### `email_submission → backend`
 Select a backend to be used for sending emails (e.g. for debugging or development purposes).
-By default, emails are delivered via STMP.
+By default, emails are delivered via SMTP.
 It is possible to select one of the following backends:
 
 * `dummy`: outgoing mails are simply discarded
@@ -121,7 +121,7 @@ This setting is only used, if `email_submission → backend` is configured as `s
 Default: `localhost`
 
 ### `email_submission → port`
-Select the remote port of the SMTP host (see `email_submission → host`) for for delivering outgoing emails.
+Select the remote port of the SMTP host (see `email_submission → host`) for delivering outgoing emails.
 This setting is only used, if `email_submission → backend` is configured as `smtp`.
 
 The default port depends on the `email_submission → encryption` setting.
@@ -205,9 +205,9 @@ This represents a trivial approach for supporting recurring events.
 Default: `false`
 
 ### `events → enable_attendance`
-Enable form widgets for indicating the willigness to attend an event.
+Enable form widgets for indicating the willingness to attend an event.
 This may be useful for populating the personal calendar with events of interest.
-In addition hosters of events gain an indicator for estimating the number of participants.
+In addition, hosters of events gain an indicator for estimating the number of participants.
 
 Default: `false`
 
@@ -241,12 +241,12 @@ Default: `1`
 ## Theme and content customizations
 
 ### `branding → logo_backdrop`
-This logo (specified by its URL) is used on the left hand side of the footer.
+This logo (specified by its URL) is used on the left-hand side of the footer.
 Generally you should use a type of white mask graphic here.
 See the default grouprise backdrop logo for reference.
 
 ### `branding → logo_favicon`
-This logo (specified by its URL) is used as the applications favicon that is usually visible on the left hand side of the browser tab right next to the title of the webpage.
+This logo (specified by its URL) is used as the application’s favicon that is usually visible on the left-hand side of the browser tab right next to the title of the webpage.
 We recommend that you use a PNG file for the favicon as support for SVG favicons is still spotty (as of Aug 2020).
 You can set this to `None` if you want to embed the favicon through other means.
 
@@ -288,7 +288,7 @@ Default: `100`
 Add custom javascript resources either as inline snippets or by referencing a local URL path.
 The `scripts` setting is a list of dictionaries.
 Each item needs to contain either a `path` (absolute URL path of the local resource) or a `content` (inline javascript code).
-Additionally a `load` value may be added for a `path` value.
+Additionally, a `load` value may be added for a `path` value.
 A proper CSP hash is automatically configured for a `content` value.
 External resources may not be referenced, since this would leak user's data to remote servers.
 
@@ -298,7 +298,7 @@ Default: `[]` (empty)
 Add custom CSS stylesheets in order to override specific layout details.
 The `stylesheets` setting is a list of dictionaries.
 Each item needs to contain a `path` (absolute URL path of the local resource).
-Additionally a [`media` value](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link) may be specified (e.g. `print`).
+Additionally, a [`media` value](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link) may be specified (e.g. `print`).
 
 Default: `[]` (empty)
 
@@ -309,7 +309,7 @@ Any configured directory has a higher precedence than *grouprise*'s builtin temp
 
 Default: `[]` (empty)
 
-### Content Securicy Policy (CSP)
+### Content Security Policy (CSP)
 The Content Security Policy is relevant, if you want to execute customized client-side code in the context of your grouprise instance (e.g. visitor tracking via [matomo](https://matomor.org/) or customized frontend features).
 
 *grouprise* provides the following settings:
@@ -340,7 +340,7 @@ Default: current directory (depending on the context of process execution)
 
 ### `cache_storage`
 Specify the storage method for caches used by Django (e.g. for templates and database query results).
-By default *local memory* (restricted to the local process) is used.
+By default, *local memory* (restricted to the local process) is used.
 This default is suitable for setups with only a single process serving the grouprise instance.
 If you are running multiple processes on one host, then you need to use at least the `filesystem`-based storage (this is the default setup of the [deb-based deployment](/deployment/deb)).
 The [memcached](http://memcached.org/)-based storages (`memcache` and `pylibmc`) are suitable for all deployment setups.
@@ -397,9 +397,9 @@ Default: `[]` (empty)
 Enable the [Sentry](https://sentry.io) client for improved debugging.
 Errors (e.g. unhandled exceptions) are reported to a Sentry-compatible backend
 (e.g. [Sentry](https://github.com/getsentry/sentry)
-or [gitlab's integrated error tracking](https://docs.gitlab.com/ee/operations/error_tracking.html#integrated-error-tracking)).
+or [GitLab's integrated error tracking](https://docs.gitlab.com/ee/operations/error_tracking.html#integrated-error-tracking)).
 
-* `sentry → dsn`: Specify the submission URL of an Sentry-compatible backend. Sentry support is disabled, if this this string is empty. Default: `""` (empty).
+* `sentry → dsn`: Specify the submission URL of a Sentry-compatible backend. Sentry support is disabled, if this string is empty. Default: `""` (empty).
 * `sentry → init_options`: Add extra arguments for the [`sentry_sdk.init` function](https://docs.sentry.io/platforms/python/) as a dictionary.  A commonly used option is `environment` (containing a string like *production* or *development*). Default: `{}` (empty).
 
 Example:

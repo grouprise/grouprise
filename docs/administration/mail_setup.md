@@ -65,7 +65,7 @@ This delivery method can be used in two ways:
 Please note two disadvantages of the scripted processing in comparison to the LMTP service (above):
 
 * The upstream mailserver cannot verify, whether a destination mail address is valid or not.
-  Thus it is forced to accept all incoming mail messages for this domain during the SMTP session.
+  Thus, it is forced to accept all incoming mail messages for this domain during the SMTP session.
   In case of a rejection by *grouprise*, this will cause subsequent
   [backscatter](https://en.wikipedia.org/wiki/Backscatter_%28email%29) (delivery failure emails).
   Early rejection during the initial SMTP session would be preferable (see *LMTP* above).

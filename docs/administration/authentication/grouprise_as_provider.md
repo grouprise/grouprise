@@ -51,7 +51,7 @@ The following list of Django applications implementing the various protocols is 
 ### OAuth
 
 OAuth is focused on authorization.
-Thus maybe it is not a suitable choice for authentication.
+Thus, maybe it is not a suitable choice for authentication.
 
 * [Django OAuth Toolkit](https://github.com/jazzband/django-oauth-toolkit/):
     * [Debian package](https://packages.debian.org/python3-django-oauth-toolkit/) is available

@@ -82,7 +82,7 @@ def get_configuration_filenames(location_candidates=None):
     If no "location_candidates" are given, the result of "get_configuration_path_candidates()" is
     used.
     The locations are tested in the given order.  The first candidate pointing at a file or
-    pointing at a directory containing suitables files (alphanumeric characters or hyphen, with
+    pointing at a directory containing suitable files (alphanumeric characters or hyphen, with
     ".yaml" extension) is used.  All following candidates are discarded.
     A number of filenames (absolute paths) is returned.
     An empty list is returned, if no suitable files were found.
@@ -393,7 +393,7 @@ class CacheStorageConfig(ConfigBase):
             pass
         backend = value.get("backend", self.default["backend"])
         if (backend == "filesystem") and (os.geteuid() == 0):
-            # The filesystem backend may not be enabled for a privileged user.  Otherwise files
+            # The filesystem backend may not be enabled for a privileged user. Otherwise, files
             # and directories in the cache could end up with the wrong permissions and ownership.
             dest = {"BACKEND": CACHE_BACKENDS_MAP["local_memory"]}
             logger.info("Disabling filesystem-based cache for privileged user")
@@ -873,15 +873,15 @@ def _get_nested_dict_value(data, path, default=None, remove=False):
         )
 
 
-def recursivly_normalize_dict_keys_to_lower_case(data):
+def recursively_normalize_dict_keys_to_lower_case(data):
     """walk through the data (through dicts and lists) and change all dict keys to lower case"""
     if isinstance(data, dict):
         return {
-            key.lower(): recursivly_normalize_dict_keys_to_lower_case(value)
+            key.lower(): recursively_normalize_dict_keys_to_lower_case(value)
             for key, value in data.items()
         }
     elif isinstance(data, list):
-        return [recursivly_normalize_dict_keys_to_lower_case(item) for item in data]
+        return [recursively_normalize_dict_keys_to_lower_case(item) for item in data]
     else:
         return data
 
@@ -929,9 +929,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
     settings: the target dictionary to be populated (e.g. "locals()" in settings.py)
     config: the source dictionary parsed from a grouprise configuration file
     """
-    # We want to tolerate settings with with upper-case instead of lower-case keys.
+    # We want to tolerate settings with upper-case instead of lower-case keys.
     # This should simplify the migration from Django-based settings to the yaml-based settings.
-    config = recursivly_normalize_dict_keys_to_lower_case(config)
+    config = recursively_normalize_dict_keys_to_lower_case(config)
     default_domain = "example.org"
     configured_domain = config.get("domain", default_domain)
     parsers = [
