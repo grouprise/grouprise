@@ -812,7 +812,7 @@ class OIDCProviderEnableConfig(BooleanConfig):
                 )
             installed_version = LooseVersion(oauth2_provider.__version__)
             wanted_version = LooseVersion(MINIMUM_OAUTH2_VERSION)
-            if wanted_version < installed_version:
+            if installed_version < wanted_version:
                 raise ConfigError(
                     "The minimum required version of 'oauth2_provider' for OIDC support is "
                     f"{MINIMUM_OAUTH2_VERSION}. "
