@@ -114,7 +114,7 @@ class Command(BaseCommand):
             "Admin first name ('none' -> skip)",
             previous=getattr(current_admin_user, "first_name", None),
         )
-        skip_admin = admin_first_name == 'none'
+        skip_admin = admin_first_name == "none"
         if not skip_admin:
             if current_admin_user and (
                 current_admin_user.first_name == admin_first_name
