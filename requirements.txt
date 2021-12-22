@@ -29,6 +29,7 @@ django-taggit>=1.2.0        # debian: python3-django-taggit
 djangorestframework>=3.9    # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: python3-flake8
+gdal                        # debian: python3-gdal
 html2text                   # debian: python3-html2text
 huey                        # NOT IN DEBIAN
 kien                        # NOT IN DEBIAN

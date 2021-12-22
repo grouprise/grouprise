@@ -23,6 +23,7 @@ urlpatterns += [
     path("", include("grouprise.features.events.urls")),
     path("", include("grouprise.features.files.urls")),
     path("", include("grouprise.features.galleries.urls")),
+    path("", include("grouprise.features.geo.urls")),
     path("", include("grouprise.features.gestalten.urls")),
     path("", include("grouprise.features.gestalten.auth.urls")),
     path("", include("grouprise.features.groups.urls")),

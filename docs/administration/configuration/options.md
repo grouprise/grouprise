@@ -218,6 +218,51 @@ In this case it may be desirable, that members of the group can assign other mem
 
 Default: `false`
 
+## Maps and Locations
+
+### `geo → enabled`
+Enables the geo app that provides map and location data integration. Make sure your database backend supports
+geo datasets. If you have used SQLite until now, you need to switch to [SpatiaLite](https://www.gaia-gis.it/fossil/libspatialite/index).
+PostgreSQL users need to activate the `PostGIS` extension. Users of other database backends may refer to the
+[django documentation](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/#spatial-database).
+
+Once you’ve activated the `geo` feature, you need to run the migrations with `grouprisectl migrate`.
+
+### `geo → tile_server → url`
+This is the external tile server that provides the map graphics. The default server is the one graciously provided by
+[openstreetmap.org](https://www.openstreetmap.org/about). If you have a large userbase you might want to host your own.
+
+The URL must contain the required template tokens (`{s}`, `{x}`, `{y}`, and `{z}`).
+For instance, the default URL provided by grouprise looks like this:
+`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`.
+
+### `geo → tile_server → attribution`
+OpenStreetMap tile servers usually require attribution. If you use the default server configured
+by grouprise, you’re good to go. Otherwise, you should look up the correct attribution requirements
+for your tile server.
+
+### `geo → location_selector → center`
+Expects a list of latitude/ longitude coordinates  (one or more). If more than one coordinate is defined, the map
+will choose a center and zoom level that includes all listed coordinates.
+
+For instance, the default center is defined like this:
+
+```yaml
+geo:
+  location_selector:
+    center:
+      - [55.0846, 8.3174]
+      - [47.271679, 10.174047]
+      - [51.0525, 5.866944]
+      - [51.27291, 15.04193]
+```
+
+and represents the most northern, western, eastern and southern coordinates in Germany, making
+sure that the whole of Germany is visible on the map.
+
+### `geo → location_selector → zoom`
+This defines the zoom level for the map as an integer. If you’ve defined a multi-coordinate center
+the zoom level is inferred from your coordinates, though you may choose a different zoom level anyway.
 
 ## Special groups and users
 

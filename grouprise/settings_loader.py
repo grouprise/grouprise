@@ -9,7 +9,7 @@ import logging
 import os
 import re
 import types
-from typing import Any, Optional
+from typing import Any, Optional, Union
 import urllib.parse
 
 import ruamel.yaml
@@ -28,6 +28,7 @@ DATABASE_ENGINES_MAP = {
     "mysql": "django.db.backends.mysql",
     "postgis": "django.contrib.gis.db.backends.postgis",
     "postgresql": "django.db.backends.postgresql",
+    "spatialite": "django.contrib.gis.db.backends.spatialite",
     "sqlite": "django.db.backends.sqlite3",
 }
 EMAIL_BACKENDS_MAP = {
@@ -888,6 +889,55 @@ class OIDCProviderEnableConfig(BooleanConfig):
             settings["OAUTH2_PROVIDER"]["OIDC_RSA_PRIVATE_KEY"] = oidc_key
 
 
+class TileServerConfig(URLConfig):
+    TOLERATE_GROUPRISE_DEFAULTS = True
+    REQUIRED_TOKENS = {"{s}", "{x}", "{y}", "{z}"}
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("allowed_schemes", {"https"})
+        super().__init__(*args, **kwargs)
+
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
+        if settings.get("GROUPRISE", {}).get("GEO", {}).get("ENABLED", False):
+            super().apply_to_settings(settings, value)
+            # The tile server configuration setting itself will usually not suffice if
+            # CSP has been activated as images from the tile server will be blocked.
+            # Fortunately we can infer the correct CSP rule for the tile server
+            # from the tile server setting.
+            url = urllib.parse.urlparse(value)
+            settings.setdefault("CSP_IMG_SRC", tuple())
+            settings["CSP_IMG_SRC"] += type(settings["CSP_IMG_SRC"])(
+                [f"{url.scheme}://{url.netloc.replace('{s}', '*')}"]
+            )
+
+    def validate(self, value):
+        value = super().validate(value)
+        for required_token in self.REQUIRED_TOKENS:
+            if required_token not in value:
+                raise ConfigError(
+                    f"The tile server URL configured for setting '{self.name}' must contain the "
+                    f"tokens {', '.join(self.REQUIRED_TOKENS)}."
+                )
+        return value
+
+
+class CoordinatesConfig(ListConfig):
+    def validate(self, value):
+        value = super().validate(value)
+        for item in value:
+            if (
+                not isinstance(item, list)
+                or len(item) != 2
+                or not isinstance(item[0], (int, float))
+                or not isinstance(item[1], (int, float))
+            ):
+                raise ConfigError(
+                    f"Setting '{self.name}' must be a list of "
+                    f"latitude/longitude coordinates as two-element float tuples."
+                )
+        return value
+
+
 def _get_nested_dict_value(data, path, default=None, remove=False):
     if not isinstance(data, dict):
         raise KeyError(f"Container is not a dictionary: {data}")
@@ -1177,6 +1227,32 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ),
         ScriptsConfig(
             name="scripts", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
+        ),
+        # geo settings
+        DjangoAppEnableConfig(
+            name=("geo", "enabled"),
+            django_target=("GROUPRISE", "GEO", "ENABLED"),
+            app_names=(
+                "grouprise.features.geo",
+                "django.contrib.gis",
+            ),
+        ),
+        TileServerConfig(
+            name=("geo", "tile_server", "url"),
+            django_target=("GROUPRISE", "GEO", "TILE_SERVER", "URL"),
+            default="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        ),
+        StringConfig(
+            name=("geo", "tile_server", "attribution"),
+            django_target=("GROUPRISE", "GEO", "TILE_SERVER", "ATTRIBUTION"),
+        ),
+        ListConfig(
+            name=("geo", "location_selector", "center"),
+            django_target=("GROUPRISE", "GEO", "LOCATION_SELECTOR", "CENTER"),
+        ),
+        IntegerConfig(
+            name=("geo", "location_selector", "zoom"),
+            django_target=("GROUPRISE", "GEO", "LOCATION_SELECTOR", "ZOOM"),
         ),
         # matrix settings
         DjangoAppEnableConfig(

@@ -82,6 +82,16 @@
             </a>
         </li>
     {% endif %}
+    {% test_rule "is_geo_enabled" as geo_enabled %}
+    {% if can_edit_group_settings and geo_enabled %}
+        <li>
+            <a href="{% url 'geo-settings-group' %}?group={{ group.slug }}"
+               class="nav-menu-item {% if chapter == 'group-geo' %}nav-menu-item-active{% endif %}">
+                <i class="sg sg-fw sg-address"></i>
+                <span class="nav-menu-item-label">{% trans 'Location' %}</span>
+            </a>
+        </li>
+    {% endif %}
 {% endkwacro %}
 
 {% block content_before %}

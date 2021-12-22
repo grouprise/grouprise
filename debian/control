@@ -7,6 +7,10 @@ Build-Depends:
  dh-exec,
  dh-python,
  graphviz,
+# Development files for libgdal are needed, because pip-compile is unable
+# to get a version for python3-gdal without it. That's probably a packaging bug.
+ libgdal-dev,
+ libsqlite3-mod-spatialite,
  nodejs,
  python3-flake8,
  python3-sphinx-markdown-tables,
@@ -32,6 +36,7 @@ Build-Depends:
  python3-django-taggit,
  python3-djangorestframework (>= 3.9),
  python3-feedparser,
+ python3-gdal,
  python3-html2text,
  python3-markdown,
  python3-pil,
@@ -87,6 +92,7 @@ Depends:
 Recommends:
  ${misc:Recommends},
  ghostscript,
+ python3-gdal,
  uwsgi,
  uwsgi-plugin-python3,
  uwsgi-plugin-router-access,
@@ -104,7 +110,13 @@ Description: Web platform that enables social action and solidarity
 
 Package: grouprise-db-postgresql
 Architecture: all
-Depends: grouprise, postgresql-client, python3-psycopg2
+Depends:
+ ${misc:Depends},
+ grouprise,
+ postgresql-client,
+ python3-psycopg2,
+Recommends:
+ postgresql-postgis,
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
@@ -114,7 +126,12 @@ Description: Web platform that enables social action and solidarity
 
 Package: grouprise-db-sqlite
 Architecture: all
-Depends: grouprise, sqlite3
+Depends:
+ ${misc:Depends},
+ grouprise,
+ sqlite3,
+Recommends:
+ libsqlite3-mod-spatialite,
 Description: Web platform that enables social action and solidarity
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.

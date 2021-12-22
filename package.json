@@ -98,6 +98,7 @@
     "vue": "^2.6.11",
     "vue-on-click-outside": "^1.0.3",
     "vue-tabs-component": "git+https://github.com/stadtgestalten/vue-tabs-component.git#dist",
+    "vue2-leaflet": "^2.7.1",
     "vuedraggable": "^2.24.0"
   },
   "babel": {

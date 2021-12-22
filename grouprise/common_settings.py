@@ -68,6 +68,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
     # grouprise
+    "grouprise.features.geo.middleware.GeoAppConfigMiddleware",
     "grouprise.features.gestalten.middleware.GestaltAppConfigMiddleware",
 ]
 
@@ -253,6 +254,7 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_CONNECT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", "'sha256-TliXkWbZj93MFmAkxUonwpWsbHfZT4sGVDOblkOGFQg='")
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ("'self'", "data:")
 
 
 # grouprise Score Processors
