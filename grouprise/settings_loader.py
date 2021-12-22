@@ -147,24 +147,28 @@ class ConfigError(ValueError):
 
 
 class ConfigBase:
-
+    # We normally don’t want defaults to be stored in the settings loader, but
+    # for some setting types this is practical because they control more than one
+    # config variable at once.
+    TOLERATE_GROUPRISE_DEFAULTS = False
     # A child class may override this attribute in order to indicate, that it expects a dictionary
     # and that the dictionary is not supposed other keys besides the listed ones.
     # A warning is emitted in case of violations.
     EXPECTED_SUB_KEYS = None
 
     def __init__(self, name=None, django_target=None, default=None):
-        if (
-            (default is not None)
-            and django_target
-            and not callable(django_target)
-            and (django_target[0] == "GROUPRISE")
-        ):
-            logger.warning(
-                f"Configuration handling: defaults for grouprise-specific settings "
-                f"({django_target}) should always be defined in grouprise.*.settings "
-                f"(not in {__name__})"
-            )
+        if not self.TOLERATE_GROUPRISE_DEFAULTS:
+            if (
+                (default is not None)
+                and django_target
+                and not callable(django_target)
+                and (django_target[0] == "GROUPRISE")
+            ):
+                logger.warning(
+                    f"Configuration handling: defaults for grouprise-specific settings "
+                    f"({django_target}) should always be defined in grouprise.*.settings "
+                    f"(not in {__name__})"
+                )
         self.name = name
         # we do not use "self.default" directly - we just store it for the caller's convenience
         self.default = default
