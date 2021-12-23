@@ -5,7 +5,7 @@ DIR_NODE = node_modules
 DIR_NODE_BIN ?= $(DIR_NODE)/.bin
 STAMP_NODE_MODULES = $(DIR_NODE)/.stamp-install
 
-BIN_STANDARD = $(DIR_NODE_BIN)/standard
+BIN_NPM ?= npm
 BIN_WEBPACK = $(DIR_NODE_BIN)/webpack
 BIN_FONTDUMP = $(DIR_NODE_BIN)/fontdump
 
@@ -20,18 +20,18 @@ URL_FONT_GOOGLE = https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,70
 STAMP_STATIC_WEBPACK = $(DIR_BUILD)/.static_webpack
 
 $(STAMP_NODE_MODULES): package.json
-	$(RUN_NODE) "$(BIN_NPM)" ci --no-progress
+	"$(BIN_NPM)" ci --no-progress
 	touch "$(STAMP_NODE_MODULES)"
 
 $(GOOGLE_FONTS_CSS): $(STAMP_NODE_MODULES)
-	$(RUN_NODE) "$(BIN_FONTDUMP)" \
+	"$(BIN_FONTDUMP)" \
 		--target-directory "$(dir $(GOOGLE_FONTS_CSS))" \
 		--web-directory "." \
 		"$(URL_FONT_GOOGLE)"
 
 $(STAMP_STATIC_WEBPACK): $(GOOGLE_FONTS_CSS) $(DEPS_ASSETS) webpack.config.js
 	mkdir -p "$(DIR_STATIC)"
-	$(RUN_NODE) "$(BIN_NPM)" run build
+	"$(BIN_NPM)" run build
 	touch "$(STAMP_STATIC_WEBPACK)"
 
 .PHONY: assets_fonts

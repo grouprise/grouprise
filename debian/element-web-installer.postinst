@@ -6,6 +6,8 @@ set -e
 CONFIG_DIR=/etc/element-web
 WEB_DIR=/var/lib/element-web-installer/htdocs
 
+# This includes won’t work on systems not based on debian, but should be safe to ignore.
+# shellcheck disable=SC1091
 . /usr/share/debconf/confmodule
 db_version 2.1
 

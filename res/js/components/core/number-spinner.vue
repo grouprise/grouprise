@@ -41,6 +41,7 @@
   const stepValue = step => typeof step === 'number' ? step : 1
 
   export default {
+    name: 'GroupriseNumberSpinner',
     props: {
       value: {
         type: Number,

@@ -91,6 +91,7 @@
   }
 
   export default {
+    name: 'GroupriseDatetime',
     props: {
       enableTime: {
         type: Boolean,
@@ -178,6 +179,47 @@
         return null
       }
     },
+    watch: {
+      value () {
+        setTimeout(() => this.setFromSource(), 0)
+      },
+      finalValue (date) {
+        setTimeout(() => this.$emit('input', date), 0)
+      },
+      enableTime (enable) {
+        if (enable) {
+          this.timeField = input(this.$refs.time, {
+            conf: { target: () => this.$refs.timeFieldGroup }
+          })
+        } else if (this.timeField) {
+          this.timeField.remove()
+          this.timeField = null
+        }
+      }
+    },
+    created () {
+      this.setFromSource()
+    },
+    mounted () {
+      this.dateField = input(this.$refs.date, {
+        conf: { target: () => this.$refs.dateFieldGroup }
+      })
+      if (this.enableTime) {
+        this.timeField = input(this.$refs.time, {
+          conf: { target: () => this.$refs.timeFieldGroup }
+        })
+      }
+      this.datePicker = date(this.$refs.date, {
+        disable: this.disableDates,
+        appendTo: this.$refs.calendar,
+        static: true
+      })
+    },
+    beforeDestroy () {
+      this.datePicker.remove()
+      this.dateField.remove()
+      if (this.timeField) this.timeField.remove()
+    },
     methods: {
       setFromSource () {
         if (this.isEditing) return
@@ -224,47 +266,6 @@
       scrollTime: wheelListener(function (event, direction) {
         this.increaseTime(this.timeStep * direction)
       })
-    },
-    watch: {
-      value () {
-        setTimeout(() => this.setFromSource(), 0)
-      },
-      finalValue (date) {
-        setTimeout(() => this.$emit('input', date), 0)
-      },
-      enableTime (enable) {
-        if (enable) {
-          this.timeField = input(this.$refs.time, {
-            conf: { target: () => this.$refs.timeFieldGroup }
-          })
-        } else if (this.timeField) {
-          this.timeField.remove()
-          this.timeField = null
-        }
-      }
-    },
-    created () {
-      this.setFromSource()
-    },
-    mounted () {
-      this.dateField = input(this.$refs.date, {
-        conf: { target: () => this.$refs.dateFieldGroup }
-      })
-      if (this.enableTime) {
-        this.timeField = input(this.$refs.time, {
-          conf: { target: () => this.$refs.timeFieldGroup }
-        })
-      }
-      this.datePicker = date(this.$refs.date, {
-        disable: this.disableDates,
-        appendTo: this.$refs.calendar,
-        static: true
-      })
-    },
-    beforeDestroy () {
-      this.datePicker.remove()
-      this.dateField.remove()
-      if (this.timeField) this.timeField.remove()
     }
   }
 </script>

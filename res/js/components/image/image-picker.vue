@@ -36,6 +36,7 @@
 
 <script>
   export default {
+    name: 'GroupriseImagePicker',
     props: {
       image: Object,
       multiple: {

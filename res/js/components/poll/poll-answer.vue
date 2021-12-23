@@ -13,6 +13,7 @@
 
 <script>
   export default {
+    name: 'GrouprisePollAnswer',
     methods: {
       remove () {
         this.$emit('remove')

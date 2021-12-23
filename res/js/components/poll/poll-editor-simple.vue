@@ -40,6 +40,7 @@
   import SimpleAnswer from './poll-editor-simple-answer.vue'
 
   export default {
+    name: 'GroupriseSimplePollEditor',
     components: { Answer, SimpleAnswer },
     mixins: [AnswerEditorMixin],
     methods: {

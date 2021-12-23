@@ -1,5 +1,6 @@
 import base64
 import copy
+from distutils.version import LooseVersion
 import enum
 import hashlib
 import importlib.util
@@ -8,8 +9,8 @@ import logging
 import os
 import re
 import types
-from distutils.version import LooseVersion
-from typing import Any
+from typing import Any, Optional, Union
+import urllib.parse
 
 import ruamel.yaml
 
@@ -27,6 +28,7 @@ DATABASE_ENGINES_MAP = {
     "mysql": "django.db.backends.mysql",
     "postgis": "django.contrib.gis.db.backends.postgis",
     "postgresql": "django.db.backends.postgresql",
+    "spatialite": "django.contrib.gis.db.backends.spatialite",
     "sqlite": "django.db.backends.sqlite3",
 }
 EMAIL_BACKENDS_MAP = {
@@ -82,7 +84,7 @@ def get_configuration_filenames(location_candidates=None):
     If no "location_candidates" are given, the result of "get_configuration_path_candidates()" is
     used.
     The locations are tested in the given order.  The first candidate pointing at a file or
-    pointing at a directory containing suitables files (alphanumeric characters or hyphen, with
+    pointing at a directory containing suitable files (alphanumeric characters or hyphen, with
     ".yaml" extension) is used.  All following candidates are discarded.
     A number of filenames (absolute paths) is returned.
     An empty list is returned, if no suitable files were found.
@@ -146,24 +148,28 @@ class ConfigError(ValueError):
 
 
 class ConfigBase:
-
+    # We normally don’t want defaults to be stored in the settings loader, but
+    # for some setting types this is practical because they control more than one
+    # config variable at once.
+    TOLERATE_GROUPRISE_DEFAULTS = False
     # A child class may override this attribute in order to indicate, that it expects a dictionary
     # and that the dictionary is not supposed other keys besides the listed ones.
     # A warning is emitted in case of violations.
     EXPECTED_SUB_KEYS = None
 
     def __init__(self, name=None, django_target=None, default=None):
-        if (
-            (default is not None)
-            and django_target
-            and not callable(django_target)
-            and (django_target[0] == "GROUPRISE")
-        ):
-            logger.warning(
-                f"Configuration handling: defaults for grouprise-specific settings "
-                f"({django_target}) should always be defined in grouprise.*.settings "
-                f"(not in {__name__})"
-            )
+        if not self.TOLERATE_GROUPRISE_DEFAULTS:
+            if (
+                (default is not None)
+                and django_target
+                and not callable(django_target)
+                and (django_target[0] == "GROUPRISE")
+            ):
+                logger.warning(
+                    f"Configuration handling: defaults for grouprise-specific settings "
+                    f"({django_target}) should always be defined in grouprise.*.settings "
+                    f"(not in {__name__})"
+                )
         self.name = name
         # we do not use "self.default" directly - we just store it for the caller's convenience
         self.default = default
@@ -240,6 +246,38 @@ class StringConfig(ConfigBase):
                 raise ConfigError(
                     f"Setting '{self.name}' does not match the required regular expression"
                     f" ({self.regex.pattern}): {value}"
+                )
+        return value
+
+
+class URLConfig(StringConfig):
+    def __init__(
+        self,
+        *args,
+        regex=None,
+        min_length=None,
+        sensible: bool = True,
+        allowed_schemes: Optional[set[str]] = None,
+        **kwargs,
+    ):
+        super().__init__(*args, regex=regex, min_length=min_length, **kwargs)
+        self.sensible = sensible
+        self.allowed_schemes = allowed_schemes
+
+    def validate(self, value):
+        value = super().validate(value)
+        url = urllib.parse.urlparse(value)
+        if self.sensible:
+            if not url.scheme or not url.netloc:
+                raise ConfigError(
+                    f"URL configured for setting '{self.name}' doesn’t look right. "
+                    f"Scheme and host are missing."
+                )
+        if self.allowed_schemes:
+            if url.scheme not in self.allowed_schemes:
+                raise ConfigError(
+                    f"URL configured for setting '{self.name}' uses an unsupported scheme. "
+                    f"One of {', '.join(self.allowed_schemes)} is required."
                 )
         return value
 
@@ -393,7 +431,7 @@ class CacheStorageConfig(ConfigBase):
             pass
         backend = value.get("backend", self.default["backend"])
         if (backend == "filesystem") and (os.geteuid() == 0):
-            # The filesystem backend may not be enabled for a privileged user.  Otherwise files
+            # The filesystem backend may not be enabled for a privileged user. Otherwise, files
             # and directories in the cache could end up with the wrong permissions and ownership.
             dest = {"BACKEND": CACHE_BACKENDS_MAP["local_memory"]}
             logger.info("Disabling filesystem-based cache for privileged user")
@@ -754,16 +792,16 @@ class AdministratorEmailsConfig(ListConfig):
 
 
 class DjangoAppEnableConfig(BooleanConfig):
-    def __init__(self, app_name, *args, **kwargs):
+    def __init__(self, app_names: Union[list[str], tuple[str, ...]], *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.app_name = app_name
+        self.app_names = app_names
 
     def apply_to_settings(self, settings: dict, value: Any) -> None:
         # store the boolean value
         super().apply_to_settings(settings, value)
         if value:
             apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
-            apps.append(self.app_name)
+            apps.extend(self.app_names)
 
 
 class MarixRoomIDList(ListConfig):
@@ -851,6 +889,55 @@ class OIDCProviderEnableConfig(BooleanConfig):
             settings["OAUTH2_PROVIDER"]["OIDC_RSA_PRIVATE_KEY"] = oidc_key
 
 
+class TileServerConfig(URLConfig):
+    TOLERATE_GROUPRISE_DEFAULTS = True
+    REQUIRED_TOKENS = {"{s}", "{x}", "{y}", "{z}"}
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("allowed_schemes", {"https"})
+        super().__init__(*args, **kwargs)
+
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
+        if settings.get("GROUPRISE", {}).get("GEO", {}).get("ENABLED", False):
+            super().apply_to_settings(settings, value)
+            # The tile server configuration setting itself will usually not suffice if
+            # CSP has been activated as images from the tile server will be blocked.
+            # Fortunately we can infer the correct CSP rule for the tile server
+            # from the tile server setting.
+            url = urllib.parse.urlparse(value)
+            settings.setdefault("CSP_IMG_SRC", tuple())
+            settings["CSP_IMG_SRC"] += type(settings["CSP_IMG_SRC"])(
+                [f"{url.scheme}://{url.netloc.replace('{s}', '*')}"]
+            )
+
+    def validate(self, value):
+        value = super().validate(value)
+        for required_token in self.REQUIRED_TOKENS:
+            if required_token not in value:
+                raise ConfigError(
+                    f"The tile server URL configured for setting '{self.name}' must contain the "
+                    f"tokens {', '.join(self.REQUIRED_TOKENS)}."
+                )
+        return value
+
+
+class CoordinatesConfig(ListConfig):
+    def validate(self, value):
+        value = super().validate(value)
+        for item in value:
+            if (
+                not isinstance(item, list)
+                or len(item) != 2
+                or not isinstance(item[0], (int, float))
+                or not isinstance(item[1], (int, float))
+            ):
+                raise ConfigError(
+                    f"Setting '{self.name}' must be a list of "
+                    f"latitude/longitude coordinates as two-element float tuples."
+                )
+        return value
+
+
 def _get_nested_dict_value(data, path, default=None, remove=False):
     if not isinstance(data, dict):
         raise KeyError(f"Container is not a dictionary: {data}")
@@ -873,17 +960,26 @@ def _get_nested_dict_value(data, path, default=None, remove=False):
         )
 
 
-def recursivly_normalize_dict_keys_to_lower_case(data):
+def recursively_normalize_dict_keys_to_lower_case(data):
     """walk through the data (through dicts and lists) and change all dict keys to lower case"""
     if isinstance(data, dict):
         return {
-            key.lower(): recursivly_normalize_dict_keys_to_lower_case(value)
+            key.lower(): recursively_normalize_dict_keys_to_lower_case(value)
             for key, value in data.items()
         }
     elif isinstance(data, list):
-        return [recursivly_normalize_dict_keys_to_lower_case(item) for item in data]
+        return [recursively_normalize_dict_keys_to_lower_case(item) for item in data]
     else:
         return data
+
+
+def remove_empty_dicts(_dict: dict):
+    """removes empty dicts in a nested dict structure"""
+    for key in list(_dict.keys()):
+        if isinstance(_dict[key], dict):
+            remove_empty_dicts(_dict[key])
+            if not _dict[key]:
+                _dict.pop(key)
 
 
 def get_config_base_directory(locations=None):
@@ -929,9 +1025,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
     settings: the target dictionary to be populated (e.g. "locals()" in settings.py)
     config: the source dictionary parsed from a grouprise configuration file
     """
-    # We want to tolerate settings with with upper-case instead of lower-case keys.
+    # We want to tolerate settings with upper-case instead of lower-case keys.
     # This should simplify the migration from Django-based settings to the yaml-based settings.
-    config = recursivly_normalize_dict_keys_to_lower_case(config)
+    config = recursively_normalize_dict_keys_to_lower_case(config)
     default_domain = "example.org"
     configured_domain = config.get("domain", default_domain)
     parsers = [
@@ -1132,11 +1228,37 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ScriptsConfig(
             name="scripts", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
         ),
+        # geo settings
+        DjangoAppEnableConfig(
+            name=("geo", "enabled"),
+            django_target=("GROUPRISE", "GEO", "ENABLED"),
+            app_names=(
+                "grouprise.features.geo",
+                "django.contrib.gis",
+            ),
+        ),
+        TileServerConfig(
+            name=("geo", "tile_server", "url"),
+            django_target=("GROUPRISE", "GEO", "TILE_SERVER", "URL"),
+            default="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        ),
+        StringConfig(
+            name=("geo", "tile_server", "attribution"),
+            django_target=("GROUPRISE", "GEO", "TILE_SERVER", "ATTRIBUTION"),
+        ),
+        ListConfig(
+            name=("geo", "location_selector", "center"),
+            django_target=("GROUPRISE", "GEO", "LOCATION_SELECTOR", "CENTER"),
+        ),
+        IntegerConfig(
+            name=("geo", "location_selector", "zoom"),
+            django_target=("GROUPRISE", "GEO", "LOCATION_SELECTOR", "ZOOM"),
+        ),
         # matrix settings
         DjangoAppEnableConfig(
             name=("matrix_chat", "enabled"),
             django_target=("GROUPRISE", "MATRIX_CHAT", "ENABLED"),
-            app_name="grouprise.features.matrix_chat",
+            app_names=("grouprise.features.matrix_chat",),
         ),
         ChoicesConfig(
             name=("matrix_chat", "backend"),
@@ -1170,7 +1292,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         DjangoAppEnableConfig(
             name=("matrix_commander", "enabled"),
             django_target=("GROUPRISE", "MATRIX_COMMANDER", "ENABLED"),
-            app_name="grouprise.features.matrix_commander",
+            app_names=("grouprise.features.matrix_commander",),
         ),
         StringConfig(
             name=("matrix_commander", "bot_id"),
@@ -1218,13 +1340,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
     for filename in config.pop(django_settings_parser.name, []):
         django_settings_parser.validate(filename)
         import_settings_from_python(settings, filename)
-    # report unprocessed values
-    # remove all empty dictionaries (traversing only one nesting level - we do not use more depth)
-    config = {
-        key: value
-        for key, value in config.items()
-        if not (isinstance(value, dict) and not value)
-    }
+    # remove all empty dictionaries, so we can report any remaining data
+    # as unprocessed configuration options
+    remove_empty_dicts(config)
     if config:
         logger.warning(
             "Some configuration settings were not processed (%s)."

@@ -10,7 +10,6 @@ import { asyncComponent } from './util/dom'
 import PubSub from './util/pubsub'
 import HistoryStateDispatcher from './util/history'
 
-import browserWarning from './transforms/browser-warning'
 import time from './transforms/time'
 
 __webpack_nonce__ = 'value'  // eslint-disable-line
@@ -23,7 +22,6 @@ function init (searchIn = document) {
 
   // initialize components on load
   component('time', time, opts)
-  component('browser-warning', browserWarning, opts)
   asyncComponent('masonry', () => import('./transforms/masonry'), opts)
   asyncComponent('date', () => import('./transforms/date'), opts)
   asyncComponent('menu', () => import('./transforms/menu'), opts)
@@ -49,6 +47,8 @@ function init (searchIn = document) {
   asyncComponent('group-search', () => import('./transforms/group-search'), opts)
   asyncComponent('poll', () => import('./transforms/poll'), opts)
   asyncComponent('poll-editor', () => import('./transforms/poll-editor'), opts)
+  asyncComponent('location', () => import('./transforms/location'), opts)
+  asyncComponent('poi', () => import('./transforms/poi'), opts)
 
   // initialize components not based on component interface
   asyncComponent(

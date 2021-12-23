@@ -3,6 +3,7 @@ from rest_framework import serializers
 from taggit.models import Tag
 
 from grouprise import core
+from grouprise.features.geo.rest import LocationField
 from grouprise.features.gestalten.models import Gestalt, GestaltSetting
 from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
@@ -20,6 +21,24 @@ def validate_file_size(image):
         core.models.validate_file_size(image["file"])
     except django.forms.ValidationError as e:
         raise serializers.ValidationError(e)
+
+
+class IncludableFieldSerializerMixin:
+    OPTIONAL_INCLUDABLE_FIELDS = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            included_fields = [
+                field
+                for field in self.context["request"].GET.get("include", "").split(",")
+                if field in self.OPTIONAL_INCLUDABLE_FIELDS
+            ]
+        except (AttributeError, KeyError):
+            pass
+        else:
+            for field in set(self.OPTIONAL_INCLUDABLE_FIELDS) - set(included_fields):
+                self.fields.pop(field)
 
 
 class GestaltSerializer(serializers.ModelSerializer):
@@ -71,11 +90,14 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class GroupSerializer(serializers.ModelSerializer):
+class GroupSerializer(IncludableFieldSerializerMixin, serializers.ModelSerializer):
+    OPTIONAL_INCLUDABLE_FIELDS = ["location"]
+
     tags = TagSerializer(many=True)
     initials = serializers.CharField(source="get_initials", read_only=True)
     url = serializers.CharField(source="get_absolute_url", read_only=True)
     cover = serializers.SerializerMethodField()
+    location = LocationField()
 
     def get_cover(self, obj: Group):
         return obj.get_cover_url()
@@ -93,6 +115,8 @@ class GroupSerializer(serializers.ModelSerializer):
             "tags",
             "cover",
             "url",
+            # includable fields
+            "location",
         )
 
 

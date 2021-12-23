@@ -51,6 +51,7 @@
   }
 
   export default {
+    name: 'GroupriseAppointmentPollEditor',
     components: { Answer, AppointmentAnswer },
     mixins: [AnswerEditorMixin],
     methods: {

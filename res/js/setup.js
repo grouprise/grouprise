@@ -1,3 +1,4 @@
+/* eslint-disable vue/component-definition-name-casing */
 import Vue from 'vue'
 
 // custom global vue filters
@@ -6,6 +7,7 @@ import { fallback, truncatewords } from './components/core/filters.js'
 // vue setup
 Vue.filter('default', fallback)
 Vue.filter('truncatewords', truncatewords)
+/* eslint-disable-next-line vue/multi-word-component-names */
 Vue.component('draggable', () => import('vuedraggable'))
 Vue.component('sg-file-picker', () => import('./components/core/file-picker.vue'))
 Vue.component('sg-image-picker', () => import('./components/image/image-picker.vue'))

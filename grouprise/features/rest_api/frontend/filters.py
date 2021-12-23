@@ -2,6 +2,7 @@ import django_filters
 
 from grouprise.features.groups.models import Group
 from grouprise.features.images.models import Image
+from grouprise.features.geo.rest import HasLocationFilter
 
 
 class GroupFilter(django_filters.rest_framework.FilterSet):
@@ -10,6 +11,7 @@ class GroupFilter(django_filters.rest_framework.FilterSet):
     )
     name = django_filters.CharFilter(lookup_expr="icontains")
     slug = django_filters.CharFilter(lookup_expr="iexact")
+    has_location = HasLocationFilter(Group)
 
     class Meta:
         model = Group
@@ -17,6 +19,7 @@ class GroupFilter(django_filters.rest_framework.FilterSet):
             "id",
             "name",
             "slug",
+            "has_location",
         )
 
 

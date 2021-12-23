@@ -1,0 +1,10 @@
+{% load i18n %}
+
+<div data-component="location"
+     data-location-help="{{ help }}">
+    {{ form.point }}
+
+    <div data-location-selection>
+        <noscript>{% trans "You need to enable JavaScript in your browser, to be able to configure a location." %}</noscript>
+    </div>
+</div>

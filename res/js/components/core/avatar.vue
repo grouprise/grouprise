@@ -33,19 +33,20 @@
 
 <script>
   import { has } from 'lodash'
-  import createRandomColor from 'random-color'
+  import createRandomColor from 'randomcolor'
 
   const colorCache = {}
 
   function randomColorFor (name) {
     const symbol = Symbol.for(String(name))
     if (!has(colorCache, symbol)) {
-      colorCache[symbol] = createRandomColor().hexString()
+      colorCache[symbol] = createRandomColor()
     }
     return colorCache[symbol]
   }
 
   export default {
+    name: 'GroupriseAvatar',
     props: {
       entity: Object,
       rounded: Boolean,

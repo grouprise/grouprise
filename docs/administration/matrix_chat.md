@@ -4,7 +4,7 @@
 It can be used for real-time communication (with end-to-end encryption) between grouprise users
 and also external Matrix users.
 Matrix supports [federation](https://en.wikipedia.org/wiki/Federation_(information_technology)).
-Thus grouprise users may use either their existing Matrix account (hosted by an external provider)
+Thus, grouprise users may use either their existing Matrix account (hosted by an external provider)
 or they can use a new Matrix account, which is based on their grouprise account.
 
 ## Usage
@@ -24,7 +24,7 @@ Matrix homeserver):
   user
 * the group overview page in grouprise provides links to the group's Matrix rooms
 
-Additionally the usual benefits of the Matrix system are available:
+Additionally, the usual benefits of the Matrix system are available:
 
 * users from external homeservers can join the public rooms and can be invited to the private rooms
 * new rooms and communities can be created freely on the homeserver
@@ -79,7 +79,7 @@ database:
 The following configuration settings are available below the `matrix_chat` path in your grouprise settings file (e.g. `/etc/grouprise/conf.d/local.yaml`).
 They are configured automatically during the deb package configuration.
 
-* `domain`: The Matrix domain to be used.  Defaults to the grourise domain.
+* `domain`: The Matrix domain to be used.  Defaults to the grouprise domain.
 * `bot_username`: The local name of the Matrix bot used by grouprise.  Defaults to `grouprise-bot`.
 * `bot_access_token`: The access token of the Matrix bot used by grouprise.  To be generated via
   `GROUPRISE_USER=root grouprisectl matrix_register_grouprise_bot`.  In case of manual account
@@ -95,7 +95,7 @@ They are configured automatically during the deb package configuration.
   The default is `nio` - the [matrix-nio](https://github.com/poljar/matrix-nio) client library.
   The alternative backend `console` may be used for testing.
   It does not require a real matrix server.
-  Instead it just prints all relevant actions and messages to stdout.
+  Instead, it just prints all relevant actions and messages to stdout.
 
 Example:
 ```yaml

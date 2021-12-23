@@ -1,0 +1,23 @@
+{% extends 'stadt/settings.html' %}
+{% load i18n %}
+
+{% block sidebar %}
+    {% with chapter='group-geo' %}{{ block.super }}{% endwith %}
+{% endblock %}
+
+{% block content %}
+    <form method="post" class="form">
+        {% csrf_token %}
+
+        <div class="section section-group">
+            <h2>{% trans "Location" %}</h2>
+            <p>{% trans "You can define a location for your group that is shown on maps. This could be your common place for meet ups where people can find your group." %}</p>
+
+            {% include 'geo/location.html' %}
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            {% trans "Save settings" %}
+        </button>
+    </form>
+{% endblock %}

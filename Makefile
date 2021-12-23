@@ -31,7 +31,6 @@ default-target: build
 include make.d/app.mk
 include make.d/ci.mk
 include make.d/doc.mk
-include make.d/nodejs.mk
 include make.d/assets.mk
 include make.d/test.mk
 include make.d/dist.mk

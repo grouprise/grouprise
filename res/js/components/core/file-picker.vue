@@ -24,6 +24,7 @@
 
 <script>
   export default {
+    name: 'GroupriseFilePicker',
     props: {
       accept: Array,
       multiple: Boolean,
