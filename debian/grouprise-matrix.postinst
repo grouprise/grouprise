@@ -9,7 +9,8 @@ OIDC_KEY_FILE=/etc/grouprise/oidc.key
 OIDC_KEY_BITS=4096
 PKG_GROUP=_grouprise
 
-
+# This includes won’t work on systems not based on debian, but should be safe to ignore.
+# shellcheck disable=SC1091
 . /usr/share/debconf/confmodule
 db_version 2.1
 

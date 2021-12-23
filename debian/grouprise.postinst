@@ -11,6 +11,8 @@ DIR_HOME="/var/lib/grouprise"
 DIR_MEDIA="/var/lib/grouprise/media"
 DIR_STATIC="/var/lib/grouprise/static"
 
+# This includes won’t work on systems not based on debian, but should be safe to ignore.
+# shellcheck disable=SC1091
 . /usr/share/debconf/confmodule
 db_version 2.1
 
