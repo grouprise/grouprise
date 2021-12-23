@@ -1,0 +1,16 @@
+# This file is consumed by systemd and only simple variable assignments are supported.
+# Consider adding new defaults in /etc/default/grouprise.d/*.default files to avoid conflicts.
+PYTHONPATH=/usr/share/grouprise/python-lib:/usr/share/grouprise/dependencies
+
+# System- and/or Debian-specific uWSGI configuration
+UWSGI_PLUGINS=python
+UWSGI_EXEC_PRE_APP=/usr/bin/grouprisectl prepare_run
+UWSGI_SOCKET=/run/grouprise/uwsgi.socket
+UWSGI_CHOWN_SOCKET=www-data:www-data
+UWSGI_CHMOD_SOCKET=660
+UWSGI_LOGTO=/var/log/grouprise/uwsgi.log
+UWSGI_PIDFILE=/run/grouprise/uwsgi.pid
+# If you’re using the geo app beware of enabling threads because
+# the gdal python library is not thread-safe.
+# See: https://docs.djangoproject.com/en/4.0/ref/contrib/gis/deployment/
+UWSGI_WORKERS=4

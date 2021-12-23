@@ -17,6 +17,24 @@ START_ARGS="--chuid $RUN_USER"
 
 GROUPRISE_LMTPD_IS_RUNNING=$(if service grouprise-lmtpd status >/dev/null 2>&1; then echo 1; else echo 0; fi)
 
+# We support multiple environment files
+#   * /etc/default/grouprise
+#   * anything matching /etc/default/grouprise.d/*.default
+. /etc/default/grouprise
+if [ -d /etc/default/grouprise.d ]; then
+    find /etc/default/grouprise.d/ -type f -name '*.default' | while read -r file; do
+        . "$file"
+    done
+fi
+
+# We need to export settings from our environment files.
+# Compared to systemd, which exports all variables found in the environment files,
+# we need to do that manually and are therefore restricted to known variable names,
+# though we do export anything that starts with UWSGI_.
+export PYTHONPATH
+set | grep '^UWSGI_[^=]*=' | cut -f 1 -d = | while read -r env_variable; do
+    export "$env_variable"
+done
 
 do_stop_prepare() {
     /usr/sbin/service grouprise-tasks stop
