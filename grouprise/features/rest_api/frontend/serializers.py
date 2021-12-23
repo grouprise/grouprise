@@ -22,6 +22,24 @@ def validate_file_size(image):
         raise serializers.ValidationError(e)
 
 
+class IncludableFieldSerializerMixin:
+    OPTIONAL_INCLUDABLE_FIELDS = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            included_fields = [
+                field
+                for field in self.context["request"].GET.get("include", "").split(",")
+                if field in self.OPTIONAL_INCLUDABLE_FIELDS
+            ]
+        except (AttributeError, KeyError):
+            pass
+        else:
+            for field in set(self.OPTIONAL_INCLUDABLE_FIELDS) - set(included_fields):
+                self.fields.pop(field)
+
+
 class GestaltSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="__str__", read_only=True)
     initials = serializers.CharField(source="get_initials", read_only=True)
