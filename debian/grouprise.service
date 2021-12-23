@@ -6,6 +6,7 @@ After=syslog.target
 User=_grouprise
 Group=_grouprise
 ExecStart=/usr/bin/uwsgi --ini /etc/grouprise/uwsgi.ini
+ExecReload=/bin/kill -HUP $MAINPID
 RuntimeDirectory=grouprise grouprise/django-cache
 LogsDirectory=grouprise
 Restart=always
