@@ -5,7 +5,6 @@ set -eu
 PKG_USER="_grouprise"
 PKG_GROUP="_grouprise"
 DIR_BACKUPS="/var/backups/grouprise"
-DIR_ETC="/etc/grouprise"
 UWSGI_APP_SYMLINK="/etc/uwsgi/apps-enabled/grouprise.ini"
 CTL_TOOL=$(which grouprisectl stadtctl | head -1)
 
@@ -18,13 +17,11 @@ if getent passwd "$PKG_USER" >/dev/null && getent group "$PKG_GROUP" >/dev/null;
     fi
 
     if [ -e "$UWSGI_APP_SYMLINK" ]; then
-        touch "$DIR_ETC/maintenance_mode"
         echo "Creating a backup of the grouprise database ..."
         if ! "$CTL_TOOL" database_dump --prefix preinst_auto; then
             echo >&2 "Failed to create a database backup.  Maybe the relevant package (see 'grouprise-deb-*') is missing.  Aborting in order to prevent any changes while lacking a database backup."
             exit 1
         fi
-        rm -f "$DIR_ETC/maintenance_mode"
     fi
 fi
 
