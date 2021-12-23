@@ -48,6 +48,7 @@ function init (searchIn = document) {
   asyncComponent('poll', () => import('./transforms/poll'), opts)
   asyncComponent('poll-editor', () => import('./transforms/poll-editor'), opts)
   asyncComponent('location', () => import('./transforms/location'), opts)
+  asyncComponent('poi', () => import('./transforms/poi'), opts)
 
   // initialize components not based on component interface
   asyncComponent(
