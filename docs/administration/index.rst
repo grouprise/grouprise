@@ -10,6 +10,7 @@ Grouprise offers a variety of configuration settings and optional components for
    database/index
    mail_setup
    matrix_chat
+   import_feeds
    authentication/index
    import_export
    upgrading
