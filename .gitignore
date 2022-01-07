@@ -5,6 +5,7 @@ dist/
 db.sqlite3*
 huey.sqlite
 grouprise.yaml
+oidc.key
 media/
 media-*/
 node_modules
