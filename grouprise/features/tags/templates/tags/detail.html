@@ -5,7 +5,7 @@
 {% block breadcrumb %}{% breadcrumb 'Schlagworte' view.tag %}{% endblock %}
 
 {% block heading_title %}
-    <h1 class="content-classification">#{{ view.tag.slug }}</h1>
+    <h1 class="content-classification">#{{ view.tag.name }}</h1>
     {% if view.groups %}
         <span class="decoration-icon sg-group" role="presentation"></span>
     {% else %}
