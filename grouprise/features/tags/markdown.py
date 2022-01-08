@@ -1,11 +1,12 @@
 import re
 
 from django import urls
-from markdown import Extension, inlinepatterns
+from markdown import Extension, inlinepatterns, util
+from taggit.models import Tag
 
 from grouprise.core.markdown import ExtendedLinkPattern, markdown_extensions
 from grouprise.features.tags import RE_TAG_REF
-from grouprise.features.tags.utils import get_slug
+from grouprise.features.tags.utils import get_slug, get_tag_data
 
 
 class TagLinkExtension:
@@ -23,8 +24,24 @@ class TagLinkExtension:
 class TagReferencePattern(inlinepatterns.ReferencePattern):
     def handleMatch(self, m):
         name = m.group(2)
-        slug = get_slug(name)
-        return self.makeTag(urls.reverse("tag", args=[slug]), None, "#%s" % name)
+        tag: Tag = Tag.objects.get(name=name)
+        tag_category, tag_name = get_tag_data(tag)
+        return self.makeTag(
+            urls.reverse("tag", args=[tag.slug]),
+            tag_name,
+            tag_category,
+        )
+
+    def makeTag(self, href, text, category: str = None):
+        el = util.etree.Element("a")
+        text_el = util.etree.SubElement(el, "span")
+        text_el.text = text
+        el.set("href", href)
+        el.set("class", "tag")
+        if category:
+            el.set("data-tag-group-key", category.lower())
+            el.set("data-tag-group-name", category)
+        return el
 
 
 class TagReferenceExtension(Extension):

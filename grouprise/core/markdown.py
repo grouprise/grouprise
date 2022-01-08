@@ -125,7 +125,15 @@ content_allowed_tags = (
 
 content_allowed_attributes = {
     "*": ["id", "title"],
-    "a": ["href", "title", "data-component", "data-grouplink-ref"],
+    "a": [
+        "class",
+        "href",
+        "title",
+        "data-component",
+        "data-grouplink-ref",
+        "data-tag-group-key",
+        "data-tag-group-name",
+    ],
     "code": ["class"],
     "img": ["src", "alt"],
 }
