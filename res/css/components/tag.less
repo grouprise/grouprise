@@ -1,0 +1,31 @@
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.tag {
+    background: #eaeaea;
+    color: inherit;
+    border-radius: 500px;
+    padding: 0 0.5em;
+    text-decoration: none;
+    overflow: hidden;
+    display: inline-flex;
+    transition: color .2s, background-color .2s, filter .2s;
+    cursor: pointer;
+}
+
+.tag:hover,
+.tag:active,
+.tag:focus-visible {
+    filter: brightness(0.9);
+}
+
+.tag::before {
+    content: '#';
+}
+
+.tag[data-tag-group-name]::before {
+    content: '#' attr(data-tag-group-name) ':';
+}

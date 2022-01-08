@@ -23,9 +23,7 @@
                             {{ num_members }} Mitglied{{ num_members|pluralize:"er" }}
                         {% endwith %}
                     </span>
-                    {% for tag in group.tags.all %}
-                        <a href="{% url 'tag' tag.slug %}">#{{ tag }}</a>{% if not forloop.last %},{% endif %}
-                    {% endfor %}
+                    {% tags group.tags.all %}
                 </p>
             </div>
             <a href="{{ group.get_absolute_url }}" class="dock-header-link">

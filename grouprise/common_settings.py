@@ -82,6 +82,7 @@ TEMPLATES = [
             "builtins": [
                 "grouprise.core.templatetags.defaultfilters",
                 "grouprise.core.templatetags.defaulttags",
+                "grouprise.features.tags.templatetags.defaulttags",
                 "rules.templatetags.rules",
             ],
             "context_processors": [

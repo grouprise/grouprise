@@ -23,9 +23,7 @@
                 <span class="sr-only">Schlagworte</span>
             </dt>
             <dd>
-                {% for tag in group.tags.all %}
-                    <a href="{% url 'tag' tag.slug %}">#{{ tag }}</a>{% if not forloop.last %},{% endif %}
-                {% endfor %}
+                {% tags group.tags.all %}
             </dd>
         {% endif %}
         {% if group.address %}
