@@ -2,6 +2,7 @@ import logging
 import os
 import re
 
+import markdown
 import nio
 
 from grouprise.features.matrix_chat.matrix_bot import MatrixBot
@@ -52,7 +53,8 @@ class CommanderBot(MatrixBot):
     ):
         msg = {"body": body, "msgtype": msgtype}
         if parser == "markdown":
-            msg["format"] = "org.matrix.custom.html"
+            msg["formatted"] = markdown.markdown(body)
+            msg["formatted_body"] = "org.matrix.custom.html"
         try:
             response = await self.client.room_send(room.room_id, "m.room.message", msg)
         except nio.exceptions.ProtocolError as exc:
