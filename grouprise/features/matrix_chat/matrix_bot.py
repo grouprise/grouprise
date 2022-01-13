@@ -95,12 +95,22 @@ class MatrixBot:
         _latest_sync_token = sync_result.next_batch
 
     async def __aenter__(self):
-        await self.sync()
+        try:
+            await self.sync()
+        except MatrixError:
+            try:
+                await self.close()
+            except Exception:
+                pass
+            raise
         return self
 
     async def __aexit__(self, exc_type, exc_value, traceback):
-        await self.client.close()
+        await self.close()
         return False
+
+    async def close(self):
+        await self.client.close()
 
     async def send_text(
         self, room_id: str, body: str, msgtype="m.notice", parser="markdown"
