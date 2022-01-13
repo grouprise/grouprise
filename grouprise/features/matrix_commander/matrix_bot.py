@@ -67,14 +67,15 @@ class CommanderBot(MatrixBot):
     async def serve_forever(self):
         # discard old messages during an initial sync
         self._ignore_messages = True
-        await self.client.sync()
+        await self.sync()
         logger.info(
             "Bot has logged in successfully and is waiting for requests: %s",
             self.bot_id,
         )
         # process all further (new) messages
         self._ignore_messages = False
-        await self.client.sync_forever(30 * 1000, set_presence="online")
+        await self.sync(set_presence="online", update_period=30)
+        await self.close()
 
     async def handle_message(self, room: nio.MatrixRoom, event: nio.RoomMessageText):
         if self._ignore_messages:

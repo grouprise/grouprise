@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from kien.runner import ConsoleRunner
 
 from grouprise.core.utils import run_async
+from grouprise.features.matrix_chat.matrix_bot import MatrixError
 from grouprise.features.matrix_commander.commands import commander
 from grouprise.features.matrix_commander.matrix_bot import CommanderBot
 
@@ -38,8 +39,17 @@ class Command(BaseCommand):
         if options["console"]:
             self.serve_console()
         else:
-            bot = CommanderBot()
-            run_async(bot.serve_forever())
+            try:
+                run_async(self.serve_bot())
+            except KeyboardInterrupt:
+                pass
+
+    async def serve_bot(self):
+        try:
+            async with CommanderBot() as bot:
+                await bot.serve_forever()
+        except MatrixError as exc:
+            self.stderr.write(self.style.ERROR(f"Matrix error: {exc}"))
 
     def serve_console(self):
         console = CommanderConsole()

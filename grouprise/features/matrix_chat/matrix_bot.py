@@ -67,11 +67,22 @@ class MatrixBot:
         self.client.matrix_bot = self
         self.client.access_token = MATRIX_SETTINGS.BOT_ACCESS_TOKEN
 
-    async def sync(self, set_presence="online", since=None):
+    async def sync(self, set_presence="online", since=None, update_period=None):
+        """synchronize the bot state with the server state
+
+        If "update_period" is specified, then the function is running forever and
+        polls for new events.  The period defines the maximum duration of a request,
+        even if no events are received.  Callbacks are executed immediately anyway.
+        """
         global _latest_sync_token
         if since is None:
             since = _latest_sync_token
-        sync_result = await self.client.sync(set_presence=set_presence, since=since)
+        if update_period is None:
+            sync_function = self.client.sync
+        else:
+            period_sec = 1000 * update_period
+            sync_function = functools.partial(self.client.sync_forever, period_sec)
+        sync_result = await sync_function(set_presence=set_presence, since=since)
         if isinstance(sync_result, nio.responses.SyncError):
             raise MatrixError(
                 f"Failed to synchronize state with homeserver: {sync_result}"
