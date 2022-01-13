@@ -23,6 +23,7 @@ class CommanderBot(MatrixBot):
         self.client = nio.AsyncClient(matrix_url, self.bot_id)
         self.client.access_token = bot_access_token
         self.client.add_event_callback(self.cb_autojoin_admin_rooms, nio.InviteEvent)
+        self.client.add_event_callback(self.handle_encrypted_message, nio.MegolmEvent)
         self.client.add_event_callback(self.handle_message, nio.RoomMessageText)
         if command_prefix is None:
             local_part = re.escape(self.bot_id.split(":")[0].lstrip("@"))
@@ -95,3 +96,15 @@ class CommanderBot(MatrixBot):
                 logger.info("Processing incoming message: %s", remainder[:60])
                 response = os.linesep.join(self._commander.process_command(remainder))
                 await self.send_text(room, response)
+
+    async def handle_encrypted_message(
+        self, room: nio.MatrixRoom, event: nio.MegolmEvent
+    ):
+        logger.info("Received encrypted message from room: %s", room.name)
+        response = os.linesep.join(
+            [
+                'Sorry, grouprise\'s "matrix-commander" bot does not support encryption.',
+                "You should not not invite this bot to encrypted rooms.",
+            ]
+        )
+        await self.send_text(room, response)
