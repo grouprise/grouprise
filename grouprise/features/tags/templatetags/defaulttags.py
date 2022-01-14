@@ -7,10 +7,10 @@ register = template.Library()
 
 @register.inclusion_tag("tags/_tag.html", name="tag")
 def render_tag(tag):
-    tag_category, tag_name = get_tag_data(tag)
+    tag_group, tag_name = get_tag_data(tag)
     return {
         "tag": {
-            "category": tag_category,
+            "group": tag_group,
             "name": tag_name,
             "slug": tag.slug,
         }
