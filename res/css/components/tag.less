@@ -21,11 +21,3 @@
 .tag:focus-visible {
     filter: brightness(0.9);
 }
-
-.tag::before {
-    content: '#';
-}
-
-.tag[data-tag-group-name]::before {
-    content: '#' attr(data-tag-group-name) ':';
-}

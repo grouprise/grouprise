@@ -1,1 +1,1 @@
-<a class="tag" href="{% url 'tag' tag.slug %}" {% if tag.group %}data-tag-group-key="{{ tag.group.lower }}" data-tag-group-name="{{ tag.group }}"{% endif %}><span>{{ tag.name }}</span></a>
+<a class="tag" href="{% url 'tag' tag.slug %}" {% if tag.group %}data-tag-group-key="{{ tag.group.lower }}"{% endif %}>{% if tag.group %}<span class="tag-group"><span class="tag-hash">#</span>{{ tag.group }}:</span>{% else %}<span class="tag-hash">#</span>{% endif %}<span class="tag-name">{{ tag.name }}</span></a>
