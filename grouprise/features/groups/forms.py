@@ -18,11 +18,6 @@ class RecommendForm(forms.Form):
 
 
 class Update(forms.ModelForm):
-    tags = TagField(
-        widget=TextareaTagWidget({"rows": 2}),
-        help_text=_("A comma-separated list of tags that best describe your group."),
-    )
-
     class Meta:
         fields = (
             "address",
@@ -40,6 +35,10 @@ class Update(forms.ModelForm):
             "address": forms.Textarea({"rows": 3}),
             "date_founded": forms.DateInput({"data-component": "date"}),
             "description": forms.Textarea({"rows": 5}),
+            "tags": TextareaTagWidget({"rows": 2}),
+        }
+        help_texts = {
+            "tags": _("A comma-separated list of tags that best describe your group."),
         }
 
     def __init__(self, *args, **kwargs):
