@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import gettext as _
-from taggit.forms import TagField, TextareaTagWidget
+from taggit.forms import TextareaTagWidget
 
 from grouprise.core.settings import get_grouprise_site
 
