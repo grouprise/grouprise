@@ -20,7 +20,7 @@ class RecommendForm(forms.Form):
 class Update(forms.ModelForm):
     tags = TagField(
         widget=TextareaTagWidget({"rows": 2}),
-        help_text=_("A comma-separated list of tags that best describe your group.")
+        help_text=_("A comma-separated list of tags that best describe your group."),
     )
 
     class Meta:
