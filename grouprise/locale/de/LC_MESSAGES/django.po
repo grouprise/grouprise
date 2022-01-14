@@ -350,6 +350,11 @@ msgstr "Hauptaddresse"
 msgid "e.g. Repair Cafe"
 msgstr "z.B. Foodcoop"
 
+msgid "A comma-separated list of tags that best describe your group."
+msgstr ""
+"Eine kommaseparierte Liste von Schlagworten, die deine Gruppe bestmöglich "
+"beschreiben."
+
 msgid "Path of the group's site"
 msgstr "Adresse der Gruppenseite"
 
