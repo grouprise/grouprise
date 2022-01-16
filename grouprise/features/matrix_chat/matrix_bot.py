@@ -340,12 +340,10 @@ class ChatBot(MatrixBaseBot):
         Optionally these invitations may be limited to a set of gestalt objects.
         """
         for room in MatrixChatGroupRoom.objects.filter(group=group):
-            invited_members = [
+            invited_members = {
                 invite.gestalt.id
-                for invite in room.invitations.distinct("gestalt").select_related(
-                    "gestalt"
-                )
-            ]
+                for invite in room.invitations.select_related("gestalt")
+            }
             if gestalten is None:
                 invitees = group.members.exclude(id__in=invited_members)
             else:
