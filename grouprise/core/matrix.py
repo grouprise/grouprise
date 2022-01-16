@@ -1,3 +1,4 @@
+from collections.abc import Callable
 import copy
 import functools
 import logging
@@ -150,10 +151,24 @@ class MatrixConsoleClient:
         self._stream.write(message + "\n")
 
     async def sync(self, set_presence=None, since=None):
-        pass
+        return nio.responses.SyncResponse(
+            next_batch=str(int(time.time())),
+            rooms={},
+            device_key_count=0,
+            device_list=None,
+            to_device_events=[],
+            presence_events=[],
+            account_data_events=[],
+        )
 
     async def close(self):
         self.logged_in = False
+
+    def add_event_callback(
+        self, func: Callable[[nio.MatrixRoom, nio.Event], None], event: nio.Event
+    ):
+        # just a stub: there is currently no need for the handling of events
+        pass
 
     @staticmethod
     def _get_event_id():
@@ -182,7 +197,8 @@ class MatrixConsoleClient:
 
     @room_resolver(nio.responses.RoomGetStateError)
     async def room_get_state(self, room):
-        return copy.deepcopy(room.state)
+        events = [{"type": key, "content": value} for key, value in room.state.items()]
+        return nio.RoomGetStateResponse(events=events, room_id=room.room_id)
 
     @room_resolver(nio.responses.RoomPutStateError)
     async def room_put_state(self, room, state_key, wanted_state):
@@ -190,6 +206,7 @@ class MatrixConsoleClient:
             f"Changing state of room '{room.label}' ({state_key}): {wanted_state}"
         )
         room.state[state_key] = copy.deepcopy(wanted_state)
+        return nio.RoomPutStateResponse(event_id=int(time.time()), room_id=room.room_id)
 
     @room_resolver(nio.responses.RoomInviteError)
     async def room_invite(self, room, invitee_id):
