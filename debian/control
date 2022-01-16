@@ -39,6 +39,7 @@ Build-Depends:
  python3-gdal,
  python3-html2text,
  python3-markdown,
+ python3-matrix-nio,
  python3-pil,
  python3-recommonmark,
  python3-ruamel.yaml,

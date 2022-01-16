@@ -7,6 +7,16 @@ secret_key: DEVELOPMENT_IS_NOT_SECURE
 email_submission: { backend: console }
 database: { engine: sqlite, name: db.sqlite3 }
 transport_security: disabled
+matrix_chat:
+  enabled: true
+  bot_username: grouprise-bot
+  bot_access_token: 'SECRET_ACCESS_TOKEN'
+  public_listener_rooms:
+    - "!foo:example.org"
+  backend: console
+matrix_commander:
+  enabled: true
+  backend: console
 # allow the usage of a local webpack dev server (via `npm run dev`)
 csp:
   script_src:
