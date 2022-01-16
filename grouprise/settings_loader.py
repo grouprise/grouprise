@@ -14,7 +14,6 @@ import urllib.parse
 
 import ruamel.yaml
 
-from grouprise.features.matrix_chat import MatrixBackend
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +57,11 @@ class TransportSecurity(enum.Enum):
     REVERSE_PROXY = "reverse-proxy"
     # the site is published via http-only
     DISABLED = "disabled"
+
+
+class MatrixBackend(enum.Enum):
+    NIO = "nio"
+    CONSOLE = "console"
 
 
 def get_configuration_path_candidates():
@@ -1293,6 +1297,11 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name=("matrix_commander", "enabled"),
             django_target=("GROUPRISE", "MATRIX_COMMANDER", "ENABLED"),
             app_names=("grouprise.features.matrix_commander",),
+        ),
+        ChoicesConfig(
+            name=("matrix_commander", "backend"),
+            django_target=("GROUPRISE", "MATRIX_COMMANDER", "BACKEND"),
+            choices=MatrixBackend,
         ),
         StringConfig(
             name=("matrix_commander", "bot_id"),

@@ -13,7 +13,7 @@ from grouprise.core.utils import run_async
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
 
-from .matrix_bot import MatrixBot
+from .matrix_bot import ChatBot
 from .models import MatrixChatGestaltSettings, MatrixChatGroupRoom
 from .settings import MATRIX_SETTINGS
 
@@ -38,7 +38,7 @@ def get_room_url_for_requester(room_id, request_user):
     # supposed to be implementation details and should not be used in public.
     # See https://github.com/vector-im/element-web/issues/2925
     async def retrieve_room_alias():
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             return await bot.get_public_room_name(room_id)
 
     room_alias = run_async(retrieve_room_alias())

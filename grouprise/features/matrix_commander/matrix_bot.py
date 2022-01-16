@@ -5,7 +5,7 @@ import re
 import markdown
 import nio
 
-from grouprise.features.matrix_chat.matrix_bot import MatrixBot
+from grouprise.core.matrix import MatrixBaseBot
 
 from .commands import MatrixCommander
 from .settings import MATRIX_COMMANDER_SETTINGS
@@ -13,15 +13,15 @@ from .settings import MATRIX_COMMANDER_SETTINGS
 logger = logging.getLogger(__name__)
 
 
-class CommanderBot(MatrixBot):
+class CommanderBot(MatrixBaseBot):
     def __init__(self, command_prefix=None):
         self._commander = MatrixCommander()
         self.bot_id = MATRIX_COMMANDER_SETTINGS.BOT_ID
         bot_access_token = MATRIX_COMMANDER_SETTINGS.BOT_ACCESS_TOKEN
+        backend = MATRIX_COMMANDER_SETTINGS.BACKEND
         domain = self.bot_id.split(":")[-1]
         matrix_url = f"https://{domain}"
-        self.client = nio.AsyncClient(matrix_url, self.bot_id)
-        self.client.access_token = bot_access_token
+        super().__init__(matrix_url, self.bot_id, bot_access_token, backend=backend)
         self.client.add_event_callback(self.cb_autojoin_admin_rooms, nio.InviteEvent)
         self.client.add_event_callback(self.handle_encrypted_message, nio.MegolmEvent)
         self.client.add_event_callback(self.handle_message, nio.RoomMessageText)

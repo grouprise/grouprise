@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.utils import run_async
 from grouprise.features.groups.models import Group
-from grouprise.features.matrix_chat.matrix_bot import MatrixBot
+from grouprise.features.matrix_chat.matrix_bot import ChatBot
 from grouprise.features.matrix_chat.models import MatrixChatGroupRoom
 from grouprise.features.matrix_chat.settings import (
     get_or_create_oidc_client_application,
@@ -39,7 +39,7 @@ class Command(BaseCommand):
         if action == "configure-rooms":
 
             async def create_group_rooms(groups):
-                async with MatrixBot() as bot:
+                async with ChatBot() as bot:
                     for group in groups:
                         if options["group"] and (group.slug != options["group"]):
                             continue
@@ -54,7 +54,7 @@ class Command(BaseCommand):
         elif action == "invite-room-members":
 
             async def invite_to_group_rooms(groups):
-                async with MatrixBot() as bot:
+                async with ChatBot() as bot:
                     for group in groups:
                         if options["group"] and (group.slug != options["group"]):
                             continue
@@ -128,7 +128,7 @@ class Command(BaseCommand):
         elif action == "update-statistics":
 
             async def update():
-                async with MatrixBot() as bot:
+                async with ChatBot() as bot:
                     await bot.update_statistics()
 
             run_async(update())

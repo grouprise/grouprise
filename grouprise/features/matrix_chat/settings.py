@@ -1,7 +1,8 @@
 from django.conf import settings
 
 from grouprise.core.settings import LazySettingsResolver, get_grouprise_site
-from grouprise.features.matrix_chat import MatrixBackend
+from grouprise.settings_loader import MatrixBackend
+
 
 try:
     _MATRIX_SETTINGS = settings.GROUPRISE["MATRIX_CHAT"]

@@ -41,8 +41,10 @@ Follow these steps:
             bot_access_token: "ACCESS_TOKEN_GENERATED_ABOVE"
             admin_rooms:
                     - "!lTcmhpFGnyuvwYyeCH:example.org"
+            backend: nio
     ```
     * The room ID (see above `admin_rooms`) can be found in the *Room Settings* within the *Advanced* tab.
+    * The `backend` can be `nio` (default value, a Matrix client library) or `console` (a dummy implementation for debugging).
 1. Try to run the bot manually (with verbose logging; stop it via `CTRL-C`):
     ```shell
     grouprisectl matrix_commander --log-level info

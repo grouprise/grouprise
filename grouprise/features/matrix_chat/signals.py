@@ -10,13 +10,14 @@ from huey.contrib.djhuey import db_task
 import grouprise.features.content.models
 import grouprise.features.contributions.models
 import grouprise.features.memberships.models
+from grouprise.core.matrix import MatrixError
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.core.utils import run_async
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 
-from .matrix_bot import MatrixBot, MatrixError
+from .matrix_bot import ChatBot
 from .models import (
     MatrixChatGestaltSettings,
     MatrixChatGroupRoom,
@@ -58,7 +59,7 @@ def post_matrix_chat_gestalt_settings_save(
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _send_invitations_for_gestalt(gestalt):
     async def _invite_gestalt(gestalt):
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             for membership in gestalt.memberships.all():
                 group = membership.group
                 try:
@@ -83,7 +84,7 @@ def create_matrix_rooms_for_new_group(sender, instance, created, raw=False, **kw
 @db_task()
 def _sync_rooms_delayed(group):
     async def _sync_rooms_async(group):
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             try:
                 await bot.synchronize_rooms_of_group(group)
             except MatrixError as exc:
@@ -115,7 +116,7 @@ def _get_matrix_messages_for_group(
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -> None:
     async def _send_room_messages_async():
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             for message in messages:
                 try:
                     await bot.send_text(message.room_id, message.text)
@@ -183,7 +184,7 @@ def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
     """
 
     async def invite_and_send():
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             room_id = get_gestalt_matrix_notification_room(gestalt)
             if room_id is None:
                 # we need to invite the user into a new room and store the room ID
@@ -265,7 +266,7 @@ def synchronize_matrix_room_memberships(sender, instance, created, raw=False, **
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _invite_to_group_rooms(group):
     async def _invite_to_group_rooms_delayed(group):
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             try:
                 async for invited in bot.send_invitations_to_group_members(group):
                     logger.info(f"Invitation sent: {invited}")
@@ -303,7 +304,7 @@ def _migrate_to_new_room(*args):
     async def _migrate_to_new_room_delayed(
         room_object, old_room_id, room_alias, new_room_id
     ):
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             await bot.remove_room_alias(old_room_id, room_alias)
             text = _(
                 'The {room_visibility} chat room of ["{group_name}"]({group_url})'
@@ -334,7 +335,7 @@ def kick_room_members_after_leaving_group(sender, instance, **kwargs):
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def _kick_gestalt_from_group_rooms(group, gestalt):
     async def _kick_gestalt_from_group_rooms_delayed(group, gestalt):
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             try:
                 await bot.kick_gestalt_from_group_rooms(group, gestalt)
             except MatrixError as exc:

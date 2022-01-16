@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from kien.runner import ConsoleRunner
 
 from grouprise.core.utils import run_async
-from grouprise.features.matrix_chat.matrix_bot import MatrixError
+from grouprise.core.matrix import MatrixError
 from grouprise.features.matrix_commander.commands import commander
 from grouprise.features.matrix_commander.matrix_bot import CommanderBot
 

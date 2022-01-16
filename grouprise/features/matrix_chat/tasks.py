@@ -6,7 +6,7 @@ from huey.contrib.djhuey import db_periodic_task
 from grouprise.core.utils import run_async
 from grouprise.features.groups.models import Group
 
-from .matrix_bot import MatrixBot
+from .matrix_bot import ChatBot
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def update_matrix_chat_statiscs():
     logger.info("Update statistics for matrix chats")
 
     async def update():
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             await bot.update_statistics()
 
     run_async(update())
@@ -32,7 +32,7 @@ def synchronize_matrix_rooms():
     logger.info("Synchronize matrix chat rooms")
 
     async def synchronize():
-        async with MatrixBot() as bot:
+        async with ChatBot() as bot:
             for group in Group.objects.all():
                 [_ async for _ in bot.synchronize_rooms_of_group(group)]
                 [_ async for _ in bot.send_invitations_to_group_members(group)]
