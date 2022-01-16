@@ -86,7 +86,8 @@ def _sync_rooms_delayed(group):
     async def _sync_rooms_async(group):
         async with ChatBot() as bot:
             try:
-                await bot.synchronize_rooms_of_group(group)
+                async for room in bot.synchronize_rooms_of_group(group):
+                    pass
             except MatrixError as exc:
                 logger.warning(
                     f"Failed to synchronize group ({group}) with matrix rooms: {exc}"

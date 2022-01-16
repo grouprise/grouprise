@@ -355,7 +355,7 @@ class ChatBot(MatrixBaseBot):
                     if gestalt.id not in invited_members
                 ]
             for gestalt in invitees:
-                if self.invite_into_room(room.room_id, gestalt, str(room)):
+                if await self.invite_into_room(room.room_id, gestalt, str(room)):
                     yield room, gestalt
 
     async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> bool:
