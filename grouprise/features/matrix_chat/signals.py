@@ -127,19 +127,23 @@ def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -
     run_async(_send_room_messages_async())
 
 
-@receiver(post_save, sender=grouprise.features.content.models.Content)
+# We are only interested in Content items, but sadly we cannot use "save a Content" as a filter
+# source for this signal, since the association for a Content instance are assigned *after* the
+# Content is created.
+# See "self.container_class.objects.create" in "grouprise.features.content.forms.Create.save" for
+# details.
+# Thus we peek into any new Association and discard all non-Content containers.
+@receiver(post_save, sender=grouprise.features.associations.models.Association)
 def send_content_notification_to_matrix_rooms(
     sender, instance, created, raw=False, **kwargs
 ):
     if not raw:
-        # For unknown reasons the instance is not complete at this moment
-        # ("instance.get_associated_groups()" is empty).  Thus we delay the execution slightly by
-        # asking our worker process to process the instance when it is ready.
-        _delayed_send_content_notification_to_matrix_rooms(instance, created)
+        if isinstance(instance.container, grouprise.features.content.models.Content):
+            _send_content_notification_to_matrix_rooms(instance.container, created)
 
 
 @db_task()
-def _delayed_send_content_notification_to_matrix_rooms(instance, created):
+def _send_content_notification_to_matrix_rooms(instance, created):
     # only sent group messages to matrix rooms
     if instance.get_associated_groups():
         if instance.is_event:
