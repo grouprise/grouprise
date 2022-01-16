@@ -110,6 +110,9 @@ class MatrixDummyServer:
     def __init__(self):
         self.rooms = {}
 
+    def reset(self):
+        self.rooms.clear()
+
 
 class MatrixDummyRoom:
     def __init__(self, room_id, room_label=None):
@@ -250,3 +253,7 @@ class MatrixConsoleClient:
 
 # use a singleton for the server state
 MatrixConsoleClient.server = MatrixDummyServer()
+
+
+def get_dummy_matrix_server():
+    return MatrixConsoleClient.server

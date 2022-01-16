@@ -26,21 +26,23 @@ logger = logging.getLogger(__name__)
 def _populate_group_rooms(server):
     """initialize the room dictionary based on the state of the database"""
     for group_room in MatrixChatGroupRoom.objects.all():
-        room_label = "Group '{}' ({})".format(
-            group_room.group, "private" if group_room.is_private else "public"
-        )
-        room = MatrixDummyRoom(group_room.room_id, room_label)
-        for membership in group_room.group.memberships.all():
-            gestalt = membership.member
-            try:
-                room.members.add(gestalt.matrix_chat_settings.matrix_id)
-            except ObjectDoesNotExist:
-                pass
-        server.rooms[room.room_id] = room
+        if group_room.room_id not in server.rooms:
+            room_label = "Group '{}' ({})".format(
+                group_room.group, "private" if group_room.is_private else "public"
+            )
+            room = MatrixDummyRoom(group_room.room_id, room_label)
+            for membership in group_room.group.memberships.all():
+                gestalt = membership.member
+                try:
+                    room.members.add(gestalt.matrix_chat_settings.matrix_id)
+                except ObjectDoesNotExist:
+                    pass
+            server.rooms[room.room_id] = room
     for setting in get_matrix_notification_room_queryset():
         room_id = setting.value
-        room_label = f"Gestalt '{setting.gestalt}'"
-        server.rooms[room_id] = MatrixDummyRoom(room_id, room_label)
+        if room_id not in server.rooms:
+            room_label = f"Gestalt '{setting.gestalt}'"
+            server.rooms[room_id] = MatrixDummyRoom(room_id, room_label)
 
 
 class ChatBot(MatrixBaseBot):
