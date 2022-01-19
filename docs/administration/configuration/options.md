@@ -401,6 +401,7 @@ The [memcached](http://memcached.org/)-based storages (`memcache` and `pylibmc`)
 The use of an unsuitable cache storage results in partially stale caches, since cache invalidation cannot reach all caches.
 
 Most storages require a `location` attribute.
+The `max_entries` attribute may be used for specifying a maximum number of cache items to be stored (default: `20000`).
 See the [Django documentation](https://docs.djangoproject.com/en/dev/topics/cache/) for details.
 
 Default: `{"backend": "local_memory"}`

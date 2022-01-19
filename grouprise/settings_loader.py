@@ -433,6 +433,11 @@ class CacheStorageConfig(ConfigBase):
             dest["LOCATION"] = value["location"]
         except KeyError:
             pass
+        dest["OPTIONS"] = {}
+        # The cache seems to be used quite heavily with around 8k cache entries (maybe due to
+        # cachalot).  The required storage for these 8k entries is approximately 32 MB.
+        # We leave some headroom in order to track the cache usage.
+        dest["OPTIONS"]["MAX_ENTRIES"] = int(value.get("max_entries", 20000))
         backend = value.get("backend", self.default["backend"])
         if (backend == "filesystem") and (os.geteuid() == 0):
             # The filesystem backend may not be enabled for a privileged user. Otherwise, files
