@@ -10,14 +10,12 @@ import time
 import markdown
 import nio
 
+from django.core.cache import cache
+
 from grouprise.settings_loader import MatrixBackend
 
 
 logger = logging.getLogger(__name__)
-
-# this variable serves as a trivial per-process cache for the latest sync timestamp
-# see https://git.hack-hro.de/grouprise/grouprise/-/issues/755
-_latest_sync_token = None
 
 
 class MatrixError(Exception):
@@ -31,6 +29,8 @@ def get_matrix_client(server_url, user_id, access_token, backend=MatrixBackend.N
         # maybe we should use "self.client.login()" instead?
     elif backend == MatrixBackend.CONSOLE:
         client = MatrixConsoleClient()
+        client.homeserver = server_url
+        client.user_id = user_id
     else:
         raise NotImplementedError(
             f"The selected Matrix backend is not supported: {backend}"
@@ -52,9 +52,11 @@ class MatrixBaseBot:
         polls for new events.  The period defines the maximum duration of a request,
         even if no events are received.  Callbacks are executed immediately anyway.
         """
-        global _latest_sync_token
+        sync_token_cache_key = ".".join(
+            ["matrix_chat", "sync_token", self.client.homeserver, self.client.user_id]
+        )
         if since is None:
-            since = _latest_sync_token
+            since = cache.get(sync_token_cache_key)
         if update_period is None:
             sync_function = self.client.sync
         else:
@@ -70,7 +72,7 @@ class MatrixBaseBot:
                 "Failed to login. There is a problem with the matrix server or the configured "
                 "account settings are invalid."
             )
-        _latest_sync_token = sync_result.next_batch
+        cache.set(sync_token_cache_key, sync_result.next_batch, 24 * 3600)
 
     async def __aenter__(self):
         try:
