@@ -163,7 +163,6 @@ class MatrixConsoleClient:
             device_list=None,
             to_device_events=[],
             presence_events=[],
-            account_data_events=[],
         )
 
     async def close(self):
