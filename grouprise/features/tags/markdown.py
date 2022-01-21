@@ -24,7 +24,7 @@ class TagLinkExtension:
 class TagReferencePattern(inlinepatterns.ReferencePattern):
     def handleMatch(self, m):
         name = m.group(2)
-        tag: Tag = Tag.objects.get(name=name)
+        tag, was_created = Tag.objects.get_or_create(name=name)
         tag_category, tag_name = get_tag_data(tag)
         return self.makeTag(
             urls.reverse("tag", args=[tag.slug]),
