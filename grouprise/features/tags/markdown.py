@@ -6,7 +6,7 @@ from taggit.models import Tag
 
 from grouprise.core.markdown import ExtendedLinkPattern, markdown_extensions
 from grouprise.features.tags import RE_TAG_REF
-from grouprise.features.tags.utils import get_slug, get_tag_data
+from grouprise.features.tags.utils import get_slug, get_tag_render_data
 
 
 class TagLinkExtension:
@@ -25,23 +25,37 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
     def handleMatch(self, m):
         name = m.group(2)
         tag, was_created = Tag.objects.get_or_create(name=name)
-        tag_category, tag_name = get_tag_data(tag)
+        tag_group, tag_name = get_tag_render_data(tag)
         return self.makeTag(
             urls.reverse("tag", args=[tag.slug]),
             tag_name,
-            tag_category,
+            tag_group,
         )
 
-    def makeTag(self, href, text, category: str = None):
-        el = util.etree.Element("a")
-        text_el = util.etree.SubElement(el, "span")
-        text_el.text = text
-        el.set("href", href)
-        el.set("class", "tag")
-        if category:
-            el.set("data-tag-group-key", category.lower())
-            el.set("data-tag-group-name", category)
-        return el
+    def makeTag(self, href, label, group_label: str = None):
+        link_el = util.etree.Element("a")
+        link_el.set("href", href)
+        link_el.set("class", "tag")
+        hash_el = util.etree.Element("span")
+        hash_el.set("class", "tag-hash")
+        hash_el.text = "#"
+        if group_label:
+            link_el.set("data-tag-group-key", group_label.lower())
+            group_el = util.etree.Element("span")
+            group_el.set("class", "tag-group")
+            group_el.append(hash_el)
+            # The element tail will be output AFTER the closing tag of the
+            # element it’s assigned to. One might intuitively think it
+            # should be assigned to the group_el, but that is not the case.
+            hash_el.tail = group_label + ":"
+            link_el.append(group_el)
+        else:
+            link_el.append(hash_el)
+        label_el = util.etree.Element("span")
+        label_el.set("class", "tag-name")
+        label_el.text = label
+        link_el.append(label_el)
+        return link_el
 
 
 class TagReferenceExtension(Extension):

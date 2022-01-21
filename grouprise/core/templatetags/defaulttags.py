@@ -165,7 +165,7 @@ def markdown(
     #      result just in order to get some partially formatted text
     result = python_markdown.markdown(text, extensions=extensions)
     if preset == "linkonly":
-        result = bleach(result, disable_tags="all", except_for=("a",))
+        result = bleach(result, disable_tags="all", except_for=("a", "span"))
     elif filter_tags:
         disabled_tags = tuple(disable_tags.split(","))
         result = bleach(result, disabled_tags)

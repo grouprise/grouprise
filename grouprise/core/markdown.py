@@ -104,6 +104,7 @@ content_allowed_tags = (
     "img",
     "sub",
     "sup",
+    "span",
     # citation
     "blockquote",
     "cite",
@@ -132,8 +133,8 @@ content_allowed_attributes = {
         "data-component",
         "data-grouplink-ref",
         "data-tag-group-key",
-        "data-tag-group-name",
     ],
+    "span": ["class"],
     "code": ["class"],
     "img": ["src", "alt"],
 }

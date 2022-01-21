@@ -1,13 +1,13 @@
 from django import template
 
-from grouprise.features.tags.utils import get_tag_data
+from grouprise.features.tags.utils import get_tag_render_data
 
 register = template.Library()
 
 
 @register.inclusion_tag("tags/_tag.html", name="tag")
 def render_tag(tag):
-    tag_group, tag_name = get_tag_data(tag)
+    tag_group, tag_name = get_tag_render_data(tag)
     return {
         "tag": {
             "group": tag_group,
