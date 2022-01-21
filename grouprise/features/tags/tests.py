@@ -1,5 +1,7 @@
 from django.core import mail
+from django.template import Context, Template
 from django.urls import reverse
+from taggit.models import Tag
 
 from grouprise.core.tests import Test
 from grouprise.core.tests import get_url as u
@@ -66,3 +68,54 @@ class TaggedGroupTests(TaggedGroupMixin, AuthenticatedMemberMixin, Test):
             "{}?group={}".format(reverse("group-settings"), self.group.slug)
         )
         self.assertEqual(r.status_code, 200)
+
+
+class TagRenderingTests(Test):
+    SIMPLE_TAG_HTML = (
+        '<a class="tag" href="/stadt/tags/my-simple-tag/">'
+        '<span class="tag-hash">#</span>'
+        '<span class="tag-name">my-simple-tag</span>'
+        "</a>"
+    )
+    GROUP_TAG_HTML = (
+        '<a class="tag" href="/stadt/tags/newyearresolutionbekind/" data-tag-group-key="newyearresolution">'  # noqa: E501
+        '<span class="tag-group">'
+        '<span class="tag-hash">#</span>NewYearResolution:'
+        "</span>"
+        '<span class="tag-name">BeKind</span>'
+        "</a>"
+    )
+
+    def _render_tag_markdown(self, tag_markdown: str):
+        ctx = Context({"tag_markdown": tag_markdown})
+        return Template("{% markdown tag_markdown plain=True %}").render(ctx).strip()
+
+    def _render_tag_template(self, tag: Tag):
+        ctx = Context({"tag": tag})
+        return Template("{% tag tag %}").render(ctx).strip()
+
+    def test_render_simple_tag(self):
+        tag = Tag.objects.create(name="my-simple-tag")
+        self.assertHTMLEqual(self._render_tag_template(tag), self.SIMPLE_TAG_HTML)
+        self.assertHTMLEqual(
+            self._render_tag_markdown(f"#{tag.name}"),
+            f"<p>{self.SIMPLE_TAG_HTML}</p>",
+        )
+
+    def test_render_group_tag(self):
+        tag = Tag.objects.create(name="NewYearResolution:BeKind")
+        self.assertHTMLEqual(self._render_tag_template(tag), self.GROUP_TAG_HTML)
+        self.assertHTMLEqual(
+            self._render_tag_markdown(f"#{tag.name}"),
+            f"<p>{self.GROUP_TAG_HTML}</p>",
+        )
+
+    def test_unknown_tags_in_markdown_do_not_raise(self):
+        tag_name = "ThisTagDoesNotExistYet"
+        # Make sure this tag does not exist so the actual test is worthwhile.
+        with self.assertRaises(Tag.DoesNotExist):
+            Tag.objects.get(name=tag_name)
+        try:
+            self._render_tag_markdown(f"#{tag_name}")
+        except Tag.DoesNotExist:
+            self.fail("Unknown tags in markdown should not raise exceptions.")
