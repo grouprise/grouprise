@@ -1,3 +1,9 @@
+grouprise (4.7.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Konrad Mohrfeldt <konrad.mohrfeldt@farbdev.org>  Fri, 21 Jan 2022 14:30:29 +0100
+
 grouprise (4.7.0-1) unstable; urgency=medium
 
   * New upstream release
