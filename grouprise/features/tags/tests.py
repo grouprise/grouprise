@@ -119,3 +119,17 @@ class TagRenderingTests(Test):
             self._render_tag_markdown(f"#{tag_name}")
         except Tag.DoesNotExist:
             self.fail("Unknown tags in markdown should not raise exceptions.")
+
+    def test_tags_in_markdown_are_case_insensitive_but_retain_custom_casing(self):
+        """We want to ensure that authors using tags in markdown have full authorship control
+        meaning we don’t apply seemingly arbitrary transformation.
+        In essence: both "#MyTag" and "#mytag" should point to the same tag, but
+        should be rendered the way the author has written them.
+        """
+        name_1 = "ThIsTAgHAsWEIrdCAsIng"
+        name_2 = "THiSTaGHaSWeiRDCaSiNG"
+        tag = Tag.objects.create(name=name_1)
+        tag_url = reverse("tag", args=[tag.slug])
+        markdown_html = self._render_tag_markdown(f"#{name_2}")
+        self.assertIn(name_2, markdown_html)
+        self.assertIn(f'href="{tag_url}"', markdown_html)

@@ -8,12 +8,12 @@ def get_slug(tag_name):
         return Tag().slugify(tag_name)
 
 
-def get_tag_render_data(tag: Tag):
-    tag_parts = tag.name.split(":", 1)
+def get_tag_render_data(name: str):
+    tag_parts = name.split(":", 1)
     if len(tag_parts) == 2:
         tag_group = tag_parts[0]
         tag_name = tag_parts[1]
     else:
         tag_group = None
-        tag_name = tag.name
+        tag_name = name
     return tag_group, tag_name
