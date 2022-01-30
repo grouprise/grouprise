@@ -18,7 +18,7 @@ def update_scores():
     grouprise.core.scores.update(Group)
 
 
-@db_periodic_task(crontab(minute="*/5"))
+@db_periodic_task(crontab(minute="*/15"))
 def update_search_index():
     logger.info("Starting update of search index")
     # Sadly the haystack command "update_index" contains a lot of complicated logic, thus we need
