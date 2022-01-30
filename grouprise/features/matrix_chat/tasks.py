@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 @db_periodic_task(crontab(minute="27"))
-def update_matrix_chat_statiscs():
+def update_matrix_chat_statistics():
     logger.info("Update statistics for matrix chats")
 
     async def update():
