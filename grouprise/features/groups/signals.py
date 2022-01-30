@@ -65,6 +65,8 @@ def call_hook_script(event_type: str, group: Group, timeout=300):
 
 @receiver(post_save, sender=Group)
 def post_group_save(sender, instance, created, raw=False, **kwargs):
+    if not CORE_SETTINGS.HOOK_SCRIPT_PATHS:
+        return
     # do nothing, if loading fixtures
     if raw:
         return
@@ -86,4 +88,6 @@ def post_group_save(sender, instance, created, raw=False, **kwargs):
 
 @receiver(post_delete, sender=Group)
 def group_deleted(sender, instance, **kwargs):
+    if not CORE_SETTINGS.HOOK_SCRIPT_PATHS:
+        return
     call_hook_script("deleted", instance)
