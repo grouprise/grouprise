@@ -82,7 +82,7 @@ configure_element() {
             ;;
     esac
     # discover the homeserver information
-    if homeserver_info="$(curl --silent --fail "https://$homeserver_name/.well-known/matrix/client")" \
+    if homeserver_info="$(curl --silent --fail --location "https://$homeserver_url/.well-known/matrix/client")" \
             && [ -n "$homeserver_info" ] \
             && printf '%s' "$homeserver_info" | jq . >/dev/null 2>/dev/null; then
         # inject the "server_name" if it is missing (it is not part of the well-known/matrix/client response)
