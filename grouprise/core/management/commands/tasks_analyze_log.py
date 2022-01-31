@@ -182,12 +182,12 @@ def parse_entries(source, minimum_timestamp=None):
                 match_dict["timestamp"], "%b %d %H:%M:%S"
             )
             if timestamp.year < 2000:
-                timestamp.replace(year=current_year)
+                timestamp = timestamp.replace(year=current_year)
             message = match_dict["message"]
+        message_match = MESSAGE_REXEX.match(message)
+        exception_match = EXCEPTION_REGEX.match(message)
         if (minimum_timestamp is not None) and (timestamp < minimum_timestamp):
             continue
-        huey_match = MESSAGE_REXEX.match(message)
-        exception_match = EXCEPTION_REGEX.match(message)
         if exception_match:
             match_dict = exception_match.groupdict()
             exception_name = match_dict["exception"]
@@ -196,8 +196,8 @@ def parse_entries(source, minimum_timestamp=None):
                 "Exception parsed: %s -> %s", exception_name, exception_message
             )
             yield Entry(timestamp, EntryEvent.EXCEPTION, None, last_exception_job_id)
-        elif huey_match:
-            match_dict = huey_match.groupdict()
+        elif message_match:
+            match_dict = message_match.groupdict()
             details = match_dict["details"]
             if details.startswith("huey:Worker-") or details.startswith(
                 "huey.consumer.Worker:Worker-"
@@ -241,6 +241,12 @@ def parse_entries(source, minimum_timestamp=None):
             yield Entry(timestamp, event, target, job_id)
 
 
+def get_event_by_type(events, event_type):
+    for event in events:
+        if event.event == event_type:
+            return event
+
+
 def assemble_statistics(entries):
     UNSCHEDULED_SUCCESS_EVENTS = frozenset({EntryEvent.STARTED, EntryEvent.FINISHED})
     SCHEDULED_SUCCESS_EVENTS = frozenset(
@@ -255,21 +261,15 @@ def assemble_statistics(entries):
         all_targets = list({item.target for item in entries if item.target is not None})
         target = all_targets[0] if all_targets else "undefined"
         events = frozenset({entry.event for entry in entries})
-        if UNSCHEDULED_SUCCESS_EVENTS.issubset(events):
-            start = [
-                item.timestamp for item in entries if item.event == EntryEvent.STARTED
-            ][0]
-            end = [
-                item.timestamp for item in entries if item.event == EntryEvent.FINISHED
-            ][0]
-            duration = (end - start).total_seconds()
-        else:
-            duration = None
+        start_event = get_event_by_type(entries, EntryEvent.STARTED)
+        finish_event = get_event_by_type(entries, EntryEvent.FINISHED)
+        schedule_event = get_event_by_type(entries, EntryEvent.SCHEDULED)
         target_summary = targets.setdefault(
             target,
             {
                 "target": target,
                 "count": 0,
+                "delays": DurationAssembler(),
                 "durations": DurationAssembler(),
                 "problems": {},
                 "incomplete": {},
@@ -277,7 +277,11 @@ def assemble_statistics(entries):
         )
         target_summary["count"] += 1
         if events in {UNSCHEDULED_SUCCESS_EVENTS, SCHEDULED_SUCCESS_EVENTS}:
+            duration = (finish_event.timestamp - start_event.timestamp).total_seconds()
             target_summary["durations"].add(duration)
+        if {EntryEvent.SCHEDULED, EntryEvent.STARTED}.issubset(events):
+            delay = (start_event.timestamp - schedule_event.timestamp).total_seconds()
+            target_summary["delays"].add(delay)
         else:
             # count invalid states
             incomplete_states = []
@@ -300,6 +304,7 @@ def assemble_statistics(entries):
 def export_statistics_json(targets: dict) -> str:
     exportable = []
     for data in targets.values():
+        data["delays"] = data["delays"].to_dict()
         data["durations"] = data["durations"].to_dict()
         exportable.append(data)
     return json.dumps(exportable, indent=2)
@@ -310,15 +315,16 @@ def export_statistics_text(targets: dict) -> str:
     for target_name, target_data in targets.items():
         lines.append(f"{target_name}:")
         lines.append(f"    count:                     {target_data['count']}")
-        lines.append(f"    success and durations:     {target_data['durations']}")
+        lines.append(f"    durations of success:      {target_data['durations']}")
+        lines.append(f"    delays of success:         {target_data['delays']}")
         if target_data["problems"]:
             lines.append("    failures:")
-        for key, value in sorted(target_data["problems"].items()):
-            label = key + ":"
-            lines.append(f"        {label:<22s} {value}")
+            for key, value in sorted(target_data["problems"].items()):
+                label = key + ":"
+                lines.append(f"        {label:<22s} {value}")
         if target_data["incomplete"]:
             lines.append("    incomplete:")
-        for key, value in sorted(target_data["incomplete"].items()):
-            label = key + ":"
-            lines.append(f"        {label:<22s} {value}")
+            for key, value in sorted(target_data["incomplete"].items()):
+                label = key + ":"
+                lines.append(f"        {label:<22s} {value}")
     return os.linesep.join(lines)
