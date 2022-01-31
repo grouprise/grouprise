@@ -65,16 +65,14 @@ def call_hook_script(event_type: str, group: Group, timeout=300):
 
 @receiver(post_save, sender=Group)
 def post_group_save(sender, instance, created, raw=False, **kwargs):
-    if not CORE_SETTINGS.HOOK_SCRIPT_PATHS:
-        return
     # do nothing, if loading fixtures
     if raw:
         return
-    if created:
-        call_hook_script("created", instance)
-    else:
-        call_hook_script("changed", instance)
-
+    if CORE_SETTINGS.HOOK_SCRIPT_PATHS:
+        if created:
+            call_hook_script("created", instance)
+        else:
+            call_hook_script("changed", instance)
     if created:
         instance.slug = get_unique_slug(
             Group,
