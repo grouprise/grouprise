@@ -229,7 +229,7 @@ HUEY = {
     # Some tasks (e.g. "update_search_index") take very long (e.g. an hour).  We need to allow
     # parallel processing in order to prevent the queue from filling up and thus delaying
     # notifications.
-    "consumer": {"workers": 4, "worker_type": "thread"}
+    "consumer": {"workers": 4, "worker_type": "thread"},
 }
 
 
