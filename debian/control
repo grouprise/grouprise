@@ -118,7 +118,7 @@ Depends:
  python3-psycopg2,
 Recommends:
  postgresql-postgis,
-Description: Web platform that enables social action and solidarity
+Description: Dependency package for PostgreSQL support in grouprise
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
  .
@@ -133,7 +133,7 @@ Depends:
  sqlite3,
 Recommends:
  libsqlite3-mod-spatialite,
-Description: Web platform that enables social action and solidarity
+Description: Dependency package for SQLite support in grouprise
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
  .
@@ -143,7 +143,7 @@ Description: Web platform that enables social action and solidarity
 Package: grouprise-lmtpd
 Architecture: all
 Depends: grouprise, python3-aiosmtpd
-Description: Web platform that enables social action and solidarity
+Description: Handling of incoming mails for the grouprise platform
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
  .
@@ -152,7 +152,7 @@ Description: Web platform that enables social action and solidarity
 
 Package: grouprise-doc
 Architecture: all
-Description: Web platform that enables social action and solidarity
+Description: Documentation for the grouprise platform
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
  .
@@ -162,7 +162,7 @@ Package: grouprise-dependencies
 Architecture: all
 Depends:
  ${misc:Depends},
-Description: Web platform that enables social action and solidarity
+Description: Dependencies for the grouprise package
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.
  .
