@@ -14,7 +14,7 @@ class DownloadFieldFileMixin:
     @property
     def url(self):
         self._require_file()
-        return reverse(self.download_view_name, args=[self.instance.pk])
+        return reverse(self.download_view_name, args=[self.name])
 
 
 class DownloadFieldFile(DownloadFieldFileMixin, FieldFile):

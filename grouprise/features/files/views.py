@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django_downloadview import ObjectDownloadView
 
 import grouprise.features.content.views
@@ -15,4 +16,6 @@ class Create(grouprise.features.content.views.Create):
 
 class FileDownloadView(PermissionMixin, ObjectDownloadView):
     permission_required = "files.download"
-    model = File
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(File, file=self.kwargs["name"])

@@ -11,7 +11,7 @@ urlpatterns = [
         name="create-group-file",
     ),
     path(
-        "stadt/files/<int:pk>/",
+        "-/files/<str:name>",
         FileDownloadView.as_view(),
         name="download-file",
     ),

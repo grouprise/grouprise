@@ -4,7 +4,7 @@ from .views import ImageDownloadView
 
 urlpatterns = [
     path(
-        "stadt/images/<int:pk>/",
+        "-/images/<str:name>",
         ImageDownloadView.as_view(),
         name="download-image",
     ),
