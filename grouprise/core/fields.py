@@ -5,6 +5,8 @@ from django.db.models.fields import files
 from django.db.models.fields.files import FieldFile
 from django.urls import reverse
 
+from grouprise.core.storage import Storage
+
 
 class DownloadFieldFileMixin:
     download_view_name: str
@@ -24,6 +26,11 @@ class DownloadFieldFile(DownloadFieldFileMixin, FieldFile):
 class DownloadFileField(models.FileField):
     attr_class = DownloadFieldFile
 
+    def __init__(self, *args, **kwargs):
+        if "storage" not in kwargs:
+            kwargs["storage"] = Storage()
+        super().__init__(*args, **kwargs)
+
 
 class DownloadImageFieldFile(DownloadFieldFileMixin, files.ImageFieldFile):
     download_view_name = "download-image"
@@ -31,3 +38,8 @@ class DownloadImageFieldFile(DownloadFieldFileMixin, files.ImageFieldFile):
 
 class DownloadImageField(models.ImageField):
     attr_class = DownloadImageFieldFile
+
+    def __init__(self, *args, **kwargs):
+        if "storage" not in kwargs:
+            kwargs["storage"] = Storage()
+        super().__init__(*args, **kwargs)
