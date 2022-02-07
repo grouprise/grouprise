@@ -282,7 +282,6 @@ class ContentAttachments(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
         # the check is only based on the content disposition (filename)
         self.assertTrue(file_obj.is_image())
         short_filename = os.path.basename(file_obj.file.path)
-        self.assertTrue(short_filename.startswith("foo.baz-"), file_obj.file.path)
         self.assertTrue(short_filename.endswith(".png"), file_obj.file.path)
 
     def test_attachment_text_is_stored(self):

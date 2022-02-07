@@ -16,6 +16,4 @@ class ImageMixin(grouprise.features.gestalten.tests.mixins.GestaltMixin):
             os.path.dirname(os.path.abspath(__file__)), "tests", "test.png"
         )
         shutil.copy(test_image, django.conf.settings.MEDIA_ROOT)
-        self.image = models.Image.objects.create(
-            creator=self.gestalt, file="./test.png"
-        )
+        self.image = models.Image.objects.create(creator=self.gestalt, file="test.png")
