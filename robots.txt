@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /stadt/abuse
+Disallow: /stadt/login
+Disallow: /stadt/signup
+# TODO: allow /stadt/tags again, as soon as we stop bots from traversing calendar links
+Disallow: /stadt/tags

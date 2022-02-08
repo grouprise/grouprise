@@ -8,3 +8,4 @@ debian/grouprise.d/nginx/grouprise-site => /etc/nginx/sites-available/grouprise
 debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/python-lib
 debian/tmp/usr/share/grouprise/manage.py /usr/share/grouprise
 offline-website /usr/share/grouprise/
+robots.txt /usr/share/grouprise/www/
