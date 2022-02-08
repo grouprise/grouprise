@@ -117,6 +117,12 @@ class Group(grouprise.core.models.Model):
     def __str__(self):
         return self.name
 
+    def delete(self):
+        # first remove all objects, which are connected via generic relations
+        self.associations.delete()
+        self.subscriptions.delete()
+        super().delete()
+
     def get_absolute_url(self):
         return self.get_profile_url()
 
