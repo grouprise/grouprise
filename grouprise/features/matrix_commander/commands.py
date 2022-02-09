@@ -172,6 +172,30 @@ def remove_user(gestalt):
     yield CommandResult(f"Removed user '{gestalt}'")
 
 
+@commander("group", is_abstract=True)
+def group():
+    pass
+
+
+@commander(group, "show", var("groupname"))
+@inject_resolved(source="groupname", target="group", resolvers=[get_group])
+def group_show(group):
+    open_text = "open" if group.closed else "closed"
+    url = get_grouprise_baseurl().rstrip("/") + group.get_absolute_url()
+    yield CommandResult(f"Group [{group.name}]({url}) is {open_text}")
+    yield CommandResult(f"Members: {group.members.count()}")
+    yield CommandResult(f"Subscribers: {group.subscribers.count()}")
+    yield CommandResult(f"Content: {group.associations.count()}")
+    yield CommandResult(f"Latest activity: {group.get_latest_activity_time()}")
+
+
+@commander(group, "delete", var("groupname"))
+@inject_resolved(source="groupname", target="group", resolvers=[get_group])
+def group_delete(group):
+    group.delete()
+    yield CommandResult(f"Removed group '{group}'")
+
+
 @commander("content", is_abstract=True)
 def content():
     pass

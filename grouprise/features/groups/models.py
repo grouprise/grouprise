@@ -1,4 +1,5 @@
 import datetime
+from typing import Union
 
 import django
 from django import urls
@@ -177,3 +178,17 @@ class Group(grouprise.core.models.Model):
     @property
     def subscribers(self):
         return Gestalt.objects.filter(subscriptions__group=self)
+
+    def get_latest_activity_time(self) -> Union[datetime.datetime, None]:
+        most_recent = self.associations.order_content_by_time_created(
+            ascending=False
+        ).first()
+        if most_recent is None:
+            last_activity = None
+        else:
+            container = most_recent.container
+            if container.is_conversation:
+                last_activity = container.contributions.first().time_created
+            else:
+                last_activity = container.versions.first().time_created
+        return last_activity
