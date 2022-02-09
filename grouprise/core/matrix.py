@@ -73,6 +73,7 @@ class MatrixBaseBot:
                 "account settings are invalid."
             )
         cache.set(sync_token_cache_key, sync_result.next_batch, 24 * 3600)
+        return sync_result
 
     async def __aenter__(self):
         try:
@@ -164,6 +165,10 @@ class MatrixConsoleClient:
             to_device_events=[],
             presence_events=[],
         )
+
+    async def sync_forever(self, *args, **kwargs):
+        while True:
+            pass
 
     async def close(self):
         self.logged_in = False
