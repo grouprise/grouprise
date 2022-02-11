@@ -15,7 +15,20 @@ Use cases:
 Procedure:
 
 1. stop the running grouprise service (e.g. :code:`service uwsgi stop`)
-2. dump the current database in a database-neutral format: :code:`grouprisectl dumpdata --natural-primary --natural-foreign --exclude sessions --exclude admin.logentry --indent 4 --all >grouprise-export.json`
+2. dump the current database content in a database-neutral format:
+
+   .. code-block:: shell
+
+
+        grouprisectl dumpdata \
+            --natural-primary \
+            --natural-foreign \
+            --exclude sessions \
+            --exclude admin.logentry \
+            --indent 4 \
+            --all \
+            >grouprise-export.json
+
 3. prepare the new desired configuration (below :code:`/etc/grouprise/conf.d/`)
 4. create new database (see :ref:`database-initialization`)
 5. populate the database structure: :code:`grouprisectl migrate`
