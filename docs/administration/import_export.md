@@ -35,3 +35,8 @@ grouprisectl media_import --filename MEDIA_ARCHIVE.tar.gz
 zcat DATABASE_DUMP.sql.gz | grouprisectl dbshell
 service grouprise start
 ```
+
+The above database procedure assumes, that the source and destination databases use the same
+engine (e.g. PostgreSQL).
+The details of a transfer between different database engines is described in section
+[Database Management](/administration/database/management).
