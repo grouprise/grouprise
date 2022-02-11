@@ -14,8 +14,8 @@ Use cases:
 
 Procedure:
 
-1. stop the running grouprise service (e.g. :code:`service uwsgi stop`)
-2. dump the current database content in a database-neutral format:
+#. stop the running grouprise service (e.g. :code:`service uwsgi stop`)
+#. dump the current database content in a database-neutral format:
 
    .. code-block:: shell
 
@@ -29,11 +29,11 @@ Procedure:
             --all \
             >grouprise-export.json
 
-3. prepare the new desired configuration (below :code:`/etc/grouprise/conf.d/`)
-4. create new database (see :ref:`database-initialization`)
-5. populate the database structure: :code:`grouprisectl migrate`
-6. load the export data: :code:`grouprisectl loaddata --format=json - <grouprise-export.json`
-7. start the grouprise service (e.g. :code:`service uwsgi start`)
+#. prepare the new desired configuration (below :code:`/etc/grouprise/conf.d/`)
+#. create new database (see :ref:`database-initialization`)
+#. populate the database structure: :code:`grouprisectl migrate`
+#. load the export data: :code:`grouprisectl loaddata --format=json - <grouprise-export.json`
+#. start the grouprise service (e.g. :code:`service uwsgi start`)
 
 
 Import content into a another host
