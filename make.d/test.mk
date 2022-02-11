@@ -2,6 +2,8 @@ LINT_PKG_IGNORE_GLOBAL = -path "./debian/*" -o -path "./build/*" -o -path "./.py
 	-o -path "./.venv/*" -o -path "./gitlab-ci-build-venv/*" -o -path "./docs/*" -o -path "./venv/*"
 LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT_PKG_IGNORE_GLOBAL) \) -print0 | \
 	xargs -0 -n1 dirname | sort | uniq)
+SPELLING_DIRECTORIES ?= debian docker docs grouprise make.d
+SPELLING_IGNORE_FILE = .codespell-ignore-filenames
 
 .PHONY: lint
 lint: lint_js lint_packages
@@ -58,3 +60,9 @@ coverage_py: $(ACTIVATE_VIRTUALENV) $(VIRTUALENV_UPDATE_STAMP)
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage report )
 	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage html --directory="$(DIR_BUILD)/coverage-report" )
 	@echo "Coverage Report Location: file://$(realpath $(DIR_BUILD))/coverage-report/index.html"
+
+.PHONY: lint_spelling
+lint_spelling:
+	find $(SPELLING_DIRECTORIES) -type f -print0 \
+		| grep --null-data --invert-match --line-regexp --fixed-strings --file=$(SPELLING_IGNORE_FILE) \
+		| xargs --null --no-run-if-empty codespell --check-filenames
