@@ -332,6 +332,10 @@ class DictConfig(ConfigBase):
 class ChoicesConfig(ConfigBase):
     def __init__(self, *args, choices=None, **kwargs):
         self.choices = choices
+        # normalize the "default" value from enum to plain text
+        if isinstance(self.choices, enum.EnumMeta):
+            if  isinstance(kwargs.get("default"), enum.Enum):
+                kwargs["default"] = kwargs["default"].value
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
@@ -1064,7 +1068,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         TransportSecurityConfig(
             name="transport_security",
             choices=TransportSecurity,
-            default="reverse-proxy",
+            default=TransportSecurity.REVERSE_PROXY,
         ),
         BooleanConfig(name="debug", django_target="DEBUG"),
         DebugToolbarClients(name="debug_toolbar_clients"),
@@ -1084,7 +1088,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         EmailSubmissionEncryptionConfig(
             name=("email_submission", "encryption"),
             choices=EmailSubmissionEncryption,
-            default="plain",
+            default=EmailSubmissionEncryption.PLAIN,
         ),
         StringConfig(name=("email_submission", "host"), django_target="EMAIL_HOST"),
         IntegerConfig(
