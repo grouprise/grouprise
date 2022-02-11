@@ -66,6 +66,9 @@ Depends:
 # See also: make.d/ci.mk
  python3-all,
  python3-bleach,
+# TODO: remove this dependency-workaround, as soon as the related issue is fixed:
+#  https://github.com/jazzband/django-oauth-toolkit/issues/1114
+ python3-celery,
  python3-django (>= 2.2),
  python3-django-allauth,
  python3-django-csp,
