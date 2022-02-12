@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
     Changed settings are written to a configuration file.
     Beware, that the resolution order of configuration files may prevent a changed setting from
-    becoming active (e.g. the setting in `/etc/grouprise/conf.d/800-local.yaml` is overrridden by
+    becoming active (e.g. the setting in `/etc/grouprise/conf.d/800-local.yaml` is overridden by
     the setting with the same name in `900-foo.yaml`).
     """
 

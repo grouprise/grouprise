@@ -15,7 +15,7 @@ lint_js: $(STAMP_NODE_MODULES)
 .PHONY: lint_packages
 lint_packages:
 	# setuptools’ find_packages() does not find PEP420 packages
-	# we therefor forbid the use of PEP420 to ease automation
+	# we therefore forbid the use of PEP420 to ease automation
 	# see: https://github.com/pypa/setuptools/issues/97
 	@EXIT=0; for package in $(LINT_PKG_PEP420); do \
 		if [ ! -f "$$package/__init__.py" ]; then \

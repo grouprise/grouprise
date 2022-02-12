@@ -75,7 +75,7 @@ def inject_resolved(source, target, resolvers):
                 # none of the resolvers managed to deliver a result - bail out with the first error
                 yield from collected_errors[0]
                 return
-            # one conversion was successfuly
+            # one conversion was successful
             yield from func(*args, **kwargs)
 
         return inner

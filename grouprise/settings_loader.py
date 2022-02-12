@@ -1076,7 +1076,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
     configured_domain = config.get("domain", default_domain)
     parsers = [
         StringConfig(
-            # TODO: festlegen, ob Datenbank oder Konfiguration die authorative Quelle sein soll
+            # TODO: clarify whether the database or the configuration should be the source of truth
             name="domain",
             django_target=lambda settings, value: settings.update(
                 {"ALLOWED_HOSTS": [value]}
@@ -1384,8 +1384,8 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             )
         except KeyError as exc:
             raise ConfigError(
-                f"Failed to traverse configuration path {parser.name} trough a nested dictionary. "
-                f"Please verify the dict datatype for all steps along the path."
+                f"Failed to traverse configuration path {parser.name} through a nested dictionary."
+                f" Please verify the dict datatype for all steps along the path."
             ) from exc
         if value is not None:
             value = parser.validate(value)

@@ -69,7 +69,7 @@ class Command(BaseCommand):
             help=(
                 "The wanted amount of log data to be processed (e.g. 'the last 10 minutes')."
                 " The numeric value may be suffixed with 'd' (days), 'h' (hours) or 'm' (minutes)."
-                " By default numeric values without a suffix are interepreted as hours."
+                " By default numeric values without a suffix are interpreted as hours."
             ),
         )
 

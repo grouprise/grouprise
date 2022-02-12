@@ -2,7 +2,7 @@
 
 # The packaging of grouprise is a bit tricky:
 #   * dependencies need to be packaged in a virtualenv, since a few packages are missing in Debian
-#   * grouprise's build system is more focussed on "make" instead of setuptools
+#   * grouprise's build system is more focused on "make" instead of setuptools
 #
 # Everything is prepared and installed using "make".  Afterwards (during "override_dh_install")
 # some cruft is removed before the build result is installed (see debian/*.install).

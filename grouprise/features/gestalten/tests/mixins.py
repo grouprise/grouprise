@@ -18,7 +18,7 @@ class GestaltMixin:
         super().setUpTestData()
         # create an initial gestalt which is used as special user
         # (imports, unknown etc.)
-        cls.unknown_gestalt = cls.create_gestalt(name="inital")
+        cls.unknown_gestalt = cls.create_gestalt(name="initial")
         cls.gestalt = cls.create_gestalt()
 
 

@@ -112,7 +112,7 @@ case "$ACTION" in
         if [ "$wanted_version" = "$(get_installed_version)" ]; then
             echo "Version '$wanted_version' is already installed. Nothing needs to be done."
         else
-            echo "Dowloading and extracting element-web version '$wanted_version' ..."
+            echo "Downloading and extracting element-web version '$wanted_version' ..."
             extract_verified_download "$INSTALL_PATH" "$wanted_version"
         fi
         ;;
