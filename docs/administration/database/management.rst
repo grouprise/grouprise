@@ -36,8 +36,8 @@ Procedure:
 #. start the grouprise service (e.g. :code:`service uwsgi start`)
 
 
-Import content into a another host
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Import content into another host
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Use cases:
 
