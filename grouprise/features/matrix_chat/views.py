@@ -202,6 +202,10 @@ class UpdateMatrixChatGroupSettings(PermissionMixin, django.views.generic.FormVi
         return super().form_valid(form)
 
 
+class ShowMissingWebClientWarning(django.views.generic.TemplateView):
+    template_name = "matrix_chat/missing_web_client.html"
+
+
 class ShowMatrixChatHelp(django.views.generic.TemplateView):
     template_name = "matrix_chat/help.html"
     title = _("Chat / Instant Messaging")
