@@ -54,6 +54,35 @@ Thus, this setting is rarely necessary.
 
 See [Django's documentation of `ALLOWED_HOSTS`](https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-ALLOWED_HOSTS) for details.
 
+### `file_download_backend`
+It is highly recommended select a backend for file downloads corresponding to the reverse proxy you are using.
+The default backend is `none`.
+Other possible backends are listed below together with their corresponding webserver settings.
+
+#### `apache`
+
+```
+XSendFile on
+XSendFilePath /var/lib/grouprise/media
+<Location /protected-downloads/>
+    # this location is only accessible via X-Sendfile
+    Deny from all
+    Alias /var/lib/grouprise/media/
+</Location>
+```
+
+#### `lightthpd`
+See the [lighttpd documentation for X-sendfile](https://redmine.lighttpd.net/projects/lighttpd/wiki/X-LIGHTTPD-send-file) for details.
+[You are welcome](/contributing/documentation/) to propose the configuration snippet suitable for grouprise to be included here.
+
+#### `nginx`
+```
+location /protected-downloads/ {
+    internal;
+    alias /var/lib/grouprise/media/;
+}
+```
+
 ### `language_code`
 Select the primary language to be used within grouprise and other components (e.g. the search indexer).
 

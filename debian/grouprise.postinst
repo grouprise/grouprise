@@ -62,6 +62,7 @@ configure_grouprise() {
     case "$webserver_type" in
         nginx)
             sed -i "s|server_name .*$|server_name $grouprise_domain;|g" /etc/nginx/sites-available/grouprise
+            printf 'nginx' | grouprise_settings set "file_download_backend"
             if [ ! -e "/etc/nginx/sites-enabled/grouprise" ]; then
                 mkdir -p /etc/nginx/sites-enabled/
                 ln -s ../sites-available/grouprise /etc/nginx/sites-enabled/

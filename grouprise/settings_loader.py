@@ -64,6 +64,13 @@ class MatrixBackend(enum.Enum):
     CONSOLE = "console"
 
 
+class FileDownloadBackend(enum.Enum):
+    APACHE = "apache"
+    NGINX = "nginx"
+    LIGHTTPD = "lighttpd"
+    NONE = "none"
+
+
 def get_configuration_path_candidates():
     """return a list locations where grouprise configuration files may be looked for
 
@@ -334,7 +341,7 @@ class ChoicesConfig(ConfigBase):
         self.choices = choices
         # normalize the "default" value from enum to plain text
         if isinstance(self.choices, enum.EnumMeta):
-            if  isinstance(kwargs.get("default"), enum.Enum):
+            if isinstance(kwargs.get("default"), enum.Enum):
                 kwargs["default"] = kwargs["default"].value
         super().__init__(*args, **kwargs)
 
@@ -951,6 +958,30 @@ class CoordinatesConfig(ListConfig):
         return value
 
 
+class FileDownloadConfig(ChoicesConfig):
+    TOLERATE_GROUPRISE_DEFAULTS = True
+
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
+        if value != FileDownloadBackend.NONE:
+            settings["MIDDLEWARE"].append("csp.middleware.CSPMiddleware")
+            if value == FileDownloadBackend.APACHE:
+                from django_downloadview.nginx import x_sendfile as wrapper
+
+                backend = "django_downloadview.apache.XSendfileMiddleware"
+            elif value == FileDownloadBackend.LIGHTTPD:
+                from django_downloadview.lighttpd import x_sendfile as wrapper
+
+                backend = "django_downloadview.lighttpd.XSendfileMiddleware"
+            elif value == FileDownloadBackend.NGINX:
+                from django_downloadview.nginx import x_accel_redirect as wrapper
+
+                backend = "django_downloadview.nginx.XAccelRedirectMiddleware"
+            else:
+                raise KeyError(f"Unknown FileDownloadBackend: {value}")
+            settings["DOWNLOADVIEW_BACKEND"] = backend
+            super().apply_to_settings(settings, wrapper)
+
+
 def _get_nested_dict_value(data, path, default=None, remove=False):
     if not isinstance(data, dict):
         raise KeyError(f"Container is not a dictionary: {data}")
@@ -1240,6 +1271,12 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ),
         ScriptsConfig(
             name="scripts", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
+        ),
+        FileDownloadConfig(
+            name="file_download_backend",
+            choices=FileDownloadBackend,
+            django_target=("GROUPRISE", "FILE_DOWNLOAD_WRAPPER"),
+            default=FileDownloadBackend.NONE,
         ),
         # geo settings
         DjangoAppEnableConfig(
