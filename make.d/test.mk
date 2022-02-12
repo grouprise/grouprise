@@ -6,7 +6,7 @@ SPELLING_DIRECTORIES ?= debian docker docs grouprise make.d
 SPELLING_IGNORE_FILE = .codespell-ignore-filenames
 
 .PHONY: lint
-lint: lint_js lint_packages
+lint: lint_js lint_packages lint_spelling
 
 .PHONY: lint_js
 lint_js: $(STAMP_NODE_MODULES)

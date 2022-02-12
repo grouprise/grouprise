@@ -3,6 +3,7 @@ Section: python
 Priority: optional
 Maintainer: grouprise Maintainers <mail@grouprise.org>
 Build-Depends:
+ codespell,
  debhelper (>= 12),
  dh-exec,
  dh-python,
