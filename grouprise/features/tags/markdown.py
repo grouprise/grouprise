@@ -28,6 +28,9 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
             tag = Tag.objects.get(name__iexact=name)
         except Tag.DoesNotExist:
             tag = Tag.objects.create(name=name)
+        except Tag.MultipleObjectsReturned:
+            # TODO: remove this exception branch, when #770 is fixed
+            tag = Tag.objects.filter(name__iexact=name).first()
         tag_group, tag_name = get_tag_render_data(name)
         return self.makeTag(
             urls.reverse("tag", args=[tag.slug]),
