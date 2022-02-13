@@ -133,5 +133,6 @@ CORE_SETTINGS = LazySettingsResolver(
     ),
     SCORE_CONTENT_AGE=_GR.get("SCORE_CONTENT_AGE", 100),
     UPLOAD_MAX_FILE_SIZE=_GR.get("UPLOAD_MAX_FILE_SIZE", 10),
-    FILE_DOWNLOAD_WRAPPER=_GR.get("FILE_DOWNLOAD_WRAPPER", None),
+    # the wrapper is a callable - we protect it from being evaluated by the LazySettingsResolver
+    FILE_DOWNLOAD_WRAPPER=lambda: _GR.get("FILE_DOWNLOAD_WRAPPER", None),
 )
