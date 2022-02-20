@@ -1,6 +1,7 @@
 import difflib
 import functools
 import os
+import re
 from typing import Union
 
 import kien.command.help as help_command
@@ -10,6 +11,7 @@ from kien.utils import strip_tags
 
 from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.features.associations.models import Association
+from grouprise.features.contributions.models import Contribution
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships.models import Membership
@@ -283,6 +285,58 @@ def change_content_ownership(association: Association, entity: Union[Gestalt, Gr
         yield CommandResult(
             f"Changed ownership of '{association}' from '{previous_owner}' to '{entity}'"
         )
+
+
+@commander("comment", is_abstract=True)
+def contribution():
+    pass
+
+
+def get_contribution_by_url(url):
+    """retrieve a contribution instance based on an URL
+
+    example URL: https://example.org/stadt/content/42/#contribution-23
+    """
+    not_found_exception = ResolveException(
+        f"Failed to find comment based on URL ('{url}'). Maybe try the permanent link?"
+    )
+    contribution_regex = r"/#contribution-(\d+)$"
+    contribution_match = re.search(contribution_regex, url)
+    if contribution_match:
+        contribution_id = int(contribution_match.groups()[0])
+        try:
+            return Contribution.objects.get(pk=contribution_id)
+        except Contribution.DoesNotExist:
+            raise not_found_exception
+    else:
+        raise not_found_exception
+
+
+@commander(contribution, "show", var("url"))
+@inject_resolved(
+    source="url", target="contribution", resolvers=[get_contribution_by_url]
+)
+def show_contribution(contribution: Contribution, max_text_length: int = 200):
+    yield CommandResult(f"* **Author**: {contribution.author}")
+    time_created = contribution.time_created.strftime("%Y-%m-%d %H:%M")
+    yield CommandResult(f"* **Published**: {time_created}")
+    full_text = contribution.text.last().text
+    if len(full_text) > max_text_length:
+        abbreviated_text = full_text[: max_text_length - 1] + " …"
+    else:
+        abbreviated_text = full_text
+    yield CommandResult(f"* **Content**: {abbreviated_text}")
+
+
+@commander(contribution, "delete", var("url"))
+@inject_resolved(
+    source="url", target="contribution", resolvers=[get_contribution_by_url]
+)
+def delete_contribution(contribution: Contribution):
+    # remember the contribution ID before deleting the object
+    old_identifier = contribution.pk
+    contribution.delete()
+    yield CommandResult(f"Removed comment #{old_identifier}")
 
 
 @commander(user, "admin", "list")
