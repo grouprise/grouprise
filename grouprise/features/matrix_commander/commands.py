@@ -7,7 +7,9 @@ from typing import Union
 import kien.command.help as help_command
 import kien.error
 from kien import CommandResult, create_commander, var
+from kien.transformation import transform
 from kien.utils import strip_tags
+from kien.validation import is_gt, is_int, validate
 
 from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.features.associations.models import Association
@@ -152,6 +154,8 @@ def user_leave_group(gestalt: Gestalt, group: Group):
 
 
 @commander(user, "list", "unused", var("limit", is_optional=True))
+@validate(limit=(is_int() & is_gt(0)))
+@transform(limit=int)
 def user_list_unused(limit: int = 5):
     # TODO: verify the following queryset
     for gestalt in Gestalt.objects.filter(
