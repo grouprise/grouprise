@@ -20,6 +20,8 @@ class CommanderBot(MatrixBaseBot):
         backend = MATRIX_COMMANDER_SETTINGS.BACKEND
         domain = self.bot_id.split(":")[-1]
         matrix_url = f"https://{domain}"
+        # ignore incoming messages during the very first sync (do not react on old commands)
+        self._ignore_messages = True
         super().__init__(matrix_url, self.bot_id, bot_access_token, backend=backend)
         self.client.add_event_callback(self.cb_autojoin_admin_rooms, nio.InviteEvent)
         self.client.add_event_callback(self.handle_encrypted_message, nio.MegolmEvent)
@@ -33,7 +35,6 @@ class CommanderBot(MatrixBaseBot):
         else:
             escaped = re.escape(command_prefix)
             self._prefix_regex = re.compile(fr"^{escaped}$")
-        self._ignore_messages = False
 
     def is_admin_room(self, room: nio.MatrixRoom):
         return room.room_id in MATRIX_COMMANDER_SETTINGS.ADMIN_ROOMS
@@ -56,16 +57,19 @@ class CommanderBot(MatrixBaseBot):
 
     async def serve_forever(self):
         # discard old messages during an initial sync
-        self._ignore_messages = True
         await self.sync()
         logger.info(
             "Bot has logged in successfully and is waiting for requests: %s",
             self.bot_id,
         )
-        # process all further (new) messages
-        self._ignore_messages = False
         await self.sync(set_presence="online", update_period=30)
         await self.close()
+
+    async def sync(self, *args, **kwargs):
+        result = await super().sync(*args, **kwargs)
+        # only relevant after the first sync: process all further (new) messages
+        self._ignore_messages = False
+        return result
 
     async def handle_message(self, room: nio.MatrixRoom, event: nio.RoomMessageText):
         if self._ignore_messages:
