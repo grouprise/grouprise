@@ -19,6 +19,14 @@ from grouprise.features.memberships.models import Membership
 commander = create_commander("grouprise-commander")
 
 
+class MatrixCommanderResult(CommandResult):
+    """this derived class helps us distinguish kien messages from our own messages
+
+    Without this separate class, we could not excempt kien's messages from being interpreted as
+    markdown.
+    """
+
+
 class ResolveException(Exception):
     """we failed to resolve an item (user, group, content, ...)"""
 
@@ -30,7 +38,7 @@ class ResolveException(Exception):
 
     def get_command_results(self):
         for line in self._msg_lines:
-            yield CommandResult(line, success=False)
+            yield MatrixCommanderResult(line, success=False)
 
 
 def _get_invalid_key_response(invalid_key, label, alternatives, max_alternative_count):
@@ -41,7 +49,7 @@ def _get_invalid_key_response(invalid_key, label, alternatives, max_alternative_
     if closest_matches:
         yield "Maybe you meant one of the following?"
         for item in closest_matches:
-            yield "  " + item
+            yield "- " + item
 
 
 def get_unknown_username_response(username, max_alternative_count=10):
@@ -117,10 +125,10 @@ def user():
 def user_join_group(gestalt: Gestalt, group: Group):
     if not Membership.objects.filter(member=gestalt, group=group).exists():
         Membership.objects.create(member=gestalt, group=group, created_by=gestalt)
-        yield CommandResult(f"Added '{gestalt}' to group '{group}'")
+        yield MatrixCommanderResult(f"Added *{gestalt}* to group *{group}*")
     else:
-        yield CommandResult(
-            f"Warning: user '{gestalt}' is already a member of group '{group}'",
+        yield MatrixCommanderResult(
+            f"**Warning**: user *{gestalt}* is already a member of group *{group}*",
             success=False,
         )
 
@@ -132,10 +140,10 @@ def user_leave_group(gestalt: Gestalt, group: Group):
     queryset = Membership.objects.filter(member=gestalt, group=group)
     if queryset.exists():
         queryset.delete()
-        yield CommandResult(f"Removed '{gestalt}' from group '{group}'")
+        yield MatrixCommanderResult(f"Removed *{gestalt}* from group *{group}*")
     else:
-        yield CommandResult(
-            f"Failure: user '{gestalt}' is not a member of group '{group}'",
+        yield MatrixCommanderResult(
+            f"**Failure**: user *{gestalt}* is not a member of group *{group}*",
             success=False,
         )
 
@@ -154,26 +162,28 @@ def user_list_unused(limit: int = 5):
         versions=None,
     ).order_by("activity_bookmark_time")[:limit]:
         if not gestalt.user.has_usable_password():
-            yield CommandResult(f"{gestalt.user.username} ({gestalt.user.date_joined})")
+            yield MatrixCommanderResult(
+                f"- {gestalt.user.username} ({gestalt.user.date_joined})"
+            )
 
 
 @commander(user, "show", var("username"))
 @inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
 def show_user(gestalt: Gestalt):
-    yield CommandResult(f"Username: {gestalt.user.username}")
-    yield CommandResult(f"Email: {gestalt.user.email}")
-    yield CommandResult(f"Contributions: {gestalt.contributions.count()}")
-    yield CommandResult(f"Group memberships: {gestalt.memberships.count()}")
+    yield MatrixCommanderResult(f"- *Username*: {gestalt.user.username}")
+    yield MatrixCommanderResult(f"- *Email*: {gestalt.user.email}")
+    yield MatrixCommanderResult(f"- *Contributions*: {gestalt.contributions.count()}")
+    yield MatrixCommanderResult(f"- *Group memberships*: {gestalt.memberships.count()}")
     latest_contribution = gestalt.contributions.order_by("time_created").last()
     timestamp = latest_contribution.time_created if latest_contribution else None
-    yield CommandResult(f"Latest contribution: {timestamp}")
+    yield MatrixCommanderResult(f"- *Latest contribution*: {timestamp}")
 
 
 @commander(user, "remove", var("username"))
 @inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
 def remove_user(gestalt):
     gestalt.delete()
-    yield CommandResult(f"Removed user '{gestalt}'")
+    yield MatrixCommanderResult(f"Removed user *{gestalt}*")
 
 
 @commander("group", is_abstract=True)
@@ -186,18 +196,19 @@ def group():
 def group_show(group):
     open_text = "open" if group.closed else "closed"
     url = get_grouprise_baseurl().rstrip("/") + group.get_absolute_url()
-    yield CommandResult(f"Group [{group.name}]({url}) is {open_text}")
-    yield CommandResult(f"Members: {group.members.count()}")
-    yield CommandResult(f"Subscribers: {group.subscribers.count()}")
-    yield CommandResult(f"Content: {group.associations.count()}")
-    yield CommandResult(f"Latest activity: {group.get_latest_activity_time()}")
+    yield MatrixCommanderResult(f"- Group [{group.name}]({url}) is {open_text}")
+    yield MatrixCommanderResult(f"- *Members*: {group.members.count()}")
+    yield MatrixCommanderResult(f"- *Subscribers*: {group.subscribers.count()}")
+    yield MatrixCommanderResult(f"- *Content*: {group.associations.count()}")
+    yield MatrixCommanderResult(f"- *Latest activity*: {group.get_latest_activity_time()}")
 
 
 @commander(group, "delete", var("groupname"))
 @inject_resolved(source="groupname", target="group", resolvers=[get_group])
 def group_delete(group):
+    old_group_name = str(group)
     group.delete()
-    yield CommandResult(f"Removed group '{group}'")
+    yield MatrixCommanderResult(f"Removed group *{old_group_name}*")
 
 
 @commander("content", is_abstract=True)
@@ -253,8 +264,8 @@ def change_content_visibility(association: Association, state: str):
     elif state.lower() == "private":
         should_go_public = False
     else:
-        yield CommandResult(
-            f"Invalid target state: {state} (should be 'public' or 'private')"
+        yield MatrixCommanderResult(
+            f"Invalid target state: `{state}` (should be `public` or `private`)"
         )
         return
     if should_go_public:
@@ -262,8 +273,8 @@ def change_content_visibility(association: Association, state: str):
     else:
         association.public = False
     association.save()
-    yield CommandResult(
-        f"Changed visibility to {'public' if should_go_public else 'private'}"
+    yield MatrixCommanderResult(
+        f"Changed visibility to *{'public' if should_go_public else 'private'}*"
     )
 
 
@@ -275,15 +286,15 @@ def change_content_visibility(association: Association, state: str):
 def change_content_ownership(association: Association, entity: Union[Gestalt, Group]):
     previous_owner = association.entity
     if previous_owner == entity:
-        yield CommandResult(
-            f"Warning: the content '{association}' already belongs to '{entity}'",
+        yield MatrixCommanderResult(
+            f"**Warning**: the content *{association}* already belongs to *{entity}*",
             success=False,
         )
     else:
         association.entity = entity
         association.save()
-        yield CommandResult(
-            f"Changed ownership of '{association}' from '{previous_owner}' to '{entity}'"
+        yield MatrixCommanderResult(
+            f"Changed ownership of *{association}* from *{previous_owner}* to *{entity}*"
         )
 
 
@@ -317,15 +328,15 @@ def get_contribution_by_url(url):
     source="url", target="contribution", resolvers=[get_contribution_by_url]
 )
 def show_contribution(contribution: Contribution, max_text_length: int = 200):
-    yield CommandResult(f"* **Author**: {contribution.author}")
+    yield MatrixCommanderResult(f"- *Author*: {contribution.author}")
     time_created = contribution.time_created.strftime("%Y-%m-%d %H:%M")
-    yield CommandResult(f"* **Published**: {time_created}")
+    yield MatrixCommanderResult(f"- *Published*: {time_created}")
     full_text = contribution.text.last().text
     if len(full_text) > max_text_length:
         abbreviated_text = full_text[: max_text_length - 1] + " …"
     else:
         abbreviated_text = full_text
-    yield CommandResult(f"* **Content**: {abbreviated_text}")
+    yield MatrixCommanderResult(f"- *Content*: {abbreviated_text}")
 
 
 @commander(contribution, "delete", var("url"))
@@ -336,7 +347,7 @@ def delete_contribution(contribution: Contribution):
     # remember the contribution ID before deleting the object
     old_identifier = contribution.pk
     contribution.delete()
-    yield CommandResult(f"Removed comment #{old_identifier}")
+    yield MatrixCommanderResult(f"Removed comment `#{old_identifier}`")
 
 
 @commander(user, "admin", "list")
@@ -344,7 +355,7 @@ def list_admins():
     for gestalt in Gestalt.objects.filter(
         user__is_staff=True, user__is_superuser=True
     ).only("user"):
-        yield CommandResult(f"{gestalt.user.username}")
+        yield MatrixCommanderResult(f"- {gestalt.user.username}")
 
 
 @commander(user, "admin", "grant", var("username"))
@@ -352,14 +363,14 @@ def list_admins():
 def grant_admin(gestalt):
     user = gestalt.user
     if user.is_staff and user.is_superuser:
-        yield CommandResult(
-            f"Warning: the user '{gestalt}' is already privileged", success=False
+        yield MatrixCommanderResult(
+            f"**Warning**: the user *{gestalt}* is already privileged", success=False
         )
     else:
         user.is_staff = True
         user.is_superuser = True
         user.save()
-        yield CommandResult(f"Granted privileges to user '{gestalt}'")
+        yield MatrixCommanderResult(f"Granted privileges to user *{gestalt}*")
 
 
 @commander(user, "admin", "revoke", var("username"))
@@ -367,14 +378,14 @@ def grant_admin(gestalt):
 def revoke_admin(gestalt):
     user = gestalt.user
     if not user.is_staff and not user.is_superuser:
-        yield CommandResult(
-            f"Warning: the user '{gestalt}' is not privileged", success=False
+        yield MatrixCommanderResult(
+            f"**Warning**: the user *{gestalt}* is not privileged", success=False
         )
     else:
         user.is_staff = False
         user.is_superuser = False
         user.save()
-        yield CommandResult(f"Revoked privileges from user '{gestalt}'")
+        yield MatrixCommanderResult(f"Revoked privileges from user *{gestalt}*")
 
 
 class MatrixCommander:
@@ -383,8 +394,13 @@ class MatrixCommander:
         self._commander.compose(commander, help_command.command)
 
     def process_command(self, command):
+        lines = []
+        use_markdown = True
         try:
             for response in self._commander.dispatch(command):
-                yield strip_tags(response.message)
+                if not isinstance(response, MatrixCommanderResult):
+                    use_markdown = False
+                lines.append(strip_tags(response.message))
+            return os.linesep.join(lines), use_markdown
         except kien.error.CommandError as exc:
-            yield str(exc)
+            return str(exc), False

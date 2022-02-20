@@ -4,7 +4,7 @@ import re
 
 import nio
 
-from grouprise.core.matrix import MatrixBaseBot
+from grouprise.core.matrix import MatrixBaseBot, MatrixError
 
 from .commands import MatrixCommander
 from .settings import MATRIX_COMMANDER_SETTINGS
@@ -74,8 +74,8 @@ class CommanderBot(MatrixBaseBot):
             logger.warning("Ignoring request from a non-admin room: %s", room)
             await self.send_text_carefully(
                 room.room_id,
-                f"Ignoring request, since this room ({room.room_id}) is not"
-                f" configured in 'matrix_commander.admin_rooms'.",
+                f"Ignoring request, since this room (`{room.room_id}`) is not"
+                f" configured in `matrix_commander.admin_rooms`.",
             )
         else:
             message = event.body
@@ -85,8 +85,9 @@ class CommanderBot(MatrixBaseBot):
             prefix, remainder = tokens
             if self._prefix_regex.match(prefix):
                 logger.info("Processing incoming message: %s", remainder[:60])
-                response = os.linesep.join(self._commander.process_command(remainder))
-                await self.send_text_carefully(room.room_id, response)
+                response, use_markdown = self._commander.process_command(remainder)
+                parser = "markdown" if use_markdown else None
+                await self.send_text_carefully(room.room_id, response, parser=parser)
 
     async def handle_encrypted_message(
         self, room: nio.MatrixRoom, event: nio.MegolmEvent
@@ -94,7 +95,8 @@ class CommanderBot(MatrixBaseBot):
         logger.info("Received encrypted message from room: %s", room.name)
         response = os.linesep.join(
             [
-                'Sorry, grouprise\'s "matrix-commander" bot does not support encryption.',
+                "Sorry, grouprise's `matrix-commander` bot does not support encryption.",
+                "",
                 "You should not not invite this bot to encrypted rooms.",
             ]
         )
