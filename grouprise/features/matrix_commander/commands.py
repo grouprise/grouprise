@@ -159,7 +159,7 @@ def user_leave_group(gestalt: Gestalt, group: Group):
 @transform(limit=int)
 def user_list_unused(limit: int = 5):
     # TODO: verify the following queryset
-    for gestalt in Gestalt.objects.filter(
+    queryset = Gestalt.objects.filter(
         associations=None,
         contributions=None,
         groups=None,
@@ -168,10 +168,18 @@ def user_list_unused(limit: int = 5):
         subscriptions=None,
         user__last_login=None,
         versions=None,
-    ).order_by("activity_bookmark_time")[:limit]:
+    )
+    yield MatrixCommanderResult(f"There are {queryset.count()} unused accounts.")
+    yield MatrixCommanderResult(f"The {limit} most recently active ones are:")
+    yield MatrixCommanderResult("")
+    for gestalt in queryset.order_by("activity_bookmark_time")[:limit]:
         if not gestalt.user.has_usable_password():
             date_joined = gestalt.user.date_joined.strftime(TIME_FORMAT)
-            yield MatrixCommanderResult(f"- {gestalt.user.username} ({date_joined})")
+            date_activity = gestalt.activity_bookmark_time.strftime(TIME_FORMAT)
+            yield MatrixCommanderResult(
+                f"- {gestalt.user.username}"
+                f" (joined: {date_joined}, activity: {date_activity})"
+            )
 
 
 @commander(user, "show", var("username"))
