@@ -19,6 +19,9 @@ from grouprise.features.memberships.models import Membership
 commander = create_commander("grouprise-commander")
 
 
+TIME_FORMAT = "%Y-%m-%d %H:%M"
+
+
 class MatrixCommanderResult(CommandResult):
     """this derived class helps us distinguish kien messages from our own messages
 
@@ -162,9 +165,8 @@ def user_list_unused(limit: int = 5):
         versions=None,
     ).order_by("activity_bookmark_time")[:limit]:
         if not gestalt.user.has_usable_password():
-            yield MatrixCommanderResult(
-                f"- {gestalt.user.username} ({gestalt.user.date_joined})"
-            )
+            date_joined = gestalt.user.date_joined.strftime(TIME_FORMAT)
+            yield MatrixCommanderResult(f"- {gestalt.user.username} ({date_joined})")
 
 
 @commander(user, "show", var("username"))
@@ -175,7 +177,10 @@ def show_user(gestalt: Gestalt):
     yield MatrixCommanderResult(f"- *Contributions*: {gestalt.contributions.count()}")
     yield MatrixCommanderResult(f"- *Group memberships*: {gestalt.memberships.count()}")
     latest_contribution = gestalt.contributions.order_by("time_created").last()
-    timestamp = latest_contribution.time_created if latest_contribution else None
+    if latest_contribution:
+        timestamp = latest_contribution.time_created.strftime(TIME_FORMAT)
+    else:
+        timestamp = None
     yield MatrixCommanderResult(f"- *Latest contribution*: {timestamp}")
 
 
@@ -200,7 +205,12 @@ def group_show(group):
     yield MatrixCommanderResult(f"- *Members*: {group.members.count()}")
     yield MatrixCommanderResult(f"- *Subscribers*: {group.subscribers.count()}")
     yield MatrixCommanderResult(f"- *Content*: {group.associations.count()}")
-    yield MatrixCommanderResult(f"- *Latest activity*: {group.get_latest_activity_time()}")
+    latest_activity_time = group.get_latest_activity_time()
+    if latest_activity_time:
+        timestamp = latest_activity_time.strftime(TIME_FORMAT)
+    else:
+        timestamp = None
+    yield MatrixCommanderResult(f"- *Latest activity*: {timestamp}")
 
 
 @commander(group, "delete", var("groupname"))
@@ -329,7 +339,7 @@ def get_contribution_by_url(url):
 )
 def show_contribution(contribution: Contribution, max_text_length: int = 200):
     yield MatrixCommanderResult(f"- *Author*: {contribution.author}")
-    time_created = contribution.time_created.strftime("%Y-%m-%d %H:%M")
+    time_created = contribution.time_created.strftime(TIME_FORMAT)
     yield MatrixCommanderResult(f"- *Published*: {time_created}")
     full_text = contribution.text.last().text
     if len(full_text) > max_text_length:
