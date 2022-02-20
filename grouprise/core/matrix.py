@@ -106,7 +106,9 @@ class MatrixBaseBot:
             raise MatrixError(f"Failed to send message: {exc}")
         else:
             if not isinstance(response, nio.responses.RoomSendResponse):
-                raise MatrixError(f"Failed to send message: {response}")
+                raise MatrixError(
+                    f"Failed to send message due to rejection: {response}"
+                )
 
 
 class MatrixDummyServer:

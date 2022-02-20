@@ -2,7 +2,6 @@ import logging
 import os
 import re
 
-import markdown
 import nio
 
 from grouprise.core.matrix import MatrixBaseBot
@@ -49,20 +48,11 @@ class CommanderBot(MatrixBaseBot):
             logger.info("Rejecting invitation for unknown room: %s", room.room_id)
             await self.client.room_leave(room.room_id)
 
-    async def send_text(
-        self, room: nio.MatrixRoom, body: str, msgtype="m.notice", parser="markdown"
-    ):
-        msg = {"body": body, "msgtype": msgtype}
-        if parser == "markdown":
-            msg["formatted"] = markdown.markdown(body)
-            msg["formatted_body"] = "org.matrix.custom.html"
+    async def send_text_carefully(self, room_id: str, body: str, **kwargs):
         try:
-            response = await self.client.room_send(room.room_id, "m.room.message", msg)
-        except nio.exceptions.ProtocolError as exc:
-            logger.warning("Failed to send message: %s", exc)
-        else:
-            if not isinstance(response, nio.responses.RoomSendResponse):
-                logger.warning("Failed to send message due to rejection: %s", response)
+            await self.send_text(room_id, body, **kwargs)
+        except MatrixError as exc:
+            logging.warning(exc)
 
     async def serve_forever(self):
         # discard old messages during an initial sync
@@ -82,8 +72,8 @@ class CommanderBot(MatrixBaseBot):
             logger.debug("Ignoring old message: %s", event)
         elif not self.is_admin_room(room):
             logger.warning("Ignoring request from a non-admin room: %s", room)
-            await self.send_text(
-                room,
+            await self.send_text_carefully(
+                room.room_id,
                 f"Ignoring request, since this room ({room.room_id}) is not"
                 f" configured in 'matrix_commander.admin_rooms'.",
             )
@@ -96,7 +86,7 @@ class CommanderBot(MatrixBaseBot):
             if self._prefix_regex.match(prefix):
                 logger.info("Processing incoming message: %s", remainder[:60])
                 response = os.linesep.join(self._commander.process_command(remainder))
-                await self.send_text(room, response)
+                await self.send_text_carefully(room.room_id, response)
 
     async def handle_encrypted_message(
         self, room: nio.MatrixRoom, event: nio.MegolmEvent
@@ -108,4 +98,4 @@ class CommanderBot(MatrixBaseBot):
                 "You should not not invite this bot to encrypted rooms.",
             ]
         )
-        await self.send_text(room, response)
+        await self.send_text_carefully(room.room_id, response)
