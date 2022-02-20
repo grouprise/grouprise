@@ -53,6 +53,7 @@ def _get_invalid_key_response(invalid_key, label, alternatives, max_alternative_
     )
     if closest_matches:
         yield "Maybe you meant one of the following?"
+        yield ""
         for item in closest_matches:
             yield "- " + item
 
