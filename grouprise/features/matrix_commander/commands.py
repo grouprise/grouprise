@@ -18,6 +18,8 @@ commander = create_commander("grouprise-commander")
 
 
 class ResolveException(Exception):
+    """we failed to resolve an item (user, group, content, ...)"""
+
     def __init__(self, message_lines, *args, **kwargs):
         if isinstance(message_lines, str):
             message_lines = [message_lines]
@@ -217,7 +219,10 @@ def get_association_by_url(url):
         except ValueError:
             raise not_found_exception
         else:
-            return Association.objects.get(pk=association_pk)
+            try:
+                return Association.objects.get(pk=association_pk)
+            except Association.DoesNotExist:
+                raise not_found_exception
     elif len(tokens) == 2:
         # see URL "content"
         entity_slug = tokens[0]
