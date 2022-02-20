@@ -154,12 +154,10 @@ def user_leave_group(gestalt: Gestalt, group: Group):
         )
 
 
-@commander(user, "list", "unused", var("limit", is_optional=True))
-@validate(limit=(is_int() & is_gt(0)))
-@transform(limit=int)
-def user_list_unused(limit: int = 5):
+def get_unused_gestalts(limit: int = None):
+    count = 0
     # TODO: verify the following queryset
-    queryset = Gestalt.objects.filter(
+    for gestalt in Gestalt.objects.filter(
         associations=None,
         contributions=None,
         groups=None,
@@ -168,18 +166,45 @@ def user_list_unused(limit: int = 5):
         subscriptions=None,
         user__last_login=None,
         versions=None,
-    )
-    yield MatrixCommanderResult(f"There are {queryset.count()} unused accounts.")
+    ).order_by("activity_bookmark_time"):
+        if not gestalt.can_login():
+            yield gestalt
+            count += 1
+            if (limit is not None) and (count >= limit):
+                break
+
+
+@commander(user, "list-unused", var("limit", is_optional=True))
+@validate(limit=(is_int() & is_gt(0)))
+@transform(limit=int)
+def user_list_unused(limit):
+    if limit is None:
+        limit = 5
+    unused_gestalts = list(get_unused_gestalts())
+    yield MatrixCommanderResult(f"There are {len(unused_gestalts)} unused accounts.")
     yield MatrixCommanderResult(f"The {limit} most recently active ones are:")
     yield MatrixCommanderResult("")
-    for gestalt in queryset.order_by("activity_bookmark_time")[:limit]:
-        if not gestalt.user.has_usable_password():
-            date_joined = gestalt.user.date_joined.strftime(TIME_FORMAT)
-            date_activity = gestalt.activity_bookmark_time.strftime(TIME_FORMAT)
-            yield MatrixCommanderResult(
-                f"- {gestalt.user.username}"
-                f" (joined: {date_joined}, activity: {date_activity})"
-            )
+    for gestalt in unused_gestalts[:limit]:
+        date_joined = gestalt.user.date_joined.strftime(TIME_FORMAT)
+        date_activity = gestalt.activity_bookmark_time.strftime(TIME_FORMAT)
+        yield MatrixCommanderResult(
+            f"- {gestalt.user.username}"
+            f" (joined: {date_joined}, activity: {date_activity})"
+        )
+
+
+@commander(user, "delete-unused", var("limit", is_optional=True))
+@validate(limit=(is_int() & is_gt(0)))
+@transform(limit=int)
+def user_remove_unused(limit):
+    if limit is None:
+        limit = 5
+    yield MatrixCommanderResult("Removed the following accounts:")
+    yield MatrixCommanderResult("")
+    for gestalt in get_unused_gestalts(limit):
+        username = gestalt.user.username
+        gestalt.delete()
+        yield MatrixCommanderResult(f"- {username}")
 
 
 @commander(user, "show", var("username"))
