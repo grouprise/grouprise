@@ -1,9 +1,11 @@
+import datetime
 import difflib
 import functools
 import os
 import re
 from typing import Union
 
+from django.utils import timezone
 import kien.command.help as help_command
 import kien.error
 from kien import CommandResult, create_commander, var
@@ -11,7 +13,7 @@ from kien.transformation import transform
 from kien.utils import strip_tags
 from kien.validation import is_gt, is_int, validate
 
-from grouprise.core.settings import get_grouprise_baseurl
+from grouprise.core.settings import get_grouprise_baseurl, CORE_SETTINGS
 from grouprise.features.associations.models import Association
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.gestalten.models import Gestalt
@@ -154,24 +156,69 @@ def user_leave_group(gestalt: Gestalt, group: Group):
         )
 
 
-def get_unused_gestalts(limit: int = None):
+def get_unused_gestalts(
+    limit: int = None,
+    # most bots seem to register within less than one second - too obvious :)
+    bot_login_delay_seconds: float = 3,
+    acount_creation_age_days: int = 30,
+):
+    # accounts with a very quick login (right after registration) are surely bots
+    if bot_login_delay_seconds is None:
+        bot_login_delay_threshold = None
+    else:
+        bot_login_delay_threshold = datetime.timedelta(seconds=bot_login_delay_seconds)
+    if acount_creation_age_days is None:
+        recent_account_creation_time = None
+    else:
+        recent_account_creation_time = timezone.now() - datetime.timedelta(
+            days=acount_creation_age_days
+        )
+    gestalt_exemptions = {
+        CORE_SETTINGS.FEED_IMPORTER_GESTALT_ID,
+        CORE_SETTINGS.UNKNOWN_GESTALT_ID,
+    }
     count = 0
-    # TODO: verify the following queryset
-    for gestalt in Gestalt.objects.filter(
+    queryset = Gestalt.objects.filter(
         associations=None,
         contributions=None,
         groups=None,
         images=None,
         memberships=None,
         subscriptions=None,
-        user__last_login=None,
         versions=None,
-    ).order_by("activity_bookmark_time"):
-        if not gestalt.can_login():
-            yield gestalt
-            count += 1
-            if (limit is not None) and (count >= limit):
-                break
+        votes=None,
+    )
+    if recent_account_creation_time is not None:
+        # the account was registered recently - maybe there will be the first login soon
+        queryset = queryset.filter(user__date_joined__lt=recent_account_creation_time)
+    for gestalt in queryset.order_by("activity_bookmark_time").prefetch_related("user"):
+        # test a few exceptions - all remaining accounts should be disposable
+        if gestalt.pk in gestalt_exemptions:
+            # some users are relevant for grouprise itself
+            continue
+        # can we see obvious bot-like behaviour?
+        if (
+            (bot_login_delay_threshold is not None)
+            and gestalt.user.last_login
+            and (
+                (gestalt.user.last_login - gestalt.user.date_joined)
+                < bot_login_delay_threshold
+            )
+        ):
+            # the user logged in way too fast - it is surely a bot
+            pass
+        else:
+            # None of the clear bot-like behaviors above matched - look for some soft indicators.
+            # TODO: the test for "can_login" excludes most accounts from automatic removal.
+            #    Maybe we should not trust this condition?
+            if gestalt.can_login():
+                # the confirmation email was processed by the user
+                continue
+        # this seems to be really a bot (or an unused account)
+        yield gestalt
+        count += 1
+        if (limit is not None) and (count >= limit):
+            break
 
 
 @commander(user, "list-unused", var("limit", is_optional=True))
