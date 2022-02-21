@@ -240,7 +240,7 @@ def user_list_unused(limit):
         )
 
 
-@commander(user, "delete-unused", var("limit", is_optional=True))
+@commander(user, "remove-unused", var("limit", is_optional=True))
 @validate(limit=(is_int() & is_gt(0)))
 @transform(limit=int)
 def user_remove_unused(limit):
@@ -298,7 +298,7 @@ def group_show(group):
     yield MatrixCommanderResult(f"- *Latest activity*: {timestamp}")
 
 
-@commander(group, "delete", var("groupname"))
+@commander(group, "remove", var("groupname"))
 @inject_resolved(source="groupname", target="group", resolvers=[get_group])
 def group_delete(group):
     old_group_name = str(group)
@@ -434,7 +434,7 @@ def show_contribution(contribution: Contribution, max_text_length: int = 200):
     yield MatrixCommanderResult(f"- *Content*: {abbreviated_text}")
 
 
-@commander(contribution, "delete", var("url"))
+@commander(contribution, "remove", var("url"))
 @inject_resolved(
     source="url", target="contribution", resolvers=[get_contribution_by_url]
 )
