@@ -158,15 +158,11 @@ def user_leave_group(gestalt: Gestalt, group: Group):
 
 def get_unused_gestalts(
     limit: int = None,
-    # most bots seem to register within less than one second - too obvious :)
-    bot_login_delay_seconds: float = 3,
     acount_creation_age_days: int = 30,
 ):
-    # accounts with a very quick login (right after registration) are surely bots
-    if bot_login_delay_seconds is None:
-        bot_login_delay_threshold = None
-    else:
-        bot_login_delay_threshold = datetime.timedelta(seconds=bot_login_delay_seconds)
+    # The first login happens automatically right after registration.  We use this short time frame
+    # for determining whether a user logged in only once at all (during registration).
+    login_after_registration_time = datetime.timedelta(seconds=60)
     if acount_creation_age_days is None:
         recent_account_creation_time = None
     else:
@@ -196,24 +192,18 @@ def get_unused_gestalts(
         if gestalt.pk in gestalt_exemptions:
             # some users are relevant for grouprise itself
             continue
-        # can we see obvious bot-like behaviour?
-        if (
-            (bot_login_delay_threshold is not None)
-            and gestalt.user.last_login
-            and (
-                (gestalt.user.last_login - gestalt.user.date_joined)
-                < bot_login_delay_threshold
-            )
+        # did the user log in again, later (after the registration)?
+        if gestalt.user.last_login and (
+            (gestalt.user.last_login - gestalt.user.date_joined)
+            > login_after_registration_time
         ):
-            # the user logged in way too fast - it is surely a bot
-            pass
-        else:
-            # None of the clear bot-like behaviors above matched - look for some soft indicators.
-            # TODO: the test for "can_login" excludes most accounts from automatic removal.
-            #    Maybe we should not trust this condition?
-            if gestalt.can_login():
-                # the confirmation email was processed by the user
-                continue
+            # the user logged in at least twice - it seems to be human
+            continue
+        # TODO: the test for "can_login" excludes most accounts from automatic removal.
+        #    Maybe we should not trust this condition?
+        if gestalt.can_login():
+            # the confirmation email was processed by the user
+            continue
         # this seems to be really a bot (or an unused account)
         yield gestalt
         count += 1
