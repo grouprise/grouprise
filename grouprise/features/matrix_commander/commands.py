@@ -320,7 +320,11 @@ def get_association_by_url(url):
     if url.startswith(base_url):
         url = url[len(base_url) :]
     tokens = url.lstrip("/").split("/")
-    if (len(tokens) == 3) and (tokens[0] == "stadt") and (tokens[1] == "content"):
+    if (
+        (len(tokens) == 3)
+        and (tokens[0] == "stadt")
+        and (tokens[1] in {"content", "conversations"})
+    ):
         # see URL "content-permalink"
         try:
             association_pk = int(tokens[2])
@@ -360,7 +364,8 @@ def change_content_visibility(association: Association, state: str):
         should_go_public = False
     else:
         yield MatrixCommanderResult(
-            f"Invalid target state: `{state}` (should be `public` or `private`)"
+            f"Invalid target state: `{state}` (should be `public` or `private`)",
+            success=False,
         )
         return
     if should_go_public:
