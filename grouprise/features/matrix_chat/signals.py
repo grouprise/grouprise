@@ -235,7 +235,8 @@ def send_contribution_notification_to_matrix_rooms(
     else:
         messages = []
         for association in instance.container.associations.all():
-            url = full_url(association.get_absolute_url())
+            association_url = full_url(association.get_absolute_url())
+            url = association_url + f"#contribution-{instance.pk}"
             if association.entity.is_group:
                 # send a message to the group's rooms
                 group = association.entity
