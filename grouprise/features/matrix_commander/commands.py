@@ -378,6 +378,14 @@ def change_content_visibility(association: Association, state: str):
     )
 
 
+@commander(content, "remove", var("url"))
+@inject_resolved(source="url", target="association", resolvers=[get_association_by_url])
+def remove_content(association: Association):
+    association_description = str(association)
+    association.delete()
+    yield MatrixCommanderResult(f"Removed content: {association_description}")
+
+
 @commander(content, "ownership", var("url"), var("group_or_user"))
 @inject_resolved(source="url", target="association", resolvers=[get_association_by_url])
 @inject_resolved(
