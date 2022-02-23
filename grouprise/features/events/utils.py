@@ -1,5 +1,5 @@
 from calendar import LocaleHTMLCalendar, day_abbr, different_locale, month_name
-from datetime import date
+import datetime
 
 from django import urls
 from django.utils import timezone
@@ -10,8 +10,9 @@ def get_requested_time(request):
     month, year = query.get("month", None), query.get("year", None)
 
     if month and year:
+        tz = timezone.get_current_timezone()
         try:
-            return timezone.datetime(year=int(year), month=int(month), day=1)
+            return datetime.datetime(year=int(year), month=int(month), day=1, tz=tz)
         except ValueError:
             pass
     return None
@@ -20,7 +21,7 @@ def get_requested_time(request):
 class EventCalendar(LocaleHTMLCalendar):
     def __init__(self, event_dict, firstweekday=0, locale=None):
         super().__init__(firstweekday, locale)
-        self.today = date.today()
+        self.today = datetime.date.today()
         self.events = event_dict
 
     def formatday(self, thedate, themonth):
