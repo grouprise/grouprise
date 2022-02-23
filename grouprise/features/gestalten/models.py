@@ -84,6 +84,7 @@ class Gestalt(grouprise.core.models.Model):
         return self.name or self.slug
 
     def can_login(self):
+        """some accounts are created with unusable passwords (see `get_or_create_by_email`)"""
         return self.user.has_usable_password()
 
     def delete(self, *args, **kwargs):

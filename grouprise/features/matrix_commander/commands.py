@@ -199,11 +199,6 @@ def get_unused_gestalts(
         ):
             # the user logged in at least twice - it seems to be human
             continue
-        # TODO: the test for "can_login" excludes most accounts from automatic removal.
-        #    Maybe we should not trust this condition?
-        if gestalt.can_login():
-            # the confirmation email was processed by the user
-            continue
         # this seems to be really a bot (or an unused account)
         yield gestalt
         count += 1
