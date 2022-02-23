@@ -1,3 +1,5 @@
+import datetime
+
 import django.contrib.contenttypes.models
 from allauth.account import adapter as allauth_adapter
 from django import urls
@@ -32,6 +34,55 @@ class GestaltQuerySet(models.QuerySet):
             user.set_unusable_password()
             user.save()
         return user.gestalt
+
+    def filter_unused(self, limit: int = None, acount_creation_age_days: int = 30):
+        """generator for gestalt objects which seem to be unused (or a bot)"""
+        # The first login happens automatically right after registration.  We use this short time
+        # frame for determining whether a user logged in only once at all (during registration).
+        login_after_registration_time = datetime.timedelta(seconds=60)
+        if acount_creation_age_days is None:
+            recent_account_creation_time = None
+        else:
+            recent_account_creation_time = now() - datetime.timedelta(
+                days=acount_creation_age_days
+            )
+        gestalt_exemptions = {
+            CORE_SETTINGS.FEED_IMPORTER_GESTALT_ID,
+            CORE_SETTINGS.UNKNOWN_GESTALT_ID,
+        }
+        count = 0
+        queryset = self.model.objects.filter(
+            associations=None,
+            contributions=None,
+            groups=None,
+            images=None,
+            memberships=None,
+            subscriptions=None,
+            versions=None,
+            votes=None,
+        )
+        if recent_account_creation_time is not None:
+            # the account was registered recently - maybe there will be the first login soon
+            queryset = queryset.filter(user__date_joined__lt=recent_account_creation_time)
+        for gestalt in queryset.order_by("activity_bookmark_time").prefetch_related("user"):
+            # test a few exceptions - all remaining accounts should be disposable
+            if gestalt.pk in gestalt_exemptions:
+                # some users are relevant for grouprise itself
+                continue
+            # did the user log in again, later (after the registration)?
+            # Beware, that some users may have logged in only once, as their cookie was renewed
+            # periodically.  But anyway: multiple logins are a strong indicator for a non-bot.
+            if gestalt.user.last_login and (
+                (gestalt.user.last_login - gestalt.user.date_joined)
+                > login_after_registration_time
+            ):
+                # the user logged in at least twice - it seems to be human
+                continue
+            # this seems to be really a bot (or an unused account)
+            yield gestalt
+            count += 1
+            if (limit is not None) and (count >= limit):
+                break
 
 
 class Gestalt(grouprise.core.models.Model):

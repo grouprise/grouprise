@@ -1,11 +1,9 @@
-import datetime
 import difflib
 import functools
 import os
 import re
 from typing import Union
 
-from django.utils import timezone
 import kien.command.help as help_command
 import kien.error
 from kien import CommandResult, create_commander, var
@@ -13,7 +11,7 @@ from kien.transformation import transform
 from kien.utils import strip_tags
 from kien.validation import is_gt, is_int, validate
 
-from grouprise.core.settings import get_grouprise_baseurl, CORE_SETTINGS
+from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.features.associations.models import Association
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.gestalten.models import Gestalt
@@ -156,65 +154,14 @@ def user_leave_group(gestalt: Gestalt, group: Group):
         )
 
 
-def get_unused_gestalts(
-    limit: int = None,
-    acount_creation_age_days: int = 30,
-):
-    # The first login happens automatically right after registration.  We use this short time frame
-    # for determining whether a user logged in only once at all (during registration).
-    login_after_registration_time = datetime.timedelta(seconds=60)
-    if acount_creation_age_days is None:
-        recent_account_creation_time = None
-    else:
-        recent_account_creation_time = timezone.now() - datetime.timedelta(
-            days=acount_creation_age_days
-        )
-    gestalt_exemptions = {
-        CORE_SETTINGS.FEED_IMPORTER_GESTALT_ID,
-        CORE_SETTINGS.UNKNOWN_GESTALT_ID,
-    }
-    count = 0
-    queryset = Gestalt.objects.filter(
-        associations=None,
-        contributions=None,
-        groups=None,
-        images=None,
-        memberships=None,
-        subscriptions=None,
-        versions=None,
-        votes=None,
-    )
-    if recent_account_creation_time is not None:
-        # the account was registered recently - maybe there will be the first login soon
-        queryset = queryset.filter(user__date_joined__lt=recent_account_creation_time)
-    for gestalt in queryset.order_by("activity_bookmark_time").prefetch_related("user"):
-        # test a few exceptions - all remaining accounts should be disposable
-        if gestalt.pk in gestalt_exemptions:
-            # some users are relevant for grouprise itself
-            continue
-        # did the user log in again, later (after the registration)?
-        # Beware, that some users may have logged in only once, as their cookie was renewed
-        # periodically.  But anyway: multiple logins are a strong indicator for a non-bot.
-        if gestalt.user.last_login and (
-            (gestalt.user.last_login - gestalt.user.date_joined)
-            > login_after_registration_time
-        ):
-            # the user logged in at least twice - it seems to be human
-            continue
-        # this seems to be really a bot (or an unused account)
-        yield gestalt
-        count += 1
-        if (limit is not None) and (count >= limit):
-            break
-
-
 @commander(user, "list-unused", var("limit", is_optional=True))
 @validate(limit=(is_int() & is_gt(0)))
 @transform(limit=int)
 def user_list_unused(limit):
     if limit is None:
         limit = 5
-    unused_gestalts = list(get_unused_gestalts())
+    # request all unused gestalts in order to count them
+    unused_gestalts = list(Gestalt.objects.filter_unused(limit=None))
     yield MatrixCommanderResult(f"There are {len(unused_gestalts)} unused accounts.")
     yield MatrixCommanderResult(f"The {limit} most recently active ones are:")
     yield MatrixCommanderResult("")
@@ -235,7 +182,7 @@ def user_remove_unused(limit):
         limit = 5
     yield MatrixCommanderResult("Removed the following accounts:")
     yield MatrixCommanderResult("")
-    for gestalt in get_unused_gestalts(limit):
+    for gestalt in Gestalt.objects.filter_unused(limit=limit):
         username = gestalt.user.username
         gestalt.delete()
         yield MatrixCommanderResult(f"- {username}")
