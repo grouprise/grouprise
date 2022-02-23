@@ -193,6 +193,8 @@ def get_unused_gestalts(
             # some users are relevant for grouprise itself
             continue
         # did the user log in again, later (after the registration)?
+        # Beware, that some users may have logged in only once, as their cookie was renewed
+        # periodically.  But anyway: multiple logins are a strong indicator for a non-bot.
         if gestalt.user.last_login and (
             (gestalt.user.last_login - gestalt.user.date_joined)
             > login_after_registration_time
