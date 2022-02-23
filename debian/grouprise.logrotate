@@ -1,4 +1,5 @@
 /var/log/grouprise/*.log {
+        copytruncate
         daily
         rotate 5
         compress
