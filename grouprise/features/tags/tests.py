@@ -1,8 +1,11 @@
+import re
+
 from django.core import mail
 from django.template import Context, Template
 from django.urls import reverse
 from taggit.models import Tag
 
+from . import RE_TAG_REF
 from grouprise.core.tests import Test
 from grouprise.core.tests import get_url as u
 from grouprise.features.associations.models import Association
@@ -60,6 +63,38 @@ class BasicTagTests(AuthenticatedMemberMixin, MailInjectLMTPMixin, Test):
                 Association.objects.get(content__title="Test").get_absolute_url()
             ),
         )
+
+
+class TagPatternTests(Test):
+    def test_text_examples(self):
+        for text, expected_tags in (
+            ("Lore ipsum #foo bar", ["foo"]),
+            ("Lore ipsum #foo, bar", ["foo"]),
+            ("Lore ipsum #foo\nbar", ["foo"]),
+            ("Lore ipsum\n#foo bar", ["foo"]),
+            ("Lore ipsum '#foo' bar", ["foo"]),
+            ('Lore ipsum "#foo" bar', ["foo"]),
+            ("Lore ipsum (#foo) bar", ["foo"]),
+            ("Lore ipsum /#foo/ bar", ["foo"]),
+            ("Lore ipsum #foo. bar", ["foo"]),
+            ("Lore ipsum #foo", ["foo"]),
+            ("ipsum #foo", ["foo"]),
+            ("#foo bar", ["foo"]),
+            ("#foo", ["foo"]),
+            ("Lore ipsum #foo-12 bar", ["foo-12"]),
+            ("Lore ipsum 12-#foo bar", []),
+            ("Lore ipsum abc-#foo bar", []),
+            ("Lore ipsum #foo-abc bar", ["foo-abc"]),
+            ("Lore ipsum #foo_abc bar", ["foo_abc"]),
+            ("Lore ipsum #foo.abc bar", ["foo"]),
+            ("Lore ipsum #foo_ bar", ["foo_"]),
+            ("Lore ipsum 12#foo bar", []),
+            ("Lore ipsum abc#foo bar", []),
+            ("Lore https://example.org/#foo bar", ["foo"]),
+        ):
+            with self.subTest(text=text, expected_tags=expected_tags):
+                found_items = re.findall(RE_TAG_REF, text)
+                self.assertEqual(expected_tags, found_items)
 
 
 class TaggedGroupTests(TaggedGroupMixin, AuthenticatedMemberMixin, Test):
