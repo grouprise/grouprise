@@ -63,8 +63,12 @@ class GestaltQuerySet(models.QuerySet):
         )
         if recent_account_creation_time is not None:
             # the account was registered recently - maybe there will be the first login soon
-            queryset = queryset.filter(user__date_joined__lt=recent_account_creation_time)
-        for gestalt in queryset.order_by("activity_bookmark_time").prefetch_related("user"):
+            queryset = queryset.filter(
+                user__date_joined__lt=recent_account_creation_time
+            )
+        for gestalt in queryset.order_by("activity_bookmark_time").prefetch_related(
+            "user"
+        ):
             # test a few exceptions - all remaining accounts should be disposable
             if gestalt.pk in gestalt_exemptions:
                 # some users are relevant for grouprise itself
