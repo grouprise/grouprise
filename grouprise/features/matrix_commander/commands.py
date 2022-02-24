@@ -27,7 +27,7 @@ TIME_FORMAT = "%Y-%m-%d %H:%M"
 class MatrixCommanderResult(CommandResult):
     """this derived class helps us distinguish kien messages from our own messages
 
-    Without this separate class, we could not excempt kien's messages from being interpreted as
+    Without this separate class, we could not exempt kien's messages from being interpreted as
     markdown.
     """
 
