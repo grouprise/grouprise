@@ -105,7 +105,7 @@ class ContentReferencePattern(inlinepatterns.ReferencePattern):
 class ContentReferenceExtension(Extension):
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns["content_reference"] = ContentReferencePattern(
-            RE_CONTENT_REF, md
+            RE_CONTENT_REF.pattern, md
         )
 
 

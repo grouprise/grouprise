@@ -66,7 +66,7 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
 
 class TagReferenceExtension(Extension):
     def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns["tag_reference"] = TagReferencePattern(RE_TAG_REF, md)
+        md.inlinePatterns["tag_reference"] = TagReferencePattern(RE_TAG_REF.pattern, md)
 
 
 ExtendedLinkPattern.register_extension(TagLinkExtension())
