@@ -12,7 +12,7 @@ def get_requested_time(request):
     if month and year:
         tz = timezone.get_current_timezone()
         try:
-            return datetime.datetime(year=int(year), month=int(month), day=1, tz=tz)
+            return datetime.datetime(year=int(year), month=int(month), day=1, tzinfo=tz)
         except ValueError:
             pass
     return None
