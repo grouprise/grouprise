@@ -4,7 +4,7 @@
 {% with event_association as event_association %}
 {% with user as user %}
 {% with separator|default:", " as separator %}
-{% with read_only|default:false as read_only %}
+{% with read_only|default:False as read_only %}
 {% with redirect_url|default:"" as redirect_url %}
 
 {% has_perm 'events.can_attend_group_members' user event_association.entity as can_attend_group_members %}
