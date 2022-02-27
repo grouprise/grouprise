@@ -18,4 +18,8 @@ class FileDownloadView(PermissionMixin, ObjectDownloadView):
     permission_required = "files.download"
 
     def get_object(self, queryset=None):
-        return get_object_or_404(File, file=self.kwargs["name"])
+        try:
+            return get_object_or_404(File, file=self.kwargs["name"])
+        except File.MultipleObjectsReturned:
+            # TODO: remove this workaround, when #773 is fixed
+            return File.objects.filter(file=self.kwargs["name"]).first()
