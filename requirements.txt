@@ -10,8 +10,7 @@
 aiosmtpd                    # debian: python3-aiosmtpd
 aiosmtplib                  # debian (bookworm): python3-aiosmtplib
 bleach                      # debian: python3-bleach
-# django-simple-math-captcha currently fails to work with Django 3.0: https://github.com/alsoicode/django-simple-math-captcha/issues/20
-django<3.0                  # debian: python3-django
+django                      # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 django-cachalot>=2.4.4      # NOT IN DEBIAN
 django-cors-middleware      # debian: python3-django-cors-headers
