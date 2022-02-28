@@ -1,13 +1,9 @@
-import contextlib
 import os
-import tempfile
-import unittest
 
 import django
 
 import grouprise.core.tests
 from grouprise.features.associations import models as associations
-from grouprise.features.files.models import get_unique_storage_filename
 from grouprise.features.images import tests as images
 from grouprise.features.imports.tests.test_mail import (
     GroupMailMixin,
@@ -114,42 +110,6 @@ class Gestalt(
         self.create_group_file(public=False)
         self.assertContainsLink(obj=self.group, link_url=self.get_group_file_url())
         self.assertOk(url=self.get_group_file_url())
-
-
-class FilenameGenerator(unittest.TestCase):
-    def setUp(self):
-        self._base_dir = tempfile.mkdtemp()
-        # Manage a set of created filenames.  Otherwise the 'tearDown' method preempts the context
-        # cleanup and thus fails to remove the temporary directory.
-        self._filenames = set()
-        super().setUp()
-
-    def tearDown(self):
-        for filename in self._filenames:
-            os.unlink(filename)
-        os.rmdir(self._base_dir)
-
-    @contextlib.contextmanager
-    def get_unique_filename(self, name_template, default_prefix=None):
-        filename = get_unique_storage_filename(
-            name_template, self._base_dir, default_prefix=default_prefix
-        )
-        self._filenames.add(filename)
-        yield filename
-        os.unlink(filename)
-        self._filenames.remove(filename)
-
-    def test_unique_name_generator(self):
-        with self.get_unique_filename("foo.bar.baz", "nom") as filename:
-            self.assertEqual(os.path.dirname(filename), self._base_dir)
-            self.assertTrue(os.path.basename(filename))
-            self.assertTrue(os.path.basename(filename).startswith("foo.bar-"), filename)
-            self.assertTrue(os.path.basename(filename).endswith(".baz"), filename)
-        with self.get_unique_filename(None, "foo-") as filename:
-            self.assertEqual(os.path.dirname(filename), self._base_dir)
-            self.assertTrue(os.path.basename(filename))
-            self.assertTrue(os.path.basename(filename).startswith("foo-"), filename)
-            self.assertNotIn(".", os.path.basename(filename))
 
 
 class TestUrls(grouprise.core.tests.Test):

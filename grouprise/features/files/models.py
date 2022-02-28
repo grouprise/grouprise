@@ -1,6 +1,5 @@
 import io
 import os
-import tempfile
 from typing import List
 
 import django
@@ -18,25 +17,6 @@ from grouprise.features.imports.mails import ParsedMailAttachment
 IGNORE_CONTENT_TYPES = {"application/pgp-signature"}
 
 
-def get_unique_storage_filename(
-    name_template: str, base_dir: str, default_prefix: str = "attachment-"
-) -> str:
-    """determine a suitable name for a file to be stored in a directory
-
-    The file may not overwrite an existing file and it should keep its original extension.
-    """
-    temp_kwargs = {"dir": base_dir, "prefix": default_prefix, "delete": False}
-    if name_template:
-        basename, extension = os.path.splitext(os.path.basename(name_template))
-        if extension:
-            temp_kwargs["suffix"] = "." + extension
-        if basename:
-            temp_kwargs["prefix"] = basename + "-"
-    storage_file = tempfile.NamedTemporaryFile(**temp_kwargs)
-    storage_file.close()
-    return storage_file.name
-
-
 class FileManager(models.Manager):
     def create_from_message_attachments(
         self, attachments: List[ParsedMailAttachment], attached_to
@@ -47,12 +27,9 @@ class FileManager(models.Manager):
 
             if attachment.data is not None:
                 # create the file and reference it
-                filename = get_unique_storage_filename(
-                    attachment.filename, File.file.field.storage.base_location
-                )
                 f = self.create()
                 f.file.save(
-                    os.path.basename(filename),
+                    os.path.basename(attachment.filename),
                     django.core.files.File(io.BytesIO(attachment.data)),
                 )
             else:
