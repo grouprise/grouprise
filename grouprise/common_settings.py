@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.redirects",
     "django.contrib.sites",
     "django.contrib.staticfiles",
     # basic django apps
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     # grouprise
     "grouprise.features.geo.middleware.GeoAppConfigMiddleware",
     "grouprise.features.gestalten.middleware.GestaltAppConfigMiddleware",
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 ]
 
 TEMPLATES = [

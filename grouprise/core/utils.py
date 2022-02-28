@@ -7,7 +7,10 @@ from calendar import different_locale
 import django.utils.text
 import randomcolor
 import translitcodec  # noqa: F401, used indirectly via "translit/"
+from django.contrib.redirects.models import Redirect
 from django.utils.translation import get_language, get_language_from_request, to_locale
+
+from grouprise.core.settings import get_grouprise_site
 
 
 def slugify(value):
@@ -40,6 +43,13 @@ def get_verified_locale(request=None):
             pass
     else:
         return None
+
+
+def add_redirect(old_path: str, new_path: str) -> None:
+    redirect = Redirect.objects.create(
+        site_id=get_grouprise_site().pk, old_path=old_path, new_path=new_path
+    )
+    redirect.save()
 
 
 def run_async(async_func):
