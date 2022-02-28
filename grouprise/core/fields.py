@@ -3,7 +3,7 @@ from typing import Callable
 from django.db import models
 from django.db.models.fields import files
 from django.db.models.fields.files import FieldFile
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 
 from grouprise.core.storage import Storage
 
@@ -16,7 +16,10 @@ class DownloadFieldFileMixin:
     @property
     def url(self):
         self._require_file()
-        return reverse(self.download_view_name, args=[self.name])
+        try:
+            return reverse(self.download_view_name, args=[self.name])
+        except NoReverseMatch:
+            return f"/-/files/{self.name}"
 
 
 class DownloadFieldFile(DownloadFieldFileMixin, FieldFile):
