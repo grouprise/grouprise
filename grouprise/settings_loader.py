@@ -963,7 +963,7 @@ class FileDownloadConfig(ChoicesConfig):
 
     def apply_to_settings(self, settings: dict, value: Any) -> None:
         if value != FileDownloadBackend.NONE:
-            settings["MIDDLEWARE"].append("csp.middleware.CSPMiddleware")
+            settings["MIDDLEWARE"].append("django_downloadview.SmartDownloadMiddleware")
             if value == FileDownloadBackend.APACHE:
                 from django_downloadview.nginx import x_sendfile as wrapper
 
