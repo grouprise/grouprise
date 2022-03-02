@@ -10,7 +10,7 @@ import translitcodec  # noqa: F401, used indirectly via "translit/"
 from django.contrib.redirects.models import Redirect
 from django.utils.translation import get_language, get_language_from_request, to_locale
 
-from grouprise.core.settings import get_grouprise_site
+from grouprise.core.settings import get_grouprise_site, CORE_SETTINGS
 
 
 def slugify(value):
@@ -19,6 +19,19 @@ def slugify(value):
 
 def get_random_color():
     return randomcolor.RandomColor().generate(luminosity="dark")[0]
+
+
+def get_accelerated_download_view(view, base_path):
+    wrapper = CORE_SETTINGS.FILE_DOWNLOAD_WRAPPER
+    if wrapper is None:
+        return view
+    else:
+        return wrapper(
+            view,
+            source_url=base_path,
+            # the webserver should be configured to deliver this path only for internal requests
+            destination_url="/protected-downloads/",
+        )
 
 
 def get_verified_locale(request=None):

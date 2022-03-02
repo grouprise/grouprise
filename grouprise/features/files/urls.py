@@ -1,21 +1,9 @@
 from django.conf.urls import url
 from django.urls import path
 
-from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.utils import get_accelerated_download_view
 from . import views
 from .views import FileDownloadView
-
-
-def get_accelerated_download_view(view):
-    wrapper = CORE_SETTINGS.FILE_DOWNLOAD_WRAPPER
-    if wrapper is None:
-        return view
-    else:
-        return wrapper(
-            view,
-            source_url="/-/files/",
-            destination_url="/protected-downloads/",
-        )
 
 
 urlpatterns = [
@@ -26,7 +14,7 @@ urlpatterns = [
     ),
     path(
         "-/files/<str:name>",
-        get_accelerated_download_view(FileDownloadView.as_view()),
+        get_accelerated_download_view(FileDownloadView.as_view(), "/-/files/"),
         name="download-file",
     ),
 ]
