@@ -963,22 +963,17 @@ class FileDownloadConfig(ChoicesConfig):
 
     def apply_to_settings(self, settings: dict, value: Any) -> None:
         if value != FileDownloadBackend.NONE:
-            settings["MIDDLEWARE"].append("django_downloadview.SmartDownloadMiddleware")
             if value == FileDownloadBackend.APACHE:
                 from django_downloadview.nginx import x_sendfile as wrapper
-
-                backend = "django_downloadview.apache.XSendfileMiddleware"
             elif value == FileDownloadBackend.LIGHTTPD:
                 from django_downloadview.lighttpd import x_sendfile as wrapper
-
-                backend = "django_downloadview.lighttpd.XSendfileMiddleware"
             elif value == FileDownloadBackend.NGINX:
                 from django_downloadview.nginx import x_accel_redirect as wrapper
-
-                backend = "django_downloadview.nginx.XAccelRedirectMiddleware"
             else:
                 raise KeyError(f"Unknown FileDownloadBackend: {value}")
-            settings["DOWNLOADVIEW_BACKEND"] = backend
+            # We do not use django-downloadview's middleware for optimizing media delivery.
+            # Instead we just apply the decorator "get_accelerated_download_view" to the few views,
+            # which deliver a file from the media directory.
             super().apply_to_settings(settings, wrapper)
 
 
