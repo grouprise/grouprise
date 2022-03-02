@@ -96,7 +96,7 @@ def run_feed_import_for_groups():
                 try:
                     with urllib.request.urlopen(request) as req:
                         text = req.read()
-                except urllib.request.URLError as exc:
+                except OSError as exc:
                     logger.warning(
                         f"Failed to retrieve content from '{group.url}': {exc}"
                     )
