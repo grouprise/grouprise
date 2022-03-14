@@ -4,6 +4,7 @@ import locale
 import threading
 from calendar import different_locale
 
+import boltons.strutils
 import django.utils.text
 import randomcolor
 import translitcodec  # noqa: F401, used indirectly via "translit/"
@@ -14,7 +15,9 @@ from grouprise.core.settings import get_grouprise_site, CORE_SETTINGS
 
 
 def slugify(value):
-    return django.utils.text.slugify(codecs.encode(value, "translit/long"))
+    # replace umlauts and other special characters with suitable representations
+    ascii_value = boltons.strutils.asciify(value).decode()
+    return django.utils.text.slugify(ascii_value)
 
 
 def get_random_color():

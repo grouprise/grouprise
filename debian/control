@@ -25,6 +25,7 @@ Build-Depends:
  python3-all,
  python3-aiosmtpd,
  python3-bleach,
+ python3-boltons,
  python3-django (>= 2:2.2),
  python3-django-allauth,
  python3-django-csp,
@@ -67,6 +68,7 @@ Depends:
 # See also: make.d/ci.mk
  python3-all,
  python3-bleach,
+ python3-boltons,
 # TODO: remove this dependency-workaround, as soon as the related issue is fixed:
 #  https://github.com/jazzband/django-oauth-toolkit/issues/1114
  python3-celery,

@@ -10,6 +10,7 @@
 aiosmtpd                    # debian: python3-aiosmtpd
 aiosmtplib                  # debian (bookworm): python3-aiosmtplib
 bleach                      # debian: python3-bleach
+boltons                     # debian: python3-boltons
 django                      # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 django-cachalot>=2.4.4      # NOT IN DEBIAN
@@ -45,7 +46,6 @@ ruamel.yaml                 # debian: python3-ruamel.yaml
 rules                       # debian: python3-django-rules
 schulze                     # NOT IN DEBIAN
 sentry-sdk                  # debian: python3-sentry-sdk
-translitcodec               # NOT IN DEBIAN
 xapian-haystack>=2.1.1      # debian: python3-xapian-haystack
 # xapian-haystack also requires the xapian python bindings that you'll find
 # as "python3-xapian" in Debian/Ubuntu and "python-xapian" in ArchLinux
