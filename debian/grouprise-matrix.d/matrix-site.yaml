@@ -13,7 +13,7 @@ listeners:
       # openid is required for matrix-dimension
       - names: [client]
         compress: true
-      - names: [federation, webclient]
+      - names: [federation]
         compress: false
 
 # the server is accessed via an SSL terminating proxy
