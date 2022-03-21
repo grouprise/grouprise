@@ -11,7 +11,8 @@ class Storage(FileSystemStorage):
 
     def get_available_name(self, name, max_length=None):
         dir_name, file_name = os.path.split(name)
-        _, file_ext = os.path.splitext(file_name)
+        # normalize the file extension to lower case
+        file_ext = os.path.splitext(file_name)[1].lower()
         result = None
         while result is None:
             alphabet = string.ascii_lowercase + string.digits
