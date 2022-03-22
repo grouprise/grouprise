@@ -1,5 +1,4 @@
 import asyncio
-import codecs
 import locale
 import threading
 from calendar import different_locale
