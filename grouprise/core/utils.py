@@ -6,7 +6,6 @@ from calendar import different_locale
 import boltons.strutils
 import django.utils.text
 import randomcolor
-import translitcodec  # noqa: F401, used indirectly via "translit/"
 from django.contrib.redirects.models import Redirect
 from django.utils.translation import get_language, get_language_from_request, to_locale
 
