@@ -23,3 +23,12 @@ class Storage(FileSystemStorage):
             if self.exists(result):
                 result = None
         return str(result)
+
+    def is_valid_filename(self, name):
+        """check whether the filename looks like an automatically generated one"""
+        base_filename, file_ext = os.path.splitext(name)
+        if file_ext != file_ext.lower():
+            return False
+        if len(base_filename) != self.FILE_ROOT_LENGTH:
+            return False
+        return set(self.VALID_CHARACTERS).issuperset(base_filename)
