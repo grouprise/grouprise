@@ -28,8 +28,11 @@ class FileManager(models.Manager):
             if attachment.data is not None:
                 # create the file and reference it
                 f = self.create()
+                filename = f.file.storage.get_available_name(
+                    os.path.basename(attachment.filename or "")
+                )
                 f.file.save(
-                    os.path.basename(attachment.filename),
+                    filename,
                     django.core.files.File(io.BytesIO(attachment.data)),
                 )
             else:
