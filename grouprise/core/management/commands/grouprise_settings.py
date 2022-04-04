@@ -6,9 +6,14 @@ import os
 import sys
 
 import ruamel.yaml
+from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 
-from grouprise.settings_loader import load_settings_from_yaml_files
+from grouprise.settings_loader import (
+    convert_django_settings_to_dict,
+    format_django_settings,
+    load_settings_from_yaml_files,
+)
 
 
 def _get_nested_dict_value(data, path, default=None):
@@ -53,7 +58,7 @@ class Command(BaseCommand):
             default="/etc/grouprise/conf.d/800-local.yaml",
             help="Path of yaml file to be used for changing settings ('set')",
         )
-        parser.add_argument("action", choices=("set", "get", "dump"))
+        parser.add_argument("action", choices=("set", "get", "dump", "dump-django"))
         parser.add_argument("selector", nargs="?", type=str)
 
     @staticmethod
@@ -96,6 +101,9 @@ class Command(BaseCommand):
         if action == "dump":
             settings = load_settings_from_yaml_files(source_config_locations)
             self.stdout.write(self._get_formatted(settings, options["format"]))
+        elif action == "dump-django":
+            settings_dict = convert_django_settings_to_dict(django_settings)
+            self.stdout.write(format_django_settings(settings_dict))
         elif action == "get":
             tokens = self._parse_selector(options["selector"])
             settings = load_settings_from_yaml_files(source_config_locations)

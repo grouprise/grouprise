@@ -1430,7 +1430,16 @@ def import_settings_from_python(settings, filename):
         post_load_hook(settings)
 
 
-def format_django_settings(settings):
+def convert_django_settings_to_dict(django_settings):
+    settings = {}
+    for key in dir(django_settings):
+        value = getattr(django_settings, key)
+        if not key.startswith("_") and not callable(value):
+            settings[key] = value
+    return settings
+
+
+def format_django_settings(settings: dict):
     lines = []
     for key, value in settings.items():
         if (
