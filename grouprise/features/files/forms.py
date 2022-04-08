@@ -1,9 +1,11 @@
 import os
 
 from django import forms
+from django.db import transaction
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.content import forms as content
+from grouprise.features.files.models import File
 
 
 class Create(content.Create):
@@ -42,8 +44,11 @@ class Update(content.Update):
 
     def save(self, commit=True):
         association = super().save(commit)
-        association.container.versions.last().file.create(
-            file=self.cleaned_data.get("file"),
-            filename=os.path.basename(self.cleaned_data.get("file").name),
-        )
+        with transaction.atomic():
+            # We only want to keep a File object for the latest version.
+            File.objects.filter(version__content=association.container).delete()
+            association.container.versions.last().file.create(
+                file=self.cleaned_data.get("file"),
+                filename=os.path.basename(self.cleaned_data.get("file").name),
+            )
         return association

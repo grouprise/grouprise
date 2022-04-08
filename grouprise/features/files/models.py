@@ -59,6 +59,11 @@ class File(grouprise.core.models.Model):
         related_query_name="file",
     )
 
+    # A file object *may* be used for appending a file to a content.
+    # Earlier versions of grouprise *versioned* the file object along with the content.
+    # This feature is no longer used. We only store a file object for *the latest*
+    # version of a content object. We keep the foreign key pointing to the version,
+    # this might change in the future.
     version = models.ForeignKey(
         "content2.Version", null=True, on_delete=models.CASCADE, related_name="file"
     )
