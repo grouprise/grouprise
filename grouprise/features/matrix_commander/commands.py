@@ -289,6 +289,20 @@ def get_association_by_url(url):
         raise not_found_exception
 
 
+@commander(content, "show", var("url"))
+@inject_resolved(source="url", target="association", resolvers=[get_association_by_url])
+def show_content(association: Association):
+    if association.entity.is_group:
+        yield MatrixCommanderResult(f"- Group: {association.entity}")
+    else:
+        yield MatrixCommanderResult(f"- Author: {association.entity}")
+    content = association.container
+    yield MatrixCommanderResult(f"- Title: {content.subject}")
+    if content.is_conversation:
+        text = content.contributions.first().text.first().text
+        yield MatrixCommanderResult(f"- First contribution: {text}")
+
+
 @commander(content, "visibility", var("url"), var("state"))
 @inject_resolved(source="url", target="association", resolvers=[get_association_by_url])
 def change_content_visibility(association: Association, state: str):
