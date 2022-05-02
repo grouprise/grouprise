@@ -919,7 +919,7 @@ msgstr "Startseite"
 msgid "About"
 msgstr "Über"
 
-msgid "Inprint"
+msgid "Imprint"
 msgstr "Impressum"
 
 msgid "Report abuse"

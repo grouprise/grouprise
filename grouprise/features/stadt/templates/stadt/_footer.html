@@ -17,7 +17,7 @@
                     <li class="separator"></li>
                     <li><a href="{{ about_group.get_absolute_url }}">{% trans 'About' %} {{ about_group }}</a></li>
                     {% if about_group %}
-                        <li><a href="{% url 'content' about_group.slug 'imprint' %}">{% trans 'Inprint' %}</a></li>
+                        <li><a href="{% url 'content' about_group.slug 'imprint' %}">{% trans 'Imprint' %}</a></li>
                     {% endif %}
                     <li><a href="{% url 'privacy' %}">{% trans 'Privacy' %}</a></li>
                     <li class="separator"></li>
