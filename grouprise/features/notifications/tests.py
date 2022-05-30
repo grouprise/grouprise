@@ -10,6 +10,16 @@ from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 class AuthenticatedMemberArticleTestCase(
     MatrixChatMixin, GroupArticleMixin, AuthenticatedMemberMixin, TestCase
 ):
+    def test_receives_builtin_notification_upon_content_creation(self):
+        notification_count = self.gestalt.notifications.count()
+        self._create_article()
+        self.assertEqual(self.gestalt.notifications.count(), notification_count + 1)
+
+    def test_receives_builtin_notification_upon_contribution_creation(self):
+        notification_count = self.gestalt.notifications.count()
+        self._create_comment()
+        self.assertEqual(self.gestalt.notifications.count(), notification_count + 1)
+
     def test_receives_email_notification_upon_content_creation(self):
         mail.outbox.clear()
         self._create_article()
