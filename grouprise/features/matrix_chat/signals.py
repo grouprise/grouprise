@@ -29,6 +29,8 @@ from .utils import (
     get_gestalt_matrix_notification_room,
     set_gestalt_matrix_notification_room,
 )
+from ..content.models import Content
+from ..contributions.models import Contribution
 
 logger = logging.getLogger(__name__)
 
@@ -127,19 +129,19 @@ def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -
     run_async(_send_room_messages_async())
 
 
-# We are only interested in Content items, but sadly we cannot use "save a Content" as a filter
-# source for this signal, since the association for a Content instance are assigned *after* the
-# Content is created.
-# See "self.container_class.objects.create" in "grouprise.features.content.forms.Create.save" for
-# details.
-# Thus we peek into any new Association and discard all non-Content containers.
-@receiver(post_save, sender=grouprise.features.associations.models.Association)
-def send_content_notification_to_matrix_rooms(
-    sender, instance, created, raw=False, **kwargs
-):
-    if not raw:
-        if isinstance(instance.container, grouprise.features.content.models.Content):
-            _send_content_notification_to_matrix_rooms(instance.container, created)
+def send_matrix_notifications(instance):
+    """Sends notifications for the newly created instance to appropriate matrix rooms.
+
+    This signal handler is called implicitly from notifications.signals.
+
+    @instance is either a Content or a Contribution instance.
+    """
+    assert isinstance(instance, (Content, Contribution))
+
+    if isinstance(instance, Content):
+        _send_content_notification_to_matrix_rooms(instance, True)
+    else:
+        _send_contribution_notification_to_matrix_rooms(instance)
 
 
 @db_task()
@@ -219,17 +221,8 @@ def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
     run_async(invite_and_send())
 
 
-@receiver(post_save, sender=grouprise.features.contributions.models.Contribution)
-def send_contribution_notification_to_matrix_rooms(
-    sender, instance, created, raw=False, **kwargs
-):
-    if raw:
-        # do not send notifications while loading fixtures
-        pass
-    elif not created:
-        # send notifications only for new contributions
-        pass
-    elif instance.deleted:
+def _send_contribution_notification_to_matrix_rooms(instance):
+    if instance.deleted:
         # ignore deleted contributions
         pass
     else:

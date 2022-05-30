@@ -37,8 +37,9 @@ class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin)
 
 class GroupArticleMixin(ArticleMixin):
     def create_article(self, **kwargs):
+        url = reverse("create-group-article", args=[self.group.slug])
         kwargs.update({"title": "Group Article", "text": "Test", "as_gestalt": True})
-        self.client.post(self.get_url("create-group-article", self.group.slug), kwargs)
+        self.client.post(url, kwargs)
         return Association.objects.get(content__title="Group Article")
 
 
