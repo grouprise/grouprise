@@ -9,6 +9,7 @@ exclude = '''
     ^/docs/conf\.py$
     | /migrations/[^/]+\.py$
     | ^/build/
+    | ^/venv/
 '''
 
 [tool.isort]
