@@ -84,6 +84,9 @@ class EmailNotifications:
         except Gestalt.DoesNotExist:
             pass
 
+    def does_recipient_want_notifications(self, recipient: Gestalt):
+        return not recipient.is_email_blocker
+
     def send(self):
         kwargs = {"association": self.affected_gestalten.association}
         if self.affected_gestalten.association.public:
@@ -99,7 +102,10 @@ class EmailNotifications:
     def send_to(self, audience_key: str, **kwargs):
         if audience_key in self.affected_gestalten:
             for recipient in self.affected_gestalten[audience_key]:
-                if recipient not in self.recipients_to_ignore:
+                if (
+                    recipient not in self.recipients_to_ignore
+                    and self.does_recipient_want_notifications(recipient)
+                ):
                     self.send_notification(recipient, **kwargs)
                     self.recipients_to_ignore.add(recipient)
 
