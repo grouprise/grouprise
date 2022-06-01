@@ -125,13 +125,17 @@ class EmailNotifications:
                 self.send_to(AffectedGestalten.Audience.INITIAL_CONTRIBUTOR, **kwargs)
 
     def send_to(self, audience: AffectedGestalten.Audience, **kwargs):
-        for recipient in self.affected_gestalten[audience]:
-            if (
-                recipient not in self.recipients_to_ignore
-                and self.does_recipient_want_notifications(recipient)
-            ):
-                self.send_notification(recipient, **kwargs)
-                self.recipients_to_ignore.add(recipient)
+        try:
+            for recipient in self.affected_gestalten[audience]:
+                if (
+                    recipient not in self.recipients_to_ignore
+                    and self.does_recipient_want_notifications(recipient)
+                ):
+                    self.send_notification(recipient, **kwargs)
+                    self.recipients_to_ignore.add(recipient)
+        except KeyError:
+            # we cannot send notifications to a non-existing audience
+            pass
 
     def send_notification(self, recipient, **kwargs):
         self.notification_class(self.affected_gestalten.instance).send(
