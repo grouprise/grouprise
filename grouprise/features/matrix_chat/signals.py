@@ -7,8 +7,6 @@ from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from huey.contrib.djhuey import db_task
 
-import grouprise.features.content.models
-import grouprise.features.contributions.models
 import grouprise.features.memberships.models
 from grouprise.core.matrix import MatrixError
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
@@ -16,7 +14,6 @@ from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.core.utils import run_async
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
-
 from .matrix_bot import ChatBot
 from .models import (
     MatrixChatGestaltSettings,
@@ -29,8 +26,6 @@ from .utils import (
     get_gestalt_matrix_notification_room,
     set_gestalt_matrix_notification_room,
 )
-from ..content.models import Content
-from ..contributions.models import Contribution
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +93,7 @@ def _sync_rooms_delayed(group):
     run_async(_sync_rooms_async(group))
 
 
-def _get_matrix_messages_for_group(
+def get_matrix_messages_for_group(
     group: Group, text: str, is_public: bool
 ) -> Iterable[MatrixMessage]:
     """return a generator of MatrixMessage instances for the given group
@@ -116,6 +111,11 @@ def _get_matrix_messages_for_group(
             yield MatrixMessage(room.room_id, text)
 
 
+def get_matrix_messages_for_public(text: str) -> Iterable[MatrixMessage]:
+    for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
+        yield MatrixMessage(room_id, text)
+
+
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
 def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -> None:
     async def _send_room_messages_async():
@@ -127,58 +127,6 @@ def send_matrix_messages(messages: Sequence[MatrixMessage], message_type: str) -
                     logger.warning(f"Failed to send {message_type}: {exc}")
 
     run_async(_send_room_messages_async())
-
-
-def send_matrix_notifications(instance):
-    """Sends notifications for the newly created instance to appropriate matrix rooms.
-
-    This signal handler is called implicitly from notifications.signals.
-
-    @instance is either a Content or a Contribution instance.
-    """
-    assert isinstance(instance, (Content, Contribution))
-
-    if isinstance(instance, Content):
-        _send_content_notification_to_matrix_rooms(instance, True)
-    else:
-        _send_contribution_notification_to_matrix_rooms(instance)
-
-
-@db_task()
-def _send_content_notification_to_matrix_rooms(instance, created):
-    # only sent group messages to matrix rooms
-    if instance.get_associated_groups():
-        if instance.is_event:
-            content_type = "Termin"
-        elif instance.is_file:
-            content_type = "Anhang"
-        elif instance.is_gallery:
-            content_type = "Galerie"
-        elif instance.is_poll:
-            content_type = "Umfrage"
-        elif instance.is_conversation:
-            content_type = "Gespräch"
-        else:
-            content_type = "Artikel"
-        change_type = "neu" if created else "aktualisiert"
-        messages = []
-        for association in instance.associations.all():
-            url = full_url(association.get_absolute_url())
-            if association.entity.is_group:
-                summary = f"{content_type} ({change_type}): [{instance.subject}]({url})"
-                messages.extend(
-                    _get_matrix_messages_for_group(
-                        association.entity, summary, association.public
-                    )
-                )
-            if created and association.public:
-                # Send a notification to the configured listener rooms, if the content is new and
-                # public.  This creates a behaviour similar to an RSS feed or the front page.
-                source = association.entity.name
-                summary = f"[{source}] {content_type}: [{instance.subject}]({url})"
-                for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
-                    messages.append(MatrixMessage(room_id, summary))
-        send_matrix_messages(messages, "matrix notification for content")
 
 
 @db_task(retries=MATRIX_CHAT_RETRIES, retry_delay=MATRIX_CHAT_RETRY_DELAY)
@@ -236,7 +184,7 @@ def _send_contribution_notification_to_matrix_rooms(instance):
                 summary = f"Diskussionsbeitrag: [{instance.container.subject}]({url})"
                 is_public = instance.is_public_in_context_of(group)
                 messages.extend(
-                    _get_matrix_messages_for_group(group, summary, is_public)
+                    get_matrix_messages_for_group(group, summary, is_public)
                 )
             else:
                 # determine the recipient for the notification
