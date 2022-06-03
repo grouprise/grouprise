@@ -120,7 +120,8 @@ class BaseNotification(metaclass=ABCMeta):
 class MatrixNotification(BaseNotification):
     def __init__(self, instance: Union[Content, Contribution]):
         super().__init__(instance)
-        self.summary = self._get_summary()
+        if isinstance(instance, Content):
+            self.summary = self._get_summary()
 
     def send(
         self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
@@ -133,7 +134,7 @@ class MatrixNotification(BaseNotification):
             summary = f"[{self.association.entity.name}] {self.summary}"
             return get_matrix_messages_for_public(summary)
 
-    def _get_summary(self):
+    def _get_summary(self) -> str:
         if self.instance.is_event:
             content_type = "Termin"
         elif self.instance.is_file:
@@ -156,6 +157,9 @@ class BaseNotifications(metaclass=ABCMeta):
 
     def __init__(self, affected_gestalten: AffectedGestalten):
         self.affected_gestalten = affected_gestalten
+        notification_class = self.get_notification_class()
+        self.notification = notification_class(self.affected_gestalten.instance)
+        self.results = []
         self.recipients_to_ignore = set()
         try:
             self.recipients_to_ignore.add(
@@ -163,7 +167,6 @@ class BaseNotifications(metaclass=ABCMeta):
             )
         except Gestalt.DoesNotExist:
             pass
-        self.results = []
 
     def does_recipient_want_notifications(self, recipient: Gestalt):
         return True
@@ -196,9 +199,7 @@ class BaseNotifications(metaclass=ABCMeta):
     def send_notification(
         self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
     ):
-        notification_class = self.get_notification_class()
-        notification = notification_class(self.affected_gestalten.instance)
-        result = notification.send(recipients, **kwargs)
+        result = self.notification.send(recipients, **kwargs)
         self.results.append(result)
 
 
