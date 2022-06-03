@@ -120,22 +120,32 @@ class BaseNotification(metaclass=ABCMeta):
 class MatrixNotification(BaseNotification):
     def __init__(self, instance: Union[Content, Contribution]):
         super().__init__(instance)
-        if isinstance(instance, Content):
-            self.summary = self._get_summary()
+        if isinstance(self.instance, Content):
+            self.is_public = self.association.public
+        else:
+            self.is_public = self.instance.is_public_in_context_of(
+                self.association.entity
+            )
+        self.summary = self._get_summary()
 
     def send(
         self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         if recipients == AffectedGestalten.Audience.GROUP_MEMBERS:
             return get_matrix_messages_for_group(
-                self.association.entity, self.summary, self.association.public
+                self.association.entity, self.summary, self.is_public
             )
         elif recipients == AffectedGestalten.Audience.PUBLIC:
             summary = f"[{self.association.entity.name}] {self.summary}"
             return get_matrix_messages_for_public(summary)
 
     def _get_summary(self) -> str:
-        if self.instance.is_event:
+        if isinstance(self.instance, Contribution):
+            if isinstance(self.instance, Conversation):
+                content_type = "Gesprächsbeitrag"
+            else:
+                content_type = "Kommentar"
+        elif self.instance.is_event:
             content_type = "Termin"
         elif self.instance.is_file:
             content_type = "Anhang"
@@ -148,7 +158,9 @@ class MatrixNotification(BaseNotification):
         else:
             content_type = "Artikel"
         url = full_url(self.association.get_absolute_url())
-        return f"{content_type}: [{self.instance.subject}]({url})"
+        if isinstance(self.instance, Contribution):
+            url += f"#contribution-{self.instance.pk}"
+        return f"{content_type}: [{self.container.subject}]({url})"
 
 
 class BaseNotifications(metaclass=ABCMeta):
@@ -255,8 +267,8 @@ class MatrixNotifications(BaseNotifications):
         )
 
     def send(self):
+        self.send_to(AffectedGestalten.Audience.GROUP_MEMBERS)
         if isinstance(self.affected_gestalten.instance, Content):
-            self.send_to(AffectedGestalten.Audience.GROUP_MEMBERS)
             if self.affected_gestalten.association.public:
                 self.send_to(AffectedGestalten.Audience.PUBLIC)
         self.commit()
