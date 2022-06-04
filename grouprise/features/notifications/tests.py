@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from grouprise.features.articles.tests import GroupArticleMixin
+from grouprise.features.conversations.tests import GestaltConversationMixin
 from grouprise.features.matrix_chat.tests import MatrixChatMixin, MatrixRoomTracker
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
@@ -51,3 +52,22 @@ class AuthenticatedMemberArticleTestCase(
             "content", args=[self.association.entity.slug, self.association.slug]
         )
         self.client.post(url, {"text": "Test Comment"})
+
+
+class OtherAuthenticatedConversationTestCase(
+    MatrixChatMixin, GestaltConversationMixin, TestCase
+):
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.force_login(self.other_gestalt.user)
+
+    # FIXME: uncomment after fixing MatrixChatMixin.get_gestalt_room()
+    # def test_receives_matrix_notification_upon_gestalt_conversation_reply(self):
+    #     gestalt_room = self.get_gestalt_room(self.gestalt)
+    #     with MatrixRoomTracker(gestalt_room) as room_tracker:
+    #         self._create_reply()
+    #         self.assertEqual(room_tracker.messages_count, 1)
+
+    def _create_reply(self):
+        url = reverse("conversation", args=[self.association.pk])
+        self.client.post(url, {"text": "Test Reply"})

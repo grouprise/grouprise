@@ -2,7 +2,9 @@ from django.urls import reverse
 
 from grouprise.core import tests
 from grouprise.core.matrix import get_dummy_matrix_server, MatrixDummyRoom
+from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
+from grouprise.features.matrix_chat.utils import get_gestalt_matrix_notification_room
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
 
@@ -39,6 +41,12 @@ class MatrixRoomTracker:
 class MatrixChatMixin:
 
     matrix_server = get_dummy_matrix_server()
+
+    @classmethod
+    def get_gestalt_room(cls, gestalt: Gestalt):
+        # FIXME: room_id may be None
+        room_id = get_gestalt_matrix_notification_room(gestalt)
+        return cls.matrix_server.rooms[room_id]
 
     @classmethod
     def get_group_rooms(cls, group: Group):

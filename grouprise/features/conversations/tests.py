@@ -6,13 +6,14 @@ import grouprise.features.gestalten.tests.mixins
 from grouprise.core import tests
 from grouprise.features.associations import models as associations
 from grouprise.features.contributions import models as contributions
+from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin
 from grouprise.features.groups.tests import mixins as groups
 from grouprise.features.memberships import test_mixins as memberships
 
 from . import models
 
 
-class GestaltConversation(
+class GestaltConversationMixin(
     grouprise.features.gestalten.tests.mixins.GestaltMixin,
     grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
 ):
@@ -25,7 +26,7 @@ class GestaltConversation(
             contribution=contributions.Text.objects.create(text="Test Text"),
         )
         cls.association = associations.Association.objects.create(
-            container=conversation, entity=cls.group
+            container=conversation, entity=cls.gestalt
         )
 
 
@@ -280,7 +281,7 @@ class Anonymous(
     CanNotReplyToConversation,
     CanCreateGestaltConversationWithEmail,
     CanNotViewGestaltConversation,
-    GestaltConversation,
+    GestaltConversationMixin,
     GroupConversation,
     tests.Test,
 ):
@@ -294,22 +295,31 @@ class Anonymous(
         self.other_gestalt.save()
 
 
-class Authenticated(
+class AuthenticatedGroupConversationTestCase(
     GroupPageHasCreateLink,
     CanCreateGroupConversation,
     GroupPageHasConversationLink,
     CanViewGroupConversation,
     CanReplyToConversation,
-    CanCreateGestaltConversation,
-    CanViewGestaltConversation,
-    GestaltConversation,
     GroupConversation,
-    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
+    AuthenticatedMixin,
     tests.Test,
 ):
     """
     An authenticated visitor
-    * should see a message creation link on the group page
+    """
+
+
+class AuthenticatedGestaltConversationTestCase(
+    CanCreateGestaltConversation,
+    CanViewGestaltConversation,
+    CanReplyToConversation,
+    GestaltConversationMixin,
+    AuthenticatedMixin,
+    tests.Test,
+):
+    """
+    An authenticated visitor
     """
 
 
