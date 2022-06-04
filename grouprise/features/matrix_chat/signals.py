@@ -169,41 +169,6 @@ def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
     run_async(invite_and_send())
 
 
-def _send_contribution_notification_to_matrix_rooms(instance):
-    if instance.deleted:
-        # ignore deleted contributions
-        pass
-    else:
-        messages = []
-        for association in instance.container.associations.all():
-            association_url = full_url(association.get_absolute_url())
-            url = association_url + f"#contribution-{instance.pk}"
-            if association.entity.is_group:
-                # send a message to the group's rooms
-                group = association.entity
-                summary = f"Diskussionsbeitrag: [{instance.container.subject}]({url})"
-                is_public = instance.is_public_in_context_of(group)
-                messages.extend(
-                    get_matrix_messages_for_group(group, summary, is_public)
-                )
-            else:
-                # determine the recipient for the notification
-                recipients = {
-                    # initial sender
-                    instance.container.contributions.first().author,
-                    # initial recipient
-                    association.entity,
-                }
-                # do not inform the author of this new contribution
-                recipients.difference_update({instance.author})
-                # send a private message to a user's room
-                summary = f"[{instance.author}] Nachricht: [{instance.container.subject}]({url})"
-                for recipient in recipients:
-                    send_private_message_to_gestalt(summary, recipient)
-        if messages:
-            send_matrix_messages(messages, "matrix notification for contribution")
-
-
 @receiver(post_save, sender=grouprise.features.memberships.models.Membership)
 def synchronize_matrix_room_memberships(sender, instance, created, raw=False, **kwargs):
     if created and not raw:

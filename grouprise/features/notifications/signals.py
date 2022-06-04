@@ -24,6 +24,7 @@ from grouprise.features.matrix_chat.signals import (
     send_matrix_messages,
     get_matrix_messages_for_group,
     get_matrix_messages_for_public,
+    send_private_message_to_gestalt,
 )
 
 
@@ -46,11 +47,19 @@ class AffectedGestalten:
 
     def __init__(self, instance: Union[Content, Contribution]) -> None:
         self.instance = instance
-        self.container: Union[Content, Conversation] = (
-            instance if isinstance(instance, Content) else instance.container
-        )
+        if isinstance(instance, Content):
+            self.author = instance.versions.last().author
+            self.container = instance
+        else:
+            self.author = instance.author
+            self.container = instance.container
         self.association: Association = self.container.associations.get()
-        self.is_group_context = isinstance(self.association.entity, Group)
+        self.entity: Union[Gestalt, Group] = self.association.entity
+        self.is_group_context = isinstance(self.entity, Group)
+        if isinstance(instance, Content):
+            self.is_public_context = self.association.public
+        else:
+            self.is_public_context = instance.is_public_in_context_of(self.entity)
         self.gestalten = self._get_affected_gestalten()
 
     def __contains__(self, item: Audience) -> bool:
@@ -126,6 +135,7 @@ class MatrixNotification(BaseNotification):
             self.is_public = self.instance.is_public_in_context_of(
                 self.association.entity
             )
+        self.context = f"[{self.association.entity}] "
         self.summary = self._get_summary()
 
     def send(
@@ -136,27 +146,30 @@ class MatrixNotification(BaseNotification):
                 self.association.entity, self.summary, self.is_public
             )
         elif recipients == AffectedGestalten.Audience.PUBLIC:
-            summary = f"[{self.association.entity.name}] {self.summary}"
-            return get_matrix_messages_for_public(summary)
+            return get_matrix_messages_for_public(self.context + self.summary)
+        else:
+            send_private_message_to_gestalt(self.context + self.summary, recipients)
+            return []
 
     def _get_summary(self) -> str:
-        if isinstance(self.instance, Contribution):
-            if isinstance(self.instance, Conversation):
-                content_type = "Gesprächsbeitrag"
+        if isinstance(self.instance, Content):
+            if self.instance.is_event:
+                content_type = "Termin"
+            elif self.instance.is_file:
+                content_type = "Anhang"
+            elif self.instance.is_gallery:
+                content_type = "Galerie"
+            elif self.instance.is_poll:
+                content_type = "Umfrage"
+            elif self.instance.is_conversation:
+                content_type = "Gespräch"
+            else:
+                content_type = "Artikel"
+        else:
+            if isinstance(self.container, Conversation):
+                content_type = "Nachricht"
             else:
                 content_type = "Kommentar"
-        elif self.instance.is_event:
-            content_type = "Termin"
-        elif self.instance.is_file:
-            content_type = "Anhang"
-        elif self.instance.is_gallery:
-            content_type = "Galerie"
-        elif self.instance.is_poll:
-            content_type = "Umfrage"
-        elif self.instance.is_conversation:
-            content_type = "Gespräch"
-        else:
-            content_type = "Artikel"
         url = full_url(self.association.get_absolute_url())
         if isinstance(self.instance, Contribution):
             url += f"#contribution-{self.instance.pk}"
@@ -227,23 +240,21 @@ class EmailNotifications(BaseNotifications):
 
     def send(self):
         kwargs = {"association": self.affected_gestalten.association}
-        if self.affected_gestalten.association.public:
+        if self.affected_gestalten.is_public_context:
             self.send_to(
                 AffectedGestalten.Audience.GROUP_SUBSCRIBERS,
                 is_subscriber=True,
                 **kwargs,
             )
         else:
-            if self.affected_gestalten.is_group_context:
-                self.send_to(
-                    AffectedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS,
-                    is_subscriber=True,
-                    **kwargs,
-                )
-            else:
-                self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT, **kwargs)
-            if self._is_initial_contributor_external():
-                self.send_to(AffectedGestalten.Audience.INITIAL_CONTRIBUTOR, **kwargs)
+            self.send_to(
+                AffectedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS,
+                is_subscriber=True,
+                **kwargs,
+            )
+        self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT, **kwargs)
+        if self._is_initial_contributor_external():
+            self.send_to(AffectedGestalten.Audience.INITIAL_CONTRIBUTOR, **kwargs)
 
     def _is_initial_contributor_external(self):
         contributor = self.affected_gestalten.get_initial_contributor()
@@ -261,6 +272,10 @@ class MatrixNotifications(BaseNotifications):
     ]
     notification_class = MatrixNotification
 
+    def __init__(self, affected_gestalten):
+        super().__init__(affected_gestalten)
+        self.recipients_to_ignore.add(self.affected_gestalten.author)
+
     def commit(self):
         send_matrix_messages(
             list(chain.from_iterable(self.results)), "matrix notification"
@@ -268,9 +283,12 @@ class MatrixNotifications(BaseNotifications):
 
     def send(self):
         self.send_to(AffectedGestalten.Audience.GROUP_MEMBERS)
-        if isinstance(self.affected_gestalten.instance, Content):
-            if self.affected_gestalten.association.public:
+        if self.affected_gestalten.is_public_context:
+            if isinstance(self.affected_gestalten.instance, Content):
                 self.send_to(AffectedGestalten.Audience.PUBLIC)
+            self.send_to(AffectedGestalten.Audience.GROUP_SUBSCRIBERS)
+        self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT)
+        self.send_to(AffectedGestalten.Audience.INITIAL_CONTRIBUTOR)
         self.commit()
 
 
