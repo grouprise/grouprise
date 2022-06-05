@@ -10,7 +10,6 @@ from huey.contrib.djhuey import db_task
 import grouprise.features.memberships.models
 from grouprise.core.matrix import MatrixError
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
-from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.core.utils import run_async
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group

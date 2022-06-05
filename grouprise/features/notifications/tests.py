@@ -5,12 +5,23 @@ from django.urls import reverse
 from grouprise.features.articles.tests import GroupArticleMixin
 from grouprise.features.conversations.tests import GestaltConversationMixin
 from grouprise.features.matrix_chat.tests import MatrixChatMixin, MatrixRoomTracker
-from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
+from grouprise.features.memberships.test_mixins import (
+    MemberMixin,
+    OtherMemberMixin,
+)
 
 
 class AuthenticatedMemberArticleTestCase(
-    MatrixChatMixin, GroupArticleMixin, AuthenticatedMemberMixin, TestCase
+    MatrixChatMixin,
+    GroupArticleMixin,
+    MemberMixin,
+    OtherMemberMixin,
+    TestCase,
 ):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.other_gestalt.user)
+
     def test_receives_builtin_notification_upon_content_creation(self):
         notification_count = self.gestalt.notifications.count()
         self._create_article()
@@ -24,12 +35,12 @@ class AuthenticatedMemberArticleTestCase(
     def test_receives_email_notification_upon_content_creation(self):
         mail.outbox.clear()
         self._create_article()
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 2)
 
     def test_receives_email_notification_upon_contribution_creation(self):
         mail.outbox.clear()
         self._create_comment()
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 2)
 
     def test_receives_matrix_notification_upon_content_creation(self):
         private_room, _ = self.get_group_rooms(self.group)

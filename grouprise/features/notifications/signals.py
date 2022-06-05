@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABCMeta
 from enum import Enum, auto
 from itertools import chain
-from typing import Union, Iterable, Iterator, Optional, Mapping, Any
+from typing import Union, Iterable, Iterator, Mapping, Any
 
 from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
@@ -10,7 +10,6 @@ from grouprise.core.settings import CORE_SETTINGS
 from grouprise.core.signals import post_create
 from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.features.associations.models import Association
-from grouprise.features.builtin_notifications.signals import send_builtin_notifications
 from grouprise.features.content.models import Content
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.conversations.models import Conversation
@@ -35,7 +34,7 @@ class AffectedGestalten:
         # the gestalt to whom this content is associated, if any
         ASSOCIATED_GESTALT = auto()
         # the author of the initial contribution, if any
-        INITIAL_CONTRIBUTOR = auto()
+        EXTERNAL_INITIAL_CONTRIBUTOR = auto()
         # all members of the associated group, if any
         GROUP_MEMBERS = auto()
         # all gestalten who subscribed to the associated group, if any
@@ -71,18 +70,17 @@ class AffectedGestalten:
     def __iter__(self) -> Iterator[Gestalt]:
         return self.gestalten[self.Audience.ALL].__iter__()
 
-    def get_initial_contributor(self) -> Optional[Gestalt]:
-        if not self.container.contributions.exists():
-            return None
-        return self.container.contributions.first().author
-
     def _get_affected_gestalten(self) -> Mapping[Audience, Iterable[Gestalt]]:
         gestalten = {
             self.Audience.PUBLIC: {},
         }
-        initial_contributor = self.get_initial_contributor()
-        if initial_contributor:
-            gestalten[self.Audience.INITIAL_CONTRIBUTOR] = {initial_contributor}
+        initial_contributor, is_external = self._get_initial_contributor()
+        if initial_contributor and is_external:
+            gestalten.update(
+                {
+                    self.Audience.EXTERNAL_INITIAL_CONTRIBUTOR: {initial_contributor},
+                }
+            )
         if self.is_group_context:
             gestalten.update(
                 {
@@ -110,13 +108,24 @@ class AffectedGestalten:
             **gestalten,
         }
 
+    def _get_initial_contributor(self):
+        if not self.container.contributions.exists():
+            return None, False
+        contributor = self.container.contributions.first().author
+        if self.is_group_context:
+            members = self.association.entity.members.all()
+        else:
+            members = {self.association.entity}
+        return contributor, contributor not in members
+
 
 class BaseNotification(metaclass=ABCMeta):
     def __init__(self, instance: Union[Content, Contribution]):
         self.instance = instance
-        self.container: Union[Content, Conversation] = (
-            instance if isinstance(instance, Content) else instance.container
-        )
+        if isinstance(instance, Content):
+            self.container = instance
+        else:
+            self.container = instance.container
         self.association: Association = self.container.associations.get()
 
     @abstractmethod
@@ -124,6 +133,13 @@ class BaseNotification(metaclass=ABCMeta):
         self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         pass
+
+
+class BuiltinNotification(BaseNotification):
+    def send(
+        self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
+    ) -> Any:
+        recipients.notifications.create()
 
 
 class MatrixNotification(BaseNotification):
@@ -228,6 +244,22 @@ class BaseNotifications(metaclass=ABCMeta):
         self.results.append(result)
 
 
+class BuiltinNotifications(BaseNotifications):
+    notification_class = BuiltinNotification
+
+    def __init__(self, affected_gestalten):
+        super().__init__(affected_gestalten)
+        self.recipients_to_ignore.add(self.affected_gestalten.author)
+
+    def send(self):
+        if self.affected_gestalten.is_public_context:
+            self.send_to(AffectedGestalten.Audience.GROUP_SUBSCRIBERS)
+        else:
+            self.send_to(AffectedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS)
+        self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT)
+        self.send_to(AffectedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR)
+
+
 class EmailNotifications(BaseNotifications):
     def does_recipient_want_notifications(self, recipient: Gestalt):
         return not recipient.is_email_blocker
@@ -253,16 +285,7 @@ class EmailNotifications(BaseNotifications):
                 **kwargs,
             )
         self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT, **kwargs)
-        if self._is_initial_contributor_external():
-            self.send_to(AffectedGestalten.Audience.INITIAL_CONTRIBUTOR, **kwargs)
-
-    def _is_initial_contributor_external(self):
-        contributor = self.affected_gestalten.get_initial_contributor()
-        if self.affected_gestalten.is_group_context:
-            members = self.affected_gestalten.association.entity.members.all()
-        else:
-            members = {self.affected_gestalten.association.entity}
-        return contributor and contributor not in members
+        self.send_to(AffectedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR, **kwargs)
 
 
 class MatrixNotifications(BaseNotifications):
@@ -288,7 +311,7 @@ class MatrixNotifications(BaseNotifications):
                 self.send_to(AffectedGestalten.Audience.PUBLIC)
             self.send_to(AffectedGestalten.Audience.GROUP_SUBSCRIBERS)
         self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT)
-        self.send_to(AffectedGestalten.Audience.INITIAL_CONTRIBUTOR)
+        self.send_to(AffectedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR)
         self.commit()
 
 
@@ -301,6 +324,6 @@ def send_notifications(instance, raw=False, **_):
 @db_task()
 def _send_notifications(instance):
     affected_gestalten = AffectedGestalten(instance)
-    send_builtin_notifications(instance)
+    BuiltinNotifications(affected_gestalten).send()
     EmailNotifications(affected_gestalten).send()
     MatrixNotifications(affected_gestalten).send()
