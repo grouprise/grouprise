@@ -7,6 +7,12 @@
 #    * Build-Depends in source package (first stanza)
 #    * Depends in package "grouprise"
 #
+
+# "pypandoc" is an indirect requirement of "mdx_unimoji" (via "setuptools-markdown").
+# Currently "mdx_unimoji" breaks the build, since it relies on an old feature of pypandoc.
+# TODO: remove this requirement, as soon as https://github.com/msabramo/setuptools-markdown/pull/21 is merged.
+pypandoc<1.8                # debian: python3-pypandoc
+
 aiosmtpd                    # debian: python3-aiosmtpd
 aiosmtplib                  # debian (bookworm): python3-aiosmtplib
 bleach                      # debian: python3-bleach
