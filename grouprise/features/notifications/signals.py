@@ -27,7 +27,7 @@ from grouprise.features.matrix_chat.signals import (
 )
 
 
-class AffectedGestalten:
+class RelatedGestalten:
     class Audience(Enum):
         # all gestalten affected by changes to the given instance
         ALL = auto()
@@ -59,7 +59,7 @@ class AffectedGestalten:
             self.is_public_context = self.association.public
         else:
             self.is_public_context = instance.is_public_in_context_of(self.entity)
-        self.gestalten = self._get_affected_gestalten()
+        self.gestalten = self._get_related_gestalten()
 
     def __contains__(self, item: Audience) -> bool:
         return self.gestalten.__contains__(item)
@@ -70,7 +70,7 @@ class AffectedGestalten:
     def __iter__(self) -> Iterator[Gestalt]:
         return self.gestalten[self.Audience.ALL].__iter__()
 
-    def _get_affected_gestalten(self) -> Mapping[Audience, Iterable[Gestalt]]:
+    def _get_related_gestalten(self) -> Mapping[Audience, Iterable[Gestalt]]:
         gestalten = {
             self.Audience.PUBLIC: {},
         }
@@ -130,14 +130,14 @@ class BaseNotification(metaclass=ABCMeta):
 
     @abstractmethod
     def send(
-        self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
+        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         pass
 
 
 class BuiltinNotification(BaseNotification):
     def send(
-        self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
+        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         recipients.notifications.create()
 
@@ -155,13 +155,13 @@ class MatrixNotification(BaseNotification):
         self.summary = self._get_summary()
 
     def send(
-        self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
+        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
-        if recipients == AffectedGestalten.Audience.GROUP_MEMBERS:
+        if recipients == RelatedGestalten.Audience.GROUP_MEMBERS:
             return get_matrix_messages_for_group(
                 self.association.entity, self.summary, self.is_public
             )
-        elif recipients == AffectedGestalten.Audience.PUBLIC:
+        elif recipients == RelatedGestalten.Audience.PUBLIC:
             return get_matrix_messages_for_public(self.context + self.summary)
         else:
             send_private_message_to_gestalt(self.context + self.summary, recipients)
@@ -196,10 +196,10 @@ class BaseNotifications(metaclass=ABCMeta):
     bulk_audiences = []
     notification_class = None
 
-    def __init__(self, affected_gestalten: AffectedGestalten):
-        self.affected_gestalten = affected_gestalten
+    def __init__(self, related_gestalten: RelatedGestalten):
+        self.related_gestalten = related_gestalten
         notification_class = self.get_notification_class()
-        self.notification = notification_class(self.affected_gestalten.instance)
+        self.notification = notification_class(self.related_gestalten.instance)
         self.results = []
         self.recipients_to_ignore = set()
         try:
@@ -219,9 +219,9 @@ class BaseNotifications(metaclass=ABCMeta):
     def send(self):
         pass
 
-    def send_to(self, audience: AffectedGestalten.Audience, **kwargs):
+    def send_to(self, audience: RelatedGestalten.Audience, **kwargs):
         try:
-            recipients = self.affected_gestalten[audience]
+            recipients = self.related_gestalten[audience]
             if audience in self.bulk_audiences:
                 self.send_notification(audience, **kwargs)
                 self.recipients_to_ignore.update(recipients)
@@ -238,7 +238,7 @@ class BaseNotifications(metaclass=ABCMeta):
             pass
 
     def send_notification(
-        self, recipients: Union[AffectedGestalten.Audience, Gestalt], **kwargs
+        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ):
         result = self.notification.send(recipients, **kwargs)
         self.results.append(result)
@@ -247,17 +247,17 @@ class BaseNotifications(metaclass=ABCMeta):
 class BuiltinNotifications(BaseNotifications):
     notification_class = BuiltinNotification
 
-    def __init__(self, affected_gestalten):
-        super().__init__(affected_gestalten)
-        self.recipients_to_ignore.add(self.affected_gestalten.author)
+    def __init__(self, related_gestalten):
+        super().__init__(related_gestalten)
+        self.recipients_to_ignore.add(self.related_gestalten.author)
 
     def send(self):
-        if self.affected_gestalten.is_public_context:
-            self.send_to(AffectedGestalten.Audience.GROUP_SUBSCRIBERS)
+        if self.related_gestalten.is_public_context:
+            self.send_to(RelatedGestalten.Audience.GROUP_SUBSCRIBERS)
         else:
-            self.send_to(AffectedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS)
-        self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT)
-        self.send_to(AffectedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR)
+            self.send_to(RelatedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS)
+        self.send_to(RelatedGestalten.Audience.ASSOCIATED_GESTALT)
+        self.send_to(RelatedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR)
 
 
 class EmailNotifications(BaseNotifications):
@@ -265,39 +265,39 @@ class EmailNotifications(BaseNotifications):
         return not recipient.is_email_blocker
 
     def get_notification_class(self):
-        if isinstance(self.affected_gestalten.instance, Content):
+        if isinstance(self.related_gestalten.instance, Content):
             return ContentCreated
         else:
             return ContributionCreated
 
     def send(self):
-        kwargs = {"association": self.affected_gestalten.association}
-        if self.affected_gestalten.is_public_context:
+        kwargs = {"association": self.related_gestalten.association}
+        if self.related_gestalten.is_public_context:
             self.send_to(
-                AffectedGestalten.Audience.GROUP_SUBSCRIBERS,
+                RelatedGestalten.Audience.GROUP_SUBSCRIBERS,
                 is_subscriber=True,
                 **kwargs,
             )
         else:
             self.send_to(
-                AffectedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS,
+                RelatedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS,
                 is_subscriber=True,
                 **kwargs,
             )
-        self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT, **kwargs)
-        self.send_to(AffectedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR, **kwargs)
+        self.send_to(RelatedGestalten.Audience.ASSOCIATED_GESTALT, **kwargs)
+        self.send_to(RelatedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR, **kwargs)
 
 
 class MatrixNotifications(BaseNotifications):
     bulk_audiences = [
-        AffectedGestalten.Audience.GROUP_MEMBERS,
-        AffectedGestalten.Audience.PUBLIC,
+        RelatedGestalten.Audience.GROUP_MEMBERS,
+        RelatedGestalten.Audience.PUBLIC,
     ]
     notification_class = MatrixNotification
 
-    def __init__(self, affected_gestalten):
-        super().__init__(affected_gestalten)
-        self.recipients_to_ignore.add(self.affected_gestalten.author)
+    def __init__(self, related_gestalten):
+        super().__init__(related_gestalten)
+        self.recipients_to_ignore.add(self.related_gestalten.author)
 
     def commit(self):
         send_matrix_messages(
@@ -305,13 +305,13 @@ class MatrixNotifications(BaseNotifications):
         )
 
     def send(self):
-        self.send_to(AffectedGestalten.Audience.GROUP_MEMBERS)
-        if self.affected_gestalten.is_public_context:
-            if isinstance(self.affected_gestalten.instance, Content):
-                self.send_to(AffectedGestalten.Audience.PUBLIC)
-            self.send_to(AffectedGestalten.Audience.GROUP_SUBSCRIBERS)
-        self.send_to(AffectedGestalten.Audience.ASSOCIATED_GESTALT)
-        self.send_to(AffectedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR)
+        self.send_to(RelatedGestalten.Audience.GROUP_MEMBERS)
+        if self.related_gestalten.is_public_context:
+            if isinstance(self.related_gestalten.instance, Content):
+                self.send_to(RelatedGestalten.Audience.PUBLIC)
+            self.send_to(RelatedGestalten.Audience.GROUP_SUBSCRIBERS)
+        self.send_to(RelatedGestalten.Audience.ASSOCIATED_GESTALT)
+        self.send_to(RelatedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR)
         self.commit()
 
 
@@ -323,7 +323,7 @@ def send_notifications(instance, raw=False, **_):
 
 @db_task()
 def _send_notifications(instance):
-    affected_gestalten = AffectedGestalten(instance)
-    BuiltinNotifications(affected_gestalten).send()
-    EmailNotifications(affected_gestalten).send()
-    MatrixNotifications(affected_gestalten).send()
+    gestalten = RelatedGestalten(instance)
+    BuiltinNotifications(gestalten).send()
+    EmailNotifications(gestalten).send()
+    MatrixNotifications(gestalten).send()
