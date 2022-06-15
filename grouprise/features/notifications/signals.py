@@ -135,7 +135,7 @@ class BaseNotification(metaclass=ABCMeta):
         pass
 
 
-class BuiltinNotification(BaseNotification):
+class BuiltinInboxNotification(BaseNotification):
     def send(
         self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
@@ -244,8 +244,8 @@ class BaseNotifications(metaclass=ABCMeta):
         self.results.append(result)
 
 
-class BuiltinNotifications(BaseNotifications):
-    notification_class = BuiltinNotification
+class BuiltinInboxNotifications(BaseNotifications):
+    notification_class = BuiltinInboxNotification
 
     def __init__(self, related_gestalten):
         super().__init__(related_gestalten)
@@ -324,6 +324,6 @@ def send_notifications(instance, raw=False, **_):
 @db_task()
 def _send_notifications(instance):
     gestalten = RelatedGestalten(instance)
-    BuiltinNotifications(gestalten).send()
+    BuiltinInboxNotifications(gestalten).send()
     EmailNotifications(gestalten).send()
     MatrixNotifications(gestalten).send()
