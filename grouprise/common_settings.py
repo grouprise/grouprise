@@ -14,7 +14,7 @@ INSTALLED_APPS = [
     # grouprise features
     "grouprise.features.articles",
     "grouprise.features.associations",
-    "grouprise.features.builtin_notifications",
+    "grouprise.features.builtin_inbox_notifications",
     "grouprise.features.contributions",
     "grouprise.features.conversations",
     "grouprise.features.content",
