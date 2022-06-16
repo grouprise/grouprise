@@ -17,7 +17,10 @@ aiosmtpd                    # debian: python3-aiosmtpd
 aiosmtplib                  # debian (bookworm): python3-aiosmtplib
 bleach                      # debian: python3-bleach
 boltons                     # debian: python3-boltons
-django                      # debian: python3-django
+# django-imagekit breaks with Django 4.0
+# This is fixed only in commit https://github.com/matthewwithanm/django-imagekit/commit/155025d2dfbdc86df40f7923127b9049ae2df424 (not relased, yet).
+# TODO: remove "<4" as soon as django-imagekit v4.2 or newer is released (and require this version).
+django<4                    # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 django-cachalot>=2.4.4      # NOT IN DEBIAN
 django-cors-middleware      # debian: python3-django-cors-headers
