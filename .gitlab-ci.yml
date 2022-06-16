@@ -7,6 +7,10 @@ variables:
 .populate_virtualenv: &populate_virtualenv
     - python3 -m venv --system-site-packages "$virtualenv_directory"
     - source "$virtualenv_directory/bin/activate"
+    # For some reason we need to install pypandoc separately in advance, otherwise the version
+    # requirement in "requirements.txt" is not applied during the (later) installation of
+    # "mdx_unimoji".
+    - pip3 install "pypandoc<1.8"
     # force usage of "stdlib" due to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1003252
     # TODO: remove after switching to Bookworm
     - SETUPTOOLS_USE_DISTUTILS=stdlib pip3 install -r requirements.txt
