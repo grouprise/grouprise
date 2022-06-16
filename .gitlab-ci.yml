@@ -7,7 +7,9 @@ variables:
 .populate_virtualenv: &populate_virtualenv
     - python3 -m venv --system-site-packages "$virtualenv_directory"
     - source "$virtualenv_directory/bin/activate"
-    - pip3 install -r requirements.txt
+    # force usage of "stdlib" due to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1003252
+    # TODO: remove after switching to Bookworm
+    - SETUPTOOLS_USE_DISTUTILS=stdlib pip3 install -r requirements.txt
 
 .build_deb_package:
     script:
