@@ -17,9 +17,14 @@ class GestaltByEmailField(forms.EmailField):
     }
 
     def __init__(self, *args, **kwargs):
-        del kwargs["limit_choices_to"]
-        del kwargs["queryset"]
-        del kwargs["to_field_name"]
+        # This field is used in place of a ModelChoiceField implementation
+        # and django pre-populates kwargs based on the foreign key relation.
+        # As forms.EmailField is not a ModelChoiceField subclass it will not
+        # recognize the specialized keyword arguments and raise an error.
+        # TODO: this seems like a hack and there’s probably a better way to
+        #       define a simple form field for a relation field.
+        for key in ["blank", "limit_choices_to", "queryset", "to_field_name"]:
+            kwargs.pop(key, None)
         super().__init__(*args, **kwargs)
 
     def clean(self, value):
