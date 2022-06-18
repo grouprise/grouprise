@@ -10,6 +10,10 @@ class CoreConfig(AppConfig):
     def ready(self):
         self.module.autodiscover()
 
+        from .settings import CORE_SETTINGS
+
+        CORE_SETTINGS.resolve_lazy_settings()
+
         # configure sentry if DSN has been defined
         sentry_dsn = getattr(settings, "SENTRY_DSN", None)
         if sentry_dsn:
