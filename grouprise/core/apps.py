@@ -10,6 +10,16 @@ class CoreConfig(AppConfig):
     def ready(self):
         self.module.autodiscover()
 
+        from .settings import CORE_SETTINGS
+
+        try:
+            CORE_SETTINGS.resolve_lazy_settings()
+        except Exception:
+            # Resolution may fail under certain circumstances, e.g. during the initial run of
+            # "migrate" (before the django site is written to the database).
+            # We just hope, this works *almost* always.
+            pass
+
         # configure sentry if DSN has been defined
         sentry_dsn = getattr(settings, "SENTRY_DSN", None)
         if sentry_dsn:
