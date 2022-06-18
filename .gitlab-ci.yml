@@ -20,7 +20,7 @@ variables:
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
         # generate an export of the versions of the embedded python modules (helpful for a rebuild)
         - pip3 install pip-tools
-        - pip-compile --output-file build/debian/requirements-build.txt
+        - pip-compile --output-file build/debian/requirements-build.txt requirements.txt
     artifacts:
         name: grouprise-deb
         paths:
