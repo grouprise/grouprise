@@ -1,10 +1,10 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
 urlpatterns = [
-    url(r"^stadt/tags/(?P<slug>[-\w]+)/$", views.Detail.as_view(), name="tag"),
-    url(
+    re_path(r"^stadt/tags/(?P<slug>[-\w]+)/$", views.Detail.as_view(), name="tag"),
+    re_path(
         r"^stadt/tags/(?P<slug>[-\w]+)/tag-group/$",
         views.TagGroup.as_view(),
         name="tag-group",

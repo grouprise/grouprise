@@ -1,26 +1,25 @@
 from allauth.account import views as allauth_views
 from allauth.socialaccount import views as socialaccount_views
-from django.conf.urls import url
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 from .views import NotificationSettingsUpdateView
 
 urlpatterns = [
-    url(r"^stadt/signup/$", views.Create.as_view(), name="account_signup"),
-    url(
+    re_path(r"^stadt/signup/$", views.Create.as_view(), name="account_signup"),
+    re_path(
         r"^stadt/login/signup/$",
         socialaccount_views.signup,
         name="socialaccount_signup",
     ),
-    url(r"^stadt/gestalten/$", views.List.as_view(), name="gestalten"),
-    url(r"^stadt/settings/$", views.Update.as_view(), name="settings"),
-    url(
+    re_path(r"^stadt/gestalten/$", views.List.as_view(), name="gestalten"),
+    re_path(r"^stadt/settings/$", views.Update.as_view(), name="settings"),
+    re_path(
         r"^stadt/settings/gestalt/delete/$",
         views.Delete.as_view(),
         name="delete-gestalt",
     ),
-    url(
+    re_path(
         r"^stadt/settings/images/$", views.UpdateImages.as_view(), name="image-settings"
     ),
     path(
@@ -28,28 +27,28 @@ urlpatterns = [
         NotificationSettingsUpdateView.as_view(),
         name="notification-settings",
     ),
-    url(r"^stadt/email/$", views.UpdateEmail.as_view(), name="email-settings"),
-    url(
+    re_path(r"^stadt/email/$", views.UpdateEmail.as_view(), name="email-settings"),
+    re_path(
         r"^stadt/confirm/(?P<key>[-:\w]+)/$",
         views.UpdateEmailConfirm.as_view(),
         name="account_confirm_email",
     ),
-    url(
+    re_path(
         r"^stadt/settings/password/$",
         views.UpdatePassword.as_view(),
         name="account_change_password",
     ),
-    url(
+    re_path(
         r"^stadt/password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$",
         views.UpdatePasswordKey.as_view(),
         name="account_reset_password_from_key",
     ),
-    url(
+    re_path(
         r"^stadt/password/reset/key/done/$",
         allauth_views.password_reset_from_key_done,
         name="account_reset_password_from_key_done",
     ),
-    url(
+    re_path(
         r"^stadt/password/set/$",
         views.UpdatePasswordSet.as_view(),
         name="account_set_password",
