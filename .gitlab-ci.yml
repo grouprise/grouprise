@@ -20,8 +20,6 @@ variables:
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
         # generate an export of the versions of the embedded python modules (helpful for a rebuild)
         - pip3 install pip-tools
-        # TODO: remove this downgrade, as soon as https://github.com/jazzband/pip-tools/issues/1558 is fixed
-        - pip install "pip<22"
         - pip-compile --output-file build/debian/requirements-build.txt
     artifacts:
         name: grouprise-deb
