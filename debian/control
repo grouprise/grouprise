@@ -24,6 +24,7 @@ Build-Depends:
 # See also: make.d/ci.mk
  python3-all,
  python3-aiosmtpd,
+ python3-asgiref,
  python3-bleach,
  python3-boltons,
  python3-django (>= 2:2.2),
@@ -65,6 +66,7 @@ Depends:
 # Python dependencies should be added to the Build-Depends field of the source package too!
 # See also: make.d/ci.mk
  python3-all,
+ python3-asgiref,
  python3-bleach,
  python3-boltons,
 # TODO: remove this dependency-workaround, as soon as the related issue is fixed:

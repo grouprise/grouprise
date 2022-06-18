@@ -1,6 +1,7 @@
 import copy
 import logging
 
+from asgiref.sync import sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
 import nio
 
@@ -50,10 +51,10 @@ class ChatBot(MatrixBaseBot):
         matrix_url = f"https://{MATRIX_SETTINGS.DOMAIN}"
         self.bot_matrix_id = f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}"
         access_token = MATRIX_SETTINGS.BOT_ACCESS_TOKEN
-        backend = MATRIX_SETTINGS.BACKEND
-        super().__init__(matrix_url, self.bot_matrix_id, access_token, backend=backend)
-        if backend == MatrixBackend.CONSOLE:
-            _populate_group_rooms(self.client.server)
+        self._backend = MATRIX_SETTINGS.BACKEND
+        super().__init__(
+            matrix_url, self.bot_matrix_id, access_token, backend=self._backend
+        )
 
         async def join_and_configure_group_room_after_invite(
             room: nio.MatrixRoom, event: nio.InviteEvent
@@ -70,6 +71,11 @@ class ChatBot(MatrixBaseBot):
             join_and_configure_group_room_after_invite, nio.InviteEvent
         )
 
+    async def __aenter__(self):
+        if (self._backend == MatrixBackend.CONSOLE) and not self.client.server.rooms:
+            await sync_to_async(_populate_group_rooms)(self.client.server)
+        return await super().__aenter__()
+
     async def synchronize_rooms_of_group(self, group):
         """create rooms for the group and synchronize their avatar with the grouprise avatar"""
         for is_private in (False, True):
@@ -84,7 +90,9 @@ class ChatBot(MatrixBaseBot):
 
     async def _get_or_create_group_room(self, group, is_private):
         try:
-            room = MatrixChatGroupRoom.objects.get(group=group, is_private=is_private)
+            room = await sync_to_async(MatrixChatGroupRoom.objects.get)(
+                group=group, is_private=is_private
+            )
             return room, False
         except MatrixChatGroupRoom.DoesNotExist:
             pass
@@ -120,7 +128,7 @@ class ChatBot(MatrixBaseBot):
                 f"Create room requested for '{room_title}' was rejected: {response}"
             )
         # store the room
-        room = MatrixChatGroupRoom.objects.create(
+        room = await sync_to_async(MatrixChatGroupRoom.objects.create)(
             group=group, is_private=is_private, room_id=response.room_id
         )
         # respond with success, even though the alias assignment may have failed
@@ -341,13 +349,25 @@ class ChatBot(MatrixBaseBot):
 
         Optionally these invitations may be limited to a set of gestalt objects.
         """
-        for room in MatrixChatGroupRoom.objects.filter(group=group):
+
+        def get_rooms(group):
+            return list(MatrixChatGroupRoom.objects.filter(group=group))
+
+        def get_room_invitations(room):
+            return list(room.invitations.select_related("gestalt"))
+
+        def get_group_members_with_exceptions(group, ignored_members):
+            return list(group.members.exclude(id__in=invited_members))
+
+        for room in await sync_to_async(get_rooms)(group):
             invited_members = {
                 invite.gestalt.id
-                for invite in room.invitations.select_related("gestalt")
+                for invite in await sync_to_async(get_room_invitations)(room)
             }
             if gestalten is None:
-                invitees = group.members.exclude(id__in=invited_members)
+                invitees = await sync_to_async(get_group_members_with_exceptions)(
+                    group, invited_members
+                )
             else:
                 invitees = [
                     gestalt
@@ -355,11 +375,14 @@ class ChatBot(MatrixBaseBot):
                     if gestalt.id not in invited_members
                 ]
             for gestalt in invitees:
-                if await self.invite_into_room(room.room_id, gestalt, str(room)):
+                room_label = await sync_to_async(str)(room)
+                if await self.invite_into_room(room.room_id, gestalt, room_label):
                     yield room, gestalt
 
     async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> bool:
-        gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
+        gestalt_matrix_id = await sync_to_async(
+            MatrixChatGestaltSettings.get_matrix_id
+        )(gestalt)
         try:
             result = await self.client.room_invite(room_id, gestalt_matrix_id)
         except nio.exceptions.ProtocolError as exc:
@@ -380,8 +403,18 @@ class ChatBot(MatrixBaseBot):
                 return False
 
     async def kick_gestalt_from_group_rooms(self, group, gestalt, reason=None):
-        gestalt_matrix_id = MatrixChatGestaltSettings.get_matrix_id(gestalt)
-        for room in MatrixChatGroupRoom.objects.filter(group=group):
+        def get_group_chat_rooms(group):
+            return list(MatrixChatGroupRoom.objects.filter(group=group))
+
+        def delete_room_invitations(room, gestalt):
+            MatrixChatGroupRoomInvitations.objects.filter(
+                room=room, gestalt=gestalt
+            ).delete()
+
+        gestalt_matrix_id = await sync_to_async(
+            MatrixChatGestaltSettings.get_matrix_id
+        )(gestalt)
+        for room in await sync_to_async(get_group_chat_rooms)(group):
             try:
                 result = await self.client.room_kick(
                     room.room_id, gestalt_matrix_id, reason=reason
@@ -395,9 +428,7 @@ class ChatBot(MatrixBaseBot):
                 ):
                     # "forbidden" indicates that we were not a member of the room.
                     # Discard invitations, anyway.
-                    MatrixChatGroupRoomInvitations.objects.filter(
-                        room=room, gestalt=gestalt
-                    ).delete()
+                    await sync_to_async(delete_room_invitations)(room, gestalt)
                 else:
                     logger.warning(
                         f"Kick request for {gestalt} out of {room} was rejected: {result}"

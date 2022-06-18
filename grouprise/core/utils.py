@@ -1,6 +1,4 @@
-import asyncio
 import locale
-import threading
 from calendar import different_locale
 
 import boltons.strutils
@@ -64,25 +62,3 @@ def add_redirect(old_path: str, new_path: str) -> None:
         site_id=get_grouprise_site().pk, old_path=old_path, new_path=new_path
     )
     redirect.save()
-
-
-def run_async(async_func):
-    """run an async callable in a new loop (if there is no running loop) or in a separate thread
-
-    The result of the async callable is returned.
-    """
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = None
-    if loop and loop.is_running():
-        # there is a running loop (probably we are within a huey task)
-        result = []
-        # execute the function in a separate thread (nested loops are not supported in Python)
-        thread = threading.Thread(target=lambda: result.append(asyncio.run(async_func)))
-        thread.start()
-        thread.join()
-        return result[0]
-    else:
-        # no loop is running: create a new one
-        return asyncio.run(async_func)

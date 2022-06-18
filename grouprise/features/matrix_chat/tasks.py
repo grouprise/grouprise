@@ -1,9 +1,9 @@
 import logging
 
+from asgiref.sync import async_to_sync, sync_to_async
 from huey import crontab
 from huey.contrib.djhuey import db_periodic_task
 
-from grouprise.core.utils import run_async
 from grouprise.features.groups.models import Group
 
 from .matrix_bot import ChatBot
@@ -12,18 +12,20 @@ logger = logging.getLogger(__name__)
 
 
 @db_periodic_task(crontab(minute="27"))
-def update_matrix_chat_statistics():
+@async_to_sync
+async def update_matrix_chat_statistics():
     logger.info("Update statistics for matrix chats")
+    async with ChatBot() as bot:
+        await bot.update_statistics()
 
-    async def update():
-        async with ChatBot() as bot:
-            await bot.update_statistics()
 
-    run_async(update())
+def _get_all_groups():
+    return list(Group.objects.all())
 
 
 @db_periodic_task(crontab(minute="39"))
-def synchronize_matrix_rooms():
+@async_to_sync
+async def synchronize_matrix_rooms():
     """synchronize any outstanding missing room updates
 
     All rooms should be created on demand and all invitations should be send automatically.
@@ -31,10 +33,7 @@ def synchronize_matrix_rooms():
     """
     logger.info("Synchronize matrix chat rooms")
 
-    async def synchronize():
-        async with ChatBot() as bot:
-            for group in Group.objects.all():
-                [_ async for _ in bot.synchronize_rooms_of_group(group)]
-                [_ async for _ in bot.send_invitations_to_group_members(group)]
-
-    run_async(synchronize())
+    async with ChatBot() as bot:
+        for group in await sync_to_async(_get_all_groups)():
+            [_ async for _ in bot.synchronize_rooms_of_group(group)]
+            [_ async for _ in bot.send_invitations_to_group_members(group)]

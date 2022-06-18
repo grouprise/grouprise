@@ -2,6 +2,7 @@ import json
 import logging
 import urllib.request
 
+from asgiref.sync import async_to_sync
 import django.views.generic
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
@@ -9,7 +10,6 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from grouprise.core.utils import run_async
 from grouprise.core.views import PermissionMixin
 from grouprise.features.groups.models import Group
 
@@ -41,7 +41,7 @@ def get_room_url_for_requester(room_id, request_user):
         async with ChatBot() as bot:
             return await bot.get_public_room_name(room_id)
 
-    room_alias = run_async(retrieve_room_alias())
+    room_alias = async_to_sync(retrieve_room_alias)()
     room_name = room_id if room_alias is None else room_alias
     return base_path.format(room=room_name)
 

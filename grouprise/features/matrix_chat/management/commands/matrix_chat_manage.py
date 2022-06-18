@@ -2,11 +2,11 @@ import datetime
 import io
 import sys
 
+from asgiref.sync import async_to_sync, sync_to_async
 import ruamel.yaml
 from django.core.management.base import BaseCommand
 
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
-from grouprise.core.utils import run_async
 from grouprise.features.groups.models import Group
 from grouprise.features.matrix_chat.matrix_bot import ChatBot
 from grouprise.features.matrix_chat.models import MatrixChatGroupRoom
@@ -34,41 +34,42 @@ class Command(BaseCommand):
             ),
         )
 
-    def handle(self, *args, **options):
+    @async_to_sync
+    async def handle(self, *args, **options):
+        def get_all_groups():
+            return list(Group.objects.all())
+
         action = options["action"]
         if action == "configure-rooms":
-
-            async def create_group_rooms(groups):
-                async with ChatBot() as bot:
-                    for group in groups:
-                        if options["group"] and (group.slug != options["group"]):
-                            continue
-                        async for updated_room in bot.synchronize_rooms_of_group(group):
-                            self.stdout.write(
-                                self.style.NOTICE(
-                                    f"Created or updated room '{updated_room}'"
-                                )
+            groups = await sync_to_async(get_all_groups)()
+            async with ChatBot() as bot:
+                for group in groups:
+                    if options["group"] and (group.slug != options["group"]):
+                        continue
+                    async for updated_room in bot.synchronize_rooms_of_group(group):
+                        updated_room_label = await sync_to_async(str)(updated_room)
+                        self.stdout.write(
+                            self.style.NOTICE(
+                                f"Created or updated room '{updated_room_label}'"
                             )
-
-            run_async(create_group_rooms(list(Group.objects.all())))
+                        )
         elif action == "invite-room-members":
-
-            async def invite_to_group_rooms(groups):
-                async with ChatBot() as bot:
-                    for group in groups:
-                        if options["group"] and (group.slug != options["group"]):
-                            continue
-                        async for (
-                            room,
-                            gestalt,
-                        ) in bot.send_invitations_to_group_members(group):
-                            self.stdout.write(
-                                self.style.NOTICE(
-                                    f"Invited '{gestalt}' to room '{room}'"
-                                )
+            groups = await sync_to_async(get_all_groups)()
+            async with ChatBot() as bot:
+                for group in groups:
+                    if options["group"] and (group.slug != options["group"]):
+                        continue
+                    async for (
+                        room,
+                        gestalt,
+                    ) in bot.send_invitations_to_group_members(group):
+                        gestalt_label = await sync_to_async(str)(gestalt)
+                        room_label = await sync_to_async(str)(room)
+                        self.stdout.write(
+                            self.style.NOTICE(
+                                f"Invited '{gestalt_label}' to room '{room_label}'"
                             )
-
-            run_async(invite_to_group_rooms(list(Group.objects.all())))
+                        )
         elif action == "print-synapse-configuration":
             site = get_grouprise_site()
             matrix_chat_app = get_or_create_oidc_client_application()
@@ -126,12 +127,8 @@ class Command(BaseCommand):
                     f"{room_text:50s} {members_count:3d} {timestamp_text}"
                 )
         elif action == "update-statistics":
-
-            async def update():
-                async with ChatBot() as bot:
-                    await bot.update_statistics()
-
-            run_async(update())
+            async with ChatBot() as bot:
+                await bot.update_statistics()
         else:
             self.stderr.write(
                 self.style.ERROR("Invalid action requested: {}".format(action))

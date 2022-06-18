@@ -1,11 +1,11 @@
 import logging
 
+from asgiref.sync import async_to_sync
+from django.core.management.base import BaseCommand
 import kien.command.help
 import kien.command.quit
-from django.core.management.base import BaseCommand
 from kien.runner import ConsoleRunner
 
-from grouprise.core.utils import run_async
 from grouprise.core.matrix import MatrixError
 from grouprise.features.matrix_commander.commands import commander
 from grouprise.features.matrix_commander.matrix_bot import CommanderBot
@@ -34,13 +34,14 @@ class Command(BaseCommand):
             help="Run an interactive session on the console (useful for debugging).",
         )
 
-    def handle(self, *args, log_level=None, **options):
+    @async_to_sync
+    async def handle(self, *args, log_level=None, **options):
         logging.basicConfig(level=self.LOG_LEVEL_MAP[log_level])
         if options["console"]:
             self.serve_console()
         else:
             try:
-                run_async(self.serve_bot())
+                await self.serve_bot()
             except KeyboardInterrupt:
                 pass
 
