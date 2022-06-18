@@ -3,6 +3,9 @@ variables:
     # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
     # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.
     virtualenv_directory: "$CI_PROJECT_DIR/gitlab-ci-build-venv"
+    # force usage of "stdlib" due to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1003252
+    # TODO: remove after switching to Bookworm
+    SETUPTOOLS_USE_DISTUTILS: stdlib
 
 .populate_virtualenv: &populate_virtualenv
     - python3 -m venv --system-site-packages "$virtualenv_directory"
