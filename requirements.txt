@@ -36,7 +36,7 @@ huey                        # NOT IN DEBIAN
 kien                        # NOT IN DEBIAN
 # incompatible change introduced in https://github.com/Python-Markdown/markdown/commit/d18c3d0acab
 markdown<3                  # debian: python3-markdown
-mdx_unimoji                 # NOT IN DEBIAN
+git+https://github.com/grouprise/mdx_unimoji#egg=mdx_unimoji
 matrix-nio                  # debian: python3-matrix-nio
 pillow                      # debian: python3-pil
 pymdown-extensions<6        # NOT IN DEBIAN
