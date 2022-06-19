@@ -45,10 +45,10 @@ class EntityLinkExtension:
     ENTITY_NONE = "entity://none"
 
     def process_url(self, url):
-        match = re.match(RE_CONTENT_REF, url)
+        url_match = re.match(RE_CONTENT_REF, url)
 
-        if match:
-            entity, slug, name = get_entity(match)
+        if url_match:
+            entity, slug, name = get_entity(url_match)
             if entity:
                 entity_url = full_url(entity.get_absolute_url())
                 if entity.is_group:
@@ -60,11 +60,11 @@ class EntityLinkExtension:
 
     def process_link(self, a):
         el_href = a.get("href")
-        match = re.match(self.PROTO, el_href)
-        if match:
-            entity_type = match.group(1)
-            entity_id = match.group(2)
-            href = match.group(3)
+        href_match = re.match(self.PROTO, el_href)
+        if href_match:
+            entity_type = href_match.group(1)
+            entity_id = href_match.group(2)
+            href = href_match.group(3)
             a.set("href", href)
             set_entity_attrs(a, entity_id, entity_type == "group")
         elif el_href == self.ENTITY_NONE:

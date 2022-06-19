@@ -23,9 +23,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         def get_data(pattern_str):
             pattern = re.compile(pattern_str, re.DOTALL | re.MULTILINE)
-            match = pattern.search(mm)
-            if match:
-                for dataset in match[1].splitlines():
+            tag_match = pattern.search(mm)
+            if tag_match:
+                for dataset in tag_match[1].splitlines():
                     yield dataset.decode().split(sep="\t")
             else:
                 raise CommandError("Dump file does not contain tag data")

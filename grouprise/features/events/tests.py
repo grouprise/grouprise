@@ -258,9 +258,9 @@ class GroupCalendarExportMember(
             url_regex = re.compile(r">(?P<url>[^<]+/public.ics[^<]*)<")
         else:
             url_regex = re.compile(r">(?P<url>[^<]+/private.ics[^<]+)<")
-        match = url_regex.search(data.content.decode("utf8"))
-        self.assertTrue(match)
-        calendar_export_url = match.groupdict()["url"]
+        url_match = url_regex.search(data.content.decode("utf8"))
+        self.assertTrue(url_match)
+        calendar_export_url = url_match.groupdict()["url"]
         if is_public:
             self.assertNotIn("token", calendar_export_url)
         else:
@@ -338,9 +338,9 @@ class GroupCalendarExportNonMember(
         """test the inaccessibility of a private calendar for a logged in non-member"""
         data = self.client.get(self.get_url("group-events-export", (self.group.slug,)))
         private_url_regex = re.compile(r">(?P<url>[^<]+/private.ics[^<]*)<")
-        match = private_url_regex.search(data.content.decode("utf8"))
+        url_match = private_url_regex.search(data.content.decode("utf8"))
         # the private URL should not be displayed
-        self.assertIsNone(match)
+        self.assertIsNone(url_match)
 
 
 class TestUrls(grouprise.core.tests.Test):

@@ -204,8 +204,8 @@ class ContributionMailProcessor:
 
     def parse_authentication_token_text(self, address):
         """parse a potential authentication token from a recipient address without checking it"""
-        match = self.auth_token_regex.match(address)
-        return match.groups()[0] if match else None
+        token_match = self.auth_token_regex.match(address)
+        return token_match.groups()[0] if token_match else None
 
     def _create_contribution(self, message, container, gestalt, in_reply_to=None):
         t = models.Text.objects.create(text=message.content)

@@ -11,9 +11,9 @@ from grouprise.features.tags.utils import get_slug, get_tag_render_data
 
 class TagLinkExtension:
     def process_url(self, url):
-        match = re.match(RE_TAG_REF, url)
-        if match:
-            tag_name = match.group(1)
+        url_match = re.match(RE_TAG_REF, url)
+        if url_match:
+            tag_name = url_match.group(1)
             tag_slug = get_slug(tag_name)
             return urls.reverse("tag", args=[tag_slug])
 

@@ -77,14 +77,14 @@ class Command(BaseCommand):
     def get_destination_addresses(self, message):
         dtline_env = os.getenv("DTLINE")
         if dtline_env:
-            match = DTLINE_REGEX.search(dtline_env)
-            if not match:
+            line_match = DTLINE_REGEX.search(dtline_env)
+            if not line_match:
                 raise ValueError(
                     "Failed to parse content of DTLINE environment variable ({})".format(
                         dtline_env
                     )
                 )
-            delivered_to_address = get_normalized_address(match.groups()[0])
+            delivered_to_address = get_normalized_address(line_match.groups()[0])
             if CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS:
                 if (
                     get_normalized_address(CORE_SETTINGS.COLLECTOR_MAILBOX_ADDRESS)
