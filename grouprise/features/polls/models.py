@@ -189,7 +189,7 @@ class Vote(grouprise.core.models.Model):
 
 
 class SimpleVote(Vote):
-    endorse = models.NullBooleanField(default=False)
+    endorse = models.BooleanField(null=True, default=False)
 
 
 class CondorcetVote(Vote):
