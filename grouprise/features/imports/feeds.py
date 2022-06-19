@@ -1,7 +1,6 @@
 import datetime
 import logging
 import re
-import time
 import urllib.request
 
 import django
@@ -58,9 +57,8 @@ def import_from_feed(feed_url, submitter, target_group):
                 )
                 t = entry.get("published_parsed")
                 if t:
-                    t = datetime.datetime.fromtimestamp(time.mktime(t))
                     tz = django.utils.timezone.get_current_timezone()
-                    v.time_created = tz.localize(t)
+                    v.time_created = datetime.datetime.now(tz=tz)
                     v.save()
                 slug = grouprise.core.models.get_unique_slug(
                     associations.Association,
