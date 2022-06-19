@@ -47,7 +47,6 @@ Build-Depends:
  python3-recommonmark,
  python3-ruamel.yaml,
  python3-setuptools,
- python3-tz,
  python3-xapian-haystack,
 # The following packages are indirectly required by the dependencies above.
  python3-dateutil,
@@ -90,7 +89,6 @@ Depends:
  python3-recommonmark,
  python3-ruamel.yaml,
  python3-setuptools,
- python3-tz,
  python3-xapian-haystack,
 # The following packages are indirectly required by the dependencies above.
  python3-dateutil,
