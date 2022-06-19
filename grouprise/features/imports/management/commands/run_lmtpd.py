@@ -14,6 +14,7 @@ import django.db
 from aiosmtpd.lmtp import LMTP
 from aiosmtplib.errors import SMTPRecipientsRefused, SMTPResponseException
 from aiosmtplib.smtp import SMTP
+from asgiref.sync import sync_to_async
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
@@ -191,9 +192,8 @@ class AsyncLMTPClient:
         """wrapper to be used for synchronously executing the async methods of this object"""
         return self.loop.run_until_complete(command)
 
-
-def close_db_connection_afterwards(func):
-    """force closing of the database connection after every single request
+def ensure_database_connection(func):
+    """ensure a usable database connection before every single request
 
     See https://git.hack-hro.de/grouprise/grouprise/-/issues/711 for details.
     This prevents a restart or temporary loss of the database server from breaking all future
@@ -203,10 +203,8 @@ def close_db_connection_afterwards(func):
 
     @functools.wraps(func)
     async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        finally:
-            django.db.connection.close()
+        await sync_to_async(django.db.connection.ensure_connection)()
+        return await func(*args, **kwargs)
 
     return wrapper
 
@@ -236,7 +234,7 @@ class ContributionHandler:
         else:
             return "Unknown target mail address"
 
-    @close_db_connection_afterwards
+    @ensure_database_connection
     async def handle_VRFY(self, server, session, envelope, recipient):
         error_message = self._get_recipient_check_error_message(recipient)
         if error_message is None:
@@ -244,7 +242,7 @@ class ContributionHandler:
         else:
             return "550 {}".format(error_message)
 
-    @close_db_connection_afterwards
+    @ensure_database_connection
     async def handle_RCPT(self, server, session, envelope, recipient, rcpt_options):
         # TODO: we should test here, if the sender is allowed to reach this recipient. LMTP allows
         # partial rejection - this would be good to use (e.g. for CCing multiple groups).
@@ -255,7 +253,7 @@ class ContributionHandler:
         else:
             return "550 {}".format(error_message)
 
-    @close_db_connection_afterwards
+    @ensure_database_connection
     async def handle_DATA(self, server, session, envelope):
         parser = email.parser.BytesParser(policy=email.policy.SMTP)
         message = parser.parsebytes(envelope.content)
