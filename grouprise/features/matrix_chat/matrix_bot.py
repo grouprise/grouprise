@@ -376,31 +376,33 @@ class ChatBot(MatrixBaseBot):
                 ]
             for gestalt in invitees:
                 room_label = await sync_to_async(str)(room)
-                if await self.invite_into_room(room.room_id, gestalt, room_label):
+                try:
+                    await self.invite_into_room(room.room_id, gestalt, room_label)
+                except MatrixError as exc:
+                    logger.warning(str(exc))
+                else:
                     yield room, gestalt
 
-    async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> bool:
+    async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> None:
         gestalt_matrix_id = await sync_to_async(
             MatrixChatGestaltSettings.get_matrix_id
         )(gestalt)
         try:
             result = await self.client.room_invite(room_id, gestalt_matrix_id)
         except nio.exceptions.ProtocolError as exc:
-            logger.warning(f"Failed to invite {gestalt} into {room_label}: {exc}")
-            return False
+            raise MatrixError(f"Failed to invite {gestalt} into {room_label}: {exc}") from exc
         else:
             if isinstance(result, nio.responses.RoomInviteResponse):
-                return True
+                pass
             elif isinstance(result, nio.responses.RoomInviteError) and (
                 result.status_code == "M_FORBIDDEN"
             ):
                 # "forbidden" indicates that the invitee is already in the room
-                return True
+                pass
             else:
-                logger.warning(
+                raise MatrixError(
                     f"Invite request for {gestalt} into {room_label} was rejected: {result}"
                 )
-                return False
 
     async def kick_gestalt_from_group_rooms(self, group, gestalt, reason=None):
         def get_group_chat_rooms(group):

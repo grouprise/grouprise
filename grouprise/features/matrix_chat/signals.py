@@ -176,11 +176,8 @@ async def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
                 room_label=room_label,
             )
             # invite the target user
-            is_invited = await bot.invite_into_room(room_id, gestalt, room_label)
-            if is_invited:
-                await sync_to_async(set_gestalt_matrix_notification_room)(
-                    gestalt, room_id
-                )
+            await bot.invite_into_room(room_id, gestalt, room_label)
+            await sync_to_async(set_gestalt_matrix_notification_room)(gestalt, room_id)
         await bot.send_text(room_id, text)
 
 
