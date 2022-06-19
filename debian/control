@@ -89,7 +89,6 @@ Depends:
  python3-markdown,
  python3-pil,
  python3-recommonmark,
- python3-requests,
  python3-ruamel.yaml,
  python3-setuptools,
  python3-six,
