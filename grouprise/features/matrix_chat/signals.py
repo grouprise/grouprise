@@ -10,7 +10,7 @@ from huey.contrib.djhuey import db_task
 
 import grouprise.features.memberships.models
 from grouprise.core.matrix import MatrixError
-from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
+from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 from .matrix_bot import ChatBot
@@ -21,9 +21,9 @@ from .models import (
 )
 from .settings import MATRIX_SETTINGS
 from .utils import (
+    create_gestalt_matrix_notification_room,
     delete_gestalt_matrix_notification_room,
     get_gestalt_matrix_notification_room,
-    set_gestalt_matrix_notification_room,
 )
 
 logger = logging.getLogger(__name__)
@@ -156,28 +156,7 @@ async def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
     async with ChatBot() as bot:
         room_id = await sync_to_async(get_gestalt_matrix_notification_room)(gestalt)
         if room_id is None:
-            # we need to invite the user into a new room and store the room ID
-            room_title = _("{site_name} - notifications").format(
-                site_name=(await sync_to_async(get_grouprise_site)()).name
-            )
-            room_description = _(
-                "Notifications for private messages from {site_url}"
-            ).format(site_url=await sync_to_async(get_grouprise_baseurl)())
-            # the label is used for log messages only
-            gestalt_label = await sync_to_async(str)(gestalt)
-            room_label = f"notifications for {gestalt_label}"
-            # create the room
-            room_id = await bot.create_private_room(room_title, room_description)
-            # raise the default power level for new members to "moderator"
-            await bot._change_room_state(
-                room_id,
-                {"users_default": 50},
-                "m.room.power_levels",
-                room_label=room_label,
-            )
-            # invite the target user
-            await bot.invite_into_room(room_id, gestalt, room_label)
-            await sync_to_async(set_gestalt_matrix_notification_room)(gestalt, room_id)
+            await create_gestalt_matrix_notification_room(bot, gestalt)
         await bot.send_text(room_id, text)
 
 

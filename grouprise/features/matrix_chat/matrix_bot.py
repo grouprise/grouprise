@@ -390,7 +390,9 @@ class ChatBot(MatrixBaseBot):
         try:
             result = await self.client.room_invite(room_id, gestalt_matrix_id)
         except nio.exceptions.ProtocolError as exc:
-            raise MatrixError(f"Failed to invite {gestalt} into {room_label}: {exc}") from exc
+            raise MatrixError(
+                f"Failed to invite {gestalt} into {room_label}: {exc}"
+            ) from exc
         else:
             if isinstance(result, nio.responses.RoomInviteResponse):
                 pass
