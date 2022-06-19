@@ -156,7 +156,13 @@ class AsyncLMTPClient:
         Returns a list of recipients with failed delivery.
         """
         recipients = tuple(recipients)
-        await self.smtp_client.connect()
+        try:
+            await self.smtp_client.connect()
+        except OSError as exc:
+            if not hide_error_messages:
+                logger.error("Failed to connect to server: {}".format(exc))
+            failed_recipients = recipients
+            return failed_recipients
         try:
             failures, err_msg = await self.smtp_client.sendmail(
                 from_address, recipients, data
