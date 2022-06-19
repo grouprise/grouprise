@@ -6,6 +6,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from asgiref.sync import async_to_sync
 from aiosmtplib.errors import SMTPDataError
 from django.core import mail
 from django.urls import reverse
@@ -80,7 +81,8 @@ class MailInjectLMTPMixin:
                 message.set_payload(body)
         return message.as_bytes()
 
-    def inject_mail(
+    @async_to_sync
+    async def inject_mail(
         self, from_address, recipients, data: bytes = None, filename: str = None
     ) -> None:
         # either data or filename needs to be specified
@@ -91,15 +93,16 @@ class MailInjectLMTPMixin:
             with open(filename, "rb") as f:
                 data = f.read()
         recipients = tuple(recipients)
-        with ContributionLMTPD(lambda text: None) as lmtp_client:
-            failed_recipients = lmtp_client.run_sync(
-                lmtp_client.sendmail(from_address, recipients, data)
+        async with ContributionLMTPD(lambda text: None).run_server() as lmtpd:
+            failed_recipients = await lmtpd.client.sendmail(
+                from_address, recipients, data
             )
         return failed_recipients
 
-    def _is_valid_recipient(self, recipient):
-        with ContributionLMTPD(lambda text: None) as lmtp_client:
-            return lmtp_client.run_sync(lmtp_client.verify_recipient(recipient))
+    @async_to_sync
+    async def _is_valid_recipient(self, recipient):
+        async with ContributionLMTPD(lambda text: None).run_server() as lmtpd:
+            return await lmtpd.client.verify_recipient(recipient)
 
     def assertValidRecipient(self, recipient):
         self.assertTrue(self._is_valid_recipient(recipient), recipient)

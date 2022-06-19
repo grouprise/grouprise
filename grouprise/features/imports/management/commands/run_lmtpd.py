@@ -1,4 +1,6 @@
 import asyncio
+import collections
+import contextlib
 import email.parser
 import email.policy
 import functools
@@ -14,7 +16,7 @@ import django.db
 from aiosmtpd.lmtp import LMTP
 from aiosmtplib.errors import SMTPRecipientsRefused, SMTPResponseException
 from aiosmtplib.smtp import SMTP
-from asgiref.sync import sync_to_async
+from asgiref.sync import async_to_sync, sync_to_async
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
@@ -26,10 +28,13 @@ from grouprise.features.imports.mails import (
 logger = logging.getLogger(__name__)
 
 
+LMTPDConnection = collections.namedtuple("LMTPDConnection", ("server", "client"))
+
+
 class Command(django.core.management.base.BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("host")
-        parser.add_argument("port")
+        parser.add_argument("host", type=str)
+        parser.add_argument("port", type=int)
 
     def handle(self, host=None, port=None, **options):
         def message_writer(text, style=None):
@@ -40,8 +45,10 @@ class Command(django.core.management.base.BaseCommand):
 
         success_writer = functools.partial(message_writer, style=self.style.SUCCESS)
         error_writer = functools.partial(message_writer, style=self.style.ERROR)
-        lmtp_daemon = ContributionLMTPD(success_writer, error_writer)
-        lmtp_daemon.serve_forever(host, port)
+        lmtp_daemon = ContributionLMTPD(
+            success_writer, error_writer, host=host, port=port
+        )
+        lmtp_daemon.serve_forever()
 
 
 class ContributionLMTPD:
@@ -51,7 +58,13 @@ class ContributionLMTPD:
     (by using the instance as a context).
     """
 
-    def __init__(self, success_writer=None, error_writer=None):
+    def __init__(
+        self,
+        success_writer=None,
+        error_writer=None,
+        host: str = None,
+        port: int = None,
+    ):
         if success_writer is None:
             self._success_writer = functools.partial(print, file=sys.stdout)
         else:
@@ -60,73 +73,55 @@ class ContributionLMTPD:
             self._error_writer = functools.partial(logger.error)
         else:
             self._error_writer = error_writer
+        self.host = "localhost" if host is None else host
+        self.port = random.randint(16384, 32767) if port is None else port
         processor = ContributionMailProcessor()
         self._handler = ContributionHandler(
             processor, self._success_writer, self._error_writer
         )
 
-    def serve_forever(self, host, port):
+    def serve_forever(self):
         """block execution and run the LMTP daemon until it is stopped via signal or CTRL-C"""
-        try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-        server = loop.run_until_complete(
-            loop.create_server(
-                functools.partial(LMTP, self._handler), host=host, port=port
-            )
-        )
-        self._success_writer("Server is waiting for requests: {}:{}".format(host, port))
 
-        def stop_by_signal():
-            self._success_writer("Shutting down due to signalling")
-            loop.stop()
+        def stop_by_signal(*args):
+            global server
+            self._success_writer("Shutting down due to signalling or interrupt")
+            server.close()
 
-        loop.add_signal_handler(signal.SIGTERM, loop.stop)
-        try:
-            loop.run_forever()
-        except KeyboardInterrupt:
-            self._success_writer("Shutting down due to interrupt")
-        server.close()
-        loop.run_until_complete(server.wait_closed())
-        loop.close()
+        async def serve_forever():
+            global server
+            async with self.run_server() as lmtpd:
+                server = lmtpd.server
+                while lmtpd.server.is_serving():
+                    await asyncio.sleep(0.1)
 
-    def __enter__(self):
-        """initialize a context with an LMTP daemon running on a random port on localhost
+        signal.signal(signal.SIGTERM, stop_by_signal)
+        signal.signal(signal.SIGINT, stop_by_signal)
+        async_to_sync(serve_forever)()
+
+    @contextlib.asynccontextmanager
+    async def run_server(self):
+        """initialize a context with an LMTP daemon
 
         The context returns an AsyncLMTPClient.
 
         Example usage:
 
-            with ContributionLMTPD() as lmtp_client:
-                failed_recipients = lmtp_client.sendmail(from_address, recipients, data)
+            with ContributionLMTPD().run_server() as lmtpd:
+                failed_recipients = lmtpd.client.sendmail(from_address, recipients, data)
         """
-        host = "localhost"
-        port = random.randint(16384, 32767)
-
-        try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-        self._server = loop.run_until_complete(
-            loop.create_server(
-                functools.partial(LMTP, self._handler), host=host, port=port
-            )
+        loop = asyncio.get_running_loop()
+        self._success_writer("Starting up server")
+        server = await loop.create_server(
+            functools.partial(LMTP, self._handler), host=self.host, port=self.port
         )
-        self._success_writer("Server is waiting for requests: {}:{}".format(host, port))
-
-        def stop_by_signal():
-            self._success_writer("Shutting down due to signalling")
-            self._server.close()
-
-        loop.add_signal_handler(signal.SIGTERM, stop_by_signal)
-
-        return AsyncLMTPClient(loop, host, port)
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        assert hasattr(self, "_server")
-        self._server.close()
-        del self._server
+        self._success_writer(f"Server is waiting for requests: {self.host}:{self.port}")
+        client = AsyncLMTPClient(self.host, self.port)
+        try:
+            yield LMTPDConnection(server, client)
+        finally:
+            server.close()
+            await server.wait_closed()
 
 
 class AsyncLMTPClient:
@@ -137,8 +132,7 @@ class AsyncLMTPClient:
     The HELO/EHLO greetings of the SMTP client are replaced with LHLO (for LMTP).
     """
 
-    def __init__(self, loop, host, port):
-        self.loop = loop
+    def __init__(self, host, port):
         self.smtp_client = SMTP(hostname=host, port=port)
 
         # monkey-patch the greeting command from HELO/EHLO to LHLO (LMTP-only)
@@ -188,9 +182,6 @@ class AsyncLMTPClient:
         await self.smtp_client.quit()
         return result
 
-    def run_sync(self, command):
-        """wrapper to be used for synchronously executing the async methods of this object"""
-        return self.loop.run_until_complete(command)
 
 def ensure_database_connection(func):
     """ensure a usable database connection before every single request
@@ -215,6 +206,7 @@ class ContributionHandler:
         self._success_writer = success_writer
         self._error_writer = error_writer
 
+    @sync_to_async
     def _get_recipient_check_error_message(self, recipient):
         """check if the recipient could be valid
 
@@ -236,7 +228,7 @@ class ContributionHandler:
 
     @ensure_database_connection
     async def handle_VRFY(self, server, session, envelope, recipient):
-        error_message = self._get_recipient_check_error_message(recipient)
+        error_message = await self._get_recipient_check_error_message(recipient)
         if error_message is None:
             return "250 <{}>".format(recipient)
         else:
@@ -246,7 +238,7 @@ class ContributionHandler:
     async def handle_RCPT(self, server, session, envelope, recipient, rcpt_options):
         # TODO: we should test here, if the sender is allowed to reach this recipient. LMTP allows
         # partial rejection - this would be good to use (e.g. for CCing multiple groups).
-        error_message = self._get_recipient_check_error_message(recipient)
+        error_message = await self._get_recipient_check_error_message(recipient)
         if error_message is None:
             envelope.rcpt_tos.append(recipient)
             return "250 OK"
@@ -277,9 +269,9 @@ class ContributionHandler:
         internal_problems = []
         for recipient in envelope.rcpt_tos:
             try:
-                self._contribution_processor.process_message_for_recipient(
-                    parsed_message, recipient
-                )
+                await sync_to_async(
+                    self._contribution_processor.process_message_for_recipient
+                )(parsed_message, recipient)
                 success_count += 1
                 self._success_writer(
                     "Processed recipient {:d}/{:d} ({}) successfully".format(
