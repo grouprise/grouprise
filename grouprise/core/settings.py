@@ -60,15 +60,6 @@ class LazySettingsResolver:
             setattr(self, name, value)
             return value
 
-    def resolve_lazy_settings(self):
-        """force the resolution of all "lazy" configuration values
-
-        This method should be called right after the app is ready in order to ensure, that no
-        unexpected sync calls (e.g. depending on the ORM) are executed in an async context.
-        """
-        for name in list(self._unresolved_attributes):
-            getattr(self, name)
-
     @contextlib.contextmanager
     def temporary_override(self, **kwargs):
         """Allow temporary manipulation of specific settings (e.g. for tests)"""
