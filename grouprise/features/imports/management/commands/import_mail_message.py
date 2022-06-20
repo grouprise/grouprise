@@ -5,7 +5,7 @@ import os
 import re
 import sys
 
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
@@ -50,11 +50,8 @@ class Command(BaseCommand):
         try:
             destination_address = self.get_destination_addresses(message)
         except ValueError as exc:
-            # TODO: replace "log.error" and "sys.exit" with
-            #    "raise CommandError(..., returncode=99)" as soon as we switch to Django 3.1
-            logging.error(exc)
             # report a permanent delivery failure
-            sys.exit(EXITCODE_PERMANENT_FAILURE)
+            raise CommandError(exc, returncode=EXITCODE_PERMANENT_FAILURE) from exc
         destination_address = get_normalized_address(destination_address)
         parsed_message = ParsedMailMessage.from_email_object(message)
         processor = ContributionMailProcessor()
@@ -64,11 +61,11 @@ class Command(BaseCommand):
             processor.send_error_mail_response(
                 parsed_message, str(exc), fail_silently=True
             )
-            # TODO: replace "log.error" and "sys.exit" with
-            #    "raise CommandError(..., returncode=99)" as soon as we switch to Django 3.1
-            logger.error("Mail from {} was rejected".format(message["from"]))
             # report a permanent delivery failure
-            sys.exit(EXITCODE_PERMANENT_FAILURE)
+            raise CommandError(
+                f"Mail from {message['from']} was rejected",
+                returncode=EXITCODE_PERMANENT_FAILURE,
+            ) from exc
         else:
             logger.info("Message received from %s", message["from"])
             # report exitcode for successful delivery (as specified for the "dotforward" mechanism)
