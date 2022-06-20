@@ -58,12 +58,12 @@ def _get_invalid_key_response(invalid_key, label, alternatives, max_alternative_
             yield "- " + item
 
 
-def get_unknown_username_response(username, max_alternative_count=10):
-    all_usernames = (
-        item.user.username for item in Gestalt.objects.only("user__username")
-    )
+def get_unknown_username_response(username, max_alternative_count=10, queryset=None):
+    if queryset is None:
+        queryset = Gestalt.objects
+    usernames = (item.user.username for item in queryset.only("user__username"))
     yield from _get_invalid_key_response(
-        username, "username", all_usernames, max_alternative_count
+        username, "username", usernames, max_alternative_count
     )
 
 
@@ -74,15 +74,16 @@ def get_unknown_groupname_response(groupname, max_alternative_count=10):
     )
 
 
-def inject_resolved(source, target, resolvers):
+def inject_resolved(source, target, resolvers, context=None):
     def outer(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
             collected_errors = []
             original_value = kwargs.pop(source)
+            resolver_context = {key: kwargs[key] for key in (context or [])}
             for resolver in resolvers:
                 try:
-                    new_value = resolver(original_value)
+                    new_value = resolver(original_value, **resolver_context)
                 except ResolveException as exc:
                     collected_errors.append(exc.get_command_results())
                 else:
@@ -101,11 +102,13 @@ def inject_resolved(source, target, resolvers):
     return outer
 
 
-def get_gestalt(name: str) -> Gestalt:
+def get_gestalt(name: str, group: Group = None) -> Gestalt:
     try:
         return Gestalt.objects.get(user__username=name)
     except Gestalt.DoesNotExist:
-        raise ResolveException(get_unknown_username_response(name))
+        # optional: restrict the list of suggestions to the members of the group
+        queryset = None if group is None else group.members
+        raise ResolveException(get_unknown_username_response(name, queryset=queryset))
 
 
 def get_group(slug_or_url: str) -> Group:
@@ -140,8 +143,10 @@ def user_join_group(gestalt: Gestalt, group: Group):
 
 
 @commander(user, "leave", var("username"), var("groupname"))
-@inject_resolved(source="username", target="gestalt", resolvers=[get_gestalt])
 @inject_resolved(source="groupname", target="group", resolvers=[get_group])
+@inject_resolved(
+    source="username", target="gestalt", resolvers=[get_gestalt], context={"group"}
+)
 def user_leave_group(gestalt: Gestalt, group: Group):
     queryset = Membership.objects.filter(member=gestalt, group=group)
     if queryset.exists():
