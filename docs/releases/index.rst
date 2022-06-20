@@ -8,6 +8,11 @@ Release Notes
    Maybe we should switch to one of sphinx's redirect extensions somewhen.
 
 .. toctree::
+   :hidden:
+
+   4.10.0
+
+.. toctree::
    :maxdepth: 1
 
    4.9.0
