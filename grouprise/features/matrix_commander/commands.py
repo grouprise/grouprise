@@ -232,6 +232,13 @@ def group_show(group):
     yield MatrixCommanderResult(f"- *Latest activity*: {timestamp}")
 
 
+@commander(group, "list-members", var("groupname"))
+@inject_resolved(source="groupname", target="group", resolvers=[get_group])
+def group_list_members(group):
+    for gestalt in group.members.all():
+        yield MatrixCommanderResult(f"- {gestalt} ({gestalt.user.username})")
+
+
 @commander(group, "remove", var("groupname"))
 @inject_resolved(source="groupname", target="group", resolvers=[get_group])
 def group_delete(group):
