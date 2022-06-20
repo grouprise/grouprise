@@ -203,14 +203,6 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 ACCOUNT_USERNAME_VALIDATORS = "grouprise.features.gestalten.forms.username_validators"
 
-# Backports of upcoming Django setting default changes
-# Some security related settings are changed for new versions of Django.  In some cases we want to
-# use these new defaults before switching to the new version.
-# These setting overrides can be removed as soon as grouprise requires a newer version of Django.
-# New defaults introduced with Django 3.0:
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = "DENY"
-
 # Haystack
 # https://django-haystack.readthedocs.io/
 
