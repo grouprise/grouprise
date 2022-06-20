@@ -1,5 +1,4 @@
-# TODO: add "-W" as soon as we upgraded to Bullseye
-SPHINXOPTS    = -n --keep-going
+SPHINXOPTS    = -n --keep-going -W
 SPHINXBUILD   = sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
