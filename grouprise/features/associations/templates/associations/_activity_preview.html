@@ -1,7 +1,7 @@
 {% if notification.association.container.is_conversation %}
-    {% include 'conversations/_preview.html' with association=notification.association show_type=True unread=True %}
+    {% include 'conversations/_preview.html' with association=notification.association show_type=True is_read=notification.is_read %}
 {% else %}
-    {% with c=notification.association.container unread=True %}
+    {% with c=notification.association.container %}
     <a href="{% url 'content' notification.association.entity.slug notification.association.slug %}"
         class="thread-preview{% if not notification.association.public %} content-internal{% endif %}">
             <div class="thread-preview-image">
@@ -16,7 +16,7 @@
                     {{ c.subject }}
                 </div>
                 <span class="thread-preview-stat">
-                    {% if unread %}
+                    {% if not notification.is_read %}
                         <strong>neue Aktivität,</strong>
                     {% endif %}
                     {% with num_comments=c.contributions.count %}

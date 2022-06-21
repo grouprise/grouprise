@@ -47,8 +47,7 @@ class ActivityView(PermissionMixin, ListView):
         return self.request.user.gestalt.notifications.order_by("-created_on")
 
     def post(self, *args, **kwargs):
-        self.request.user.gestalt.activity_bookmark_time = now()
-        self.request.user.gestalt.save()
+        self.get_queryset().update(is_read=True)
         return HttpResponseRedirect(reverse("activity"))
 
 

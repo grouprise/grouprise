@@ -20,6 +20,7 @@ class BuiltinInboxNotification(models.Model):
         on_delete=models.CASCADE,
         related_name="notifications",
     )
+    is_read = models.BooleanField(default=False)
 
     @property
     def association(self):

@@ -12,7 +12,7 @@
                 {{ c.subject }}
             </div>
             <span class="thread-preview-stat">
-                {% if unread %}
+                {% if not is_read %}
                     <strong>neue Aktivität,</strong>
                 {% endif %}
                 {% if show_type %}
