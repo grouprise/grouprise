@@ -44,7 +44,7 @@ class ActivityView(PermissionMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return super().get_queryset().ordered_user_associations(self.request.user)
+        return self.request.user.gestalt.notifications.order_by("-created_on")
 
     def post(self, *args, **kwargs):
         self.request.user.gestalt.activity_bookmark_time = now()

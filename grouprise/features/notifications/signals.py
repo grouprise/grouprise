@@ -139,7 +139,10 @@ class BuiltinInboxNotification(BaseNotification):
     def send(
         self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
-        recipients.notifications.create()
+        if isinstance(self.instance, Content):
+            recipients.notifications.create(created_content=self.instance)
+        else:
+            recipients.notifications.create(created_contribution=self.instance)
 
 
 class MatrixNotification(BaseNotification):

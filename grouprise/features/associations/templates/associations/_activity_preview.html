@@ -1,12 +1,12 @@
-{% if association.container.is_conversation %}
-    {% include 'conversations/_preview.html' with show_type=True %}
+{% if notification.association.container.is_conversation %}
+    {% include 'conversations/_preview.html' with association=notification.association show_type=True unread=True %}
 {% else %}
-    {% with c=association.container %}
-    <a href="{% url 'content' association.entity.slug association.slug %}"
-        class="thread-preview{% if not association.public %} content-internal{% endif %}">
+    {% with c=notification.association.container unread=True %}
+    <a href="{% url 'content' notification.association.entity.slug notification.association.slug %}"
+        class="thread-preview{% if not notification.association.public %} content-internal{% endif %}">
             <div class="thread-preview-image">
-                {% if group_avatar and association.entity.is_group %}
-                    {% include 'groups/_avatar.html' with group=association.entity link=False size=64 %}
+                {% if group_avatar and notification.association.entity.is_group %}
+                    {% include 'groups/_avatar.html' with group=notification.association.entity link=False size=64 %}
                 {% else %}
                     {% include 'gestalten/_avatar.html' with gestalt=c.versions.first.author link=False size=64 %}
                 {% endif %}

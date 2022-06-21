@@ -18,10 +18,9 @@
 
 {% block content %}
     <ol class="thread-preview-list">
-        {% for association in association_list %}
+        {% for notification in object_list %}
             <li>
-                {% load associations %}
-                {% include 'associations/_activity_preview.html' with group_avatar=True unread=association|unread:user.gestalt %}
+                {% include 'associations/_activity_preview.html' with notification=notification group_avatar=True %}
             </li>
         {% endfor %}
     </ol>
