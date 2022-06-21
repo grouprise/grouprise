@@ -1,20 +1,65 @@
 {% if user.is_authenticated %}
-    <input class="dropdown-state" id="menu-user" type="checkbox" data-menu-group="main">
-    <label for="menu-user" class="nav-menu-item nav-state-toggle"
-           aria-label="Zeige persönliches Menü" tabindex="0"
-           data-component="openable" data-openable-target="#user-menu-dropdown">
-        <span class="nav-tab-icon">
-            {% include 'gestalten/_avatar.html' with gestalt=user.gestalt link=False size=24 %}
-        </span>
-        {% include 'gestalten/_avatar.html' with gestalt=user.gestalt link=False size=48 %}
-        <span class="nav-menu-item-label">
-            {{ user.gestalt }}
-            {% if num_activity %}
-                ({{ num_activity }})
-            {% endif %}
-        </span>
-        <i class="caret"></i>
-    </label>
+    {% with num_activity=user.gestalt.notifications.filter_unread.count %}
+        <input class="dropdown-state" id="menu-user" type="checkbox" data-menu-group="main">
+        <label for="menu-user" class="nav-menu-item nav-state-toggle"
+               aria-label="Zeige persönliches Menü" tabindex="0"
+               data-component="openable" data-openable-target="#user-menu-dropdown">
+            <span class="nav-tab-icon">
+                {% include 'gestalten/_avatar.html' with gestalt=user.gestalt link=False size=24 %}
+            </span>
+            {% include 'gestalten/_avatar.html' with gestalt=user.gestalt link=False size=48 %}
+            <span class="nav-menu-item-label">
+                {{ user.gestalt }}
+                {% if num_activity %}
+                    ({{ num_activity }})
+                {% endif %}
+            </span>
+            <i class="caret"></i>
+        </label>
+        <div class="dock dock-light" id="user-menu-dropdown" data-dropdown data-component="dock">
+            <div class="dock-inner">
+                <span class="dock-decoration"></span>
+                <header class="dock-header">
+                    {% include 'gestalten/_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
+                    <a href="{{ user.gestalt.get_profile_url }}" class="dock-header-link">
+                        <i class="sg sg-home"></i>
+                        <span>Home</span>
+                    </a>
+                </header>
+                <div class="dock-content">
+                    <div class="dock-content-inner">
+                        <ol class="nav-vertical">
+                            <li>
+                                <a href="{% url 'activity' %}" class="nav-menu-item">
+                                    <i class="sg sg-fw sg-conversations"></i>
+                                    <span class="nav-menu-item-label">
+                                        Aktivität
+                                        {% if num_activity %}
+                                            ({{ num_activity }})
+                                        {% endif %}
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'settings' %}{% if group %}?group={{ group.slug }}{% endif %}"
+                                   class="nav-menu-item">
+                                    <i class="sg sg-fw sg-settings"></i>
+                                    <span class="nav-menu-item-label">Einstellungen</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'account_logout' %}?next={{ request.path }}"
+                                   class="nav-menu-item">
+                                    <i class="sg sg-fw sg-logout"></i>
+                                    <span class="nav-menu-item-label">Abmelden</span>
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
 {% else %}
     <a href="{% url 'account_login' %}?next={{ request.path }}" class="nav-menu-item">
         <span class="nav-tab-icon">
@@ -28,50 +73,4 @@
         </div>
         <span class="nav-menu-item-label">Anmelden</span>
     </a>
-{% endif %}
-
-{% if user.is_authenticated %}
-    <div class="dock dock-light" id="user-menu-dropdown" data-dropdown data-component="dock">
-        <div class="dock-inner">
-            <span class="dock-decoration"></span>
-            <header class="dock-header">
-                {% include 'gestalten/_preview.html' with gestalt=user.gestalt link=False hide_about=True hide_avatar=True %}
-                <a href="{{ user.gestalt.get_profile_url }}" class="dock-header-link">
-                    <i class="sg sg-home"></i>
-                    <span>Home</span>
-                </a>
-            </header>
-            <div class="dock-content">
-                <div class="dock-content-inner">
-                    <ol class="nav-vertical">
-                        <li>
-                            <a href="{% url 'activity' %}" class="nav-menu-item">
-                                <i class="sg sg-fw sg-conversations"></i>
-                                <span class="nav-menu-item-label">
-                                    Aktivität
-                                    {% if num_activity %}
-                                        ({{ num_activity }})
-                                    {% endif %}
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'settings' %}{% if group %}?group={{ group.slug }}{% endif %}"
-                               class="nav-menu-item">
-                                <i class="sg sg-fw sg-settings"></i>
-                                <span class="nav-menu-item-label">Einstellungen</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'account_logout' %}?next={{ request.path }}"
-                               class="nav-menu-item">
-                                <i class="sg sg-fw sg-logout"></i>
-                                <span class="nav-menu-item-label">Abmelden</span>
-                            </a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endif %}

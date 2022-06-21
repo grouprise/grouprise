@@ -98,7 +98,6 @@ TEMPLATES = [
                 # grouprise core
                 "grouprise.core.context_processors.settings",
                 # grouprise features
-                "grouprise.features.associations.context_processors.activity",
                 "grouprise.features.groups.context_processors.groups",
                 "grouprise.features.stadt.context_processors.page_meta",
             ],

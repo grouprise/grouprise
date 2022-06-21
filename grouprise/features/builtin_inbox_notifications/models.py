@@ -1,6 +1,11 @@
 from django.db import models
 
 
+class BuiltinInboxNotificationQuerySet(models.QuerySet):
+    def filter_unread(self):
+        return self.filter(is_read=False)
+
+
 class BuiltinInboxNotification(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     created_content = models.ForeignKey(
@@ -21,6 +26,8 @@ class BuiltinInboxNotification(models.Model):
         related_name="notifications",
     )
     is_read = models.BooleanField(default=False)
+
+    objects = models.Manager.from_queryset(BuiltinInboxNotificationQuerySet)()
 
     @property
     def association(self):
