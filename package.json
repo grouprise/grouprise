@@ -90,7 +90,7 @@
     "promise.allsettled": "^1.0.2",
     "random-id": "^1.0.4",
     "randomcolor": "^0.6.2",
-    "simplemde": "git://github.com/stadtgestalten/simplemde-markdown-editor.git#translatable-prompt-texts",
+    "simplemde": "git+https://github.com/stadtgestalten/simplemde-markdown-editor.git#translatable-prompt-texts",
     "stroll.js": "^3.0.3",
     "tether": "^1.4.7",
     "tether-drop": "^1.4.2",
