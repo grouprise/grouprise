@@ -1,8 +1,10 @@
 from allauth.account import views as allauth_views
 from allauth.socialaccount import views as socialaccount_views
 from django.conf.urls import url
+from django.urls import path
 
 from . import views
+from .views import NotificationSettingsUpdateView
 
 urlpatterns = [
     url(r"^stadt/signup/$", views.Create.as_view(), name="account_signup"),
@@ -20,6 +22,11 @@ urlpatterns = [
     ),
     url(
         r"^stadt/settings/images/$", views.UpdateImages.as_view(), name="image-settings"
+    ),
+    path(
+        "stadt/settings/notifications/",
+        NotificationSettingsUpdateView.as_view(),
+        name="notification-settings",
     ),
     url(r"^stadt/email/$", views.UpdateEmail.as_view(), name="email-settings"),
     url(

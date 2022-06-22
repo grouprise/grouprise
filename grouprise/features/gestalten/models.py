@@ -111,11 +111,23 @@ class Gestalt(grouprise.core.models.Model):
     )
     score = models.IntegerField(default=0)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    activity_bookmark_time = models.DateTimeField(default=now)
-    is_email_blocker = models.BooleanField(
-        "E-Mail-Benachrichtigungen ausschalten",
-        default=False,
-        help_text="Unabhängig von Abonnements alle Benachrichtigungen via E-Mail deaktivieren",
+    receives_builtin_inbox_notifications = models.BooleanField(
+        "Empfange Benachrichtigungen auf der Plattform",
+        default=True,
+        help_text="Die Benachrichtigungen werden im Benutzer:innenmenü unter "
+        '"Aktivität" angezeigt.',
+    )
+    receives_email_notifications = models.BooleanField(
+        "Empfange Benachrichtigungen per E-Mail",
+        default=True,
+        help_text="Die Benachrichtigungen werden per E-Mail an die festgelegte "
+        "Hauptadresse versendet.",
+    )
+    receives_matrix_notifications = models.BooleanField(
+        "Empfange Benachrichtigungen per Matrix-Chat",
+        default=True,
+        help_text="Die Benachrichtigungen werden in verschiedene Matrix-Räume "
+        "zugestellt. Sie können auch mit einer App auf mobilen Geräten gelesen werden.",
     )
 
     associations = django.contrib.contenttypes.fields.GenericRelation(

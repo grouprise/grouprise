@@ -13,6 +13,15 @@ from grouprise.features.associations import models as associations
 from grouprise.features.groups.models import Group
 
 from . import forms, models
+from .models import Gestalt
+
+
+class AuthenticatedGestaltObjectMixin:
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            return self.request.user.gestalt
+        else:
+            return None
 
 
 class Create(views.SignupView):
@@ -30,15 +39,14 @@ class Create(views.SignupView):
         return views.LoginView.get_success_url(self)
 
 
-class Delete(PermissionMixin, DeleteView):
+class Delete(PermissionMixin, AuthenticatedGestaltObjectMixin, DeleteView):
     permission_required = "gestalten.delete"
     template_name = "gestalten/delete.html"
     success_url = "/"
 
     def get_object(self):
-        gestalt = None
+        gestalt = super().get_object()
         if self.request.user.is_authenticated:
-            gestalt = self.request.user.gestalt
             self.data = gestalt.get_data()
         return gestalt
 
@@ -80,7 +88,7 @@ class List(PermissionMixin, generic.ListView):
         ).can_view(self.request.user)
 
 
-class Update(PermissionMixin, UpdateView):
+class Update(PermissionMixin, AuthenticatedGestaltObjectMixin, UpdateView):
     permission_required = "gestalten.change"
     form_class = forms.Update
     template_name = "gestalten/update.html"
@@ -97,12 +105,6 @@ class Update(PermissionMixin, UpdateView):
             "last_name": self.object.user.last_name,
             "slug": self.object.slug,
         }
-
-    def get_object(self):
-        if self.request.user.is_authenticated:
-            return self.request.user.gestalt
-        else:
-            return None
 
     def get_success_url(self):
         return self.object.get_profile_url()
@@ -140,7 +142,7 @@ class UpdateEmailConfirm(PermissionMixin, views.ConfirmEmailView):
         return self.get_redirect_url()
 
 
-class UpdateImages(PermissionMixin, UpdateView):
+class UpdateImages(PermissionMixin, AuthenticatedGestaltObjectMixin, UpdateView):
     permission_required = "gestalten.change"
     model = models.Gestalt
     fields = ("avatar", "background")
@@ -152,14 +154,21 @@ class UpdateImages(PermissionMixin, UpdateView):
             kwargs["group"] = group
         return super().get_context_data(**kwargs)
 
-    def get_object(self):
-        if self.request.user.is_authenticated:
-            return self.request.user.gestalt
-        else:
-            return None
-
     def get_success_url(self):
         return self.object.get_profile_url()
+
+
+class NotificationSettingsUpdateView(
+    PermissionMixin, AuthenticatedGestaltObjectMixin, UpdateView
+):
+    permission_required = "gestalten.change"
+    model = Gestalt
+    fields = [
+        "receives_builtin_inbox_notifications",
+        "receives_email_notifications",
+        "receives_matrix_notifications",
+    ]
+    template_name = "gestalten/update_notification_settings.html"
 
 
 class UpdatePassword(PermissionMixin, allauth_views.PasswordChangeView):

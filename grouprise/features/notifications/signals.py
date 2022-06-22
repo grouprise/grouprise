@@ -254,6 +254,9 @@ class BuiltinInboxNotifications(BaseNotifications):
         super().__init__(related_gestalten)
         self.recipients_to_ignore.add(self.related_gestalten.author)
 
+    def does_recipient_want_notifications(self, recipient: Gestalt):
+        return recipient.receives_builtin_inbox_notifications
+
     def send(self):
         if self.related_gestalten.is_public_context:
             self.send_to(RelatedGestalten.Audience.GROUP_SUBSCRIBERS)
@@ -265,7 +268,7 @@ class BuiltinInboxNotifications(BaseNotifications):
 
 class EmailNotifications(BaseNotifications):
     def does_recipient_want_notifications(self, recipient: Gestalt):
-        return not recipient.is_email_blocker
+        return recipient.receives_email_notifications
 
     def get_notification_class(self):
         if isinstance(self.related_gestalten.instance, Content):
@@ -306,6 +309,9 @@ class MatrixNotifications(BaseNotifications):
         send_matrix_messages(
             list(chain.from_iterable(self.results)), "matrix notification"
         )
+
+    def does_recipient_want_notifications(self, recipient: Gestalt):
+        return recipient.receives_matrix_notifications
 
     def send(self):
         self.send_to(RelatedGestalten.Audience.GROUP_MEMBERS)

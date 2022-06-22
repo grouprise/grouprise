@@ -12,6 +12,8 @@ grouprise/features/gestalten/migrations/0011_auto_20171127_1412.py
 grouprise/features/gestalten/migrations/0012_auto_20190618_1438.py
 grouprise/features/gestalten/migrations/0015_gestalt_is_email_blocker.py
 grouprise/features/gestalten/migrations/0016_auto_20210421_1051.py
+grouprise/features/gestalten/migrations/0017_auto_20220622_1657.py
+grouprise/features/gestalten/migrations/0019_auto_20220622_1721.py
 grouprise/features/groups/migrations/0001_initial.py
 grouprise/features/groups/migrations/0010_auto_20170613_1457.py
 grouprise/features/groups/migrations/0011_auto_20170613_1501.py
