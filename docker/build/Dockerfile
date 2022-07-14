@@ -18,6 +18,7 @@ COPY --from=build-deps \
     /srv/local-apt-repository/grouprise-build-deps.deb
 RUN /usr/lib/local-apt-repository/rebuild && \
     apt-get --yes update && \
+    apt-get --yes install --target-release bullseye-backports python3-django && \
     apt-get --yes install grouprise-build-deps && \
     apt-get --yes clean
 # compile locales required for example app configuration
