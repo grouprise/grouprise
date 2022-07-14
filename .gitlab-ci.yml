@@ -29,6 +29,21 @@ variables:
             # omit the full build directory (including the huge "node_modules" directory)
             - build/debian/grouprise-*/**
 
+.build-docker-image:
+    image:
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [ "" ]
+    script:
+        - mkdir -p /kaniko/.docker
+        - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+        - >-
+            /kaniko/executor
+            --force
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "$DOCKERFILE"
+            --destination "${CI_REGISTRY_IMAGE}${PUBLISH_VERSION}"
+            --skip-tls-verify
+
 make_test:
     stage: test
     script:
@@ -109,3 +124,19 @@ release_job:
     description: 'docs/releases/${CI_COMMIT_TAG#v}.md'
     tag_name: '$CI_COMMIT_TAG'
     ref: '$CI_COMMIT_TAG'
+
+build_ci_docker_image:
+    stage: .pre
+    extends: .build-docker-image
+    variables:
+        PUBLISH_VERSION: /build:bullseye
+        DOCKERFILE: ${CI_PROJECT_DIR}/docker/build/Dockerfile
+    rules:
+        # we only want the ci image to be updated if:
+        #   * relevant files have changed and these changes are on the main branch of the official repo (not a fork)
+        #   * the GROUPRISE_UPDATE_BUILD_IMAGE variable has been explicitly set to "true"
+        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PROJECT_PATH == "grouprise/grouprise"
+          changes:
+              - docker/build/Dockerfile
+              - debian/control
+        - if: $GROUPRISE_UPDATE_BUILD_IMAGE == "true"
