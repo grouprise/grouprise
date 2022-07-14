@@ -12,9 +12,14 @@ variables:
     - source "$virtualenv_directory/bin/activate"
     - pip3 install -r requirements.txt
 
+.generate_locales: &generate_locales
+    - sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
+    - locale-gen
+
 .build_deb_package:
     script:
         - *populate_virtualenv
+        - *generate_locales
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage -sa --no-sign"
         # turn the symlink of the orig tarball into a real file
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
@@ -48,6 +53,7 @@ make_test:
     stage: test
     script:
         - *populate_virtualenv
+        - *generate_locales
         # stadt.settings is required for the tests
         - make app_local_settings
         - make lint
