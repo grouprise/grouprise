@@ -51,13 +51,14 @@ class LazySettingsResolver:
         See https://bugs.python.org/issue38517
         """
         try:
-            value_func = self._unresolved_attributes.pop(name)
+            value_func = self._unresolved_attributes[name]
         except KeyError:
             raise AttributeError(f"Missing settings key '{name}' in {type(self)}")
         else:
             # first access to the lazy-evaluation attribute: finally set the calculated value
             value = value_func()
             setattr(self, name, value)
+            self._unresolved_attributes.pop(name)
             return value
 
     def resolve_lazy_settings(self):
