@@ -82,6 +82,25 @@ class LazySettingsResolver:
             setattr(self, key, value)
 
 
+def ensure_resolved_settings(settings):
+    """decorator for resolving a LazySettingsResolver instance before a function is executed
+
+    This decorator is intended for situations, where a function is wrapped into `async_to_sync`,
+    but it is not guaranteed, that ORM-related functions (which are forbidden in an async context
+    in Django 3.x and 4.x) are needed at runtime.
+    """
+
+    def wrapper_outer(func):
+        @functools.wraps(func)
+        def wrapper_inner(*args, **kwargs):
+            settings.resolve_lazy_settings()
+            return func(*args, **kwargs)
+
+        return wrapper_inner
+
+    return wrapper_outer
+
+
 def get_grouprise_baseurl():
     return "{proto}://{domain}".format(
         proto=settings.ACCOUNT_DEFAULT_HTTP_PROTOCOL,
