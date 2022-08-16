@@ -9,7 +9,7 @@ import logging
 import os
 import re
 import types
-from typing import Any, Optional, Union
+from typing import Any, Optional, Set, Union
 import urllib.parse
 
 import ruamel.yaml
@@ -268,7 +268,7 @@ class URLConfig(StringConfig):
         regex=None,
         min_length=None,
         sensible: bool = True,
-        allowed_schemes: Optional[set[str]] = None,
+        allowed_schemes: Optional[Set[str]] = None,
         **kwargs,
     ):
         super().__init__(*args, regex=regex, min_length=min_length, **kwargs)
