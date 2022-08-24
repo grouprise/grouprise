@@ -1,4 +1,3 @@
-from collections.abc import Callable
 import copy
 import functools
 import logging
@@ -6,6 +5,7 @@ import random
 import string
 import sys
 import time
+from typing import Callable
 
 import markdown
 import nio

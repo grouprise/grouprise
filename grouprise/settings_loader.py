@@ -9,7 +9,7 @@ import logging
 import os
 import re
 import types
-from typing import Any, Optional, Set, Union
+from typing import Any, List, Optional, Set, Tuple, Union
 import urllib.parse
 
 import ruamel.yaml
@@ -812,7 +812,7 @@ class AdministratorEmailsConfig(ListConfig):
 
 
 class DjangoAppEnableConfig(BooleanConfig):
-    def __init__(self, app_names: Union[list[str], tuple[str, ...]], *args, **kwargs):
+    def __init__(self, app_names: Union[List[str], Tuple[str, ...]], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.app_names = app_names
 
