@@ -1,4 +1,4 @@
-from grouprise.core.notifications import Notification
+from grouprise.features.email_notifications.notifications import Notification
 
 
 class NoSubscriber(Notification):

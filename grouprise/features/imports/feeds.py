@@ -19,12 +19,12 @@ from grouprise.features.groups import models as groups
 from grouprise.features.imports import models
 
 FEED_RE = re.compile(
-    br"<link\s+[^>]*"
-    br"(?:type=[\"\']application/(?:rss|atom)\+xml[\"\']\s+[^>]*"
-    br"href=[\"\']([^\"\']+)[\"\']"
-    br"|href=[\"\']([^\"\']+)[\"\']\s+[^>]*"
-    br"type=[\"\']application/(?:rss|atom)\+xml[\"\'])"
-    br"[^>]*>"
+    rb"<link\s+[^>]*"
+    rb"(?:type=[\"\']application/(?:rss|atom)\+xml[\"\']\s+[^>]*"
+    rb"href=[\"\']([^\"\']+)[\"\']"
+    rb"|href=[\"\']([^\"\']+)[\"\']\s+[^>]*"
+    rb"type=[\"\']application/(?:rss|atom)\+xml[\"\'])"
+    rb"[^>]*>"
 )
 
 logger = logging.getLogger(__name__)

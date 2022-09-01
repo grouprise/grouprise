@@ -30,11 +30,11 @@ class CommanderBot(MatrixBaseBot):
             local_part = re.escape(self.bot_id.split(":")[0].lstrip("@"))
             hostname = re.escape(self.bot_id.split(":", 1)[1])
             self._prefix_regex = re.compile(
-                fr"^(@?{local_part}(:{hostname})?:?|!grouprise)$"
+                rf"^(@?{local_part}(:{hostname})?:?|!grouprise)$"
             )
         else:
             escaped = re.escape(command_prefix)
-            self._prefix_regex = re.compile(fr"^{escaped}$")
+            self._prefix_regex = re.compile(rf"^{escaped}$")
 
     def is_admin_room(self, room: nio.MatrixRoom):
         return room.room_id in MATRIX_COMMANDER_SETTINGS.ADMIN_ROOMS

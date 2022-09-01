@@ -12,8 +12,11 @@ from grouprise.features.matrix_chat.signals import (
     send_private_message_to_gestalt,
     send_matrix_messages,
 )
-from grouprise.features.notifications.notifications import RelatedGestalten, \
-    BaseNotification, BaseNotifications
+from grouprise.features.notifications.notifications import (
+    RelatedGestalten,
+    BaseNotification,
+    BaseNotifications,
+)
 
 
 class MatrixNotification(BaseNotification):
