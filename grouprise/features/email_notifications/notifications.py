@@ -15,6 +15,8 @@ from grouprise.features.conversations.models import Conversation
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
 from grouprise.features.memberships import models as memberships
+from grouprise.features.notifications.notifications import RelatedGestalten, \
+    BaseNotifications
 
 
 class ContentOrContributionCreated(Notification):
@@ -206,3 +208,31 @@ class ContributionCreated(ContentOrContributionCreated):
             self.object.container.is_conversation
             and self.object.container.contributions.first() == self.object
         )
+
+
+class EmailNotifications(BaseNotifications):
+    def does_recipient_want_notifications(self, recipient: Gestalt):
+        return recipient.receives_email_notifications
+
+    def get_notification_class(self):
+        if isinstance(self.related_gestalten.instance, Content):
+            return ContentCreated
+        else:
+            return ContributionCreated
+
+    def send(self):
+        kwargs = {"association": self.related_gestalten.association}
+        if self.related_gestalten.is_public_context:
+            self.send_to(
+                RelatedGestalten.Audience.GROUP_SUBSCRIBERS,
+                is_subscriber=True,
+                **kwargs,
+            )
+        else:
+            self.send_to(
+                RelatedGestalten.Audience.SUBSCRIBED_GROUP_MEMBERS,
+                is_subscriber=True,
+                **kwargs,
+            )
+        self.send_to(RelatedGestalten.Audience.ASSOCIATED_GESTALT, **kwargs)
+        self.send_to(RelatedGestalten.Audience.EXTERNAL_INITIAL_CONTRIBUTOR, **kwargs)
