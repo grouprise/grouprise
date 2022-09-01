@@ -17,6 +17,7 @@ urlpatterns += [
     path("", include("grouprise.core.urls")),
     path("", include("grouprise.features.articles.urls")),
     path("", include("grouprise.features.associations.urls")),
+    path("", include("grouprise.features.builtin_inbox_notifications.urls")),
     path("", include("grouprise.features.content.urls")),
     path("", include("grouprise.features.contributions.urls")),
     path("", include("grouprise.features.conversations.urls")),

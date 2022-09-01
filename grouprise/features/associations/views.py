@@ -1,12 +1,9 @@
 import django
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
 from django.utils.timezone import now
-from django.views.generic import ListView
 
 import grouprise.core
-from grouprise.core.views import PermissionMixin
 from grouprise.features.associations.models import Association
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
@@ -35,20 +32,6 @@ class AssociationMixin:
         return get_association_or_404(
             entity_type=entity.content_type, entity_id=entity.id, slug=association_slug
         )
-
-
-class ActivityView(PermissionMixin, ListView):
-    model = Association
-    permission_required = "associations.list_activity"
-    template_name = "associations/list_activity.html"
-    paginate_by = 10
-
-    def get_queryset(self):
-        return self.request.user.gestalt.notifications.order_by("-created_on")
-
-    def post(self, *args, **kwargs):
-        self.get_queryset().update(is_read=True)
-        return HttpResponseRedirect(reverse("activity"))
 
 
 class Delete(

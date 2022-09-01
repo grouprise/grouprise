@@ -26,5 +26,3 @@ add_perm(
     "associations.delete",
     is_authenticated & (is_creator | is_long_standing_group_member),
 )
-
-add_perm("associations.list_activity", is_authenticated)
