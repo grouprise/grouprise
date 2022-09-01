@@ -94,7 +94,7 @@ class Test(test.TestCase):
         )
 
     def assertNotificationHeaderContent(self, header, content):
-        self.assertTrue(content in self.get_latest_notification().extra_headers[header])
+        self.assertIn(content, self.get_latest_notification().extra_headers[header])
 
     def assertNotificationContains(self, text):
         self.assertIn(text, self.get_latest_notification().body)
