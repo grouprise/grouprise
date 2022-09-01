@@ -80,7 +80,7 @@ class Contribution(grouprise.core.models.Model):
 
     def get_unique_id(self):
         return "{}.{}.contribution.{}".format(
-            self.container_type, self.container.id, self.id
+            self.container_type.name, self.container.id, self.id
         )
 
     def is_public_in_context_of(self, entity):
