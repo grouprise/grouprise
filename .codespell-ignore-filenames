@@ -30,7 +30,7 @@ grouprise/features/tags/migrations/0004_auto_20170209_1506.py
 grouprise/core/models.py
 grouprise/core/templates/404.html
 grouprise/core/templates/core/markdown.html
-grouprise/features/associations/templates/associations/list_activity.html
+grouprise/features/builtin_inbox_notifications/templates/associations/list_activity.html
 grouprise/features/content/filters.py
 grouprise/features/content/forms.py
 grouprise/features/content/templates/content/_content_visibility.html
