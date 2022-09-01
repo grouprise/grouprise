@@ -4,13 +4,13 @@ import hashlib
 import os
 import uuid
 from email.utils import formatdate
+from typing import Optional
 
 import django
 import django.utils.timezone
 from django.apps import apps
 from django.conf import settings
 from django.core import mail
-from django.db import models
 from django.template import loader
 from django.urls import reverse
 
@@ -18,12 +18,9 @@ from grouprise.core.models import PermissionToken
 from grouprise.core.settings import CORE_SETTINGS, get_grouprise_site
 from grouprise.core.templatetags.defaultfilters import full_url as build_absolute_uri
 from grouprise.core.templatetags.defaulttags import ref
-from grouprise.features.associations.models import Association
 from grouprise.features.content.models import Content
 from grouprise.features.contributions import models as contributions
-from grouprise.features.conversations.models import Conversation
 from grouprise.features.gestalten.models import Gestalt
-from grouprise.features.groups.models import Group
 from grouprise.features.memberships import models as memberships
 from grouprise.features.notifications.notifications import (
     RelatedGestalten,
@@ -31,7 +28,13 @@ from grouprise.features.notifications.notifications import (
 )
 
 
-class Notification:
+class EmailNotification:
+    subject = ""
+
+    @classmethod
+    def get_recipients(cls, membership):
+        return {}
+
     @classmethod
     def send_all(cls, instance, force=False, **extra_kwargs):
         for recipient, kwargs in cls.get_recipients(instance).items():
@@ -42,8 +45,11 @@ class Notification:
                 cls(instance).send(recipient, **kwargs)
 
     def __init__(self, instance):
+        self.kwargs = {}
         self.object = instance
+        self.recipient = None
         self.site = get_grouprise_site()
+        self.url = None
 
     def create_token(self):
         token = PermissionToken(
@@ -88,11 +94,11 @@ class Notification:
         sender = self.get_sender()
         name = "{} via ".format(sender) if sender else ""
         if sender:
-            email = CORE_SETTINGS.DEFAULT_DISTINCT_FROM_EMAIL.format(slug=sender.slug)
+            message = CORE_SETTINGS.DEFAULT_DISTINCT_FROM_EMAIL.format(slug=sender.slug)
         else:
-            email = settings.DEFAULT_FROM_EMAIL
+            message = settings.DEFAULT_FROM_EMAIL
         from_email = "{name}{site} <{email}>".format(
-            name=name, site=self.site.name, email=email
+            name=name, site=self.site.name, email=message
         )
         return from_email
 
@@ -138,10 +144,11 @@ class Notification:
     def get_message_ids(self):
         """generate a unique message ID for this specific email message and related IDs
 
-        Most notification subclasses should implement their own specific message ID generator.
-        Some notifications lack unique features, since they can be issued multiple times (e.g.
-        group recommendations or membership associations).
-        In these cases we pick a random ID. These subclasses do not need to overwrite this method.
+        Most notification subclasses should implement their own specific message ID
+        generator. Some notifications lack unique features, since they can be issued
+        multiple times (e.g. group recommendations or membership associations).
+        In these cases we pick a random ID. These subclasses do not need to overwrite
+        this method.
 
         The result is a tuple of three items:
             * unique message ID
@@ -153,10 +160,10 @@ class Notification:
         my_id = "{}.{}".format(now_string, uuid_string)
         return my_id, None, []
 
-    def get_reply_token(self):
+    def get_reply_token(self) -> Optional[PermissionToken]:
         return None
 
-    def get_sender(self):
+    def get_sender(self) -> Optional[Gestalt]:
         return None
 
     def get_subject(self):
@@ -170,18 +177,16 @@ class Notification:
         return "{}/{}.txt".format(app_label, type(self).__name__.lower())
 
     def get_thread_headers(self):
-        def format_message_id(message_id, recipient):
+        def format_message_id(mid, recipient):
             try:
                 # The reference towards the recipient is not a security measure, thus
                 # collisions (due the capping of 16 bytes) are acceptable.
                 recipient_token = hashlib.sha256(
                     recipient.user.email.encode("utf-8")
                 ).hexdigest()[:16]
-                return "<{}-{}@{}>".format(
-                    message_id, recipient_token, self.site.domain
-                )
+                return "<{}-{}@{}>".format(mid, recipient_token, self.site.domain)
             except AttributeError:
-                return "<{}@{}>".format(message_id, self.site.domain)
+                return "<{}@{}>".format(mid, self.site.domain)
 
         headers = {}
         message_id, parent_id, reference_ids = self.get_message_ids()
@@ -213,67 +218,16 @@ class Notification:
         for file_name in self.get_attachments():
             message.attach_file(file_name)
 
-        # we don't expect errors when sending mails because we just pass mails to django-mailer
+        # we don't expect errors when sending mails because we just pass mails to
+        # django-mailer
         message.send()
 
 
-class ContentOrContributionCreated(Notification):
-    @staticmethod
-    def get_recipients(contentOrContribution: models.Model) -> dict:
-        if isinstance(contentOrContribution, Content):
-            container = contentOrContribution
-        else:
-            container = contentOrContribution.container
-        recipients = {}
-        association: Association
-        for association in container.associations.all():
-            if association.public:
-                # for public associations we just send notifications to all group subscribers
-                if isinstance(association.entity, Group):
-                    recipients.update(
-                        {
-                            subscriber: {"is_subscriber": True}
-                            for subscriber in association.entity.subscribers.all()
-                        }
-                    )
-            else:
-                # for private associations
-                if isinstance(association.entity, Group):
-                    # we send notifications to subscribed group members
-                    recipients.update(
-                        {
-                            subscriber: {"is_subscriber": True}
-                            for subscriber in association.entity.members.filter(
-                                subscriptions__group=association.entity
-                            )
-                        }
-                    )
-                elif isinstance(association.entity, Gestalt):
-                    # we send a notification to the associated gestalt
-                    recipients[association.entity] = {}
-                # for conversations we check the initiating contribution
-                if (
-                    isinstance(container, Conversation)
-                    and container.contributions.exists()
-                ):
-                    initiating_gestalt: Gestalt = container.contributions.first().author
-                    # if either the conversation is private (associated to a gestalt) or the
-                    # initial author is not a group member, they get notified
-                    if isinstance(association.entity, Gestalt) or (
-                        isinstance(association.entity, Group)
-                        and not association.entity.members.filter(
-                            pk=initiating_gestalt.pk
-                        ).exists()
-                    ):
-                        recipients[initiating_gestalt] = {}
-            # enrich recipients with some context
-            recipients.update(
-                {
-                    recipient: {"association": association, **context}
-                    for recipient, context in recipients.items()
-                }
-            )
-        return recipients
+class ContentOrContributionCreated(EmailNotification):
+    def __init__(self, instance):
+        super().__init__(instance)
+        self.association = None
+        self.group = None
 
     def get_group(self):
         if self.association and self.association.entity.is_group:

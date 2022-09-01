@@ -1,7 +1,7 @@
-from grouprise.features.email_notifications.notifications import Notification
+from grouprise.features.email_notifications.notifications import EmailNotification
 
 
-class RecommendNotification(Notification):
+class RecommendNotification(EmailNotification):
 
     subject = "Empfehlung für Gruppe"
 

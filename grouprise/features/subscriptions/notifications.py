@@ -1,14 +1,14 @@
-from grouprise.features.email_notifications.notifications import Notification
+from grouprise.features.email_notifications.notifications import EmailNotification
 
 
-class NoSubscriber(Notification):
+class NoSubscriber(EmailNotification):
     subject = "Abonnement"
 
     def get_formatted_recipient(self):
         return "<{}>".format(self.recipient)
 
 
-class Subscriber(Notification):
+class Subscriber(EmailNotification):
     subject = "Abonnement"
 
     def get_context_data(self, **kwargs):

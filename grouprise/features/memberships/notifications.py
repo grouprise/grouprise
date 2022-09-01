@@ -1,7 +1,7 @@
-from grouprise.features.email_notifications.notifications import Notification
+from grouprise.features.email_notifications.notifications import EmailNotification
 
 
-class MembershipRequest(Notification):
+class MembershipRequest(EmailNotification):
     subject = "Mitgliedschaft"
 
     def get_context_data(self, **kwargs):
@@ -13,7 +13,7 @@ class Join(MembershipRequest):
     pass
 
 
-class MembershipCreated(Notification):
+class MembershipCreated(EmailNotification):
     subject = "Mitgliedschaft"
 
     @classmethod
@@ -21,7 +21,7 @@ class MembershipCreated(Notification):
         return {gestalt: {} for gestalt in membership.group.members.all()}
 
 
-class NoMember(Notification):
+class NoMember(EmailNotification):
     subject = "Mitgliedschaft"
 
     def get_formatted_recipient(self):
