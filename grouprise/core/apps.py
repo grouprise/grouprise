@@ -1,7 +1,19 @@
 from django.apps import AppConfig
 from django.conf import settings
+from huey.contrib.djhuey import on_startup
 
 from grouprise import __release__
+
+
+@on_startup()
+def _resolve_lazy_core_settings():
+    """we need to ensure, that all settings are resolved (required for async tasks)
+
+    Django (at least up to 4.x) does not allow ORM requests in async contexts.
+    """
+    from .settings import CORE_SETTINGS
+
+    CORE_SETTINGS.resolve_lazy_settings()
 
 
 class CoreConfig(AppConfig):
