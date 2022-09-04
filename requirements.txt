@@ -9,7 +9,8 @@
 #
 aiosmtpd                    # debian: python3-aiosmtpd
 aiosmtplib                  # debian (bookworm): python3-aiosmtplib
-asgiref                     # debian: python3-asgiref
+# a problem with `sync_to_async` was fixed in that version
+asgiref>=3.5.1              # debian: python3-asgiref
 bleach                      # debian: python3-bleach
 boltons                     # debian: python3-boltons
 django                      # debian: python3-django
