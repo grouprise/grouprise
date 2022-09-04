@@ -13,12 +13,14 @@ from grouprise.core.matrix import MatrixError
 from grouprise.core.settings import get_grouprise_baseurl
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
+from grouprise.features.notifications.signals import register_notification_backend
 from .matrix_bot import ChatBot
 from .models import (
     MatrixChatGestaltSettings,
     MatrixChatGroupRoom,
     MatrixChatGroupRoomInvitations,
 )
+from .notifications import MatrixNotifications
 from .settings import MATRIX_SETTINGS
 from .utils import (
     create_gestalt_matrix_notification_room,
@@ -32,6 +34,9 @@ logger = logging.getLogger(__name__)
 # Only tasks that are relevant and that interact with the Matrix server should use this feature.
 MATRIX_CHAT_RETRIES = 2
 MATRIX_CHAT_RETRY_DELAY = 30
+
+
+register_notification_backend(MatrixNotifications)
 
 
 MatrixMessage = collections.namedtuple("MatrixMessage", ("room_id", "text"))
