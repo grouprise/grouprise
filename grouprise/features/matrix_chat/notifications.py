@@ -1,22 +1,48 @@
 from itertools import chain
-from typing import Union, Any
+from typing import Any, Iterable, Union
 
 from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.features.content.models import Content
 from grouprise.features.contributions.models import Contribution
 from grouprise.features.conversations.models import Conversation
 from grouprise.features.gestalten.models import Gestalt
-from grouprise.features.matrix_chat.signals import (
-    get_matrix_messages_for_group,
-    get_matrix_messages_for_public,
-    send_private_message_to_gestalt,
-    send_matrix_messages,
-)
+from grouprise.features.groups.models import Group
 from grouprise.features.notifications.notifications import (
     RelatedGestalten,
     BaseNotification,
     BaseNotifications,
 )
+from . import MatrixMessage
+from .settings import MATRIX_SETTINGS
+from .utils import (
+    send_matrix_messages,
+    send_private_message_to_gestalt,
+)
+
+
+def get_matrix_messages_for_public(text: str) -> Iterable[MatrixMessage]:
+    for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
+        yield MatrixMessage(room_id, text)
+
+
+def get_matrix_messages_for_group(
+    group: Group, text: str, is_public: bool
+) -> Iterable[MatrixMessage]:
+    """return a generator of MatrixMessage instances for the given group
+
+    Zero or more MatrixMessage instances can be returned - based the Matrix rooms of the group and
+    the "is_public" flag.
+
+    @param group: the target group for the message
+    @param text: the message to be sent
+    @param is_public: the public attribute of the source content or contribution
+    """
+    for room in group.matrix_rooms.all():
+        # send private messages only to the internal room
+        if is_public or room.is_private:
+            yield MatrixMessage(room.room_id, text)
+    for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
+        yield MatrixMessage(room_id, text)
 
 
 class MatrixNotification(BaseNotification):

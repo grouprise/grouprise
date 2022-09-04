@@ -11,17 +11,29 @@ from grouprise.core.matrix import (
     MatrixError,
 )
 from grouprise.core.templatetags.defaultfilters import full_url
+from grouprise.features.gestalten.models import GestaltSetting
 from grouprise.settings_loader import MatrixBackend
 
+from . import (
+    GESTALT_SETTINGS_CATEGORY_MATRIX,
+    GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
+)
 from .models import (
     MatrixChatGestaltSettings,
     MatrixChatGroupRoom,
     MatrixChatGroupRoomInvitations,
 )
 from .settings import MATRIX_SETTINGS
-from .utils import get_matrix_notification_room_queryset
+
 
 logger = logging.getLogger(__name__)
+
+
+def get_matrix_notification_room_queryset():
+    return GestaltSetting.objects.filter(
+        name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
+        category=GESTALT_SETTINGS_CATEGORY_MATRIX,
+    )
 
 
 def _populate_group_rooms(server):
