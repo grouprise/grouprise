@@ -1,4 +1,5 @@
 Tests: grouprise-uwsgi-nginx
 Depends: curl, grouprise, grouprise-db-postgresql, nginx, postgresql, sharness, uwsgi, uwsgi-plugin-python3, uwsgi-plugin-router-access
-# enable restrictions, if/when we run autopkgtest with a virtualization backend
-#Restrictions: needs-root, breaks-testbed, isolation-container
+# Enable restrictions, if/when we run autopkgtest with a virtualization backend.
+# Suitable candidates: needs-root, breaks-testbed, isolation-container
+Restrictions: allow-stderr
