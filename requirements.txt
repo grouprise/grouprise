@@ -28,9 +28,7 @@ django-ipware               # debian: python3-django-ipware
 # OIDC support was introduced in v1.5.0
 django-oauth-toolkit>=1.5   # debian (bookworm): python3-django-oauth-toolkit
 django-simple-math-captcha  # NOT IN DEBIAN
-# TODO: django-taggit 3+ forces us to upgrade to django 3.2.
-#       We should remove this constraint, once we’ve upgraded our code to work with django 3.2.
-django-taggit>=1.2.0,<3     # debian: python3-django-taggit
+django-taggit>=1.2.0        # debian: python3-django-taggit
 djangorestframework>=3.9    # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: python3-flake8
