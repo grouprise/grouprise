@@ -15,7 +15,7 @@ bleach                      # debian: python3-bleach
 boltons                     # debian: python3-boltons
 django                      # debian: python3-django
 django-allauth              # debian: python3-django-allauth
-django-cachalot>=2.4.4      # NOT IN DEBIAN
+django-cachalot>=2.4.4      # debian (bookworm): python3-django-cachalot
 django-cors-middleware      # debian: python3-django-cors-headers
 django-csp                  # debian: python3-django-csp
 django-debug-toolbar        # debian: python3-django-debug-toolbar
@@ -41,7 +41,7 @@ markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
 matrix-nio                  # debian: python3-matrix-nio
 pillow                      # debian: python3-pil
-pymdown-extensions<6        # NOT IN DEBIAN
+pymdown-extensions<6        # debian (bookworm): python3-pymdownx
 randomcolor                 # NOT IN DEBIAN
 recommonmark                # debian: python3-recommonmark
 ruamel.yaml                 # debian: python3-ruamel.yaml
@@ -49,5 +49,3 @@ rules                       # debian: python3-django-rules
 schulze                     # NOT IN DEBIAN
 sentry-sdk                  # debian: python3-sentry-sdk
 xapian-haystack>=2.1.1      # debian: python3-xapian-haystack
-# xapian-haystack also requires the xapian python bindings that you'll find
-# as "python3-xapian" in Debian/Ubuntu and "python-xapian" in ArchLinux
