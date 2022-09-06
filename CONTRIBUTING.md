@@ -35,16 +35,8 @@ Only the most recent release is supported (for hot fixes).
 
 ## Release workflow
 
-To create a new release take the following steps:
+See the release documentation: [documentation](https://docs.grouprise.org/contributing/releases.html) or [source](./docs/contributing/releases.md).
 
-1. checkout the `main` branch
-2. create a release notes document (below `docs/releases/`) and add it to `docs/releases/index.rst`
-3. commit your changes
-4. run `make release-major`, `make release-minor` or `make release-patch`
-5. push your updated `main` branch (`git push`) and tags (`git push --tags`)¹
-6. done
-
-¹ you might also want to apply `git config --global push.followTags true` ;)
 
 ## License
 
