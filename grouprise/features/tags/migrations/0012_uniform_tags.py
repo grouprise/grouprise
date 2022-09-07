@@ -7,7 +7,7 @@ from grouprise.features.groups.models import Group
 
 def merge_duplicates(*args):
     """find tags with the same name (but different case) and merge them into one"""
-    processed = {}
+    processed = set()
     while True:
         for tag in Tag.objects.all():
             if tag.pk in processed:
