@@ -48,7 +48,7 @@ def _normalize_storage_filename(obj, model, original_base_path, reverse_url_key)
                 preferred_base_filename += os.path.splitext(obj.file.name)[1]
     new_filename = obj.file.storage.get_available_name(preferred_base_filename)
     model_count = model.objects.filter(file=obj.file.name).count()
-    if model.objects.filter(file=obj.file.name).count() > 1:
+    if model_count > 1:
         # this is not the last object referring to this file - we need to create a copy
         _copy_file_in_storage(obj, new_filename)
     else:
@@ -151,8 +151,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("files", "0004_auto_20211213_1229"),
+        ("redirects", "__latest__"),
     ]
 
     operations = [
         migrations.RunPython(flatten_file_paths),
     ]
+
+    # We are moving and renaming real files while going through all "file" objects in the database.
+    # Thus we may not allow a rollback in case of errors.
+    atomic = False
