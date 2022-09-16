@@ -8,19 +8,16 @@
 set -eu
 
 
-DOWNLOAD_BASE_URL=https://github.com
 DOWNLOAD_PROJECT_URL_PATH=vector-im/element-web
-DOWNLOAD_APP_NAME=element
 SIGNING_KEYRING_PATH=${SIGNING_KEYRING_PATH:-/usr/share/element-web-installer/trustedkeys.gpg}
 INSTALL_PATH=${INSTALL_PATH:-/var/lib/element-web-installer/htdocs}
 SETTINGS_PATH=${SETTINGS_PATH:-/etc/element-web}
 
 
 get_latest_version() {
-    curl -sSL --fail "$DOWNLOAD_BASE_URL/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
-        | grep "<a href=\"/$DOWNLOAD_PROJECT_URL_PATH/releases/download/v[0-9.]\+/${DOWNLOAD_APP_NAME}-v[0-9.]\+.tar.gz[^.]" \
-        | cut -f 2 -d '"' \
-        | sed "s|^.*/${DOWNLOAD_APP_NAME}-v||; s|\.tar\.gz$||"
+    curl -sS --fail "https://api.github.com/repos/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
+        | jq -r '.name' \
+        | sed 's/^v//'
 }
 
 
@@ -32,7 +29,9 @@ get_installed_version() {
 
 get_download_url() {
     local version="$1"
-    echo "$DOWNLOAD_BASE_URL/$DOWNLOAD_PROJECT_URL_PATH/releases/download/v$version/${DOWNLOAD_APP_NAME}-v$version.tar.gz"
+    curl -sS --fail "https://api.github.com/repos/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
+        | jq -r '.assets[].browser_download_url' \
+        | grep "\.tar\.gz$"
 }
 
 
