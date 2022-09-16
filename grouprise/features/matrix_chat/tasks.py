@@ -13,7 +13,7 @@ from .settings import MATRIX_SETTINGS
 logger = logging.getLogger(__name__)
 
 
-@db_periodic_task(crontab(minute="27"))
+@db_periodic_task(crontab(minute="27"), name="update_matrix_chat_statistics")
 @ensure_resolved_settings(MATRIX_SETTINGS)
 @async_to_sync
 async def update_matrix_chat_statistics():
@@ -26,7 +26,7 @@ def _get_all_groups():
     return list(Group.objects.all())
 
 
-@db_periodic_task(crontab(minute="39"))
+@db_periodic_task(crontab(minute="39"), name="synchronize_matrix_rooms")
 @ensure_resolved_settings(MATRIX_SETTINGS)
 @async_to_sync
 async def synchronize_matrix_rooms():
