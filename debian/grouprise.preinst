@@ -7,6 +7,11 @@ PKG_GROUP="_grouprise"
 DIR_BACKUPS="/var/backups/grouprise"
 DIR_ETC="/etc/grouprise"
 CTL_TOOL=$(which grouprisectl stadtctl | head -1)
+# Allow to skip the database backup during package upgrades.
+# Otherwise there would be no way for a local administrator to manipulate the `preinst` operation
+# of a package just being installed (since the `preinst` script to be executed is taken from the
+# not-yet extracted package archive).
+GROUPRISE_SKIP_DATABASE_BACKUP=${GROUPRISE_SKIP_DATABASE_BACKUP:-0}
 
 
 if getent passwd "$PKG_USER" >/dev/null && getent group "$PKG_GROUP" >/dev/null; then
@@ -16,14 +21,17 @@ if getent passwd "$PKG_USER" >/dev/null && getent group "$PKG_GROUP" >/dev/null;
         chmod 750 "$DIR_BACKUPS"
     fi
 
-    # create a database backup
-    touch "$DIR_ETC/maintenance_mode"
-    echo "Creating a backup of the grouprise database ..."
-    if ! "$CTL_TOOL" database_dump --prefix preinst_auto; then
-        echo >&2 "Failed to create a database backup.  Maybe the relevant package (see 'grouprise-deb-*') is missing.  Aborting in order to prevent any changes while lacking a database backup."
-        exit 1
+    if [ "$GROUPRISE_SKIP_DATABASE_BACKUP" = "0" ]; then
+        # create a database backup
+        touch "$DIR_ETC/maintenance_mode"
+        echo "Creating a backup of the grouprise database ..."
+        if ! "$CTL_TOOL" database_dump --prefix preinst_auto; then
+            echo >&2 "Failed to create a database backup.  Maybe the relevant package (see 'grouprise-deb-*') is missing.  Aborting in order to prevent any changes while lacking a database backup."
+            echo >&2 "You may want to set the environment variable 'GROUPRISE_SKIP_DATABASE_BACKUP=1' in order to skip the database backup."
+            exit 1
+        fi
+        rm -f "$DIR_ETC/maintenance_mode"
     fi
-    rm -f "$DIR_ETC/maintenance_mode"
 fi
 
 set +eu
