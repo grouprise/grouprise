@@ -100,7 +100,17 @@ configure_element() {
 
 
 if [ "$1" = "configure" ]; then
-    /usr/sbin/element-web-installer upgrade
+    if ! /usr/sbin/element-web-installer upgrade; then
+        # installation may fail due to network issues
+        if [ -e "$WEB_DIR/config.sample.json" ]; then
+            # element-web was installed before - we can tolerate a download failure
+            echo >&2 "Failed to upgrade local 'element-web' instance during package upgrade. Continuing anyway."
+        else
+            # This is our first run of "configure" for this package. Complain obsessively about the setup failure.
+            echo >&2 "Failed to download 'element-web' during package installation. Refusing to continue."
+            exit 1
+        fi
+    fi
     if [ ! -e "$CONFIG_DIR/config.json" ]; then
         echo "Creating sample $CONFIG_DIR/config.json. Please adjust its content."
         cp "$WEB_DIR/config.sample.json" "$CONFIG_DIR/config.json"
