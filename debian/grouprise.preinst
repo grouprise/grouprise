@@ -26,6 +26,7 @@ if getent passwd "$PKG_USER" >/dev/null && getent group "$PKG_GROUP" >/dev/null;
         touch "$DIR_ETC/maintenance_mode"
         echo "Creating a backup of the grouprise database ..."
         if ! "$CTL_TOOL" database_dump --prefix preinst_auto; then
+            rm -f "$DIR_ETC/maintenance_mode"
             echo >&2 "Failed to create a database backup.  Maybe the relevant package (see 'grouprise-deb-*') is missing.  Aborting in order to prevent any changes while lacking a database backup."
             echo >&2 "You may want to set the environment variable 'GROUPRISE_SKIP_DATABASE_BACKUP=1' in order to skip the database backup."
             exit 1
