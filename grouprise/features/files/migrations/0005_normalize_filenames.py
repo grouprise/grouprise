@@ -40,12 +40,13 @@ def _normalize_storage_filename(obj, model, original_base_path, reverse_url_key)
         preferred_base_filename = obj.filename
     except AttributeError:
         # the "Image" model does not have a "filename" attribute
+        preferred_base_filename = None
+    if preferred_base_filename is None:
         preferred_base_filename = obj.file.name
-    else:
-        # try to guess the filename extension (if it is missing)
-        if os.path.extsep not in preferred_base_filename:
-            if os.path.extsep in obj.file.name:
-                preferred_base_filename += os.path.splitext(obj.file.name)[1]
+    # try to guess the filename extension (if it is missing)
+    if os.path.extsep not in preferred_base_filename:
+        if os.path.extsep in obj.file.name:
+            preferred_base_filename += os.path.splitext(obj.file.name)[1]
     new_filename = obj.file.storage.get_available_name(preferred_base_filename)
     model_count = model.objects.filter(file=obj.file.name).count()
     if model_count > 1:
