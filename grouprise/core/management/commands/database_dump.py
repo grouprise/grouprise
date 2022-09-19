@@ -71,6 +71,8 @@ class Command(BaseCommand):
         db = settings.DATABASES["default"]
         engine = db["ENGINE"].split(".")[-1]
         output_filename = create_filename(output_dir, prefix, output_file, suffix=".gz")
+        # use a temporary filename while the file is incomplete
+        partial_output_filename = output_filename + ".part"
 
         if engine == "sqlite3":
             dump_call = ("sqlite3", db["NAME"], ".dump")
@@ -84,7 +86,7 @@ class Command(BaseCommand):
         else:
             raise CommandError("database backup not supported with %s engine" % engine)
         try:
-            with open(output_filename, "wb") as dump_out:
+            with open(partial_output_filename, "wb") as dump_out:
                 try:
                     dump_proc = subprocess.Popen(
                         dump_call,
@@ -149,13 +151,21 @@ class Command(BaseCommand):
                     )
         except FileNotFoundError:
             raise CommandError(
-                "Failed to create dump output file: {}".format(output_filename)
+                "Failed to create dump output file: {}".format(partial_output_filename)
             )
         except CommandError:
-            os.unlink(output_filename)
+            os.unlink(partial_output_filename)
             raise
+        try:
+            os.rename(partial_output_filename, output_filename)
+        except OSError as exc:
+            raise CommandError(
+                "Failed to move database backup file to its final location: {}".format(
+                    exc
+                )
+            )
         self.stdout.write(
             self.style.SUCCESS(
-                'Successfully created database backup in "%s"' % output_filename
+                'Successfully created database backup in "%s"' % partial_output_filename
             )
         )

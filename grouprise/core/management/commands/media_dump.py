@@ -83,6 +83,8 @@ class Command(BaseCommand):
         output_filename = assemble_filename(
             output_dir, prefix, output_file, suffix=compression.filename_extension
         )
+        # use a temporary filename while the file is incomplete
+        partial_output_filename = output_filename + ".part"
         media_dir = settings.MEDIA_ROOT
 
         def reset_owner_and_ignore_excludes(tarinfo: tarfile.TarInfo):
@@ -91,7 +93,9 @@ class Command(BaseCommand):
             return tarinfo
 
         try:
-            output = tarfile.open(output_filename, mode=f"w:{compression.tarfile_type}")
+            output = tarfile.open(
+                partial_output_filename, mode=f"w:{compression.tarfile_type}"
+            )
             for filename in os.listdir(media_dir):
                 if filename not in EXCLUDE_FILENAMES:
                     output.add(
@@ -102,12 +106,20 @@ class Command(BaseCommand):
         except FileNotFoundError as exc:
             raise CommandError(f"Failed to create dump output file: {exc}")
         except tarfile.TarError as exc:
-            os.unlink(output_filename)
+            os.unlink(partial_output_filename)
             raise CommandError(f"Failed to create archive: {exc}")
         else:
             output.close()
+            try:
+                os.rename(partial_output_filename, output_filename)
+            except OSError as exc:
+                raise CommandError(
+                    "Failed to move database backup file to its final location: {}".format(
+                        exc
+                    )
+                )
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Successfully created media backup: {output_filename}"
+                    f"Successfully created media backup: {partial_output_filename}"
                 )
             )
