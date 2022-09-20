@@ -22,7 +22,7 @@ class RelatedGestalten:
         GROUP_MEMBERS = auto()
         # all gestalten who subscribed to the associated group, if any
         GROUP_SUBSCRIBERS = auto()
-        # an empty set as a placeholder for the public audience
+        # an empty set as a placeholder for the public audience (only used by a few transports)
         PUBLIC = auto()
         # all members of the associated group who have a subscription
         SUBSCRIBED_GROUP_MEMBERS = auto()
@@ -103,6 +103,8 @@ class RelatedGestalten:
 
 
 class BaseNotification(metaclass=ABCMeta):
+    """transport-specific details for assembling and sending a notification message"""
+
     def __init__(self, instance: Union[Content, Contribution]):
         self.instance = instance
         if isinstance(instance, Content):
@@ -115,18 +117,36 @@ class BaseNotification(metaclass=ABCMeta):
     def send(
         self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
-        pass
+        """send messages to specific `bulk_audiences` or to Gestalt instances
+
+        Besides a Gestalt iterable only the target audiences mentioned in `bulk_audiences` are
+        allowed as arguments.
+
+        The messages are supposed to be sent right away or they may be returned and transmitted
+        later (in `BaseNotifications.send`).
+        """
 
 
 class BaseNotifications(metaclass=ABCMeta):
+    """transport-specific details for determining target audiences and combining messages"""
+
+    # Some implementations may communicate with certain target audiences (containing one or more
+    # reciepients) via a single message (e.g. a matrix notification for a "group room").
     bulk_audiences = []
+    # Implementations must overwrite either `notification_class` or the `get_notification_class`
+    # method.
     notification_class = None
 
     def __init__(self, related_gestalten: RelatedGestalten):
         self.related_gestalten = related_gestalten
         notification_class = self.get_notification_class()
         self.notification = notification_class(self.related_gestalten.instance)
+        # This list collects the results of all calls of the `send` method of the notification
+        # class.
+        # Its content may be used for transport-specific post-processing during the `send` method
+        # of the `BaseNotifications` (e.g. sending all collected messages in a single transaction).
         self.results = []
+        # The set contains processed recipients (for avoiding duplicates) and excluded ones.
         self.recipients_to_ignore = set()
         try:
             self.recipients_to_ignore.add(

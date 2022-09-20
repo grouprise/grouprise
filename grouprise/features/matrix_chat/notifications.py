@@ -60,6 +60,14 @@ class MatrixNotification(BaseNotification):
     def send(
         self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
+        """assemble and return matrix messages
+
+        The messages are not sent right away.
+        Instead we expect, that the messages are collected and sent in a single transaction.
+
+        The incoming `recipients` may be either a Gestalt iterable or one of the target audiences
+        mentioned in `bulk_audiences`.
+        """
         if recipients == RelatedGestalten.Audience.GROUP_MEMBERS:
             return get_matrix_messages_for_group(
                 self.association.entity, self.summary, self.is_public
