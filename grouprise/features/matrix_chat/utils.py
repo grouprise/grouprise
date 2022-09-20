@@ -25,14 +25,24 @@ MATRIX_CHAT_RETRIES = 2
 MATRIX_CHAT_RETRY_DELAY = 30
 
 
-def get_gestalt_matrix_notification_room(gestalt):
+def get_gestalt_matrix_notification_room(
+    gestalt: Gestalt, create_if_missing: bool = True
+):
+    """retrieve the currently configured private room shared by the bot and the user
+
+    Depending on `create_if_missing`, either `None` is returned or a new matrix room is created,
+    if no room was configured for the user, yet.
+    """
     try:
         return gestalt.settings.get(
             name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
             category=GESTALT_SETTINGS_CATEGORY_MATRIX,
         ).value
     except ObjectDoesNotExist:
-        return None
+        if create_if_missing:
+            return async_to_sync(create_gestalt_matrix_notification_room)(gestalt)
+        else:
+            return None
 
 
 def set_gestalt_matrix_notification_room(gestalt, room_id):
@@ -118,8 +128,6 @@ async def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
 
     async with ChatBot() as bot:
         room_id = await sync_to_async(get_gestalt_matrix_notification_room)(gestalt)
-        if room_id is None:
-            await create_gestalt_matrix_notification_room(bot, gestalt)
         await bot.send_text(room_id, text)
 
 

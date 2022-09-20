@@ -44,7 +44,6 @@ class MatrixChatMixin:
 
     @classmethod
     def get_gestalt_room(cls, gestalt: Gestalt):
-        # FIXME: room_id may be None
         room_id = get_gestalt_matrix_notification_room(gestalt)
         return cls.matrix_server.rooms[room_id]
 
