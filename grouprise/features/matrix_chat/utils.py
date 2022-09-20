@@ -120,25 +120,6 @@ async def sync_group_rooms_delayed(group):
 @db_task(
     retries=MATRIX_CHAT_RETRIES,
     retry_delay=MATRIX_CHAT_RETRY_DELAY,
-    name="send_private_message_to_gestalt",
-)
-@async_to_sync
-async def send_private_message_to_gestalt(text: str, gestalt: Gestalt) -> None:
-    """send the message to the target gestalt
-
-    If this is the first message being sent, then we need to invite the gestalt into a new room
-    first.
-    This private room is memorized as a setting of the gestalt.
-    """
-
-    async with ChatBot() as bot:
-        room_id = await sync_to_async(get_gestalt_matrix_notification_room)(gestalt)
-        await bot.send_text(room_id, text)
-
-
-@db_task(
-    retries=MATRIX_CHAT_RETRIES,
-    retry_delay=MATRIX_CHAT_RETRY_DELAY,
     name="send_invitations_for_gestalt",
 )
 @async_to_sync

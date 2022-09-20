@@ -15,8 +15,8 @@ from grouprise.features.notifications.notifications import (
 from . import MatrixMessage
 from .settings import MATRIX_SETTINGS
 from .utils import (
+    get_gestalt_matrix_notification_room,
     send_matrix_messages,
-    send_private_message_to_gestalt,
 )
 
 
@@ -75,8 +75,13 @@ class MatrixNotification(BaseNotification):
         elif recipients == RelatedGestalten.Audience.PUBLIC:
             return get_matrix_messages_for_public(self.context + self.summary)
         else:
-            send_private_message_to_gestalt(self.context + self.summary, recipients)
-            return []
+            # Private messages are special, since the target room may need to be created first.
+            message_text = self.context + self.summary
+            messages = []
+            for recipient in recipients:
+                room_id = get_gestalt_matrix_notification_room(recipient)
+                messages.append(MatrixMessage(room_id, message_text))
+            return messages
 
     def _get_summary(self) -> str:
         if isinstance(self.instance, Content):
