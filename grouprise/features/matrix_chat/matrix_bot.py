@@ -1,3 +1,4 @@
+from typing import Iterable
 import copy
 import logging
 
@@ -35,6 +36,13 @@ def get_matrix_notification_room_queryset():
         name=GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
         category=GESTALT_SETTINGS_CATEGORY_MATRIX,
     )
+
+
+def _get_group_members_matrix_addresses(group):
+    return {
+        MatrixChatGestaltSettings.get_matrix_id(gestalt)
+        for gestalt in group.members.all()
+    }
 
 
 def _populate_group_rooms(server):
@@ -226,15 +234,35 @@ class ChatBot(MatrixBaseBot):
                 logger.warning(
                     f"Refused to set canonical alias ({room_alias}) of room: {response}"
                 )
-        # try to raise default role of new members
+        # try to change default role of new members
+        # Private rooms:
+        #    - Only group members or explicitly invited people are inside.
+        #    - Everyone has the moderator level.
+        # Public rooms:
+        #    - All group members are raised to moderator level.
+        #    - Anyone who joined on his own (without being a group member) has the standard level.
+        default_power_level = (
+            MATRIX_ROOM_POWER_LEVEL_MODERATOR if room.is_private else 0
+        )
         if not await self._change_room_state(
             room.room_id,
-            {"users_default": MATRIX_ROOM_POWER_LEVEL_MODERATOR},
+            {"users_default": default_power_level},
             "m.room.power_levels",
             room_label=str(room),
         ):
             logger.warning(
-                f"Failed to raise default role for new members ({room_alias})"
+                "Failed to change default role for new members (%s)", room_alias
+            )
+        # try to raise power levels for group members in public rooms
+        if not room.is_private:
+            member_addresses = await sync_to_async(_get_group_members_matrix_addresses)(
+                room.group
+            )
+            await self.raise_room_members_power_levels(
+                room.room_id,
+                member_addresses,
+                MATRIX_ROOM_POWER_LEVEL_MODERATOR,
+                str(room),
             )
 
     async def create_private_room(self, room_title, room_description):
@@ -395,6 +423,35 @@ class ChatBot(MatrixBaseBot):
                     logger.warning(str(exc))
                 else:
                     yield room, gestalt
+
+    async def raise_room_members_power_levels(
+        self,
+        room_id: str,
+        matrix_addresses: Iterable[str],
+        new_level: int,
+        room_label: str,
+    ):
+        """raise the power levels of the given matrix addresses in a room
+
+        The power level of each matrix address is changed only, if its current level is lower than
+        the new target level.
+        Addresses without a specific level (e.g. they were invited, but did not join, yet) also
+        receive their future power level, which will become active as soon as they join.
+        """
+        response = await self._get_room_state(room_id, "m.room.power_levels")
+        user_power_levels = response["users"]
+        for matrix_address in matrix_addresses:
+            if user_power_levels.get(matrix_address, -1) < new_level:
+                user_power_levels[matrix_address] = new_level
+        if not await self._change_room_state(
+            room_id,
+            {"users": user_power_levels},
+            "m.room.power_levels",
+            room_label=room_label,
+        ):
+            logger.warning(
+                "Failed to raise power levels for group members (%s)", room_label
+            )
 
     async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> None:
         gestalt_matrix_id = await sync_to_async(
