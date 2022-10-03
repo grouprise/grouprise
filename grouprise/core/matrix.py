@@ -18,6 +18,11 @@ from grouprise.settings_loader import MatrixBackend
 logger = logging.getLogger(__name__)
 
 
+# source: https://matrix.org/docs/guides/moderation#power-levels
+MATRIX_ROOM_POWER_LEVEL_MINIMAL = 0
+MATRIX_ROOM_POWER_LEVEL_MODERATOR = 50
+
+
 class MatrixError(Exception):
     """an error occurred while communicating with the matrix server"""
 

@@ -9,6 +9,7 @@ from grouprise.core.matrix import (
     MatrixBaseBot,
     MatrixDummyRoom,
     MatrixError,
+    MATRIX_ROOM_POWER_LEVEL_MODERATOR,
 )
 from grouprise.core.templatetags.defaultfilters import full_url
 from grouprise.features.gestalten.models import GestaltSetting
@@ -228,7 +229,7 @@ class ChatBot(MatrixBaseBot):
         # try to raise default role of new members
         if not await self._change_room_state(
             room.room_id,
-            {"users_default": 50},
+            {"users_default": MATRIX_ROOM_POWER_LEVEL_MODERATOR},
             "m.room.power_levels",
             room_label=str(room),
         ):

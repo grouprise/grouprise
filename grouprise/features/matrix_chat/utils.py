@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 from huey.contrib.djhuey import db_task
 
-from grouprise.core.matrix import MatrixError
+from grouprise.core.matrix import MatrixError, MATRIX_ROOM_POWER_LEVEL_MODERATOR
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
 from grouprise.core.tasks import TaskPriority
 from grouprise.features.gestalten.models import Gestalt
@@ -82,7 +82,7 @@ def create_gestalt_matrix_notification_room(gestalt: Gestalt) -> str:
             # raise the default power level for new members to "moderator"
             await bot._change_room_state(
                 room_id,
-                {"users_default": 50},
+                {"users_default": MATRIX_ROOM_POWER_LEVEL_MODERATOR},
                 "m.room.power_levels",
                 room_label=room_label,
             )
