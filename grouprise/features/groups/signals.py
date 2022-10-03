@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
 from grouprise.core.settings import CORE_SETTINGS
+from grouprise.core.tasks import TaskPriority
 from grouprise.core.utils import slugify
 from grouprise.features.gestalten import models as gestalten
 
@@ -17,7 +18,7 @@ from .models import Group
 logger = logging.getLogger(__name__)
 
 
-@db_task()
+@db_task(priority=TaskPriority.SYNCHRONIZATION)
 def call_hook_script(event_type: str, group: Group, timeout=300):
     hook_event_info_json = json.dumps(
         {

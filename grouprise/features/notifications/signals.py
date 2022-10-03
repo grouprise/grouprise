@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
 from grouprise.core.signals import post_create
+from grouprise.core.tasks import TaskPriority
 from .notifications import BaseNotification, RelatedGestalten
 
 
@@ -23,7 +24,7 @@ def send_notifications(instance, raw=False, **_):
         _send_notifications(instance)
 
 
-@db_task()
+@db_task(priority=TaskPriority.NOTIFICATION)
 def _send_notifications(instance):
     gestalten = RelatedGestalten(instance)
     for notification_class in _registered_notification_backends:

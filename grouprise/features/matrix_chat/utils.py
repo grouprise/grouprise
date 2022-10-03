@@ -8,6 +8,7 @@ from huey.contrib.djhuey import db_task
 
 from grouprise.core.matrix import MatrixError
 from grouprise.core.settings import get_grouprise_baseurl, get_grouprise_site
+from grouprise.core.tasks import TaskPriority
 from grouprise.features.gestalten.models import Gestalt
 from .matrix_bot import (
     ChatBot,
@@ -103,7 +104,7 @@ def create_gestalt_matrix_notification_room(gestalt: Gestalt) -> str:
     return room_id
 
 
-@db_task(name="sync_group_rooms_delayed")
+@db_task(name="sync_group_rooms_delayed", priority=TaskPriority.SYNCHRONIZATION)
 @async_to_sync
 async def sync_group_rooms_delayed(group):
     async with ChatBot() as bot:
@@ -120,6 +121,7 @@ async def sync_group_rooms_delayed(group):
 @db_task(
     retries=MATRIX_CHAT_RETRIES,
     retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    priority=TaskPriority.NOTIFICATION,
     name="send_invitations_for_gestalt",
 )
 @async_to_sync
@@ -147,6 +149,7 @@ async def send_invitations_for_gestalt(gestalt):
 @db_task(
     retries=MATRIX_CHAT_RETRIES,
     retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    priority=TaskPriority.SYNCHRONIZATION,
     name="invite_to_group_rooms",
 )
 @async_to_sync
@@ -169,6 +172,7 @@ def _get_room_url(room_object):
 @db_task(
     retries=MATRIX_CHAT_RETRIES,
     retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    priority=TaskPriority.SYNCHRONIZATION,
     name="migrate_to_new_room",
 )
 @async_to_sync
@@ -193,6 +197,7 @@ async def migrate_to_new_room(room_object, old_room_id, room_alias, new_room_id)
 @db_task(
     retries=MATRIX_CHAT_RETRIES,
     retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    priority=TaskPriority.SYNCHRONIZATION,
     name="kick_gestalt_from_group_matrix_rooms",
 )
 @async_to_sync
@@ -210,6 +215,7 @@ async def kick_gestalt_from_group_matrix_rooms(group, gestalt):
 @db_task(
     retries=MATRIX_CHAT_RETRIES,
     retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    priority=TaskPriority.NOTIFICATION,
     name="send_matrix_messages",
 )
 @async_to_sync
