@@ -416,7 +416,11 @@ Default: current directory (depending on the context of process execution)
 Specify the storage method for caches used by Django (e.g. for templates and database query results).
 By default, *local memory* (restricted to the local process) is used.
 This default is suitable for setups with only a single process serving the grouprise instance.
+
 If you are running multiple processes on one host, then you need to use at least the `filesystem`-based storage (this is the default setup of the [deb-based deployment](/deployment/deb)).
+Performance of the `filesystem`-based cache is greatly improved (especially for large sites), if the Python package [diskcache](https://grantjenks.com/docs/diskcache/) is installed.
+Django's builtin filesystem-based storage is used as a `filesystem`-based backend automatically, if `diskcache` is not available.
+
 The [memcached](http://memcached.org/)-based storages (`memcache` and `pylibmc`) are suitable for all deployment setups.
 
 | Cache Storage | One Host with one Process | One Host with multiple Processes | Multiple Hosts |

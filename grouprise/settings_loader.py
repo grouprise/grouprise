@@ -12,6 +12,18 @@ import types
 from typing import Any, List, Optional, Set, Tuple, Union
 import urllib.parse
 
+"""
+Determine whether the external `diskcache` implementation is available or whether Django's builtin
+FileBasedCache implementation needs to be used.
+Django's file-based cache suffers if a large number of cache files is stored in the flat directory.
+See https://code.djangoproject.com/ticket/11260 and https://code.djangoproject.com/ticket/29994
+"""
+try:
+    import diskcache  # noqa: F401
+except ImportError:
+    _file_based_cache_class = "django.core.cache.backends.filebased.FileBasedCache"
+else:
+    _file_based_cache_class = "diskcache.DjangoCache"
 import ruamel.yaml
 
 
@@ -37,7 +49,7 @@ EMAIL_BACKENDS_MAP = {
 }
 CACHE_BACKENDS_MAP = {
     "dummy": "django.core.cache.backends.dummy.DummyCache",
-    "filesystem": "django.core.cache.backends.filebased.FileBasedCache",
+    "filesystem": _file_based_cache_class,
     "local_memory": "django.core.cache.backends.locmem.LocMemCache",
     "memcache": "django.core.cache.backends.memcached.MemcachedCache",
     "pylibmc": "django.core.cache.backends.memcached.PyLibMCCache",

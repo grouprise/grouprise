@@ -95,6 +95,7 @@ Depends:
 Recommends:
  ${misc:Recommends},
  ghostscript,
+ python3-diskcache,
  python3-gdal,
  uwsgi,
  uwsgi-plugin-python3,
