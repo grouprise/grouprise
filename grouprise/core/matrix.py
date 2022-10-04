@@ -126,7 +126,7 @@ class MatrixDummyServer:
 
 class MatrixDummyRoom:
     def __init__(self, room_id, room_label=None):
-        self.state = {}
+        self.state = {"m.room.power_levels": {"users": {}}}
         self.members = set()
         self.sent_messages_count = 0
         self.room_id = room_id
