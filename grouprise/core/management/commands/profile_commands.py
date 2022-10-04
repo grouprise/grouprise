@@ -1,4 +1,4 @@
-import profile
+import cProfile
 import sys
 
 from django.core.management.base import BaseCommand
@@ -15,4 +15,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         commands = sys.stdin.read()
         output_filename = options.get("output_file")
-        profile.run(commands, filename=output_filename)
+        cProfile.run(commands, filename=output_filename)
