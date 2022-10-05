@@ -4,7 +4,6 @@ import django.contrib.contenttypes.models
 import django.utils.timezone
 from django.contrib.contenttypes import models as contenttypes_models
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import crypto
 
@@ -155,14 +154,3 @@ class PermissionToken(models.Model):
         token = cls.get_permission_token(gestalt, target, feature_key)
         if token:
             token.delete()
-
-
-class RepeatableTask(models.Model):
-    """
-    Saves parameters for tasks (actions) that might want to be repeated in case of failure.
-    """
-
-    created_time = models.DateTimeField(auto_now_add=True)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    task_parameter = GenericForeignKey()
