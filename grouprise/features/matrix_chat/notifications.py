@@ -41,8 +41,6 @@ def get_matrix_messages_for_group(
         # send private messages only to the internal room
         if is_public or room.is_private:
             yield MatrixMessage(room.room_id, text)
-    for room_id in MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS:
-        yield MatrixMessage(room_id, text)
 
 
 class MatrixNotification(BaseNotification):

@@ -78,7 +78,9 @@ def create_gestalt_matrix_notification_room(gestalt: Gestalt) -> str:
 
     async def _create_private_room():
         async with ChatBot() as bot:
-            room_id = await bot.create_private_room(room_title, room_description)
+            room_id = await bot.create_room(
+                room_title, room_description, is_private=True
+            )
             # raise the default power level for new members to "moderator"
             await bot._change_room_state(
                 room_id,
@@ -101,6 +103,23 @@ def create_gestalt_matrix_notification_room(gestalt: Gestalt) -> str:
     room_label = f"notifications for {gestalt_label}"
     room_id = async_to_sync(_create_private_room())()
     set_gestalt_matrix_notification_room(gestalt, room_id)
+    return room_id
+
+
+def create_public_room() -> str:
+    """create a new and empty public room
+
+    Raises MatrixError in case of problems.
+    """
+
+    async def _create_public_room():
+        async with ChatBot() as bot:
+            return await bot.create_room(
+                room_title, room_description="", is_private=False
+            )
+
+    room_title = _("{site_name}")
+    room_id = async_to_sync(_create_public_room)()
     return room_id
 
 

@@ -4,7 +4,11 @@ from grouprise.core import tests
 from grouprise.core.matrix import get_dummy_matrix_server, MatrixDummyRoom
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.groups.models import Group
-from grouprise.features.matrix_chat.utils import get_gestalt_matrix_notification_room
+from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
+from grouprise.features.matrix_chat.utils import (
+    get_gestalt_matrix_notification_room,
+    create_public_room,
+)
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
 
@@ -24,7 +28,7 @@ class MatrixRoomTracker:
         pass
 
     # The room instances seem to get *replaced* instead of modified in case of changes.
-    # Thus we grab a fresh reference whenever we need to access a room.
+    # Thus, we grab a fresh reference whenever we need to access a room.
     @property
     def room(self):
         return self._rooms_dict[self._room_id]
@@ -58,6 +62,11 @@ class MatrixChatMixin:
             else:
                 public_room = matrix_room
         return private_room, public_room
+
+    @classmethod
+    def get_public_listener_room(cls):
+        room_id = MATRIX_SETTINGS.PUBLIC_LISTENER_ROOMS[0]
+        return cls.matrix_server.rooms[room_id]
 
     @classmethod
     def setUpTestData(cls):
@@ -97,3 +106,23 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
                 self._create_article(public=True)
                 self.assertEqual(public_tracker.messages_count, 1)
                 self.assertEqual(private_tracker.messages_count, 1)
+
+    def test_public_listener_room_receives_notification_for_public_message(self):
+        with MATRIX_SETTINGS.temporary_override(
+            PUBLIC_LISTENER_ROOMS=[create_public_room()]
+        ):
+            room = self.get_public_listener_room()
+            with MatrixRoomTracker(room) as tracker:
+                self._create_article(public=True)
+                self.assertEqual(tracker.messages_count, 1)
+
+    def test_public_listener_room_does_not_receive_notification_for_private_message(
+        self,
+    ):
+        with MATRIX_SETTINGS.temporary_override(
+            PUBLIC_LISTENER_ROOMS=[create_public_room()]
+        ):
+            room = self.get_public_listener_room()
+            with MatrixRoomTracker(room) as tracker:
+                self._create_article(public=False)
+                self.assertEqual(tracker.messages_count, 0)

@@ -125,32 +125,10 @@ class ChatBot(MatrixBaseBot):
         else:
             room_title = group.name
             room_description = group_url
-        preset = (
-            nio.api.RoomPreset.private_chat
-            if is_private
-            else nio.api.RoomPreset.public_chat
-        )
-        visibility = (
-            nio.api.RoomVisibility.private
-            if is_private
-            else nio.api.RoomVisibility.public
-        )
-        try:
-            response = await self.client.room_create(
-                name=room_title,
-                topic=room_description,
-                preset=preset,
-                visibility=visibility,
-            )
-        except nio.exceptions.ProtocolError as exc:
-            raise MatrixError(f"Failed to create room '{room_title}': {exc}")
-        if not isinstance(response, nio.responses.RoomCreateResponse):
-            raise MatrixError(
-                f"Create room requested for '{room_title}' was rejected: {response}"
-            )
+        room_id = await self.create_room(room_title, room_description, is_private)
         # store the room
         room = await sync_to_async(MatrixChatGroupRoom.objects.create)(
-            group=group, is_private=is_private, room_id=response.room_id
+            group=group, is_private=is_private, room_id=room_id
         )
         # respond with success, even though the alias assignment may have failed
         return room, True
@@ -265,13 +243,23 @@ class ChatBot(MatrixBaseBot):
                 str(room),
             )
 
-    async def create_private_room(self, room_title, room_description):
+    async def create_room(self, room_title, room_description, is_private: bool):
+        preset = (
+            nio.api.RoomPreset.private_chat
+            if is_private
+            else nio.api.RoomPreset.public_chat
+        )
+        visibility = (
+            nio.api.RoomVisibility.private
+            if is_private
+            else nio.api.RoomVisibility.public
+        )
         try:
             response = await self.client.room_create(
                 name=room_title,
                 topic=room_description,
-                preset=nio.api.RoomPreset.private_chat,
-                visibility=nio.api.RoomVisibility.private,
+                preset=preset,
+                visibility=visibility,
             )
         except nio.exceptions.ProtocolError as exc:
             raise MatrixError(f"Failed to create room '{room_title}': {exc}")
