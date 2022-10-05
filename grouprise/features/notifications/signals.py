@@ -24,6 +24,7 @@ def send_notifications(instance, raw=False, **_):
         _send_notifications(instance)
 
 
+# TODO: retry sending notifications in case of (temporary) errors, while avoiding duplicates
 @db_task(priority=TaskPriority.NOTIFICATION)
 def _send_notifications(instance):
     gestalten = RelatedGestalten(instance)

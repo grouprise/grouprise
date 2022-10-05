@@ -20,11 +20,6 @@ from .notifications import MatrixMessage
 
 logger = logging.getLogger(__name__)
 
-# Some tasks should be attempted again in case of temporary failures of the Matrix server.
-# Only tasks that are relevant and that interact with the Matrix server should use this feature.
-MATRIX_CHAT_RETRIES = 2
-MATRIX_CHAT_RETRY_DELAY = 30
-
 
 def get_gestalt_matrix_notification_room(
     gestalt: Gestalt, create_if_missing: bool = True
@@ -138,8 +133,9 @@ async def sync_group_rooms_delayed(group):
 
 
 @db_task(
-    retries=MATRIX_CHAT_RETRIES,
-    retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    retries=1000000,
+    retry_delay=600,
+    expires=(7 * 24 * 60 * 60),
     priority=TaskPriority.NOTIFICATION,
     name="send_invitations_for_gestalt",
 )
@@ -166,8 +162,9 @@ async def send_invitations_for_gestalt(gestalt):
 
 
 @db_task(
-    retries=MATRIX_CHAT_RETRIES,
-    retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    retries=1000000,
+    retry_delay=600,
+    expires=(7 * 24 * 60 * 60),
     priority=TaskPriority.SYNCHRONIZATION,
     name="invite_to_group_rooms",
 )
@@ -189,8 +186,9 @@ def _get_room_url(room_object):
 
 
 @db_task(
-    retries=MATRIX_CHAT_RETRIES,
-    retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    retries=1000000,
+    retry_delay=600,
+    expires=(7 * 24 * 60 * 60),
     priority=TaskPriority.SYNCHRONIZATION,
     name="migrate_to_new_room",
 )
@@ -214,8 +212,9 @@ async def migrate_to_new_room(room_object, old_room_id, room_alias, new_room_id)
 
 
 @db_task(
-    retries=MATRIX_CHAT_RETRIES,
-    retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    retries=1000000,
+    retry_delay=600,
+    expires=(7 * 24 * 60 * 60),
     priority=TaskPriority.SYNCHRONIZATION,
     name="kick_gestalt_from_group_matrix_rooms",
 )
@@ -232,8 +231,9 @@ async def kick_gestalt_from_group_matrix_rooms(group, gestalt):
 
 
 @db_task(
-    retries=MATRIX_CHAT_RETRIES,
-    retry_delay=MATRIX_CHAT_RETRY_DELAY,
+    retries=1000000,
+    retry_delay=600,
+    expires=(3 * 24 * 60 * 60),
     priority=TaskPriority.NOTIFICATION,
     name="send_matrix_messages",
 )
