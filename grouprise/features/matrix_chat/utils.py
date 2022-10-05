@@ -208,7 +208,7 @@ async def migrate_to_new_room(room_object, old_room_id, room_alias, new_room_id)
             new_room_id=new_room_id,
         )
         try:
-            await bot.send_text(old_room_id, text, msgtype="m.message")
+            await bot.send_text(old_room_id, text, msgtype="m.text")
         except MatrixError as exc:
             logger.warning(f"Failed to send goodbye message to {old_room_id}: {exc}")
 
@@ -244,6 +244,6 @@ async def send_matrix_messages(
     async with ChatBot() as bot:
         for message in messages:
             try:
-                await bot.send_text(message.room_id, message.text, msgtype="m.message")
+                await bot.send_text(message.room_id, message.text, msgtype="m.text")
             except MatrixError as exc:
                 logger.warning(f"Failed to send {message_type}: {exc}")
