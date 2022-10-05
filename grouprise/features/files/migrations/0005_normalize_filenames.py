@@ -152,7 +152,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("files", "0004_auto_20211213_1229"),
-        ("redirects", "__latest__"),
+        ("redirects", "0001_initial"),
     ]
 
     operations = [
