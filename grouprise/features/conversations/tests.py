@@ -13,6 +13,18 @@ from grouprise.features.memberships import test_mixins as memberships
 from . import models
 
 
+def create_conversation(subject, content, sender, recipient_entity):
+    conversation = models.Conversation.objects.create(subject=subject)
+    conversation.contributions.create(
+        author=sender,
+        contribution=contributions.Text.objects.create(text=content),
+    )
+    association = associations.Association.objects.create(
+        container=conversation, entity=recipient_entity
+    )
+    return association
+
+
 class GestaltConversationMixin(
     grouprise.features.gestalten.tests.mixins.GestaltMixin,
     grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
@@ -20,13 +32,8 @@ class GestaltConversationMixin(
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        conversation = models.Conversation.objects.create(subject="Test Thema")
-        conversation.contributions.create(
-            author=cls.gestalt,
-            contribution=contributions.Text.objects.create(text="Test Text"),
-        )
-        cls.association = associations.Association.objects.create(
-            container=conversation, entity=cls.other_gestalt
+        cls.association = create_conversation(
+            "Test Thema", "Test Text", cls.gestalt, cls.other_gestalt
         )
 
 
@@ -36,13 +43,8 @@ class GroupConversation(
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        conversation = models.Conversation.objects.create(subject="Test Thema")
-        conversation.contributions.create(
-            author=cls.gestalt,
-            contribution=contributions.Text.objects.create(text="Test Text"),
-        )
-        cls.association = associations.Association.objects.create(
-            container=conversation, entity=cls.group
+        cls.association = create_conversation(
+            "Test Thema", "Test Text", cls.gestalt, cls.group
         )
 
 
