@@ -96,7 +96,7 @@ def create_gestalt_matrix_notification_room(gestalt: Gestalt) -> str:
     # the label is used for log messages only
     gestalt_label = str(gestalt)
     room_label = f"notifications for {gestalt_label}"
-    room_id = async_to_sync(_create_private_room())()
+    room_id = async_to_sync(_create_private_room)()
     set_gestalt_matrix_notification_room(gestalt, room_id)
     return room_id
 
