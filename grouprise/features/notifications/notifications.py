@@ -53,6 +53,9 @@ class RelatedGestalten:
     def __iter__(self) -> Iterator[Gestalt]:
         return self.gestalten[self.Audience.ALL].__iter__()
 
+    def __str__(self) -> str:
+        return f"RelatedGestalten({self.instance})"
+
     def _get_related_gestalten(self) -> Mapping[Audience, Iterable[Gestalt]]:
         gestalten = {
             self.Audience.PUBLIC: {},
