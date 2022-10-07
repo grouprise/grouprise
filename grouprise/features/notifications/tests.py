@@ -74,8 +74,6 @@ class OtherAuthenticatedConversationTestCase(
         super().setUp()
         self.client.force_login(self.other_gestalt.user)
 
-    # FIXME: the test has never worked
-    @skip
     def test_receives_matrix_notification_upon_gestalt_conversation_reply(self):
         gestalt_room = self.get_gestalt_room(self.gestalt)
         with MatrixRoomTracker(gestalt_room) as room_tracker:

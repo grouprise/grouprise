@@ -26,7 +26,7 @@ class GestaltConversationMixin(
             contribution=contributions.Text.objects.create(text="Test Text"),
         )
         cls.association = associations.Association.objects.create(
-            container=conversation, entity=cls.gestalt
+            container=conversation, entity=cls.other_gestalt
         )
 
 
