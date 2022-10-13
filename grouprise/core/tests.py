@@ -6,6 +6,7 @@ from django.contrib import auth
 from django.core import mail
 from simplemathcaptcha.utils import hash_answer
 
+from grouprise.core.matrix import MatrixConsoleClient
 from grouprise.core.settings import get_grouprise_site
 
 HTTP_GET = "get"
@@ -151,6 +152,7 @@ class Test(test.TestCase):
 
     def setUp(self):
         logging.disable(logging.CRITICAL)
+        MatrixConsoleClient.output_stream = None
 
     def tearDown(self):
         logging.disable(logging.NOTSET)

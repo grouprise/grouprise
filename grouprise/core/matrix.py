@@ -155,13 +155,15 @@ class MatrixConsoleClient:
 
     # the server is assigned once during module loading as a class attribute (as a singleton)
     server = None
+    # the output target can be overwritten (e.g. during tests)
+    output_stream = sys.stdout
 
-    def __init__(self, stream=None):
+    def __init__(self):
         self.logged_in = True
-        self._stream = sys.stdout if stream is None else stream
 
     def _log(self, message):
-        self._stream.write(message + "\n")
+        if self.output_stream is not None:
+            self.output_stream.write(message + "\n")
 
     async def sync(self, set_presence=None, since=None):
         return nio.responses.SyncResponse(
