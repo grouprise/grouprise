@@ -169,9 +169,13 @@ class Test(test.TestCase):
         url = self.get_url(kwargs["url"], kwargs.get("key"))
         return self.get_response(method, url)
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         logging.disable(logging.CRITICAL)
         MatrixConsoleClient.output_stream = None
+        super().setUpClass()
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
         logging.disable(logging.NOTSET)
