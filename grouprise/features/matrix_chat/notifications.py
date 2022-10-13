@@ -56,30 +56,28 @@ class MatrixNotification(BaseNotification):
         self.summary = self._get_summary()
 
     def send(
-        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
+        self, recipient: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         """assemble and return matrix messages
 
         The messages are not sent right away.
         Instead we expect, that the messages are collected and sent in a single transaction.
 
-        The incoming `recipients` may be either a Gestalt iterable or one of the target audiences
-        mentioned in `bulk_audiences`.
+        The incoming `recipient` may be either a Gestalt or one of the target audiences mentioned
+        in `bulk_audiences`.
         """
-        if recipients == RelatedGestalten.Audience.GROUP_MEMBERS:
+        if recipient == RelatedGestalten.Audience.GROUP_MEMBERS:
             return get_matrix_messages_for_group(
                 self.association.entity, self.summary, self.is_public
             )
-        elif recipients == RelatedGestalten.Audience.PUBLIC:
+        elif recipient == RelatedGestalten.Audience.PUBLIC:
             return get_matrix_messages_for_public(self.context + self.summary)
         else:
             # Private messages are special, since the target room may need to be created first.
             message_text = self.context + self.summary
-            messages = []
-            for recipient in recipients:
-                room_id = get_gestalt_matrix_notification_room(recipient)
-                messages.append(MatrixMessage(room_id, message_text))
-            return messages
+            room_id = get_gestalt_matrix_notification_room(recipient)
+            message = MatrixMessage(room_id, message_text)
+            return [message]
 
     def _get_summary(self) -> str:
         if isinstance(self.instance, Content):

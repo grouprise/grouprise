@@ -118,12 +118,12 @@ class BaseNotification(metaclass=ABCMeta):
 
     @abstractmethod
     def send(
-        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
+        self, recipient: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         """send messages to specific `bulk_audiences` or to Gestalt instances
 
-        Besides a Gestalt iterable only the target audiences mentioned in `bulk_audiences` are
-        allowed as arguments.
+        Besides a Gestalt only the target audiences mentioned in `bulk_audiences` are allowed as
+        arguments.
 
         The messages are supposed to be sent right away or they may be returned and transmitted
         later (in `BaseNotifications.send`).
@@ -187,7 +187,7 @@ class BaseNotifications(metaclass=ABCMeta):
             pass
 
     def send_notification(
-        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
+        self, recipient: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ):
-        result = self.notification.send(recipients, **kwargs)
+        result = self.notification.send(recipient, **kwargs)
         self.results.append(result)

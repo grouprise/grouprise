@@ -11,12 +11,12 @@ from grouprise.features.notifications.notifications import (
 
 class BuiltinInboxNotification(BaseNotification):
     def send(
-        self, recipients: Union[RelatedGestalten.Audience, Gestalt], **kwargs
+        self, recipient: Union[RelatedGestalten.Audience, Gestalt], **kwargs
     ) -> Any:
         if isinstance(self.instance, Content):
-            recipients.notifications.create(created_content=self.instance)
+            recipient.notifications.create(created_content=self.instance)
         else:
-            recipients.notifications.create(created_contribution=self.instance)
+            recipient.notifications.create(created_contribution=self.instance)
 
 
 class BuiltinInboxNotifications(BaseNotifications):
