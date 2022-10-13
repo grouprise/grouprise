@@ -1,9 +1,11 @@
+import contextlib
 import logging
 
 import django.urls
 from django import test, urls
 from django.contrib import auth
 from django.core import mail
+from django.db import models
 from simplemathcaptcha.utils import hash_answer
 
 from grouprise.core.matrix import MatrixConsoleClient
@@ -36,6 +38,23 @@ class Test(test.TestCase):
         if response is None:
             response = self.client.get(obj.get_absolute_url())
         self.assertNotContains(response, self.get_link(link_url, key))
+
+    @contextlib.contextmanager
+    def assertCreatedModelInstance(self, model: models.Model, expected_count=1):
+        """track model instances created during the life time of the context
+
+        The yielded value is a list, which is supposed to be evaluated *after* the context is
+        finished.
+        This list contains the recently created instances.
+        """
+        new_items = []
+        before_pks = set(model.objects.values_list("pk", flat=True))
+        yield new_items
+        after_pks = set(model.objects.values_list("pk", flat=True))
+        new_items.extend(
+            [model.objects.get(pk=pk) for pk in sorted(after_pks - before_pks)]
+        )
+        self.assertEqual(len(new_items), expected_count)
 
     def assertExists(self, model, **kwargs):
         qs = model.objects.filter(**kwargs)
