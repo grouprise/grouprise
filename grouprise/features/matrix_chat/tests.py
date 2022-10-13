@@ -9,7 +9,14 @@ from grouprise.features.matrix_chat.utils import (
     get_gestalt_matrix_notification_room,
     create_public_room,
 )
-from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
+from grouprise.features.conversations.tests import (
+    AuthenticatedGestaltConversationMixin,
+    AuthenticatedGroupConversationMixin,
+)
+from grouprise.features.memberships.test_mixins import (
+    AuthenticatedMemberMixin,
+    OtherMemberMixin,
+)
 
 
 class MatrixRoomTracker:
@@ -89,7 +96,7 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
             {"title": "Test", "text": "Test", "public": public},
         )
 
-    def test_private_only(self):
+    def test_group_private_notification(self):
         """content announcements are sent to the private Matrix room of a group"""
         private_room, public_room = self.get_group_rooms(self.group)
         with MatrixRoomTracker(private_room) as private_tracker:
@@ -98,7 +105,7 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
                 self.assertEqual(public_tracker.messages_count, 0)
                 self.assertEqual(private_tracker.messages_count, 1)
 
-    def test_public(self):
+    def test_group_public_notification(self):
         """content announcements are sent to the all Matrix rooms of a group"""
         private_room, public_room = self.get_group_rooms(self.group)
         with MatrixRoomTracker(private_room) as private_tracker:
@@ -126,3 +133,51 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
             with MatrixRoomTracker(room) as tracker:
                 self._create_article(public=False)
                 self.assertEqual(tracker.messages_count, 0)
+
+
+class MatrixPrivateConversationNotification(
+    MatrixChatMixin, AuthenticatedGestaltConversationMixin, tests.Test
+):
+    def test_private_chat_arrives_at_recipient(self):
+        """matrix notifications are sent for private messages between two gestalts"""
+        my_room = self.get_gestalt_room(self.gestalt)
+        other_room = self.get_gestalt_room(self.other_gestalt)
+        with MatrixRoomTracker(my_room) as my_tracker:
+            with MatrixRoomTracker(other_room) as other_tracker:
+                self.assertEqual(my_tracker.messages_count, 0)
+                self.assertEqual(other_tracker.messages_count, 0)
+                self._create_conversation_to_other()
+                # only the recipients receives a notification
+                self.assertEqual(my_tracker.messages_count, 0)
+                self.assertEqual(other_tracker.messages_count, 1)
+
+
+class MatrixGroupConversationNotification(
+    MatrixChatMixin, AuthenticatedGroupConversationMixin, OtherMemberMixin, tests.Test
+):
+    def test_incoming_message_arrives_at_group_member(self):
+        """matrix notifications are sent for messages between a user and a group"""
+        gestalt_room = self.get_gestalt_room(self.gestalt)
+        private_group_room, public_group_room = self.get_group_rooms(self.group)
+        with MatrixRoomTracker(private_group_room) as private_tracker:
+            with MatrixRoomTracker(public_group_room) as public_tracker:
+                with MatrixRoomTracker(gestalt_room) as gestalt_tracker:
+                    self.assertEqual(gestalt_tracker.messages_count, 0)
+                    self.assertEqual(public_tracker.messages_count, 0)
+                    self.assertEqual(private_tracker.messages_count, 0)
+                    association = self._create_conversation_to_group()
+                    # only members (private room) receive a notification
+                    self.assertEqual(gestalt_tracker.messages_count, 0)
+                    self.assertEqual(public_tracker.messages_count, 0)
+                    self.assertEqual(private_tracker.messages_count, 1)
+                    # send a reply as the "other" gestalt
+                    self.client.logout()
+                    self.client.force_login(self.other_gestalt.user)
+                    conversation_url = self.get_url(
+                        "conversation", key=association.pk
+                    )
+                    self.client.post(conversation_url, {"text": "Test Reply"})
+                    # members and the initial poster receive a notification
+                    self.assertEqual(gestalt_tracker.messages_count, 1)
+                    self.assertEqual(public_tracker.messages_count, 0)
+                    self.assertEqual(private_tracker.messages_count, 2)

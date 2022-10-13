@@ -1,4 +1,5 @@
 from django.contrib.contenttypes import models as contenttypes
+from django.urls import reverse
 
 import grouprise.core
 import grouprise.features.gestalten.tests
@@ -46,6 +47,39 @@ class GroupConversationMixin(
         cls.association = create_conversation(
             "Test Thema", "Test Text", cls.gestalt, cls.group
         )
+
+
+class AuthenticatedGestaltConversationMixin(
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
+):
+    def _create_conversation_to_other(
+        self, title: str = "Test Thema", body: str = "Test Text"
+    ):
+        with self.assertCreatedModelInstance(associations.Association) as new_objects:
+            url = reverse("create-gestalt-conversation", args=[self.other_gestalt.pk])
+            self.client.post(url, {"subject": title, "text": body})
+        return new_objects[0]
+
+    def setUp(self):
+        super().setUp()
+        self.association = self._create_conversation_to_other()
+
+
+class AuthenticatedGroupConversationMixin(
+    grouprise.features.gestalten.tests.mixins.AuthenticatedMixin, groups.GroupMixin
+):
+    def _create_conversation_to_group(
+        self, title: str = "Test Thema", body: str = "Test Text"
+    ):
+        with self.assertCreatedModelInstance(associations.Association) as new_objects:
+            url = reverse("create-group-conversation", args=[self.group.pk])
+            self.client.post(url, {"subject": title, "text": body})
+        return new_objects[0]
+
+    def setUp(self):
+        super().setUp()
+        self.association = self._create_conversation_to_group()
 
 
 class NotificationContainsConversationMessageIDs:
