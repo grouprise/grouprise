@@ -37,7 +37,7 @@ class GestaltConversationMixin(
         )
 
 
-class GroupConversation(
+class GroupConversationMixin(
     grouprise.features.gestalten.tests.mixins.GestaltMixin, groups.GroupMixin
 ):
     @classmethod
@@ -284,7 +284,7 @@ class Anonymous(
     CanCreateGestaltConversationWithEmail,
     CanNotViewGestaltConversation,
     GestaltConversationMixin,
-    GroupConversation,
+    GroupConversationMixin,
     tests.Test,
 ):
     """
@@ -303,7 +303,7 @@ class AuthenticatedGroupConversationTestCase(
     GroupPageHasConversationLink,
     CanViewGroupConversation,
     CanReplyToConversation,
-    GroupConversation,
+    GroupConversationMixin,
     AuthenticatedMixin,
     tests.Test,
 ):
@@ -332,7 +332,7 @@ class GroupMember(
     CanViewGroupConversation,
     OtherGestaltCanNotViewGroupConversation,
     CanReplyToConversation,
-    GroupConversation,
+    GroupConversationMixin,
     memberships.AuthenticatedMemberMixin,
     grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     tests.Test,
@@ -347,7 +347,7 @@ class TwoGroupMembers(
     OtherGestaltIsNotifiedOnReply,
     OtherGestaltIsNotifiedOnGestaltConversation,
     NotificationContainsConversationMessageIDs,
-    GroupConversation,
+    GroupConversationMixin,
     memberships.OtherAuthenticatedMemberMixin,
     memberships.AuthenticatedMemberMixin,
     tests.Test,
