@@ -173,9 +173,7 @@ class MatrixGroupConversationNotification(
                     # send a reply as the "other" gestalt
                     self.client.logout()
                     self.client.force_login(self.other_gestalt.user)
-                    conversation_url = self.get_url(
-                        "conversation", key=association.pk
-                    )
+                    conversation_url = self.get_url("conversation", key=association.pk)
                     self.client.post(conversation_url, {"text": "Test Reply"})
                     # members and the initial poster receive a notification
                     self.assertEqual(gestalt_tracker.messages_count, 1)
