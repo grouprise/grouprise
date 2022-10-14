@@ -465,7 +465,9 @@ class CacheStorageConfig(ConfigBase):
         if (backend == "filesystem") and (os.geteuid() == 0):
             # The filesystem backend may not be enabled for a privileged user. Otherwise, files
             # and directories in the cache could end up with the wrong permissions and ownership.
-            dest = {"BACKEND": CACHE_BACKENDS_MAP["local_memory"]}
+            # Thus we disable the caching completely in order to prevent coordination problems
+            # between multiple processes.
+            dest = {"BACKEND": CACHE_BACKENDS_MAP["dummy"]}
             logger.info("Disabling filesystem-based cache for privileged user")
         else:
             # unprivileged user: accept the chosen backend
