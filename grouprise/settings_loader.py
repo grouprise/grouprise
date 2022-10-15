@@ -174,7 +174,7 @@ def load_settings_from_yaml_files(locations=None, error_if_missing=False):
 
 def guess_suitable_cache_size(path: Union[str, pathlib.Path, None]) -> int:
     """determine a reasonable size for a filesystem-backed cache based on the storage location"""
-    megabyte_factor = 2**20
+    megabyte_factor = 2 ** 20
     if not path:
         return FALLBACK_FILESYSTEM_CACHE_SIZE_MB * megabyte_factor
     try:
