@@ -7,6 +7,7 @@ import importlib.util
 import ipaddress
 import logging
 import os
+import pathlib
 import re
 import types
 from typing import Any, List, Optional, Set, Tuple, Union
@@ -54,6 +55,11 @@ CACHE_BACKENDS_MAP = {
     "memcache": "django.core.cache.backends.memcached.MemcachedCache",
     "pylibmc": "django.core.cache.backends.memcached.PyLibMCCache",
 }
+# The fallback cache size is used, if the cache size is not configured and the size of the target
+# filesystem cannot be determined for some reason.
+FALLBACK_FILESYSTEM_CACHE_SIZE_MB = 16
+# The maximum size is applied only if the cache size is not configured.
+MAXIMUM_FILESYSTEM_CACHE_SIZE_MB = 256
 
 
 class EmailSubmissionEncryption(enum.Enum):
@@ -164,6 +170,22 @@ def load_settings_from_yaml_files(locations=None, error_if_missing=False):
             else:
                 combined_configuration.update(data)
     return combined_configuration
+
+
+def guess_suitable_cache_size(path: Union[str, pathlib.Path, None]) -> int:
+    """determine a reasonable size for a filesystem-backed cache based on the storage location"""
+    megabyte_factor = 2**20
+    if not path:
+        return FALLBACK_FILESYSTEM_CACHE_SIZE_MB * megabyte_factor
+    try:
+        vfs = os.statvfs(path)
+    except OSError:
+        logger.warning("Failed to determine size of cache location (%s)", path)
+        return FALLBACK_FILESYSTEM_CACHE_SIZE_MB * megabyte_factor
+    else:
+        full_size = vfs.f_frsize * vfs.f_blocks
+        # use half of the filesystem, but do not exceed the maximum
+        return min(full_size / 2, MAXIMUM_FILESYSTEM_CACHE_SIZE_MB * megabyte_factor)
 
 
 class ConfigError(ValueError):
@@ -472,6 +494,16 @@ class CacheStorageConfig(ConfigBase):
         else:
             # unprivileged user: accept the chosen backend
             dest["BACKEND"] = CACHE_BACKENDS_MAP[backend]
+            if backend == "filesystem":
+                # determine a maximum cache size (or use the configured size)
+                try:
+                    max_size = value["size_limit"]
+                except KeyError:
+                    # determine the size of the target filesystem und use half of it
+                    max_size = guess_suitable_cache_size(dest.get("LOCATION"))
+                logging.info("Limiting the cache size to %d bytes", max_size)
+                # This value is only used by 'diskcache.DjangoCache'.
+                dest["OPTIONS"]["size_limit"] = max_size
         settings["CACHES"] = {"default": dest}
 
 

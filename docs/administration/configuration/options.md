@@ -423,6 +423,8 @@ Django's builtin filesystem-based storage is used as a `filesystem`-based backen
 
 The [memcached](http://memcached.org/)-based storages (`memcache` and `pylibmc`) are suitable for all deployment setups.
 
+The cache storage implementation is selected by the `backend` attribute in the `cache_storage` dictionary.
+
 | Cache Storage | One Host with one Process | One Host with multiple Processes | Multiple Hosts |
 |---------------|---------------------------|----------------------------------|----------------|
 | `dummy` | Yes | Yes | Yes |
@@ -435,6 +437,7 @@ The use of an unsuitable cache storage results in partially stale caches, since 
 
 Most storages require a `location` attribute.
 The `max_entries` attribute may be used for specifying a maximum number of cache items to be stored (default: `20000`).
+The `size_limit` attribute can be used for limiting the amount of space used (only applicable for the `filesystem`-backend and if the `diskcache` package is available - see above)).
 See the [Django documentation](https://docs.djangoproject.com/en/dev/topics/cache/) for details.
 
 Default: `{"backend": "local_memory"}`
