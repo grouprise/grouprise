@@ -427,6 +427,12 @@ class ChatBot(MatrixBaseBot):
         receive their future power level, which will become active as soon as they join.
         """
         response = await self._get_room_state(room_id, "m.room.power_levels")
+        if not response:
+            logger.warning(
+                "Failed to retrieve current power levels for group members (%s)",
+                room_label,
+            )
+            return
         user_power_levels = response["users"]
         for matrix_address in matrix_addresses:
             if user_power_levels.get(matrix_address, -1) < new_level:
