@@ -17,9 +17,15 @@ app_migrate: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP)
 # makefilet runs "manage.py check" during "virtualenv-check" - thus we need the settings beforehand
 virtualenv-check: app_local_settings
 
+.PHONY: _app_run_single_job
+_app_run_single_job:
+	. "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py runserver
+
 .PHONY: app_run
 app_run: app_migrate app_collect_static app_compile_translations
-	( . "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py runserver )
+	@# Parallel execution causes issues with interactive jobs, since these parallel processes
+	@# are not connected to the terminal (and thus the process cannot detect the tty).
+	@$(MAKE) --jobs=1 _app_run_single_job
 
 .PHONY: app_collect_static
 app_collect_static: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP) assets
