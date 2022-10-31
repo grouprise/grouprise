@@ -209,6 +209,7 @@ DJANGO_SETTINGS_EXAMPLE = {
         "OAUTH2_VALIDATOR_CLASS": "grouprise.auth.oauth_validators.AccountOAuth2Validator",
         "OIDC_ENABLED": True,
         "OIDC_RSA_PRIVATE_KEY": "secret-key-content",
+        "PKCE_REQUIRED": False,
         "SCOPES": {
             "email": "Email scope",
             "openid": "OpenID Connect scope",

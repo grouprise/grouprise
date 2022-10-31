@@ -900,6 +900,10 @@ class OIDCProviderEnableConfig(BooleanConfig):
             apps.append("oauth2_provider")
             middleware.insert(0, "corsheaders.middleware.CorsMiddleware")
             provider["OIDC_ENABLED"] = True
+            # Since django-oauth-toolkit 2.0 the client is expected to use the PKCE extension by
+            # default (https://django-oauth-toolkit.readthedocs.io/en/latest/changelog.html).
+            # But currently (2022) matrix-synapse does not seem to support this extension.
+            provider["PKCE_REQUIRED"] = False
             # The following scopes are required for the amount of attributes we want to return.
             # (see `get_additional_claims`)
             provider.setdefault("SCOPES", {}).update(
