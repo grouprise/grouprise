@@ -90,7 +90,7 @@ class Command(BaseCommand):
                         "client_secret": matrix_chat_app.client_secret,
                         "client_auth_method": "client_secret_post",
                         "discover": True,
-                        "scopes": ["openid"],
+                        "scopes": ["email", "openid", "profile"],
                         "skip_verification": True,
                         "user_mapping_provider": {
                             "config": {

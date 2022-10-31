@@ -900,7 +900,15 @@ class OIDCProviderEnableConfig(BooleanConfig):
             apps.append("oauth2_provider")
             middleware.insert(0, "corsheaders.middleware.CorsMiddleware")
             provider["OIDC_ENABLED"] = True
-            provider.setdefault("SCOPES", {}).update({"openid": "OpenID Connect scope"})
+            # The following scopes are required for the amount of attributes we want to return.
+            # (see `get_additional_claims`)
+            provider.setdefault("SCOPES", {}).update(
+                {
+                    "email": "Email scope",
+                    "openid": "OpenID Connect scope",
+                    "profile": "Profile scope",
+                }
+            )
             validator = "grouprise.auth.oauth_validators.AccountOAuth2Validator"
             provider["OAUTH2_VALIDATOR_CLASS"] = validator
             # verify the version of oauth2_provider (OIDC support started in v1.5.0)

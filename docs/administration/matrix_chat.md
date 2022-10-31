@@ -164,7 +164,7 @@ oidc_providers:
     client_id: "SEE_GROUPRISE_OAUTH_APPLICATION"
     client_secret: "SEE_GROUPRISE_OAUTH_APPLICATION"
     client_auth_method: client_secret_post
-    scopes: ["openid"]
+    scopes: ["email", "openid", "profile"]
     skip_verification: true
     user_mapping_provider:
       config:

@@ -10,6 +10,8 @@ Release Notes
 .. toctree::
    :hidden:
 
+   5.2.1
+
 
 .. toctree::
    :maxdepth: 1
