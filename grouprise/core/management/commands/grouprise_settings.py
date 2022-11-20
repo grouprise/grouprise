@@ -49,7 +49,7 @@ class Command(BaseCommand):
             action="append",
             help=(
                 "Location of configuration data (directory or filename). "
-                "May be specified multiple times",
+                "May be specified multiple times"
             ),
         )
         parser.add_argument(
