@@ -13,7 +13,10 @@ aiosmtplib                  # debian (bookworm): python3-aiosmtplib
 asgiref>=3.5.1              # debian: python3-asgiref
 bleach                      # debian: python3-bleach
 boltons                     # debian: python3-boltons
-django                      # debian: python3-django
+# Django 3.2 or later is supported
+# Django 4.x is not usable, due to imagekit (v4.1) failing to support it
+# TODO: remove `<4` after https://github.com/parruc/django-imagekit/commit/8180f3a3 is released
+django>=3.2,<4              # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 django-cachalot>=2.4.4      # debian (bookworm): python3-django-cachalot
 django-cors-middleware      # debian: python3-django-cors-headers
