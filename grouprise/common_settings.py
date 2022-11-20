@@ -2,7 +2,7 @@ import os
 import sys
 
 GROUPRISE_PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
-BASE_DIR = os.path.dirname(GROUPRISE_PACKAGE_DIR)
+GROUPRISE_DATA_DIR = os.path.dirname(GROUPRISE_PACKAGE_DIR)
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
@@ -135,7 +135,7 @@ SITE_ID = 1
 
 STATIC_URL = "/stadt/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(GROUPRISE_DATA_DIR, "static")
 
 
 # Media files (User uploaded files)
@@ -143,7 +143,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = "/stadt/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(GROUPRISE_DATA_DIR, "media")
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
@@ -209,13 +209,13 @@ ACCOUNT_USERNAME_VALIDATORS = "grouprise.features.gestalten.forms.username_valid
 HAYSTACK_CONNECTIONS = {
     "default": {
         "ENGINE": "xapian_backend.XapianEngine",
-        "PATH": os.path.join(BASE_DIR, "xapian_index"),
+        "PATH": os.path.join(GROUPRISE_DATA_DIR, "xapian_index"),
     },
 }
 
 HUEY = {
     "huey_class": "huey.SqliteHuey",
-    "filename": os.path.join(BASE_DIR, "huey.sqlite"),
+    "filename": os.path.join(GROUPRISE_DATA_DIR, "huey.sqlite"),
     # Do not store results of tasks, since we do not use them.
     # Otherwise we would need to run the following periodically:
     #   from huey.contrib.djhuey import HUEY
