@@ -27,7 +27,7 @@ Build-Depends:
  python3-asgiref,
  python3-bleach,
  python3-boltons,
- python3-django (>= 2:2.2),
+ python3-django (>= 2:3.2),
  python3-django-allauth,
  python3-django-csp,
  python3-django-debug-toolbar,
