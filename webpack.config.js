@@ -17,7 +17,7 @@ const baseDir = __dirname
 const buildDir = process.env.DIR_BUILD || path.join(baseDir, 'build')
 const reportsDir = path.join(buildDir, 'reports')
 const devServerURL = new URL(process.env.GROUPRISE_WEBPACK_DEV_SERVER || 'http://localhost:8080')
-const listenAddress = devServerURL.searchParams.get('listen') ?? devServerURL.hostname
+const listenAddress = devServerURL.searchParams.get('listen') || devServerURL.hostname
 
 const postCss = {
   loader: 'postcss-loader',
