@@ -487,7 +487,7 @@ class CacheStorageConfig(ConfigBase):
         if (backend == "filesystem") and (os.geteuid() == 0):
             # The filesystem backend may not be enabled for a privileged user. Otherwise, files
             # and directories in the cache could end up with the wrong permissions and ownership.
-            # Thus we disable the caching completely in order to prevent coordination problems
+            # Thus, we disable the caching completely in order to prevent coordination problems
             # between multiple processes.
             dest = {"BACKEND": CACHE_BACKENDS_MAP["dummy"]}
             logger.info("Disabling filesystem-based cache for privileged user")
@@ -949,7 +949,7 @@ class OIDCProviderEnableConfig(BooleanConfig):
             if self.config_base_directory is None:
                 raise ConfigError(
                     "OIDC is enabled, but the configuration's location could not be determined. "
-                    "Thus the location of the OIDC key file cannot be defined."
+                    "Thus, the location of the OIDC key file cannot be defined."
                 )
             oidc_key_filename = os.path.join(self.config_base_directory, "oidc.key")
             if not os.path.exists(oidc_key_filename):

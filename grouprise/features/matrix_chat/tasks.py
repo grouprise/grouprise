@@ -44,7 +44,7 @@ async def synchronize_matrix_rooms():
     """synchronize any outstanding missing room updates
 
     All rooms should be created on demand and all invitations should be send automatically.
-    But somehow events may get lost, thus we trigger a periodic manual update.
+    But somehow events may get lost. Thus, we trigger a periodic manual update.
     """
     logger.info("Synchronize matrix chat rooms")
 

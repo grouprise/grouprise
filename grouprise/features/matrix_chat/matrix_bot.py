@@ -175,7 +175,8 @@ class ChatBot(MatrixBaseBot):
         except nio.exceptions.ProtocolError as exc:
             logger.warning(f"Failed to assign alias ({room_alias}) to room: {exc}")
         else:
-            # we cannot detect the state of an alias already existing, thus we parse the message
+            # We cannot detect the state of an alias already existing.
+            # Thus, we need to parse the message.
             if not isinstance(
                 response, nio.responses.EmptyResponse
             ) and not response.message.endswith(" already exists"):
@@ -329,7 +330,7 @@ class ChatBot(MatrixBaseBot):
         """configure the power levels, aliases and other attributes of a room
 
         The procedure is a bit complicated, since we need to send a full state dictionary.
-        Thus we retrieve the current state first and merge it with the wanted changes.
+        Thus, we retrieve the current state first and merge it with the wanted changes.
         The result is sent to the server (if it differs from the current state).
 
         Specification: https://matrix.org/docs/spec/client_server/latest#id253

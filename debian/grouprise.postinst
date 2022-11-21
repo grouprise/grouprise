@@ -16,7 +16,7 @@ DIR_STATIC="/var/lib/grouprise/static"
 . /usr/share/debconf/confmodule
 db_version 2.1
 
-# debconf does not work with "set -u", thus we enable it after loading debconf
+# debconf does not work with "set -u". Thus, we enable it after loading debconf.
 set -eu
 
 
@@ -111,8 +111,8 @@ if [ "$1" = "configure" ]; then
         new_secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
         if [ ! -s "$GROUPRISE_SETTINGS_FILE" ] && ! grouprise_settings --help >/dev/null 2>&1; then
             # The config file does not exist and the "grouprise_settings" is not available, yet.
-            # Probably the "secret_key" is not configured, thus Django refuses to look for
-            # management commands within the installed apps.
+            # Probably the "secret_key" is not configured.
+            # Thus, Django refuses to look for management commands within the installed apps.
             # In this case we need to set the "secret_key" manually.
             mkdir -p "$(dirname "$GROUPRISE_SETTINGS_FILE")"
             echo "secret_key: '$new_secret_key'" > "$GROUPRISE_SETTINGS_FILE"

@@ -14,7 +14,7 @@ PKG_GROUP=_grouprise
 . /usr/share/debconf/confmodule
 db_version 2.1
 
-# debconf does not work with "set -u", thus we enable it after loading debconf
+# debconf does not work with "set -u". Thus, we enable it after loading debconf.
 set -eu
 
 

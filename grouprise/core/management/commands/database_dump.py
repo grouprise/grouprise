@@ -104,7 +104,7 @@ class Command(BaseCommand):
                 # (e.g. "gzip.open"), since subprocess.Popen would write directly to the underlying
                 # file handle instead of using the "write" method of the Gzip object.
                 # See https://stackoverflow.com/questions/7452427/
-                # Thus we need to handle two processes running in parallel.
+                # Thus, we need to handle two processes running in parallel.
                 try:
                     compress_proc = subprocess.Popen(
                         ["gzip"],

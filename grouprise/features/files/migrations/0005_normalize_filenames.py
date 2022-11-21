@@ -160,5 +160,5 @@ class Migration(migrations.Migration):
     ]
 
     # We are moving and renaming real files while going through all "file" objects in the database.
-    # Thus we may not allow a rollback in case of errors.
+    # Thus, we may not allow a rollback in case of errors.
     atomic = False

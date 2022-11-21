@@ -94,7 +94,7 @@ test_deb_package:
       - cp build/debian/*.deb /srv/local-apt-repository/
       - /usr/lib/local-apt-repository/rebuild
       - apt-get update
-      # we are running autopkgtest manually, thus we need to install its dependencies
+      # We are running autopkgtest manually. Thus, we need to install its dependencies.
       - "apt-get install -y $(grep '^Depends: ' debian/tests/control | cut -f 2- -d ' ' | tr -d ',' | tr ' ' '\n' | sort | uniq)"
       # install and run autopkgtest
       - apt-get install -y autopkgtest

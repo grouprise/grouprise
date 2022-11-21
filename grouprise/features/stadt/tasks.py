@@ -28,7 +28,7 @@ def update_scores():
 )
 def update_search_index():
     logger.info("Starting update of search index")
-    # Sadly the haystack command "update_index" contains a lot of complicated logic, thus we need
-    # to execute it directly.
+    # Sadly the haystack command "update_index" contains a lot of complicated logic.
+    # Thus, we need to execute it directly.
     UpdateIndexCommand().handle(remove=True)
     logger.info("Finished update of search index")

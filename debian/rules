@@ -38,7 +38,7 @@ override_dh_auto_build:
 override_dh_auto_test:
 	# grouprise's tests fail with:
 	#     django.db.utils.OperationalError: no such table: main.auth_user__old
-	# Thus we skip the tests for now.
+	# Thus, we skip the tests for now.
 	true dh_auto_test
 	# verify that at least some modules are part of the package
 	for module in aiosmtplib django_ical huey mdx_unimoji schulze randomcolor; do \

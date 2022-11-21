@@ -311,7 +311,8 @@ the zoom level is inferred from your coordinates, though you may choose a differ
 
 ### `feed_importer_gestalt_id`
 ID of the user (gestalt), which is set by the RSS feed importer as the author of imported content.
-This user never receives any kind of notifications, thus it should not be a human's user account.
+This user never receives any kind of notifications.
+Thus, it should not be a human's user account.
 
 Default: `1`
 
@@ -459,7 +460,8 @@ Default: `{"backend": "local_memory"}`
 ### `extra_django_settings_filenames`
 Names of files to be read during startup.
 The files are supposed to contain Django-style configuration settings (see [Django documentation](https://docs.djangoproject.com/en/stable/ref/settings/) for details).
-The files are parsed after all other settings are processed, thus it is possible to override any undesired configuration assumption imposed by *grouprise*.
+The files are parsed after all other settings are processed.
+Thus, it is possible to override any undesired configuration assumption imposed by *grouprise*.
 
 In addition to the general Django configuration, this file (*module*) may also contain a function named `post_load_hook`.
 This function (if it exists) is called with the current state of the Django settings dictionary as its first and only parameter.

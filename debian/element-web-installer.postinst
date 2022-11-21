@@ -11,7 +11,7 @@ WEB_DIR=/var/lib/element-web-installer/htdocs
 . /usr/share/debconf/confmodule
 db_version 2.1
 
-# debconf does not work with "set -u", thus we enable it after loading debconf
+# debconf does not work with "set -u". Thus, we enable it after loading debconf.
 set -eu
 
 

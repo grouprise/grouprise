@@ -56,7 +56,7 @@ GROUPRISE_PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 # overridden by the `data_path` configuration setting (if present)
 # You may *never* refer to `GROUPRISE_DATA_DIR` directly within this module, since it
 # depends on the (later) resolving of configuration settings.
-# Thus you always need to use the `grouprise_field_resolver` approach described below.
+# Thus, you always need to use the `grouprise_field_resolver` approach described below.
 GROUPRISE_DATA_DIR = os.path.dirname(GROUPRISE_PACKAGE_DIR)
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"

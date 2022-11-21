@@ -4,10 +4,10 @@ a matrix-synapse server.
 
 Please note: the grouprise instance must run on the same host as the matrix-synapse server.
 This authentication module uses the Django mechanism for loading the grouprise configuration.
-Thus at least the full set of dependencies for grouprise as well as the grouprise configuration
+Thus, at least the full set of dependencies for grouprise as well as the grouprise configuration
 file must be available.
-Grouprise does not offer any remote authentication mechanism, thus there is no way to work around
-this limitation.
+Grouprise does not offer any remote authentication mechanism.
+Thus, there is no way to work around this limitation.
 
 Configuration:
 * grouprise and Django (as well as all dependencies) need to be available within matrix-synapse,
