@@ -1145,6 +1145,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
                 "name": os.path.expanduser("~/grouprise.sqlite3"),
             },
         ),
+        WritableDirectoryConfig(name="data_path", django_target="GROUPRISE_DATA_DIR"),
         CacheStorageConfig(name="cache_storage", default={"backend": "local_memory"}),
         IntegerConfig(
             name="session_cookie_age", django_target="SESSION_COOKIE_AGE", minimum=0

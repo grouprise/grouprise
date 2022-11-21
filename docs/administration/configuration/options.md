@@ -2,6 +2,18 @@
 
 ## General
 
+### `data_path`
+This directory contains all locally stored data of the `grouprise` instance.
+
+The following subdirectories are noteworthy:
+
+* `media`: see [Django's `MEDIA_ROOT`](https://docs.djangoproject.com/en/stable/ref/settings/#media-root)) (may be overridden by the grouprise setting [`media_root`](#media-root))
+* `static`: see [Django's `STATIC_ROOT`](https://docs.djangoproject.com/en/stable/ref/settings/#static-root))
+
+Additionally local databases (e.g. stored tasks and search indexes) are stored below this directory.
+
+Default: the parent directory of the `grouprise` Python module (i.e. the project directory in a development setup).  Packagers are expected to override this default.
+
 ### `database`
 Configure the database connection to be used for storing grouprise's data.
 By default, an [SQLite](https://sqlite.org/) database is configured:
@@ -94,6 +106,8 @@ Default: `de-de`
 Uploaded files are stored in this directory.
 
 See [Django's documentation of the related setting](https://docs.djangoproject.com/en/stable/ref/settings/#media-root) for details.
+
+Default: `./media/` below the [`data_path`](#data-path)
 
 ### `secret_key`
 Specify a random secret key to be used for encryption and signing around form and session handling.
