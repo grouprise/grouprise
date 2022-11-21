@@ -12,7 +12,7 @@ Afterwards you can browse the generated documentation: `build/doc/html/index.htm
 
 ## Markdown format
 
-Markdown is a convenient format for writing formatted text, but sadly our currently used parser ([recommonmark](https://recommonmark.readthedocs.io/en/latest/)) does not offer all strucuturing capabilities offered by Sphinx.
+Markdown is a convenient format for writing formatted text, but sadly our currently used parser ([recommonmark](https://recommonmark.readthedocs.io/en/latest/)) does not offer all structuring capabilities offered by Sphinx.
 
 The following hints may help you:
 
