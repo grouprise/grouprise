@@ -96,11 +96,13 @@ def get_configuration_path_candidates():
     """
     result = []
     for path in (
+        # ordered by intention and required privilege
         os.getenv("GROUPRISE_CONFIG"),
-        # development setup: grouprise.yaml in the current directory
-        os.path.join(os.getcwd(), "grouprise.yaml"),
-        os.path.expanduser("~/.config/grouprise/conf.d"),
         "/etc/grouprise/conf.d",
+        os.path.expanduser("~/.config/grouprise/conf.d"),
+        # development setup: grouprise.conf.d/ and grouprise.yaml in the current directory
+        os.path.join(os.getcwd(), "grouprise.conf.d"),
+        os.path.join(os.getcwd(), "grouprise.yaml"),
     ):
         if path:
             result.append(os.path.abspath(path))
