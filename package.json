@@ -10,8 +10,9 @@
   "scripts": {
     "test": "true",
     "lint": "eslint 'res/**/*.{js,vue}' 'webpack.config.js'",
-    "build": "NODE_ENV=production webpack --bail --mode production",
-    "dev": "webpack-dev-server"
+    "fonts": "test -e build/fonts/google/fonts.css || fontdump --target-directory build/fonts/google --web-directory . 'https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:300,400,400i,500,700'",
+    "build": "npm run fonts && NODE_ENV=production webpack --bail --mode production",
+    "dev": "npm run fonts && webpack-dev-server"
   },
   "repository": {
     "type": "git",
