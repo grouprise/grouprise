@@ -44,22 +44,30 @@ RUN adduser --force-badname --gecos '' --disabled-password --shell /bin/bash --h
 WORKDIR /var/lib/grouprise
 EXPOSE 8000
 ENTRYPOINT ["/usr/local/bin/grouprise-entrypoint.sh"]
-CMD ["uwsgi", "--show-config", "--plugin", "python3", "--static-map", "/static/=/var/lib/grouprise/static/", "--static-map", "/media/=/var/lib/grouprise/media/"]
-ENV UWSGI_MODULE=grouprise.wsgi:application \
-    UWSGI_SOCKET=0.0.0.0:8001 \
-    UWSGI_HTTP_SOCKET=0.0.0.0:8002 \
-    UWSGI_MASTER=1 \
+CMD [ "uwsgi", \
+    "--show-config", \
+    "--master", \
+    "--lazy-apps", \
+    "--plugin", "python3", \
+    "--socket", "0.0.0.0:8001", \
+    "--http-socket", "0.0.0.0:8002", \
+    "--uid", "_grouprise", \
+    "--gid", "_grouprise", \
+    "--module", "grouprise.wsgi:application", \
+    "--static-map", "/static/=/var/lib/grouprise/static/", \
+    "--static-map", "/media/=/var/lib/grouprise/media/", \
+]
+ENV GROUPRISE_CONFIG=/etc/grouprise/conf.d/ \
+    PYTHONPATH=/usr/share/grouprise/python-lib/ \
+    # This one freaks out the docker parser when used in CMD.
+    UWSGI_STATIC_EXPIRES_URI="/stadt/static/core/base/.*\.[a-f0-9]{12,}\.(css|js|png|jpg|jpeg|gif|avif|webp|ico|woff|ttf|otf|svg|scss|map|txt) 315360000" \
+    # We need an env var for this so common_settings.py knows it has to set HUEY["immediate"] = False.
+    UWSGI_ATTACH_DAEMON="grouprisectl run_huey --skip-checks --workers 2" \
+    # Debian uWSGI doesn’t support these as CLI options.
     UWSGI_HTTP_AUTO_CHUNKED=1 \
     UWSGI_HTTP_KEEPALIVE=1 \
-    UWSGI_LAZY_APPS=1 \
-    UWSGI_WSGI_ENV_BEHAVIOR=holy \
-    UWSGI_STATIC_EXPIRES_URI="/static/.*\.[a-f0-9]{12,}\.(css|js|png|jpg|jpeg|gif|avif|webp|ico|woff|ttf|otf|svg|scss|map|txt) 315360000" \
-    UWSGI_UID=_grouprise \
-    UWSGI_GID=_grouprise \
-    UWSGI_ATTACH_DAEMON='grouprisectl run_huey --skip-checks --workers 2' \
-    GROUPRISE_CONFIG=/etc/grouprise/conf-base.d/ \
-    PYTHONPATH=/usr/share/grouprise/python-lib/ \
-    # you might want to change these following env variables
+    UWSGI_WSGI_ENV_BEHAVIOUR=holy \
+    # You might want to override the following env variables.
     UWSGI_WORKERS=2 \
     UWSGI_THREADS=4
 
