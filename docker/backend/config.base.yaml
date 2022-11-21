@@ -1,1 +1,4 @@
 data_path: /var/lib/grouprise
+cache_storage:
+    backend: filesystem
+    location: /tmp/grouprise-cache
