@@ -1,4 +1,4 @@
 cache_storage:
   backend: filesystem
   location: /run/grouprise/django-cache
-data_dir: /var/lib/grouprise
+data_path: /var/lib/grouprise
