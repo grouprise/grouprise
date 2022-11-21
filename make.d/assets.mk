@@ -15,7 +15,7 @@ $(STAMP_NODE_MODULES): package.json
 	touch "$(STAMP_NODE_MODULES)"
 
 
-$(STAMP_STATIC_WEBPACK): $(DEPS_ASSETS) webpack.config.js
+$(STAMP_STATIC_WEBPACK): $(DEPS_ASSETS) $(STAMP_NODE_MODULES) webpack.config.js
 	mkdir -p "$(DIR_STATIC)"
 	"$(BIN_NPM)" run build
 	touch "$(STAMP_STATIC_WEBPACK)"
