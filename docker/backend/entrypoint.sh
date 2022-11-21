@@ -7,15 +7,15 @@ _status() {
 }
 
 _prep() {
-     if [ -z "${GROUPRISE_DOCKER_NO_MIGRATE:-}" ]; then
+    if [ -z "${GROUPRISE_DOCKER_NO_MIGRATE:-}" ]; then
         _status "Executing migrations..."
         chronic grouprisectl migrate --no-input --skip-checks
-     fi
+    fi
 
-     if [ -z "${GROUPRISE_DOCKER_NO_COLLECTSTATIC:-}" ]; then
-         _status "Reloading assets..."
+    if [ -z "${GROUPRISE_DOCKER_NO_COLLECTSTATIC:-}" ]; then
+        _status "Reloading assets..."
         GROUPRISE_USER=root chronic grouprisectl collectstatic --no-input --skip-checks --clear
-     fi
+    fi
 }
 
 _show_config() {
