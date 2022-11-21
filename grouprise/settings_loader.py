@@ -420,7 +420,7 @@ class ListConfig(ConfigBase):
             else:
                 path = [self.django_target]
             # Do not apply the concatenation ("+=") directly to the value, but reference it via its
-            # parent.  Otherwise concatenation would have no effect on tuples.
+            # parent. Otherwise, concatenation would have no effect on tuples.
             parent = _get_nested_dict_value(settings, path[:-1], default={})
             parent.setdefault(path[-1], copy.deepcopy(self.append_pre_default))
             parent[path[-1]] += type(parent[path[-1]])(value)
@@ -480,7 +480,7 @@ class CacheStorageConfig(ConfigBase):
             pass
         dest["OPTIONS"] = {}
         # The cache seems to be used quite heavily with around 8k cache entries (maybe due to
-        # cachalot).  The required storage for these 8k entries is approximately 32 MB.
+        # cachalot). The required storage for these 8k entries is approximately 32 MB.
         # We leave some headroom in order to track the cache usage.
         dest["OPTIONS"]["MAX_ENTRIES"] = int(value.get("max_entries", 20000))
         backend = value.get("backend", self.default["backend"])
