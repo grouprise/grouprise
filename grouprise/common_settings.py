@@ -306,6 +306,7 @@ HUEY = {
 
 # Force huey into non-immediate mode if this looks like a uWSGI setup
 # where it’s started as an attached daemon.
+# See for use: docker/backend/Dockerfile
 if "run_huey" in os.environ.get("UWSGI_ATTACH_DAEMON", ""):
     HUEY["immediate"] = False
 
