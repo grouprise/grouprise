@@ -1,5 +1,7 @@
 services:
     db:
+        # We use postgis by default, so user’s don’t need to
+        # migrate the database if they decide to use geo-features.
         image: postgis/postgis
         container_name: grouprise-db
         restart: always
