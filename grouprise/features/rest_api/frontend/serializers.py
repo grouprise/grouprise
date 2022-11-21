@@ -1,5 +1,8 @@
 import django
+from django.db.models import NullBooleanField
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.fields import CharField, IntegerField, SerializerMethodField
 from taggit.models import Tag
 
 from grouprise import core
@@ -20,7 +23,7 @@ def validate_file_size(image):
     try:
         core.models.validate_file_size(image["file"])
     except django.forms.ValidationError as e:
-        raise serializers.ValidationError(e)
+        raise ValidationError(e)
 
 
 class IncludableFieldSerializerMixin:
@@ -42,9 +45,9 @@ class IncludableFieldSerializerMixin:
 
 
 class GestaltSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source="__str__", read_only=True)
-    initials = serializers.CharField(source="get_initials", read_only=True)
-    url = serializers.CharField(source="get_absolute_url", read_only=True)
+    name = CharField(source="__str__", read_only=True)
+    initials = CharField(source="get_initials", read_only=True)
+    url = CharField(source="get_absolute_url", read_only=True)
 
     class Meta:
         model = Gestalt
@@ -52,8 +55,8 @@ class GestaltSerializer(serializers.ModelSerializer):
 
 
 class GestaltOrAnonSerializer(serializers.Serializer):
-    id = serializers.IntegerField(required=False, allow_null=True)
-    name = serializers.CharField(required=False, allow_null=True)
+    id = IntegerField(required=False, allow_null=True)
+    name = CharField(required=False, allow_null=True)
 
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
@@ -94,9 +97,9 @@ class GroupSerializer(IncludableFieldSerializerMixin, serializers.ModelSerialize
     OPTIONAL_INCLUDABLE_FIELDS = ["location"]
 
     tags = TagSerializer(many=True)
-    initials = serializers.CharField(source="get_initials", read_only=True)
-    url = serializers.CharField(source="get_absolute_url", read_only=True)
-    cover = serializers.SerializerMethodField()
+    initials = CharField(source="get_initials", read_only=True)
+    url = CharField(source="get_absolute_url", read_only=True)
+    cover = SerializerMethodField()
     location = LocationField()
 
     def get_cover(self, obj: Group):
@@ -121,8 +124,8 @@ class GroupSerializer(IncludableFieldSerializerMixin, serializers.ModelSerialize
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(source="file.name", read_only=True)
-    path = serializers.CharField(source="file.url", read_only=True)
+    title = CharField(source="file.name", read_only=True)
+    path = CharField(source="file.url", read_only=True)
 
     class Meta:
         model = Image
@@ -150,7 +153,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class OptionSerializer(serializers.ModelSerializer):
-    title = serializers.SerializerMethodField()
+    title = SerializerMethodField()
 
     def get_title(self, instance: Option):
         return str(instance)
@@ -172,8 +175,8 @@ class VoterSerializer(serializers.ModelSerializer):
 
 
 class PollSerializer(serializers.ModelSerializer):
-    options = serializers.SerializerMethodField()
-    last_voted = serializers.SerializerMethodField()
+    options = SerializerMethodField()
+    last_voted = SerializerMethodField()
 
     def get_options(self, instance: WorkaroundPoll):
         options = sorted(list(instance.options.all()))
@@ -261,7 +264,7 @@ class PollSerializer(serializers.ModelSerializer):
 
 class EndorsementsSerializer(serializers.Serializer):
     option = serializers.PrimaryKeyRelatedField(queryset=Option.objects)
-    endorsement = serializers.NullBooleanField()
+    endorsement = NullBooleanField()
 
 
 class PollVoteSerializer(serializers.Serializer):
