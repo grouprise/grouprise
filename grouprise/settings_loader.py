@@ -107,40 +107,41 @@ def get_configuration_path_candidates():
     return result
 
 
-def get_configuration_filenames(location_candidates=None):
+def get_configuration_filenames(location_candidates=None, level=1):
     """determine suitable configuration files based on a list of location candidates
 
     If no "location_candidates" are given, the result of "get_configuration_path_candidates()" is
     used.
-    The locations are tested in the given order.  The first candidate pointing at a file or
+    The locations are tested in the given order. The first candidate pointing at a file or
     pointing at a directory containing suitable files (alphanumeric characters or hyphen, with
-    ".yaml" extension) is used.  All following candidates are discarded.
+    ".yaml" extension) is used. Directories are scanned recursively. All following candidates are discarded.
     A number of filenames (absolute paths) is returned.
     An empty list is returned, if no suitable files were found.
     """
     if location_candidates is None:
         location_candidates = get_configuration_path_candidates()
-    result = []
+    if level > 10:
+        return []
+    results = []
     for path in location_candidates:
         if os.path.exists(path):
             if os.path.isdir(path):
                 for filename in sorted(os.listdir(path)):
-                    full_path = os.path.abspath(os.path.join(path, filename))
-                    if os.path.isfile(
-                        full_path
-                    ) and CONFIGURATION_FILENAME_PATTERN.match(filename):
-                        result.append(full_path)
-            elif os.path.isfile(path):
-                result.append(os.path.abspath(path))
-            else:
-                # skip any other kind of objects
-                pass
-        # stop testing further candidate locations as soon as the first configuration file is found
-        if result:
-            return result
-    else:
-        # no suitable configuration file was found
-        return []
+                    results.extend(
+                        get_configuration_filenames(
+                            [os.path.join(path, filename)],
+                            level + 1,
+                        ),
+                    )
+            elif os.path.isfile(path) and CONFIGURATION_FILENAME_PATTERN.match(
+                os.path.basename(path)
+            ):
+                results.append(os.path.abspath(path))
+        # stop testing further candidate locations
+        # as soon as we’ve encountered a path with valid configurations
+        if results:
+            break
+    return results
 
 
 def load_settings_from_yaml_files(locations=None, error_if_missing=False):
