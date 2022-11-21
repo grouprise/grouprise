@@ -17,6 +17,7 @@ const baseDir = __dirname
 const buildDir = process.env.DIR_BUILD || path.join(baseDir, 'build')
 const reportsDir = path.join(buildDir, 'reports')
 const devServerURL = new URL(process.env.GROUPRISE_WEBPACK_DEV_SERVER || 'http://localhost:8080')
+const listenAddress = devServerURL.searchParams.get('listen') ?? devServerURL.hostname
 
 const postCss = {
   loader: 'postcss-loader',
@@ -55,7 +56,7 @@ module.exports = {
   devServer: {
     static: './dist',
     port: devServerURL.port,
-    host: ['localhost', '127.0.0.1'].includes(devServerURL.hostname) ? 'localhost' : '0.0.0.0',
+    host: ['localhost', '127.0.0.1'].includes(listenAddress) ? 'localhost' : listenAddress,
     hot: true,
     client: {
       overlay: true
