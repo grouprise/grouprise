@@ -197,7 +197,7 @@ module.exports = {
       debug: isDebug
     }),
     new HtmlWebpackPlugin({
-      filename: path.join(__dirname, 'grouprise', 'core', 'templates', 'core', '_assets.html'),
+      filename: path.join(__dirname, 'grouprise', 'core', 'templates', 'core', 'assets', '_assets.html'),
       scriptLoading: 'defer',
       inject: false,
       alwaysWriteToDisk: true,

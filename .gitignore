@@ -39,4 +39,4 @@ debian/files
 
 grouprise.egg-info/
 gitlab-ci-build-venv/
-grouprise/core/templates/core/_assets.html
+grouprise/core/templates/core/assets/_assets.html
