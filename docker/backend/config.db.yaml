@@ -1,0 +1,6 @@
+database:
+    engine: postgis
+    host: db
+    name: grouprise
+    user: grouprise
+    password: grouprise

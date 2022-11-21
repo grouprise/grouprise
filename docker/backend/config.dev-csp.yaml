@@ -1,0 +1,12 @@
+csp:
+    script_src:
+        - http://localhost:8003
+        # the webpack dev server emits at least one `eval` call
+        - "'unsafe-eval'"
+    default_src:
+        - http://localhost:8003
+        # allow font download via the webpack dev server
+        - "data:"
+    connect_src:
+        - http://localhost:8003
+        - ws://localhost:8003

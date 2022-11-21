@@ -1,0 +1,43 @@
+services:
+    db:
+        image: postgis/postgis
+        container_name: grouprise-db
+        restart: always
+        environment:
+            POSTGRES_USER: grouprise
+            POSTGRES_PASSWORD: grouprise
+        volumes:
+            - grouprise-db:/var/lib/postgresql/data/
+
+    backend:
+        build:
+            context: .
+            dockerfile: docker/backend/Dockerfile
+        container_name: grouprise-backend
+        env_file:
+            - .env
+        image: grouprise-backend
+        volumes:
+            - ./docker/backend/config.db.yaml:/etc/grouprise/conf-base.d/010-db.yaml
+            - grouprise-media:/var/lib/grouprise/media/
+            - grouprise-static:/var/lib/grouprise/static/
+        depends_on:
+            - db
+
+    nginx:
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile
+        container_name: grouprise-nginx
+        volumes:
+            - grouprise-media:/var/lib/grouprise/media/
+            - grouprise-static:/var/lib/grouprise/static/
+        depends_on:
+            - backend
+        ports:
+            - "8008:80"
+
+volumes:
+    grouprise-db:
+    grouprise-media:
+    grouprise-static:

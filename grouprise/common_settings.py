@@ -302,6 +302,9 @@ HUEY = {
     # parallel processing in order to prevent the queue from filling up and thus delaying
     # notifications.
     "consumer": {"workers": 4, "worker_type": "thread"},
+    # Force huey into non-immediate mode if this looks like a uWSGI setup
+    # where it’s started as an attached daemon.
+    "immediate": "run_huey" not in os.environ.get("UWSGI_ATTACH_DAEMON", ""),
 }
 
 

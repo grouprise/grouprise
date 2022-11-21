@@ -1,0 +1,5 @@
+server {
+    listen 80 default_server;
+    client_max_body_size 128m;
+    include /etc/nginx/snippets/grouprise.conf;
+}

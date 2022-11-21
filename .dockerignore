@@ -1,2 +1,7 @@
 media/
 build/
+node_modules/
+grouprise.egg-info/
+.git/
+.idea/
+db.sqlite3

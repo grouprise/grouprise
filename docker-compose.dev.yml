@@ -1,0 +1,48 @@
+services:
+    db:
+        ports:
+            - "54320:5432"
+
+    backend:
+        environment:
+            UWSGI_PY_AUTORELOAD: 1
+        volumes:
+            - ./grouprise/:/usr/share/grouprise/python-lib/grouprise/
+            - ./manage.py:/usr/share/grouprise/manage.py
+            - ./debian/grouprisectl:/usr/local/bin/grouprisectl
+            - ./docker/backend/entrypoint.sh:/usr/local/bin/grouprise-entrypoint.sh
+            - ./grouprise.yaml:/etc/grouprise/conf-base.d/000-local.yaml
+            - ./docker/backend/config.dev-csp.yaml:/etc/grouprise/conf-base.d/001-dev-csp.yaml
+            - ./docker/backend/config.db.yaml:/etc/grouprise/conf-base.d/010-db.yaml
+            - grouprise-assets:/usr/share/grouprise/python-lib/grouprise/core/templates/core/assets/
+            - grouprise-media:/var/lib/grouprise/media/
+            - grouprise-static:/var/lib/grouprise/static/
+        ports:
+            - "8001:8001"
+            - "8002:8002"
+
+    assets:
+        build:
+            context: .
+            dockerfile: docker/assets/Dockerfile
+        env_file:
+            - .env
+        environment:
+            # any port changes need to be applied
+            #  * in the ports section below and
+            #  * in docker/backend/config.dev-csp.yaml
+            GROUPRISE_WEBPACK_DEV_SERVER: "http://localhost:8003?listen=0.0.0.0"
+        volumes:
+            - ./res/:/home/node/assets/
+            - ./webpack.config.js:/home/node/webpack.config.js
+            - grouprise-assets:/root/assets/grouprise/core/templates/core/assets/
+        ports:
+            - "8003:8003"
+
+    nginx:
+        volumes:
+            - ./offline-website/:/usr/share/grouprise/offline-website/
+            - ./robots.txt:/usr/share/grouprise/www/robots.txt
+
+volumes:
+    grouprise-assets:

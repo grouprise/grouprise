@@ -9,54 +9,76 @@ You may want to install the latest [release](./-/blob/main/docs/deployment/deb.m
 
 ### For developers
 
-The *local source* approach described below is suitable for developing the code of grouprise itself.
-The *system in docker* approach is helpful for developing integrations with other packages (e.g. a mail server or matrix).
+grouprise has become an application with a lot of integrations into other services
+like mail and [matrix](https://matrix.org/) servers and depends on other services
+like task queues in order to work properly.
 
-#### Local Source
+If you are just starting out, we recommend to use docker-compose
+to jump-start your development environment.
 
-1. You will need [virtualenv](https://virtualenv.pypa.io/en/stable/), [node](https://nodejs.org/en/), [python3](https://www.python.org/), [flake8](http://flake8.pycqa.org/en/latest/), [pip](https://pip.pypa.io/en/stable/) and [make](https://www.gnu.org/software/make/) to get started. If you have all of those, you may proceed :). Otherwise see *Dependencies* below.
-2. Run `make app_run` and wait until you see something like `Starting development server at http://127.0.0.1:8000/`
-3. Visit http://127.0.0.1:8000/
+Once you’ve got to know the intricacies and details of grouprise you might
+feel comfortable to run grouprise with more low-level tooling,
+but feel free to point out shortcomings in our docker-compose setup,
+so we can fix them.
 
-#### System in Docker
+#### Development with docker-compose
 
-1. generate and run a docker image containing a prepared Debian Bullseye image. It is ready for installing
-grouprise's [deb packages](./-/blob/main/docs/deployment/deb.md) from grouprise's apt repository
-or for testing locally built deb packages:
-```shell
-make run-docker-deb-prepared
-```
-1. install released packages from the official apt repository or locally built deb packages:
-```shell
-# a) install released grouprise packages
-apt install grouprise
-# b) install locally built packages
-dpkg -i /app/build/debian/grouprise_*.deb
-```
+If you’re running Linux or BSD, your favorite distribution will most
+likely have a package for docker-compose. In case it doesn’t or if you
+use a different operating system like Windows or macOS please
+refer to the [docker-compose install guide](https://docs.docker.com/compose/install/)
+to get it up and running.
 
+First create a copy of the default configuration.
+This only needs to be done once.
 
-## Dependencies
-
-Depending on your distribution (we assume you’ll be using something like Linux here) the build dependencies of this project will be available via your package manager.
-
-
-### Debian
 ```sh
-apt install make nodejs npm python3 virtualenv python3-flake8 python3-pip python3-sphinx python3-recommonmark python3-xapian
+cp grouprise.yaml.development grouprise.yaml
 ```
 
+After that you should be able to start a development environment by
+executing the following command:
 
-### Arch Linux
 ```sh
-pacman -Sy make nodejs npm python python-virtualenv flake8 python-pip python-sphinx python-recommonmark python-xapian
+COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml docker-compose up --build
 ```
+
+Bootstrapping the environment will take quite some time on your first start,
+but eventually you’ll see *Running* in the output and the output itself
+becomes more colorful once the individual services are started.
+
+A short while after that you can visit `http://localhost:8008` in your browser
+of choice.
+
+Things are not working? Come join us in our
+[grouprise-dev chatroom](https://matrix.to/#/#grouprise-dev:systemausfall.org)!
+
+Please note: Some settings like `database` or the `data_path` are overridden
+or extended internally by the docker-compose setup. Changing them in your local
+configuration won’t have any effect. You’ll see a dump of your entire
+configuration as it is used by grouprise in the output of docker-compose
+under the `grouprise-backend` prefix.
+
+#### Development with low-level tooling
+
+1. You will need [virtualenv](https://virtualenv.pypa.io/en/stable/),
+   [node](https://nodejs.org/en/),
+   [python3](https://www.python.org/),
+   [flake8](http://flake8.pycqa.org/en/latest/),
+   [pip](https://pip.pypa.io/en/stable/) and
+   [make](https://www.gnu.org/software/make/) to get started.
+   If you have all of those, you may proceed :).
+   Otherwise, see *Low-level tooling dependencies* below.
+2. Run `make assets` if you plan on working on the frontend
+3. Run `make app_run` and wait until you see something like
+   `Starting development server at http://127.0.0.1:8000/`
+4. Visit http://127.0.0.1:8000/
 
 
 ## Local Settings
 
 Your local Django settings will be located in `grouprise.yaml`.
 Run `make app_local_settings` to create a default configuration.
-
 
 ## Database Setup
 
@@ -87,3 +109,18 @@ The source code of grouprise itself is released under the [AGPL version 3 or lat
 which is included in the [LICENSE](LICENSE) file.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+
+## Low-level tooling dependencies
+
+Depending on your distribution (we assume you’ll be using something like Linux here) the build dependencies of this project will be available via your package manager.
+
+### Debian
+```sh
+apt install make nodejs npm python3 virtualenv python3-flake8 python3-pip python3-sphinx python3-recommonmark python3-xapian
+```
+
+### Arch Linux
+```sh
+pacman -Sy make nodejs npm python python-virtualenv flake8 python-pip python-sphinx python-recommonmark python-xapian
+```
