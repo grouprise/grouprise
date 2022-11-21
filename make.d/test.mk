@@ -4,6 +4,7 @@ LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT
 	xargs -0 -n1 dirname | sort | uniq)
 SPELLING_DIRECTORIES ?= debian docker docs grouprise make.d
 SPELLING_IGNORE_FILE = .codespell-ignore-filenames
+ASSETS_TEMPLATE = grouprise/core/templates/core/assets/_assets.html
 
 .PHONY: lint
 lint: lint_js lint_packages lint_spelling
@@ -48,7 +49,8 @@ test_py_prepare:
 	@# is resolved, which breaks a lot of our python-tests. As this template only includes
 	@# asset metadata and JavaScript & CSS file references, we simply make sure that the file
 	@# exists during the test run. The content itself is of no relevance to the python-tests.
-	touch grouprise/core/templates/core/assets/_assets.html
+	mkdir -p $(dir $(ASSETS_TEMPLATE))
+	touch $(ASSETS_TEMPLATE)
 
 .PHONY: test_js
 test_js: $(STAMP_NODE_MODULES) lint_js
