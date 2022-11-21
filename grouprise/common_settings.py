@@ -22,7 +22,7 @@ class DelayedDictFieldResolver:
     def __init__(self):
         self._resolvables = []
 
-    def get_resolver(self, dict_path: Tuple[str], resolver: Callable):
+    def get_resolver(self, dict_path: Tuple[str, ...], resolver: Callable):
         """this function is mainly used for registering a to-be-resolved callable"""
         self._resolvables.append(tuple(dict_path))
         # Simply return the resolver function.
@@ -41,7 +41,7 @@ class DelayedDictFieldResolver:
                     parent[fieldname] = parent[fieldname](data_dict)
 
     @staticmethod
-    def _get_nested_dict(data: dict, path: Tuple[str]):
+    def _get_nested_dict(data: dict, path: Tuple[str, ...]):
         """raise KeyError if the referenced field does not exist"""
         current_level = data
         # walk down the dictionary to the target element's parent
