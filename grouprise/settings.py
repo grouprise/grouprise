@@ -20,11 +20,20 @@ else:
     from grouprise.common_settings import *  # noqa: F401 F403
     from grouprise.settings_loader import ConfigError, import_settings_from_yaml
 
+    settings = locals()
     try:
-        import_settings_from_yaml(locals(), error_if_missing=True)
+        import_settings_from_yaml(settings, error_if_missing=True)
     except ConfigError as exc:
         if os.getenv("GROUPRISE_EXIT_ON_CONFIG_ERROR", "1") == "1":
             print(f"[grouprise] {exc}", file=sys.stderr)
             sys.exit(1)
         else:
             raise
+    # resolve all potentially delayed settings (e.g. based on `data_path`)
+    try:
+        resolver = settings["grouprise_field_resolver"]
+    except KeyError:
+        pass
+    else:
+        resolver.resolve_fields(settings)
+        del settings["grouprise_field_resolver"]

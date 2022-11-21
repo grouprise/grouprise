@@ -1,10 +1,71 @@
 import os
 import sys
+from typing import Callable, Tuple
+
+
+class DelayedDictFieldResolver:
+    """allow the delayed resolving of dictionary fields
+
+    This may be used for certain Django settings, which depend on other settings, which may be
+    overridden by our configuration files mechanism (e.g. `data_path`).
+    Such references should be resolved *after* the configuration files are loaded.
+
+    Initialize this class once and call the `get_resolver` method for each field to be resolved
+    delayed.
+    The result of this call needs to be stored in place of the setting to be resolved later.
+
+    At some point (e.g. after all configuration files are processed), you need to call the
+    `resolved_fields` method with the current data dictionary (for settings: `locals()`) as the
+    only parameter.
+    """
+
+    def __init__(self):
+        self._resolvables = []
+
+    def get_resolver(self, dict_path: Tuple[str], resolver: Callable):
+        """this function is mainly used for registering a to-be-resolved callable"""
+        self._resolvables.append(tuple(dict_path))
+        # Simply return the resolver function.
+        # We expect it to be stored in the dictionary.
+        return resolver
+
+    def resolve_fields(self, data_dict: dict):
+        for dict_path in self._resolvables:
+            try:
+                parent, fieldname = self._get_nested_dict(data_dict, dict_path)
+            except KeyError:
+                # the path does not exist anymore - maybe the user overwrote it
+                return
+            else:
+                if callable(parent[fieldname]):
+                    parent[fieldname] = parent[fieldname](data_dict)
+
+    @staticmethod
+    def _get_nested_dict(data: dict, path: Tuple[str]):
+        """raise KeyError if the referenced field does not exist"""
+        current_level = data
+        # walk down the dictionary to the target element's parent
+        for key in path[:-1]:
+            current_level = current_level[key]
+        # ensure that the final key exists
+        current_level[path[-1]]
+        return current_level, path[-1]
+
 
 GROUPRISE_PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
+# overridden by the `data_path` configuration setting (if present)
+# You may *never* refer to `GROUPRISE_DATA_DIR` directly within this module, since it
+# depends on the (later) resolving of configuration settings.
+# Thus you always need to use the `grouprise_field_resolver` approach described below.
 GROUPRISE_DATA_DIR = os.path.dirname(GROUPRISE_PACKAGE_DIR)
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
+
+
+# This mechanism should be used for all settings, which depend on other settings.
+# The callable should expect a single argument: a dictionary containing the django settings
+# (previsely: `locals()` in the current context).
+grouprise_field_resolver = DelayedDictFieldResolver()
 
 
 # Django Basics
@@ -135,7 +196,10 @@ SITE_ID = 1
 
 STATIC_URL = "/stadt/static/"
 
-STATIC_ROOT = os.path.join(GROUPRISE_DATA_DIR, "static")
+STATIC_ROOT = grouprise_field_resolver.get_resolver(
+    ("STATIC_ROOT",),
+    lambda settings_dict: os.path.join(settings_dict["GROUPRISE_DATA_DIR"], "static"),
+)
 
 
 # Media files (User uploaded files)
@@ -143,7 +207,10 @@ STATIC_ROOT = os.path.join(GROUPRISE_DATA_DIR, "static")
 
 MEDIA_URL = "/stadt/media/"
 
-MEDIA_ROOT = os.path.join(GROUPRISE_DATA_DIR, "media")
+MEDIA_ROOT = grouprise_field_resolver.get_resolver(
+    ("MEDIA_ROOT",),
+    lambda settings_dict: os.path.join(settings_dict["GROUPRISE_DATA_DIR"], "media"),
+)
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
@@ -209,13 +276,23 @@ ACCOUNT_USERNAME_VALIDATORS = "grouprise.features.gestalten.forms.username_valid
 HAYSTACK_CONNECTIONS = {
     "default": {
         "ENGINE": "xapian_backend.XapianEngine",
-        "PATH": os.path.join(GROUPRISE_DATA_DIR, "xapian_index"),
+        "PATH": grouprise_field_resolver.get_resolver(
+            ("HAYSTACK_CONNECTIONS", "default", "PATH"),
+            lambda settings_dict: os.path.join(
+                settings_dict["GROUPRISE_DATA_DIR"], "xapian_index"
+            ),
+        ),
     },
 }
 
 HUEY = {
     "huey_class": "huey.SqliteHuey",
-    "filename": os.path.join(GROUPRISE_DATA_DIR, "huey.sqlite"),
+    "filename": grouprise_field_resolver.get_resolver(
+        ("HUEY", "filename"),
+        lambda settings_dict: os.path.join(
+            settings_dict["GROUPRISE_DATA_DIR"], "huey.sqlite"
+        ),
+    ),
     # Do not store results of tasks, since we do not use them.
     # Otherwise we would need to run the following periodically:
     #   from huey.contrib.djhuey import HUEY
