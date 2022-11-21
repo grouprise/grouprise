@@ -24,6 +24,7 @@ COPY --from=grouprise-depends depends /tmp
 RUN apt update -y && \
     apt install -y -t bullseye-backports \
       adduser \
+      inotify-tools \
       locales \
       python3-pip \
       wget \
@@ -54,8 +55,10 @@ CMD [ "uwsgi", \
     "--uid", "_grouprise", \
     "--gid", "_grouprise", \
     "--module", "grouprise.wsgi:application", \
+    "--touch-reload", "/etc/grouprise/conf.d", \
     "--static-map", "/static/=/var/lib/grouprise/static/", \
     "--static-map", "/media/=/var/lib/grouprise/media/", \
+    "--attach-daemon", "/usr/local/bin/grouprise-conf-watcher.sh" \
 ]
 ENV GROUPRISE_CONFIG=/etc/grouprise/conf.d/ \
     PYTHONPATH=/usr/share/grouprise/python-lib/ \
@@ -81,5 +84,6 @@ COPY --from=grouprise-assets \
     /root/assets/build/static/ \
     /usr/share/grouprise/python-lib/grouprise/core/static/core/base/
 COPY debian/grouprisectl /usr/local/bin/
+COPY docker/backend/conf-watcher.sh /usr/local/bin/grouprise-conf-watcher.sh
 COPY docker/backend/entrypoint.sh /usr/local/bin/grouprise-entrypoint.sh
-COPY docker/backend/config.base.yaml /etc/grouprise/conf-base.d/010-base.yaml
+COPY docker/backend/config.base.yaml /etc/grouprise/conf.d/0-static/000-base.yaml

@@ -1,14 +1,9 @@
-CONFIG_APP_SETUP ?= grouprise.yaml
-CONFIG_APP_SETUP_TEMPLATE = grouprise.yaml.development
 VIRTUALENV_UPDATE_STAMP = $(DIR_BUILD)/.virtualenv-update.stamp
 REQUIREMENTS_FILE = requirements.txt
 
 
 $(VIRTUALENV_UPDATE_STAMP): $(REQUIREMENTS_FILE) virtualenv-update
 	touch "$@"
-
-$(CONFIG_APP_SETUP):
-	cp "$(CONFIG_APP_SETUP_TEMPLATE)" "$@"
 
 .PHONY: app_migrate
 app_migrate: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP)
@@ -32,7 +27,8 @@ app_collect_static: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP) assets
 	( . "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py collectstatic --no-input )
 
 .PHONY: app_local_settings
-app_local_settings: $(CONFIG_APP_SETUP)
+app_local_settings:
+	cp grouprise-dev.conf.d/*.yaml grouprise.conf.d/
 
 .PHONY: app_collect_translation_strings
 app_collect_translation_strings: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP)

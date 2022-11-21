@@ -33,7 +33,7 @@ First create a copy of the default configuration.
 This only needs to be done once.
 
 ```sh
-cp grouprise.yaml.development grouprise.yaml
+cp grouprise-dev.conf.d/000-common.yaml grouprise.conf.d/
 ```
 
 After that you should be able to start a development environment by
@@ -79,6 +79,8 @@ under the `grouprise-backend` prefix.
 
 Your local Django settings will be located in `grouprise.yaml`.
 Run `make app_local_settings` to create a default configuration.
+
+PS: Don’t run `make app_local_settings` if you’re using docker-compose!
 
 ## Database Setup
 

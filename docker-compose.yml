@@ -18,7 +18,8 @@ services:
             - .env
         image: grouprise-backend
         volumes:
-            - ./docker/backend/config.db.yaml:/etc/grouprise/conf-base.d/010-db.yaml
+            - ./docker/backend/config.db.yaml:/etc/grouprise/conf.d/0-static/100-db.yaml
+            - ./grouprise.conf.d/:/etc/grouprise/conf.d/1-user/
             - grouprise-media:/var/lib/grouprise/media/
             - grouprise-static:/var/lib/grouprise/static/
         depends_on:

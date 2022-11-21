@@ -1,0 +1,18 @@
+# example settings for local development and tests
+
+domain: example.org
+debug: true
+extra_allowed_hosts: [ "localhost", "127.0.0.1", "[::1]" ]
+secret_key: DEVELOPMENT_IS_NOT_SECURE
+email_submission: { backend: console }
+transport_security: disabled
+matrix_chat:
+    enabled: true
+    bot_username: grouprise-bot
+    bot_access_token: 'SECRET_ACCESS_TOKEN'
+    public_listener_rooms:
+        - "!foo:example.org"
+    backend: console
+matrix_commander:
+    enabled: true
+    backend: console

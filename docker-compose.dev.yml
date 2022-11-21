@@ -11,9 +11,9 @@ services:
             - ./manage.py:/usr/share/grouprise/manage.py
             - ./debian/grouprisectl:/usr/local/bin/grouprisectl
             - ./docker/backend/entrypoint.sh:/usr/local/bin/grouprise-entrypoint.sh
-            - ./grouprise.yaml:/etc/grouprise/conf-base.d/000-local.yaml
-            - ./docker/backend/config.dev-csp.yaml:/etc/grouprise/conf-base.d/001-dev-csp.yaml
-            - ./docker/backend/config.db.yaml:/etc/grouprise/conf-base.d/010-db.yaml
+            - ./docker/backend/config.dev-csp.yaml:/etc/grouprise/conf.d/0-static/100-dev-csp.yaml
+            - ./docker/backend/config.db.yaml:/etc/grouprise/conf.d/0-static/100-db.yaml
+            - ./grouprise.conf.d/:/etc/grouprise/conf.d/1-user/
             - grouprise-assets:/usr/share/grouprise/python-lib/grouprise/core/templates/core/assets/
             - grouprise-media:/var/lib/grouprise/media/
             - grouprise-static:/var/lib/grouprise/static/

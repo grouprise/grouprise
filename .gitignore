@@ -5,6 +5,7 @@ dist/
 db.sqlite3*
 huey.sqlite
 grouprise.yaml
+grouprise.conf.d/*.yaml
 oidc.key
 media/
 media-*/
