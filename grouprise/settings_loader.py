@@ -116,7 +116,9 @@ def get_configuration_filenames(location_candidates=None, level=1):
     used.
     The locations are tested in the given order. The first candidate pointing at a file or
     pointing at a directory containing suitable files (alphanumeric characters or hyphen, with
-    ".yaml" extension) is used. Directories are scanned recursively. All following candidates are discarded.
+    ".yaml" extension) is used. Directories are scanned recursively.
+    All following candidates are discarded.
+
     A number of filenames (absolute paths) is returned.
     An empty list is returned, if no suitable files were found.
     """
