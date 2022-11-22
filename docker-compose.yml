@@ -16,8 +16,6 @@ services:
             context: .
             dockerfile: docker/backend/Dockerfile
         container_name: grouprise-backend
-        env_file:
-            - .env
         volumes:
             - ./docker/backend/config.db.yaml:/etc/grouprise/conf.d/0-static/100-db.yaml
             - ./grouprise.conf.d/:/etc/grouprise/conf.d/1-user/
