@@ -109,7 +109,8 @@ def get_configuration_path_candidates():
     return result
 
 
-def get_configuration_filenames(location_candidates=None, level=1):
+
+def get_configuration_filenames(location_candidates=None, max_level=10):
     """determine suitable configuration files based on a list of location candidates
 
     If no "location_candidates" are given, the result of "get_configuration_path_candidates()" is
@@ -124,7 +125,7 @@ def get_configuration_filenames(location_candidates=None, level=1):
     """
     if location_candidates is None:
         location_candidates = get_configuration_path_candidates()
-    if level > 10:
+    if max_level == 0:
         return []
     results = []
     for path in location_candidates:
@@ -134,7 +135,7 @@ def get_configuration_filenames(location_candidates=None, level=1):
                     results.extend(
                         get_configuration_filenames(
                             [os.path.join(path, filename)],
-                            level + 1,
+                            max_level - 1,
                         ),
                     )
             elif os.path.isfile(path) and CONFIGURATION_FILENAME_PATTERN.match(
