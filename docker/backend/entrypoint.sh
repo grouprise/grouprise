@@ -16,6 +16,8 @@ _prep() {
         _status "Reloading assets..."
         GROUPRISE_USER=root chronic grouprisectl collectstatic --no-input --skip-checks --clear
     fi
+
+    chown -R _grouprise: /var/lib/grouprise
 }
 
 _show_config() {
