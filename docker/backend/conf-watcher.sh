@@ -19,7 +19,7 @@ inotifywait \
     --event close_write \
     "$CONF_DIR" | while read -r filename; \
 do
-    if echo "$filename" | grep -q '\.yaml$'; then
+    if printf '%s' "$filename" | grep -q '\.yaml$'; then
         touch "$CONF_DIR"
     fi
 done
