@@ -1,7 +1,10 @@
 #!/bin/sh
 
-# some random port
-export HTTP_SOCKET="localhost:37136"
+# use some random port
+# A hostname (e.g. `localhost`) seems to cause problems with nginx due
+# to "duplicate listen directive" for some reason (maybe based on DNS
+# resolution).
+export HTTP_SOCKET="127.0.0.1:37136"
 
 TEST_DIRECTORY="debian/tests/grouprise-uwsgi-nginx.d"
 

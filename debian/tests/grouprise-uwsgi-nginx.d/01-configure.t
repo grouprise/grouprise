@@ -34,7 +34,7 @@ test_expect_success "configure grouprise database" '
 '
 
 test_expect_success "configure grouprise proxy setup" '
-  echo "- localhost" | GROUPRISE_USER=root grouprisectl grouprise_settings set extra_allowed_hosts
+  echo "- 127.0.0.1" | GROUPRISE_USER=root grouprisectl grouprise_settings set extra_allowed_hosts
   echo "disabled" | GROUPRISE_USER=root grouprisectl grouprise_settings set transport_security
 '
 
