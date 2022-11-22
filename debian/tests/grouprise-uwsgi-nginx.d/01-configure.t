@@ -54,6 +54,7 @@ test_expect_success "enable grouprise debugging" '
 '
 
 test_expect_success "restart nginx" '
+  nginx -T
   service nginx restart
 '
 
