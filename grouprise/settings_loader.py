@@ -94,20 +94,20 @@ def get_configuration_path_candidates():
 
     The resulting paths may not exist.
     """
-    result = []
-    for path in (
-        # ordered by intention and required privilege
-        os.getenv("GROUPRISE_CONFIG"),
-        "/etc/grouprise/conf.d",
-        os.path.expanduser("~/.config/grouprise/conf.d"),
-        # development setup: grouprise.conf.d/ and grouprise.yaml in the current directory
-        os.path.join(os.getcwd(), "grouprise.conf.d"),
-        os.path.join(os.getcwd(), "grouprise.yaml"),
-    ):
-        if path:
-            result.append(os.path.abspath(path))
-    return result
 
+    if forced_config := os.getenv("GROUPRISE_CONFIG"):
+        # If a user explicitly specified a configuration location
+        # we should treat it as given and should not propose any
+        # alternative locations.
+        return [forced_config]
+    else:
+        return [
+            # development setup: grouprise.yaml and grouprise.conf.d/ in the current directory
+            os.path.join(os.getcwd(), "grouprise.yaml"),
+            os.path.join(os.getcwd(), "grouprise.conf.d"),
+            os.path.expanduser("~/.config/grouprise/conf.d"),
+            "/etc/grouprise/conf.d",
+        ]
 
 
 def get_configuration_filenames(location_candidates=None, max_level=10):
