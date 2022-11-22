@@ -3,13 +3,19 @@
 *grouprise* is looking for configuration files in the following locations:
 
 * filename or directory specified in environment variable `GROUPRISE_CONFIG`
+* `grouprise.conf.d` (in the current directory)
 * `grouprise.yaml` (in the current directory)
 * `~/.config/grouprise/conf.d/` (in user's home directory)
 * `/etc/grouprise/conf.d/` (system-wide configuration)
 
 The first location, that contains any [yaml](https://yaml.org/) files is selected.
 Files in subsequent locations are ignored.
-If the location is a directory, then all files within this directory (filenames ending in `.yaml` and consisting only of alphanumeric characters and hyphens) are parsed in alphabetical order.
+If the location is a directory, then all of its children (files and directories) are processed in alphabetical order:
+
+* A file is parsed, if the filename ends in `.yaml` and consists only of alphanumeric characters and hyphens.
+* A directory is processed recursively irrespective of its name.
+* Items are processed down to their deepest level, before the next item at the same level is processed (depth-first - not breadth-first).
+
 If the location is a file, then only this file is parsed.
 
 Settings in earlier files are overwritten by settings with the same name in later files.
