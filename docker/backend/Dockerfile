@@ -72,7 +72,9 @@ ENV GROUPRISE_CONFIG=/etc/grouprise/conf.d/ \
     UWSGI_WSGI_ENV_BEHAVIOUR=holy \
     # You might want to override the following env variables.
     UWSGI_WORKERS=2 \
-    UWSGI_THREADS=4
+    UWSGI_THREADS=4 \
+    LANG=de_DE.UTF-8 \
+    LC_MESSAGES=en_US.UTF-8
 
 # copy project source files and base configuration
 COPY grouprise/ /usr/share/grouprise/python-lib/grouprise/
