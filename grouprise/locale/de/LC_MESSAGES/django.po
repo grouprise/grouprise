@@ -536,28 +536,6 @@ msgstr "Zeige Verweise auf den internen Chat-Raum"
 msgid "Private chat room"
 msgstr "Privater Chat-Raum"
 
-#, python-brace-format
-msgid "{site_name} - notifications"
-msgstr "{site_name} - Benachrichtigungen"
-
-#, python-brace-format
-msgid "Notifications for private messages from {site_url}"
-msgstr "Benachrichtigungen für private Nachrichten von {site_url}"
-
-#, python-brace-format
-msgid ""
-"The {room_visibility} chat room of [\"{group_name}\"]({group_url}) moved to "
-"{new_room_id}."
-msgstr ""
-"Der Chat-Raum von [\"{group_name}\"]({group_url}) ({room_visibility}) wurde "
-"nach {new_room_id} verschoben."
-
-msgid "private"
-msgstr "intern"
-
-msgid "public"
-msgstr "öffentlich"
-
 msgid "Introduction to Chat"
 msgstr "Einführung in Chats"
 
@@ -605,22 +583,22 @@ msgid ""
 "Use the web client or a mobile app (see <a href=\"#usage\">Usage</a>) for "
 "accessing the chat rooms."
 msgstr ""
-"Der Chat-Dienst ist über den Web-Client oder eine mobile App (siehe <a href="
-"\"#usage\">Nutzung</a>) bedienbar."
+"Der Chat-Dienst ist über den Web-Client oder eine mobile App (siehe <a "
+"href=\"#usage\">Nutzung</a>) bedienbar."
 
 #, python-format
 msgid ""
 "A wide variety of instant messenger applications and protocols is available, "
 "e.g. Jabber, IRC, Whatsapp, Facebook Messenger, Slack, Mattermost and many "
-"more. This platform (%(GROUPRISE_SITE_NAME)s) integrates the <a href="
-"\"%(matrix_url)s\">Matrix</a> protocol, since it offers a wide range of "
+"more. This platform (%(GROUPRISE_SITE_NAME)s) integrates the <a "
+"href=\"%(matrix_url)s\">Matrix</a> protocol, since it offers a wide range of "
 "features, that turn it into a perfect fit."
 msgstr ""
 "Es gibt eine große Vielfalt von Chat-Anwendungen, wie beispielsweise Jabber, "
 "IRC, Whatsapp, Facebook Messenger, Slack, Mattermost und viele mehr. Diese "
-"Plattform (%(GROUPRISE_SITE_NAME)s) integriert das <a href=\"%(matrix_url)s"
-"\">Matrix</a>-Protokoll, da es vielerlei nützliche Funktionen zur "
-"Erweiterung der grouprise-Plattform bietet."
+"Plattform (%(GROUPRISE_SITE_NAME)s) integriert das <a "
+"href=\"%(matrix_url)s\">Matrix</a>-Protokoll, da es vielerlei nützliche "
+"Funktionen zur Erweiterung der grouprise-Plattform bietet."
 
 msgid "Matrix offers the following features:"
 msgstr "Matrix bietet die folgenden Funktionen:"
@@ -629,13 +607,13 @@ msgid "trustworthy"
 msgstr "vertrauenswürdig"
 
 msgid ""
-"Both the server and the client implementations are available as <a href="
-"\"{{ free_software_url }}\">Free Software</a>. Thus, anyone interested can "
-"verify, that the software is operating in the interest of the users."
+"Both the server and the client implementations are available as <a "
+"href=\"{{ free_software_url }}\">Free Software</a>. Thus, anyone interested "
+"can verify, that the software is operating in the interest of the users."
 msgstr ""
-"Sowohl die Server- als auch die Client-Implementierung sind als <a href="
-"\"{{ free_software_url }}\">Freie Software</a> verfügbar. Somit kann jede "
-"interessierte Person prüfen, ob die Software im Interesse der Nutzenden "
+"Sowohl die Server- als auch die Client-Implementierung sind als <a "
+"href=\"{{ free_software_url }}\">Freie Software</a> verfügbar. Somit kann "
+"jede interessierte Person prüfen, ob die Software im Interesse der Nutzenden "
 "handelt."
 
 msgid "federated"
@@ -670,9 +648,9 @@ msgid ""
 "Pick your favorite client from a <a href=\"{{ matrix_clients_url }}\">wide "
 "range of applications</a> for various mobile and desktop platforms."
 msgstr ""
-"Wähle einen passenden Client aus der <a href="
-"\"{{ matrix_clients_url }}\">Vielfalt von Anwendungen</a> für verschiedene "
-"mobile und Desktop-Plattformen."
+"Wähle einen passenden Client aus der <a "
+"href=\"{{ matrix_clients_url }}\">Vielfalt von Anwendungen</a> für "
+"verschiedene mobile und Desktop-Plattformen."
 
 #, python-format
 msgid ""
@@ -692,12 +670,12 @@ msgstr ""
 #, python-format
 msgid ""
 "A local instance of the <a href=\"%(element_url)s\">Element web client</a> "
-"is provided along with %(GROUPRISE_SITE_NAME)s (<a href="
-"\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
+"is provided along with %(GROUPRISE_SITE_NAME)s (<a "
+"href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
 msgstr ""
 "Eine lokale Instanz der <a href=\"%(element_url)s\">Element-Web-Anwendung</"
-"a> wird zusammen mit %(GROUPRISE_SITE_NAME)s ausgeliefert (<a href="
-"\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
+"a> wird zusammen mit %(GROUPRISE_SITE_NAME)s ausgeliefert (<a "
+"href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
 
 #, python-format
 msgid ""
@@ -784,8 +762,8 @@ msgid ""
 "a> in case of doubt."
 msgstr ""
 "Installiere eine der <a href=\"%(matrix_clients_url)s\">Matrix-Apps</a> über "
-"den Paketmanager deiner Wahl. Wähle im Zweifelsfall <a href="
-"\"%(element_android_url)s\">Element</a>."
+"den Paketmanager deiner Wahl. Wähle im Zweifelsfall <a "
+"href=\"%(element_android_url)s\">Element</a>."
 
 msgid "Select <i>Other</i> as the Matrix server."
 msgstr "Wähle <i>andere</i> als Matrix-Server."
@@ -922,6 +900,32 @@ msgstr "Öffentlicher Chat-Raum"
 
 msgid "Private Chat Room"
 msgstr "Privater Chat-Raum"
+
+#, python-brace-format
+msgid "{site_name} - notifications"
+msgstr "{site_name} - Benachrichtigungen"
+
+#, python-brace-format
+msgid "Notifications for private messages from {site_url}"
+msgstr "Benachrichtigungen für private Nachrichten von {site_url}"
+
+#, python-brace-format
+msgid "{site_name}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"The {room_visibility} chat room of [\"{group_name}\"]({group_url}) moved to "
+"{new_room_id}."
+msgstr ""
+"Der Chat-Raum von [\"{group_name}\"]({group_url}) ({room_visibility}) wurde "
+"nach {new_room_id} verschoben."
+
+msgid "private"
+msgstr "intern"
+
+msgid "public"
+msgstr "öffentlich"
 
 msgid "Chat / Instant Messaging"
 msgstr "Chat / Direktnachrichten"
