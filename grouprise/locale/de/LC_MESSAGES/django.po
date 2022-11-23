@@ -148,7 +148,7 @@ msgstr "Gruppe abonnieren"
 msgid "to receive prospective contribution of the group"
 msgstr "um über zukünftige Beiträge der Gruppe"
 
-msgid "by e-mail"
+msgid "by email"
 msgstr "per E-Mail"
 
 msgid "More Items"
@@ -257,7 +257,7 @@ msgstr "Möchtest Du Dein Benutzerkonto wirklich löschen?"
 msgid "The following data will be delete irrevocable:"
 msgstr "Folgende Daten werden unwiderruflich gelöscht:"
 
-msgid "Account and profile with all settings an e-mail addresses"
+msgid "Account and profile with all settings and email addresses"
 msgstr "Benutzerkonto und Profil mit allen Einstellungen und E-Mail-Adressen"
 
 msgid "Subscriptions to groups"
