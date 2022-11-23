@@ -11,28 +11,28 @@
         <a href="{% url 'settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-info"></i>
-            <span class="nav-menu-item-label">Allgemein</span>
+            <span class="nav-menu-item-label">{% trans 'General' %}</span>
         </a>
     </li>
     <li>
         <a href="{% url 'image-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-images' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-images"></i>
-            <span class="nav-menu-item-label">Bilder</span>
+            <span class="nav-menu-item-label">{% trans 'Images' %}</span>
         </a>
     </li>
     <li>
         <a href="{% url 'notification-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-notifications' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-notification"></i>
-            <span class="nav-menu-item-label">{% trans "Benachrichtigungen" %}</span>
+            <span class="nav-menu-item-label">{% trans 'Notifications' %}</span>
         </a>
     </li>
     <li>
         <a href="{% url 'email-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-email' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-message"></i>
-            <span class="nav-menu-item-label">E-Mail-Adressen</span>
+            <span class="nav-menu-item-label">{% trans 'Email addresses' %}</span>
         </a>
     </li>
     {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
@@ -49,7 +49,7 @@
         <a href="{% url 'account_change_password' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-password' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-password"></i>
-            <span class="nav-menu-item-label">Kennwort</span>
+            <span class="nav-menu-item-label">{% trans 'Password' %}</span>
         </a>
     </li>
 {% endkwacro %}
@@ -61,14 +61,14 @@
             <a href="{% url 'group-settings' %}?group={{ group.slug }}"
                class="nav-menu-item {% if chapter == 'group' %}nav-menu-item-active{% endif %}">
                 <i class="sg sg-fw sg-info"></i>
-                <span class="nav-menu-item-label">Allgemein</span>
+                <span class="nav-menu-item-label">{% trans 'General' %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'group-image-settings' %}?group={{ group.slug }}"
                class="nav-menu-item {% if chapter == 'group-images' %}nav-menu-item-active{% endif %}">
                 <i class="sg sg-fw sg-images"></i>
-                <span class="nav-menu-item-label">Bilder</span>
+                <span class="nav-menu-item-label">{% trans 'Images' %}</span>
             </a>
         </li>
     {% endif %}
@@ -76,7 +76,7 @@
         <a href="{% url 'subscriptions-memberships-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'subscriptions-memberships' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-subscription"></i>
-            <span class="nav-menu-item-label">Benachrichtigungen & Mitgliedschaft</span>
+            <span class="nav-menu-item-label">{% trans 'Notifications & Membership' %}</span>
         </a>
     </li>
     {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
@@ -110,7 +110,7 @@
                     <label class="nav-menu-item nav-menu-item-centered" for="menu-settings-gestalt"
                            data-component="openable" data-openable-target="#menu-settings-gestalt">
                         {% include 'gestalten/_avatar.html' with size=24 gestalt=user.gestalt %}
-                        <span class="nav-menu-item-label">Profil</span>
+                        <span class="nav-menu-item-label">{% trans 'Profile' %}</span>
                         <i class="caret"></i>
                     </label>
                     <div class="dock dock-light dock-menu dock-absolute" id="menu-settings-gestalt" data-dropdown>
@@ -131,7 +131,7 @@
                     <label class="nav-menu-item nav-menu-item-centered" for="menu-settings-group"
                            data-component="openable" data-openable-target="#menu-settings-group">
                         {% include 'groups/_avatar.html' with size=24 %}
-                        <span class="nav-menu-item-label">Gruppe</span>
+                        <span class="nav-menu-item-label">{% trans 'Group' %}</span>
                         <i class="caret"></i>
                     </label>
                     <div class="dock dock-light dock-menu dock-absolute" id="menu-settings-group" data-dropdown>

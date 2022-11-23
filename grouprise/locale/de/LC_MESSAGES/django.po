@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-23 01:31+0100\n"
+"POT-Creation-Date: 2022-11-23 02:02+0100\n"
 "PO-Revision-Date: 2021-12-22 15:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1024,8 +1024,29 @@ msgstr "Hilfe zu"
 msgid "Instant communication within groups or between individuals."
 msgstr "Schnelle Kommunikation innerhalb von Gruppen oder zwischen Individuen."
 
+msgid "General"
+msgstr "Allgemein"
+
+msgid "Images"
+msgstr "Bilder"
+
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+msgid "Email addresses"
+msgstr "E-Mail-Adressen"
+
 msgid "Chat (Matrix)"
 msgstr "Chat (Matrix)"
+
+msgid "Password"
+msgstr "Kennwort"
+
+msgid "Notifications & Membership"
+msgstr "Benachrichtigungen & Mitgliedschaft"
+
+msgid "Profile"
+msgstr "Pofil"
 
 msgid "all"
 msgstr "alle"
