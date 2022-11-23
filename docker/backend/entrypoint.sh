@@ -7,6 +7,11 @@ _status() {
 }
 
 _prep() {
+    if [ -z "${GROUPRISE_DOCKER_NO_DATABASE_AWAIT_CONNECTION:-}" ]; then
+        _status "Awaiting database connection..."
+        chronic grouprisectl database_await_connection --skip-checks
+    fi
+
     if [ -z "${GROUPRISE_DOCKER_NO_MIGRATE:-}" ]; then
         _status "Executing migrations..."
         chronic grouprisectl migrate --no-input --skip-checks
