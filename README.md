@@ -53,11 +53,12 @@ of choice.
 Things are not working? Come join us in our
 [grouprise-dev chatroom](https://matrix.to/#/#grouprise-dev:systemausfall.org)!
 
-Please note: Some settings like `database` or the `data_path` are overridden
-or extended internally by the docker-compose setup. Changing them in your local
-configuration won’t have any effect. You’ll see a dump of your entire
-configuration as it is used by grouprise in the output of docker-compose
-under the `grouprise-backend` prefix.
+Please note: If you want to make changes to the grouprise configuration you
+can create a new file in `grouprise.conf.d` like `grouprise.conf.d/100-local.yaml`.
+Be advised that any settings that involve file paths like `data_path` are evaluated
+within the docker-compose setup. `/home/you/grouprise` or any other local path
+you might configure won’t work out of the box. You can make them work by learning
+about [docker-compose volumes](https://docs.docker.com/storage/volumes/#use-a-volume-with-docker-compose).
 
 #### Development with low-level tooling
 
