@@ -1,9 +1,11 @@
 import locale
 from calendar import different_locale
+from hashlib import sha256
 
 import boltons.strutils
 import django.utils.text
 import randomcolor
+from django.conf import settings
 from django.contrib.redirects.models import Redirect
 from django.utils.translation import get_language, get_language_from_request, to_locale
 
@@ -62,3 +64,9 @@ def add_redirect(old_path: str, new_path: str) -> None:
         site_id=get_grouprise_site().pk, old_path=old_path, new_path=new_path
     )
     redirect.save()
+
+
+def hash_captcha_answer(value):
+    answer = str(value).strip().lower()
+    to_encode = (settings.SECRET_KEY + answer).encode()
+    return sha256(to_encode).hexdigest()

@@ -6,10 +6,10 @@ from django import test, urls
 from django.contrib import auth
 from django.core import mail
 from django.db import models
-from simplemathcaptcha.utils import hash_answer
 
-from grouprise.core.matrix import MatrixConsoleClient
-from grouprise.core.settings import get_grouprise_site
+from .fields import hash_captcha_answer
+from .matrix import MatrixConsoleClient
+from .settings import get_grouprise_site
 
 HTTP_GET = "get"
 HTTP_POST = "post"
@@ -23,8 +23,10 @@ def get_url(url, *args):
     return django.urls.reverse(url, args=args)
 
 
-def with_captcha(data, answer=10, field_name="captcha"):
-    data.update({field_name + "_0": answer, field_name + "_1": hash_answer(answer)})
+def with_captcha(data, answer="foo", field_name="captcha"):
+    data.update(
+        {field_name + "_0": answer, field_name + "_1": hash_captcha_answer(answer)}
+    )
     return data
 
 
