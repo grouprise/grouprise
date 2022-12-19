@@ -33,6 +33,7 @@ Follow these steps:
         ```
     * If you are not running a local Matrix server, you may just register an account on any Matrix server and retrieve this account's access token (e.g. in the *element* web client below *Profile -> Help and About*).
 1. Invite the bot (`@grouprise-commander-bot:example.org`) into a new matrix room (e.g. via the *element* web client)
+    * Please note, that the matrix room may *not* be encrypted. At the moment the bot cannot handle encryption.
 1. Create the matrix-commander configuration (e.g. `/etc/grouprise/conf.d/300-matrix_commander.yaml`):
     ```yaml
     matrix_commander:
