@@ -84,3 +84,16 @@ Instead of using a Matrix client for issuing commands, you can also run *Matrix 
 ```shell
 grouprisectl matrix_commander --console
 ```
+
+
+### Change Visible Name of Bot
+
+You may want to improve your emotional relationship with your bot by giving it a better name.
+
+```shell
+curl \
+    --header "Authorization: Bearer <bot_access_token>" \
+    -X PUT \
+    --data '{"displayname": "Commander example.org"}' \
+    "https://example.org:8448/_matrix/client/v3/profile/@grouprise-commander-bot:example.org/displayname"
+```
