@@ -29,21 +29,23 @@ Architecture
         }
         {
             rank = "same"
-            uwsgi [label = "UWSGI"]
+            uwsgi [label = "uWSGI"]
             worker [label = "Task Runner"]
             lmtp [label = "LMTP Server"]
         }
         {
             rank = "min"
-            webserver [label = "Webserver"]
-            mailserver [label = "Mail Server"]
+            web_server [label = "Web Server"]
+            mail_server [label = "Mail Server"]
+            matrix_server [label = "Matrix Server"]
         }
 
-        webserver -- uwsgi -- django -- database [dir = "both"]
+        web_server -- uwsgi -- django -- database [dir = "both"]
         worker -- django [dir = "both"]
-        mailserver -- lmtp -- django [dir = "forward"]
-        django -- mailserver [dir = "forward"]
-        media -- webserver [dir = "forward"]
+        mail_server -- lmtp -- django [dir = "forward"]
+        matrix_server -- django [dir = "forward"]
+        django -- mail_server [dir = "forward"]
+        media -- web_server [dir = "forward"]
         django -- media [dir = "both"]
     }
 
@@ -60,16 +62,23 @@ Database
 Media Storage
   Uploaded media (images, documents, ...) are stored locally in the filesystem.
 
-UWSGI
-  The `UWSGI <http://projects.unbit.it/uwsgi/>`_ application server connects *grouprise* with the webserver.
+uWSGI
+  The `uWSGI <http://projects.unbit.it/uwsgi/>`_ application server connects *grouprise* with the web server.
 
-Webserver
-  The webserver (e.g. apache2 or nginx) serves the content provided by *grouprise* to its users.
+Web Server
+  The web server (e.g. apache2 or nginx) serves the content provided by *grouprise* to its users.
 
 LMTP Server
   The integrated LTMP server handles incoming mails and injects them into the *grouprise* application.
 
-Mailserver
-  The external mailserver (e.g. Postfix or Exim) delivers outgoing emails to external recipients and transfers incoming mails to the integrated LTMP Server.
+Mail Server
+  The external mail server (e.g. Postfix or Exim) delivers outgoing emails to external recipients
+  and transfers incoming mails to the integrated LTMP Server.
+
+Matrix Server
+  `grouprise` can send notifications into [Matrix](https://matrix.org/) chat rooms
+  (see `Matrix-Chat <../administration/matrix_chat.html>`_).
+  In addition it is possible to manage grouprise content (e.g. delete spam, manage groups) by
+  talking to the `Matrix Commander <../management/matrix_commander.html>`_ (a chat bot).
 
 The `deployment based on deb packages <./deb.html>`_ configures most of these components.
