@@ -8,7 +8,7 @@ Linux or unix-like distributions.
 ## Download the Sources
 
 The latest stable release is available at
-[git.hack-hro.de](https://git.hack-hro.de/grouprise/grouprise/-/tags)
+[git.hack-hro.de](https://git.hack-hro.de/grouprise/grouprise/-/tags).
 You can download it as a `zip` or `tar` file (both containing the same content).
 
 Extract the content of the archive into `/usr/local/share/grouprise`.
@@ -101,7 +101,7 @@ The what, how and why of *grouprise* configuration is outlined in the
 files and symlinks to make it work.
 
 
-The *grouprise* process is managed via `uwsgi`.
+The *grouprise* process is managed via [uWSGI](https://uwsgi-docs.readthedocs.org/).
 
 1. copy `grouprise.yaml.development` to `/etc/grouprise/conf.d/local.yaml` and adapt the settings
    according to your needs
@@ -124,5 +124,5 @@ The *grouprise* process is managed via `uwsgi`.
 1. restart nginx: `service nginx restart`
 1. visit the fresh grouprise instance: `http://localhost/` (or use a suitable hostname)
 
-You may also want to create a separate user and group for running grouprise and set the
+You may also want to create a separate user and group for running *grouprise* and set the
 corresponding `uid` setting in the uWSGI configuration.
