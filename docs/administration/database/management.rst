@@ -14,7 +14,7 @@ Use cases:
 
 Procedure:
 
-#. stop the running grouprise service (e.g. :code:`service uwsgi stop`)
+#. stop the running grouprise service (e.g. :code:`service grouprise stop`)
 #. dump the current database content in a database-neutral format:
 
    .. code-block:: shell
@@ -33,7 +33,7 @@ Procedure:
 #. create new database (see :ref:`database-initialization`)
 #. populate the database structure: :code:`grouprisectl migrate`
 #. load the export data: :code:`grouprisectl loaddata --format=json - <grouprise-export.json`
-#. start the grouprise service (e.g. :code:`service uwsgi start`)
+#. start the grouprise service (e.g. :code:`service grouprise start`)
 
 
 Import content into another host
