@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-23 02:02+0100\n"
+"POT-Creation-Date: 2022-12-24 19:33+0100\n"
 "PO-Revision-Date: 2021-12-22 15:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0\n"
 
-msgid "Which season follows after winter?"
+msgid "Which season follows winter?"
 msgstr "Welche Jahreszeit folgt auf den Winter?"
 
 msgid "spring"
@@ -36,7 +36,7 @@ msgstr "Wie viele Monate hat ein Jahr?"
 msgid "twelve"
 msgstr "zwölf"
 
-msgid "Which day follows after Wednesday?"
+msgid "Which day follows Wednesday?"
 msgstr "Welcher Tag folgt auf den Mittwoch?"
 
 msgid "Thursday"
@@ -48,11 +48,26 @@ msgstr "Welche Farbe hat Schnee?"
 msgid "white"
 msgstr "weiß"
 
+msgid "What is the color of the sea?"
+msgstr "Welche Farbe hat das Meer?"
+
+msgid "blue"
+msgstr "blau"
+
+msgid "What is the color of the sky?"
+msgstr "Welche Farbe hat der Himmer?"
+
 msgid "What is the opposite of 'day'?"
 msgstr "Was ist das Gegenstück zum 'Tag'?"
 
 msgid "night"
 msgstr "Nacht"
+
+msgid "How many hours does a day have?"
+msgstr "Wie viele Stunden hat ein Tag?"
+
+msgid "twenty-four"
+msgstr "vierundzwanzig"
 
 msgid "The answer was not quite correct. Please try it again!"
 msgstr "Diese Antwort war nicht ganz richtig. Bitte versuche es erneut!"

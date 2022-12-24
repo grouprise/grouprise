@@ -25,12 +25,15 @@ class CaptchaWidget(forms.MultiWidget):
     template_name = "core/widgets/captcha.html"
 
     CAPTCHA_QUESTIONS = [
-        (_("Which season follows after winter?"), {_("spring")}),
+        (_("Which season follows winter?"), {_("spring")}),
         (_("How many days does a week have?"), {"7", _("seven")}),
         (_("How many months does a year have?"), {"12", _("twelve")}),
-        (_("Which day follows after Wednesday?"), {_("Thursday")}),
+        (_("Which day follows Wednesday?"), {_("Thursday")}),
         (_("What is the color of snow?"), {_("white")}),
+        (_("What is the color of the sea?"), {_("blue")}),
+        (_("What is the color of the sky?"), {_("blue")}),
         (_("What is the opposite of 'day'?"), {_("night")}),
+        (_("How many hours does a day have?"), {"24", _("twenty-four")}),
     ]
 
     def __init__(self):
