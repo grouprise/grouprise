@@ -7,9 +7,9 @@ from django.contrib import auth
 from django.core import mail
 from django.db import models
 
-from .fields import hash_captcha_answer
 from .matrix import MatrixConsoleClient
 from .settings import get_grouprise_site
+from .utils import hash_captcha_answer
 
 HTTP_GET = "get"
 HTTP_POST = "post"
