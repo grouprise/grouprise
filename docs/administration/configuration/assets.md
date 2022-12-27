@@ -1,6 +1,7 @@
 # Asset Management
 
-grouprise assets are compiled during build time. If you want to use additional assets you can add them via the theming mechanism (overriding templates). You should as well adjust the CSP directives.
+The frontend assets for *grouprise* are compiled during build time.
+If you want to use additional assets you can add them via the theming mechanism (overriding templates).
 
 
 ## Adjusting CSP directives
@@ -8,36 +9,41 @@ grouprise assets are compiled during build time. If you want to use additional a
 If you add new assets (e.g. scripts or styles) to your setup, you have to check your CSP setup.
 See the [Django-CSP documentation](https://django-csp.readthedocs.io/en/latest/configuration.html) for all options.
 
-Local external assets are allowed by default. If you want to add assets from another host, add something to your config like:
+See *grouprise*'s [CSP-related settings](/administration/configuration/options.html#content-security-policy-csp).
 
-```python
-CSP_DEFAULT_SRC += ("https://sub.example.org",)
 
-CSP_SCRIPT_SRC += ("https://sub.example.org",)
-```
+## Templates
 
-You can also use inline scripts in local templates:
+You may override any grouprise template.
 
-```python
-CSP_SCRIPT_SRC += ("'sha256-0123456789abdcef'",)
-```
+In [deb-based deployments](/deployment/deb), you may place templates below `/etc/grouprise/templates/`.
 
-Use [Sentry](https://sentry.io/) to track CSP errors:
-
-```python
-CSP_REPORT_URI = ("https://sentry.example.org/api/2/csp-report/?sentry_key=0123456789abcdef",)
+Alternatively you may specify alternative locations for [templates](options.html#template-directories):
+```yaml
+template_directories:
+    - /opt/grouprise-templates/
 ```
 
 
 ## Adding Scripts or Stylesheets
 
-You may override any grouprise template. To do so, add something like the following line to the Django configuration:
+### Configure additional scripts or CSS files
 
-```python
-TEMPLATES[0]['DIRS'] += ['/var/www/mysite/templates/']
-```
+See *grouprise*'s relevant settings:
 
-For adding scripts or stylesheets the hook include `core/_head.html` is especially useful. Just add a file `core/_head.html` to your local template directory as defined by the line above and add local stylesheet and link definitions to that file. Don't forget to adjust the CSP directives as described in the previous section.
+* [`scripts`](/administration/configuration/options.html#scripts)
+* [`stylesheets`](/administration/configuration/options.html#stylesheets)
+
+
+### Manually override HTML `head` content via templates
+
+The following procedure (overriding templates) is necessary only under very rare circumstances.
+Take a look at `scripts`, `stylesheets` or the CSP settings mentioned above.
+
+If you want to add more than just scripts or CSS files, then you should override the header file `core/_head.html`.
+By default, *grouprise* ships an empty file with that name.
+Just add a file `core/_head.html` to your local template directory (by default: `/etc/grouprise/templates/`) and add local stylesheet and link definitions to that file.
+Don't forget to adjust the CSP directives as described in the previous section.
 
 Take a look at the next section about style variables to learn about easy style overrides with CSS variables.
 
