@@ -3,6 +3,7 @@ debian/grouprise.uwsgi.ini => /etc/grouprise/uwsgi.ini
 debian/grouprise.d/050-defaults.yaml /etc/grouprise/conf.d/
 debian/grouprisectl => /usr/bin/grouprisectl
 debian/README-backups.md => /var/backups/grouprise/README
+debian/README-templates.md => /etc/grouprise/templates/README
 debian/nginx.conf => /etc/nginx/snippets/grouprise.conf
 debian/grouprise.d/nginx/grouprise-site => /etc/nginx/sites-available/grouprise
 debian/tmp/usr/share/grouprise/grouprise /usr/share/grouprise/python-lib
