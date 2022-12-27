@@ -18,9 +18,9 @@ Extract the content of the archive into `/usr/local/share/grouprise`.
 
 Dependencies mentioned in this section refer to Debian package names, which
 can be installed with `apt`.
-If you are installing *grouprise* on an operation system other than Debian or one of its many
-derivates like Ubuntu, then you have to find the appropriate equivalents for your system’s package
-manager.
+If you are installing *grouprise* on an operation system other than [Debian](https://debian.org/)
+or one of its many derivatives (e.g. Ubuntu), then you have to find the appropriate equivalents for
+your system’s package manager.
 A good starting point may be the
 [Debian package search](https://www.debian.org/distrib/packages#search_packages), which offers
 information about each package’s sources and website.

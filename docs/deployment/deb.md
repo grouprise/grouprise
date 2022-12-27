@@ -1,6 +1,7 @@
 # Deployment via "deb" packages
 
-This guide helps you to install *grouprise* on Debian or one of its derivates like Ubuntu.
+This guide helps you to install *grouprise* on [Debian](https://debian.org/) or one of its
+derivatives (e.g. Ubuntu).
 If you do not want to use a Debian-based system or wish to install *grouprise* manually, then you
 should follow the [separate instructions for manual deployments](/deployment/source).
 
