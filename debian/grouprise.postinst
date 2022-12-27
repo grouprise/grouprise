@@ -104,6 +104,9 @@ if [ "$1" = "configure" ]; then
             --ingroup "$PKG_GROUP" \
             --home "$DIR_HOME" \
             "$PKG_USER"
+        # The directory /var/lib/grouprise/site-data/ is created by the package (before postinst),
+        # thus we need to enforce the ownership of our home directory.
+        chown "$PKG_USER": "$DIR_HOME"
     fi
 
     if [ -z "$(grouprise_settings get "secret_key" 2>/dev/null)" ]; then

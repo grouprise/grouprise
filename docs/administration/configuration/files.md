@@ -40,10 +40,10 @@ unknown_gestalt_id: 32
 mailinglist_enabled: True
 
 branding:
-        logo_backdrop: /stadt/media/example.org/logo_backdrop.svg
-        logo_favicon: /stadt/media/example.org/favicon.ico
-        logo_square: /stadt/media/example.org/logo_large.svg
-        logo_text: /stadt/media/example.org/logo_text.svg
+        logo_backdrop: /-/site/logo_backdrop.svg
+        logo_favicon: /-/site/favicon.ico
+        logo_square: /-/site/logo_large.svg
+        logo_text: /-/site/logo_text.svg
 
 backup_path: /var/backups/grouprise
 
