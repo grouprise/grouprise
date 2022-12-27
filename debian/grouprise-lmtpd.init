@@ -10,7 +10,7 @@
 DESC="grouprise lmtp service"
 NAME=grouprise-lmtpd
 DAEMON=/usr/bin/grouprisectl
-PIDFILE=/run/grouprise/tasks.pid
+PIDFILE=/run/grouprise/lmtpd.pid
 DAEMON_ARGS="run_lmtpd localhost 1025"
 START_ARGS="--background --pidfile $PIDFILE --make-pidfile"
 
