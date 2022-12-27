@@ -43,7 +43,7 @@ Architecture
         web_server -- uwsgi -- django -- database [dir = "both"]
         worker -- django [dir = "both"]
         mail_server -- lmtp -- django [dir = "forward"]
-        matrix_server -- django [dir = "forward"]
+        django -- matrix_server [dir = "forward"]
         django -- mail_server [dir = "forward"]
         media -- web_server [dir = "forward"]
         django -- media [dir = "both"]
