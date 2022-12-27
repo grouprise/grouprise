@@ -67,7 +67,7 @@ Thus, this setting is rarely necessary.
 See [Django's documentation of `ALLOWED_HOSTS`](https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-ALLOWED_HOSTS) for details.
 
 ### `file_download_backend`
-It is highly recommended select a backend for file downloads corresponding to the reverse proxy you are using.
+It is highly recommended to select a backend for file downloads corresponding to the reverse proxy you are using.
 The default backend is `none`.
 Other possible backends are listed below together with their corresponding webserver settings.
 
@@ -377,9 +377,18 @@ Default: `100`
 Add custom javascript resources either as inline snippets or by referencing a local URL path.
 The `scripts` setting is a list of dictionaries.
 Each item needs to contain either a `path` (absolute URL path of the local resource) or a `content` (inline javascript code).
-Additionally, a `load` value may be added for a `path` value.
+Additionally, a `load` value may be added for a `path` value, which may contain one of `async` (default), `defer` or `blocking`.
 A proper CSP hash is automatically configured for a `content` value.
 External resources may not be referenced, since this would leak user's data to remote servers.
+
+Example:
+```yaml
+scripts:
+  - content: |
+      alert("hello")
+  - path: /-/site/custom.js
+    load: defer
+```
 
 Default: `[]` (empty)
 
@@ -388,6 +397,13 @@ Add custom CSS stylesheets in order to override specific layout details.
 The `stylesheets` setting is a list of dictionaries.
 Each item needs to contain a `path` (absolute URL path of the local resource).
 Additionally, a [`media` value](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link) may be specified (e.g. `print`).
+
+Example:
+```yaml
+stylesheets:
+  - path: /-/site/custom-print.css
+    media: print
+```
 
 Default: `[]` (empty)
 
