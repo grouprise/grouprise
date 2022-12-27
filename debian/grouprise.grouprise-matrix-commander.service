@@ -8,6 +8,7 @@ User=_grouprise
 Group=_grouprise
 ExecStart=/usr/bin/grouprisectl matrix_commander
 Restart=always
+PIDFile=/run/grouprise/matrix-commander.pid
 
 [Install]
 WantedBy=multi-user.target
