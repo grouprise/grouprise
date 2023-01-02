@@ -58,7 +58,9 @@ class LazySettingsResolver:
             # first access to the lazy-evaluation attribute: finally set the calculated value
             value = value_func()
             setattr(self, name, value)
-            self._unresolved_attributes.pop(name)
+            # Tolerate a missing key, since multiple acceses may occur in parallel, if `value_func`
+            # is asynchronous.
+            self._unresolved_attributes.pop(name, None)
             return value
 
     def resolve_lazy_settings(self):
