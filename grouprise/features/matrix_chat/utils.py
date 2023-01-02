@@ -219,12 +219,13 @@ async def migrate_to_new_room(room_object, old_room_id, room_alias, new_room_id)
     name="kick_gestalt_from_group_matrix_rooms",
 )
 @async_to_sync
-async def kick_gestalt_from_group_matrix_rooms(group, gestalt):
+async def kick_matrix_id_from_group_room(
+    group_label: str, room_id: str, room_label: str, matrix_id: str
+):
     async with ChatBot() as bot:
         try:
-            await bot.kick_gestalt_from_group_rooms(group, gestalt)
+            await bot.kick_matrix_id_from_room(room_id, room_label, matrix_id)
         except MatrixError as exc:
-            group_label = await sync_to_async(str)(group)
             logger.warning(
                 f"Failed to kick previous group members ({group_label}) from matrix rooms: {exc}"
             )

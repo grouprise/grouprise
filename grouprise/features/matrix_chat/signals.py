@@ -15,7 +15,7 @@ from .notifications import (
 from .utils import (
     delete_gestalt_matrix_notification_room,
     invite_to_group_rooms,
-    kick_gestalt_from_group_matrix_rooms,
+    kick_matrix_id_from_group_room,
     migrate_to_new_room,
     send_invitations_for_gestalt,
     sync_group_rooms_delayed,
@@ -74,4 +74,14 @@ def move_away_from_matrix_room(
 
 @receiver(post_delete, sender=grouprise.features.memberships.models.Membership)
 def kick_room_members_after_leaving_group(sender, instance, **kwargs):
-    kick_gestalt_from_group_matrix_rooms(instance.group, instance.member)
+    group = instance.group
+    member = instance.member
+    member_matrix_id = MatrixChatGestaltSettings.get_matrix_id(member)
+    for room in group.matrix_rooms.all():
+        # delete invitations
+        MatrixChatGroupRoomInvitations.objects.filter(
+            room=room, gestalt=member
+        ).delete()
+        kick_matrix_id_from_group_room(
+            str(group), room.room_id, str(room), member_matrix_id
+        )

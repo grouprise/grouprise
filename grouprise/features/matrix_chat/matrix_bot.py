@@ -23,7 +23,6 @@ from . import (
 from .models import (
     MatrixChatGestaltSettings,
     MatrixChatGroupRoom,
-    MatrixChatGroupRoomInvitations,
 )
 from .settings import MATRIX_SETTINGS
 
@@ -473,37 +472,24 @@ class ChatBot(MatrixBaseBot):
                     f"Invite request for {gestalt} into {room_label} was rejected: {result}"
                 )
 
-    async def kick_gestalt_from_group_rooms(self, group, gestalt, reason=None):
-        def get_group_chat_rooms(group):
-            return list(MatrixChatGroupRoom.objects.filter(group=group))
-
-        def delete_room_invitations(room, gestalt):
-            MatrixChatGroupRoomInvitations.objects.filter(
-                room=room, gestalt=gestalt
-            ).delete()
-
-        gestalt_matrix_id = await sync_to_async(
-            MatrixChatGestaltSettings.get_matrix_id
-        )(gestalt)
-        for room in await sync_to_async(get_group_chat_rooms)(group):
-            try:
-                result = await self.client.room_kick(
-                    room.room_id, gestalt_matrix_id, reason=reason
-                )
-            except nio.exceptions.ProtocolError as exc:
-                logger.warning(f"Failed to kick {gestalt} from {room}: {exc}")
+    async def kick_matrix_id_from_room(
+        self, room_id: str, room_label: str, matrix_id: str, reason=None
+    ):
+        try:
+            result = await self.client.room_kick(room_id, matrix_id, reason=reason)
+        except nio.exceptions.ProtocolError as exc:
+            logger.warning(f"Failed to kick {matrix_id} from {room_label}: {exc}")
+        else:
+            if isinstance(result, nio.responses.RoomKickResponse) or (
+                isinstance(result, nio.responses.RoomKickError)
+                and (result.status_code == "M_FORBIDDEN")
+            ):
+                # "forbidden" indicates that we were not a member of the room.
+                pass
             else:
-                if isinstance(result, nio.responses.RoomKickResponse) or (
-                    isinstance(result, nio.responses.RoomKickError)
-                    and (result.status_code == "M_FORBIDDEN")
-                ):
-                    # "forbidden" indicates that we were not a member of the room.
-                    # Discard invitations, anyway.
-                    await sync_to_async(delete_room_invitations)(room, gestalt)
-                else:
-                    logger.warning(
-                        f"Kick request for {gestalt} out of {room} was rejected: {result}"
-                    )
+                logger.warning(
+                    f"Kick request for {matrix_id} out of {room_label} was rejected: {result}"
+                )
 
     async def update_statistics(self):
         for room in MatrixChatGroupRoom.objects.all():
