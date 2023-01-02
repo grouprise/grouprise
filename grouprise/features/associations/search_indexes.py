@@ -1,5 +1,6 @@
 import re
 
+from django.db.models import Q
 from haystack import indexes
 from haystack.indexes import Indexable, NgramField, SearchIndex
 
@@ -19,6 +20,26 @@ class AssociationIndex(Indexable, SearchIndex):
         # our texts sometimes contain links and other stuff that may be
         # longer than that. replace everything that is longer than 240 chars
         return re.sub(MAX_TERM_LENGTH_REGEX, "", self.prepared_data["text"])
+
+    def build_queryset(self, using=None, start_date=None, end_date=None):
+        """allow filtering based start/end date for incremental updates
+
+        We cannot use haystack's `get_updated_field` hook, since it expects only a single field
+        name (while we need timestamps of content versions and contributions (comments)).
+        """
+        # retrieve the original queryset before applying time limits
+        qs = super().build_queryset(using=using)
+        if start_date:
+            qs = qs.filter(
+                Q(conversation__contributions__time_created__gte=start_date)
+                | Q(content__versions__time_created__gte=start_date)
+            )
+        if end_date:
+            qs = qs.filter(
+                Q(conversation__contributions__time_created__lte=end_date)
+                | Q(content__versions__time_created__lte=end_date)
+            )
+        return qs
 
     def get_model(self):
         return Association
