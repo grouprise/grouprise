@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import urllib.request
 
 from asgiref.sync import async_to_sync
@@ -18,6 +19,19 @@ from .models import MatrixChatGestaltSettings, MatrixChatGroupRoom
 from .settings import MATRIX_SETTINGS
 
 logger = logging.getLogger(__name__)
+
+
+MATRIX_URL_DOMAIN_REGEX = re.compile(r"^https?://(?P<domain>[\w.]+)(?::\d+)?/?$")
+MATRIX_HOMESERVER_WEB_CLIENT_LOCATION_MAPPING = {
+    "gestadten.org": "https://gestadten.org/stadt/chat",
+    "hack-hro.de": "https://quassel.hack-hro.de",
+    "lohro.de": "https://chat.lohro.de",
+    "matrix.org": "https://app.element.io",
+    "schwerin-aktiv.org": "https://schwerin-aktiv.org/stadt/chat",
+    "stadtgestalten.org": "https://stadtgestalten.org/stadt/chat",
+    "stadtimpuls.org": "https://stadtimpuls.org/stadt/chat",
+    "systemausfall.org": "https://klax.systemausfall.org",
+}
 
 
 def get_room_url_for_requester(room_id, request_user):
@@ -74,13 +88,33 @@ def get_web_client_url_pattern_for_domain(domain):
         def redirect_request(self, *args, **kwargs):
             return None
 
+    web_client_url = None
     opener = urllib.request.build_opener(NoRedirect)
     try:
         opener.open(f"{homeserver_url}/_matrix/client/")
     except urllib.error.HTTPError as exc:
         if exc.status == 302:
             web_client_url = exc.headers.get("location")
-            return web_client_url.rstrip("/") + "/#/room/{room}"
+        elif exc.status in {400, 404}:
+            # The server did not respond as expected.
+            # Look up the Matrix homeserver in our manual mapping from domain to web client
+            # location.
+            # See https://git.hack-hro.de/grouprise/grouprise/-/issues/793
+            canonical_domain_match = MATRIX_URL_DOMAIN_REGEX.match(homeserver_url)
+            if canonical_domain_match:
+                matrix_domain = canonical_domain_match.group("domain")
+                try:
+                    web_client_url = MATRIX_HOMESERVER_WEB_CLIENT_LOCATION_MAPPING[
+                        matrix_domain
+                    ]
+                except KeyError:
+                    pass
+        else:
+            logger.warning("Failed to discover web client location for '%s'", domain)
+
+    if web_client_url:
+        return web_client_url.rstrip("/") + "/#/room/{room}"
+
     # Fall back to the matrix.to service for now.
     # In the future we may want to use the new matrix scheme:
     #   https://github.com/matrix-org/matrix-doc/pull/2312
