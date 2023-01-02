@@ -10,12 +10,12 @@ Release Notes
 .. toctree::
    :hidden:
 
-   5.3.2
 
 
 .. toctree::
    :maxdepth: 1
 
+   5.3.2
    5.3.1
    5.3.0
    5.2.0
