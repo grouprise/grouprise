@@ -59,6 +59,8 @@ def _populate_group_rooms(server):
                     room.members.add(gestalt.matrix_chat_settings.matrix_id)
                 except ObjectDoesNotExist:
                     pass
+            # the bot itself is in the room, too
+            room.members.add(server.bot_matrix_id)
             server.rooms[room.room_id] = room
     for setting in get_matrix_notification_room_queryset():
         room_id = setting.value

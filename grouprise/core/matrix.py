@@ -210,7 +210,9 @@ class MatrixConsoleClient:
             return nio.responses.RoomCreateError("Room already exists")
         else:
             self._log(f"Creating room: {room_id}")
-            self.server.rooms[room_id] = MatrixDummyRoom(room_id)
+            new_room = MatrixDummyRoom(room_id)
+            new_room.members.add(self.user_id)
+            self.server.rooms[room_id] = new_room
             return nio.responses.RoomCreateResponse(room_id)
 
     @room_resolver(nio.responses.RoomGetStateError)
