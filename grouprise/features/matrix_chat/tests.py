@@ -135,6 +135,18 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
                 self.assertEqual(tracker.messages_count, 0)
 
 
+class MatrixGroupLeave(MatrixChatMixin, AuthenticatedMemberMixin, tests.Test):
+    def test_matrix_id_removed_from_group_rooms(self):
+        private_room, public_room = self.get_group_rooms(self.group)
+        # the member and the bot are in the rooms
+        self.assertEqual(len(private_room.members), 2)
+        self.assertEqual(len(public_room.members), 2)
+        self.leave_group()
+        # only the bot remains in the rooms
+        self.assertEqual(len(private_room.members), 1)
+        self.assertEqual(len(public_room.members), 1)
+
+
 class MatrixPrivateConversationNotification(
     MatrixChatMixin, AuthenticatedGestaltConversationMixin, tests.Test
 ):

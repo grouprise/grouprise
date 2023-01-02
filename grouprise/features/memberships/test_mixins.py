@@ -13,6 +13,9 @@ class MemberMixin(grouprise.features.gestalten.tests.mixins.GestaltMixin, GroupM
             created_by=cls.gestalt, group=cls.group, member=cls.gestalt
         )
 
+    def leave_group(self):
+        models.Membership.objects.filter(group=self.group, member=self.gestalt).delete()
+
 
 class OtherMemberMixin(
     grouprise.features.gestalten.tests.mixins.OtherGestaltMixin, GroupMixin
