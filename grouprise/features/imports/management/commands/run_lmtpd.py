@@ -17,6 +17,7 @@ from aiosmtpd.lmtp import LMTP
 from aiosmtplib.errors import SMTPRecipientsRefused, SMTPResponseException
 from aiosmtplib.smtp import SMTP
 from asgiref.sync import async_to_sync, sync_to_async
+from setproctitle import setproctitle
 
 from grouprise.core.settings import CORE_SETTINGS
 from grouprise.features.imports.mails import (
@@ -43,6 +44,7 @@ class Command(django.core.management.base.BaseCommand):
             else:
                 self.stderr.write(style(text))
 
+        setproctitle("grouprise-lmtpd")
         success_writer = functools.partial(message_writer, style=self.style.SUCCESS)
         error_writer = functools.partial(message_writer, style=self.style.ERROR)
         lmtp_daemon = ContributionLMTPD(

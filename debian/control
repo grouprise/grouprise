@@ -47,6 +47,7 @@ Build-Depends:
  python3-pil,
  python3-recommonmark,
  python3-ruamel.yaml,
+ python3-setproctitle,
  python3-setuptools,
  python3-xapian-haystack,
 # The following packages are indirectly required by the dependencies above.
@@ -87,6 +88,7 @@ Depends:
  python3-pil,
  python3-recommonmark,
  python3-ruamel.yaml,
+ python3-setproctitle,
  python3-setuptools,
  python3-xapian-haystack,
 # The following packages are indirectly required by the dependencies above.

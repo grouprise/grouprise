@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 import kien.command.help
 import kien.command.quit
 from kien.runner import ConsoleRunner
+from setproctitle import setproctitle
 
 from grouprise.core.matrix import MatrixError
 from grouprise.features.matrix_commander.commands import commander
@@ -37,6 +38,7 @@ class Command(BaseCommand):
     @async_to_sync
     async def handle(self, *args, log_level=None, **options):
         logging.basicConfig(level=self.LOG_LEVEL_MAP[log_level])
+        setproctitle("grouprise-matrix-commander")
         if options["console"]:
             self.serve_console()
         else:

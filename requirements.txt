@@ -50,4 +50,5 @@ ruamel.yaml                 # debian: python3-ruamel.yaml
 rules                       # debian: python3-django-rules
 schulze                     # NOT IN DEBIAN
 sentry-sdk                  # debian: python3-sentry-sdk
+setproctitle                # debian: python3-setproctitle
 xapian-haystack>=2.1.1      # debian: python3-xapian-haystack

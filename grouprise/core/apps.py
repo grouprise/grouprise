@@ -1,6 +1,9 @@
+import sys
+
 from django.apps import AppConfig
 from django.conf import settings
 from huey.contrib.djhuey import on_startup
+from setproctitle import setproctitle
 
 from grouprise import __release__
 
@@ -14,6 +17,18 @@ def _resolve_lazy_core_settings():
     from .settings import CORE_SETTINGS
 
     CORE_SETTINGS.resolve_lazy_settings()
+
+
+@on_startup()
+def _set_process_title_for_tasks():
+    """override the process name for "run_huey"
+
+    This eases process tracking (e.g. via monit) and is simply more beautiful.
+    """
+    # This "on_startup" hook is also called within the context of a regular (uWSGI) process.
+    # Thus, we need to guess, whether we were executed as the task processor.
+    if "run_huey" in sys.argv:
+        setproctitle("grouprise-tasks")
 
 
 class CoreConfig(AppConfig):
