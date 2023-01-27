@@ -31,7 +31,7 @@
                         <h3>{% trans 'Groups' %}</h3>
                     {% if user.is_authenticated %}
                         <p class="dock-meta">
-                        You are a member
+                        {% trans "You are member of" %}
                         <a href="{% url 'group-index' %}?only_with_membership=true">
                             {% blocktrans trimmed count membership_count=user.gestalt.memberships.count %}
                                 one group

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-24 19:33+0100\n"
+"POT-Creation-Date: 2023-01-27 13:55+0100\n"
 "PO-Revision-Date: 2021-12-22 15:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -55,7 +55,7 @@ msgid "blue"
 msgstr "blau"
 
 msgid "What is the color of the sky?"
-msgstr "Welche Farbe hat der Himmer?"
+msgstr "Welche Farbe hat der Himmel?"
 
 msgid "What is the opposite of 'day'?"
 msgstr "Was ist das Gegenstück zum 'Tag'?"
@@ -77,6 +77,9 @@ msgstr "Zeige Gruppenmenü"
 
 msgid "Groups"
 msgstr "Gruppen"
+
+msgid "You are member of"
+msgstr "Du bist Mitglied von"
 
 #, python-format
 msgid "one group"
