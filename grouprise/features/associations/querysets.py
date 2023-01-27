@@ -118,12 +118,6 @@ class Association(models.QuerySet):
         qs = qs.order_by("-last_activity")
         return qs
 
-    def active_ordered_user_associations(self, user):
-        qs = self
-        qs = qs.ordered_user_associations(user)
-        qs = qs.filter(last_activity__gte=user.gestalt.activity_bookmark_time)
-        return qs
-
     def prefetch(self):
         qs = self
         qs = qs.prefetch_related("entity")
