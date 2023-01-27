@@ -168,14 +168,12 @@ def user_list_unused(limit):
     # request all unused gestalts in order to count them
     unused_gestalts = list(Gestalt.objects.filter_unused(limit=None))
     yield MatrixCommanderResult(f"There are {len(unused_gestalts)} unused accounts.")
-    yield MatrixCommanderResult(f"The {limit} most recently active ones are:")
+    yield MatrixCommanderResult(f"The {limit} oldest ones are:")
     yield MatrixCommanderResult("")
     for gestalt in unused_gestalts[:limit]:
         date_joined = gestalt.user.date_joined.strftime(TIME_FORMAT)
-        date_activity = gestalt.activity_bookmark_time.strftime(TIME_FORMAT)
         yield MatrixCommanderResult(
-            f"- {gestalt.user.username}"
-            f" (joined: {date_joined}, activity: {date_activity})"
+            f"- {gestalt.user.username}" f" (joined: {date_joined})"
         )
 
 
