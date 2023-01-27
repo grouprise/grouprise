@@ -66,9 +66,7 @@ class GestaltQuerySet(models.QuerySet):
             queryset = queryset.filter(
                 user__date_joined__lt=recent_account_creation_time
             )
-        for gestalt in queryset.order_by("activity_bookmark_time").prefetch_related(
-            "user"
-        ):
+        for gestalt in queryset.prefetch_related("user").order_by("user__date_joined"):
             # test a few exceptions - all remaining accounts should be disposable
             if gestalt.pk in gestalt_exemptions:
                 # some users are relevant for grouprise itself
