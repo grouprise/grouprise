@@ -204,9 +204,19 @@ class Command(BaseCommand):
         except urllib.error.HTTPError as exc:
             if exc.code == 401:
                 return False
-        return user_id_for_token == "@{}:{}".format(
-            MATRIX_SETTINGS.BOT_USERNAME, MATRIX_SETTINGS.DOMAIN
-        )
+            else:
+                self.stderr.write(
+                    self.style.NOTICE(
+                        f"Failed to verify bot configuration via an HTTP request against the"
+                        f" Matrix Synapse server: {exc}"
+                    )
+                )
+                return False
+        else:
+            return (
+                user_id_for_token
+                == f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}"
+            )
 
     def handle(self, *args, **options):
         config_locations = options["matrix_config_locations"]
