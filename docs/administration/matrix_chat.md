@@ -62,6 +62,12 @@ database:
     cp_max: 10
 ```
 1. start matrix-synapse: `service matrix-synapse start`
+    * This could fail due to a missing TLS key
+      (see [debian#960305](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=960305)).
+      In this case you should proceed with the next step (`apt install grouprise-matrix`) and
+      restart `matrix-synapse` afterwards.
+      The `grouprise-matrix` package helps here, since it contains a configuration file for
+      `matrix-synapse`, which disables the TLS setup.
 1. install the matrix integration package for grouprise: `apt install grouprise-matrix`
 1. answer the configuration questions during package installation:
     * matrix-synapse:
