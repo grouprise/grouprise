@@ -23,6 +23,10 @@ Matrix homeserver):
 * personal messages from other users trigger Matrix notifications, which are sent directly to the
   user
 * the group overview page in grouprise provides links to the group's Matrix rooms
+* You may create one or more rooms as a general *feed* for any public content published on this
+  *grouprise* instance (see `public_listener_rooms` below.
+  This room should probably be public and read-only for most participants
+  (if you want to designate it as a one-way announcement channel).
 
 Additionally, the usual benefits of the Matrix system are available:
 
