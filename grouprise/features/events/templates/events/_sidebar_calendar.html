@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="box box-striped">
     <div class="box-inner">
         <header class="box-header">
@@ -24,6 +26,15 @@
                             </div>
                         </li>
                     {% endfor %}
+                    {% if show_events_url %}
+                        <li>
+                            <div class="event-preview">
+                                <a href="{{ show_events_url }}">
+                                    <strong>{% translate "Show all events" %}</strong>
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             {% endif %}
         </div>

@@ -102,6 +102,14 @@ def sidebar_calendar(
         get_requested_time(context.request)
     ).order_by("content__time")[:preview_length]
 
+    if upcoming:
+        if group:
+            show_events_url = "{}?content=events".format(group.get_absolute_url())
+        else:
+            show_events_url = reverse("events")
+    else:
+        show_events_url = None
+
     # collect toolbar actions
     actions = []
     if (
@@ -116,11 +124,6 @@ def sidebar_calendar(
         actions.append(
             (mark_safe('<i class="sg sg-add"></i> Veranstaltung eintragen'), url)
         )
-    if upcoming:
-        url = reverse("events")
-        if group:
-            url = "{}?content=events".format(group.get_absolute_url())
-        actions.append(("Alle Veranstaltungen", url))
     if group:
         url = reverse("group-events-export", args=(group.slug,))
         actions.append(("Kalender exportieren", url))
@@ -134,6 +137,7 @@ def sidebar_calendar(
             "associations": associations,
             "group": group,
             "hide_buttons": hide_buttons,
+            "show_events_url": show_events_url,
             "show_group": show_group,
             "upcoming": upcoming,
             "component_id": component_id,
