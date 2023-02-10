@@ -187,12 +187,14 @@ class Gestalt(memberships.AuthenticatedMemberMixin, grouprise.core.tests.Test):
         ).get_absolute_url()
 
     def test_gestalt_poll_link(self):
-        self.assertContainsLink(self.client.get("/"), self.get_url("create-poll"))
-        self.assertContainsLink(
+        # creation of new polls is "disabled"
+        # i.e. you may create them if you know the url
+        self.assertNotContainsLink(self.client.get("/"), self.get_url("create-poll"))
+        self.assertNotContainsLink(
             self.client.get(self.gestalt.get_absolute_url()),
             self.get_url("create-poll"),
         )
-        self.assertContainsLink(
+        self.assertNotContainsLink(
             self.client.get(self.group.get_absolute_url()),
             self.get_url("create-group-poll", self.group.slug),
         )
