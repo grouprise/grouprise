@@ -5,7 +5,9 @@ import django.urls
 from django import test, urls
 from django.contrib import auth
 from django.core import mail
+from django.core.exceptions import ImproperlyConfigured
 from django.db import models
+from huey.contrib.djhuey import task
 
 from .matrix import MatrixConsoleClient
 from .settings import get_grouprise_site
@@ -28,6 +30,11 @@ def with_captcha(data, answer="foo", field_name="captcha"):
         {field_name + "_0": answer, field_name + "_1": hash_captcha_answer(answer)}
     )
     return data
+
+
+@task(name="grouprise-core-test-huey-immediate-mode")
+def _dummy_task_append_to_list(input_data: list) -> None:
+    input_data.append(True)
 
 
 class Test(test.TestCase):
@@ -172,9 +179,23 @@ class Test(test.TestCase):
         return self.get_response(method, url)
 
     @classmethod
+    def _verify_task_runner_immediate_mode(cls):
+        task_was_executed = []
+
+        # Run the task: this will happen in the background (later), if huey is not configured for
+        # "immediate" execution.
+        _dummy_task_append_to_list(task_was_executed)
+        if not task_was_executed:
+            raise ImproperlyConfigured(
+                "For unknown reasons, 'huey' is not configured in 'immediate' mode."
+                " Maybe the default settings were changed locally?",
+            )
+
+    @classmethod
     def setUpClass(cls):
         logging.disable(logging.CRITICAL)
         MatrixConsoleClient.output_stream = None
+        cls._verify_task_runner_immediate_mode()
         super().setUpClass()
 
     @classmethod
