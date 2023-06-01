@@ -135,7 +135,7 @@ class ChatBot(MatrixBaseBot):
         return room, True
 
     async def configure_group_room(self, room):
-        room_alias = room.get_default_room_alias()
+        room_alias = await sync_to_async(room.get_default_room_alias)()
         # try to set the visibility of the room in the public room directory
         try:
             response = await self.client._send(
