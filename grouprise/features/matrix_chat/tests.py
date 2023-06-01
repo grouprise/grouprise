@@ -163,6 +163,53 @@ class MatrixGroupLeave(MatrixChatMixin, AuthenticatedMemberMixin, tests.Test):
         self.assertEqual(len(public_room.members), 1)
 
 
+class MatrixGroupInvitationAfterJoin(
+    MatrixChatMixin, AuthenticatedMixin, GroupMixin, tests.Test
+):
+    def _join_group(self) -> None:
+        Membership.objects.create(
+            created_by=self.gestalt, group=self.group, member=self.gestalt
+        )
+
+    def _leave_group(self) -> None:
+        Membership.objects.filter(group=self.group, member=self.gestalt).delete()
+
+    def tearDown(self):
+        """reset group membership, invitations and matrix IDs"""
+        self.group.members.clear()
+        private_room, public_room = self.get_group_rooms(self.group)
+        private_room.members.clear()
+        public_room.members.clear()
+        MatrixChatGroupRoomInvitations.objects.filter(gestalt=self.gestalt).delete()
+        MatrixChatGestaltSettings.objects.filter(gestalt=self.gestalt).delete()
+        super().tearDown()
+
+    def test_invitation_after_join(self):
+        private_room, public_room = self.get_group_rooms(self.group)
+        # join the public matrix room before joining the group
+        public_room.members.add(self.get_gestalt_matrix_id(self.gestalt))
+        with MatrixRoomTracker(private_room) as private_tracker:
+            with MatrixRoomTracker(public_room) as public_tracker:
+                self._join_group()
+                self.assertEqual(private_tracker.invitations_count, 1)
+                self.assertEqual(public_tracker.invitations_count, 0)
+                self._leave_group()
+                self._join_group()
+                self.assertEqual(private_tracker.invitations_count, 2)
+                self.assertEqual(public_tracker.invitations_count, 1)
+
+    def test_skip_duplicate_invitation(self):
+        private_room, public_room = self.get_group_rooms(self.group)
+        with MatrixRoomTracker(public_room) as public_tracker:
+            self._join_group()
+            self.assertEqual(public_tracker.invitations_count, 1)
+            # leave the room (while staying within the group)
+            public_room.members.remove(self.get_gestalt_matrix_id(self.gestalt))
+            # trigger periodic submission of matrix invitations
+            synchronize_matrix_rooms.func()
+            self.assertEqual(public_tracker.invitations_count, 1)
+
+
 class MatrixPrivateConversationNotification(
     MatrixChatMixin, AuthenticatedGestaltConversationMixin, tests.Test
 ):
