@@ -24,19 +24,32 @@ from .utils import (
 register_notification_backend(MatrixNotifications)
 
 
-@receiver(post_save, sender=MatrixChatGestaltSettings)
-def post_matrix_chat_gestalt_settings_save(
-    sender, instance, created, update_fields=None, raw=False, **kwargs
-):
+@receiver(pre_save, sender=MatrixChatGestaltSettings)
+def pre_matrix_chat_gestalt_settings_save(sender, instance, raw, **kwargs):
+    """before storing a new matrix ID, we have to get rid of references to the old one"""
+    gestalt = instance.gestalt
     if not raw and (
-        created or (update_fields and "matrix_id_override" in update_fields)
+        MatrixChatGestaltSettings.get_matrix_id(gestalt) != instance.matrix_id_override
     ):
-        gestalt = instance.gestalt
-        # the matrix ID of the user has changed: remove all existing invitations
         MatrixChatGroupRoomInvitations.objects.filter(gestalt=gestalt).delete()
-        send_invitations_for_gestalt(gestalt)
         # forget the old room for private messages (the former Matrix account still occupies it)
         delete_gestalt_matrix_notification_room(gestalt)
+
+
+@receiver(post_save, sender=MatrixChatGestaltSettings)
+def post_matrix_chat_gestalt_settings_save(sender, instance, raw=False, **kwargs):
+    gestalt = instance.gestalt
+    if not raw:
+        # We need to determine the new Matrix ID manually.
+        # The `get_matrix_id` method does not work at the moment, since the reference to the new
+        # MatrixChatGestaltSettings is stored in the related Gestalt *after* `instance` is saved.
+        if instance.matrix_id_override is not None:
+            new_matrix_id = instance.matrix_id_override
+        else:
+            new_matrix_id = MatrixChatGestaltSettings.get_default_local_matrix_id(
+                gestalt
+            )
+        send_invitations_for_gestalt(gestalt, new_matrix_id)
 
 
 @receiver(post_save, sender=Group)

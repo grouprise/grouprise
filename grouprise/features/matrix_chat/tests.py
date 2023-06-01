@@ -174,6 +174,13 @@ class MatrixGroupInvitationAfterJoin(
     def _leave_group(self) -> None:
         Membership.objects.filter(group=self.group, member=self.gestalt).delete()
 
+    def _set_gestalt_matrix_id(self, gestalt: Gestalt, matrix_id: str) -> None:
+        matrix_settings, created = MatrixChatGestaltSettings.objects.get_or_create(
+            gestalt=gestalt
+        )
+        matrix_settings.matrix_id_override = matrix_id
+        matrix_settings.save()
+
     def tearDown(self):
         """reset group membership, invitations and matrix IDs"""
         self.group.members.clear()
@@ -208,6 +215,15 @@ class MatrixGroupInvitationAfterJoin(
             # trigger periodic submission of matrix invitations
             synchronize_matrix_rooms.func()
             self.assertEqual(public_tracker.invitations_count, 1)
+
+    def test_reinvite_after_gestalt_matrix_id_changed(self):
+        private_room, public_room = self.get_group_rooms(self.group)
+        # trigger the creation of the gestalt's `matrix_chat_settings` object
+        with MatrixRoomTracker(private_room) as private_tracker:
+            self._join_group()
+            self.assertEqual(private_tracker.invitations_count, 1)
+            self._set_gestalt_matrix_id(self.gestalt, "@fooby:example.org")
+            self.assertEqual(private_tracker.invitations_count, 2)
 
 
 class MatrixPrivateConversationNotification(

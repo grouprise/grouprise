@@ -15,6 +15,7 @@ from .matrix_bot import (
     GESTALT_SETTINGS_CATEGORY_MATRIX,
     GESTALT_SETTINGS_KEY_PRIVATE_NOTIFICATION_ROOM,
 )
+from .models import MatrixChatGestaltSettings
 from .notifications import MatrixMessage
 
 
@@ -84,7 +85,11 @@ def create_gestalt_matrix_notification_room(gestalt: Gestalt) -> str:
                 room_label=room_label,
             )
             # invite the target user
-            await bot.invite_into_room(room_id, gestalt, room_label)
+            matrix_id = await sync_to_async(MatrixChatGestaltSettings.get_matrix_id)(
+                gestalt
+            )
+            gestalt_label = await sync_to_async(str)(gestalt)
+            await bot.invite_into_room(room_id, matrix_id, gestalt_label, room_label)
             return room_id
 
     room_title = _("{site_name} - notifications").format(
@@ -140,16 +145,15 @@ async def sync_group_rooms_delayed(group):
     name="send_invitations_for_gestalt",
 )
 @async_to_sync
-async def send_invitations_for_gestalt(gestalt):
-    def get_gestalt_memberships(gestalt):
-        return list(gestalt.memberships.all())
+async def send_invitations_for_gestalt(gestalt, matrix_id: str):
+    def get_gestalt_groups(gestalt):
+        return [membership.group for membership in gestalt.memberships.all()]
 
     async with ChatBot() as bot:
-        for membership in await sync_to_async(get_gestalt_memberships)(gestalt):
-            group = membership.group
+        for group in await sync_to_async(get_gestalt_groups)(gestalt):
             try:
                 async for invited in bot.send_invitations_to_group_members(
-                    group, gestalten=[gestalt]
+                    group, gestalten_with_matrix_id=[(gestalt, matrix_id)]
                 ):
                     logger.info(f"Invitation sent: {invited}")
             except MatrixError as exc:

@@ -376,10 +376,13 @@ class ChatBot(MatrixBaseBot):
                 )
                 return False
 
-    async def send_invitations_to_group_members(self, group, gestalten=None):
+    async def send_invitations_to_group_members(
+        self, group, gestalten_with_matrix_id=None
+    ):
         """Send invitations to the rooms of group to all members that were not yet invited
 
-        Optionally these invitations may be limited to a set of gestalt objects.
+        Optionally these invitations may be limited to a set of Gestalten:
+        `gestalten_with_matrix_id` is a list of tuples containing the Gestalt and the Matrix ID.
         """
 
         def get_rooms(group):
@@ -396,20 +399,31 @@ class ChatBot(MatrixBaseBot):
                 invite.gestalt.id
                 for invite in await sync_to_async(get_room_invitations)(room)
             }
-            if gestalten is None:
-                invitees = await sync_to_async(get_group_members_with_exceptions)(
-                    group, invited_members
-                )
+            if gestalten_with_matrix_id is None:
+                invitees = [
+                    (
+                        gestalt,
+                        await sync_to_async(MatrixChatGestaltSettings.get_matrix_id)(
+                            gestalt
+                        ),
+                    )
+                    for gestalt in await sync_to_async(
+                        get_group_members_with_exceptions
+                    )(group, invited_members)
+                ]
             else:
                 invitees = [
-                    gestalt
-                    for gestalt in gestalten
+                    (gestalt, matrix_id)
+                    for gestalt, matrix_id in gestalten_with_matrix_id
                     if gestalt.id not in invited_members
                 ]
-            for gestalt in invitees:
+            for gestalt, matrix_id in invitees:
                 room_label = await sync_to_async(str)(room)
+                gestalt_label = await sync_to_async(str)(gestalt)
                 try:
-                    await self.invite_into_room(room.room_id, gestalt, room_label)
+                    await self.invite_into_room(
+                        room.room_id, matrix_id, gestalt_label, room_label
+                    )
                 except MatrixError as exc:
                     logger.warning(str(exc))
                 else:
@@ -455,15 +469,14 @@ class ChatBot(MatrixBaseBot):
                 "Failed to raise power levels for group members (%s)", room_label
             )
 
-    async def invite_into_room(self, room_id: str, gestalt, room_label: str) -> None:
-        gestalt_matrix_id = await sync_to_async(
-            MatrixChatGestaltSettings.get_matrix_id
-        )(gestalt)
+    async def invite_into_room(
+        self, room_id: str, gestalt_matrix_id: str, gestalt_label: str, room_label: str
+    ) -> None:
         try:
             result = await self.client.room_invite(room_id, gestalt_matrix_id)
         except nio.exceptions.ProtocolError as exc:
             raise MatrixError(
-                f"Failed to invite {gestalt} into {room_label}: {exc}"
+                f"Failed to invite {gestalt_label} into {room_label}: {exc}"
             ) from exc
         else:
             if isinstance(result, nio.responses.RoomInviteResponse):
@@ -475,7 +488,7 @@ class ChatBot(MatrixBaseBot):
                 pass
             else:
                 raise MatrixError(
-                    f"Invite request for {gestalt} into {room_label} was rejected: {result}"
+                    f"Invite request for {gestalt_label} into {room_label} was rejected: {result}"
                 )
 
     async def kick_matrix_id_from_room(
