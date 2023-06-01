@@ -129,6 +129,7 @@ class MatrixDummyRoom:
         self.state = {"m.room.power_levels": {"users": {}}}
         self.members = set()
         self.sent_messages_count = 0
+        self.sent_invitations_count = 0
         self.room_id = room_id
         self.label = room_id if room_label is None else room_label
 
@@ -236,6 +237,7 @@ class MatrixConsoleClient:
             )
         else:
             self._log(f"Inviting {invitee_id} to room: {room.label}")
+            room.sent_invitations_count += 1
             room.members.add(invitee_id)
             return nio.responses.RoomInviteResponse()
 

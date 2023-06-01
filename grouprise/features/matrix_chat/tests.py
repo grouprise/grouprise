@@ -3,12 +3,15 @@ from django.urls import reverse
 from grouprise.core import tests
 from grouprise.core.matrix import get_dummy_matrix_server, MatrixDummyRoom
 from grouprise.features.gestalten.models import Gestalt
+from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin
 from grouprise.features.groups.models import Group
+from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 from grouprise.features.matrix_chat.utils import (
     get_gestalt_matrix_notification_room,
     create_public_room,
 )
+from grouprise.features.memberships.models import Membership
 from grouprise.features.conversations.tests import (
     AuthenticatedGestaltConversationMixin,
     AuthenticatedGroupConversationMixin,
@@ -18,15 +21,20 @@ from grouprise.features.memberships.test_mixins import (
     OtherMemberMixin,
 )
 
+from .models import MatrixChatGestaltSettings, MatrixChatGroupRoomInvitations
+from .tasks import synchronize_matrix_rooms
+
 
 class MatrixRoomTracker:
     def __init__(self, room: MatrixDummyRoom):
         self._room_id = room.room_id
         self._rooms_dict = get_dummy_matrix_server().rooms
-        self._previous_messages_count = None
+        self._previous_invitations_count = None
         self._previous_members_count = None
+        self._previous_messages_count = None
 
     def __enter__(self):
+        self._previous_invitations_count = self.room.sent_invitations_count
         self._previous_members_count = len(self.room.members)
         self._previous_messages_count = self.room.sent_messages_count
         return self
@@ -39,6 +47,10 @@ class MatrixRoomTracker:
     @property
     def room(self):
         return self._rooms_dict[self._room_id]
+
+    @property
+    def invitations_count(self) -> int:
+        return self.room.sent_invitations_count - self._previous_invitations_count
 
     @property
     def members_count(self):
@@ -57,6 +69,10 @@ class MatrixChatMixin:
     def get_gestalt_room(cls, gestalt: Gestalt):
         room_id = get_gestalt_matrix_notification_room(gestalt)
         return cls.matrix_server.rooms[room_id]
+
+    @classmethod
+    def get_gestalt_matrix_id(cls, gestalt: Gestalt) -> str:
+        return MatrixChatGestaltSettings.get_matrix_id(gestalt)
 
     @classmethod
     def get_group_rooms(cls, group: Group):
