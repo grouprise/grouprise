@@ -23,6 +23,7 @@ from . import (
 from .models import (
     MatrixChatGestaltSettings,
     MatrixChatGroupRoom,
+    MatrixChatGroupRoomInvitations,
 )
 from .settings import MATRIX_SETTINGS
 
@@ -412,6 +413,11 @@ class ChatBot(MatrixBaseBot):
                 except MatrixError as exc:
                     logger.warning(str(exc))
                 else:
+                    # The gestalt was successfully invited or it has been invited before.
+                    # Remember that fact.
+                    await sync_to_async(
+                        MatrixChatGroupRoomInvitations.objects.get_or_create
+                    )(room=room, gestalt=gestalt)
                     yield room, gestalt
 
     async def raise_room_members_power_levels(
