@@ -32,7 +32,8 @@ variables:
             - build/debian
         exclude:
             # omit the full build directory (including the huge "node_modules" directory)
-            - build/debian/grouprise-*/**
+            - build/debian/grouprise-*/*
+            - build/debian/grouprise-*/*/**
 
 .build-docker-image:
     image:
