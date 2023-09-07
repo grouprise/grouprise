@@ -10,6 +10,7 @@ Release Notes
 .. toctree::
    :hidden:
 
+   5.4.0
 
 
 .. toctree::
