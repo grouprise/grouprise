@@ -88,6 +88,10 @@ stylesheets:
         - path: /custom.css
         - path: /print.css
           media: print
+task_handler:
+  storage_backend: sqlite
+  location: /tmp/huey.sqlite
+  workers_count: 4
 template_directories:
         - /run
 time_zone: Europe/Berlin
@@ -118,6 +122,12 @@ DJANGO_SETTINGS_MINIMAL = {
     "EMAIL_USE_SSL": False,
     "EMAIL_USE_TLS": False,
     "HAYSTACK_XAPIAN_LANGUAGE": "german2",
+    "HUEY": {
+        "consumer": {"worker_type": "thread", "workers": 4},
+        "filename": "/tmp/huey.sqlite",
+        "huey_class": "huey.SqliteHuey",
+        "results": False,
+    },
     "LANGUAGE_CODE": "de-de",
     "SECURE_HSTS_SECONDS": 31536000,
     "SECURE_PROXY_SSL_HEADER": ("HTTP_X_FORWARDED_PROTO", "https"),
@@ -197,6 +207,12 @@ DJANGO_SETTINGS_EXAMPLE = {
         "UPLOAD_MAX_FILE_SIZE": 1024,
     },
     "HAYSTACK_XAPIAN_LANGUAGE": "english",
+    "HUEY": {
+        "consumer": {"worker_type": "thread", "workers": 4},
+        "filename": "/tmp/huey.sqlite",
+        "huey_class": "huey.SqliteHuey",
+        "results": False,
+    },
     "INSTALLED_APPS": [
         "grouprise.features.matrix_chat",
         "corsheaders",
@@ -274,18 +290,34 @@ class SettingsLoaderTest(TestCase):
     def tearDown(self):
         os.rmdir(self.temporary_directory)
 
+    def assertEqualSettings(
+        self, expected_settings: dict, generated_settings: dict, *args, **kwargs
+    ):
+        generated_settings = copy.deepcopy(generated_settings)
+        # exempt the huey filename from the comparison: it would be resolved only later
+        try:
+            expected_filename = DJANGO_SETTINGS_MINIMAL["HUEY"]["filename"]
+        except KeyError:
+            # somehow the setting does not exist - ignore this mystery
+            pass
+        else:
+            self.assertIn("HUEY", generated_settings)
+            self.assertIn("filename", generated_settings["HUEY"])
+            generated_settings["HUEY"]["filename"] = expected_filename
+        self.assertEqual(expected_settings, generated_settings, *args, **kwargs)
+
     @ContentFile("oidc.key", content="secret-key-content")
     def test_all_settings(self):
         target = {}
         import_settings_from_dict(
             target, CONFIG_EXAMPLE, base_directory=self.temporary_directory
         )
-        self.assertEqual(DJANGO_SETTINGS_EXAMPLE, target)
+        self.assertEqualSettings(DJANGO_SETTINGS_EXAMPLE, target)
 
     def test_minimal_settings(self):
         target = {}
         import_settings_from_dict(target, {})
-        self.assertEqual(DJANGO_SETTINGS_MINIMAL, target)
+        self.assertEqualSettings(DJANGO_SETTINGS_MINIMAL, target)
 
     def test_list_append(self):
         """verify that items can be added to existing lists"""
@@ -298,7 +330,7 @@ class SettingsLoaderTest(TestCase):
             stylesheet_pattern.format("foo"),
             stylesheet_pattern.format("bar"),
         ]
-        self.assertEqual(wanted_result, target)
+        self.assertEqualSettings(wanted_result, target)
 
     def test_invalid_structure(self):
         """test various bad configuration input values"""

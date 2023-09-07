@@ -118,6 +118,33 @@ See [Django's documentation of `SECRET_KEY`](https://docs.djangoproject.com/en/s
 Expiry time of cookie-based sessions in seconds.
 By default, the expiration period is two weeks (1209600 seconds).
 
+### `task_handler`
+
+Default settings:
+
+```yaml
+task_handler:
+  # may be one of: file / memory / redis / sql / sqlite / 
+  storage_backend: sqlite
+  # content depends on the `storage_backend` (see below)
+  location: /var/lib/grouprise/huey.sqlite
+  # number of threads for parallel execution of tasks (should be greater than 2)
+  workers_count: 4
+```
+
+Example `location` fields for different storage backends:
+
+| Backend | Concurrency | Example location |
+|---------|------------------|
+| `file` | limited | `/var/lib/grouprise/huey.storage` |
+| `memory` | full | *ignored* |
+| `redis` | full | `redis://localhost:6379/?db=1`
+| `sqlite` | limited | `/var/lib/grouprise/huey.sqlite` |
+| `sql` | full | `postgresql://postgres:my_password@localhost:5432/huey_grouprise` |
+
+Busy grouprise instances should pick one of the storage backends with full concurrency support.
+
+
 ### `time_zone`
 Specify the time zone used for storing timestamps in the database and for visualizing dates and times.
 

@@ -27,6 +27,8 @@ else:
     _file_based_cache_class = "diskcache.DjangoCache"
 import ruamel.yaml
 
+from grouprise.settings_utils import grouprise_field_resolver
+
 
 logger = logging.getLogger(__name__)
 
@@ -55,11 +57,22 @@ CACHE_BACKENDS_MAP = {
     "memcache": "django.core.cache.backends.memcached.MemcachedCache",
     "pylibmc": "django.core.cache.backends.memcached.PyLibMCCache",
 }
+TASK_STORAGE_BACKENDS_MAP = {
+    "file": "huey.FileHuey",
+    "memory": "huey.MemoryHuey",
+    "redis": "huey.PriorityRedisHuey",
+    "sql": "huey.contrib.sql_huey.SqlHuey",
+    "sqlite": "huey.SqliteHuey",
+}
 # The fallback cache size is used, if the cache size is not configured and the size of the target
 # filesystem cannot be determined for some reason.
 FALLBACK_FILESYSTEM_CACHE_SIZE_MB = 16
 # The maximum size is applied only if the cache size is not configured.
 MAXIMUM_FILESYSTEM_CACHE_SIZE_MB = 256
+# Some tasks (e.g. "update_search_index") take very long (e.g. an hour).
+# We need to allow parallel processing in order to prevent the queue from filling up and thus
+# delaying notifications.
+DEFAULT_TASK_WORKERS_COUNT = 4
 
 
 class EmailSubmissionEncryption(enum.Enum):
@@ -471,6 +484,88 @@ class DatabaseConfig(ConfigBase):
         engine = value.get("engine", self.default["engine"])
         dest["ENGINE"] = DATABASE_ENGINES_MAP[engine]
         settings["DATABASES"] = {"default": dest}
+
+
+class TaskHandlerConfig(ConfigBase):
+
+    EXPECTED_SUB_KEYS = {"storage_backend", "location", "workers_count"}
+
+    def validate(self, value):
+        value = super().validate(value)
+        backend = value.setdefault("storage_backend", self.default["storage_backend"])
+        if backend not in TASK_STORAGE_BACKENDS_MAP:
+            raise ConfigError(
+                f"Invalid task storage backend: '{backend}' "
+                f"(supported: {TASK_STORAGE_BACKENDS_MAP.keys()})"
+            )
+        if (backend in {"file", "sqlite"}) and should_avoid_file_based_storage():
+            backend = "memory"
+            value["storage_backend"] = backend
+            logger.info("Disabling filesystem-based task storage for privileged user")
+        workers_count = value.setdefault("workers_count", DEFAULT_TASK_WORKERS_COUNT)
+        if not isinstance(workers_count, int) or (workers_count < 1):
+            raise ConfigError(
+                "Invalid task handler workers count: must be a positive number"
+            )
+        if backend == "file":
+            value.setdefault(
+                "location",
+                grouprise_field_resolver.get_resolver(
+                    ("HUEY", "filename"),
+                    lambda settings_dict: os.path.join(
+                        settings_dict["GROUPRISE_DATA_DIR"], "huey.storage"
+                    ),
+                ),
+            )
+        if backend == "sqlite":
+            value.setdefault(
+                "location",
+                grouprise_field_resolver.get_resolver(
+                    ("HUEY", "filename"),
+                    lambda settings_dict: os.path.join(
+                        settings_dict["GROUPRISE_DATA_DIR"], "huey.sqlite"
+                    ),
+                ),
+            )
+        if backend in {"redis", "sql"}:
+            if not value.get("location"):
+                raise ConfigError(
+                    f"Missing 'location' value for task handler storage backend '{backend}'"
+                )
+        return value
+
+    def apply_to_settings(self, settings: dict, value: Any) -> None:
+        dest = {}
+        backend = value["storage_backend"]
+        dest["huey_class"] = TASK_STORAGE_BACKENDS_MAP[backend]
+        if backend == "file":
+            dest["filename"] = value["location"]
+        elif backend == "memory":
+            pass
+        elif backend == "redis":
+            dest["url"] = value["location"]
+        elif backend == "sql":
+            dest["database"] = value["location"]
+        elif backend == "sqlite":
+            dest["filename"] = value["location"]
+        else:
+            raise ValueError(f"Task storage backend is not implemented: '{backend}'")
+        dest["consumer"] = {"workers": value["workers_count"], "worker_type": "thread"}
+        # Do not store results of tasks, since we do not use them.
+        # Otherwise we would need to run the following periodically:
+        #   from huey.contrib.djhuey import HUEY
+        #   HUEY.storage.flush_results()
+        dest["results"] = False
+        # Force huey into non-immediate mode if this looks like a uWSGI setup
+        # where it’s started as an attached daemon.
+        # See for use: docker/backend/Dockerfile
+        if "run_huey" in os.environ.get("UWSGI_ATTACH_DAEMON", ""):
+            dest["immediate"] = False
+        elif backend == "memory":
+            # Due to the separate worker service, the memory backend would effectively discard all
+            # tasks. Thus, we execute them immediately.
+            dest["immediate"] = True
+        settings["HUEY"] = dest
 
 
 class CacheStorageConfig(ConfigBase):
@@ -1158,6 +1253,10 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
         ),
         WritableDirectoryConfig(name="data_path", django_target="GROUPRISE_DATA_DIR"),
         CacheStorageConfig(name="cache_storage", default={"backend": "local_memory"}),
+        TaskHandlerConfig(
+            name="task_handler",
+            default={"storage_backend": "sqlite"},
+        ),
         IntegerConfig(
             name="session_cookie_age", django_target="SESSION_COOKIE_AGE", minimum=0
         ),

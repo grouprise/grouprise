@@ -58,7 +58,10 @@ make_test:
         # stadt.settings is required for the tests
         - make app_local_settings
         - make lint
-        - make test
+        # finish the installation of dependencies (as root) before switching to a limited context
+        - make virtualenv-update
+        # avoid running the tests as root: the huey storage backend would be modified in that case
+        - runuser -u nobody -- make test
     # disable artifacts: otherwise the deb package would be checked by lintian (and fail)
     dependencies: []
     # do not wait for the build jobs

@@ -42,6 +42,8 @@ kien                        # NOT IN DEBIAN
 markdown<3                  # debian: python3-markdown
 mdx_unimoji                 # NOT IN DEBIAN
 matrix-nio                  # debian: python3-matrix-nio
+# used by huey for generic SQL storage
+peewee                      # debian: python3-peewee
 pillow                      # debian: python3-pil
 pymdown-extensions<6        # debian (bookworm): python3-pymdownx
 randomcolor                 # NOT IN DEBIAN

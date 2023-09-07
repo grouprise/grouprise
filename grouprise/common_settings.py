@@ -234,31 +234,6 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-HUEY = {
-    "huey_class": "huey.SqliteHuey",
-    "filename": grouprise_field_resolver.get_resolver(
-        ("HUEY", "filename"),
-        lambda settings_dict: os.path.join(
-            settings_dict["GROUPRISE_DATA_DIR"], "huey.sqlite"
-        ),
-    ),
-    # Do not store results of tasks, since we do not use them.
-    # Otherwise we would need to run the following periodically:
-    #   from huey.contrib.djhuey import HUEY
-    #   HUEY.storage.flush_results()
-    "results": False,
-    # Some tasks (e.g. "update_search_index") take very long (e.g. an hour).  We need to allow
-    # parallel processing in order to prevent the queue from filling up and thus delaying
-    # notifications.
-    "consumer": {"workers": 4, "worker_type": "thread"},
-}
-
-# Force huey into non-immediate mode if this looks like a uWSGI setup
-# where it’s started as an attached daemon.
-# See for use: docker/backend/Dockerfile
-if "run_huey" in os.environ.get("UWSGI_ATTACH_DAEMON", ""):
-    HUEY["immediate"] = False
-
 
 # Django Rest Framework
 # http://www.django-rest-framework.org/
