@@ -89,6 +89,15 @@ class FileDownloadBackend(enum.Enum):
     NONE = "none"
 
 
+def should_avoid_file_based_storage():
+    """
+    The filesystem-based backend may not be enabled for a privileged user.
+    Otherwise, files and directories in the cache could end up with the wrong permissions and
+    ownership.
+    """
+    return os.geteuid() == 0
+
+
 def get_configuration_path_candidates():
     """return a list locations where grouprise configuration files may be looked for
 
@@ -490,11 +499,7 @@ class CacheStorageConfig(ConfigBase):
         # We leave some headroom in order to track the cache usage.
         dest["OPTIONS"]["MAX_ENTRIES"] = int(value.get("max_entries", 20000))
         backend = value["backend"]
-        if (backend == "filesystem") and (os.geteuid() == 0):
-            # The filesystem backend may not be enabled for a privileged user. Otherwise, files
-            # and directories in the cache could end up with the wrong permissions and ownership.
-            # Thus, we disable the caching completely in order to prevent coordination problems
-            # between multiple processes.
+        if (backend == "filesystem") and should_avoid_file_based_storage():
             dest = {"BACKEND": CACHE_BACKENDS_MAP["dummy"]}
             logger.info("Disabling filesystem-based cache for privileged user")
         else:
