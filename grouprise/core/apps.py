@@ -30,16 +30,23 @@ def _register_startup_hooks():
 
         CORE_SETTINGS.resolve_lazy_settings()
 
-    @on_startup()
-    def _set_process_title_for_tasks():
-        """override the process name for "run_huey"
 
-        This eases process tracking (e.g. via monit) and is simply more beautiful.
-        """
-        # This "on_startup" hook is also called within the context of a regular (uWSGI) process.
-        # Thus, we need to guess, whether we were executed as the task processor.
-        if "run_huey" in sys.argv:
-            setproctitle("grouprise-tasks")
+def _set_process_title_for_tasks():
+    """override the process name for "run_huey"
+
+    This eases process tracking (e.g. via monit) and is simply more beautiful.
+
+    This function is called within the context of *all* grouprise related processes.
+    But for most processes, we can arrange the process title within the Django management script.
+    Only huey's management script is used without a wrapper.
+    Thus, we need to override its process title manually.
+
+    This function must be called before any huey module is loaded.
+    Otherwise consumer threads are spawned and some of the threads will carry the original
+    `python3` name.
+    """
+    if "run_huey" in sys.argv:
+        setproctitle("grouprise-tasks")
 
 
 def _resolve_django_settings():
@@ -76,5 +83,6 @@ class CoreConfig(AppConfig):
     def ready(self):
         self.module.autodiscover()
         _resolve_django_settings()
+        _set_process_title_for_tasks()
         _register_startup_hooks()
         _configure_sentry()
