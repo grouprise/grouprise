@@ -10,6 +10,11 @@ from pymdownx import magiclink
 
 
 class CuddledListProcessor(blockprocessors.BlockProcessor):
+    """detect a list even if it is not prefixed by an empty line
+
+    Plain markdown would require an empty line between a paragraph and a list.
+    """
+
     RE = re.compile(r"\n([*+-]|1\.)[ ]")
 
     def test(self, parent, block):
