@@ -65,7 +65,7 @@ ENV GROUPRISE_CONFIG=/etc/grouprise/conf.d/ \
     # This one freaks out the docker parser when used in CMD.
     UWSGI_STATIC_EXPIRES_URI="/stadt/static/core/base/.*\.[a-f0-9]{12,}\.(css|js|png|jpg|jpeg|gif|avif|webp|ico|woff|ttf|otf|svg|scss|map|txt) 315360000" \
     # We need an env var for this so common_settings.py knows it has to set HUEY["immediate"] = False.
-    UWSGI_ATTACH_DAEMON="grouprisectl run_huey --skip-checks --workers 2" \
+    UWSGI_ATTACH_DAEMON="grouprisectl run_huey --skip-checks" \
     # Debian uWSGI doesn’t support these as CLI options.
     UWSGI_HTTP_AUTO_CHUNKED=1 \
     UWSGI_HTTP_KEEPALIVE=1 \
