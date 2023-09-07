@@ -1,5 +1,6 @@
 import contextlib
 import logging
+import typing
 
 import django.urls
 from django import test, urls
@@ -7,11 +8,12 @@ from django.contrib import auth
 from django.core import mail
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
+from django.template import Context, Template
 from huey.contrib.djhuey import task
 
-from .matrix import MatrixConsoleClient
-from .settings import get_grouprise_site
-from .utils import hash_captcha_answer
+from ..matrix import MatrixConsoleClient
+from ..settings import get_grouprise_site
+from ..utils import hash_captcha_answer
 
 HTTP_GET = "get"
 HTTP_POST = "post"
@@ -202,3 +204,21 @@ class Test(test.TestCase):
     def tearDownClass(cls):
         super().tearDownClass()
         logging.disable(logging.NOTSET)
+
+
+class RenderingTest(Test):
+    def get_rendered_raw(
+        self, content: str, context: typing.Optional[dict] = None
+    ) -> str:
+        return Template(content).render(Context(context)).strip()
+
+    def get_rendered_markdown(
+        self, content: str, context: typing.Optional[dict] = None
+    ) -> str:
+        if context is None:
+            context = {}
+        merged_context = dict(context)
+        merged_context["md_input"] = content
+        return self.get_rendered_raw(
+            "{% markdown md_input plain=True %}", merged_context
+        )

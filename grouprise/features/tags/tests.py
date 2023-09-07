@@ -1,12 +1,11 @@
 import re
 
 from django.core import mail
-from django.template import Context, Template
 from django.urls import reverse
 from taggit.models import Tag
 
 from . import RE_TAG_REF
-from grouprise.core.tests import Test
+from grouprise.core.tests import RenderingTest, Test
 from grouprise.core.tests import get_url as u
 from grouprise.features.associations.models import Association
 from grouprise.features.groups.tests.mixins import GroupMixin
@@ -107,7 +106,7 @@ class TaggedGroupTests(TaggedGroupMixin, AuthenticatedMemberMixin, Test):
         self.assertEqual(r.status_code, 200)
 
 
-class TagRenderingTests(Test):
+class TagRenderingTests(RenderingTest):
     SIMPLE_TAG_HTML = (
         '<a class="tag" href="/stadt/tags/my-simple-tag/">'
         '<span class="tag-hash">#</span>'
@@ -123,19 +122,14 @@ class TagRenderingTests(Test):
         "</a>"
     )
 
-    def _render_tag_markdown(self, tag_markdown: str):
-        ctx = Context({"tag_markdown": tag_markdown})
-        return Template("{% markdown tag_markdown plain=True %}").render(ctx).strip()
-
     def _render_tag_template(self, tag: Tag):
-        ctx = Context({"tag": tag})
-        return Template("{% tag tag %}").render(ctx).strip()
+        return self.get_rendered_raw("{% tag my_tag %}", {"my_tag": tag})
 
     def test_render_simple_tag(self):
         tag = Tag.objects.create(name="my-simple-tag")
         self.assertHTMLEqual(self._render_tag_template(tag), self.SIMPLE_TAG_HTML)
         self.assertHTMLEqual(
-            self._render_tag_markdown(f"#{tag.name}"),
+            self.get_rendered_markdown(f"#{tag.name}"),
             f"<p>{self.SIMPLE_TAG_HTML}</p>",
         )
 
@@ -143,7 +137,7 @@ class TagRenderingTests(Test):
         tag = Tag.objects.create(name="NewYearResolution:BeKind")
         self.assertHTMLEqual(self._render_tag_template(tag), self.GROUP_TAG_HTML)
         self.assertHTMLEqual(
-            self._render_tag_markdown(f"#{tag.name}"),
+            self.get_rendered_markdown(f"#{tag.name}"),
             f"<p>{self.GROUP_TAG_HTML}</p>",
         )
 
@@ -153,7 +147,7 @@ class TagRenderingTests(Test):
         with self.assertRaises(Tag.DoesNotExist):
             Tag.objects.get(name=tag_name)
         try:
-            self._render_tag_markdown(f"#{tag_name}")
+            self.get_rendered_markdown(f"#{tag_name}")
         except Tag.DoesNotExist:
             self.fail("Unknown tags in markdown should not raise exceptions.")
 
@@ -167,6 +161,6 @@ class TagRenderingTests(Test):
         name_2 = "THiSTaGHaSWeiRDCaSiNG"
         tag = Tag.objects.create(name=name_1)
         tag_url = reverse("tag", args=[tag.slug])
-        markdown_html = self._render_tag_markdown(f"#{name_2}")
+        markdown_html = self.get_rendered_markdown(f"#{name_2}")
         self.assertIn(name_2, markdown_html)
         self.assertIn(f'href="{tag_url}"', markdown_html)
