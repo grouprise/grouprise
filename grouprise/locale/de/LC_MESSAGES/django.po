@@ -368,7 +368,7 @@ msgid "More possibilities"
 msgstr "Weitere Möglichkeiten"
 
 msgid "Signup"
-msgstr "Registieren"
+msgstr "Registrieren"
 
 msgid ""
 "Not all <em>persons</em> are visible to you. Every single <em>person</em> "
