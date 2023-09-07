@@ -6,7 +6,7 @@ ReloadPropagatedFrom=grouprise.service
 [Service]
 User=_grouprise
 Group=_grouprise
-ExecStart=/usr/bin/grouprisectl run_huey -w 2
+ExecStart=/usr/bin/grouprisectl run_huey
 Restart=always
 
 [Install]
