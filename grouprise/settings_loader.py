@@ -470,7 +470,7 @@ class CacheStorageConfig(ConfigBase):
 
     def validate(self, value):
         value = super().validate(value)
-        backend = value.get("backend", self.default["backend"])
+        backend = value.setdefault("backend", self.default["backend"])
         if backend not in CACHE_BACKENDS_MAP:
             raise ConfigError(
                 f"Invalid cache backend: '{backend}' "
@@ -489,7 +489,7 @@ class CacheStorageConfig(ConfigBase):
         # cachalot). The required storage for these 8k entries is approximately 32 MB.
         # We leave some headroom in order to track the cache usage.
         dest["OPTIONS"]["MAX_ENTRIES"] = int(value.get("max_entries", 20000))
-        backend = value.get("backend", self.default["backend"])
+        backend = value["backend"]
         if (backend == "filesystem") and (os.geteuid() == 0):
             # The filesystem backend may not be enabled for a privileged user. Otherwise, files
             # and directories in the cache could end up with the wrong permissions and ownership.
