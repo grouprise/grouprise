@@ -12,10 +12,15 @@ from grouprise.features.memberships import test_mixins as memberships
 
 
 class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin):
+    ARTICLE_TITLE = "Test"
+    ARTICLE_TEXT = "Test"
+
     def create_article(self, **kwargs):
-        kwargs.update({"title": "Test", "text": "Test", "as_gestalt": True})
+        kwargs.update(
+            {"title": self.ARTICLE_TITLE, "text": self.ARTICLE_TEXT, "as_gestalt": True}
+        )
         self.client.post(reverse("create-article"), kwargs)
-        return Association.objects.get(content__title="Test")
+        return Association.objects.get(content__title=self.ARTICLE_TITLE)
 
     def get_content_url(self):
         return self.get_url(
@@ -36,11 +41,15 @@ class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin)
 
 
 class GroupArticleMixin(ArticleMixin):
+    ARTICLE_TITLE = "Group Article"
+
     def create_article(self, **kwargs):
         url = reverse("create-group-article", args=[self.group.slug])
-        kwargs.update({"title": "Group Article", "text": "Test", "as_gestalt": True})
+        kwargs.update(
+            {"title": self.ARTICLE_TITLE, "text": self.ARTICLE_TEXT, "as_gestalt": True}
+        )
         self.client.post(url, kwargs)
-        return Association.objects.get(content__title="Group Article")
+        return Association.objects.get(content__title=self.ARTICLE_TITLE)
 
 
 class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
