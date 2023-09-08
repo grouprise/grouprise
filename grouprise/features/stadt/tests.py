@@ -44,6 +44,20 @@ class TestEntityArticleLinks(ArticleMixin, grouprise.core.tests.RenderingTest):
             ),
         )
 
+    def test_unknown_article(self):
+        username = self.gestalt.user.username
+        user_pk = self.gestalt.user.pk
+        bad_content_slug = "nonexistent"
+        self.assertHTMLEqual(
+            self.get_rendered_markdown(f"foo @{username}/{bad_content_slug} bar"),
+            (
+                f'<p>foo <span><span><a data-component="gestaltlink"'
+                f' data-gestaltlink-ref="{user_pk}" title="{username}"'
+                f' href="http://example.com/test/">@{username}</a></span>/{bad_content_slug}'
+                f" (Inhalt nicht gefunden)</span> bar</p>"
+            ),
+        )
+
 
 class TestEntityGroupLinks(GroupMixin, grouprise.core.tests.RenderingTest):
     def test_group_link(self):

@@ -18,6 +18,10 @@ class UnknownEntityError(KeyError):
     """the entity (gestalt or group) was not found"""
 
 
+class UnknownContentError(KeyError):
+    """the piece of content was not found"""
+
+
 def _make_link_tag(url, title, text):
     el = etree.Element("a")
     el.set("href", url)
@@ -32,6 +36,7 @@ def _parse_tag_from_entity_or_content(
     """create an HTML tag for a given reference based on a regex match
 
     Raises UnknownEntityError is the given entity does not exist.
+    Raises UnknownContentError if the content belonging to the entity does not exist.
     """
     # resolve the entity separately (for a precise exception in case of failure)
     try:
@@ -54,7 +59,7 @@ def _parse_tag_from_entity_or_content(
             )
             name = "@{}/{}".format(entity_slug, content_slug)
         except associations.Association.DoesNotExist:
-            raise UnknownEntityError()
+            raise UnknownContentError()
         else:
             return _make_link_tag(
                 full_url(association.get_absolute_url()), str(association), name
@@ -83,6 +88,15 @@ def get_entity_placeholder(slug):
     return el
 
 
+def get_content_placeholder(entity_slug, content_slug):
+    el = etree.Element("span")
+    span_entity = etree.SubElement(el, "span")
+    # the entity link will be resolved in a later cycle
+    span_entity.text = f"@{entity_slug}"
+    span_entity.tail = util.AtomicString(f"/{content_slug} (Inhalt nicht gefunden)")
+    return el
+
+
 class EntityLinkExtension:
     """allow entity links in URLs, e.g. `see [group 'foo'](@foo)`"""
 
@@ -98,6 +112,8 @@ class EntityLinkExtension:
                 )
             except UnknownEntityError:
                 return get_entity_placeholder(entity_slug)
+            except UnknownContentError:
+                return get_content_placeholder(entity_slug, content_slug)
             else:
                 # transfer attributes from the generated tag to the existing link
                 for attribute in (
@@ -129,6 +145,8 @@ class ContentReferencePattern(inlinepatterns.ReferenceInlineProcessor):
             html_tag = _parse_tag_from_entity_or_content(entity_slug, content_slug)
         except UnknownEntityError:
             html_tag = get_entity_placeholder(entity_slug)
+        except UnknownContentError:
+            html_tag = get_content_placeholder(entity_slug, content_slug)
         return (html_tag, *m.span())
 
 
