@@ -136,6 +136,7 @@ content_allowed_attributes = {
         "href",
         "title",
         "data-component",
+        "data-gestaltlink-ref",
         "data-grouplink-ref",
         "data-tag-group-key",
     ],
