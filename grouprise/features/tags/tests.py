@@ -164,3 +164,11 @@ class TagRenderingTests(RenderingTest):
         markdown_html = self.get_rendered_markdown(f"#{name_2}")
         self.assertIn(name_2, markdown_html)
         self.assertIn(f'href="{tag_url}"', markdown_html)
+
+    def test_indirect_tag_link(self):
+        tag = Tag.objects.create(name="foo")
+        slug = tag.slug
+        self.assertHTMLEqual(
+            self.get_rendered_markdown(f"foo [tag {slug}](#{slug}) bar"),
+            f'<p>foo <a href="/stadt/tags/{slug}/"><span>tag {slug}</span></a> bar</p>',
+        )
