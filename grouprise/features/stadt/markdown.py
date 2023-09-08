@@ -1,5 +1,6 @@
 import re
 
+import xml.etree.ElementTree as etree
 from django.db.models import Q
 from markdown import Extension, inlinepatterns, util
 
@@ -35,8 +36,8 @@ def set_entity_attrs(el, entity_id, is_group):
 
 
 def get_entity_placeholder(name):
-    el = util.etree.Element("span")
-    el.text = util.AtomicString("%s (unbekannte Gruppe/Gestalt)" % name)
+    el = etree.Element("span")
+    el.text = util.AtomicString(f"@{name} (unbekannte Gruppe/Gestalt)")
     return el
 
 

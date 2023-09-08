@@ -1,7 +1,8 @@
 import re
 
+import xml.etree.ElementTree as etree
 from django import urls
-from markdown import Extension, inlinepatterns, util
+from markdown import Extension, inlinepatterns
 from taggit.models import Tag
 
 from grouprise.core.markdown import ExtendedLinkPattern, markdown_extensions
@@ -39,15 +40,15 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
         )
 
     def makeTag(self, href, label, group_label: str = None):
-        link_el = util.etree.Element("a")
+        link_el = etree.Element("a")
         link_el.set("href", href)
         link_el.set("class", "tag")
-        hash_el = util.etree.Element("span")
+        hash_el = etree.Element("span")
         hash_el.set("class", "tag-hash")
         hash_el.text = "#"
         if group_label:
             link_el.set("data-tag-group-key", group_label.lower())
-            group_el = util.etree.Element("span")
+            group_el = etree.Element("span")
             group_el.set("class", "tag-group")
             group_el.append(hash_el)
             # The element tail will be output AFTER the closing tag of the
@@ -57,7 +58,7 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
             link_el.append(group_el)
         else:
             link_el.append(hash_el)
-        label_el = util.etree.Element("span")
+        label_el = etree.Element("span")
         label_el.set("class", "tag-name")
         label_el.text = label
         link_el.append(label_el)
