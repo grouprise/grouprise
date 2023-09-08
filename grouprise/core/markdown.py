@@ -30,9 +30,9 @@ class CuddledListProcessor(blockprocessors.BlockProcessor):
 
 
 class CuddledListExtension(markdown.Extension):
-    def extendMarkdown(self, md, md_globals):
-        md.parser.blockprocessors.add(
-            "cuddledlist", CuddledListProcessor(md.parser), "<paragraph"
+    def extendMarkdown(self, md):
+        md.parser.blockprocessors.register(
+            CuddledListProcessor(md.parser), "cuddledlist", 100
         )
 
 
@@ -43,7 +43,7 @@ class SpacedHashHeaderProcessor(blockprocessors.HashHeaderProcessor):
     RE = re.compile(r"(^|\n)(?P<level>#{1,6})\s+(?P<header>.*?)#*(\n|$)")
 
 
-class ExtendedLinkPattern(inlinepatterns.LinkPattern):
+class ExtendedLinkPattern(inlinepatterns.LinkInlineProcessor):
     _EXTENSIONS = []
 
     def _atomize(self, el):
@@ -53,6 +53,11 @@ class ExtendedLinkPattern(inlinepatterns.LinkPattern):
             self._atomize(child)
 
     def _processInline(self, el):
+        """render the link text as markdown
+
+        Custom markdown extensions (e.g. group links) are applied via the `process_link` method in
+        `self._EXTENSIONS` items.
+        """
         new_text = markdown.markdown(el.text)
         cleaned_text = bleach.clean(new_text, strip=True, tags=("em", "strong", "span"))
         children = ElementTree.fromstring("<span>{}</span>".format(cleaned_text))
@@ -61,22 +66,16 @@ class ExtendedLinkPattern(inlinepatterns.LinkPattern):
         result.append(children)
         return result
 
-    def handleMatch(self, m):
-        el = super().handleMatch(m)
+    def handleMatch(self, m, data):
+        el, start, end = super().handleMatch(m, data)
         for extension in self._EXTENSIONS:
             el = extension.process_link(el)
-        return self._processInline(el)
-
-    # in order to avoid any tampering with the original implementation
-    # of LinkPattern we use sanitize_url to provide us with special
-    # group url that we use to pass around group information
-    def sanitize_url(self, url):
-        for extension in self._EXTENSIONS:
-            new_url = extension.process_url(url)
-            if new_url:
-                return new_url
-
-        return super().sanitize_url(url)
+            if el.tag != "a":
+                # One of the extensions changed the data type.
+                # We cannot proceed now, since our extensions expect an 'a' tag.
+                break
+        result_tag = self._processInline(el)
+        return (result_tag, start, end)
 
     @classmethod
     def register_extension(cls, extension):
@@ -84,9 +83,14 @@ class ExtendedLinkPattern(inlinepatterns.LinkPattern):
 
 
 class ExtendedLinkExtension(markdown.Extension):
-    def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns["link"] = ExtendedLinkPattern(inlinepatterns.LINK_RE, md)
-        md.parser.blockprocessors["hashheader"] = SpacedHashHeaderProcessor(md.parser)
+    def extendMarkdown(self, md):
+        md.inlinePatterns.register(
+            ExtendedLinkPattern(inlinepatterns.LINK_RE, md), "link", 100
+        )
+        # replace the original "hashheader" processor
+        md.parser.blockprocessors.register(
+            SpacedHashHeaderProcessor(md.parser), "hashheader", 100
+        )
 
 
 markdown_extensions = [

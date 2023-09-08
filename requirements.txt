@@ -38,14 +38,14 @@ gdal                        # debian: python3-gdal
 html2text                   # debian: python3-html2text
 huey                        # NOT IN DEBIAN
 kien                        # NOT IN DEBIAN
-# incompatible change introduced in https://github.com/Python-Markdown/markdown/commit/d18c3d0acab
-markdown<3                  # debian: python3-markdown
-mdx_unimoji                 # NOT IN DEBIAN
+markdown                    # debian: python3-markdown
+# TODO: remove specific commit reference after https://github.com/kernc/mdx_unimoji/issues/5
+mdx_unimoji@git+https://github.com/kernc/mdx_unimoji@f65d87fa  # NOT IN DEBIAN
 matrix-nio                  # debian: python3-matrix-nio
 # used by huey for generic SQL storage
 peewee                      # debian: python3-peewee
 pillow                      # debian: python3-pil
-pymdown-extensions<6        # debian (bookworm): python3-pymdownx
+pymdown-extensions          # debian (bookworm): python3-pymdownx
 randomcolor                 # NOT IN DEBIAN
 recommonmark                # debian: python3-recommonmark
 ruamel.yaml                 # debian: python3-ruamel.yaml

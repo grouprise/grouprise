@@ -11,20 +11,33 @@ from grouprise.features.tags.utils import get_slug, get_tag_render_data
 
 
 class TagLinkExtension:
-    def process_url(self, url):
-        url_match = re.match(RE_TAG_REF, url)
+    """allow tag links in URLs, e.g. `see [tag #foo](#foo)`
+
+    This implementation differs from `EntityLinkExtension`: here we parse the text-based reference
+    and directly emit a real URL. This leaves `process_link` as an empty stub.
+    """
+
+    def process_link(self, a):
+        """substitute tag links in URLs"""
+        url_match = re.match(RE_TAG_REF, a.get("href"))
         if url_match:
             tag_name = url_match.group(1)
             tag_slug = get_slug(tag_name)
-            return urls.reverse("tag", args=[tag_slug])
-
-    def process_link(self, a):
+            a.set("href", urls.reverse("tag", args=[tag_slug]))
         return a
 
 
-class TagReferencePattern(inlinepatterns.ReferencePattern):
-    def handleMatch(self, m):
-        name = m.group(2)
+class TagReferencePattern(inlinepatterns.ReferenceInlineProcessor):
+    """replace tag-like tokens with a link to the tag overview
+
+    Examples:
+      - "Foo #Bar Baz"
+      - "#Bar_Bu"
+      - "#Bar:Bu"
+    """
+
+    def handleMatch(self, m, data):
+        name = m.group(1)
         try:
             tag = Tag.objects.get(name__iexact=name)
         except Tag.DoesNotExist:
@@ -33,11 +46,12 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
             # TODO: remove this exception branch, when #770 is fixed
             tag = Tag.objects.filter(name__iexact=name).first()
         tag_group, tag_name = get_tag_render_data(name)
-        return self.makeTag(
+        result_tag = self.makeTag(
             urls.reverse("tag", args=[tag.slug]),
             tag_name,
             tag_group,
         )
+        return (result_tag, *m.span())
 
     def makeTag(self, href, label, group_label: str = None):
         link_el = etree.Element("a")
@@ -66,8 +80,10 @@ class TagReferencePattern(inlinepatterns.ReferencePattern):
 
 
 class TagReferenceExtension(Extension):
-    def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns["tag_reference"] = TagReferencePattern(RE_TAG_REF.pattern, md)
+    def extendMarkdown(self, md):
+        md.inlinePatterns.register(
+            TagReferencePattern(RE_TAG_REF.pattern, md), "tag_reference", 100
+        )
 
 
 ExtendedLinkPattern.register_extension(TagLinkExtension())

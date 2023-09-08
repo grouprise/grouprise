@@ -64,6 +64,6 @@ class TestEntityGroupLinks(GroupMixin, grouprise.core.tests.RenderingTest):
             (
                 f'<p>foo <a data-component="grouplink" href="http://example.com/{slug}/"'
                 f' data-grouplink-ref="{self.group.pk}"'
-                f" ><span>group {slug}</span></a> bar</p>"
+                f' title="{self.group.name}"><span>group {slug}</span></a> bar</p>'
             ),
         )

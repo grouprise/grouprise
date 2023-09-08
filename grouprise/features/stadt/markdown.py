@@ -1,4 +1,5 @@
 import re
+import typing
 
 import xml.etree.ElementTree as etree
 from django.db.models import Q
@@ -13,16 +14,57 @@ from grouprise.features.groups.models import Group
 from . import RE_CONTENT_REF
 
 
-def get_entity(m, index_base=0):
-    slug = m.group(1 + index_base)
+class UnknownEntityError(KeyError):
+    """the entity (gestalt or group) was not found"""
+
+
+def _make_link_tag(url, title, text):
+    el = etree.Element("a")
+    el.set("href", url)
+    el.set("title", title)
+    el.text = text
+    return el
+
+
+def _parse_tag_from_entity_or_content(
+    entity_slug: str, content_slug: typing.Optional[str] = None
+) -> etree.Element:
+    """create an HTML tag for a given reference based on a regex match
+
+    Raises UnknownEntityError is the given entity does not exist.
+    """
+    # resolve the entity separately (for a precise exception in case of failure)
     try:
-        entity = Group.objects.get(slug=slug)
+        entity = Group.objects.get(slug=entity_slug)
     except Group.DoesNotExist:
         try:
-            entity = Gestalt.objects.get(user__username=slug)
+            entity = Gestalt.objects.get(user__username=entity_slug)
         except Gestalt.DoesNotExist:
-            entity = None
-    return entity, slug, "@%s" % slug
+            # the entity does not exist
+            raise UnknownEntityError()
+    if content_slug:
+        # the link refers to an association
+        if isinstance(entity, Gestalt):
+            entity_query = Q(gestalt=entity)
+        else:
+            entity_query = Q(group=entity)
+        try:
+            association = associations.Association.objects.get(
+                entity_query, slug=content_slug
+            )
+            name = "@{}/{}".format(entity_slug, content_slug)
+        except associations.Association.DoesNotExist:
+            raise UnknownEntityError()
+        else:
+            return _make_link_tag(
+                full_url(association.get_absolute_url()), str(association), name
+            )
+    else:
+        # we are dealing with an entity (not an association)
+        entity_tag = _make_link_tag(
+            full_url(entity.get_absolute_url()), str(entity), "@" + entity_slug
+        )
+        return set_entity_attrs(entity_tag, entity.id, entity.is_group)
 
 
 def set_entity_attrs(el, entity_id, is_group):
@@ -35,78 +77,67 @@ def set_entity_attrs(el, entity_id, is_group):
     return el
 
 
-def get_entity_placeholder(name):
+def get_entity_placeholder(slug):
     el = etree.Element("span")
-    el.text = util.AtomicString(f"@{name} (unbekannte Gruppe/Gestalt)")
+    el.text = util.AtomicString(f"@{slug} (unbekannte Gruppe/Gestalt)")
     return el
 
 
 class EntityLinkExtension:
-    PROTO = r"(gestalt|group)://(\d+)@(.*)"
-    ENTITY_NONE = "entity://none"
-
-    def process_url(self, url):
-        url_match = re.match(RE_CONTENT_REF, url)
-
-        if url_match:
-            entity, slug, name = get_entity(url_match)
-            if entity:
-                entity_url = full_url(entity.get_absolute_url())
-                if entity.is_group:
-                    return "group://%d@%s" % (entity.id, entity_url)
-                else:
-                    return "gestalt://%d@%s" % (entity.id, entity_url)
-            else:
-                return self.ENTITY_NONE
+    """allow entity links in URLs, e.g. `see [group 'foo'](@foo)`"""
 
     def process_link(self, a):
         el_href = a.get("href")
-        href_match = re.match(self.PROTO, el_href)
+        href_match = re.match(RE_CONTENT_REF, el_href)
         if href_match:
-            entity_type = href_match.group(1)
-            entity_id = href_match.group(2)
-            href = href_match.group(3)
-            a.set("href", href)
-            set_entity_attrs(a, entity_id, entity_type == "group")
-        elif el_href == self.ENTITY_NONE:
-            return get_entity_placeholder(a.text)
-        return a
+            entity_slug = href_match.group(1).lstrip("@")
+            content_slug = href_match.group(2)
+            try:
+                generated_tag = _parse_tag_from_entity_or_content(
+                    entity_slug, content_slug
+                )
+            except UnknownEntityError:
+                return get_entity_placeholder(entity_slug)
+            else:
+                # transfer attributes from the generated tag to the existing link
+                for attribute in (
+                    "data-component",
+                    "data-gestaltlink-ref",
+                    "data-grouplink-ref",
+                    "href",
+                    "title",
+                ):
+                    value = generated_tag.get(attribute)
+                    if value:
+                        a.set(attribute, value)
+                return a
+        else:
+            # the link is probably just a real URL
+            return a
 
 
 ExtendedLinkPattern.register_extension(EntityLinkExtension())
 
 
-class ContentReferencePattern(inlinepatterns.ReferencePattern):
-    def handleMatch(self, m):
-        entity_slug = m.group(2)
-        content_slug = m.group(3)
-        if content_slug:
-            try:
-                association = associations.Association.objects.get(
-                    Q(group__slug=entity_slug) | Q(gestalt__user__username=entity_slug),
-                    slug=content_slug,
-                )
-                name = "@{}/{}".format(entity_slug, content_slug)
-                return self.makeTag(
-                    full_url(association.get_absolute_url()), str(association), name
-                )
-            except associations.Association.DoesNotExist:
-                pass
-        entity, slug, name = get_entity(m, 1)
-        if entity:
-            return set_entity_attrs(
-                self.makeTag(full_url(entity.get_absolute_url()), str(entity), name),
-                entity.id,
-                entity.is_group,
-            )
-        else:
-            return get_entity_placeholder(name)
+class ContentReferencePattern(inlinepatterns.ReferenceInlineProcessor):
+    """substitute content links, e.g. `@foo` or `@foo/bar`"""
+
+    def handleMatch(self, m, data):
+        entity_slug = m.group(1).lstrip("@")
+        content_slug = m.group(2)
+        try:
+            html_tag = _parse_tag_from_entity_or_content(entity_slug, content_slug)
+        except UnknownEntityError:
+            html_tag = get_entity_placeholder(entity_slug)
+        return (html_tag, *m.span())
 
 
 class ContentReferenceExtension(Extension):
-    def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns["content_reference"] = ContentReferencePattern(
-            RE_CONTENT_REF.pattern, md
+    def extendMarkdown(self, md):
+        md.inlinePatterns.register(
+            ContentReferencePattern(RE_CONTENT_REF.pattern, md),
+            "content_reference",
+            100,
         )
 
 
