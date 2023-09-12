@@ -26,3 +26,8 @@ class CoreRenderingTest(RenderingTest):
             self.get_rendered_markdown("Text:\n- foo\n- bar"),
             """<p>Text:</p><ul><li><p>foo</p></li><li><p>bar</p></li></ul>""",
         )
+
+    def test_weird_input(self):
+        for md_input, html_output in (("foo [bar] baz", """<p>foo [bar] baz</p>"""),):
+            with self.subTest(md_input=md_input):
+                self.assertHTMLEqual(self.get_rendered_markdown(md_input), html_output)

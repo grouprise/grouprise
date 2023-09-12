@@ -68,13 +68,17 @@ class ExtendedLinkPattern(inlinepatterns.LinkInlineProcessor):
 
     def handleMatch(self, m, data):
         el, start, end = super().handleMatch(m, data)
-        for extension in self._EXTENSIONS:
-            el = extension.process_link(el)
-            if el.tag != "a":
-                # One of the extensions changed the data type.
-                # We cannot proceed now, since our extensions expect an 'a' tag.
-                break
-        result_tag = self._processInline(el)
+        if el:
+            for extension in self._EXTENSIONS:
+                el = extension.process_link(el)
+                if el.tag != "a":
+                    # One of the extensions changed the data type.
+                    # We cannot proceed now, since our extensions expect an 'a' tag.
+                    break
+            result_tag = self._processInline(el)
+        else:
+            # somehow the link processor did not find a match (e.g. `foo [bar] baz`)
+            result_tag = el
         return (result_tag, start, end)
 
     @classmethod
