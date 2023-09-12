@@ -511,7 +511,7 @@ class ChatBot(MatrixBaseBot):
                 )
 
     async def update_statistics(self):
-        for room in MatrixChatGroupRoom.objects.all():
+        for room in sync_to_async(MatrixChatGroupRoom.objects.all)():
             await self.update_room_statistics(room)
 
     async def update_room_statistics(self, room=None):
