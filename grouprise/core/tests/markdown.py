@@ -27,6 +27,13 @@ class CoreRenderingTest(RenderingTest):
             """<p>Text:</p><ul><li><p>foo</p></li><li><p>bar</p></li></ul>""",
         )
 
+    def test_email_links(self):
+        """detect email addresses and render them as mailto (done by Magiclink)"""
+        self.assertHTMLEqual(
+            self.get_rendered_markdown("foo joe@example.org bar"),
+            """<p>foo <a href="mailto:joe@example.org">joe@example.org</a> bar</p>""",
+        )
+
     def test_weird_input(self):
         for md_input, html_output in (("foo [bar] baz", """<p>foo [bar] baz</p>"""),):
             with self.subTest(md_input=md_input):

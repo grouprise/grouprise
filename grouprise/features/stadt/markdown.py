@@ -155,7 +155,8 @@ class ContentReferenceExtension(Extension):
         md.inlinePatterns.register(
             ContentReferencePattern(RE_CONTENT_REF.pattern, md),
             "content_reference",
-            100,
+            # the MagiclinkMailPattern is registered for 84.9 - we are less relevant
+            70,
         )
 
 
