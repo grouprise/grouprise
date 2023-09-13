@@ -4,6 +4,7 @@ import logging
 
 from asgiref.sync import sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import prefetch_related_objects
 import nio
 
 from grouprise.core.matrix import (
@@ -511,7 +512,12 @@ class ChatBot(MatrixBaseBot):
                 )
 
     async def update_statistics(self):
-        for room in sync_to_async(MatrixChatGroupRoom.objects.all)():
+        def get_rooms():
+            rooms = MatrixChatGroupRoom.objects.all()
+            prefetch_related_objects(rooms)
+            return rooms
+
+        for room in (await sync_to_async(get_rooms)()):
             await self.update_room_statistics(room)
 
     async def update_room_statistics(self, room=None):
@@ -551,4 +557,4 @@ class ChatBot(MatrixBaseBot):
                     f"Retrieval of message count from {room} was rejected: {response}"
                 )
         room.set_statistics(statistics)
-        room.save()
+        await sync_to_async(room.save)()
