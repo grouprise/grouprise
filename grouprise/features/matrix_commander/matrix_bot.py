@@ -2,6 +2,7 @@ import logging
 import os
 import re
 
+from asgiref.sync import sync_to_async
 import nio
 
 from grouprise.core.matrix import MatrixBaseBot, MatrixError
@@ -89,7 +90,9 @@ class CommanderBot(MatrixBaseBot):
             prefix, remainder = tokens
             if self._prefix_regex.match(prefix):
                 logger.info("Processing incoming message: %s", remainder[:60])
-                response, use_markdown = self._commander.process_command(remainder)
+                response, use_markdown = await sync_to_async(
+                    self._commander.process_command
+                )(remainder)
                 parser = "markdown" if use_markdown else None
                 await self.send_text_carefully(room.room_id, response, parser=parser)
 
