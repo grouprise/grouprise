@@ -1,8 +1,12 @@
 import django
-from django.db.models import NullBooleanField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import CharField, IntegerField, SerializerMethodField
+from rest_framework.fields import (
+    BooleanField,
+    CharField,
+    IntegerField,
+    SerializerMethodField,
+)
 from taggit.models import Tag
 
 from grouprise import core
@@ -264,7 +268,7 @@ class PollSerializer(serializers.ModelSerializer):
 
 class EndorsementsSerializer(serializers.Serializer):
     option = serializers.PrimaryKeyRelatedField(queryset=Option.objects)
-    endorsement = NullBooleanField()
+    endorsement = BooleanField(allow_null=True)
 
 
 class PollVoteSerializer(serializers.Serializer):
