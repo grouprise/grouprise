@@ -50,6 +50,13 @@ class PollMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin):
             "content", (self.association.entity.slug, self.association.slug)
         )
 
+    def vote_for_poll_via_api(self, **kwargs):
+        return self.client.post(
+            self.get_url("polls-vote", [self.association.container.poll.pk]),
+            kwargs,
+            content_type="application/json",
+        )
+
     def setUp(self):
         super().setUp()
         self.association = self.create_poll()
@@ -298,6 +305,31 @@ class GestaltAndPoll(PollMixin, grouprise.core.tests.Test):
             reverse("content-permalink", args=[self.association.pk])
         )
         self.assertNotificationContains("Comment")
+
+
+class GestaltSubmitVote(PollMixin, grouprise.core.tests.Test):
+    def get_post_data(self):
+        return super().get_post_data() | {
+            "form-TOTAL_FORMS": "3",
+            "form-0-title": "Option 1",
+            "form-1-title": "Option 2",
+            "form-2-title": "Option 3",
+        }
+
+    def test_submit_vote(self):
+        option_ids = [
+            option.pk for option in self.association.container.poll.options.all()
+        ]
+        self.assertEqual(len(option_ids), 3)
+        response = self.vote_for_poll_via_api(
+            gestalt={"id": self.gestalt.pk},
+            endorsements=[
+                {"option": option_ids[0], "endorsement": True},
+                {"option": option_ids[1], "endorsement": None},
+                {"option": option_ids[2], "endorsement": False},
+            ],
+        )
+        self.assertEqual(response.status_code, 200, response.data)
 
 
 class TwoGestaltenAndGroupPoll(
