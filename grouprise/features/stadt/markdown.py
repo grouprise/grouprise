@@ -22,7 +22,7 @@ class UnknownContentError(KeyError):
     """the piece of content was not found"""
 
 
-def _make_link_tag(url, title, text):
+def _make_link_tag(url, title, text) -> etree.Element:
     el = etree.Element("a")
     el.set("href", url)
     el.set("title", title)
@@ -76,25 +76,33 @@ def _parse_tag_from_entity_or_content(
         except associations.Association.DoesNotExist:
             raise UnknownContentError()
         else:
-            return _make_link_tag(
-                full_url(association.get_absolute_url()), str(association), name
-            )
+            return get_association_link(association, name)
     else:
         # we are dealing with an entity (not an association)
-        entity_tag = _make_link_tag(
-            full_url(entity.get_absolute_url()), str(entity), "@" + entity_slug
-        )
-        return set_entity_attrs(entity_tag, entity.id, entity.is_group)
+        return get_entity_link(entity)
 
 
-def set_entity_attrs(el, entity_id, is_group):
-    if is_group:
-        el.set("data-component", "grouplink")
-        el.set("data-grouplink-ref", str(entity_id))
+def get_entity_link(entity: typing.Union[Gestalt, Group]) -> etree.Element:
+    """generate an ElementTree item referencing an entity"""
+    entity_tag = _make_link_tag(
+        full_url(entity.get_absolute_url()), str(entity), "@" + entity.slug
+    )
+    if entity.is_group:
+        entity_tag.set("data-component", "grouplink")
+        entity_tag.set("data-grouplink-ref", str(entity.id))
     else:
-        el.set("data-component", "gestaltlink")
-        el.set("data-gestaltlink-ref", str(entity_id))
-    return el
+        entity_tag.set("data-component", "gestaltlink")
+        entity_tag.set("data-gestaltlink-ref", str(entity.id))
+    return entity_tag
+
+
+def get_association_link(
+    association: associations.Association, label: str
+) -> etree.Element:
+    """generate an ElementTree item referencing an association"""
+    return _make_link_tag(
+        full_url(association.get_absolute_url()), str(association), label
+    )
 
 
 def get_entity_placeholder(slug):
