@@ -33,6 +33,13 @@ class TestEntityGestaltLinks(GestaltMixin, grouprise.core.tests.RenderingTest):
             f"<p>foo {self._get_gestalt_link()} bar</p>",
         )
 
+    def test_gestalt_link_insensitive(self):
+        mixed_case_username = self.gestalt.user.username.title()
+        self.assertHTMLEqual(
+            self.get_rendered_markdown(f"foo @{mixed_case_username} bar"),
+            f"<p>foo {self._get_gestalt_link()} bar</p>",
+        )
+
     def test_unknown_entity(self):
         self.assertHTMLEqual(
             self.get_rendered_markdown("foo @nonexistent bar"),
@@ -86,6 +93,13 @@ class TestEntityGroupLinks(GroupMixin, grouprise.core.tests.RenderingTest):
     def test_group_link(self):
         self.assertHTMLEqual(
             self.get_rendered_markdown(f"foo @{self.group.slug} bar"),
+            f"<p>foo {self._get_group_link()} bar</p>",
+        )
+
+    def test_group_link_insensitive(self):
+        mixed_case_slug = self.group.slug.title()
+        self.assertHTMLEqual(
+            self.get_rendered_markdown(f"foo @{mixed_case_slug} bar"),
             f"<p>foo {self._get_group_link()} bar</p>",
         )
 

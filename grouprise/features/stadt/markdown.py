@@ -30,6 +30,24 @@ def _make_link_tag(url, title, text):
     return el
 
 
+def _get_entity_by_slug_with_relaxed_case(wanted_slug: str):
+    """try to find the entity with an exact slug match and fall back to a case insensitive match
+
+    Raises the `KeyError` if the entity does not exist.
+    """
+    for model, field_query in (
+        (Group, "slug"),
+        (Gestalt, "user__username"),
+        (Group, "slug__iexact"),
+        (Gestalt, "user__username__iexact"),
+    ):
+        try:
+            return model.objects.get(**{field_query: wanted_slug})
+        except model.DoesNotExist:
+            pass
+    raise KeyError(f"Entity does not exist: {wanted_slug}")
+
+
 def _parse_tag_from_entity_or_content(
     entity_slug: str, content_slug: typing.Optional[str] = None
 ) -> etree.Element:
@@ -40,13 +58,10 @@ def _parse_tag_from_entity_or_content(
     """
     # resolve the entity separately (for a precise exception in case of failure)
     try:
-        entity = Group.objects.get(slug=entity_slug)
-    except Group.DoesNotExist:
-        try:
-            entity = Gestalt.objects.get(user__username=entity_slug)
-        except Gestalt.DoesNotExist:
-            # the entity does not exist
-            raise UnknownEntityError()
+        entity = _get_entity_by_slug_with_relaxed_case(entity_slug)
+    except KeyError:
+        # the entity does not exist
+        raise UnknownEntityError()
     if content_slug:
         # the link refers to an association
         if isinstance(entity, Gestalt):
