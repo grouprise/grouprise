@@ -1,3 +1,5 @@
+import typing
+
 import grouprise.core.tests
 from grouprise.features.articles.tests import ArticleMixin
 from grouprise.features.gestalten.tests.mixins import GestaltMixin
@@ -11,15 +13,24 @@ class TestUrls(grouprise.core.tests.Test):
 
 
 class TestEntityGestaltLinks(GestaltMixin, grouprise.core.tests.RenderingTest):
-    def test_gestalt_link(self):
+    def _get_gestalt_link(self, label: typing.Optional[str] = None):
         username = self.gestalt.user.username
         user_pk = self.gestalt.user.pk
+        if label is None:
+            label = f"@{username}"
+        return (
+            f"<a"
+            f' data-component="gestaltlink"'
+            f' href="http://example.com/{username}/"'
+            f' data-gestaltlink-ref="{user_pk}"'
+            f' title="{username}"'
+            f">{label}</a>"
+        )
+
+    def test_gestalt_link(self):
         self.assertHTMLEqual(
-            self.get_rendered_markdown(f"foo @{username} bar"),
-            (
-                f'<p>foo <a data-component="gestaltlink" href="http://example.com/{username}/"'
-                f' data-gestaltlink-ref="{user_pk}" title="{username}">@{username}</a> bar</p>'
-            ),
+            self.get_rendered_markdown(f"foo @{self.gestalt.user.username} bar"),
+            f"<p>foo {self._get_gestalt_link()} bar</p>",
         )
 
     def test_unknown_entity(self):
@@ -60,24 +71,28 @@ class TestEntityArticleLinks(ArticleMixin, grouprise.core.tests.RenderingTest):
 
 
 class TestEntityGroupLinks(GroupMixin, grouprise.core.tests.RenderingTest):
+    def _get_group_link(self, label: typing.Optional[str] = None):
+        if label is None:
+            label = f"@{self.group.slug}"
+        return (
+            f"<a"
+            f' data-component="grouplink"'
+            f' href="http://example.com/{self.group.slug}/"'
+            f' data-grouplink-ref="{self.group.pk}"'
+            f' title="{self.group.name}"'
+            f">{label}</a>"
+        )
+
     def test_group_link(self):
-        slug = self.group.slug
         self.assertHTMLEqual(
-            self.get_rendered_markdown(f"foo @{slug} bar"),
-            (
-                f'<p>foo <a data-component="grouplink" href="http://example.com/{slug}/"'
-                f' data-grouplink-ref="{self.group.pk}"'
-                f' title="{self.group.name}">@{slug}</a> bar</p>'
-            ),
+            self.get_rendered_markdown(f"foo @{self.group.slug} bar"),
+            f"<p>foo {self._get_group_link()} bar</p>",
         )
 
     def test_indirect_group_link(self):
         slug = self.group.slug
+        label = f"<span>group {slug}</span>"
         self.assertHTMLEqual(
             self.get_rendered_markdown(f"foo [group {slug}](@{slug}) bar"),
-            (
-                f'<p>foo <a data-component="grouplink" href="http://example.com/{slug}/"'
-                f' data-grouplink-ref="{self.group.pk}"'
-                f' title="{self.group.name}"><span>group {slug}</span></a> bar</p>'
-            ),
+            f"<p>foo {self._get_group_link(label)} bar</p>",
         )
