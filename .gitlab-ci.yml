@@ -1,4 +1,4 @@
-image: git-registry.hack-hro.de:443/grouprise/grouprise/build:bullseye
+image: git-registry.hack-hro.de:443/grouprise/grouprise/build:bookworm
 variables:
     # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
     # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.
@@ -138,7 +138,7 @@ build_ci_docker_image:
     stage: .pre
     extends: .build-docker-image
     variables:
-        PUBLISH_VERSION: /build:bullseye
+        PUBLISH_VERSION: /build:bookworm
         DOCKERFILE: ${CI_PROJECT_DIR}/docker/build/Dockerfile
     rules:
         # we only want the ci image to be updated if:
