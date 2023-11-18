@@ -32,8 +32,8 @@ class TagReferencePattern(inlinepatterns.ReferenceInlineProcessor):
 
     Examples:
       - "Foo #Bar Baz"
-      - "#Bar_Bu"
-      - "#Bar:Bu"
+      - "#Bar_Bus"
+      - "#Bar:Bus"
     """
 
     def handleMatch(self, m, data):
