@@ -1,6 +1,6 @@
 # Extract the list of debian packages in the Depends and Recommends sections
 # of relevant grouprise packages
-FROM debian:bullseye-slim AS grouprise-depends
+FROM debian:bookworm-slim AS grouprise-depends
 RUN apt update -y && apt install -y dctrl-tools && apt-get clean -y
 ADD debian/control ./
 RUN for pkg in grouprise grouprise-db-postgresql; do \
@@ -18,11 +18,11 @@ ADD .eslintrc.js webpack.config.js ./
 RUN npm run build
 
 # create app image
-FROM debian:bullseye-backports
+FROM debian:bookworm-slim
 # install dependencies available in debian
 COPY --from=grouprise-depends depends /tmp
 RUN apt update -y && \
-    apt install -y -t bullseye-backports \
+    apt install -y \
       adduser \
       git \
       inotify-tools \

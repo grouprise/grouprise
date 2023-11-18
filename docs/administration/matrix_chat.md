@@ -43,11 +43,11 @@ The web client is accessible via `https://YOUR_DOMAIN/stadt/chat`.
 ### Setup
 
 The following steps are based on the [deb-based deployment](../deployment/deb) and require
-Debian Bullseye (or a similar derivative distribution release).
+Debian Bookworm (or a similar derivative distribution release).
 
-1. add the `bullseye-backports` repository to your apt packages sources (see [instructions](https://backports.debian.org/Instructions/))
+1. add the `bookworm-backports` repository to your apt packages sources (see [instructions](https://backports.debian.org/Instructions/))
 1. update the package cache: `apt update`
-1. install the matrix server: `apt install matrix-synapse/bullseye-backports`
+1. install the matrix server: `apt install matrix-synapse/bookworm-backports`
 1. create the postgresql database connection for matrix-synapse:
 ```
 CREATE USER grouprise_matrix WITH password 'YOUR_SECRET_RANDOM_PASSWORD';

@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 # configure external apt repository and install packages
 RUN apt-get update && \
