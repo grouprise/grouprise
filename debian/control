@@ -8,9 +8,6 @@ Build-Depends:
  dh-exec,
  dh-python,
  graphviz,
-# Development files for libgdal are needed, because pip-compile is unable
-# to get a version for python3-gdal without it. That's probably a packaging bug.
- libgdal-dev,
  libsqlite3-mod-spatialite,
  nodejs,
  python3-flake8,

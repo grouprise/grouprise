@@ -24,8 +24,7 @@ variables:
         # turn the symlink of the orig tarball into a real file
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
         # generate an export of the versions of the embedded python modules (helpful for a rebuild)
-        - pip3 install pip-tools
-        - pip-compile --output-file build/debian/requirements-build.txt requirements.txt
+        - pip freeze --local >build/debian/requirements-build.txt
     artifacts:
         name: grouprise-deb
         paths:
