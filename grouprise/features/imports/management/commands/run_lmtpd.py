@@ -188,16 +188,18 @@ class AsyncLMTPClient:
 def ensure_database_connection(func):
     """ensure a usable database connection before every single request
 
-    See https://git.hack-hro.de/grouprise/grouprise/-/issues/711 for details.
-    This prevents a restart or temporary loss of the database server from breaking all future
-    requests (due to an "not closed, but unusable" database connection).
-    See also https://code.djangoproject.com/ticket/24810.
+    See https://code.djangoproject.com/ticket/32589
+    Long-running command handlers (like our LMTP daemon) are supposed to close old/unusable
+    connections from time to time.
     """
 
     @functools.wraps(func)
     async def wrapper(*args, **kwargs):
-        await sync_to_async(django.db.connection.ensure_connection)()
-        return await func(*args, **kwargs)
+        await sync_to_async(django.db.close_old_connections)()
+        try:
+            return await func(*args, **kwargs)
+        finally:
+            await sync_to_async(django.db.close_old_connections)()
 
     return wrapper
 
