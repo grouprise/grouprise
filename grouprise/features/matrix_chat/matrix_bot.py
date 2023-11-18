@@ -517,7 +517,7 @@ class ChatBot(MatrixBaseBot):
             prefetch_related_objects(rooms)
             return rooms
 
-        for room in (await sync_to_async(get_rooms)()):
+        for room in await sync_to_async(get_rooms)():
             await self.update_room_statistics(room)
 
     async def update_room_statistics(self, room=None):
