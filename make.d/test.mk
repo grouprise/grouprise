@@ -29,11 +29,12 @@ lint_packages:
 .PHONY: test
 test: test_js
 
-# the "test-python" target is provided by makefilet
-test-python: test_py_prepare app_local_settings
+# these test targets are provided by makefilet
+test-python: test_py_prepare
+test-python-django: test_py_prepare
 
 .PHONY: test_py_prepare
-test_py_prepare:
+test_py_prepare: app_local_settings
 	@# check for duplicate test method names that may overwrite each other
 	@duplicate_function_names=$$(find . -mindepth 2 -type f -name tests.py -not \( $(LINT_PKG_IGNORE_GLOBAL) \) \
 			| xargs grep -h "def test_" \
