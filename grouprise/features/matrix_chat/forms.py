@@ -5,9 +5,9 @@ from .settings import MATRIX_SETTINGS
 
 # see https://matrix.org/docs/spec/appendices#user-identifiers
 MATRIX_USER_ID_REGEX = r"^(@[\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$"
-MATRIX_ROOM_REFERENCE_REGEX = r"^([!#][\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$"
+MATRIX_ROOM_REFERENCE_REGEX = r"^(![\w.=\-/]+:[\w.-]+\.[a-zA-Z]{2,}|)$"
 MATRIX_ROOM_REFERENCE_HELP = _(
-    "A Matrix room ID (starting with '!') or an alias (starting with '#') can be used."
+    "A Matrix room ID (starting with '!') can be used."
     " You may want to invite {bot_address} to this room and grant moderation power after"
     " changing the room address."
 ).format(bot_address=f"@{MATRIX_SETTINGS.BOT_USERNAME}:{MATRIX_SETTINGS.DOMAIN}")
