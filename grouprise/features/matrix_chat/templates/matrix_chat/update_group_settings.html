@@ -12,12 +12,14 @@
 
         <div class="section section-group">
             <h3>{% trans "Public Chat Room" %}</h3>
+            <p>{% trans "Notifications for new public content (articles, events, files, ...) are sent to this Matrix room." %}</p>
             {% field_checkbox form.room_public_visibility %}
             {% field form.room_public_matrix_reference %}
         </div>
 
         <div class="section section-group">
             <h3>{% trans "Private Chat Room" %}</h3>
+            <p>{% trans "Notifications for any new content (public and private; including discussions) are sent to this Matrix room." %}</p>
             {% field_checkbox form.room_private_visibility %}
             {% field form.room_private_matrix_reference %}
         </div>
