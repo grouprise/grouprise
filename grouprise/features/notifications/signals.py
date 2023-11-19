@@ -1,5 +1,6 @@
 import logging
 
+from django.db import close_old_connections
 from django.dispatch import receiver
 from huey.contrib.djhuey import db_task
 
@@ -21,6 +22,7 @@ def register_notification_backend(notification_class: BaseNotification):
 @receiver(post_create)
 def send_notifications(instance, raw=False, **_):
     if not raw:
+        close_old_connections()
         _send_notifications(instance)
 
 
