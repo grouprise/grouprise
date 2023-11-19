@@ -27,6 +27,16 @@ make app_run
 Now you can visit the web interface of the development system in your browser: http://localhost:5000/
 
 
+## Translate content
+
+Run `make django-translate` for collecting the translatable strings and for opening a translation
+editor.
+Add the argument `PO_EDITOR=`, if you want to skip the editor call.
+
+The translation files (`*.po`) are stored below `grouprise/locale`.
+They can be edited manually with any suitable editor.
+
+
 ## Profile specific operations
 
 Sometimes it may be useful to analyze the runtime behavior of specific parts of the code.

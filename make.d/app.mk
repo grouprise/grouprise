@@ -35,16 +35,3 @@ app_collect_static: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP) assets
 
 .PHONY: app_local_settings
 app_local_settings: $(CONFIG_APP_SETUP)
-
-.PHONY: app_collect_translation_strings
-app_collect_translation_strings: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP)
-	( . "$(ACTIVATE_VIRTUALENV)" && cd grouprise && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" ../manage.py makemessages --no-location --all )
-
-.PHONY: app_compile_translations
-app_compile_translations: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP)
-	( . "$(ACTIVATE_VIRTUALENV)" && cd grouprise && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" ../manage.py compilemessages )
-
-.PHONY: app_translate
-app_translate:
-	$(MAKE) app_collect_translation_strings
-	$(MAKE) app_compile_translations

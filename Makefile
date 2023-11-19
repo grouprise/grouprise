@@ -21,6 +21,9 @@ SHELL_FILES_ALL ?= $(shell find debian/ -type f -perm /a+x | grep -vE "^debian/t
 BLACK_FILES ?= grouprise/
 FLAKE8_FILES ?= grouprise/
 
+DJANGO_WANTED_LOCALES = de
+DIR_DJANGO_LOCALES ?= grouprise/locale
+
 # load makefilet
 include make.d/makefilet-download-ondemand.mk
 

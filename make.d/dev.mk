@@ -9,7 +9,6 @@ help-grouprise:
 	@echo "    app_local_settings  - generate a local django configuration file"
 	@echo "    app_migrate         - run django migrations for a local setup"
 	@echo "    app_run             - run django server locally"
-	@echo "    app_translate       - extract translatable strings, update catalogs and compile MO files"
 	@echo "    assets              - build static assets"
 	@echo "    build-grouprise     - build all grouprise components"
 	@echo "    clean-grouprise     - delete all built grouprise components"
