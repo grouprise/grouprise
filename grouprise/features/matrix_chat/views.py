@@ -136,7 +136,7 @@ class UpdateMatrixChatGestaltSettings(PermissionMixin, django.views.generic.Form
         return Group.objects.filter(slug=self.request.GET.get("group")).first()
 
     def get_permission_object(self):
-        return self.request.user.gestalt
+        return self.request.user.gestalt if self.request.user.is_authenticated else None
 
     def get_context_data(self, **kwargs):
         group = self.get_group()
