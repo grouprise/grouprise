@@ -3,6 +3,7 @@ import os
 import re
 
 from asgiref.sync import sync_to_async
+from django.db import close_old_connections
 import nio
 
 from grouprise.core.matrix import MatrixBaseBot, MatrixError
@@ -73,6 +74,8 @@ class CommanderBot(MatrixBaseBot):
         return result
 
     async def handle_message(self, room: nio.MatrixRoom, event: nio.RoomMessageText):
+        # Ensure the availability of a fresh database connection whenever a new message arrives.
+        close_old_connections()
         if self._ignore_messages:
             logger.debug("Ignoring old message: %s", event)
         elif not self.is_admin_room(room):
