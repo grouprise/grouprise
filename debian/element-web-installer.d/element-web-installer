@@ -15,7 +15,7 @@ SETTINGS_PATH=${SETTINGS_PATH:-/etc/element-web}
 
 
 get_latest_version() {
-    curl -sS --fail "https://api.github.com/repos/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
+    curl -sS --fail --location "https://api.github.com/repos/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
         | jq -r '.name' \
         | sed 's/^v//'
 }
@@ -29,7 +29,7 @@ get_installed_version() {
 
 get_download_url() {
     local version="$1"
-    curl -sS --fail "https://api.github.com/repos/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
+    curl -sS --fail --location "https://api.github.com/repos/$DOWNLOAD_PROJECT_URL_PATH/releases/latest" \
         | jq -r '.assets[].browser_download_url' \
         | grep "\.tar\.gz$"
 }
@@ -79,8 +79,8 @@ extract_verified_download() {
         trap 'rm -rf "'"$download_dir"'"' EXIT
         archive_path=$download_dir/archive.tar.gz
         signature_path=$download_dir/signature.asc
-        curl -sSL --fail "$(get_download_url "$target_version")" >"$archive_path"
-        curl -sSL --fail "$(get_download_signature_url "$target_version")" >"$signature_path"
+        curl -sS --fail --location "$(get_download_url "$target_version")" >"$archive_path"
+        curl -sS --fail --location "$(get_download_signature_url "$target_version")" >"$signature_path"
         # suppress the verification summary in case of success (via "chronic")
         if chronic gpgv --keyring="$SIGNING_KEYRING_PATH" "$signature_path" "$archive_path"; then
             extract_archive_to_destination "$archive_path" "$target_path"
