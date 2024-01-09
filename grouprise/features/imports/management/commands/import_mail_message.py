@@ -53,7 +53,13 @@ class Command(BaseCommand):
             # report a permanent delivery failure
             raise CommandError(exc, returncode=EXITCODE_PERMANENT_FAILURE) from exc
         destination_address = get_normalized_address(destination_address)
-        parsed_message = ParsedMailMessage.from_email_object(message)
+        try:
+            parsed_message = ParsedMailMessage.from_email_object(message)
+        except MailProcessingFailure as exc:
+            raise CommandError(
+                f"Mail from {message['from']} could not be parsed: {exc}",
+                returncode=EXITCODE_PERMANENT_FAILURE,
+            ) from exc
         processor = ContributionMailProcessor()
         try:
             processor.process_message_for_recipient(parsed_message, destination_address)

@@ -152,7 +152,10 @@ class ParsedMailMessage(
             attachments = ()
         # parse and convert the body_part (containing the text or html message)
         data = body_part.get_payload(decode=True)
-        content = data.decode().strip() if data else ""
+        try:
+            content = data.decode().strip() if data else ""
+        except UnicodeDecodeError as exc:
+            raise MailProcessingFailure("Failed to decode email body") from exc
         text_content = cls.get_processed_content(
             content, body_part.get_content_type().lower() == "text/html"
         )
