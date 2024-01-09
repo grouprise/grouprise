@@ -1,7 +1,7 @@
 # External Authentication Providers
 
 *grouprise* can be configured to use external authentication sources
-(e.g. social platforms). This allows users to re-use existing external accounts
+(e.g. social platforms). This allows users to reuse existing external accounts
 instead of memorizing another password for a local account.
 
 *grouprise* uses [django-allauth](https://www.intenct.nl/projects/django-allauth/) for

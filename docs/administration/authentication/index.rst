@@ -13,7 +13,7 @@ Authentication
 (e.g. internal database, LDAP or others).
 
 Additionally it is possible to use external authentication sources
-(e.g. social platforms). This allows users to re-use existing external accounts
+(e.g. social platforms). This allows users to reuse existing external accounts
 instead of memorizing another password for a local account.
 Details are described in `External Authentication Providers <./external_providers.html>`_.
 
