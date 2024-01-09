@@ -8,6 +8,8 @@ User=_grouprise
 Group=_grouprise
 ExecStart=/usr/bin/grouprisectl run_huey
 Restart=always
+RestartSec=60s
+StartLimitIntervalSec=0
 
 [Install]
 WantedBy=multi-user.target
