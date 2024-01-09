@@ -297,9 +297,9 @@ class ContributionCreated(ContentOrContributionCreated):
         ]
 
     def get_context_data(self, **kwargs):
-        if type(self.object.contribution) == contributions.Text:
+        if isinstance(self.object.contribution, contributions.Text):
             kwargs["text"] = self.object.contribution.text
-        elif type(self.object.contribution) == memberships.Application:
+        elif isinstance(self.object.contribution, memberships.Application):
             kwargs[
                 "text"
             ] = "Ich beantrage die Mitgliedschaft in der Gruppe {}.".format(

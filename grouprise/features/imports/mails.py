@@ -251,7 +251,7 @@ class ContributionMailProcessor:
                 "* Füge zusätzliche E-Mail-Adressen, unter denen Du antworten möchtest, "
                 "Deinem Benutzerkonto hinzu.".format(message.from_address)
             )
-        if type(auth_token.target) == Content:
+        if isinstance(auth_token.target, Content):
             container = auth_token.target
         else:
             container = auth_token.target.container
