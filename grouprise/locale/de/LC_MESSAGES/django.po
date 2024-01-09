@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-19 04:18+0100\n"
-"PO-Revision-Date: 2021-12-22 15:28+0100\n"
+"POT-Creation-Date: 2024-01-09 22:03+0100\n"
+"PO-Revision-Date: 2024-01-09 22:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.4.2\n"
 
 msgid "Which season follows winter?"
 msgstr "Welche Jahreszeit folgt auf den Winter?"
@@ -797,6 +797,22 @@ msgstr "Gib deinen grouprise-Nutzernamen oder deine Emailadresse ein."
 msgid "Enter your grouprise password."
 msgstr "Gib dein grouprise-Passwort ein."
 
+msgid "Thunderbird"
+msgstr "Thunderbird"
+
+msgid "Thunderbird supports the Matrix protocol for chats."
+msgstr "Thunderbird unterstützt das Matrix-Protokoll für Chats."
+
+#, python-format
+msgid ""
+"Simply enter your account data, but leave the password empty (<a "
+"href=\"%(thunderbird_sso_doc_url)s\">Thunderbird documentation for Single-"
+"Sign-On</a>)."
+msgstr ""
+"Gib einfach deine Kontodaten ein, lass jedoch das Passwort leer (<a "
+"href=\"%(thunderbird_sso_doc_url)s\">Thunderbird-Dokumentation für Single-"
+"Sign-On</a>)."
+
 msgid "FAQ (Frequently Asked Questions)"
 msgstr "Häufige Fragen (FAQ)"
 
@@ -942,7 +958,7 @@ msgstr "Benachrichtigungen für private Nachrichten von {site_url}"
 
 #, python-brace-format
 msgid "{site_name}"
-msgstr ""
+msgstr "{site_name}"
 
 #, python-brace-format
 msgid ""

@@ -253,6 +253,10 @@ class ShowMatrixChatHelp(django.views.generic.TemplateView):
         kwargs[
             "element_android_url"
         ] = "https://matrix.org/docs/projects/client/element-android"
+        kwargs["thunderbird_sso_doc_url"] = (
+            "https://support.mozilla.org/de/kb/thunderbird-matrix-chat-faq"
+            "#w_how-can-i-connect-a-matrix-account-that-uses-single-sign-on-sso-in-thunderbird"
+        )
         kwargs["grouprise_url"] = "https://grouprise.org/"
         kwargs["free_software_url"] = "https://www.gnu.org/philosophy/free-sw.html"
         kwargs["matrix_clients_url"] = "https://matrix.org/clients/"
