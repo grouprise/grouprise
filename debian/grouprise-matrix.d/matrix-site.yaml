@@ -10,7 +10,6 @@ listeners:
     type: http
     x_forwarded: true
     resources:
-      # openid is required for matrix-dimension
       - names: [client]
         compress: true
       - names: [federation]
