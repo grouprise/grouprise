@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-__version__ = "5.4.4"
+__version__ = "5.4.5"
 
 try:
     _local_dir = os.path.dirname(__file__)
