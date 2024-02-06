@@ -202,7 +202,7 @@ def load_settings_from_yaml_files(locations=None, error_if_missing=False):
 
 def guess_suitable_cache_size(path: Union[str, pathlib.Path, None]) -> int:
     """determine a reasonable size for a filesystem-backed cache based on the storage location"""
-    megabyte_factor = 2 ** 20
+    megabyte_factor = 2**20
     if not path:
         return FALLBACK_FILESYSTEM_CACHE_SIZE_MB * megabyte_factor
     try:
@@ -1429,6 +1429,15 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             name="unknown_gestalt_id",
             django_target=("GROUPRISE", "UNKNOWN_GESTALT_ID"),
             minimum=1,
+        ),
+        ListConfig(
+            name=("tags", "featured_tag_ids"),
+            django_target=("GROUPRISE", "TAGS", "FEATURED_TAG_IDS"),
+        ),
+        IntegerConfig(
+            name=("tags", "min_featured_group_tag_count"),
+            django_target=("GROUPRISE", "TAGS", "MIN_FEATURED_GROUP_TAG_COUNT"),
+            minimum=0,
         ),
         StylesheetsConfig(
             name="stylesheets", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True

@@ -1,10 +1,13 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from taggit.forms import TextareaTagWidget
+from taggit.models import Tag
 
 from grouprise.core.settings import get_grouprise_site
 
 from . import models
+from ..tags.settings import TAG_SETTINGS
 
 
 class RecommendForm(forms.Form):
@@ -44,3 +47,17 @@ class Update(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.slug_domain = "{}/".format(get_grouprise_site().domain)
+
+    def clean_tags(self):
+        tags = self.cleaned_data["tags"]
+        tag_count = (
+            Tag.objects.filter(name__in=tags)
+            .filter(id__in=TAG_SETTINGS.FEATURED_TAG_IDS)
+            .count()
+        )
+        min_tag_count = TAG_SETTINGS.MIN_FEATURED_GROUP_TAG_COUNT
+        if tag_count < min_tag_count:
+            raise ValidationError(
+                _("At least %d featured tags need to be specified.") % min_tag_count
+            )
+        return tags

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-09 22:03+0100\n"
+"POT-Creation-Date: 2024-02-06 16:15+0100\n"
 "PO-Revision-Date: 2024-01-09 22:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,102 +18,145 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
+#: grouprise/core/forms.py:28
 msgid "Which season follows winter?"
 msgstr "Welche Jahreszeit folgt auf den Winter?"
 
+#: grouprise/core/forms.py:28
 msgid "spring"
 msgstr "Frühling"
 
+#: grouprise/core/forms.py:29
 msgid "How many days does a week have?"
 msgstr "Wie viele Tage hat eine Woche?"
 
+#: grouprise/core/forms.py:29
 msgid "seven"
 msgstr "sieben"
 
+#: grouprise/core/forms.py:30
 msgid "How many months does a year have?"
 msgstr "Wie viele Monate hat ein Jahr?"
 
+#: grouprise/core/forms.py:30
 msgid "twelve"
 msgstr "zwölf"
 
+#: grouprise/core/forms.py:31
 msgid "Which day follows Wednesday?"
 msgstr "Welcher Tag folgt auf den Mittwoch?"
 
+#: grouprise/core/forms.py:31
 msgid "Thursday"
 msgstr "Donnerstag"
 
+#: grouprise/core/forms.py:32
 msgid "What is the color of snow?"
 msgstr "Welche Farbe hat Schnee?"
 
+#: grouprise/core/forms.py:32
 msgid "white"
 msgstr "weiß"
 
+#: grouprise/core/forms.py:33
 msgid "What is the color of the sea?"
 msgstr "Welche Farbe hat das Meer?"
 
+#: grouprise/core/forms.py:33 grouprise/core/forms.py:34
 msgid "blue"
 msgstr "blau"
 
+#: grouprise/core/forms.py:34
 msgid "What is the color of the sky?"
 msgstr "Welche Farbe hat der Himmel?"
 
+#: grouprise/core/forms.py:35
 msgid "What is the opposite of 'day'?"
 msgstr "Was ist das Gegenstück zum 'Tag'?"
 
+#: grouprise/core/forms.py:35
 msgid "night"
 msgstr "Nacht"
 
+#: grouprise/core/forms.py:36
 msgid "How many hours does a day have?"
 msgstr "Wie viele Stunden hat ein Tag?"
 
+#: grouprise/core/forms.py:36
 msgid "twenty-four"
 msgstr "vierundzwanzig"
 
+#: grouprise/core/forms.py:75
 msgid "The answer was not quite correct. Please try it again!"
 msgstr "Diese Antwort war nicht ganz richtig. Bitte versuche es erneut!"
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:6
 msgid "Show group menu"
 msgstr "Zeige Gruppenmenü"
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:12
+#: grouprise/core/templates/core/menu/_menu_groups.html:20
+#: grouprise/core/templates/core/menu/_menu_groups.html:31
+#: grouprise/features/groups/templates/groups/_sidebar_list.html:9
+#: grouprise/features/groups/templates/groups/group_filter.html:5
+#: grouprise/features/groups/templates/groups/group_filter.html:7
 msgid "Groups"
 msgstr "Gruppen"
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:34
 msgid "You are member of"
 msgstr "Du bist Mitglied von"
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:36
 #, python-format
 msgid "one group"
 msgid_plural "%(membership_count)s groups"
 msgstr[0] "einer Gruppe"
 msgstr[1] "%(membership_count)s Gruppen"
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:45
 msgid "Login to see your group memberships."
 msgstr "Melde dich an, um deine Gruppenmitgliedschaften zu sehen."
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:52
+#: grouprise/features/groups/templates/groups/_sidebar_list.html:21
+#: grouprise/features/stadt/templates/stadt/_footer.html:29
 msgid "All groups"
 msgstr "Alle Gruppen"
 
+#: grouprise/core/templates/core/menu/_menu_groups.html:63
 msgid "Activate Javascript to search for groups"
 msgstr "Mit aktiviertem JavaScript könntest du hier jetzt Gruppen suchen"
 
+#: grouprise/core/templates/core/menu/_menu_more.html:10
 msgid "More"
 msgstr "Mehr"
 
+#: grouprise/core/templates/core/menu/_menu_more.html:24
+#: grouprise/features/stadt/templates/stadt/_footer.html:31
 msgid "Events"
 msgstr "Veranstaltungen"
 
+#: grouprise/core/templates/core/menu/_menu_more.html:31
+#: grouprise/features/stadt/templates/stadt/_footer.html:32
 msgid "Articles"
 msgstr "Artikel"
 
+#: grouprise/core/templates/core/menu/_menu_more.html:38
+#: grouprise/features/gestalten/templates/gestalten/list.html:5
+#: grouprise/features/gestalten/templates/gestalten/list.html:7
 msgid "Persons"
 msgstr "Gestalten"
 
+#: grouprise/features/articles/templates/articles/list.html:33
 msgid "More Articles"
 msgstr "Weitere Artikel"
 
+#: grouprise/features/associations/models.py:12
 msgid "Attach to the intro of the group"
 msgstr "Im Intro der Gruppe anheften"
 
+#: grouprise/features/associations/models.py:15
 msgid ""
 "Attached contributions are shown first on a group's site. You can use them "
 "for common introductions and descriptions."
@@ -122,9 +165,12 @@ msgstr ""
 "können beispielsweise für allgemeine Einleitungs- und Beschreibungstexte "
 "verwendet werden."
 
+#: grouprise/features/associations/models.py:20
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:70
 msgid "Public"
 msgstr "Öffentlich"
 
+#: grouprise/features/associations/models.py:23
 msgid ""
 "Public contributions are visible to visitors that are not a member of the "
 "group. Members and subscribers will receive notifications."
@@ -133,45 +179,62 @@ msgstr ""
 "Mitglied der Gruppe sind. Benachrichtigungen werden an Mitglieder und "
 "Abonnentinnen versendet."
 
+#: grouprise/features/associations/models.py:28
 msgid "Short name"
 msgstr "Kurzname"
 
+#: grouprise/features/associations/models.py:32
 msgid ""
 "Among other things the short name is used as part of the web address of a "
 "contribution."
 msgstr ""
 "Der Kurzname wird beispielsweise in der Webadresse des Beitrags verwendet."
 
+#: grouprise/features/associations/templates/associations/_contributors.html:12
 msgid "more Persons"
 msgstr "weitere Gestalten"
 
+#: grouprise/features/builtin_inbox_notifications/templates/associations/list_activity.html:27
 msgid "More Activities"
 msgstr "Weitere Aktivität"
 
+#: grouprise/features/content/templates/content/detail.html:10
+#: grouprise/features/content/templates/content/detail.html:38
 msgid "Contribution"
 msgstr "Beitrag"
 
+#: grouprise/features/content/templates/content/detail.html:19
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:37
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#: grouprise/features/content/templates/content/detail.html:36
 msgid "Contribution is visible to the public"
 msgstr "Beitrag ist öffentlich sichtbar"
 
+#: grouprise/features/content/templates/content/detail.html:36
 msgid "Contribution is only visible for members of the group"
 msgstr "Beitrag ist nur für Gruppenmitglieder sichtbar"
 
+#: grouprise/features/content/templates/content/detail.html:63
+#: grouprise/features/content/templates/content/detail.html:69
 msgid "Subscribe to this group"
 msgstr "Gruppe abonnieren"
 
+#: grouprise/features/content/templates/content/detail.html:73
 msgid "to receive prospective contribution of the group"
 msgstr "um über zukünftige Beiträge der Gruppe"
 
+#: grouprise/features/content/templates/content/detail.html:75
 msgid "by email"
 msgstr "per E-Mail"
 
+#: grouprise/features/content/templates/content/list.html:42
+#: grouprise/features/stadt/templates/stadt/search.html:34
 msgid "More Items"
 msgstr "Weitere Beiträge"
 
+#: grouprise/features/content/templates/content/list.html:47
 msgid ""
 "Visit the Matrix chat room and receive notifications for any new public "
 "content"
@@ -179,21 +242,30 @@ msgstr ""
 "Besuche den Matrix-Chat-Raum und erhalte Benachrichtigungen für alle neuen "
 "öffentlichen Inhalte"
 
+#: grouprise/features/content/templates/content/list.html:48
 msgid "Receive Chat Notifications for new Content"
 msgstr "Empfange Chat-Benachrichtigungen für neue Beiträge"
 
+#: grouprise/features/conversations/templates/conversations/_shortlist.html:7
 msgid "Discussions"
 msgstr "Gespräche"
 
+#: grouprise/features/conversations/templates/conversations/_shortlist.html:11
+#: grouprise/features/conversations/templates/conversations/create.html:4
+#: grouprise/features/conversations/templates/conversations/create.html:14
 msgid "Discussion"
 msgstr "Gespräch"
 
+#: grouprise/features/conversations/templates/conversations/_shortlist.html:18
 msgid "Discussions are only visible to group members."
 msgstr "Gespräche sind nur für Gruppenmitglieder zugänglich."
 
+#: grouprise/features/conversations/templates/conversations/_shortlist.html:33
+#: grouprise/features/conversations/templates/conversations/list_group.html:35
 msgid "More Discussions"
 msgstr "Weitere Gespräche"
 
+#: grouprise/features/conversations/templates/conversations/create.html:28
 #, python-format
 msgid ""
 "%(group)s is a closed group. Please describe why you want to join it. "
@@ -203,40 +275,52 @@ msgstr ""
 "warum du der Gruppe beitreten möchtest. Anschließend entscheiden die "
 "Gruppenmitglieder, ob sie deiner Anfrage zustimmen."
 
+#: grouprise/features/events/models.py:14
 msgid "Last Update"
 msgstr "Letzte Aktualisierung"
 
+#: grouprise/features/events/templates/events/_attendance_action.html:19
 msgid "Members"
 msgstr "Mitglieder"
 
+#: grouprise/features/events/templates/events/_attendance_action.html:52
 msgid "Show interest"
 msgstr "Eintragen"
 
+#: grouprise/features/events/templates/events/_attendance_action.html:64
 msgid "Revoke interest"
 msgstr "Austragen"
 
+#: grouprise/features/events/templates/events/_sidebar_calendar.html:33
 msgid "Show all events"
 msgstr "Alle Veranstaltungen anzeigen"
 
+#: grouprise/features/events/templates/events/detail.html:42
 msgid "Announced participants"
 msgstr "Anmeldungen"
 
+#: grouprise/features/events/templates/events/detail.html:49
 msgctxt "attendance registrations"
 msgid "Notifications"
 msgstr "Anmeldungen"
 
+#: grouprise/features/events/templates/events/list.html:35
 msgid "More Events"
 msgstr "Weitere Veranstaltungen"
 
+#: grouprise/features/events/views.py:375
 msgid "Export of group's calendars"
 msgstr "Exportmöglichkeiten für Gruppenkalender"
 
+#: grouprise/features/events/views.py:391
 msgid "Export of calendars"
 msgstr "Exportmöglichkeiten für Kalender"
 
+#: grouprise/features/events/views.py:422
 msgid "Export of figure's calendars"
 msgstr "Exportmöglichkeiten für Gestaltenkalender"
 
+#: grouprise/features/geo/templates/geo/location.html:8
 msgid ""
 "You need to enable JavaScript in your browser, to be able to configure a "
 "location."
@@ -244,9 +328,12 @@ msgstr ""
 "Du musst in deinem Browser JavaScript aktivieren, um einen Ort festlegen zu "
 "können."
 
+#: grouprise/features/geo/templates/geo/update_group_settings.html:13
+#: grouprise/features/stadt/templates/stadt/settings.html:98
 msgid "Location"
 msgstr "Ort"
 
+#: grouprise/features/geo/templates/geo/update_group_settings.html:14
 msgid ""
 "You can define a location for your group that is shown on maps. This could "
 "be your common place for meet ups where people can find your group."
@@ -254,125 +341,167 @@ msgstr ""
 "Ihr könnt einen Ort festlegen, der auf Karten angezeigt wird. Das könnte z."
 "B. euer üblicher Treffpunkt sein, an dem Menschen euch finden."
 
+#: grouprise/features/geo/templates/geo/update_group_settings.html:20
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_gestalt_settings.html:16
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_group_settings.html:28
 msgid "Save settings"
 msgstr "Einstellungen speichern"
 
+#: grouprise/features/geo/views.py:66
 msgid "Click on the map to select a location for your group."
 msgstr "Klicke auf die Karte um einen Ort für deine Gruppe festzulegen."
 
+#: grouprise/features/gestalten/templates/gestalten/_sidebar.html:8
 msgid "Person"
 msgstr "Gestalt"
 
+#: grouprise/features/gestalten/templates/gestalten/_sidebar.html:15
 msgid "More from"
 msgstr "Mehr von"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:4
 msgid "Delete Account"
 msgstr "Benutzerkonto löschen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:7
+#: grouprise/features/stadt/templates/stadt/_footer.html:43
 msgid "Settings"
 msgstr "Einstellungen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:13
 msgid "Do you really want to delete your account?"
 msgstr "Möchtest Du Dein Benutzerkonto wirklich löschen?"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:15
 msgid "The following data will be delete irrevocable:"
 msgstr "Folgende Daten werden unwiderruflich gelöscht:"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:18
 msgid "Account and profile with all settings and email addresses"
 msgstr "Benutzerkonto und Profil mit allen Einstellungen und E-Mail-Adressen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:19
 msgid "Subscriptions to groups"
 msgstr "Abonnements von Gruppen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:20
 msgid "Memberships of groups"
 msgstr "Mitgliedschaften in Gruppen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:23
 msgid "The following data will be marked as"
 msgstr "Folgende Daten werden unwiderruflich markiert als"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:23
 msgid "Unknown person"
 msgstr "Unbekannte Gestalt"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:26
 msgid "Version of contribution"
 msgstr "Beitragsversionen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:27
 msgid "Comments and news"
 msgstr "Kommentare und Nachrichten"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:28
 msgid "Pictures"
 msgstr "Bilder"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:29
 msgid "Votes in surveys"
 msgstr "Stimmen in Umfragen"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:33
 msgid "If you not agree with this procedure, do not proceed and"
 msgstr ""
 "Solltest Du damit nicht einverstanden sein, führe diesen Schritt bitte nicht "
 "aus und"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:34
 msgid "send us a message instead"
 msgstr "schreib uns stattdessen eine Nachricht"
 
+#: grouprise/features/gestalten/templates/gestalten/delete.html:38
 msgid "Delete account"
 msgstr "Benutzerkonto löschen"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:14
 msgid "Picture of"
 msgstr "Titelbild von"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:21
 msgid "Change background picture"
 msgstr "Hintergrundbild ändern"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:49
+#: grouprise/features/stadt/templates/stadt/_footer.html:22
 msgid "Privacy"
 msgstr "Datenschutzhinweise"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:53
 msgid "Your profile is <strong>public</strong>"
 msgstr "Dein Profil ist <strong>öffentlich</strong>"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:55
 msgid "Your profile is <strong>not public</strong>"
 msgstr "Dein Profil ist <strong>nicht öffentlich</strong>"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:61
 msgid "About me"
 msgstr "Über mich"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:66
 msgid "Write some lines about you!"
 msgstr "Schreib doch ein paar Zeilen zu dir!"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:68
 msgid "This person has not written something here."
 msgstr "Dieser Mensch hat nichts zu sich geschrieben."
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:81
 msgid "URL at"
 msgstr "URL auf"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:87
 msgid "Copy URL of this person"
 msgstr "URL zu dieser Gestalt kopieren"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:103
 msgid "Edit profile"
 msgstr "Pofil bearbeiten"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:113
+#: grouprise/features/groups/templates/groups/detail/_actions.html:11
 msgid "Send a message"
 msgstr "Nachricht schreiben"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:123
 msgid "Contributions"
 msgstr "Beiträge"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:129
 msgid "Write an article"
 msgstr "Artikel schreiben"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:130
 msgid "Create an event"
 msgstr "Veranstaltung eintragen"
 
+#: grouprise/features/gestalten/templates/gestalten/detail.html:131
 msgid "Gallery"
 msgstr "Bildergalerie"
 
-msgid "Start a (date) poll"
-msgstr "(Termin-)Umfrage beginnen"
-
+#: grouprise/features/gestalten/templates/gestalten/detail.html:133
 msgid "More possibilities"
 msgstr "Weitere Möglichkeiten"
 
+#: grouprise/features/gestalten/templates/gestalten/list.html:14
+#: grouprise/features/stadt/templates/stadt/_footer.html:49
 msgid "Signup"
 msgstr "Registrieren"
 
+#: grouprise/features/gestalten/templates/gestalten/list.html:31
 msgid ""
 "Not all <em>persons</em> are visible to you. Every single <em>person</em> "
 "can choose to publish their profile."
@@ -380,6 +509,7 @@ msgstr ""
 "Du wirst hier nicht alle <em>Gestalten</em> finden. Jede <em>Gestalt</em> "
 "entscheidet für sich, ob sie ein öffentliches Profil haben möchte."
 
+#: grouprise/features/gestalten/templates/gestalten/list.html:37
 #, python-format
 msgid ""
 "\n"
@@ -392,64 +522,88 @@ msgstr ""
 "Profil'</a> ändern.\n"
 "                "
 
+#: grouprise/features/gestalten/templates/gestalten/list.html:41
 msgid "You can change this setting in your profile."
 msgstr "Du kannst dieses Verhalten in deinem Profil ändern."
 
+#: grouprise/features/gestalten/templates/gestalten/list.html:55
 msgid "More Persons"
 msgstr "Weitere Gestalten"
 
+#: grouprise/features/gestalten/templates/gestalten/update_email.html:27
 msgid "verified"
 msgstr "geprüft"
 
+#: grouprise/features/gestalten/templates/gestalten/update_email.html:29
 msgid "unverified"
 msgstr "ungeprüft"
 
+#: grouprise/features/gestalten/templates/gestalten/update_email.html:33
 msgid "primary address"
 msgstr "Hauptaddresse"
 
+#: grouprise/features/groups/filters.py:12
 msgid "e.g. Repair Cafe"
 msgstr "z.B. Foodcoop"
 
+#: grouprise/features/groups/forms.py:44
 msgid "A comma-separated list of tags that best describe your group."
 msgstr ""
 "Eine kommaseparierte Liste von Schlagworten, die deine Gruppe bestmöglich "
 "beschreiben."
 
+#: grouprise/features/groups/forms.py:61
+#, python-format
+msgid "At least %d featured tags need to be specified."
+msgstr "Mindestens %d empfohlene Schlagworte"
+
+#: grouprise/features/groups/models.py:40
 msgid "Path of the group's site"
 msgstr "Adresse der Gruppenseite"
 
+#: grouprise/features/groups/models.py:42
 msgid "Will be used for referencing the group"
 msgstr "Wird auch als Kurzname verwendet"
 
+#: grouprise/features/groups/models.py:44
 msgid "Address"
 msgstr "Anschrift"
 
+#: grouprise/features/groups/models.py:48
 msgid "An avatar is a small square image, used to identify the group."
 msgstr ""
 "Der Avatar ist ein kleines quadratisches Vorschaubild, an welchem sich die "
 "Gruppe leicht erkennen lässt."
 
+#: grouprise/features/groups/models.py:59
 msgid "Group founded"
 msgstr "Gruppe gegründet"
 
+#: grouprise/features/groups/models.py:61
 msgid "Approximate date of group creation"
 msgstr "Ungefähres Datum der tatsächlichen Gruppengründung"
 
+#: grouprise/features/groups/models.py:64
 msgid "Short description"
 msgstr "Kurzbeschreibung"
 
+#: grouprise/features/groups/models.py:68
 msgid "At most 200 characters"
 msgstr "Höchstens 200 Zeichen"
 
+#: grouprise/features/groups/models.py:72
 msgid "The logo is visible in the right area at the group page."
 msgstr "Das Logo wird auf der Gruppenseite rechts angezeigt."
 
+#: grouprise/features/groups/models.py:77
 msgid "External website"
 msgstr "Externe Website"
 
+#: grouprise/features/groups/models.py:79
 msgid "Import contributions from website"
 msgstr "Beiträge von Website übernehmen"
 
+#: grouprise/features/groups/models.py:82
 msgid ""
 "Try to automatically import public contributions of this website on the "
 "group page"
@@ -457,60 +611,87 @@ msgstr ""
 "Öffentliche Beiträge der angegebenen Website nach Möglichkeit automatisch in "
 "dieser Gruppe veröffentlichen"
 
+#: grouprise/features/groups/models.py:88
 msgid "Restricted group"
 msgstr "Geschlossene Gruppe"
 
+#: grouprise/features/groups/models.py:90
 msgid "Only members can add new members to restricted groups."
 msgstr ""
 "In eine geschlossene Gruppe können nur Mitglieder neue Mitglieder aufnehmen."
 
+#: grouprise/features/groups/models.py:93
 msgid "Tags"
 msgstr "Schlagworte"
 
+#: grouprise/features/groups/templates/groups/_preview.html:19
 msgid "You are subscribed to contriutbions of this group"
 msgstr "Du hast Beiträge dieser Gruppe abonniert"
 
+#: grouprise/features/groups/templates/groups/_preview.html:21
 msgid "You are not subscribed to contributions of this group"
 msgstr "Du hast Beiträge dieser Gruppe nicht abonniert"
 
+#: grouprise/features/groups/templates/groups/_preview.html:25
 msgid "You are a member of this group"
 msgstr "Du bist Mitglied dieser Gruppe"
 
+#: grouprise/features/groups/templates/groups/_preview.html:27
 msgid "You are not a member of this group"
 msgstr "Du bist nicht Mitglied dieser Gruppe"
 
+#: grouprise/features/groups/templates/groups/_preview.html:38
 #, python-format
 msgid "This group did not leave a statement at %(about_group)s."
 msgstr ""
 "Diese Gruppe hat noch keine Beschreibung auf %(about_group)s hinterlegt."
 
+#: grouprise/features/groups/templates/groups/_sidebar.html:6
+#: grouprise/features/groups/templates/groups/create.html:4
+#: grouprise/features/groups/templates/groups/create.html:5
+#: grouprise/features/groups/templates/groups/group_filter.html:17
+#: grouprise/features/stadt/templates/stadt/settings.html:134
 msgid "Group"
 msgstr "Gruppe"
 
+#: grouprise/features/groups/templates/groups/_sidebar.html:14
 msgid "Group's homepage"
 msgstr "Zur Gruppenseite"
 
+#: grouprise/features/groups/templates/groups/_sidebar_list.html:27
+#: grouprise/features/groups/templates/groups/create.html:11
 msgid "Create group"
 msgstr "Gruppe anlegen"
 
+#: grouprise/features/groups/templates/groups/detail/_actions.html:10
 msgid "Start a conversation with all group members"
 msgstr "Ein Gespräch mit den Gruppenmitgliedern beginnen"
 
+#: grouprise/features/groups/templates/groups/detail/_actions.html:21
+#: grouprise/features/memberships/templates/memberships/join.html:19
 msgid "Join this group"
 msgstr "Der Gruppe beitreten"
 
+#: grouprise/features/groups/templates/groups/detail/_actions.html:22
 msgid "Join"
 msgstr "Beitreten"
 
+#: grouprise/features/groups/templates/groups/detail/_actions.html:25
+#: grouprise/features/groups/templates/groups/detail/_actions.html:26
 msgid "Request for membership"
 msgstr "Mitgliedschaft beantragen"
 
+#: grouprise/features/groups/templates/groups/detail/_actions.html:37
+#: grouprise/features/groups/templates/groups/detail/_actions.html:42
 msgid "Notification about new contributions"
 msgstr "Bei neuen Beiträgen benachrichtigt werden"
 
+#: grouprise/features/groups/templates/groups/detail/_actions.html:38
+#: grouprise/features/groups/templates/groups/detail/_actions.html:43
 msgid "Subscribe"
 msgstr "Abonnieren"
 
+#: grouprise/features/groups/templates/groups/group_filter.html:26
 msgid ""
 "Active groups with a lot of members or subscribes will be show first in a "
 "listing."
@@ -518,12 +699,15 @@ msgstr ""
 "Aktive Gruppen mit vielen Mitgliedern oder Abonnent:innen werden in "
 "Auflistungen zuerst angezeigt."
 
+#: grouprise/features/groups/templates/groups/group_filter.html:31
 msgid "Search for groups"
 msgstr "Gruppen suchen"
 
+#: grouprise/features/groups/templates/groups/group_filter.html:40
 msgid "More Groups"
 msgstr "Weitere Gruppen"
 
+#: grouprise/features/matrix_chat/forms.py:10
 #, python-brace-format
 msgid ""
 "A Matrix room ID (starting with '!') can be used. You may want to invite "
@@ -534,9 +718,11 @@ msgstr ""
 "empfehlenswert, {bot_address} in diesen Raum einzuladen und "
 "Moderationsrechte zu gewähren, falls die Adresse geändert wurde."
 
+#: grouprise/features/matrix_chat/forms.py:21
 msgid "Custom (external) matrix user ID"
 msgstr "Eigene (externe) Matrix-Nutzer-ID"
 
+#: grouprise/features/matrix_chat/forms.py:24
 msgid ""
 "Leave this field empty, if you want to use the local Matrix user ID. A "
 "Matrix user ID looks like '@foo:example.org'."
@@ -544,40 +730,57 @@ msgstr ""
 "Lass das Feld leer, um die lokale Matrix-Nutzer-ID zu verwenden. Eine Matrix-"
 "Nutzer-ID hat die Form '@foo:example.org'."
 
+#: grouprise/features/matrix_chat/forms.py:32
 msgid "Show links to the public chat room"
 msgstr "Zeige Verweise auf den öffentlichen Chat-Raum"
 
+#: grouprise/features/matrix_chat/forms.py:39
 msgid "Public chat room"
 msgstr "Öffentlicher Chat-Raum"
 
+#: grouprise/features/matrix_chat/forms.py:44
 msgid "Show links to the private chat room"
 msgstr "Zeige Verweise auf den internen Chat-Raum"
 
+#: grouprise/features/matrix_chat/forms.py:51
 msgid "Private chat room"
 msgstr "Privater Chat-Raum"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:4
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:11
 msgid "Introduction to Chat"
 msgstr "Einführung in Chats"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:17
 msgid "Content"
 msgstr "Inhalt"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:19
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:28
 msgid "Overview"
 msgstr "Überblick"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:20
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:42
 msgid "Matrix Features"
 msgstr "Matrix-Funktionen"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:21
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:58
 #, python-format
 msgid "Integration with %(GROUPRISE_SITE_NAME)s"
 msgstr "Einbindung in %(GROUPRISE_SITE_NAME)s"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:22
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:77
 msgid "Usage"
 msgstr "Nutzung"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:23
 msgid "FAQ"
 msgstr "Häufige Fragen"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:29
 msgid ""
 "Instant messagging (<i>chat</i>) is an efficient way of communicating "
 "directly (without delay) within a group or between interested people and "
@@ -587,6 +790,7 @@ msgstr ""
 "(verzögerungsfreien) Kommunikation innerhalb einer Gruppe oder zwischen "
 "Interessierten und Gruppenmitgliedern sein."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:33
 #, python-format
 msgid ""
 "The platform %(GROUPRISE_SITE_NAME)s provides an integrated chat service, "
@@ -599,46 +803,53 @@ msgstr ""
 "mit <a href=\"%(matrix_url)s\">Matrix</a>-Nutzenden weltweit genutzt werden "
 "kann."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:37
 msgid ""
 "Use the web client or a mobile app (see <a href=\"#usage\">Usage</a>) for "
 "accessing the chat rooms."
 msgstr ""
-"Der Chat-Dienst ist über den Web-Client oder eine mobile App (siehe <a href="
-"\"#usage\">Nutzung</a>) bedienbar."
+"Der Chat-Dienst ist über den Web-Client oder eine mobile App (siehe <a "
+"href=\"#usage\">Nutzung</a>) bedienbar."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:44
 #, python-format
 msgid ""
 "A wide variety of instant messenger applications and protocols is available, "
 "e.g. Jabber, IRC, Whatsapp, Facebook Messenger, Slack, Mattermost and many "
-"more. This platform (%(GROUPRISE_SITE_NAME)s) integrates the <a href="
-"\"%(matrix_url)s\">Matrix</a> protocol, since it offers a wide range of "
+"more. This platform (%(GROUPRISE_SITE_NAME)s) integrates the <a "
+"href=\"%(matrix_url)s\">Matrix</a> protocol, since it offers a wide range of "
 "features, that turn it into a perfect fit."
 msgstr ""
 "Es gibt eine große Vielfalt von Chat-Anwendungen, wie beispielsweise Jabber, "
 "IRC, Whatsapp, Facebook Messenger, Slack, Mattermost und viele mehr. Diese "
-"Plattform (%(GROUPRISE_SITE_NAME)s) integriert das <a href=\"%(matrix_url)s"
-"\">Matrix</a>-Protokoll, da es vielerlei nützliche Funktionen zur "
-"Erweiterung der grouprise-Plattform bietet."
+"Plattform (%(GROUPRISE_SITE_NAME)s) integriert das <a "
+"href=\"%(matrix_url)s\">Matrix</a>-Protokoll, da es vielerlei nützliche "
+"Funktionen zur Erweiterung der grouprise-Plattform bietet."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:49
 msgid "Matrix offers the following features:"
 msgstr "Matrix bietet die folgenden Funktionen:"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:51
 msgid "trustworthy"
 msgstr "vertrauenswürdig"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:51
 msgid ""
-"Both the server and the client implementations are available as <a href="
-"\"{{ free_software_url }}\">Free Software</a>. Thus, anyone interested can "
-"verify, that the software is operating in the interest of the users."
+"Both the server and the client implementations are available as <a "
+"href=\"{{ free_software_url }}\">Free Software</a>. Thus, anyone interested "
+"can verify, that the software is operating in the interest of the users."
 msgstr ""
-"Sowohl die Server- als auch die Client-Implementierung sind als <a href="
-"\"{{ free_software_url }}\">Freie Software</a> verfügbar. Somit kann jede "
-"interessierte Person prüfen, ob die Software im Interesse der Nutzenden "
+"Sowohl die Server- als auch die Client-Implementierung sind als <a "
+"href=\"{{ free_software_url }}\">Freie Software</a> verfügbar. Somit kann "
+"jede interessierte Person prüfen, ob die Software im Interesse der Nutzenden "
 "handelt."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:52
 msgid "federated"
 msgstr "föderiert"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:52
 msgid ""
 "Everyone can host their own server and all of these servers communicate with "
 "each other. This is similar to the design of the email protocol or the "
@@ -650,9 +861,11 @@ msgstr ""
 "Email- oder des Telefon-Netzwerks, in denen die Nutzer:innen verschiedener "
 "Betreiber ebenfalls miteinander kommunizieren können."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:53
 msgid "secure"
 msgstr "sicher"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:53
 msgid ""
 "End-to-end encryption keeps the content of conversations safe from pryring "
 "eyes. Even the service provider cannot peek inside."
@@ -661,17 +874,20 @@ msgstr ""
 "neugierigen Blicken. Sogar den Administrator:innen des grouprise/Matrix-"
 "Servers ist jeglicher Einblick verwehrt."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:54
 msgid "wide range of clients"
 msgstr "viele Client-Anwendungen"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:54
 msgid ""
 "Pick your favorite client from a <a href=\"{{ matrix_clients_url }}\">wide "
 "range of applications</a> for various mobile and desktop platforms."
 msgstr ""
-"Wähle einen passenden Client aus der <a href="
-"\"{{ matrix_clients_url }}\">Vielfalt von Anwendungen</a> für verschiedene "
-"mobile und Desktop-Plattformen."
+"Wähle einen passenden Client aus der <a "
+"href=\"{{ matrix_clients_url }}\">Vielfalt von Anwendungen</a> für "
+"verschiedene mobile und Desktop-Plattformen."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:60
 #, python-format
 msgid ""
 "The integration of the Matrix chat into the %(GROUPRISE_SITE_NAME)s platform "
@@ -680,6 +896,7 @@ msgstr ""
 "Die Integration des Matrix-Chats in die %(GROUPRISE_SITE_NAME)s-Plattform "
 "bietet die folgenden Funktionen:"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:62
 msgid ""
 "Use your grouprise user account to log in to the Matrix homeserver. There is "
 "no need for a separate Matrix account."
@@ -687,16 +904,18 @@ msgstr ""
 "Verwende dein grouprise-Nutzerkonto für die Anmeldung beim Matrix-Server. "
 "Ein separates Matrix-Konto ist nicht erforderlich."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:63
 #, python-format
 msgid ""
 "A local instance of the <a href=\"%(element_url)s\">Element web client</a> "
-"is provided along with %(GROUPRISE_SITE_NAME)s (<a href="
-"\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
+"is provided along with %(GROUPRISE_SITE_NAME)s (<a "
+"href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
 msgstr ""
 "Eine lokale Instanz der <a href=\"%(element_url)s\">Element-Web-Anwendung</"
-"a> wird zusammen mit %(GROUPRISE_SITE_NAME)s ausgeliefert (<a href="
-"\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
+"a> wird zusammen mit %(GROUPRISE_SITE_NAME)s ausgeliefert (<a "
+"href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>)."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:64
 #, python-format
 msgid ""
 "A public and a private Matrix room is automatically created for each "
@@ -705,6 +924,7 @@ msgstr ""
 "Für jede %(GROUPRISE_SITE_NAME)s-Gruppe wird automatisch ein öffentlicher "
 "und ein privater Chat-Raum erzeugt."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:65
 msgid ""
 "All members of a grouprise group are automatically invited to the group's "
 "Matrix rooms."
@@ -712,6 +932,7 @@ msgstr ""
 "Alle Mitglieder einer grouprise-Gruppe werden automatisch in die "
 "dazugehörigen Matrix-Räume eingeladen."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:66
 msgid ""
 "Notifications for new content (articles, events, discussions, ...) are sent "
 "to the related Matrix rooms (internal messages are announced in the private "
@@ -721,12 +942,14 @@ msgstr ""
 "werden an die dazugehörigen Matrix-Räume versandt (interne Nachrichten "
 "landen ausschließlich im privaten Raum)."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:69
 msgid ""
 "Additionally all regular features of the Matrix communication ecosystem are "
 "available:"
 msgstr ""
 "Zusätzlich sind alle sonstigen Funktionen des Matrix-Ökosystems nutzbar:"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:71
 msgid ""
 "Matrix users from other servers may join your group's rooms (if you invite "
 "them)."
@@ -734,6 +957,7 @@ msgstr ""
 "Matrix-Nutzer:innen von anderen Matrix-Servern können die Räume der "
 "grouprise-Gruppen betreten (bei privaten Räumen: nur auf Einladung)."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:72
 msgid ""
 "You may use the Matrix account provided by grouprise or your existing "
 "(external) Matrix account."
@@ -741,6 +965,7 @@ msgstr ""
 "Du kannst entweder den Matrix-Account der grouprise-Instanz oder einen "
 "eigenen (externen) Matrix-Account verwenden."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:73
 msgid ""
 "You are free to communicate with your group peers or with any other Matrix "
 "user in the world."
@@ -748,17 +973,21 @@ msgstr ""
 "Du kannst sowohl mit anderen Nutzer:innen der Community-Webseite, also auch "
 "mit Matrix-Nutzer:innen auf der ganzen Welt kommunizieren."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:79
 msgid "Use your web browser or a mobile app to access the chat messages."
 msgstr ""
 "Verwende deinen Web-Browser oder eine mobile Anwendung, um via Matrix "
 "Nachrichten auszutauschen."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:82
 msgid "Web Browser"
 msgstr "Web-Browser"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:84
 msgid "There are two approaches for entering the chat rooms:"
 msgstr "Es gibt zwei Wege, die Chat-Räume zu betreten:"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:86
 msgid ""
 "Visit the page of a group and select <i>Public Chat Room</i> or <i>Private "
 "Chat Room</i>."
@@ -766,15 +995,18 @@ msgstr ""
 "Besuche eine Gruppenübersicht und klicke auf <i>Öffentlicher Chat-Raum</i> "
 "oder <i>Privater Chat-Raum</i>."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:87
 #, python-format
 msgid ""
 "Visit the URL <a href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>."
 msgstr ""
 "Besuche die URL <a href=\"%(matrix_client_path)s\">%(matrix_client_url)s</a>."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:93
 msgid "Mobile App"
 msgstr "Mobile Anwendung"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:96
 #, python-format
 msgid ""
 "Install one of the <a href=\"%(matrix_clients_url)s\">mobile clients</a> via "
@@ -782,30 +1014,38 @@ msgid ""
 "a> in case of doubt."
 msgstr ""
 "Installiere eine der <a href=\"%(matrix_clients_url)s\">Matrix-Apps</a> über "
-"den Paketmanager deiner Wahl. Wähle im Zweifelsfall <a href="
-"\"%(element_android_url)s\">Element</a>."
+"den Paketmanager deiner Wahl. Wähle im Zweifelsfall <a "
+"href=\"%(element_android_url)s\">Element</a>."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:97
 msgid "Select <i>Other</i> as the Matrix server."
 msgstr "Wähle <i>andere</i> als Matrix-Server."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:98
 msgid "Enter the matrix server:"
 msgstr "Gib den Matrix-Server ein:"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:99
 msgid "Select <i>Sign In</i>."
 msgstr "Wähle <i>Anmelden</i>."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:100
 msgid "Enter your grouprise username or your email address."
 msgstr "Gib deinen grouprise-Nutzernamen oder deine Emailadresse ein."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:101
 msgid "Enter your grouprise password."
 msgstr "Gib dein grouprise-Passwort ein."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:105
 msgid "Thunderbird"
 msgstr "Thunderbird"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:108
 msgid "Thunderbird supports the Matrix protocol for chats."
 msgstr "Thunderbird unterstützt das Matrix-Protokoll für Chats."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:109
 #, python-format
 msgid ""
 "Simply enter your account data, but leave the password empty (<a "
@@ -816,13 +1056,16 @@ msgstr ""
 "href=\"%(thunderbird_sso_doc_url)s\">Thunderbird-Dokumentation für Single-"
 "Sign-On</a>)."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:112
 msgid "FAQ (Frequently Asked Questions)"
 msgstr "Häufige Fragen (FAQ)"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:114
 msgid "Why is there a <i>public</i> and a <i>private</i> room?"
 msgstr ""
 "Warum gibt es einen <i>öffentlichen</i> und einen <i>privaten</i> Raum?"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:116
 msgid ""
 "These pre-configured rooms for each group were prepared for your "
 "convenvience. The <i>public room</i> is configured to be open for random "
@@ -838,6 +1081,7 @@ msgstr ""
 "i> ist nicht im Raumverzeichnis zu finden. Interessierte können interne "
 "Räume nur auf Einladung betreten."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:124
 msgid ""
 "In addition to the two pre-configured rooms per group, your are free to "
 "create as many rooms as you like."
@@ -845,9 +1089,11 @@ msgstr ""
 "Unabhängig von den beiden vorkonfigurierten Räumen pro Gruppe kannst du so "
 "viele Räume anlegen, wie du möchtest."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:128
 msgid "Room members"
 msgstr "Raum-Teilnehmer:innen"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:130
 #, python-format
 msgid ""
 "Whenever someone joins a group in the %(GROUPRISE_SITE_NAME)s platform, the "
@@ -858,6 +1104,7 @@ msgstr ""
 "beitritt, wird diese Person automatisch in die Chat-Räume dieser Gruppe "
 "eingeladen."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:134
 #, python-format
 msgid ""
 "People leaving a group in the %(GROUPRISE_SITE_NAME)s platform are "
@@ -866,6 +1113,7 @@ msgstr ""
 "Sobald jemand eine Gruppe (%(GROUPRISE_SITE_NAME)s) verlässt, wird diese "
 "Person auch aus den dazugehörigen Chat-Räumen entfernt."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:138
 msgid ""
 "Any external person (even people without an account on the local grouprise "
 "instance) may join public rooms or may be invited to private rooms."
@@ -873,9 +1121,11 @@ msgstr ""
 "Auch externe Personen (selbst ohne ein Nutzerkonto der Community-Webseite) "
 "können öffentliche Räume betreten und in private Räume eingeladen werden."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:142
 msgid "Why are rooms not encrypted by default?"
 msgstr "Warum sind die Räume nicht verschlüsselt?"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:144
 #, python-format
 msgid ""
 "The developers of *grouprise* <a href=\"%(issue_url)s\">discussed this "
@@ -891,9 +1141,11 @@ msgstr ""
 "aktivieren. Außerdem ist es leicht möglich, selbst neue Räume mit den "
 "gewünschten Einstellungen zu erstellen."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:150
 msgid "I want to know more!"
 msgstr "Ich möchte mehr erfahren!"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:152
 #, python-format
 msgid ""
 "Feel free to dive into the <a href=\"%(help_matrix_url)s\">Matrix FAQ</a> or "
@@ -904,6 +1156,7 @@ msgstr ""
 "a> oder schau dich in den <a href=\"%(help_element_url)s\">Element-Räumen</"
 "a> um, falls du weitere Fragen haben solltest."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/help.html:156
 #, python-format
 msgid ""
 "For questions regarding the combination of <i>grouprise</i> "
@@ -914,9 +1167,12 @@ msgstr ""
 "Fragen zur Integration des Matrix-Chats in <i>grouprise</i> "
 "(%(GROUPRISE_SITE_NAME)s) haben solltest."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/missing_web_client.html:4
+#: grouprise/features/matrix_chat/templates/matrix_chat/missing_web_client.html:11
 msgid "Missing chat client"
 msgstr "Fehlende Chat-Anwendung"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/missing_web_client.html:16
 msgid ""
 "The administrators of this site seem to have forgotten to configure a local "
 "web client for Matrix (e.g. <a href=\"https://github.com/vector-im/element-"
@@ -928,12 +1184,16 @@ msgstr ""
 "im/element-web\">Element</a>) unter diesem Pfad (<code>/stadt/chat/</code>) "
 "zu konfigurieren. Bitte informiere die Zuständigen."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_gestalt_settings.html:9
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_group_settings.html:9
 msgid "Chat Settings - Matrix"
 msgstr "Chat-Einstellungen (Matrix)"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_group_settings.html:14
 msgid "Public Chat Room"
 msgstr "Öffentlicher Chat-Raum"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_group_settings.html:15
 msgid ""
 "Notifications for new public content (articles, events, files, ...) are sent "
 "to this Matrix room."
@@ -941,9 +1201,11 @@ msgstr ""
 "Benachrichtigungen zu neuen Inhalten (Artikel, Termine, Dateien, ...) werden "
 "an diesen Matrix-Raum gesendet."
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_group_settings.html:21
 msgid "Private Chat Room"
 msgstr "Privater Chat-Raum"
 
+#: grouprise/features/matrix_chat/templates/matrix_chat/update_group_settings.html:22
 msgid ""
 "Notifications for any new content (public and private; including "
 "discussions) are sent to this Matrix room."
@@ -951,18 +1213,22 @@ msgstr ""
 "Benachrichtigungen zu jeglichen neuen Inhalten (öffentlich und privat; "
 "inklusive Diskussionen) werden an diesen Matrix-Raum gesendet."
 
+#: grouprise/features/matrix_chat/utils.py:95
 #, python-brace-format
 msgid "{site_name} - notifications"
 msgstr "{site_name} - Benachrichtigungen"
 
+#: grouprise/features/matrix_chat/utils.py:98
 #, python-brace-format
 msgid "Notifications for private messages from {site_url}"
 msgstr "Benachrichtigungen für private Nachrichten von {site_url}"
 
+#: grouprise/features/matrix_chat/utils.py:121
 #, python-brace-format
 msgid "{site_name}"
 msgstr "{site_name}"
 
+#: grouprise/features/matrix_chat/utils.py:204
 #, python-brace-format
 msgid ""
 "The {room_visibility} chat room of [\"{group_name}\"]({group_url}) moved to "
@@ -971,22 +1237,30 @@ msgstr ""
 "Der Chat-Raum von [\"{group_name}\"]({group_url}) ({room_visibility}) wurde "
 "nach {new_room_id} verschoben."
 
+#: grouprise/features/matrix_chat/utils.py:207
 msgid "private"
 msgstr "intern"
 
+#: grouprise/features/matrix_chat/utils.py:207
 msgid "public"
 msgstr "öffentlich"
 
+#: grouprise/features/matrix_chat/views.py:245
+#: grouprise/features/stadt/templates/stadt/help.html:75
 msgid "Chat / Instant Messaging"
 msgstr "Chat / Direktnachrichten"
 
+#: grouprise/features/memberships/templates/memberships/join.html:4
+#: grouprise/features/memberships/templates/memberships/join.html:7
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
+#: grouprise/features/memberships/templates/memberships/join.html:16
 #, python-format
 msgid "Do you want to become a member of <em>%(group)s</em> on %(site)s?"
 msgstr "Möchtest Du der Gruppe <em>%(group)s</em> auf %(site)s beitreten?"
 
+#: grouprise/features/memberships/templates/memberships/join.html:21
 msgid ""
 "In case you are not a member of the group in <em>real live</em> and want to "
 "join, please talk to a group member."
@@ -994,57 +1268,75 @@ msgstr ""
 "Falls Du in der <em>echten Welt</em> noch nicht Mitglied in der Gruppe bist "
 "und es werden möchtest, sprich bitte die anderen Gruppenmitglieder an."
 
+#: grouprise/features/memberships/templates/memberships/list.html:32
 msgid "More Members"
 msgstr "Weitere Mitglieder"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:8
 msgid "is based on the free software"
 msgstr "basiert auf der Freien Software"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:10
 msgid "Support grouprise with a"
 msgstr "Unterstütze grouprise mit einer"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:11
 msgid "donation"
 msgstr "Spende"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:16
 msgid "Home"
 msgstr "Startseite"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:18
 msgid "About"
 msgstr "Über"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:20
 msgid "Imprint"
 msgstr "Impressum"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:24
 msgid "Report abuse"
 msgstr "Missbrauch melden"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:34
 msgid "Public People"
 msgstr "Öffentliche Gestalten"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:40
 msgid "Your site"
 msgstr "Deine Seite"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:41
 msgid "Your activities"
 msgstr "Dich betreffende Aktivität"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:45
 msgid "Logout"
 msgstr "Abmelden"
 
+#: grouprise/features/stadt/templates/stadt/_footer.html:47
 msgid "Login"
 msgstr "Anmelden"
 
+#: grouprise/features/stadt/templates/stadt/_index_header_buttons.html:12
 msgid "Your group now!"
 msgstr "Deine Gruppe jetzt!"
 
+#: grouprise/features/stadt/templates/stadt/_index_header_buttons.html:24
 msgid "For"
 msgstr "Für"
 
+#: grouprise/features/stadt/templates/stadt/_index_header_buttons.html:36
 msgid "No pranks"
 msgstr "Ohne Schabernack"
 
+#: grouprise/features/stadt/templates/stadt/_index_header_buttons.html:48
 msgid "You rule!"
 msgstr "Du bestimmst!"
 
+#: grouprise/features/stadt/templates/stadt/_index_header_buttons.html:57
 #, python-format
 msgid ""
 "In a blink you can create a group on %(group)s, make contributions, open a "
@@ -1055,11 +1347,13 @@ msgstr ""
 "Diskussionen führen, Veranstaltungen ankündigen und mit anderen Gruppen in "
 "Kontakt treten und deren Aktivitäten im Auge behalten."
 
+#: grouprise/features/stadt/templates/stadt/_index_header_buttons.html:70
 msgid "We want to shed light onto local issues and discussions."
 msgstr ""
 "Mit dem Fokus auf’s Lokale wollen wir ein wenig Licht in’s Dunkel bringen. "
 "Hier wohnen und leben wir und hier wollen wir auch Dinge bewegen."
 
+#: grouprise/features/stadt/templates/stadt/_page_info.html:5
 #, python-format
 msgid ""
 "%(num_groups)s Groups / %(num_gestalten)s People / %(num_contributions)s "
@@ -1068,35 +1362,266 @@ msgstr ""
 "%(num_groups)s Gruppen / %(num_gestalten)s Gestalten / %(num_contributions)s "
 "Beiträge"
 
+#: grouprise/features/stadt/templates/stadt/help.html:77
 msgid "Instant communication within groups or between individuals."
 msgstr "Schnelle Kommunikation innerhalb von Gruppen oder zwischen Individuen."
 
+#: grouprise/features/stadt/templates/stadt/settings.html:14
+#: grouprise/features/stadt/templates/stadt/settings.html:64
 msgid "General"
 msgstr "Allgemein"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:21
+#: grouprise/features/stadt/templates/stadt/settings.html:71
 msgid "Images"
 msgstr "Bilder"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:28
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:35
 msgid "Email addresses"
 msgstr "E-Mail-Adressen"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:44
+#: grouprise/features/stadt/templates/stadt/settings.html:88
 msgid "Chat (Matrix)"
 msgstr "Chat (Matrix)"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:52
 msgid "Password"
 msgstr "Kennwort"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:79
 msgid "Notifications & Membership"
 msgstr "Benachrichtigungen & Mitgliedschaft"
 
+#: grouprise/features/stadt/templates/stadt/settings.html:113
 msgid "Profile"
 msgstr "Pofil"
 
+#: grouprise/features/stadt/templatetags/stadt.py:15
 msgid "all"
 msgstr "alle"
+
+#: grouprise/features/tags/templates/tags/_sidebar_list.html:10
+msgid "Featured Tags"
+msgstr "Empfohlene Schlagworte"
+
+#: venv/lib/python3.11/site-packages/cachalot/panels.py:67
+#, python-format
+msgid "Last invalidation: %s"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/cachalot/templates/cachalot/panel.html:4
+#, python-format
+msgid "Database '%(db_alias)s'"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/cachalot/templates/cachalot/panel.html:9
+#, fuzzy
+#| msgid "Location"
+msgid "Application"
+msgstr "Ort"
+
+#: venv/lib/python3.11/site-packages/cachalot/templates/cachalot/panel.html:10
+msgid "Model"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/cachalot/templates/cachalot/panel.html:11
+msgid "Last invalidation"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/ipware/apps.py:10
+msgid "ipware app"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:69
+msgid "Confidential"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:79
+msgid "Authorization code"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:80
+msgid "Implicit"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:81
+msgid "Resource owner password-based"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:82
+msgid "Client credentials"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:83
+msgid "OpenID connect hybrid"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:90
+msgid "No OIDC support"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:91
+msgid "RSA with SHA-2 256"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:92
+msgid "HMAC with SHA-2 256"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:107
+msgid "Allowed URIs list, space separated"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:111
+msgid "Allowed Post Logout URIs list, space separated"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:120
+msgid "Hashed on Save. Copy it now if this is a new secret."
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:190
+#, python-brace-format
+msgid "Unauthorized redirect scheme: {scheme}"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:194
+#, python-brace-format
+msgid "redirect_uris cannot be empty with grant_type {grant_type}"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:200
+msgid "You must set OIDC_RSA_PRIVATE_KEY to use RSA algorithm"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/models.py:209
+msgid "You cannot use HS256 with public grants or clients"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/oauth2_validators.py:211
+msgid "The access token is invalid."
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/oauth2_validators.py:218
+msgid "The access token has expired."
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/oauth2_validators.py:225
+msgid "The access token is valid but does not have enough scope."
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_confirm_delete.html:6
+msgid "Are you sure to delete the application"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_confirm_delete.html:12
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorize.html:29
+msgid "Cancel"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_confirm_delete.html:13
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:38
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorized-token-delete.html:7
+#, fuzzy
+#| msgid "Delete Account"
+msgid "Delete"
+msgstr "Benutzerkonto löschen"
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:10
+msgid "Client id"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:15
+msgid "Client secret"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:20
+msgid "Client type"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:25
+msgid "Authorization Grant Type"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:30
+msgid "Redirect Uris"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_detail.html:36
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_form.html:35
+msgid "Go Back"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_form.html:9
+msgid "Edit application"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_form.html:37
+msgid "Save"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_list.html:6
+#, fuzzy
+#| msgid "Your activities"
+msgid "Your applications"
+msgstr "Dich betreffende Aktivität"
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_list.html:14
+msgid "New Application"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_list.html:17
+msgid "No applications defined"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_list.html:17
+msgid "Click here"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_list.html:17
+msgid "if you want to register a new one"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/application_registration_form.html:5
+msgid "Register a new application"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorize.html:8
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorize.html:30
+msgid "Authorize"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorize.html:17
+#, fuzzy
+#| msgid "Matrix offers the following features:"
+msgid "Application requires the following permissions"
+msgstr "Matrix bietet die folgenden Funktionen:"
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorized-token-delete.html:6
+#, fuzzy
+#| msgid "Do you really want to delete your account?"
+msgid "Are you sure you want to delete this token?"
+msgstr "Möchtest Du Dein Benutzerkonto wirklich löschen?"
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorized-tokens.html:6
+msgid "Tokens"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorized-tokens.html:11
+msgid "revoke"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/oauth2_provider/templates/oauth2_provider/authorized-tokens.html:19
+msgid "There are no authorized tokens yet."
+msgstr ""
+
+#~ msgid "Start a (date) poll"
+#~ msgstr "(Termin-)Umfrage beginnen"
 
 #~ msgid "Help about"
 #~ msgstr "Hilfe zu"

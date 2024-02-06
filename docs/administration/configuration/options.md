@@ -360,6 +360,11 @@ List of IDs of special tags. They will be shown on the grouprise start page. You
 
 Default: `[]`
 
+### `tags → min_featured_group_tag_count`
+Number of featured tags which need to be present when saving group properties.
+
+Default: `0`
+
 ## Theme and content customizations
 
 ### `branding → logo_backdrop`
