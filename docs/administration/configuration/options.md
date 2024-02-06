@@ -353,6 +353,12 @@ ID of the user (gestalt), which is set as the author for content by users, which
 
 Default: `1`
 
+## Tags
+
+### `tags → featured_tag_ids`
+List of IDs of special tags. They will be shown on the grouprise start page. You can retrieve the IDs from the admin interface.
+
+Default: `[]`
 
 ## Theme and content customizations
 

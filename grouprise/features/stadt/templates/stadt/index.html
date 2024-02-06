@@ -9,6 +9,8 @@
     {% sidebar_calendar paginator.object_list component_id='content-calendar' site_calendar=True %}
     {% load groups %}
     {% sidebar_groups user %}
+    {% load tags %}
+    {% sidebar_tags %}
 {% endblock %}
 
 {% block content_header %}
