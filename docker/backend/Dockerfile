@@ -24,6 +24,7 @@ COPY --from=grouprise-depends depends /tmp
 RUN apt update -y && \
     apt install -y -t bullseye-backports \
       adduser \
+      git \
       inotify-tools \
       locales \
       python3-pip \
