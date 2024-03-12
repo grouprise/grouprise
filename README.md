@@ -40,7 +40,7 @@ After that you should be able to start a development environment by
 executing the following command:
 
 ```sh
-COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml docker-compose up --build
+make dev
 ```
 
 Bootstrapping the environment will take quite some time on your first start,

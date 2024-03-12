@@ -36,3 +36,12 @@ run-docker-deb-prepared:
 		--mount "type=bind,source=$$(pwd),destination=/app" \
 		--publish 8000:80 \
 		grouprise-deb-prepared "$$SHELL"
+
+
+.PHONY: _dev
+_dev:
+	COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml docker-compose up --build --force-recreate
+
+.PHONY: dev
+dev:
+	$(MAKE) --jobs=1 _dev
