@@ -14,7 +14,7 @@
     {% else %}
         <div class="disclaimer">
             <i class="sg sg-5x sg-image"></i><br />
-            <p>Diese Gruppe war bisher nicht motiviert eine Introgalerie anzulegen.</p>
+            <p>Diese Gruppe hat leider noch keine Introgalerie angelegt.</p>
             {% load rules %}
             {% has_perm 'memberships.join' user group as can_join %}
             {% if can_join %}
