@@ -31,8 +31,8 @@ services:
             #  * in docker/backend/config.dev-csp.yaml
             GROUPRISE_WEBPACK_DEV_SERVER: "http://localhost:8003?listen=0.0.0.0"
         volumes:
-            - ./res/:/home/node/assets/
-            - ./webpack.config.js:/home/node/webpack.config.js
+            - ./res:/root/assets/res/
+            - ./webpack.config.js:/root/assets/webpack.config.js
             - grouprise-assets:/root/assets/grouprise/core/templates/core/assets/
         ports:
             - "8003:8003"
