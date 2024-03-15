@@ -1,0 +1,8 @@
+{% include "django/forms/widgets/textarea.html" %}
+{% if suggestions and suggestion_list_id %}
+    <datalist id="{{ suggestion_list_id }}">
+        {% for suggestion in suggestions %}
+        <option>{{ suggestion }}</option>
+        {% endfor %}
+    </datalist>
+{% endif %}

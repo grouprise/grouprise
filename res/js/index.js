@@ -50,6 +50,7 @@ function init (searchIn = document) {
   asyncComponent('location', () => import('./transforms/location'), opts)
   asyncComponent('poi', () => import('./transforms/poi'), opts)
   asyncComponent('tabs', () => import('./transforms/tabs'), opts)
+  asyncComponent('taginput', () => import('./transforms/taginput'), opts)
 
   // initialize components not based on component interface
   asyncComponent(

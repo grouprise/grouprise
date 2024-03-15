@@ -552,10 +552,6 @@ msgstr ""
 "Eine kommaseparierte Liste von Schlagworten, die deine Gruppe bestmöglich "
 "beschreiben."
 
-#: grouprise/features/groups/forms.py:61
-#, python-format
-msgid "At least %d featured tags need to be specified."
-msgstr "Mindestens %d empfohlene Schlagworte"
 
 #: grouprise/features/groups/models.py:40
 msgid "Path of the group's site"
@@ -1406,6 +1402,15 @@ msgid "all"
 msgstr "alle"
 
 #: grouprise/features/tags/templates/tags/_sidebar_list.html:10
+#, python-format
+msgid "At least one featured tag needs to be selected."
+msgid_plural "At least %(count)d featured tags need to be selected."
+msgstr[0] ""
+"Es muss mindestens eines der vorgeschlagenen Schlagworte verwendet werden."
+msgstr[1] ""
+"Es müssen mindestens %(count)d der vorgeschlagenen Schlagwörter verwendet "
+"werden."
+
 msgid "Featured Tags"
 msgstr "Empfohlene Schlagworte"
 

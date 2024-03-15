@@ -67,6 +67,7 @@
     "webpack-dev-server": "^4.6.0"
   },
   "dependencies": {
+    "@yaireo/tagify": "^4.21.2",
     "animejs": "^2.1.8",
     "autosize": "^5.0.1",
     "axios": "^0.24.0",

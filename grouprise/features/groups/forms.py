@@ -1,13 +1,10 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from taggit.forms import TextareaTagWidget
-from taggit.models import Tag
 
 from grouprise.core.settings import get_grouprise_site
+from grouprise.features.tags.forms import FeaturedTagInputField
 
 from . import models
-from ..tags.settings import TAG_SETTINGS
 
 
 class RecommendForm(forms.Form):
@@ -21,6 +18,8 @@ class RecommendForm(forms.Form):
 
 
 class Update(forms.ModelForm):
+    tags = FeaturedTagInputField("group-tags", required=False)
+
     class Meta:
         fields = (
             "address",
@@ -38,7 +37,6 @@ class Update(forms.ModelForm):
             "address": forms.Textarea({"rows": 3}),
             "date_founded": forms.DateInput({"data-component": "date"}),
             "description": forms.Textarea({"rows": 5}),
-            "tags": TextareaTagWidget({"rows": 2}),
         }
         help_texts = {
             "tags": _("A comma-separated list of tags that best describe your group."),
@@ -47,17 +45,3 @@ class Update(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.slug_domain = "{}/".format(get_grouprise_site().domain)
-
-    def clean_tags(self):
-        tags = self.cleaned_data["tags"]
-        tag_count = (
-            Tag.objects.filter(name__in=tags)
-            .filter(id__in=TAG_SETTINGS.FEATURED_TAG_IDS)
-            .count()
-        )
-        min_tag_count = TAG_SETTINGS.MIN_FEATURED_GROUP_TAG_COUNT
-        if tag_count < min_tag_count:
-            raise ValidationError(
-                _("At least %d featured tags need to be specified.") % min_tag_count
-            )
-        return tags
