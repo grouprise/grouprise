@@ -16,8 +16,6 @@ GROUPRISE_PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Thus, you always need to use the `grouprise_field_resolver` approach described below.
 GROUPRISE_DATA_DIR = os.path.dirname(GROUPRISE_PACKAGE_DIR)
 
-TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
-
 
 # Django Basics
 # https://docs.djangoproject.com/en/stable/
