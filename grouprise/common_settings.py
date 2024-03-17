@@ -1,6 +1,8 @@
 import os
 import sys
 
+import allauth
+
 # This mechanism should be used for all settings, which depend on other settings.
 # The callable should expect a single argument: a dictionary containing the django settings
 # (previsely: `locals()` in the current context).
@@ -85,6 +87,10 @@ MIDDLEWARE = [
     "grouprise.features.gestalten.middleware.GestaltAppConfigMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 ]
+
+# allauth introduced its middleware requirement in v0.56.0
+if allauth.VERSION >= (0, 56):
+    MIDDLEWARE += ["allauth.account.middleware.AccountMiddleware"]
 
 TEMPLATES = [
     {

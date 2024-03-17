@@ -15,7 +15,11 @@ class Login(PermissionMixin, allauth.account.views.LoginView):
     template_name = "auth/login.html"
 
     def has_facebook_app(self):
-        providers = allauth.socialaccount.providers.registry.get_list()
+        try:
+            providers = allauth.socialaccount.providers.registry.get_class_list()
+        except AttributeError:
+            # allauth before v0.55.0
+            providers = allauth.socialaccount.providers.registry.get_list()
         for provider in providers:
             if provider.id == "facebook" and provider.get_app(self.request):
                 return True
