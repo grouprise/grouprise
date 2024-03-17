@@ -1,5 +1,5 @@
 from grouprise.core import tests
-from grouprise.core.tests import get_url as u
+from grouprise.core.tests import get_url
 
 from . import models
 
@@ -29,9 +29,9 @@ class JoinForbidden:
 
 class JoinRedirectsToGroupPage:
     def test_group_join(self):
-        r = self.client.get(u("join", self.group.slug))
+        r = self.client.get(get_url("join", self.group.slug))
         self.assertRedirects(r, self.group.get_absolute_url())
-        r = self.client.post(u("join", self.group.slug))
+        r = self.client.post(get_url("join", self.group.slug))
         self.assertRedirects(r, self.group.get_absolute_url())
 
 
