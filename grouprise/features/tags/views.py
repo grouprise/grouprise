@@ -49,7 +49,7 @@ class TagGroup(PermissionMixin, FormView):
         return super().form_valid(form)
 
     def get_form_kwargs(self):
-        self.tag = self.get_tag()
+        self.tag = self.get_or_create_tag()
         kwargs = super().get_form_kwargs()
         kwargs["group_queryset"] = self.request.user.gestalt.groups.exclude(
             tags__in=[self.tag]
@@ -62,7 +62,7 @@ class TagGroup(PermissionMixin, FormView):
     def get_success_url(self):
         return reverse("tag", args=(self.tag.slug,))
 
-    def get_tag(self):
+    def get_or_create_tag(self):
         slug = self.kwargs.get("slug")
         tag, _ = Tag.objects.get_or_create(slug=slug, defaults={"name": slug})
         return tag
