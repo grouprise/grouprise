@@ -18,7 +18,11 @@ class Detail(PermissionMixin, ListView):
     template_name = "tags/detail.html"
 
     def get_queryset(self):
-        self.tag = self.get_tag()
+        try:
+            self.tag = Tag.objects.get(slug=self.kwargs.get("slug"))
+        except Tag.DoesNotExist:
+            # the result is empty if no matching tag is found
+            return super().get_queryset().none()
         self.groups = Group.objects.filter(tags__in=[self.tag])
         tagged_content_query = Q(content__tags__in=[self.tag])
         tagged_group_content_query = Q(entity_type=Group.content_type) & Q(
