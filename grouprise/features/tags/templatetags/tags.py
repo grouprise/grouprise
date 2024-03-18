@@ -1,12 +1,10 @@
 from django import template
-from taggit.models import Tag
 
-from grouprise.features.tags.settings import TAG_SETTINGS
+from grouprise.features.tags.utils import get_sorted_featured_tags
 
 register = template.Library()
 
 
 @register.inclusion_tag("tags/_sidebar_list.html")
 def sidebar_tags():
-    tags = Tag.objects.filter(id__in=TAG_SETTINGS.FEATURED_TAG_IDS).order_by("name")
-    return {"tags": tags}
+    return {"tags": get_sorted_featured_tags()}
