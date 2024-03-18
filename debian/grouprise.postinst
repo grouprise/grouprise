@@ -10,6 +10,7 @@ GROUPRISE_SETTINGS_FILE="$DIR_ETC/conf.d/100-package.yaml"
 DIR_HOME="/var/lib/grouprise"
 DIR_MEDIA="/var/lib/grouprise/media"
 DIR_STATIC="/var/lib/grouprise/static"
+DIR_RUNTIME="/run/grouprise"
 
 # This includes won’t work on systems not based on debian, but should be safe to ignore.
 # shellcheck disable=SC1091
@@ -81,6 +82,9 @@ configure_grouprise() {
 
 
 grouprise_settings() {
+    # Create the runtime directory. Otherwise the cache initialization may fail.
+    mkdir -p "$DIR_RUNTIME"
+    chown "$PKG_USER": "$DIR_RUNTIME"
     # write settings with root privileges - otherwise we could not write to files below /etc/
     [ "$1" = "set" ] && export GROUPRISE_USER=root
     grouprisectl grouprise_settings --modifiable-config="$GROUPRISE_SETTINGS_FILE" "$@"
