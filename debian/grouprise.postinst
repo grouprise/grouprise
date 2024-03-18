@@ -96,6 +96,8 @@ if [ "$1" = "configure" ]; then
 
     if ! getent passwd "$PKG_USER" >/dev/null; then
         # "--force-badname" is required before Bookworm
+        # "--no-create-home" avoids the warning regarding wrong ownership (due to the directory
+        #     being part of the deb package).
         adduser \
             --force-badname \
             --quiet \
@@ -103,6 +105,7 @@ if [ "$1" = "configure" ]; then
             --disabled-password \
             --ingroup "$PKG_GROUP" \
             --home "$DIR_HOME" \
+            --no-create-home \
             "$PKG_USER"
         # The directory /var/lib/grouprise/site-data/ is created by the package (before postinst),
         # thus we need to enforce the ownership of our home directory.
