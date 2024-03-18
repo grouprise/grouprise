@@ -17,7 +17,7 @@ from grouprise.core.views import PermissionMixin, TemplateFilterMixin
 from grouprise.features.associations import models as associations
 from grouprise.features.content.filters import ContentFilterSet
 from grouprise.features.groups import filters, forms, models
-from grouprise.features.groups.forms import RecommendForm
+from grouprise.features.groups.forms import RecommendForm, CreateForm
 from grouprise.features.groups.models import Group
 from grouprise.features.groups.notifications import RecommendNotification
 from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
@@ -26,7 +26,7 @@ from grouprise.features.matrix_chat.settings import MATRIX_SETTINGS
 class Create(PermissionMixin, CreateView):
     permission_required = "groups.create_group"
     model = Group
-    fields = ("name",)
+    form_class = CreateForm
     template_name = "groups/create.html"
 
     def get_form_kwargs(self):

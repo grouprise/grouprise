@@ -8,6 +8,7 @@
     <form method="post">
         {% csrf_token %}
         {% field form.name %}
+        {% field form.tags %}
         <button class="btn btn-primary">{% trans 'Create group' %}</button>
     </form>
 {% endblock %}

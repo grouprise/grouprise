@@ -5,6 +5,20 @@ from grouprise.core.settings import get_grouprise_site
 from grouprise.features.tags.forms import FeaturedTagInputField
 
 from . import models
+from ..tags.settings import TAG_SETTINGS
+
+
+class CreateForm(forms.ModelForm):
+    tags = FeaturedTagInputField("group-tags", required=False)
+
+    class Meta:
+        model = models.Group
+        fields = ["name", "tags"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if TAG_SETTINGS.MIN_FEATURED_GROUP_TAG_COUNT == 0:
+            del self.fields["tags"]
 
 
 class RecommendForm(forms.Form):
