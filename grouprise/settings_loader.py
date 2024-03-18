@@ -854,10 +854,8 @@ class StylesheetsConfig(ListConfig):
         for item in value:
             path = item["path"]
             media = item.get("media")
-            if media:
-                line = f'<link rel="stylesheet" href="{path}" media="{media}">'
-            else:
-                line = f'<link rel="stylesheet" href="{path}">'
+            media_attr = f' media="{media}"' if media else ""
+            line = f'<link rel="stylesheet" href="{path}"{media_attr}>'
             raw_lines.append(line)
         super().apply_to_settings(settings, raw_lines)
 
