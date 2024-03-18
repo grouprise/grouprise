@@ -601,12 +601,20 @@ class CacheStorageConfig(ConfigBase):
             # unprivileged user: accept the chosen backend
             dest["BACKEND"] = CACHE_BACKENDS_MAP[backend]
             if backend == "filesystem":
+                cache_path: str = dest.get("LOCATION")
+                # The cache directory needs to exist in order to check its capacity.
+                try:
+                    os.makedirs(cache_path, exist_ok=True)
+                except OSError as exc:
+                    logger.warning(
+                        "Failed to create cache directory ('%s'): %s", cache_path, exc
+                    )
                 # determine a maximum cache size (or use the configured size)
                 try:
                     max_size = value["size_limit"]
                 except KeyError:
                     # determine the size of the target filesystem und use half of it
-                    max_size = guess_suitable_cache_size(dest.get("LOCATION"))
+                    max_size = guess_suitable_cache_size(cache_path)
                 logging.info("Limiting the cache size to %d bytes", max_size)
                 # This value is only used by 'diskcache.DjangoCache'.
                 dest["OPTIONS"]["size_limit"] = max_size
