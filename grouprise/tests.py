@@ -185,11 +185,13 @@ DJANGO_SETTINGS_EXAMPLE = {
         "ENTITY_SLUG_BLACKLIST": DEFAULT_SLUG_DENYLIST + ("local",),
         "FEED_IMPORTER_GESTALT_ID": 23,
         "HEADER_ITEMS": [
-            '<link rel="stylesheet" href="/custom.css">',
-            '<link rel="stylesheet" href="/print.css" media="print">',
             '<script src="/foo.js" />',
             '<script src="/bar.js" async defer />',
             '<script type="application/javascript">alert("hello");</script>',
+        ],
+        "FOOTER_ITEMS": [
+            '<link rel="stylesheet" href="/custom.css">',
+            '<link rel="stylesheet" href="/print.css" media="print">',
         ],
         "HOOK_SCRIPT_PATHS": ["/usr/local/bin/foo"],
         "MAILINGLIST_ENABLED": False,
@@ -322,11 +324,11 @@ class SettingsLoaderTest(TestCase):
     def test_list_append(self):
         """verify that items can be added to existing lists"""
         stylesheet_pattern = '<link rel="stylesheet" href="/{}">'
-        target = {"GROUPRISE": {"HEADER_ITEMS": [stylesheet_pattern.format("foo")]}}
+        target = {"GROUPRISE": {"FOOTER_ITEMS": [stylesheet_pattern.format("foo")]}}
         import_settings_from_dict(target, {"stylesheets": [{"path": "/bar"}]})
         wanted_result = copy.deepcopy(DJANGO_SETTINGS_MINIMAL)
         wanted_result.setdefault("GROUPRISE", {})
-        wanted_result["GROUPRISE"]["HEADER_ITEMS"] = [
+        wanted_result["GROUPRISE"]["FOOTER_ITEMS"] = [
             stylesheet_pattern.format("foo"),
             stylesheet_pattern.format("bar"),
         ]

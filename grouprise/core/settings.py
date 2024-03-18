@@ -118,6 +118,7 @@ CORE_SETTINGS = LazySettingsResolver(
     # branding
     CLAIMS=_GR.get("CLAIMS", []),
     HEADER_ITEMS=_GR.get("HEADER_ITEMS", []),
+    FOOTER_ITEMS=_GR.get("FOOTER_ITEMS", []),
     LOGO_BACKDROP=_GR.get(
         "BRANDING_LOGO_BACKDROP", static("core/logos/logo-backdrop.svg")
     ),

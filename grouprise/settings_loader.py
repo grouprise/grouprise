@@ -1440,7 +1440,7 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             minimum=0,
         ),
         StylesheetsConfig(
-            name="stylesheets", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
+            name="stylesheets", django_target=("GROUPRISE", "FOOTER_ITEMS"), append=True
         ),
         ScriptsConfig(
             name="scripts", django_target=("GROUPRISE", "HEADER_ITEMS"), append=True
