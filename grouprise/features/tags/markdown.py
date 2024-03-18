@@ -49,14 +49,19 @@ class TagReferencePattern(inlinepatterns.ReferenceInlineProcessor):
         result_tag = self.makeTag(
             urls.reverse("tag", args=[tag.slug]),
             tag_name,
-            tag_group,
+            tag_slug=tag.slug,
+            group_label=tag_group,
         )
         return (result_tag, *m.span())
 
-    def makeTag(self, href, label, group_label: str = None):
+    def makeTag(self, href, label, tag_slug: str = "", group_label: str = ""):
+        # NOTE: attributes may be stripped, if they’re not listed in
+        #       content_allowed_attributes in grouprise.core.markdown
         link_el = etree.Element("a")
         link_el.set("href", href)
         link_el.set("class", "tag")
+        if tag_slug:
+            link_el.set("data-tag-slug", tag_slug)
         hash_el = etree.Element("span")
         hash_el.set("class", "tag-hash")
         hash_el.text = "#"

@@ -147,6 +147,7 @@ content_allowed_attributes = {
         "data-gestaltlink-ref",
         "data-grouplink-ref",
         "data-tag-group-key",
+        "data-tag-slug",
     ],
     "span": ["class"],
     "code": ["class"],

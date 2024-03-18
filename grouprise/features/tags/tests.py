@@ -110,13 +110,13 @@ class TaggedGroupTests(TaggedGroupMixin, AuthenticatedMemberMixin, Test):
 
 class TagRenderingTests(RenderingTest):
     SIMPLE_TAG_HTML = (
-        '<a class="tag" href="/stadt/tags/my-simple-tag/">'
+        '<a class="tag" href="/stadt/tags/my-simple-tag/" data-tag-slug="my-simple-tag">'
         '<span class="tag-hash">#</span>'
         '<span class="tag-name">my-simple-tag</span>'
         "</a>"
     )
     GROUP_TAG_HTML = (
-        '<a class="tag" href="/stadt/tags/newyearresolutionbekind/" data-tag-group-key="newyearresolution">'  # noqa: E501
+        '<a class="tag" href="/stadt/tags/newyearresolutionbekind/" data-tag-slug="newyearresolutionbekind" data-tag-group-key="newyearresolution">'  # noqa: E501
         '<span class="tag-group">'
         '<span class="tag-hash">#</span>NewYearResolution:'
         "</span>"

@@ -6,15 +6,17 @@ register = template.Library()
 
 
 @register.inclusion_tag("tags/_tag.html", name="tag")
-def render_tag(tag):
+def render_tag(tag, **kwargs):
     tag_group, tag_name = get_tag_render_data(tag.name)
-    return {
+    context = {
         "tag": {
             "group": tag_group,
             "name": tag_name,
             "slug": tag.slug,
         }
     }
+    context.update(kwargs)
+    return context
 
 
 @register.inclusion_tag("tags/_tags.html", name="tags")
