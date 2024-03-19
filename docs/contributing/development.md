@@ -27,6 +27,15 @@ make app_run
 Now you can visit the web interface of the development system in your browser: http://localhost:5000/
 
 
+## Update release notes
+
+Notable changes (for users, moderators or admins) should be mentioned in the release notes.
+
+A new release notes file should be created in `docs/releases/`, if the release notes for the
+upcoming version do not exist, yet.
+This new file should be referenced in the *hidden* section of `docs/release/index.rst`.
+
+
 ## Translate content
 
 Run `make django-translate` for collecting the translatable strings and for opening a translation
