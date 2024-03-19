@@ -50,8 +50,7 @@ test_py_prepare: app_local_settings
 	@# is resolved, which breaks a lot of our python-tests. As this template only includes
 	@# asset metadata and JavaScript & CSS file references, we simply make sure that the file
 	@# exists during the test run. The content itself is of no relevance to the python-tests.
-	mkdir -p $(dir $(ASSETS_TEMPLATE))
-	touch $(ASSETS_TEMPLATE)
+	test -f $(ASSETS_TEMPLATE) || ( mkdir -p $(dir $(ASSETS_TEMPLATE)) && touch $(ASSETS_TEMPLATE) )
 
 .PHONY: test_js
 test_js: $(STAMP_NODE_MODULES) lint_js
