@@ -5,6 +5,7 @@ import email.parser
 import email.policy
 import functools
 import logging
+import os
 import random
 import signal
 import smtplib
@@ -75,7 +76,7 @@ class ContributionLMTPD:
             self._error_writer = functools.partial(logger.error)
         else:
             self._error_writer = error_writer
-        self.host = "localhost" if host is None else host
+        self.host = os.getenv("GROUPRISE_LMTPD_HOST", "localhost") if host is None else host
         self.port = random.randint(16384, 32767) if port is None else port
         processor = ContributionMailProcessor()
         self._handler = ContributionHandler(

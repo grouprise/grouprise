@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -eu
+
+exec "$VIRTUAL_ENV/bin/python3" "$@"
