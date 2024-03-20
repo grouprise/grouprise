@@ -39,7 +39,7 @@ RUN printf 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >/etc/locale.gen && \
 
 # install custom dependencies not available in debian
 COPY requirements.txt /tmp
-RUN pip3 install -r /tmp/requirements.txt
+RUN pip3 install --break-system-packages -r /tmp/requirements.txt
 
 # configure runtime environment
 RUN adduser --force-badname --gecos '' --disabled-password --shell /bin/bash --home /var/lib/grouprise _grouprise
