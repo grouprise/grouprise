@@ -56,7 +56,8 @@ export default (el, { conf }) => {
       return h(PointsOfInterest, {
         props: {
           pointsOfInterest: this.pointsOfInterest,
-          height: conf.height
+          height: conf.height,
+          restrictView: conf.restrictView,
         }
       })
     }

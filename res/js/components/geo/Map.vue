@@ -4,6 +4,8 @@
     :style="{ height, width: '100%' }"
     :zoom="zoom"
     :center="center"
+    :min-zoom="realMinZoom"
+    :max-bounds="maxBounds"
     @update:zoom="zoom = $event"
     @update:center="center = $event"
     @update:bounds="bounds = $event"
@@ -13,6 +15,7 @@
       :url="tileServer.url"
       :attribution="tileServer.attribution"
       :detect-retina="true"
+      :bounds="maxBounds"
     />
     <slot />
   </LMap>
@@ -41,6 +44,14 @@
       height: {
         type: String,
         default: '300px'
+      },
+      maxBounds: {
+        type: Object,
+        default: null,
+      },
+      minZoom: {
+        type: Number,
+        default: null,
       }
     },
     data () {
@@ -50,7 +61,18 @@
         bounds: null
       }
     },
-    mounted () {
+    computed: {
+      realMinZoom () {
+        if (this.minZoom !== null) return this.minZoom
+        if (this.maxBounds !== null) {
+          const map = this.$refs.map?.mapObject
+          if (map) return map.getBoundsZoom(this.maxBounds)
+        }
+        return null
+      }
+    },
+    async mounted () {
+      await this.$nextTick()
       this.setPosition(this.initialCenter)
     },
     methods: {

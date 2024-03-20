@@ -6,3 +6,7 @@ export function createInitials (name, _default = '?') {
     .join('')
     .substr(0, 4)
 }
+
+export function isTruthy (value) {
+  return ["1", "on", "yes", "true"].includes(String(value).toLowerCase())
+}

@@ -1,4 +1,5 @@
 <div data-component="poi"
      {% if api_loader_query %}data-poi-api-loader-query="{{ api_loader_query }}"{% endif %}
-     {% if height %}data-poi-height="{{ height }}"{% endif %}>
-</div>
+     {% if height %}data-poi-height="{{ height }}"{% endif %}
+     {% if restrict_view %}data-poi-restrict-view="{{ restrict_view }}"{% endif %}
+></div>
