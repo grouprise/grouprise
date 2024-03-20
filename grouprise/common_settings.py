@@ -124,6 +124,8 @@ ROOT_URLCONF = "grouprise.urls"
 
 WSGI_APPLICATION = "grouprise.wsgi.application"
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
