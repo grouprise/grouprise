@@ -81,7 +81,7 @@ class GroupSet(viewsets.ReadOnlyModelViewSet):
         "name",
         "slug",
     )
-    filter_class = GroupFilter
+    filterset_class = GroupFilter
     queryset = Group.objects.all()
 
 
@@ -90,7 +90,7 @@ class ImageSet(
 ):
     serializer_class = ImageSerializer
     filter_fields = ("id", "creator")
-    filter_class = ImageFilter
+    filterset_class = ImageFilter
 
     def get_queryset(self):
         user = self.request.user
