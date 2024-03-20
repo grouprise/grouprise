@@ -1,0 +1,48 @@
+.leaflet-popup:has(.group-preview) {
+    & .leaflet-popup-content {
+        margin: -2px;
+    }
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 4px;
+        contain: paint;
+    }
+
+    .group-preview,
+    .group-preview-body {
+        border-radius: 0;
+        border: none;
+    }
+
+    .leaflet-popup-close-button.leaflet-popup-close-button {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        border-radius: 50%;
+        background:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E")
+            no-repeat
+            50% 50% / 55%
+            rgba(255, 255, 255, 0.75)
+        ;
+        top: .5rem;
+        right: .5rem;
+        transition: background-color .2s, outline-color .2s;
+        color: transparent;
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+
+        &:hover,
+        &:focus {
+            background-color: white;
+            outline-color: black;
+        }
+    }
+
+    .leaflet-popup-tip-container {
+        margin-top: -1px;
+    }
+}
