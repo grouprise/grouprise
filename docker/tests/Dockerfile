@@ -50,7 +50,6 @@ RUN python3 -m venv --system-site-packages "$VIRTUAL_ENV" \
     && "$VIRTUAL_ENV/bin/pip3" install -r requirements.txt
 
 # force makefilet initialization
-ENV MAKEFILET_DOWNLOAD_URL_TEMPLATE=https://git.hack-hro.de/kmohrf/makefilet/-/archive/__VERSION__/makefilet-__VERSION__.tar.gz
 ADD --chown=build ./Makefile ./
 ADD --chown=build ./make.d/ ./make.d/
 RUN make help >/dev/null
