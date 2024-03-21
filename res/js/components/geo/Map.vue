@@ -6,6 +6,7 @@
     :center="center"
     :min-zoom="realMinZoom"
     :max-bounds="maxBounds"
+    :options="{ gestureHandling: true }"
     @update:zoom="zoom = $event"
     @update:center="center = $event"
     @update:bounds="bounds = $event"
@@ -22,8 +23,11 @@
 </template>
 
 <script>
+  import { GestureHandling } from 'leaflet-gesture-handling'
   import { LMap, LTileLayer } from 'vue2-leaflet'
   import { LatLngToBounds } from 'app/components/geo/common'
+
+  window.L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling)
 
   export default {
     name: 'GroupriseMap',

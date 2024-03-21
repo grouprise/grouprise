@@ -82,6 +82,7 @@
     "font-awesome": "^4.7.0",
     "get-input-selection": "^1.1.4",
     "imagesloaded": "^4.1.4",
+    "leaflet-gesture-handling": "^1.2.2",
     "lodash": "^4.17.19",
     "lodash-move": "^1.1.1",
     "luett": "^2.6.0",
