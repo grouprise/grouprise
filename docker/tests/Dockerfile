@@ -65,6 +65,6 @@ RUN rm -rf grouprise.conf.d/* && make app_local_settings
 RUN rm -f grouprise/core/templates/core/assets/_assets.html && touch grouprise/core/templates/core/assets/_assets.html
 
 FROM base AS test-python
-ENV GROUPRISE_LMTPD_HOST=127.0.0.1
+ENV GROUPRISE_DEFAULT_LMTPD_HOST=127.0.0.1
 ENTRYPOINT ["/usr/local/bin/venv-python", "manage.py"]
 CMD ["test", "--verbosity", "1"]
