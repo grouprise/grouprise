@@ -1,6 +1,7 @@
 import html
 import json
 import random
+from typing import Iterable, Literal, Union
 
 import bleach as python_bleach
 import markdown as python_markdown
@@ -18,6 +19,30 @@ from grouprise.core.views import app_config
 from . import Link
 
 register = template.Library()
+
+NON_INTERACTIVE_INLINE_TAGS = [
+    "b",
+    "big",
+    "i",
+    "small",
+    "tt",
+    "abbr",
+    "acronym",
+    "cite",
+    "code",
+    "dfn",
+    "em",
+    "kbd",
+    "strong",
+    "samp",
+    "var",
+    "br",
+    "q",
+    "s",
+    "span",
+    "sub",
+    "sup",
+]
 
 
 @register.inclusion_tag("core/_field.html")
@@ -115,7 +140,11 @@ def render_app_config():
     return safestring.mark_safe(app_config.serialize())
 
 
-def bleach(text, disable_tags=tuple(), except_for=tuple()):
+def bleach(
+    text,
+    disable_tags: Union[Literal["all"], Iterable[str]] = tuple(),
+    except_for: Iterable[str] = tuple(),
+):
     if disable_tags == "all":
         allowed_tags = set()
     else:
@@ -166,6 +195,10 @@ def markdown(
     result = python_markdown.markdown(text, extensions=extensions)
     if preset == "linkonly":
         result = bleach(result, disable_tags="all", except_for=("a", "span"))
+    elif preset == "noninteractive-inline":
+        result = bleach(
+            result, disable_tags="all", except_for=NON_INTERACTIVE_INLINE_TAGS
+        )
     elif filter_tags:
         disabled_tags = tuple(disable_tags.split(","))
         result = bleach(result, disabled_tags)

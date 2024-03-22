@@ -1,7 +1,7 @@
 {% load cache %}
 {% load i18n %}
 
-{% kwacro preview_body %}
+{% kwacro preview_body markdown_preset='linkonly' %}
     <header class="group-preview-header">
         {% with cover_url=group.get_cover_url %}
             {% if cover_url %}
@@ -33,7 +33,7 @@
         <h3>{{ group.name }}</h3>
         <p>
             {% if group.description %}
-                {% markdown group.description preset='linkonly' %}
+                {% markdown group.description preset=markdown_preset %}
             {% else %}
                 {% blocktrans trimmed %}This group did not leave a statement at {{ about_group }}.{% endblocktrans %}
             {% endif %}
@@ -43,7 +43,7 @@
 
 {% if link %}
     <a class="group-preview" href="{{ group.get_absolute_url }}">
-        {% usekwacro preview_body %}
+        {% usekwacro preview_body markdown_preset='noninteractive-inline' %}
     </a>
 {% else %}
     <div class="group-preview">
