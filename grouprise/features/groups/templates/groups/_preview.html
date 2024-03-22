@@ -6,7 +6,7 @@
         {% with cover_url=group.get_cover_url %}
             {% if cover_url %}
                 <div class="group-preview-image">
-                    <img src="{{ cover_url }}" />
+                    <img src="{{ cover_url }}" alt=""/>
                 </div>
             {% else %}
                 <div class="group-preview-image group-preview-image-placeholder"></div>
