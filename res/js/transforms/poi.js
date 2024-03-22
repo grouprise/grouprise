@@ -32,7 +32,7 @@ function loadPointsOfInterestFromAPI(apiLoaderQuery) {
 }
 
 export default (el, { conf }) => {
-  const containerAdapter = createContainerAdapter(el)
+  const containerAdapter = createContainerAdapter(el, 'child')
   const state = {
     pointsOfInterest: el.textContent.trim()
       ? JSON.parse(el.textContent)
@@ -49,9 +49,6 @@ export default (el, { conf }) => {
   const vue = new Vue({
     el: `#${containerAdapter.container.id}`,
     data: state,
-    created () {
-      containerAdapter.replacedEl.hide()
-    },
     render (h) {
       return h(PointsOfInterest, {
         props: {

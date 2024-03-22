@@ -21,14 +21,26 @@ export function createDisplayControl (...args) {
   }
 }
 
-export function createContainerAdapter (el) {
+/**
+ *
+ * @param {HTMLElement} el
+ * @param {'after' | 'child'} position
+ * @returns {{container: HTMLDivElement, replacedEl: {hide: *, show: *}, destroy: *}}
+ */
+export function createContainerAdapter (el, position = 'after') {
   const id = el.id || randomId(20, 'a')
   const containerWrapper = document.createElement('div')
   containerWrapper.id = `${id}-container-wrapper`
   const container = document.createElement('div')
   container.id = `${id}-container`
   containerWrapper.appendChild(container)
-  insertElement.after(el, containerWrapper)
+  if (position === 'after') {
+    insertElement.after(el, containerWrapper)
+  } else if (position === 'child') {
+    el.appendChild(containerWrapper)
+  } else {
+    throw new Error('Invalid container position: must be "after" or "child".')
+  }
 
   return {
     container,
