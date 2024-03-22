@@ -51,6 +51,7 @@ function init (searchIn = document) {
   asyncComponent('poi', () => import('./transforms/poi'), opts)
   asyncComponent('tabs', () => import('./transforms/tabs'), opts)
   asyncComponent('taginput', () => import('./transforms/taginput'), opts)
+  asyncComponent('scroll-container', () => import('./transforms/scroll-container'), opts)
 
   // initialize components not based on component interface
   asyncComponent(
