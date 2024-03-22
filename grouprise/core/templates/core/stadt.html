@@ -31,8 +31,8 @@
                 {% block header %}{% endblock %}
 
                 {% block content_row %}
-                    <div class="row">
-                        <div class="col-md-8">
+                    <div class="{% block content_row_class %}row{% endblock %}">
+                        <div class="{% block content_row_main_class %}col-md-8{% endblock %}">
                             <div class="content-wrap">
                                 {% block content_header %}{% endblock %}
 
@@ -56,12 +56,14 @@
                                 {% block content %}{% endblock %}
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <aside class="sidebar">
-                                <div class="content-spacer decoration-striped"></div>
-                                {% block sidebar %}{% endblock %}
-                            </aside>
-                        </div>
+                        {% block sidebar_wrapper %}
+                            <div class="{% block content_row_sidebar_class %}col-md-4{% endblock %}">
+                                <aside class="sidebar">
+                                    <div class="content-spacer decoration-striped"></div>
+                                    {% block sidebar %}{% endblock %}
+                                </aside>
+                            </div>
+                        {% endblock %}
                     </div>
                 {% endblock %}
             </div>
