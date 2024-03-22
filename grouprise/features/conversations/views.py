@@ -36,7 +36,7 @@ class GroupConversations(PermissionMixin, ListView):
     permission_required = "conversations.list_group"
     model = Association
     template_name = "conversations/list_group.html"
-    paginate_by = 10
+    paginate_by = 12
 
     def get_content(self):
         return Association.objects.can_view(self.request.user)

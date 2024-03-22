@@ -40,7 +40,7 @@ class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailVi
     permission_required = "groups.view"
     model = models.Group
     filterset_class = ContentFilterSet
-    paginate_by = 10
+    paginate_by = 12
     template_name = "groups/detail.html"
 
     def get_queryset(self):
@@ -78,7 +78,7 @@ class Detail(PermissionMixin, TemplateFilterMixin, MultipleObjectMixin, DetailVi
 class List(PermissionMixin, FilterView):
     permission_required = "groups.view_list"
     filterset_class = filters.Group
-    paginate_by = 10
+    paginate_by = 12
     strict = False
 
     def get_content(self):

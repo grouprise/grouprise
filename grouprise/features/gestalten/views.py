@@ -58,7 +58,7 @@ class Detail(
 ):
     permission_required = "gestalten.view"
     model = models.Gestalt
-    paginate_by = 10
+    paginate_by = 12
     template_name = "gestalten/detail.html"
 
     def get_context_data(self, **kwargs):
@@ -79,7 +79,7 @@ class List(PermissionMixin, generic.ListView):
     permission_required = "gestalten.view_list"
     queryset = models.Gestalt.objects.filter(public=True)
     ordering = ["-score", "-user__date_joined"]
-    paginate_by = 10
+    paginate_by = 12
     template_name = "gestalten/list.html"
 
     def get_content(self):

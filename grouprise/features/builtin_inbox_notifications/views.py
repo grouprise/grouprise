@@ -10,7 +10,7 @@ class ActivityView(PermissionMixin, ListView):
     model = Association
     permission_required = "associations.list_activity"
     template_name = "associations/list_activity.html"
-    paginate_by = 10
+    paginate_by = 12
 
     def get_queryset(self):
         return self.request.user.gestalt.notifications.order_by("-created_on")

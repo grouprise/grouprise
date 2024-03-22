@@ -25,7 +25,7 @@ from . import forms
 class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = "content.list"
     model = associations.Association
-    paginate_by = 10
+    paginate_by = 12
     template_name = "content/list.html"
 
     def get_queryset(self):

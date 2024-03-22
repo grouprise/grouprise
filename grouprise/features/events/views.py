@@ -30,7 +30,7 @@ class List(grouprise.core.views.PermissionMixin, django.views.generic.ListView):
     permission_required = "events.view_list"
     model = associations.Association
     template_name = "events/list.html"
-    paginate_by = 10
+    paginate_by = 12
 
     def get_content(self):
         return associations.Association.objects.can_view(self.request.user)

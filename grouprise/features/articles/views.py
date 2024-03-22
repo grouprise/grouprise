@@ -11,7 +11,7 @@ class List(PermissionMixin, generic.ListView):
     permission_required = "articles.view_list"
     model = associations.Association
     template_name = "articles/list.html"
-    paginate_by = 10
+    paginate_by = 12
 
     def get_content(self):
         return associations.Association.objects.can_view(self.request.user)

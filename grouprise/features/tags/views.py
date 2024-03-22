@@ -14,7 +14,7 @@ from . import forms
 class Detail(PermissionMixin, ListView):
     permission_required = "tags.view"
     model = associations.Association
-    paginate_by = 10
+    paginate_by = 12
     template_name = "tags/detail.html"
 
     def get_queryset(self):

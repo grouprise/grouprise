@@ -93,7 +93,7 @@ class Privacy(django.views.generic.TemplateView):
 
 class Search(PermissionMixin, ListView):
     permission_required = "stadt.search"
-    paginate_by = 10
+    paginate_by = 12
     template_name = "stadt/search.html"
 
     def get_queryset(self):
