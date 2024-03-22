@@ -17,6 +17,9 @@ class Image(models.Model):
     preview_content = ImageSpecField(
         source="file", processors=[Transpose(), SmartResize(200, 200)]
     )
+    square_500 = ImageSpecField(
+        source="file", processors=[Transpose(), SmartResize(500, 500)]
+    )
     preview_gallery = ImageSpecField(
         source="file", processors=[Transpose(), ResizeToFit(250)]
     )
