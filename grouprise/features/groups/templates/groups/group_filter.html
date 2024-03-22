@@ -20,22 +20,32 @@
 {% endblock %}
 
 {% block content %}
-    {% dismissible 'group-list-order' %}
-        <div class="disclaimer content-block">
-            {% dismiss 'group-list-order' %}
-            <p>{% trans 'Active groups with a lot of members or subscribes will be show first in a listing.' %}</p>
-        </div>
-    {% enddismissible %}
-    <form class="form-search" method="get">
-        {% field filter.form.name %}
-        <button class="btn btn-default">{% trans 'Search for groups' %}</button>
-    </form>
-    <ol class="groups" data-component="masonry">
-        {% for group in object_list %}
-            <li>
-                {% include 'groups/_preview.html' with group=group link=True %}
-            </li>
-        {% endfor %}
-    </ol>
-    {% pagination _('More Groups') %}
+    {% block group_list_order_note %}
+        {% dismissible 'group-list-order' %}
+            <div class="disclaimer content-block">
+                {% dismiss 'group-list-order' %}
+                <p>{% trans 'Active groups with a lot of members or subscribes will be show first in a listing.' %}</p>
+            </div>
+        {% enddismissible %}
+    {% endblock %}
+    {% block group_search %}
+        <form class="form-search" method="get">
+            {% field filter.form.name %}
+            <button class="btn btn-default">{% trans 'Search for groups' %}</button>
+        </form>
+    {% endblock %}
+    {% block group_list %}
+        <ol class="groups"{% block masonry %} data-component="masonry"{% endblock %}>
+            {% for group in object_list %}
+                {% block group_item %}
+                    <li>
+                        {% include 'groups/_preview.html' with group=group link=True %}
+                    </li>
+                {% endblock group_item %}
+            {% endfor %}
+        </ol>
+    {% endblock %}
+    {% block group_pagination %}
+        {% pagination _('More Groups') %}
+    {% endblock %}
 {% endblock %}
