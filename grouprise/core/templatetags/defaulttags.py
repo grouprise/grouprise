@@ -1,3 +1,4 @@
+import collections
 import html
 import json
 import random
@@ -381,3 +382,13 @@ def do_usemacro(parser, token):
     )
     macro.parser = parser
     return UseMacroNode(macro, fe_args, fe_kwargs)
+
+
+named_cycle_index = collections.defaultdict(lambda: 0)
+
+
+@register.simple_tag(name="named_cycle")
+def named_cycle(cycle_name, *args):
+    idx = named_cycle_index[cycle_name]
+    named_cycle_index[cycle_name] += 1
+    return args[idx % len(args)]
