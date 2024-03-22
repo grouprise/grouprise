@@ -1,5 +1,5 @@
-<span class="tags">
+<{% if tag_list_wrapper_el %}{{ tag_list_wrapper_el }}{% else %}span{% endif %} class="{% if tag_list_class %}{{ tag_list_class }}{% else %}tags{% endif %}">
     {% for tag_item in tags %}
         {% tag tag_item %}
     {% endfor %}
-</span>
+</{% if tag_list_wrapper_el %}{{ tag_list_wrapper_el }}{% else %}span{% endif %}>
