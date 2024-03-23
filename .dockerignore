@@ -2,6 +2,11 @@ media/
 build/
 node_modules/
 grouprise.egg-info/
+res/
+static/
+xapian_index/
 .git/
 .idea/
+.mypy_cache/
 db.sqlite3
+huey.sqlite

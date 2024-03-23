@@ -60,7 +60,8 @@ $(ASSETS_TEMPLATE):
 .PHONY: _run-in-test-container
 _run-in-test-container:
 	@echo "NOTE: Initial test environment creation or regeneration after dependency updates might take a few minutes..." >&2
-	$(CONTAINER_RUNNER) run --rm -it "$$($(CONTAINER_RUNNER) build --file ./docker/tests/Dockerfile --target "$(TARGET)" --quiet .)" $(COMMAND)
+	container_id=$$("$(CONTAINER_RUNNER)" build --file ./docker/tests/Dockerfile --target "$(TARGET)" --quiet .) \
+		&&  "$(CONTAINER_RUNNER)" run --rm -it "$$container_id" $(COMMAND)
 
 .PHONY: test-python-in-container
 test-python-in-container:
