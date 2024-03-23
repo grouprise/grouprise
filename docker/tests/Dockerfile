@@ -33,6 +33,11 @@ ADD ./docker/tests/venv-python /usr/local/bin/
 # switch to working directory with appropriate permissions
 RUN adduser --home /build --gecos '' build
 USER build
+# Somehow the `WORKDIR` below is not created with proper ownership (see `USER` above) when using
+# docker for building the image.
+# Maybe other container image builders create the WORKDIR with proper USER ownership without this
+# manual `install` call.
+RUN install --owner build -d /build/app
 WORKDIR /build/app
 
 # install asset dependencies
