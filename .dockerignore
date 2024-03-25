@@ -2,7 +2,6 @@ media/
 build/
 node_modules/
 grouprise.egg-info/
-res/
 static/
 xapian_index/
 .git/
