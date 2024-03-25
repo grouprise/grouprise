@@ -1,27 +1,31 @@
-<article class="content-preview">
-    {% if not hide_meta %}
-    <header class="content-header">
-        {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
-        <div class="flex-row">
-            <span class="content-type">
-                {% block content_type %}
-                    <span>Beitrag</span>
-                {% endblock %}
-            </span>
-            {% include 'content/_content_visibility.html' %}
-        </div>
-    </header>
-    {% endif %}
+<article class="{% block class %}content-preview{% endblock %}">
+    {% block meta %}
+        {% if not hide_meta %}
+            <header class="content-header">
+                {% block content_meta %}{% include 'content/_info.html' %}{% endblock %}
+                <div class="flex-row">
+                    <span class="content-type">
+                        {% block content_type %}
+                            <span>Beitrag</span>
+                        {% endblock %}
+                    </span>
+                    {% include 'content/_content_visibility.html' %}
+                </div>
+            </header>
+        {% endif %}
+    {% endblock %}
 
     <a href="{{ association.get_absolute_url }}" class="content-preview-body">
         <div class="content-preview-body-content">
-            {% block content_preview_image %}
-                {% if association.container.image %}
-                    <div class="content-image">
-                        <img src="{{ association.container.image.preview_content.url }}">
-                    </div>
-                {% endif %}
-            {% endblock %}
+            {% with image=association.container.image %}
+                {% block content_preview_image %}
+                    {% if image %}
+                        <div class="content-image">
+                            <img src="{{ image.preview_content.url }}" alt="">
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            {% endwith %}
             <div class="content-preview-text">
                 <div class="content-preview-header">
                     <h3 class="content-title">
@@ -32,11 +36,17 @@
                     {% endif %}
                 </div>
 
-                {% markdown association.container.versions.last.text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
+                {% with teaser_text=association.container.versions.last.text %}
+                    {% block teaser %}
+                        {% markdown teaser_text truncate=50 heading_baselevel=4 disable_tags="a,img" %}
+                    {% endblock %}
+                {% endwith %}
             </div>
         </div>
     </a>
-    <footer class="content-preview-footer">
-        <a href="{{ association.get_absolute_url }}" class="read-more">Zum Beitrag &hellip;</a>
-    </footer>
+    {% block footer %}
+        <footer class="content-preview-footer">
+            <a href="{{ association.get_absolute_url }}" class="read-more">Zum Beitrag &hellip;</a>
+        </footer>
+    {% endblock %}
 </article>
