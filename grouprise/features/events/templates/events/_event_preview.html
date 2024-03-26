@@ -1,0 +1,31 @@
+{% with event=association.container url=association.get_absolute_url %}
+    <{% if tag %}{{ tag }}{% else %}a{% endif %}{% block attrs %} {% if not tag or tag == "a" %}href="{{ url }}" {% endif %}class="{% block class %}event-preview{% endblock %}"{% endblock %}>
+        {% block time %}
+            <time datetime="{{ event.time|date:'c' }}" title="{% if event.all_day %}{{ event.time|date:'d. m. Y' }}{% else %}{{ event.time|date:'d. m. Y H:i' }}{% endif %}" class="event-preview-time">
+                {% block time_label %}
+                    <span class="sr-only">Am</span>
+                    <span>{{ event.time|date:'d' }}</span><br>
+                    <span>{{ event.time|date:'m' }}</span>
+                {% endblock %}
+            </time>
+        {% endblock %}
+
+        {% block description %}
+            <span class="event-preview-description">
+                {% block title %}
+                    <span class="event-preview-title">{{ event.title }}</span>
+                {% endblock title %}
+                {% block meta %}
+                    <span class="event-preview-meta">
+                        <span data-component="time time-from" datetime="{{ event.time|date:'c' }}">In {{ event.time|timeuntil }}</span>
+                        {% if show_group and association.entity.is_group  %}
+                            <span class="sr-only">Veranstaltet von</span>
+                            <span role="presentation">· Von</span>
+                            {{ association.entity }}
+                        {% endif %}
+                    </span>
+                {% endblock %}
+            </span>
+        {% endblock %}
+    </{% if tag %}{{ tag }}{% else %}a{% endif %}>
+{% endwith %}

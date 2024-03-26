@@ -1,0 +1,7 @@
+<ul class="events">
+    {% for association in objects %}
+        <li>
+            {% include "events/_event_preview.html" %}
+        </li>
+    {% endfor %}
+</ul>

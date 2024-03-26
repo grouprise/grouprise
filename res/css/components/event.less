@@ -1,6 +1,9 @@
 .events {
     margin: 0;
     padding: 0;
+    display: grid;
+    gap: .5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 
     > li {
         display: block;
@@ -8,9 +11,51 @@
 }
 
 .event-preview {
-    font-size: @font-size-small;
-    white-space: nowrap;
-    max-width: 100%;
-    overflow: hidden;
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    color: inherit;
+    text-decoration: none;
+    line-height: 1.05;
+
+    &:not(:last-child) {
+        margin-bottom: .5rem;
+    }
+}
+
+.event-preview-time {
+    font-weight: 900;
+    text-align: center;
+    font-variant: tabular-nums;
+    flex: none;
+    display: block;
+    min-width: 3cap;
+}
+
+.event-preview-description {
+    flex: 1;
+    min-width: 160px;
+    display: block;
+}
+
+.event-preview-title {
+    display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: balance;
+
+    .event-preview:hover &,
+    .event-preview:focus-visible & {
+        text-decoration: underline;
+    }
+}
+
+.event-preview-meta {
+    display: block;
+    margin-top: .25rem;
+    opacity: .65;
 }

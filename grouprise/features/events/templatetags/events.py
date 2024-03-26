@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from grouprise.core.utils import get_verified_locale
+from grouprise.core.templatetags import context_tag
 from grouprise.features.events.utils import EventCalendar, get_requested_time
 from grouprise.features.groups.models import Group
 
@@ -110,6 +111,19 @@ def _get_upcoming_context(context, associations, group=None, limit=None):
         "upcoming_remaining": max(0, upcoming_count - limit),
         "show_events_url": show_events_url,
     }
+
+
+@context_tag(register, takes_context=True, name="upcomingevents")
+def upcoming_events(context, associations, group=_Default, preview_length=5):
+    group: Optional[Group] = context.get("group") if group is _Default else group
+    return _get_upcoming_context(context, associations, group, limit=preview_length)
+
+
+@register.inclusion_tag("events/_sidebar_upcoming_events.html", takes_context=True)
+def sidebar_upcoming_events(context, associations, group=_Default, preview_length=5):
+    group: Optional[Group] = context.get("group") if group is _Default else group
+    context.update(_get_upcoming_context(context, associations, group, limit=preview_length))
+    return context
 
 
 @register.inclusion_tag("events/_sidebar_calendar.html", takes_context=True)

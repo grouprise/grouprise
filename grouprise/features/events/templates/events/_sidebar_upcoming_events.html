@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<div class="box box-striped">
+    <div class="box-inner">
+        <header class="box-header">
+            <h2 class="box-title">
+                {% block icon %}{% endblock %}
+                {% block title %}Nächste Veranstaltungen{% endblock %}
+            </h2>
+        </header>
+        <div class="box-content">
+            {% block list %}
+                {% include "events/_event_preview_list.html" with objects=upcoming %}
+            {% endblock %}
+            {% block link %}
+                {% if show_events_url %}
+                    <a href="{{ show_events_url }}" class="block mt-1">
+                        <strong>{% translate "Show all events" %}</strong>
+                    </a>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+</div>

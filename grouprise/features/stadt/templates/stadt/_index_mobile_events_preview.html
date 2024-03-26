@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load events %}
+
+{% upcomingevents paginator.object_list %}
+    {% if upcoming %}
+        <section class="{% block class %}hidden-md hidden-lg section p-0{% endblock class %}">
+            {% block title %}<p class="section-title-lg">Kommende Veranstaltungen</p>{% endblock %}
+            {% block list %}
+                {% include "events/_event_preview_list.html" with objects=upcoming %}
+            {% endblock %}
+            {% block link %}
+                {% if show_events_url %}
+                    <a href="{{ show_events_url }}" class="block mt-1">
+                        <strong>{% translate "Show all events" %}</strong>
+                    </a>
+                {% endif %}
+            {% endblock %}
+        </section>
+    {% endif %}
+{% endupcomingevents %}

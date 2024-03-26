@@ -11,56 +11,44 @@
         <div class="box-content" {% if component_id %}data-component="calendar" id="{{ component_id }}"{% endif %}>
             {% load events %}
             {% calendar associations size='preview' %}
-
-            {% if upcoming %}
-                <ul class="events">
-                    {% for association in upcoming %}
-                        <li>
-                            <div class="event-preview">
-                                {% time association.container.time suffix=':' all_day=association.container.all_day %}
-                                <a href="{{ association.get_absolute_url }}">{{ association.container.title }}</a>
-                                {% if show_group and association.entity.is_group %}
-                                    &middot;
-                                    {% link association.entity %}
-                                {% endif %}
-                            </div>
-                        </li>
-                    {% endfor %}
-                    {% if show_events_url %}
-                        <li>
-                            <div class="event-preview">
-                                <a href="{{ show_events_url }}">
-                                    <strong>{% translate "Show all events" %}</strong>
-                                </a>
-                            </div>
-                        </li>
-                    {% endif %}
-                </ul>
-            {% endif %}
+            {% block list %}
+                {% if upcoming %}
+                    {% include "events/_event_preview_list.html" with objects=upcoming %}
+                {% endif %}
+            {% endblock %}
+            {% block link %}
+                {% if show_events_url %}
+                    <a href="{{ show_events_url }}" style="display: block; margin-top: .5rem">
+                        <strong>{% translate "Show all events" %}</strong>
+                    </a>
+                {% endif %}
+            {% endblock %}
         </div>
 
-        {% if not hide_buttons %}
-            <div class="btn-toolbar btn-toolbar-right">
-                {% if actions|length > 1 %}
-                    <div class="dropdown-container">
-                        <input class="dropdown-state" id="calendar-more" type="checkbox" />
-                        <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
-                                <span class="btn-label">
-                                    Mehr <span class="caret"></span>
-                                </span>
-                        </label>
-                        <ul class="dropdown" id="calendar-more-dropdown" data-dropdown>
-                            {% for action, url in actions|slice:'1:' %}
-                                <li><a href="{{ url }}">{{ action }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+        {% block toolbar %}
+            {% if not hide_buttons %}
+                <div class="btn-toolbar btn-toolbar-right">
+                    {% if actions|length > 1 %}
+                        <div class="dropdown-container">
+                            <input class="dropdown-state" id="calendar-more" type="checkbox" />
+                            <label class="btn btn-link" for="calendar-more" data-component="openable" data-openable-target="#calendar-more-dropdown">
+                                    <span class="btn-label">
+                                        Mehr <span class="caret"></span>
+                                    </span>
+                            </label>
+                            <ul class="dropdown" id="calendar-more-dropdown" data-dropdown>
+                                {% for action, url in actions|slice:'1:' %}
+                                    <li><a href="{{ url }}">{{ action }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
 
-                {% for action, url in actions|slice:':1' %}
-                    <a href="{{ url }}" class="btn btn-link">{{ action }}</a>
-                {% endfor %}
-            </div>
-        {% endif %}
+                    {% for action, url in actions|slice:':1' %}
+                        <a href="{{ url }}" class="btn btn-link">{{ action }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
     </div>
 </div>
