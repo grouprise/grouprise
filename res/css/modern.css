@@ -1,0 +1,28 @@
+.scroll-container-x {
+    max-width: 100%;
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
+    overflow-x: scroll;
+    overflow-y: clip;
+    scrollbar-width: thin;
+
+    /* you might want to override these */
+    --_mask-transparency: rgba(0, 0, 0, 0);
+    --_mask-percentage-max: 20;
+
+    /* these should stay */
+    --_mask-left: min(
+        1px * (var(--scroll-container-width) / 100 * var(--_mask-percentage-max)),
+        1px * (var(--scroll-container-offset-x))
+    );
+    --_mask-right: max(
+        1px * (var(--scroll-container-width) / 100 * (100 - var(--_mask-percentage-max))),
+        1px * (var(--scroll-container-width) * ((var(--scroll-container-offset-x) + var(--scroll-container-width)) / var(--scroll-container-scroll-width)))
+    );
+    mask-image: linear-gradient(
+        to right,
+        var(--_mask-transparency) 0%,
+        black var(--_mask-left), black 50%, black var(--_mask-right),
+        var(--_mask-transparency) 100%
+    );
+}
