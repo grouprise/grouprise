@@ -60,13 +60,14 @@
         position: fixed;
         top: @nav-height;
         max-height: calc(100vh - @nav-height);
+        overscroll-behavior: contain;
         .dock-screen(768px, 750px);
         .dock-screen(992px, 970px);
         .dock-screen(1200px, 1170px);
     }
 
     &.dock-fullwidth {
-        max-width: none;
+        max-width: 100vw;
         left: 0; right: 0;
         margin-top: 0;
         border-top: 1px solid @gray-light;
