@@ -1,5 +1,6 @@
 import datetime
 import itertools
+from typing import Optional
 
 import django.utils.formats
 import django.utils.timezone
@@ -10,8 +11,13 @@ from django.utils.safestring import mark_safe
 
 from grouprise.core.utils import get_verified_locale
 from grouprise.features.events.utils import EventCalendar, get_requested_time
+from grouprise.features.groups.models import Group
 
 register = template.Library()
+
+
+class _Default:
+    pass
 
 
 @register.filter
@@ -85,23 +91,12 @@ def calendar(context, associations, size="preview", component_id=None):
     return context
 
 
-@register.inclusion_tag("events/_sidebar_calendar.html", takes_context=True)
-def sidebar_calendar(
-    context,
-    associations,
-    group=None,
-    preview_length=5,
-    show_group=True,
-    hide_buttons=False,
-    component_id=None,
-    site_calendar=False,
-):
-    user = context["user"]
-    group = context.get("group")
-    upcoming = associations.filter_upcoming(
+def _get_upcoming_context(context, associations, group=None, limit=None):
+    upcoming_query = associations.filter_upcoming(
         get_requested_time(context.request)
-    ).order_by("content__time")[:preview_length]
-
+    ).order_by("content__time")
+    upcoming_count = upcoming_query.count()
+    upcoming = upcoming_query if limit is None else upcoming_query[:limit]
     if upcoming:
         if group:
             show_events_url = "{}?content=events".format(group.get_absolute_url())
@@ -109,6 +104,28 @@ def sidebar_calendar(
             show_events_url = reverse("events")
     else:
         show_events_url = None
+    return {
+        "upcoming": upcoming,
+        "upcoming_total": upcoming_count,
+        "upcoming_remaining": max(0, upcoming_count - limit),
+        "show_events_url": show_events_url,
+    }
+
+
+@register.inclusion_tag("events/_sidebar_calendar.html", takes_context=True)
+def sidebar_calendar(
+    context,
+    associations,
+    group=_Default,
+    preview_length=5,
+    show_group=True,
+    hide_buttons=False,
+    component_id=None,
+    site_calendar=False,
+):
+    user = context["user"]
+    group: Optional[Group] = context.get("group") if group is _Default else group
+    upcoming_context = _get_upcoming_context(context, associations, group, limit=preview_length)
 
     # collect toolbar actions
     actions = []
@@ -131,18 +148,15 @@ def sidebar_calendar(
         url = reverse("export-site-events")
         actions.append(("Kalender exportieren", url))
 
-    context.update(
-        {
-            "actions": actions,
-            "associations": associations,
-            "group": group,
-            "hide_buttons": hide_buttons,
-            "show_events_url": show_events_url,
-            "show_group": show_group,
-            "upcoming": upcoming,
-            "component_id": component_id,
-        }
-    )
+    context.update(upcoming_context)
+    context.update({
+        "actions": actions,
+        "associations": associations,
+        "group": group,
+        "hide_buttons": hide_buttons,
+        "show_group": show_group,
+        "component_id": component_id,
+    })
     return context
 
 
