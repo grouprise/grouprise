@@ -34,7 +34,7 @@
             {% endblocktrans %}
             {% if can_edit %}
                 {% url 'gestalt-update' user.gestalt.pk as url %}
-                {% blocktrans %}
+                {% blocktrans trimmed %}
                 You can change this setting in <a href="{{ url }}">your profile'</a>.
                 {% endblocktrans %}
             {% else %}

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-15 22:40+0100\n"
-"PO-Revision-Date: 2024-03-14 13:36+0100\n"
+"POT-Creation-Date: 2024-03-26 23:06+0100\n"
+"PO-Revision-Date: 2024-03-26 23:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -17,164 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
-
-#, python-format
-msgid "Last invalidation: %s"
-msgstr ""
-
-#, python-format
-msgid "Database '%(db_alias)s'"
-msgstr ""
-
-#, fuzzy
-#| msgid "Location"
-msgid "Application"
-msgstr "Ort"
-
-msgid "Model"
-msgstr ""
-
-msgid "Last invalidation"
-msgstr ""
-
-msgid "Confidential"
-msgstr ""
-
-msgid "Public"
-msgstr "Öffentlich"
-
-msgid "Authorization code"
-msgstr ""
-
-msgid "Implicit"
-msgstr ""
-
-msgid "Resource owner password-based"
-msgstr ""
-
-msgid "Client credentials"
-msgstr ""
-
-msgid "OpenID connect hybrid"
-msgstr ""
-
-msgid "No OIDC support"
-msgstr ""
-
-msgid "RSA with SHA-2 256"
-msgstr ""
-
-msgid "HMAC with SHA-2 256"
-msgstr ""
-
-msgid "Allowed URIs list, space separated"
-msgstr ""
-
-msgid "Hashed on Save. Copy it now if this is a new secret."
-msgstr ""
-
-#, python-brace-format
-msgid "Unauthorized redirect scheme: {scheme}"
-msgstr ""
-
-#, python-brace-format
-msgid "redirect_uris cannot be empty with grant_type {grant_type}"
-msgstr ""
-
-msgid "You must set OIDC_RSA_PRIVATE_KEY to use RSA algorithm"
-msgstr ""
-
-msgid "You cannot use HS256 with public grants or clients"
-msgstr ""
-
-msgid "The access token is invalid."
-msgstr ""
-
-msgid "The access token has expired."
-msgstr ""
-
-msgid "The access token is valid but does not have enough scope."
-msgstr ""
-
-msgid "Are you sure to delete the application"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-#, fuzzy
-#| msgid "Delete Account"
-msgid "Delete"
-msgstr "Benutzerkonto löschen"
-
-msgid "Client id"
-msgstr ""
-
-msgid "Client secret"
-msgstr ""
-
-msgid "Client type"
-msgstr ""
-
-msgid "Authorization Grant Type"
-msgstr ""
-
-msgid "Redirect Uris"
-msgstr ""
-
-msgid "Go Back"
-msgstr ""
-
-msgid "Edit"
-msgstr "Bearbeiten"
-
-msgid "Edit application"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-#, fuzzy
-#| msgid "Your activities"
-msgid "Your applications"
-msgstr "Dich betreffende Aktivität"
-
-msgid "New Application"
-msgstr ""
-
-msgid "No applications defined"
-msgstr ""
-
-msgid "Click here"
-msgstr ""
-
-msgid "if you want to register a new one"
-msgstr ""
-
-msgid "Register a new application"
-msgstr ""
-
-msgid "Authorize"
-msgstr ""
-
-#, fuzzy
-#| msgid "Matrix offers the following features:"
-msgid "Application requires the following permissions"
-msgstr "Matrix bietet die folgenden Funktionen:"
-
-#, fuzzy
-#| msgid "Do you really want to delete your account?"
-msgid "Are you sure you want to delete this token?"
-msgstr "Möchtest Du Dein Benutzerkonto wirklich löschen?"
-
-msgid "Tokens"
-msgstr ""
-
-msgid "revoke"
-msgstr ""
-
-msgid "There are no authorized tokens yet."
-msgstr ""
 
 msgid "Which season follows winter?"
 msgstr "Welche Jahreszeit folgt auf den Winter?"
@@ -280,6 +122,9 @@ msgstr ""
 "können beispielsweise für allgemeine Einleitungs- und Beschreibungstexte "
 "verwendet werden."
 
+msgid "Public"
+msgstr "Öffentlich"
+
 msgid ""
 "Public contributions are visible to visitors that are not a member of the "
 "group. Members and subscribers will receive notifications."
@@ -305,6 +150,9 @@ msgstr "Weitere Aktivität"
 
 msgid "Contribution"
 msgstr "Beitrag"
+
+msgid "Edit"
+msgstr "Bearbeiten"
 
 msgid "Contribution is visible to the public"
 msgstr "Beitrag ist öffentlich sichtbar"
@@ -530,16 +378,9 @@ msgstr ""
 "entscheidet für sich, ob sie ein öffentliches Profil haben möchte."
 
 #, python-format
-msgid ""
-"\n"
-"                You can change this setting in <a href=\"%(url)s\">your "
-"profile'</a>.\n"
-"                "
+msgid "You can change this setting in <a href=\"%(url)s\">your profile'</a>."
 msgstr ""
-"\n"
-"                Du kannst dieses Verhalten in <a href=\"%(url)s\">deinem "
-"Profil'</a> ändern.\n"
-"                "
+"Du kannst dieses Verhalten in <a href=\"%(url)s\">deinem Profil'</a> ändern."
 
 msgid "You can change this setting in your profile."
 msgstr "Du kannst dieses Verhalten in deinem Profil ändern."
@@ -673,11 +514,9 @@ msgstr "Gruppen suchen"
 msgid "More Groups"
 msgstr "Weitere Gruppen"
 
-#: grouprise/features/imports/feeds.py:55
 msgid "Proceed to article"
 msgstr "Weiter zum Artikel"
 
-#: grouprise/features/matrix_chat/forms.py:10
 #, python-brace-format
 msgid ""
 "A Matrix room ID (starting with '!') can be used. You may want to invite "
@@ -1263,9 +1102,3 @@ msgstr[1] ""
 
 msgid "Featured Tags"
 msgstr "Empfohlene Schlagworte"
-
-#~ msgid "Start a (date) poll"
-#~ msgstr "(Termin-)Umfrage beginnen"
-
-#~ msgid "Help about"
-#~ msgstr "Hilfe zu"
