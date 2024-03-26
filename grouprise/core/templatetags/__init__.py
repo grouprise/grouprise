@@ -24,7 +24,9 @@ class ContextNode(TagHelperNode):
             return self.nodelist.render(context)
 
 
-def context_tag(library: Library, takes_context: Optional[bool] = None, name: Optional[str] = None):
+def context_tag(
+    library: Library, takes_context: Optional[bool] = None, name: Optional[str] = None
+):
     """
     This works similar to a with tag, but instead of defining new context in the template
     it injects parameterizable-context through the logic of the wrapped tag function.
