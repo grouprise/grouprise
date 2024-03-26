@@ -4,6 +4,7 @@ import re
 import urllib.request
 
 import django
+from django.utils.translation import gettext as _
 import feedparser
 
 import grouprise.core
@@ -50,8 +51,9 @@ def import_from_feed(feed_url, submitter, target_group):
             if title and text:
                 c = content.Content.objects.create(title=title)
                 link = entry.get("link")
-                if link:
-                    text = "{}\n\n{}".format(text, link)
+                if link and link not in text:
+                    link_caption = _("Proceed to article")
+                    text = f"{text}\n\n[{link_caption}]({link})"
                 v = content.Version.objects.create(
                     author=submitter, content=c, text=text
                 )

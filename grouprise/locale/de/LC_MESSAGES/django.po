@@ -673,6 +673,11 @@ msgstr "Gruppen suchen"
 msgid "More Groups"
 msgstr "Weitere Gruppen"
 
+#: grouprise/features/imports/feeds.py:55
+msgid "Proceed to article"
+msgstr "Weiter zum Artikel"
+
+#: grouprise/features/matrix_chat/forms.py:10
 #, python-brace-format
 msgid ""
 "A Matrix room ID (starting with '!') can be used. You may want to invite "
