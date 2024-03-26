@@ -3,7 +3,7 @@
 
 {% block title %}
     <i class="sg sg-group"></i>
-    {% trans 'Group' %}
+    {% translate 'Group' %}
 {% endblock %}
 
 {% block content %}
@@ -11,5 +11,5 @@
 {% endblock %}
 
 {% block toolbar %}
-    <a href="{{ group.get_absolute_url }}" class="btn btn-link">{% trans "Group's homepage" %}</a>
+    <a href="{{ group.get_absolute_url }}" class="btn btn-link">{% translate "Group's homepage" %}</a>
 {% endblock %}

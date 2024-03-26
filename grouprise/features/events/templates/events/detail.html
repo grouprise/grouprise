@@ -39,14 +39,14 @@
                         <div class="meta-box">
                             <h4 class="meta-box-title">
                                 <i class="sg sg-marker"></i>
-                                <span>{% trans 'Announced participants' %}</span>
+                                <span>{% translate 'Announced participants' %}</span>
                             </h4>
                             {% if can_attend_group_members %}
                                 {% include 'events/_attendance_list_current.html' with event_association=association redirect_url=request.path user=user %}
                             {% else %}
                                 <div class="meta-box-body">
                                     {% if attendee_count > 0 %}
-                                        {% trans 'Notifications' context 'attendance registrations' %}: {{ attendee_count }}
+                                        {% translate 'Notifications' context 'attendance registrations' %}: {{ attendee_count }}
                                     {% endif %}
                                 </div>
                             {% endif %}

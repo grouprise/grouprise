@@ -6,14 +6,14 @@
 {% endblock %}
 
 {% block content %}
-    <h2>{% trans "Chat Settings - Matrix" %}</h2>
+    <h2>{% translate "Chat Settings - Matrix" %}</h2>
     <form method="post" class="form form-modern">
         {% csrf_token %}
 
         {% field form.matrix_id %}
         <br/>
         <button class="btn btn-sm btn-default" type="submit" name="action_send">
-            {% trans "Save settings" %}
+            {% translate "Save settings" %}
         </button>
     </form>
 {% endblock %}

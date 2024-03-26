@@ -1,14 +1,14 @@
 {% extends 'stadt/stadt.html' %}
 {% load i18n %}
 
-{% block title %}{% trans 'Group' %} - {{ block.super }}{% endblock %}
-{% block heading_title_text %}{% trans 'Group' %}{% endblock %}
+{% block title %}{% translate 'Group' %} - {{ block.super }}{% endblock %}
+{% block heading_title_text %}{% translate 'Group' %}{% endblock %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
         {% field form.name %}
         {% field form.tags %}
-        <button class="btn btn-primary">{% trans 'Create group' %}</button>
+        <button class="btn btn-primary">{% translate 'Create group' %}</button>
     </form>
 {% endblock %}

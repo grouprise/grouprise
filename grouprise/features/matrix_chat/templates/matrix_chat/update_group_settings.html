@@ -6,26 +6,26 @@
 {% endblock %}
 
 {% block content %}
-    <h2>{% trans "Chat Settings - Matrix" %}</h2>
+    <h2>{% translate "Chat Settings - Matrix" %}</h2>
     <form method="post" class="form form-modern">
         {% csrf_token %}
 
         <div class="section section-group">
-            <h3>{% trans "Public Chat Room" %}</h3>
-            <p>{% trans "Notifications for new public content (articles, events, files, ...) are sent to this Matrix room." %}</p>
+            <h3>{% translate "Public Chat Room" %}</h3>
+            <p>{% translate "Notifications for new public content (articles, events, files, ...) are sent to this Matrix room." %}</p>
             {% field_checkbox form.room_public_visibility %}
             {% field form.room_public_matrix_reference %}
         </div>
 
         <div class="section section-group">
-            <h3>{% trans "Private Chat Room" %}</h3>
-            <p>{% trans "Notifications for any new content (public and private; including discussions) are sent to this Matrix room." %}</p>
+            <h3>{% translate "Private Chat Room" %}</h3>
+            <p>{% translate "Notifications for any new content (public and private; including discussions) are sent to this Matrix room." %}</p>
             {% field_checkbox form.room_private_visibility %}
             {% field form.room_private_matrix_reference %}
         </div>
 
         <button class="btn btn-sm btn-default" type="submit" name="action_send">
-            {% trans "Save settings" %}
+            {% translate "Save settings" %}
         </button>
     </form>
 {% endblock %}

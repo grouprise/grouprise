@@ -16,15 +16,15 @@
         {% if user.is_authenticated %}
             <div class="group-preview-stats">
                 {% if user.gestalt in group.subscribers %}
-                    <i class="sg sg-subscription sg-active" title="{% trans 'You are subscribed to contriutbions of this group' %}"></i>
+                    <i class="sg sg-subscription sg-active" title="{% translate 'You are subscribed to contriutbions of this group' %}"></i>
                 {% else %}
-                    <i class="sg sg-subscription" title="{% trans 'You are not subscribed to contributions of this group' %}"></i>
+                    <i class="sg sg-subscription" title="{% translate 'You are not subscribed to contributions of this group' %}"></i>
                 {% endif %}
                 {% load memberships %}
                 {% if user.gestalt|is_member:group %}
-                    <i class="sg sg-members sg-active" title="{% trans 'You are a member of this group' %}"></i>
+                    <i class="sg sg-members sg-active" title="{% translate 'You are a member of this group' %}"></i>
                 {% else %}
-                <i class="sg sg-members" title="{% trans 'You are not a member of this group' %}"></i>
+                <i class="sg sg-members" title="{% translate 'You are not a member of this group' %}"></i>
                 {% endif %}
             </div>
         {% endif %}
@@ -35,7 +35,7 @@
             {% if group.description %}
                 {% markdown group.description preset=markdown_preset %}
             {% else %}
-                {% blocktrans trimmed %}This group did not leave a statement at {{ about_group }}.{% endblocktrans %}
+                {% blocktranslate trimmed %}This group did not leave a statement at {{ about_group }}.{% endblocktranslate %}
             {% endif %}
         </p>
     </div>

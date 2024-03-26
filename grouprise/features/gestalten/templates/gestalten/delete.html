@@ -1,41 +1,41 @@
 {% extends 'stadt/stadt.html' %}
 {% load i18n %}
 
-{% block title %}{% trans 'Delete Account' %} - {{ block.super }}{% endblock %}
+{% block title %}{% translate 'Delete Account' %} - {{ block.super }}{% endblock %}
 {% block menu %}{% menu %}{% endblock %}
 
-{% block heading_title_text %}{% trans 'Settings' %}{% endblock %}
+{% block heading_title_text %}{% translate 'Settings' %}{% endblock %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
 
-        <p><strong>{% trans 'Do you really want to delete your account?' %}</strong></p>
+        <p><strong>{% translate 'Do you really want to delete your account?' %}</strong></p>
 
-        <p><strong>{% trans 'The following data will be delete irrevocable:' %}</strong></p>
+        <p><strong>{% translate 'The following data will be delete irrevocable:' %}</strong></p>
 
         <ul>
-            <li>{% trans 'Account and profile with all settings and email addresses' %}</li>
+            <li>{% translate 'Account and profile with all settings and email addresses' %}</li>
             <li>{{ view.data.subscriptions.count }} {%trans 'Subscriptions to groups' %}</li>
-            <li>{{ view.data.memberships.count }} {% trans 'Memberships of groups' %}</li>
+            <li>{{ view.data.memberships.count }} {% translate 'Memberships of groups' %}</li>
         </ul>
 
-        <p><strong>{% trans 'The following data will be marked as' %}<em>{% trans 'Unknown person' %}</em>:</strong></p>
+        <p><strong>{% translate 'The following data will be marked as' %}<em>{% translate 'Unknown person' %}</em>:</strong></p>
 
         <ul>
-            <li>{{ view.data.versions.count }} {% trans 'Version of contribution' %}</li>
-            <li>{{ view.data.contributions.count }} {% trans 'Comments and news' %}</li>
-            <li>{{ view.data.images.count }} {% trans 'Pictures' %}</li>
-            <li>{{ view.data.votes.count }} {% trans 'Votes in surveys' %}</li>
+            <li>{{ view.data.versions.count }} {% translate 'Version of contribution' %}</li>
+            <li>{{ view.data.contributions.count }} {% translate 'Comments and news' %}</li>
+            <li>{{ view.data.images.count }} {% translate 'Pictures' %}</li>
+            <li>{{ view.data.votes.count }} {% translate 'Votes in surveys' %}</li>
         </ul>
 
         {% if about_group %}
-            <p>{% trans 'If you not agree with this procedure, do not proceed and' %}
-            <a href="{% url 'create-group-conversation' about_group.pk %}">{% trans 'send us a message instead' %}</a>.</p>
+            <p>{% translate 'If you not agree with this procedure, do not proceed and' %}
+            <a href="{% url 'create-group-conversation' about_group.pk %}">{% translate 'send us a message instead' %}</a>.</p>
         {% endif %}
 
         <button class="btn btn-danger">
-            {% trans 'Delete account' %}
+            {% translate 'Delete account' %}
         </button>
     </form>
 {% endblock %}

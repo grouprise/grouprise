@@ -24,13 +24,13 @@
                     {{ address.email }}
                     &mdash;
                     {% if address.verified %}
-                        <span class="verified">{% trans 'verified' %}</span>
+                        <span class="verified">{% translate 'verified' %}</span>
                     {% else %}
-                        <span class="unverified">{% trans 'unverified' %}</span>
+                        <span class="unverified">{% translate 'unverified' %}</span>
                     {% endif %}
                     {% if address.primary %}
                         &mdash;
-                        <span class="primary">{% trans 'primary address' %}</span>
+                        <span class="primary">{% translate 'primary address' %}</span>
                     {% endif %}
                 </label>
             </li>

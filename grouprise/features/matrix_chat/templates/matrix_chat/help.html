@@ -1,160 +1,160 @@
 {% extends 'stadt/stadt.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Introduction to Chat" %} - {{ block.super }}{% endblock %}
+{% block title %}{% translate "Introduction to Chat" %} - {{ block.super }}{% endblock %}
 
 {% block content_header %}
     {% include 'stadt/_index_header.html' %}
 {% endblock %}
 
 {% block heading_title %}
-    <h1 class="content-classification">{% trans "Introduction to Chat" %}</h1>
+    <h1 class="content-classification">{% translate "Introduction to Chat" %}</h1>
     <span class="decoration-icon sg-question" role="presentation"></span>
 {% endblock %}
 
 {% block content %}
 
-<p>{% trans "Content" %}</p>
+<p>{% translate "Content" %}</p>
 <ol>
-    <li><a href="#overview">{% trans "Overview" %}</a></li>
-    <li><a href="#matrix_features">{% trans "Matrix Features" %}</a></li>
-    <li><a href="#integration">{% blocktrans %}Integration with {{ GROUPRISE_SITE_NAME }}{% endblocktrans %}</a></li>
-    <li><a href="#usage">{% trans "Usage" %}</a></li>
-    <li><a href="#faq">{% trans "FAQ" %}</a></li>
+    <li><a href="#overview">{% translate "Overview" %}</a></li>
+    <li><a href="#matrix_features">{% translate "Matrix Features" %}</a></li>
+    <li><a href="#integration">{% blocktranslate %}Integration with {{ GROUPRISE_SITE_NAME }}{% endblocktranslate %}</a></li>
+    <li><a href="#usage">{% translate "Usage" %}</a></li>
+    <li><a href="#faq">{% translate "FAQ" %}</a></li>
 </ol>
 
 <hr/>
 
-<h1 id="overview">{% trans "Overview" %}</h1>
-<p>{% blocktrans trimmed %}
+<h1 id="overview">{% translate "Overview" %}</h1>
+<p>{% blocktranslate trimmed %}
 Instant messagging (<i>chat</i>) is an efficient way of communicating directly (without delay) within a group or between interested people and group members.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 The platform {{ GROUPRISE_SITE_NAME }} provides an integrated chat service, which can be used for internal communication as well as for communication with other users of this chat protocol (<a href="{{ matrix_url }}">Matrix</a>) worldwide.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 Use the web client or a mobile app (see <a href="#usage">Usage</a>) for accessing the chat rooms.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
 
-<h1 id="matrix_features">{% trans "Matrix Features" %}</h1>
+<h1 id="matrix_features">{% translate "Matrix Features" %}</h1>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 A wide variety of instant messenger applications and protocols is available, e.g. Jabber, IRC, Whatsapp, Facebook Messenger, Slack, Mattermost and many more.
 This platform ({{ GROUPRISE_SITE_NAME }}) integrates the <a href="{{ matrix_url }}">Matrix</a> protocol, since it offers a wide range of features, that turn it into a perfect fit.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% trans "Matrix offers the following features:" %}</p>
+<p>{% translate "Matrix offers the following features:" %}</p>
 <ul>
-    <li><b>{% trans "trustworthy" %}</b>: {% trans 'Both the server and the client implementations are available as <a href="{{ free_software_url }}">Free Software</a>. Thus, anyone interested can verify, that the software is operating in the interest of the users.' %}</li>
-    <li><b>{% trans "federated" %}</b>: {% trans "Everyone can host their own server and all of these servers communicate with each other. This is similar to the design of the email protocol or the telephone network, where users of different providers can communicate with each other." %}</li>
-    <li><b>{% trans "secure" %}</b>: {% trans "End-to-end encryption keeps the content of conversations safe from pryring eyes. Even the service provider cannot peek inside." %}</li>
-    <li><b>{% trans "wide range of clients" %}</b>: {% trans 'Pick your favorite client from a <a href="{{ matrix_clients_url }}">wide range of applications</a> for various mobile and desktop platforms.' %}</li>
+    <li><b>{% translate "trustworthy" %}</b>: {% translate 'Both the server and the client implementations are available as <a href="{{ free_software_url }}">Free Software</a>. Thus, anyone interested can verify, that the software is operating in the interest of the users.' %}</li>
+    <li><b>{% translate "federated" %}</b>: {% translate "Everyone can host their own server and all of these servers communicate with each other. This is similar to the design of the email protocol or the telephone network, where users of different providers can communicate with each other." %}</li>
+    <li><b>{% translate "secure" %}</b>: {% translate "End-to-end encryption keeps the content of conversations safe from pryring eyes. Even the service provider cannot peek inside." %}</li>
+    <li><b>{% translate "wide range of clients" %}</b>: {% translate 'Pick your favorite client from a <a href="{{ matrix_clients_url }}">wide range of applications</a> for various mobile and desktop platforms.' %}</li>
 </ul>
 
 
-<h1 id="integration">{% blocktrans %}Integration with {{ GROUPRISE_SITE_NAME }}{% endblocktrans %}</h1>
+<h1 id="integration">{% blocktranslate %}Integration with {{ GROUPRISE_SITE_NAME }}{% endblocktranslate %}</h1>
 
-<p>{% blocktrans %}The integration of the Matrix chat into the {{ GROUPRISE_SITE_NAME }} platform offers the following features:{% endblocktrans %}</p>
+<p>{% blocktranslate %}The integration of the Matrix chat into the {{ GROUPRISE_SITE_NAME }} platform offers the following features:{% endblocktranslate %}</p>
 <ul>
-    <li>{% trans "Use your grouprise user account to log in to the Matrix homeserver. There is no need for a separate Matrix account." %}</li>
-    <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url %}A local instance of the <a href="{{ element_url }}">Element web client</a> is provided along with {{ GROUPRISE_SITE_NAME }} (<a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>).{% endblocktrans %}</li>
-    <li>{% blocktrans %}A public and a private Matrix room is automatically created for each {{ GROUPRISE_SITE_NAME }} group.{% endblocktrans %}</li>
-    <li>{% trans "All members of a grouprise group are automatically invited to the group's Matrix rooms." %}</li>
-    <li>{% trans "Notifications for new content (articles, events, discussions, ...) are sent to the related Matrix rooms (internal messages are announced in the private room, only)." %}</li>
+    <li>{% translate "Use your grouprise user account to log in to the Matrix homeserver. There is no need for a separate Matrix account." %}</li>
+    <li>{% blocktranslate with matrix_client_url=matrix_client_path|full_url %}A local instance of the <a href="{{ element_url }}">Element web client</a> is provided along with {{ GROUPRISE_SITE_NAME }} (<a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>).{% endblocktranslate %}</li>
+    <li>{% blocktranslate %}A public and a private Matrix room is automatically created for each {{ GROUPRISE_SITE_NAME }} group.{% endblocktranslate %}</li>
+    <li>{% translate "All members of a grouprise group are automatically invited to the group's Matrix rooms." %}</li>
+    <li>{% translate "Notifications for new content (articles, events, discussions, ...) are sent to the related Matrix rooms (internal messages are announced in the private room, only)." %}</li>
 </ul>
 
-<p>{% trans "Additionally all regular features of the Matrix communication ecosystem are available:" %}</p>
+<p>{% translate "Additionally all regular features of the Matrix communication ecosystem are available:" %}</p>
 <ul>
-    <li>{% trans "Matrix users from other servers may join your group's rooms (if you invite them)." %}</li>
-    <li>{% trans "You may use the Matrix account provided by grouprise or your existing (external) Matrix account." %}</li>
-    <li>{% trans "You are free to communicate with your group peers or with any other Matrix user in the world." %}</li>
+    <li>{% translate "Matrix users from other servers may join your group's rooms (if you invite them)." %}</li>
+    <li>{% translate "You may use the Matrix account provided by grouprise or your existing (external) Matrix account." %}</li>
+    <li>{% translate "You are free to communicate with your group peers or with any other Matrix user in the world." %}</li>
 </ul>
 
 
-<h1 id="usage">{% trans "Usage" %}</h1>
+<h1 id="usage">{% translate "Usage" %}</h1>
 
-<p>{% trans "Use your web browser or a mobile app to access the chat messages." %}</p>
+<p>{% translate "Use your web browser or a mobile app to access the chat messages." %}</p>
 
 
-<h2>{% trans "Web Browser" %}</h2>
+<h2>{% translate "Web Browser" %}</h2>
 
-<p>{% trans "There are two approaches for entering the chat rooms:" %}</p>
+<p>{% translate "There are two approaches for entering the chat rooms:" %}</p>
 <ul>
-    <li>{% trans "Visit the page of a group and select <i>Public Chat Room</i> or <i>Private Chat Room</i>." %}</li>
-    <li>{% blocktrans with matrix_client_url=matrix_client_path|full_url trimmed %}
+    <li>{% translate "Visit the page of a group and select <i>Public Chat Room</i> or <i>Private Chat Room</i>." %}</li>
+    <li>{% blocktranslate with matrix_client_url=matrix_client_path|full_url trimmed %}
         Visit the URL <a href="{{ matrix_client_path }}">{{ matrix_client_url }}</a>.
-    {% endblocktrans %}</li>
+    {% endblocktranslate %}</li>
 </ul>
 
 
-<h2>{% trans "Mobile App" %}</h2>
+<h2>{% translate "Mobile App" %}</h2>
 
 <ol>
-    <li>{% blocktrans %}Install one of the <a href="{{ matrix_clients_url }}">mobile clients</a> via your favorite app store. Pick <a href="{{ element_android_url }}">Element</a> in case of doubt.{% endblocktrans %}</li>
-    <li>{% trans "Select <i>Other</i> as the Matrix server." %}</li>
-    <li>{% trans "Enter the matrix server:" %} <code>{{ MATRIX_DOMAIN }}</code></li>
-    <li>{% trans "Select <i>Sign In</i>." %}</li>
-    <li>{% trans "Enter your grouprise username or your email address." %}</li>
-    <li>{% trans "Enter your grouprise password." %}</li>
+    <li>{% blocktranslate %}Install one of the <a href="{{ matrix_clients_url }}">mobile clients</a> via your favorite app store. Pick <a href="{{ element_android_url }}">Element</a> in case of doubt.{% endblocktranslate %}</li>
+    <li>{% translate "Select <i>Other</i> as the Matrix server." %}</li>
+    <li>{% translate "Enter the matrix server:" %} <code>{{ MATRIX_DOMAIN }}</code></li>
+    <li>{% translate "Select <i>Sign In</i>." %}</li>
+    <li>{% translate "Enter your grouprise username or your email address." %}</li>
+    <li>{% translate "Enter your grouprise password." %}</li>
 </ol>
 
 
-<h2>{% trans "Thunderbird" %}</h2>
+<h2>{% translate "Thunderbird" %}</h2>
 
 <p>
-    {% blocktrans %}Thunderbird supports the Matrix protocol for chats.{% endblocktrans %}
-    {% blocktrans %}Simply enter your account data, but leave the password empty (<a href="{{ thunderbird_sso_doc_url }}">Thunderbird documentation for Single-Sign-On</a>).{% endblocktrans %}
+    {% blocktranslate %}Thunderbird supports the Matrix protocol for chats.{% endblocktranslate %}
+    {% blocktranslate %}Simply enter your account data, but leave the password empty (<a href="{{ thunderbird_sso_doc_url }}">Thunderbird documentation for Single-Sign-On</a>).{% endblocktranslate %}
 </p>
 
-<h1 id="faq">{% trans "FAQ (Frequently Asked Questions)" %}</h1>
+<h1 id="faq">{% translate "FAQ (Frequently Asked Questions)" %}</h1>
 
-<h2>{% trans "Why is there a <i>public</i> and a <i>private</i> room?" %}</h2>
+<h2>{% translate "Why is there a <i>public</i> and a <i>private</i> room?" %}</h2>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 These pre-configured rooms for each group were prepared for your convenvience.
 The <i>public room</i> is configured to be open for random visitors.
 Such rooms are visible in the public "room directory" (list of rooms hosted on the Matrix server).
 A <i>private room</i> is not listed in the room directory of the server.
 Interested people may only join private rooms after being invited by a current room member.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 In addition to the two pre-configured rooms per group, your are free to create as many rooms as you like.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<h2>{% trans "Room members" %}</h2>
+<h2>{% translate "Room members" %}</h2>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 Whenever someone joins a group in the {{ GROUPRISE_SITE_NAME }} platform, the corresponding matrix account is automatically invited to this group's chat rooms.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 People leaving a group in the {{ GROUPRISE_SITE_NAME }} platform are automatically removed from the group's chat rooms.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 Any external person (even people without an account on the local grouprise instance) may join public rooms or may be invited to private rooms.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<h2>{% trans "Why are rooms not encrypted by default?" %}</h2>
+<h2>{% translate "Why are rooms not encrypted by default?" %}</h2>
 
-<p>{% blocktrans trimmed with issue_url="https://git.hack-hro.de/grouprise/grouprise/-/issues/729" %}
+<p>{% blocktranslate trimmed with issue_url="https://git.hack-hro.de/grouprise/grouprise/-/issues/729" %}
 The developers of *grouprise* <a href="{{ issue_url }}">discussed this question</a> and decided to prefer ease of use over security.
 Feel free to contact the site operators and ask them to enable encryption in rooms of your group.
 Alternatively you are free to create new rooms according to your personal preferences.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<h2>{% trans "I want to know more!" %}</h2>
+<h2>{% translate "I want to know more!" %}</h2>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 Feel free to dive into the <a href="{{ help_matrix_url }}">Matrix FAQ</a> or visit the <a href="{{ help_element_url }}">Element community room</a>, if you have further questions.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
-<p>{% blocktrans with room_name="@grouprise-users:systemausfall.org" trimmed %}
+<p>{% blocktranslate with room_name="@grouprise-users:systemausfall.org" trimmed %}
 For questions regarding the combination of <i>grouprise</i> ({{ GROUPRISE_SITE_NAME }}) and Matrix, you are welcome to join the matrix room <code>{{ room_name }}</code>.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
 {% endblock %}

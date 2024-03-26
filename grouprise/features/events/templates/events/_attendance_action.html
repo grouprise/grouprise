@@ -16,7 +16,7 @@
                     <input class="dropdown-state" id="input-{{ target_name }}" type="checkbox" />
                         <label class="btn" for="input-{{ target_name }}" data-component="openable" data-openable-target="#dropdown-{{ target_name }}">
                         <span class="btn-label">
-                            <i class="sg sg-members"></i>{% trans 'Members' %} <span class="caret"></span>
+                            <i class="sg sg-members"></i>{% translate 'Members' %} <span class="caret"></span>
                         </span>
                     </label>
                     <ul class="dropdown" id="dropdown-{{ target_name }}" data-dropdown>
@@ -49,7 +49,7 @@
             <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
         {% endif %}
         <button class="btn btn-default btn-sm">
-            <i class="sg sg-add"></i> {% trans 'Show interest' %}
+            <i class="sg sg-add"></i> {% translate 'Show interest' %}
         </button>
     </form>
 {% elif can_abstain %}
@@ -61,7 +61,7 @@
             <input type="hidden" name="redirect_url" value="{{ redirect_url }}" />
         {% endif %}
         <button class="btn btn-default btn-sm">
-            <i class="sg sg-remove"></i> {% trans 'Revoke interest' %}
+            <i class="sg sg-remove"></i> {% translate 'Revoke interest' %}
         </button>
     </form>
 {% endif %}

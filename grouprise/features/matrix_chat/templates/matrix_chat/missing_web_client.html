@@ -1,21 +1,21 @@
 {% extends 'stadt/stadt.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Missing chat client" %} - {{ block.super }}{% endblock %}
+{% block title %}{% translate "Missing chat client" %} - {{ block.super }}{% endblock %}
 
 {% block content_header %}
     {% include 'stadt/_index_header.html' %}
 {% endblock %}
 
 {% block heading_title %}
-    <h1 class="content-classification">{% trans "Missing chat client" %}</h1>
+    <h1 class="content-classification">{% translate "Missing chat client" %}</h1>
 {% endblock %}
 
 {% block content %}
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktranslate trimmed %}
 The administrators of this site seem to have forgotten to configure a local web client for Matrix (e.g. <a href="https://github.com/vector-im/element-web">Element</a>) at this location (<code>/stadt/chat/</code>).
 Please inform your site administrators.
-{% endblocktrans %}</p>
+{% endblocktranslate %}</p>
 
 {% endblock %}

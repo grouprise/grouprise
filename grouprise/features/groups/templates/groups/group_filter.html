@@ -2,9 +2,9 @@
 {% load events rules dismissible %}
 {% load i18n %}
 
-{% block title %}{% trans 'Groups' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
+{% block title %}{% translate 'Groups' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}{% with menu='group' %}{{ block.super }}{% endwith %}{% endblock %}
-{% block heading_title %}<h1 class="content-classification">{% trans 'Groups' %}</h1>{% endblock %}
+{% block heading_title %}<h1 class="content-classification">{% translate 'Groups' %}</h1>{% endblock %}
 
 {% block sidebar %}
     {% sidebar_calendar view.get_content component_id='groups-calendar' %}
@@ -14,7 +14,7 @@
     {% has_perm 'groups.create_group' user as can_create_group %}
     {% if can_create_group %}
         <a href="{% url 'group-create' %}" class="btn btn-ch">
-            <span class="btn-label"><i class="sg sg-add"></i> {% trans 'Group' %}</span>
+            <span class="btn-label"><i class="sg sg-add"></i> {% translate 'Group' %}</span>
         </a>
     {% endif %}
 {% endblock %}
@@ -24,14 +24,14 @@
         {% dismissible 'group-list-order' %}
             <div class="disclaimer content-block">
                 {% dismiss 'group-list-order' %}
-                <p>{% trans 'Active groups with a lot of members or subscribes will be show first in a listing.' %}</p>
+                <p>{% translate 'Active groups with a lot of members or subscribes will be show first in a listing.' %}</p>
             </div>
         {% enddismissible %}
     {% endblock %}
     {% block group_search %}
         <form class="form-search" method="get">
             {% field filter.form.name %}
-            <button class="btn btn-default">{% trans 'Search for groups' %}</button>
+            <button class="btn btn-default">{% translate 'Search for groups' %}</button>
         </form>
     {% endblock %}
     {% block group_list %}

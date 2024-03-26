@@ -1,7 +1,7 @@
 {% extends 'stadt/stadt.html' %}
 {% load i18n %}
 
-{% block title %}{% trans 'Discussion' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
+{% block title %}{% translate 'Discussion' %} - {{ GROUPRISE_SITE_NAME }}{% endblock %}
 {% block menu %}
     {% if view.entity.is_group %}
         {% with group=view.entity menu='conversation' %}{{ block.super }}{% endwith %}
@@ -11,7 +11,7 @@
 {% endblock %}
 {% block breadcrumb %}{% breadcrumb view.entity 'Gespräch' %}{% endblock %}
 
-{% block heading_title %}<h1 class="content-classification">{% trans 'Discussion' %}</h1>{% endblock %}
+{% block heading_title %}<h1 class="content-classification">{% translate 'Discussion' %}</h1>{% endblock %}
 
 {% block sidebar %}
     {% if view.entity.is_group %}
@@ -25,10 +25,10 @@
 
 {% block content %}
     {% if view.with_membership_application %}
-    <p>{% blocktrans with group=view.entity trimmed %}
+    <p>{% blocktranslate with group=view.entity trimmed %}
        {{ group }} is a closed group. Please describe why you want to join it. Afterwards
        the group members will decide about your request.
-       {% endblocktrans %}</p>
+       {% endblocktranslate %}</p>
     {% endif %}
     {% include 'conversations/_create_form.html' with membership_application=view.with_membership_application %}
 {% endblock %}

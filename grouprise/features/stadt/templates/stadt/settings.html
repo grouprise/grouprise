@@ -11,28 +11,28 @@
         <a href="{% url 'settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-info"></i>
-            <span class="nav-menu-item-label">{% trans 'General' %}</span>
+            <span class="nav-menu-item-label">{% translate 'General' %}</span>
         </a>
     </li>
     <li>
         <a href="{% url 'image-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-images' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-images"></i>
-            <span class="nav-menu-item-label">{% trans 'Images' %}</span>
+            <span class="nav-menu-item-label">{% translate 'Images' %}</span>
         </a>
     </li>
     <li>
         <a href="{% url 'notification-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-notifications' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-notification"></i>
-            <span class="nav-menu-item-label">{% trans 'Notifications' %}</span>
+            <span class="nav-menu-item-label">{% translate 'Notifications' %}</span>
         </a>
     </li>
     <li>
         <a href="{% url 'email-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-email' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-message"></i>
-            <span class="nav-menu-item-label">{% trans 'Email addresses' %}</span>
+            <span class="nav-menu-item-label">{% translate 'Email addresses' %}</span>
         </a>
     </li>
     {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
@@ -41,7 +41,7 @@
         <a href="{% url 'matrix-chat-settings-user' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-matrix-chat' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-public-chat"></i>
-            <span class="nav-menu-item-label">{% trans 'Chat (Matrix)' %}</span>
+            <span class="nav-menu-item-label">{% translate 'Chat (Matrix)' %}</span>
         </a>
     </li>
     {% endif %}
@@ -49,7 +49,7 @@
         <a href="{% url 'account_change_password' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'gestalt-password' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-password"></i>
-            <span class="nav-menu-item-label">{% trans 'Password' %}</span>
+            <span class="nav-menu-item-label">{% translate 'Password' %}</span>
         </a>
     </li>
 {% endkwacro %}
@@ -61,14 +61,14 @@
             <a href="{% url 'group-settings' %}?group={{ group.slug }}"
                class="nav-menu-item {% if chapter == 'group' %}nav-menu-item-active{% endif %}">
                 <i class="sg sg-fw sg-info"></i>
-                <span class="nav-menu-item-label">{% trans 'General' %}</span>
+                <span class="nav-menu-item-label">{% translate 'General' %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'group-image-settings' %}?group={{ group.slug }}"
                class="nav-menu-item {% if chapter == 'group-images' %}nav-menu-item-active{% endif %}">
                 <i class="sg sg-fw sg-images"></i>
-                <span class="nav-menu-item-label">{% trans 'Images' %}</span>
+                <span class="nav-menu-item-label">{% translate 'Images' %}</span>
             </a>
         </li>
     {% endif %}
@@ -76,7 +76,7 @@
         <a href="{% url 'subscriptions-memberships-settings' %}?group={{ group.slug }}"
            class="nav-menu-item {% if chapter == 'subscriptions-memberships' %}nav-menu-item-active{% endif %}">
             <i class="sg sg-fw sg-subscription"></i>
-            <span class="nav-menu-item-label">{% trans 'Notifications & Membership' %}</span>
+            <span class="nav-menu-item-label">{% translate 'Notifications & Membership' %}</span>
         </a>
     </li>
     {% test_rule "is_matrix_chat_enabled" as matrix_chat_enabled %}
@@ -85,7 +85,7 @@
             <a href="{% url 'matrix-chat-settings-group' %}?group={{ group.slug }}"
                class="nav-menu-item {% if chapter == 'group-matrix-chat' %}nav-menu-item-active{% endif %}">
                 <i class="sg sg-fw sg-public-chat"></i>
-                <span class="nav-menu-item-label">{% trans 'Chat (Matrix)' %}</span>
+                <span class="nav-menu-item-label">{% translate 'Chat (Matrix)' %}</span>
             </a>
         </li>
     {% endif %}
@@ -95,7 +95,7 @@
             <a href="{% url 'geo-settings-group' %}?group={{ group.slug }}"
                class="nav-menu-item {% if chapter == 'group-geo' %}nav-menu-item-active{% endif %}">
                 <i class="sg sg-fw sg-address"></i>
-                <span class="nav-menu-item-label">{% trans 'Location' %}</span>
+                <span class="nav-menu-item-label">{% translate 'Location' %}</span>
             </a>
         </li>
     {% endif %}
@@ -110,7 +110,7 @@
                     <label class="nav-menu-item nav-menu-item-centered" for="menu-settings-gestalt"
                            data-component="openable" data-openable-target="#menu-settings-gestalt">
                         {% include 'gestalten/_avatar.html' with size=24 gestalt=user.gestalt %}
-                        <span class="nav-menu-item-label">{% trans 'Profile' %}</span>
+                        <span class="nav-menu-item-label">{% translate 'Profile' %}</span>
                         <i class="caret"></i>
                     </label>
                     <div class="dock dock-light dock-menu dock-absolute" id="menu-settings-gestalt" data-dropdown>
@@ -131,7 +131,7 @@
                     <label class="nav-menu-item nav-menu-item-centered" for="menu-settings-group"
                            data-component="openable" data-openable-target="#menu-settings-group">
                         {% include 'groups/_avatar.html' with size=24 %}
-                        <span class="nav-menu-item-label">{% trans 'Group' %}</span>
+                        <span class="nav-menu-item-label">{% translate 'Group' %}</span>
                         <i class="caret"></i>
                     </label>
                     <div class="dock dock-light dock-menu dock-absolute" id="menu-settings-group" data-dropdown>

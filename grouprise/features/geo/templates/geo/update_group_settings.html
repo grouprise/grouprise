@@ -10,14 +10,14 @@
         {% csrf_token %}
 
         <div class="section section-group">
-            <h2>{% trans "Location" %}</h2>
-            <p>{% trans "You can define a location for your group that is shown on maps. This could be your common place for meet ups where people can find your group." %}</p>
+            <h2>{% translate "Location" %}</h2>
+            <p>{% translate "You can define a location for your group that is shown on maps. This could be your common place for meet ups where people can find your group." %}</p>
 
             {% include 'geo/location.html' %}
         </div>
 
         <button class="btn btn-primary" type="submit">
-            {% trans "Save settings" %}
+            {% translate "Save settings" %}
         </button>
     </form>
 {% endblock %}

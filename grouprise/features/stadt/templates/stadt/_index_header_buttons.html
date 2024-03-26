@@ -9,7 +9,7 @@
                         <i class="sg sg-intro-group"></i>
                     </span>
                     <span class="action-description">
-                        {% trans 'Your group now!' %}
+                        {% translate 'Your group now!' %}
                     </span>
                 </span>
             </label>
@@ -21,7 +21,7 @@
                         <i class="sg sg-intro-local"></i>
                     </span>
                     <span class="action-description">
-                        {% trans 'For' %} {% target_audience %}
+                        {% translate 'For' %} {% target_audience %}
                     </span>
                 </span>
             </label>
@@ -33,7 +33,7 @@
                         <i class="sg sg-intro-privacy"></i>
                     </span>
                     <span class="action-description">
-                        {% trans 'No pranks' %}
+                        {% translate 'No pranks' %}
                     </span>
                 </span>
             </label>
@@ -45,7 +45,7 @@
                         <i class="sg sg-intro-participate"></i>
                     </span>
                     <span class="action-description">
-                        {% trans 'You rule!' %}
+                        {% translate 'You rule!' %}
                     </span>
                 </span>
             </label>
@@ -54,10 +54,10 @@
     <div class="content-state-enabled">
         <input type="radio" name="sg-help" id="sg-help-group" class="content-state">
         <div class="content-state-target content-info">
-                <p>{% blocktrans with group=about_group trimmed %}
+                <p>{% blocktranslate with group=about_group trimmed %}
                 In a blink you can create a group on {{ group }}, make contributions, open a discussion, announce an event
                 and mingle with other groups and follow their activities.
-                {% endblocktrans %}
+                {% endblocktranslate %}
             </p>
             <p>
                 Willst du erst in den Gruppen <a href="{% url 'group-index' %}">stöbern</a> oder eine
@@ -67,9 +67,9 @@
         <input type="radio" name="sg-help" id="sg-help-local" class="content-state">
         <div class="content-state-target content-info">
             <p>
-                {% blocktrans trimmed %}
+                {% blocktranslate trimmed %}
                 We want to shed light onto local issues and discussions.
-                {% endblocktrans %}
+                {% endblocktranslate %}
             </p>
         </div>
         <input type="radio" name="sg-help" id="sg-help-privacy" class="content-state">

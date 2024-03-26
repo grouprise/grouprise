@@ -9,7 +9,7 @@
         <span class="nav-tab-icon">
             <i class="sg sg-group"></i>
         </span>
-        <span>{% trans 'Groups' %}</span>
+        <span>{% translate 'Groups' %}</span>
         <i class="caret"></i>
     </label>
 {% else %}
@@ -17,7 +17,7 @@
         <span class="nav-tab-icon">
             <i class="sg sg-group"></i>
         </span>
-        <span class="nav-menu-item-label">{% trans 'Groups' %}</span>
+        <span class="nav-menu-item-label">{% translate 'Groups' %}</span>
     </a>
 {% endif %}
 
@@ -28,28 +28,28 @@
             <span class="dock-decoration"></span>
             <header class="dock-header">
                 <div>
-                        <h3>{% trans 'Groups' %}</h3>
+                        <h3>{% translate 'Groups' %}</h3>
                     {% if user.is_authenticated %}
                         <p class="dock-meta">
-                        {% trans "You are member of" %}
+                        {% translate "You are member of" %}
                         <a href="{% url 'group-index' %}?only_with_membership=true">
-                            {% blocktrans trimmed count membership_count=user.gestalt.memberships.count %}
+                            {% blocktranslate trimmed count membership_count=user.gestalt.memberships.count %}
                                 one group
                             {% plural %}
                                 {{ membership_count }} groups
-                            {% endblocktrans %}
+                            {% endblocktranslate %}
                         </a>
                         </p>
                     {% else %}
                         <p class="dock-meta">
-                            {% trans 'Login to see your group memberships.' %}
+                            {% translate 'Login to see your group memberships.' %}
                         </p>
                     {% endif %}
                 </div>
 
                 <a href="{% url 'group-index' %}" class="dock-header-link">
                     <i class="sg sg-group"></i>
-                    <span>{% trans 'All groups' %}</span>
+                    <span>{% translate 'All groups' %}</span>
                 </a>
             </header>
             <div class="dock-content">
@@ -60,7 +60,7 @@
                                 <div class="tabbl-content">
                                     <noscript>
                                         <p class="alert alert-info alert-block">
-                                            {% trans 'Activate Javascript to search for groups' %}
+                                            {% translate 'Activate Javascript to search for groups' %}
                                         </p>
                                     </noscript>
                                     <div data-component="group-search">
