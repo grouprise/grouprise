@@ -17,6 +17,9 @@ class Create(grouprise.features.content.views.Create):
 class FileDownloadView(PermissionMixin, ObjectDownloadView):
     permission_required = "files.download"
 
+    def get_basename(self):
+        return self.object.display_name
+
     def get_object(self, queryset=None):
         try:
             return get_object_or_404(File, file=self.kwargs["name"])
