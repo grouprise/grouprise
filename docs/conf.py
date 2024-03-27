@@ -24,9 +24,9 @@ copyright = 'grouprise contributors'
 author = 'grouprise contributors'
 
 # The short X.Y version
-version = '5.4.5'
+version = '5.5.0'
 # The full version, including alpha/beta/rc tags
-release = '5.4.5'
+release = '5.5.0'
 
 
 # -- General configuration ---------------------------------------------------
