@@ -1,6 +1,7 @@
 import os
 
 import django
+import django.urls
 
 import grouprise.core.tests
 from grouprise.features.associations import models as associations
@@ -85,10 +86,20 @@ class Gestalt(
             self.get_url("create-group-file", self.group.slug), kwargs
         )
 
+    def get_group_file_association(self):
+        return associations.Association.objects.get(content__title="Group File")
+
     def get_group_file_url(self):
-        return associations.Association.objects.get(
-            content__title="Group File"
-        ).get_absolute_url()
+        return self.get_group_file_association().get_absolute_url()
+
+    def get_group_file_download_url(self) -> str:
+        uploaded_file = (
+            self.get_group_file_association()
+            .content.first()
+            .versions.last()
+            .file.first()
+        )
+        return django.urls.reverse("download-file", args=[uploaded_file.file])
 
     def test_gestalt_create_group_file(self):
         self.assertEqual(
@@ -110,6 +121,14 @@ class Gestalt(
         self.create_group_file(public=False)
         self.assertContainsLink(obj=self.group, link_url=self.get_group_file_url())
         self.assertOk(url=self.get_group_file_url())
+
+    def test_gestalt_download_name(self):
+        self.create_group_file(public=True)
+        response = self.client.get(self.get_group_file_download_url())
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            f'attachment; filename="{self.IMAGE_BASENAME}"',
+        )
 
 
 class TestUrls(grouprise.core.tests.Test):
