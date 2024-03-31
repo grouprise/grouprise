@@ -1,7 +1,12 @@
+import contextlib
+import logging
+import typing
+
 from django.urls import reverse
 
 from grouprise.core import tests
 from grouprise.core.matrix import get_dummy_matrix_server, MatrixDummyRoom
+from grouprise.core.utils import suppress_logging
 from grouprise.features.gestalten.models import Gestalt
 from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin
 from grouprise.features.groups.models import Group
@@ -92,6 +97,14 @@ class MatrixChatMixin:
         return cls.matrix_server.rooms[room_id]
 
     @classmethod
+    @contextlib.contextmanager
+    def temporary_public_listener_room(cls, room_id: typing.Optional[str] = None):
+        if room_id is None:
+            room_id = create_public_room()
+        with MATRIX_SETTINGS.temporary_override(PUBLIC_LISTENER_ROOMS=[room_id]):
+            yield cls.matrix_server.rooms.get(room_id, None)
+
+    @classmethod
     def setUpTestData(cls):
         cls.matrix_server.reset()
         super().setUpTestData()
@@ -131,10 +144,7 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
                 self.assertEqual(private_tracker.messages_count, 1)
 
     def test_public_listener_room_receives_notification_for_public_message(self):
-        with MATRIX_SETTINGS.temporary_override(
-            PUBLIC_LISTENER_ROOMS=[create_public_room()]
-        ):
-            room = self.get_public_listener_room()
+        with self.temporary_public_listener_room() as room:
             with MatrixRoomTracker(room) as tracker:
                 self._create_article(public=True)
                 self.assertEqual(tracker.messages_count, 1)
@@ -142,13 +152,24 @@ class MatrixGroupNotifications(MatrixChatMixin, AuthenticatedMemberMixin, tests.
     def test_public_listener_room_does_not_receive_notification_for_private_message(
         self,
     ):
-        with MATRIX_SETTINGS.temporary_override(
-            PUBLIC_LISTENER_ROOMS=[create_public_room()]
-        ):
-            room = self.get_public_listener_room()
+        with self.temporary_public_listener_room() as room:
             with MatrixRoomTracker(room) as tracker:
                 self._create_article(public=False)
                 self.assertEqual(tracker.messages_count, 0)
+
+    def test_public_listener_room_missing_raises_log_message(self):
+        for room_id, logging_assertion in (
+            # emit a log message for a non-existing room
+            ("!invalid:example.com", self.assertLogs),
+            # do not emit a log message, if the room exists
+            (None, self.assertNoLogs),
+        ):
+            with self.subTest(public_listener_room_is_valid=(room_id is None)):
+                with self.temporary_public_listener_room(room_id):
+                    with logging_assertion(
+                        "grouprise.features.matrix_chat", level="WARNING"
+                    ):
+                        self._create_article(public=True)
 
 
 class MatrixGroupLeave(MatrixChatMixin, AuthenticatedMemberMixin, tests.Test):
