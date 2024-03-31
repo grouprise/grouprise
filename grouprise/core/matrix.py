@@ -112,7 +112,8 @@ class MatrixBaseBot:
         else:
             if not isinstance(response, nio.responses.RoomSendResponse):
                 raise MatrixError(
-                    f"Failed to send message due to rejection: {response}"
+                    f"Failed to send message to room '{room_id}' due to rejection:"
+                    f" {response}"
                 )
 
 
