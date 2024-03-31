@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 23:06+0100\n"
-"PO-Revision-Date: 2024-03-26 23:07+0100\n"
+"POT-Creation-Date: 2024-03-31 01:00+0100\n"
+"PO-Revision-Date: 2024-03-31 01:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -71,6 +71,34 @@ msgstr "vierundzwanzig"
 
 msgid "The answer was not quite correct. Please try it again!"
 msgstr "Diese Antwort war nicht ganz richtig. Bitte versuche es erneut!"
+
+msgid "Note on data processing"
+msgstr "Hinweis zur Datenverarbeitung"
+
+msgid "delivering notification messages to you"
+msgstr "Zustellung von Benachrichtigungen für Dich"
+
+#, python-format
+msgid ""
+"Your email address will be stored permanently for the purpose of "
+"%(purpose)s. The address will never be shared with third parties or shown to "
+"other users."
+msgstr "Deine Email-Adresse wird dauerhaft gespeichert (Zweck: %(purpose)s)."
+
+#, python-format
+msgid ""
+"Do you want to delete your email address later? Just <a "
+"href=\"%(url_create_account)s\">create an account</a> with this email "
+"address and delete this account afterwards."
+msgstr ""
+"Möchtest du später Deine Email-Adresse löschen? <a "
+"href=\"%(url_create_account)s\">Lege einen Account</a> mit dieser Email-"
+"Adresse an und lösche diesen Account anschließend."
+
+#, python-format
+msgid "Or just <a href=\"%(url_send_message_to_site)s\">send us a message</a>."
+msgstr ""
+"Oder <a href=\"%(url_send_message_to_site)s\">schick uns eine Nachricht</a>."
 
 msgid "Show group menu"
 msgstr "Zeige Gruppenmenü"
@@ -181,6 +209,9 @@ msgstr ""
 
 msgid "Receive Chat Notifications for new Content"
 msgstr "Empfange Chat-Benachrichtigungen für neue Beiträge"
+
+msgid "delivering responses"
+msgstr "Zustellung von Antworten"
 
 msgid "Discussions"
 msgstr "Gespräche"

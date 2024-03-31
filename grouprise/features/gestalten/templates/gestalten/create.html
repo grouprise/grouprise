@@ -9,19 +9,7 @@
 
         <p> Benutzerkonto schon vorhanden? <a href="{{ login_url }}">Melde dich an.</a></p>
 
-        <div class="disclaimer content-block">
-            <p>Deine E-Mail Adresse wird nicht weitergegeben und auch nicht auf der Seite
-            angezeigt. Sie wird dazu verwendet dir Benachrichtungen zu schicken.</p>
-
-            <p>Deine E-Mail-Adresse wird dauerhaft gespeichert. Um sie später zu löschen,
-            lösche dein Benutzerkonto in den Einstellungen oder
-            {% if about_group %}
-                <a href="{% url 'create-group-conversation' about_group.pk %}">
-                    schreib uns eine Nachricht
-                </a>.
-            {% endif %}
-        </div>
-
+        {% include 'core/_data_protection_notice.html' %}
         <div class="row">
             <div class="col-lg-9 col-sm-8 col-xs-7">
                 {% field form.email %}

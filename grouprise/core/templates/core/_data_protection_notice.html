@@ -1,0 +1,33 @@
+{% comment %}
+Provide an HTML snippet for describing the usage of an email address in the current context.
+
+Parameters:
+- "purpose": description of the purpose of storing the address (default: delivery of notifications)
+{% endcomment %}
+
+{% load i18n %}
+{# "groups" provides "about_group" #}
+{% load groups %}
+
+<div class="disclaimer content-block">
+  <h2>{% translate 'Note on data processing' %}</h2>
+  <p>
+    {% blocktranslate trimmed with purpose=purpose|default:_('delivering notification messages to you') %}
+      Your email address will be stored permanently for the purpose of {{ purpose }}.
+      The address will never be shared with third parties or shown to other users.
+    {% endblocktranslate %}
+  </p>
+  <p>
+    {% url 'account_signup' as url_create_account %}
+    {% blocktranslate trimmed %}
+      Do you want to delete your email address later?
+      Just <a href="{{ url_create_account }}">create an account</a> with this email address and delete this account afterwards.
+    {% endblocktranslate %}
+    {% if about_group %}
+      {% url 'create-group-conversation' about_group.pk as url_send_message_to_site %}
+      {% blocktranslate trimmed %}
+        Or just <a href="{{ url_send_message_to_site }}">send us a message</a>.
+      {% endblocktranslate %}
+    {% endif %}
+  </p>
+</div>

@@ -1,13 +1,7 @@
 <form method="post" data-component="publish" action="{{ action }}">
     {% csrf_token %}
     {% if form.author %}
-        <div class="disclaimer content-block">
-            <p>
-            Deine E-Mail-Adresse wird zusammen mit Deiner Nachricht dauerhaft gespeichert. Du erhältst Benachrichtungen für Antworten auf Deine Nachricht.
-            </p>
-            <p>Um die E-Mail-Adresse später zu löschen, <a href="{% url 'account_signup' %}">leg ein Benutzerkonto unter der E-Mail-Adresse an</a> und lösche es anschließend oder <a href="{% url 'create-group-conversation' about_group.pk %}">schreib uns eine Nachricht</a>.
-            </p>
-        </div>
+        {% include 'core/_data_protection_notice.html' with purpose=_('delivering responses') %}
         <div class="row">
             <div class="col-lg-9 col-sm-8 col-xs-7">
                 {% field form.author %}
