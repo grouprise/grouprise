@@ -1,34 +1,11 @@
 import sys
 
+from django.db.backends.signals import connection_created
 from django.apps import AppConfig
 from django.conf import settings
 from setproctitle import setproctitle
 
 from grouprise import __release__
-
-
-def _register_startup_hooks():
-    """register the startup hooks after the Django settings were at least partially resolved
-
-    The startup hooks cannot be imported at the top level of this module, since the import of
-    the `huey.contrib.djhuey` module relies on a properly populated settings store.
-
-    Thus, we need to run `_resolve_django_settings` before importing `on_startup`.
-    """
-    from huey.contrib.djhuey import on_startup
-
-    @on_startup()
-    def _resolve_lazy_core_settings():
-        """we need to ensure, that all settings are resolved (required for async tasks)
-
-        Django (at least up to 4.x) does not allow ORM requests in async contexts.
-
-        Most settings are probably populated in `_resolve_django_settings`.
-        But some settings may remain unresolved at that (early) moment of app initialization.
-        """
-        from .settings import CORE_SETTINGS
-
-        CORE_SETTINGS.resolve_lazy_settings()
 
 
 def _set_process_title_for_tasks():
@@ -49,7 +26,7 @@ def _set_process_title_for_tasks():
         setproctitle("grouprise-tasks")
 
 
-def _resolve_django_settings():
+def _resolve_django_settings_on_first_connect(sender, **kwargs):
     from .settings import CORE_SETTINGS
 
     try:
@@ -59,6 +36,9 @@ def _resolve_django_settings():
         # "migrate" (before the django site is written to the database).
         # We just hope, this works *almost* always.
         pass
+    else:
+        # disconnect the signal as soon as we succeeded
+        connection_created.disconnect(_resolve_django_settings_on_first_connect)
 
 
 def _configure_sentry():
@@ -82,7 +62,6 @@ class CoreConfig(AppConfig):
 
     def ready(self):
         self.module.autodiscover()
-        _resolve_django_settings()
         _set_process_title_for_tasks()
-        _register_startup_hooks()
         _configure_sentry()
+        connection_created.connect(_resolve_django_settings_on_first_connect)
