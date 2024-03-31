@@ -33,5 +33,9 @@ app_run: app_migrate app_collect_static app_compile_translations
 app_collect_static: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP) assets
 	( . "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py collectstatic --no-input )
 
+.PHONY: app_compile_translations
+app_compile_translations: PO_EDITOR=
+app_compile_translations: django-translate
+
 .PHONY: app_local_settings
 app_local_settings: $(CONFIG_APP_SETUP)

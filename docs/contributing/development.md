@@ -40,7 +40,7 @@ This new file should be referenced in the *hidden* section of `docs/release/inde
 
 Run `make django-translate` for collecting the translatable strings and for opening a translation
 editor.
-Add the argument `PO_EDITOR=`, if you want to skip the editor call.
+Run `make app_compile_translations`, if you just want to compile all translation catalogues.
 
 The translation files (`*.po`) are stored below `grouprise/locale`.
 They can be edited manually with any suitable editor.
