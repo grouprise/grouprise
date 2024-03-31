@@ -183,7 +183,18 @@ class MatrixGroupInvitationAfterJoin(
 
     def tearDown(self):
         """reset group membership, invitations and matrix IDs"""
-        self.group.members.clear()
+
+        def ignore_room_kick_warnings(record):
+            return (record.levelno != logging.WARNING) or (
+                "RoomKickError" not in record.msg
+            )
+
+        # Suppress RoomKickError log messages due to changes of the matrix ID or other
+        # expected deviations.
+        with suppress_logging(
+            "grouprise.features.matrix_chat.matrix_bot", ignore_room_kick_warnings
+        ):
+            self.group.members.clear()
         private_room, public_room = self.get_group_rooms(self.group)
         private_room.members.clear()
         public_room.members.clear()

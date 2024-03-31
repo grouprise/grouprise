@@ -1,4 +1,7 @@
+import contextlib
 import locale
+import logging
+import typing
 from calendar import different_locale
 from hashlib import sha256
 
@@ -70,3 +73,20 @@ def hash_captcha_answer(value):
     answer = str(value).strip().lower()
     to_encode = (settings.SECRET_KEY + answer).encode()
     return sha256(to_encode).hexdigest()
+
+
+@contextlib.contextmanager
+def suppress_logging(
+    logger_name: str, logging_filter: typing.Callable | logging.Filter
+):
+    """temporarily ignore log messages matching a filter function
+
+    The `logger_name` needs to match the *exact* logger emitting the message, since logger-based
+    filters to not apply to descendant loggers.
+    """
+    logger = logging.getLogger(logger_name)
+    logger.addFilter(logging_filter)
+    try:
+        yield
+    finally:
+        logger.removeFilter(logging_filter)

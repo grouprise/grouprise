@@ -195,7 +195,8 @@ class Test(test.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        logging.disable(logging.CRITICAL)
+        logging.getLogger("grouprise").setLevel(logging.WARNING)
+        logging.getLogger("django.request").setLevel(logging.WARNING)
         MatrixConsoleClient.output_stream = None
         cls._verify_task_runner_immediate_mode()
         super().setUpClass()
@@ -203,7 +204,6 @@ class Test(test.TestCase):
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
-        logging.disable(logging.NOTSET)
 
 
 class RenderingTest(Test):

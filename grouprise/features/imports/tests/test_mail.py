@@ -125,17 +125,19 @@ class ContentViaLMTP(MailInjectLMTPMixin, tests.Test):
         # Mails with a wrong target domain should never reach us. They are probably caused by a
         # configuration error of the local mail server.
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            rejections = self.inject_mail(
-                get_full_address("foo"), ["foo@example.org"], data=b"foo"
-            )
+            with self.assertLogs(level="ERROR"):
+                rejections = self.inject_mail(
+                    get_full_address("foo"), ["foo@example.org"], data=b"foo"
+                )
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
     def test_reject_non_existing_target_group(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            rejections = self.inject_mail(
-                get_full_address("foo"), [get_full_address("foo")], data=b"foo"
-            )
+            with self.assertLogs(level="ERROR"):
+                rejections = self.inject_mail(
+                    get_full_address("foo"), [get_full_address("foo")], data=b"foo"
+                )
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
@@ -169,14 +171,15 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
             magic_bad_mail = self.assemble_mail_data(
                 {"Subject": MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST}, "foo"
             )
-            self.assertRaisesRegex(
+            with self.assertRaisesRegex(
                 SMTPDataError,
                 re.escape("(451, 'Requested action aborted: error in processing')"),
-                self.inject_mail,
-                self.gestalt.user.email,
-                [self.group_address],
-                magic_bad_mail,
-            )
+            ):
+                # The "ValueError" will cause an "Internal error ..." log message.
+                with self.assertLogs(level="ERROR"):
+                    self.inject_mail(
+                        self.gestalt.user.email, [self.group_address], magic_bad_mail
+                    )
             self.assertEqual(1, len(get_new_mails()))
             self.assertIn(
                 MAGIC_SUBJECT_FOR_INTERNAL_ERROR_TEST.swapcase(),
@@ -190,18 +193,20 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
 
     def test_reject_initial_contribution_from_non_member(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            self.inject_mail(
-                "unauthorized@example.org", [self.group_address], data=b"foo"
-            )
+            with self.assertLogs(level="ERROR"):
+                self.inject_mail(
+                    "unauthorized@example.org", [self.group_address], data=b"foo"
+                )
             self.assertEqual(1, len(get_new_mails()))
             self.assertIsProcessingFailureReply(get_new_mails()[0])
 
     def test_discard_wrong_domain(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
             wrong_target_domain = self.group_address.replace("@", "@x")
-            rejections = self.inject_mail(
-                self.gestalt.user.email, [wrong_target_domain], data=b"foo"
-            )
+            with self.assertLogs(level="ERROR"):
+                rejections = self.inject_mail(
+                    self.gestalt.user.email, [wrong_target_domain], data=b"foo"
+                )
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
@@ -426,11 +431,12 @@ class ConversationInitiateByEmailViaLMTP(
 
     def test_conversation_initiate_by_email_failing(self):
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            rejections = self.inject_mail(
-                self.gestalt.user.email,
-                [get_full_address("not-existing")],
-                data=self.assemble_mail_data({}, body="Text C"),
-            )
+            with self.assertLogs(level="ERROR"):
+                rejections = self.inject_mail(
+                    self.gestalt.user.email,
+                    [get_full_address("not-existing")],
+                    data=self.assemble_mail_data({}, body="Text C"),
+                )
             self.assertEqual(1, len(rejections))
             self.assertEqual(0, len(get_new_mails()))
 
@@ -472,11 +478,12 @@ class ConversationReplyByEmailViaLMTP(
             wrong_reply_to = reply_to.swapcase()
         # start again with counting new mails for the reply
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            self.inject_mail(
-                self.other_gestalt.user.email,
-                [wrong_reply_to],
-                data=self.assemble_mail_data({}, body="Text D"),
-            )
+            with self.assertLogs(level="ERROR"):
+                self.inject_mail(
+                    self.other_gestalt.user.email,
+                    [wrong_reply_to],
+                    data=self.assemble_mail_data({}, body="Text D"),
+                )
             self.assertEqual(1, len(get_new_mails()))
             self.assertIsProcessingFailureReply(get_new_mails()[0])
             self.assertNotExists(models.Contribution, text__text="Text D")
@@ -491,12 +498,13 @@ class ConversationReplyByEmailViaLMTP(
             reply_to = get_new_mails()[0].extra_headers["Reply-To"]
         # start again with counting new mails for the reply
         with self.fresh_outbox_mails_retriever() as get_new_mails:
-            # the token belongs to "other_gestalt" - thus "gestalt" may not use it
-            self.inject_mail(
-                self.gestalt.user.email,
-                [reply_to],
-                data=self.assemble_mail_data({}, body="Text F"),
-            )
+            with self.assertLogs(level="ERROR"):
+                # the token belongs to "other_gestalt" - thus "gestalt" may not use it
+                self.inject_mail(
+                    self.gestalt.user.email,
+                    [reply_to],
+                    data=self.assemble_mail_data({}, body="Text F"),
+                )
             self.assertEqual(1, len(get_new_mails()))
             self.assertIsProcessingFailureReply(get_new_mails()[0])
             self.assertNotExists(models.Contribution, text__text="Text F")
