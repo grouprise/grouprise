@@ -245,7 +245,10 @@ class MatrixConsoleClient:
     @room_resolver(nio.responses.RoomKickError)
     async def room_kick(self, room, kicked_id, reason=None):
         self._log(f"Kicking {kicked_id} from room: {room.label}")
-        room.members.remove(kicked_id)
+        try:
+            room.members.remove(kicked_id)
+        except KeyError:
+            return nio.responses.RoomKickError("Kicking a non-joined user")
         return nio.responses.RoomKickResponse()
 
     @room_resolver(nio.responses.JoinedMembersError)
