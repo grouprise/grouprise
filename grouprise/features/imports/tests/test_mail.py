@@ -227,11 +227,12 @@ class GroupContentViaLMTP(GroupMailMixin, MailInjectLMTPMixin, tests.Test):
             ("X-AUTORESPONDER", "foo", True),
         ):
             with self.fresh_outbox_mails_retriever() as get_new_mails:
-                self.inject_mail(
-                    get_full_address("foo"),
-                    [self.group_address],
-                    data=self.assemble_mail_data({header_key: header_value}),
-                )
+                with self.assertNoLogs(level="ERROR"):
+                    self.inject_mail(
+                        self.gestalt.user.email,
+                        [self.group_address],
+                        data=self.assemble_mail_data({header_key: header_value}),
+                    )
                 self.assertEqual(
                     is_ignored, len(get_new_mails()) == 0, (header_key, header_value)
                 )
