@@ -79,9 +79,11 @@ class LazySettingsResolver:
         for key, value in kwargs.items():
             previous_content[key] = getattr(self, key)
             setattr(self, key, value)
-        yield self
-        for key, value in previous_content.items():
-            setattr(self, key, value)
+        try:
+            yield self
+        finally:
+            for key, value in previous_content.items():
+                setattr(self, key, value)
 
 
 def ensure_resolved_settings(settings):
