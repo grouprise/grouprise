@@ -1,6 +1,7 @@
 VIRTUALENV_UPDATE_STAMP = $(DIR_BUILD)/.virtualenv-update.stamp
 REQUIREMENTS_FILE = requirements.txt
 CONFIG_APP_SETUP ?= grouprise.conf.d/
+CONFIG_DEFAULT_SETUP ?= grouprise-dev.conf.d/
 
 
 $(VIRTUALENV_UPDATE_STAMP): $(REQUIREMENTS_FILE) virtualenv-update
@@ -9,7 +10,7 @@ $(VIRTUALENV_UPDATE_STAMP): $(REQUIREMENTS_FILE) virtualenv-update
 .PHONY: $(CONFIG_APP_SETUP)
 $(CONFIG_APP_SETUP):
 	if [ -z "$$(find "$(CONFIG_APP_SETUP)" -name '*.yaml')" ]; then \
-		cp grouprise-dev.conf.d/*.yaml "$(CONFIG_APP_SETUP)"; \
+		cp "$(CONFIG_DEFAULT_SETUP)"/*.yaml "$(CONFIG_APP_SETUP)/"; \
 	fi
 
 .PHONY: app_migrate
