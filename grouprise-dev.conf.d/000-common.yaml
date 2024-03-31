@@ -10,8 +10,6 @@ matrix_chat:
     enabled: true
     bot_username: grouprise-bot
     bot_access_token: 'SECRET_ACCESS_TOKEN'
-    public_listener_rooms:
-        - "!foo:example.org"
     backend: console
 matrix_commander:
     enabled: true
