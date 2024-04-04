@@ -18,14 +18,15 @@ Build-Depends:
  sphinx,
  wget,
 # These should be kept in sync with the dependencies of all related binary packages.
-# See also: make.d/ci.mk
  python3-all,
  python3-aiosmtpd,
+ python3-aiosmtplib,
  python3-asgiref,
  python3-bleach,
  python3-boltons,
  python3-django (>= 2:3.2),
  python3-django-allauth,
+ python3-django-cachalot,
  python3-django-csp,
  python3-django-debug-toolbar,
  python3-django-downloadview,
@@ -33,6 +34,7 @@ Build-Depends:
  python3-django-haystack,
  python3-django-imagekit,
  python3-django-ipware,
+ python3-django-oauth-toolkit,
  python3-django-rules,
  python3-django-taggit,
  python3-djangorestframework (>= 3.9),
@@ -63,13 +65,13 @@ Depends:
  grouprise-db-postgresql | grouprise-db-sqlite,
  moreutils,
 # Python dependencies should be added to the Build-Depends field of the source package too!
-# See also: make.d/ci.mk
  python3-all,
  python3-asgiref,
  python3-bleach,
  python3-boltons,
  python3-django (>= 2.2),
  python3-django-allauth,
+ python3-django-cachalot,
  python3-django-csp,
  python3-django-debug-toolbar,
  python3-django-downloadview,
@@ -77,6 +79,7 @@ Depends:
  python3-django-haystack,
  python3-django-imagekit,
  python3-django-ipware,
+ python3-django-oauth-toolkit,
  python3-django-rules,
  python3-django-taggit,
  python3-djangorestframework (>= 3.9),
@@ -146,7 +149,10 @@ Description: Dependency package for SQLite support in grouprise
 
 Package: grouprise-lmtpd
 Architecture: all
-Depends: grouprise, python3-aiosmtpd
+Depends:
+ grouprise,
+ python3-aiosmtpd,
+ python3-aiosmtplib,
 Description: Handling of incoming mails for the grouprise platform
  Grouprise is a web-based platform providing tools for groups and
  initiatives in a local context.

@@ -8,7 +8,7 @@
 #    * Depends in package "grouprise"
 #
 aiosmtpd                    # debian: python3-aiosmtpd
-aiosmtplib                  # debian (bookworm): python3-aiosmtplib
+aiosmtplib                  # debian: python3-aiosmtplib
 # a problem with `sync_to_async` was fixed in that version
 asgiref>=3.5.1              # debian: python3-asgiref
 bleach                      # debian: python3-bleach
@@ -18,7 +18,7 @@ boltons                     # debian: python3-boltons
 # TODO: remove `<4` after https://github.com/parruc/django-imagekit/commit/8180f3a3 is released
 django>=3.2,<4              # debian: python3-django
 django-allauth              # debian: python3-django-allauth
-django-cachalot>=2.4.4      # debian (bookworm): python3-django-cachalot
+django-cachalot>=2.4.4      # debian: python3-django-cachalot
 django-cors-middleware      # debian: python3-django-cors-headers
 django-csp                  # debian: python3-django-csp
 django-debug-toolbar        # debian: python3-django-debug-toolbar
@@ -29,7 +29,7 @@ django-ical                 # debian: python3-django-ical
 django-imagekit             # debian: python3-django-imagekit
 django-ipware               # debian: python3-django-ipware
 # OIDC support was introduced in v1.5.0
-django-oauth-toolkit>=1.5   # debian (bookworm): python3-django-oauth-toolkit
+django-oauth-toolkit>=1.5   # debian: python3-django-oauth-toolkit
 django-taggit>=1.2.0        # debian: python3-django-taggit
 djangorestframework>=3.9    # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
