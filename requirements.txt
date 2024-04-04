@@ -51,4 +51,5 @@ rules                       # debian: python3-django-rules
 schulze                     # NOT IN DEBIAN
 sentry-sdk                  # debian: python3-sentry-sdk
 setproctitle                # debian: python3-setproctitle
-xapian-haystack>=3.0        # debian: python3-xapian-haystack
+# xapian-haystack 3.0 erronously did not announce its requirement for django>=3.x
+xapian-haystack>=3.1        # debian: python3-xapian-haystack

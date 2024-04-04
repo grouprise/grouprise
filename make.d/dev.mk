@@ -22,6 +22,8 @@ help-grouprise:
 	@echo "    run-docker-deb-prepared  - enter a local docker instance prepared for installing deb packages"
 	@echo "    tags                - generate tags file for grouprise code"
 	@echo "    test                - run tests locally"
+	@echo "    test-python-in-container           - run python-based tests in a docker container used by the current CI environment"
+	@echo "    test-python-in-container-bullseye  - run python-based tests in a docker container based on Debian Bullseye"
 	@echo
 
 help: help-grouprise

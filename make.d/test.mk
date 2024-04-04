@@ -7,6 +7,7 @@ SPELLING_IGNORE_FILE = .codespell-ignore-filenames
 ASSETS_TEMPLATE = grouprise/core/templates/core/assets/_assets.html
 
 CONTAINER_RUNNER = $(shell which docker podman | head -1)
+CONTAINER_RUNNER_BUILD_PARAMS ?=
 
 .PHONY: lint
 lint: lint_js lint_packages lint_spelling
@@ -62,12 +63,23 @@ $(ASSETS_TEMPLATE):
 .PHONY: _run-in-test-container
 _run-in-test-container:
 	@echo "NOTE: Initial test environment creation or regeneration after dependency updates might take a few minutes..." >&2
-	container_id=$$("$(CONTAINER_RUNNER)" build --file ./docker/tests/Dockerfile --target "$(TARGET)" --quiet .) \
-		&&  "$(CONTAINER_RUNNER)" run --rm -it "$$container_id" $(COMMAND)
+	container_id=$$( \
+		"$(CONTAINER_RUNNER)" build \
+			--file ./docker/tests/Dockerfile \
+			--target "$(TARGET)" \
+			--quiet \
+			$(CONTAINER_RUNNER_BUILD_PARAMS) \
+			. \
+	) &&  "$(CONTAINER_RUNNER)" run --rm -it "$$container_id" $(COMMAND)
 
 .PHONY: test-python-in-container
 test-python-in-container:
 	@$(MAKE) --no-print-directory --jobs=1 _run-in-test-container TARGET=test-python
+
+.PHONY: test-python-in-container-bullseye
+test-python-in-container-bullseye: CONTAINER_RUNNER_BUILD_PARAMS += "--build-arg DOCKER_IMAGE_RUNTIME=docker.io/debian:bullseye-backports"
+test-python-in-container-bullseye: CONTAINER_RUNNER_BUILD_PARAMS += "--build-arg DOCKER_IMAGE_EXTRA_DEPENDENCIES=python3-django/backports"
+test-python-in-container-bullseye: test-python-in-container
 
 .PHONY: test_js
 test_js: $(STAMP_NODE_MODULES) lint_js

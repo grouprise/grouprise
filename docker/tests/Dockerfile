@@ -1,3 +1,8 @@
+# The image specified in `DOCKER_IMAGE_RUNTIME` is used for the test environment.
+# The build procedure should always run in the same image, that is used by our CI.
+ARG DOCKER_IMAGE_RUNTIME=docker.io/debian:bookworm-slim
+ARG DOCKER_IMAGE_EXTRA_DEPENDENCIES=
+
 FROM docker.io/debian:bookworm-slim AS build-deps
 RUN apt update -y \
     && apt upgrade -y \
@@ -7,7 +12,7 @@ RUN mk-build-deps control \
     && mv *.deb build-deps.deb
 
 
-FROM docker.io/debian:bookworm-slim AS base
+FROM $DOCKER_IMAGE_RUNTIME AS base
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y \
     && apt upgrade -y \
@@ -24,6 +29,8 @@ RUN apt update -y \
 # configure locales
 RUN echo 'de_DE.UTF-8 UTF-8' >/etc/locale.gen \
     && locale-gen
+
+RUN if [ -n "$DOCKER_IMAGE_EXTRA_DEPENDENCIES" ]; then apt-get install --yes $DOCKER_IMAGE_EXTRA_DEPENDENCIES; fi
 
 # install project dependencies
 COPY --from=build-deps build-deps.deb /tmp/build-deps.deb
