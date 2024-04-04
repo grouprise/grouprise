@@ -14,9 +14,7 @@ asgiref>=3.5.1              # debian: python3-asgiref
 bleach                      # debian: python3-bleach
 boltons                     # debian: python3-boltons
 # Django 3.2 or later is supported
-# Django 4.x is not usable, due to imagekit (v4.1) failing to support it
-# TODO: remove `<4` after https://github.com/parruc/django-imagekit/commit/8180f3a3 is released
-django>=3.2,<4              # debian: python3-django
+django>=3.2                 # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 django-cachalot>=2.4.4      # debian: python3-django-cachalot
 django-cors-middleware      # debian: python3-django-cors-headers
@@ -26,7 +24,7 @@ django-downloadview         # debian: python3-django-downloadview
 django-filter               # debian: python3-django-filters
 django-haystack             # debian: python3-django-haystack
 django-ical                 # debian: python3-django-ical
-django-imagekit             # debian: python3-django-imagekit
+django-imagekit>=5.0        # debian: python3-django-imagekit
 django-ipware               # debian: python3-django-ipware
 # OIDC support was introduced in v1.5.0
 django-oauth-toolkit>=1.5   # debian: python3-django-oauth-toolkit
