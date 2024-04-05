@@ -4,12 +4,10 @@ from asgiref.sync import async_to_sync, sync_to_async
 from huey import crontab
 from huey.contrib.djhuey import db_periodic_task
 
-from grouprise.core.settings import ensure_resolved_settings
 from grouprise.core.tasks import TaskExpiry, TaskPriority
 from grouprise.features.groups.models import Group
 
 from .matrix_bot import ChatBot
-from .settings import MATRIX_SETTINGS
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +18,6 @@ logger = logging.getLogger(__name__)
     priority=TaskPriority.STATISTICS,
     expires=TaskExpiry.HOURLY,
 )
-@ensure_resolved_settings(MATRIX_SETTINGS)
 @async_to_sync
 async def update_matrix_chat_statistics():
     logger.info("Update statistics for matrix chats")
@@ -38,7 +35,6 @@ def _get_all_groups():
     priority=TaskPriority.SYNCHRONIZATION,
     expires=TaskExpiry.HOURLY,
 )
-@ensure_resolved_settings(MATRIX_SETTINGS)
 @async_to_sync
 async def synchronize_matrix_rooms():
     """synchronize any outstanding missing room updates

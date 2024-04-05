@@ -1,6 +1,5 @@
 import sys
 
-from django.db.backends.signals import connection_created
 from django.apps import AppConfig
 from django.conf import settings
 from setproctitle import setproctitle
@@ -26,21 +25,6 @@ def _set_process_title_for_tasks():
         setproctitle("grouprise-tasks")
 
 
-def _resolve_django_settings_on_first_connect(sender, **kwargs):
-    from .settings import CORE_SETTINGS
-
-    try:
-        CORE_SETTINGS.resolve_lazy_settings()
-    except Exception:
-        # Resolution may fail under certain circumstances, e.g. during the initial run of
-        # "migrate" (before the django site is written to the database).
-        # We just hope, this works *almost* always.
-        pass
-    else:
-        # disconnect the signal as soon as we succeeded
-        connection_created.disconnect(_resolve_django_settings_on_first_connect)
-
-
 def _configure_sentry():
     # configure sentry if DSN has been defined
     sentry_dsn = getattr(settings, "SENTRY_DSN", None)
@@ -64,4 +48,3 @@ class CoreConfig(AppConfig):
         self.module.autodiscover()
         _set_process_title_for_tasks()
         _configure_sentry()
-        connection_created.connect(_resolve_django_settings_on_first_connect)

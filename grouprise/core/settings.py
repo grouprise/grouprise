@@ -1,9 +1,9 @@
 import contextlib
-import functools
 import os
 
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.db.models.signals import post_migrate
 from django.templatetags.static import static
 
 try:
@@ -24,9 +24,6 @@ class LazySettingsResolver:
     """
 
     def __init__(self, **kwargs):
-        def lazy_resolver(func):
-            return functools.lru_cache()(func)
-
         self._attribute_names = set()
         self._unresolved_attributes = {}
         # set the attribute values or (for callables) a lazy evaluator
@@ -37,6 +34,12 @@ class LazySettingsResolver:
                 # simple attribute values
                 setattr(self, key, value)
             self._attribute_names.add(key)
+        # ensure that all lazy evaluations are resolved in an early sync context
+        post_migrate.connect(self.resolve_on_post_migrate)
+
+    def resolve_on_post_migrate(self, sender, **kwargs):
+        if self.resolve_lazy_settings():
+            post_migrate.disconnect(self.resolve_on_post_migrate)
 
     def __getattr__(self, name):
         """implement a lazy evaluation mechanism (similar to functools.cached_property)
@@ -50,6 +53,7 @@ class LazySettingsResolver:
         `__set_name__` needs to be called explicitly on the new `cached_property` instance.
         See https://bugs.python.org/issue38517
         """
+
         try:
             value_func = self._unresolved_attributes[name]
         except KeyError:
@@ -63,14 +67,21 @@ class LazySettingsResolver:
             self._unresolved_attributes.pop(name, None)
             return value
 
-    def resolve_lazy_settings(self):
+    def resolve_lazy_settings(self) -> bool:
         """force the resolution of all "lazy" configuration values
 
         This method should be called right after the app is ready in order to ensure, that no
         unexpected sync calls (e.g. depending on the ORM) are executed in an async context.
         """
+        failures = set()
         for name in list(self._unresolved_attributes):
-            getattr(self, name)
+            try:
+                getattr(self, name)
+            except Exception:
+                # Resolution may fail under certain circumstances, e.g. the test context seems to
+                # emit `post_migrate` too early.
+                failures.add(name)
+        return not failures
 
     @contextlib.contextmanager
     def temporary_override(self, **kwargs):
@@ -84,25 +95,6 @@ class LazySettingsResolver:
         finally:
             for key, value in previous_content.items():
                 setattr(self, key, value)
-
-
-def ensure_resolved_settings(settings):
-    """decorator for resolving a LazySettingsResolver instance before a function is executed
-
-    This decorator is intended for situations, where a function is wrapped into `async_to_sync`,
-    but it is not guaranteed, that ORM-related functions (which are forbidden in an async context
-    in Django 3.x and 4.x) are needed at runtime.
-    """
-
-    def wrapper_outer(func):
-        @functools.wraps(func)
-        def wrapper_inner(*args, **kwargs):
-            settings.resolve_lazy_settings()
-            return func(*args, **kwargs)
-
-        return wrapper_inner
-
-    return wrapper_outer
 
 
 def get_grouprise_baseurl():
