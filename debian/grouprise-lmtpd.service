@@ -4,6 +4,7 @@ After=network-online.target
 Wants=network-online.target
 PartOf=grouprise.service
 ReloadPropagatedFrom=grouprise.service
+StartLimitIntervalSec=0
 
 [Service]
 User=_grouprise
@@ -11,7 +12,6 @@ Group=_grouprise
 ExecStart=/usr/bin/grouprisectl run_lmtpd localhost 1025
 Restart=always
 RestartSec=60s
-StartLimitIntervalSec=0
 
 [Install]
 WantedBy=multi-user.target
