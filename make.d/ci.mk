@@ -23,10 +23,14 @@ ci_image_build:
 ci_image_push:
 	docker push "$(CI_BUILD_IMAGE)"
 
-.PHONY: ci_docker_login
-ci_docker_login:
+.PHONY: _ci_cocker_login_single_job
+_ci_cocker_login_single_job:
 	@echo "Login credentials correspond to those of your GitLab account"
 	docker login "$(DOCKER_REGISTRY)"
+
+.PHONY: ci_docker_login
+ci_docker_login:
+	$(MAKE) --jobs=1 _ci_cocker_login_single_job
 
 .PHONY: ci_docker_logout
 ci_docker_logout:
