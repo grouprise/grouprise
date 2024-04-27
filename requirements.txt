@@ -27,7 +27,8 @@ django-ical                 # debian: python3-django-ical
 django-imagekit>=5.0        # debian: python3-django-imagekit
 django-ipware               # debian: python3-django-ipware
 # OIDC support was introduced in v1.5.0
-django-oauth-toolkit>=1.5   # debian: python3-django-oauth-toolkit
+# v1.7.0 (part of Debian Bookworm) accidentally introduced a dependency on celery (fixed in v1.7.1)
+django-oauth-toolkit>=1.5,!=1.7.0  # debian: python3-django-oauth-toolkit
 django-taggit>=1.2.0        # debian: python3-django-taggit
 djangorestframework>=3.9    # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
