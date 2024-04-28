@@ -171,6 +171,10 @@ Description: Documentation for the grouprise platform
 Package: grouprise-dependencies
 Architecture: all
 Depends:
+# xapian-haystack v3.1 introduced a dependency on "filelock", but our building recipe for
+# "grouprise-dependencies" omits this dependency, since `python3-filelock` is already part of the
+# build environment (for unknown reasons).
+ python3-filelock,
  ${misc:Depends},
 Description: Dependencies for the grouprise package
  Grouprise is a web-based platform providing tools for groups and
