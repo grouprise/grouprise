@@ -2,6 +2,8 @@ from django.db import models
 import django_filters
 from rest_framework import serializers
 
+from .settings import GEO_SETTINGS
+
 
 class HasLocationFilter(django_filters.BooleanFilter):
     def __init__(self, model_cls, *args, **kwargs):
@@ -9,6 +11,9 @@ class HasLocationFilter(django_filters.BooleanFilter):
         super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
+        if not GEO_SETTINGS.ENABLED:
+            return qs.none()
+
         from .models import Location
 
         if value is None:
@@ -27,6 +32,9 @@ class LocationField(serializers.Field):
         return instance
 
     def to_representation(self, instance):
+        if not GEO_SETTINGS.ENABLED:
+            return None
+
         from .models import Location
 
         try:
