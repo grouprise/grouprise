@@ -16,6 +16,7 @@ boltons                     # debian: python3-boltons
 # Django 3.2 or later is supported
 django>=3.2                 # debian: python3-django
 django-allauth              # debian: python3-django-allauth
+# previous versions had an issue with the django-taggit module
 django-cachalot>=2.4.4      # debian: python3-django-cachalot
 django-cors-middleware      # debian: python3-django-cors-headers
 django-csp                  # debian: python3-django-csp
@@ -30,7 +31,7 @@ django-ipware               # debian: python3-django-ipware
 # v1.7.0 (part of Debian Bookworm) accidentally introduced a dependency on celery (fixed in v1.7.1)
 django-oauth-toolkit>=1.5,!=1.7.0  # debian: python3-django-oauth-toolkit
 django-taggit>=1.2.0        # debian: python3-django-taggit
-djangorestframework>=3.9    # debian: python3-djangorestframework
+djangorestframework         # debian: python3-djangorestframework
 feedparser                  # debian: python3-feedparser
 flake8                      # debian: python3-flake8
 gdal                        # debian: python3-gdal
