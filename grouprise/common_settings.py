@@ -80,7 +80,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
     # grouprise
-    "grouprise.features.geo.middleware.GeoAppConfigMiddleware",
     "grouprise.features.gestalten.middleware.GestaltAppConfigMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 ]

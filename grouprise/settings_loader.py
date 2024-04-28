@@ -10,7 +10,7 @@ import os
 import pathlib
 import re
 import types
-from typing import Any, List, Optional, Set, Tuple, Union
+from typing import Any, Optional, Set, Sequence, Union
 import urllib.parse
 
 """
@@ -970,9 +970,16 @@ class AdministratorEmailsConfig(ListConfig):
 
 
 class DjangoAppEnableConfig(BooleanConfig):
-    def __init__(self, app_names: Union[List[str], Tuple[str, ...]], *args, **kwargs):
+    def __init__(
+        self,
+        app_names: Sequence[str],
+        middleware_names: Sequence[str] = (),
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.app_names = app_names
+        self.middleware_names = middleware_names
 
     def apply_to_settings(self, settings: dict, value: Any) -> None:
         # store the boolean value
@@ -980,6 +987,9 @@ class DjangoAppEnableConfig(BooleanConfig):
         if value:
             apps = _get_nested_dict_value(settings, ["INSTALLED_APPS"], [])
             apps.extend(self.app_names)
+            if self.middleware_names:
+                middleware = _get_nested_dict_value(settings, ["MIDDLEWARE"], [])
+                middleware.extend(self.middleware_names)
 
 
 class MarixRoomIDList(ListConfig):
@@ -1464,6 +1474,9 @@ def import_settings_from_dict(settings: dict, config: dict, base_directory=None)
             app_names=(
                 "grouprise.features.geo",
                 "django.contrib.gis",
+            ),
+            middleware_names=(
+                "grouprise.features.geo.middleware.GeoAppConfigMiddleware",
             ),
         ),
         TileServerConfig(
