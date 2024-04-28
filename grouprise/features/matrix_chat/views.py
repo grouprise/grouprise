@@ -250,9 +250,9 @@ class ShowMatrixChatHelp(django.views.generic.TemplateView):
         kwargs["help_element_url"] = "https://element.io/help"
         kwargs["matrix_url"] = "https://matrix.org/"
         kwargs["element_url"] = "https://github.com/vector-im/element-web"
-        kwargs[
-            "element_android_url"
-        ] = "https://matrix.org/docs/projects/client/element-android"
+        kwargs["element_android_url"] = (
+            "https://matrix.org/docs/projects/client/element-android"
+        )
         kwargs["thunderbird_sso_doc_url"] = (
             "https://support.mozilla.org/de/kb/thunderbird-matrix-chat-faq"
             "#w_how-can-i-connect-a-matrix-account-that-uses-single-sign-on-sso-in-thunderbird"

@@ -300,10 +300,10 @@ class ContributionCreated(ContentOrContributionCreated):
         if isinstance(self.object.contribution, contributions.Text):
             kwargs["text"] = self.object.contribution.text
         elif isinstance(self.object.contribution, memberships.Application):
-            kwargs[
-                "text"
-            ] = "Ich beantrage die Mitgliedschaft in der Gruppe {}.".format(
-                self.object.contribution.group
+            kwargs["text"] = (
+                "Ich beantrage die Mitgliedschaft in der Gruppe {}.".format(
+                    self.object.contribution.group
+                )
             )
         return super().get_context_data(**kwargs)
 

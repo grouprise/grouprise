@@ -26,13 +26,15 @@ def day_preview(associations):
     return ", ".join(
         [
             "{}{}".format(
-                "{} ".format(
-                    django.utils.formats.time_format(
-                        django.utils.timezone.localtime(a.container.time)
+                (
+                    "{} ".format(
+                        django.utils.formats.time_format(
+                            django.utils.timezone.localtime(a.container.time)
+                        )
                     )
-                )
-                if not a.container.all_day
-                else "",
+                    if not a.container.all_day
+                    else ""
+                ),
                 a.container.title,
             )
             for a in associations
@@ -122,7 +124,9 @@ def upcoming_events(context, associations, group=_Default, preview_length=5):
 @register.inclusion_tag("events/_sidebar_upcoming_events.html", takes_context=True)
 def sidebar_upcoming_events(context, associations, group=_Default, preview_length=5):
     group: Optional[Group] = context.get("group") if group is _Default else group
-    context.update(_get_upcoming_context(context, associations, group, limit=preview_length))
+    context.update(
+        _get_upcoming_context(context, associations, group, limit=preview_length)
+    )
     return context
 
 
@@ -139,7 +143,9 @@ def sidebar_calendar(
 ):
     user = context["user"]
     group: Optional[Group] = context.get("group") if group is _Default else group
-    upcoming_context = _get_upcoming_context(context, associations, group, limit=preview_length)
+    upcoming_context = _get_upcoming_context(
+        context, associations, group, limit=preview_length
+    )
 
     # collect toolbar actions
     actions = []
@@ -163,14 +169,16 @@ def sidebar_calendar(
         actions.append(("Kalender exportieren", url))
 
     context.update(upcoming_context)
-    context.update({
-        "actions": actions,
-        "associations": associations,
-        "group": group,
-        "hide_buttons": hide_buttons,
-        "show_group": show_group,
-        "component_id": component_id,
-    })
+    context.update(
+        {
+            "actions": actions,
+            "associations": associations,
+            "group": group,
+            "hide_buttons": hide_buttons,
+            "show_group": show_group,
+            "component_id": component_id,
+        }
+    )
     return context
 
 

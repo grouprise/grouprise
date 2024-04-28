@@ -187,7 +187,7 @@ class PollSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
         if poll.vote_type is VoteType.CONDORCET:
             num_options = len(payload["ranking"])
-            for (ranking, option) in enumerate(payload["ranking"]):
+            for ranking, option in enumerate(payload["ranking"]):
                 with create_vote(CondorcetVote, option) as condorcet_vote:
                     condorcet_vote.rank = num_options - ranking
         elif poll.vote_type is VoteType.SIMPLE:

@@ -20,9 +20,9 @@ class HasLocationFilter(django_filters.BooleanFilter):
             return qs
 
         entity_has_location = models.Exists(
-            Location.objects
-            .for_locatable_type(self.model_cls)
-            .filter(locatable_id=models.OuterRef("pk"))
+            Location.objects.for_locatable_type(self.model_cls).filter(
+                locatable_id=models.OuterRef("pk")
+            )
         )
         return qs.annotate(has_location=entity_has_location).filter(has_location=value)
 
