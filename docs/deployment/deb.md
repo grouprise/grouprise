@@ -10,6 +10,25 @@ specific domain and some reservations regarding security.
 However we will happily accept documentation proposals on this matter, so feel free to open a
 merge/pull request.
 
+## Recommended Distributions
+
+The following distributions work out of the box with the `deb` packages provided for *grouprise*:
+
+* Debian Bookworm
+
+
+## Distributions requiring adjustments
+
+The following distribution should only be used, if the administrators feel confident to deal with
+dependency issues on their own.
+
+* Debian Bullseye
+    * You need to install additional packages from Debian Bookworm (after temporarily adding this
+      repository to `sources.list`):
+        ```shell
+        apt install -t bullseye python3-django-cachalot python3-django-taggit
+        ```
+
 
 ## Installation with apt
 
