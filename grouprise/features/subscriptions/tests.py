@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from grouprise.core.models import PermissionToken
-from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin, GestaltMixin
+from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin
 from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.memberships.test_mixins import (
     AuthenticatedMemberMixin,
@@ -17,7 +17,7 @@ from grouprise.features.subscriptions.models import Subscription
 TEST_EMAIL = "test.subscription@test.local"
 
 
-class SubscriberMixin(GestaltMixin, GroupMixin):
+class AuthenticatedSubscriberMixin(AuthenticatedMixin, GroupMixin):
     def setUp(self):
         super().setUp()
         Subscription.objects.create(
@@ -25,12 +25,6 @@ class SubscriberMixin(GestaltMixin, GroupMixin):
             subscribed_to_id=self.group.id,
             subscriber=self.gestalt,
         )
-
-
-class AuthenticatedSubscriberMixin(SubscriberMixin):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(self.gestalt.user)
 
 
 class SubscriptionTests(MemberMixin, TestCase):
