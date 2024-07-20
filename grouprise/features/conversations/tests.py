@@ -242,10 +242,8 @@ class CanNotViewGroupConversation:
 
 class OtherGestaltCanNotViewGroupConversation:
     def test_view_conversation_as_other(self):
-        self.client.logout()
-        self.client.force_login(self.other_gestalt.user)
         conversation_url = self.get_url("conversation", key=self.association.pk)
-        response = self.client.get(conversation_url)
+        response = self.client_other_gestalt.get(conversation_url)
         self.assertForbiddenOrLogin(response, conversation_url)
 
 

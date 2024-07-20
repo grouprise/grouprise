@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from grouprise.features.articles.tests import GroupArticleMixin
 from grouprise.features.conversations.tests import GestaltConversationMixin
+from grouprise.features.gestalten.tests.mixins import OtherGestaltMixin
 from grouprise.features.matrix_chat.tests import MatrixChatMixin, MatrixRoomTracker
 from grouprise.features.memberships.test_mixins import (
     MemberMixin,
@@ -18,10 +19,6 @@ class AuthenticatedMemberArticleTestCase(
     OtherMemberMixin,
     TestCase,
 ):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(self.other_gestalt.user)
-
     def test_receives_builtin_notification_upon_content_creation(self):
         notification_count = self.gestalt.notifications.count()
         self._create_article()
@@ -56,28 +53,21 @@ class AuthenticatedMemberArticleTestCase(
 
     def _create_article(self):
         url = reverse("create-group-article", args=[self.group.slug])
-        self.client.post(url, {"title": "Test", "text": "Test"})
+        self.client_other_gestalt.post(url, {"title": "Test", "text": "Test"})
 
     def _create_comment(self):
         url = reverse(
             "content", args=[self.association.entity.slug, self.association.slug]
         )
-        self.client.post(url, {"text": "Test Comment"})
+        self.client_other_gestalt.post(url, {"text": "Test Comment"})
 
 
 class OtherAuthenticatedConversationTestCase(
-    MatrixChatMixin, GestaltConversationMixin, TestCase
+    MatrixChatMixin, GestaltConversationMixin, OtherGestaltMixin, TestCase
 ):
-    def setUp(self) -> None:
-        super().setUp()
-        self.client.force_login(self.other_gestalt.user)
-
     def test_receives_matrix_notification_upon_gestalt_conversation_reply(self):
         gestalt_room = self.get_gestalt_room(self.gestalt)
         with MatrixRoomTracker(gestalt_room) as room_tracker:
-            self._create_reply()
+            url = reverse("conversation", args=[self.association.pk])
+            self.client_other_gestalt.post(url, {"text": "Test Reply"})
             self.assertEqual(room_tracker.messages_count, 1)
-
-    def _create_reply(self):
-        url = reverse("conversation", args=[self.association.pk])
-        self.client.post(url, {"text": "Test Reply"})

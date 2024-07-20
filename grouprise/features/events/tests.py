@@ -331,12 +331,14 @@ class GroupCalendarExportMember(
 
 class GroupCalendarExportNonMember(
     memberships.MemberMixin,
-    grouprise.features.gestalten.tests.mixins.OtherAuthenticatedMixin,
+    grouprise.features.gestalten.tests.mixins.OtherGestaltMixin,
     tests.Test,
 ):
     def test_rejected_access_private_calendar(self):
         """test the inaccessibility of a private calendar for a logged in non-member"""
-        data = self.client.get(self.get_url("group-events-export", (self.group.slug,)))
+        data = self.client_other_gestalt.get(
+            self.get_url("group-events-export", (self.group.slug,))
+        )
         private_url_regex = re.compile(r">(?P<url>[^<]+/private.ics[^<]*)<")
         url_match = private_url_regex.search(data.content.decode("utf8"))
         # the private URL should not be displayed

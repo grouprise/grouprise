@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.test import Client
 
 
 class GestaltMixin:
@@ -31,17 +32,11 @@ class OtherGestaltMixin:
             .objects.create(email="test2@example.org", username="test2")
             .gestalt
         )
+        cls.client_other_gestalt = Client()
+        cls.client_other_gestalt.force_login(cls.other_gestalt.user)
 
 
 class AuthenticatedMixin(GestaltMixin):
     def setUp(self):
         super().setUp()
         self.client.force_login(self.gestalt.user)
-
-
-class OtherAuthenticatedMixin(OtherGestaltMixin):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(
-            self.other_gestalt.user, "django.contrib.auth.backends.ModelBackend"
-        )

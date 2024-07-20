@@ -1,8 +1,8 @@
 from django.core import mail
-from django.test import TestCase
 from django.urls import reverse
 
 from grouprise.core.models import PermissionToken
+from grouprise.core.tests import Test
 from grouprise.features.memberships.test_mixins import MemberMixin
 
 from . import models
@@ -10,7 +10,7 @@ from . import models
 TEST_EMAIL = "test.membership@test.local"
 
 
-class Membership(MemberMixin, TestCase):
+class Membership(MemberMixin, Test):
     def test_memberships(self):
         # join form renders ok
         join_request_url = reverse("join-request", args=(self.group.slug,))
