@@ -3,16 +3,15 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-import grouprise.features.articles.tests
+from grouprise.features.articles.tests import ArticleMixin
 from grouprise.features.associations.models import Association
-from grouprise.features.contributions.models import Contribution
 from grouprise.features.conversations.models import Conversation
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
 from . import models
 
 
-class ContributionMixin(grouprise.features.articles.tests.ArticleMixin):
+class ContributionMixin(ArticleMixin):
     def create_contribution(self):
         self.client.post(
             reverse(
@@ -73,7 +72,7 @@ class ReplyToAuthor(AuthenticatedMemberMixin, TestCase):
             follow=True,
         )
         association = Association.objects.last()
-        contribution = Contribution.objects.last()
+        contribution = models.Contribution.objects.last()
         reply_url = reverse("reply-to-author", args=[association.pk, contribution.pk])
 
         # conversation page contains reply link
