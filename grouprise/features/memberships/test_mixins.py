@@ -32,9 +32,3 @@ class AuthenticatedMemberMixin(MemberMixin):
     def setUp(self):
         super().setUp()
         self.client.force_login(self.gestalt.user)
-
-
-class OtherAuthenticatedMemberMixin(OtherMemberMixin):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(self.other_gestalt.user)

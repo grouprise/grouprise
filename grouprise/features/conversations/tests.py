@@ -380,8 +380,8 @@ class TwoGroupMembers(
     OtherGestaltIsNotifiedOnGestaltConversation,
     NotificationContainsConversationMessageIDs,
     GroupConversationMixin,
-    memberships.OtherAuthenticatedMemberMixin,
     memberships.AuthenticatedMemberMixin,
+    memberships.OtherMemberMixin,
     tests.Test,
 ):
     """ """
