@@ -155,6 +155,23 @@ class Test(test.TestCase):
             if HTTP_OK in tests:
                 self.assertEqual(response.status_code, 200)
 
+    @contextlib.contextmanager
+    def temporary_client_login(self, login_gestalt=None):
+        """temporarily replace `self.client` with a new instance for a changed login context
+
+        None may be provided as the optional `login_gestalt` in order to use a non-authenticated
+        (guest) context.
+        """
+        new_client = test.Client()
+        if login_gestalt is not None:
+            new_client.force_login(login_gestalt.user)
+        old_client = self.client
+        self.client = new_client
+        try:
+            yield new_client
+        finally:
+            self.client = old_client
+
     def get_link(self, url, key):
         return 'href="{}"'.format(url)
 

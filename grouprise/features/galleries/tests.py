@@ -8,7 +8,6 @@ from grouprise.features.memberships import test_mixins as memberships
 
 class Guest(images.ImageMixin, memberships.MemberMixin, Test):
     def create_gallery(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
         kwargs.update(
             {
                 "title": "Test",
@@ -17,8 +16,8 @@ class Guest(images.ImageMixin, memberships.MemberMixin, Test):
                 "as_gestalt": True,
             }
         )
-        self.client.post(self.get_url("create-gallery"), kwargs)
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(self.get_url("create-gallery"), kwargs)
 
     def get_gallery_url(self):
         return associations.Association.objects.get(
@@ -26,12 +25,13 @@ class Guest(images.ImageMixin, memberships.MemberMixin, Test):
         ).get_absolute_url()
 
     def create_group_gallery(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
         kwargs.update(
             {"title": "Group Gallery", "text": "Test", "images": [self.image.pk]}
         )
-        self.client.post(self.get_url("create-group-gallery", self.group.slug), kwargs)
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(
+                self.get_url("create-group-gallery", self.group.slug), kwargs
+            )
 
     def get_group_gallery_url(self):
         return associations.Association.objects.get(

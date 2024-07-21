@@ -34,11 +34,10 @@ def _get_adjusted_event_args(missing_keys=None, **kwargs):
 
 class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
     def create_event(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
-        self.client.post(
-            self.get_url("create-event"), _get_adjusted_event_args(**kwargs)
-        )
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(
+                self.get_url("create-event"), _get_adjusted_event_args(**kwargs)
+            )
 
     def get_event_url(self, title):
         return associations.Association.objects.get(
@@ -46,12 +45,11 @@ class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
         ).get_absolute_url()
 
     def create_group_event(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
-        self.client.post(
-            self.get_url("create-group-event", self.group.slug),
-            _get_adjusted_event_args(**kwargs),
-        )
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(
+                self.get_url("create-group-event", self.group.slug),
+                _get_adjusted_event_args(**kwargs),
+            )
 
     def test_guest_event_link(self):
         self.assertContainsLink(self.client.get("/"), self.get_url("create-event"))

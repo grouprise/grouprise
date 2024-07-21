@@ -48,10 +48,9 @@ class SendFileByEmail(
 
 class Guest(images.ImageMixin, memberships.MemberMixin, grouprise.core.tests.Test):
     def create_group_file(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
         kwargs.update({"title": "Group File", "text": "Test", "file": self.image.file})
-        self.client.post(self.get_url("create-group-file", self.group.slug), kwargs)
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(self.get_url("create-group-file", self.group.slug), kwargs)
 
     def get_group_file_url(self):
         return associations.Association.objects.get(

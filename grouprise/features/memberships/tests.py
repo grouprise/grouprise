@@ -41,11 +41,11 @@ class Membership(MemberMixin, Test):
         mail.outbox = []
 
         # member gets notified on group content
-        self.client.force_login(self.gestalt.user)
-        self.client.post(
-            reverse("create-group-article", args=(self.group.slug,)),
-            {"title": "Test", "text": "Test", "public": True},
-        )
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(
+                reverse("create-group-article", args=(self.group.slug,)),
+                {"title": "Test", "text": "Test", "public": True},
+            )
         self.assertTrue(mail.outbox)
         for email_obj in mail.outbox:
             if email_obj.to[0].find(TEST_EMAIL) >= 0:
@@ -54,7 +54,6 @@ class Membership(MemberMixin, Test):
 
         # cleanup
         mail.outbox = []
-        self.client.logout()
 
         # notification contains link to unsubscribe form
         unsubscribe_request_url = reverse(

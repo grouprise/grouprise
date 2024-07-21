@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from grouprise.core.models import PermissionToken
+from grouprise.core.tests import Test
 from grouprise.features.gestalten.tests.mixins import AuthenticatedMixin
 from grouprise.features.groups.tests.mixins import GroupMixin
 from grouprise.features.memberships.test_mixins import (
@@ -27,7 +28,7 @@ class AuthenticatedSubscriberMixin(AuthenticatedMixin, GroupMixin):
         )
 
 
-class SubscriptionTests(MemberMixin, TestCase):
+class SubscriptionTests(MemberMixin, Test):
     def test_subscriptions(self):
         subscribe_url = reverse("group-subscribe", args=(self.group.slug,))
 
@@ -44,11 +45,11 @@ class SubscriptionTests(MemberMixin, TestCase):
         self.assertRedirects(r, self.group.get_absolute_url())
 
         # subscriber gets notified on group content
-        self.client.force_login(self.gestalt.user)
-        self.client.post(
-            reverse("create-group-article", args=(self.group.slug,)),
-            {"title": "Test", "text": "Test", "public": True},
-        )
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(
+                reverse("create-group-article", args=(self.group.slug,)),
+                {"title": "Test", "text": "Test", "public": True},
+            )
         self.assertTrue(mail.outbox)
         for email_obj in mail.outbox:
             if email_obj.to[0].find(TEST_EMAIL) >= 0:
@@ -57,7 +58,6 @@ class SubscriptionTests(MemberMixin, TestCase):
 
         # cleanup
         mail.outbox = []
-        self.client.logout()
 
         # notification contains link to unsubscribe form
         unsubscribe_request_url = reverse(

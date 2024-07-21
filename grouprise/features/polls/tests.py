@@ -72,10 +72,9 @@ class GroupPollMixin(PollMixin):
 
 class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
     def create_poll(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
         kwargs.update(get_post_data())
-        self.client.post(self.get_url("create-poll"), kwargs)
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(self.get_url("create-poll"), kwargs)
 
     def get_poll_association(self):
         return associations.Association.objects.get(content__title="Test")
@@ -88,10 +87,9 @@ class Guest(memberships.MemberMixin, grouprise.core.tests.Test):
         return self.get_url("vote", [association.entity.slug, association.slug])
 
     def create_group_poll(self, **kwargs):
-        self.client.force_login(self.gestalt.user)
         kwargs.update(get_post_data())
-        self.client.post(self.get_url("create-group-poll", self.group.slug), kwargs)
-        self.client.logout()
+        with self.temporary_client_login(self.gestalt):
+            self.client.post(self.get_url("create-group-poll", self.group.slug), kwargs)
 
     def get_group_poll_url(self):
         return associations.Association.objects.get(
