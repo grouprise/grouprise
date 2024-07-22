@@ -14,11 +14,13 @@ from grouprise.features.memberships import test_mixins as memberships
 class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin):
     ARTICLE_TITLE = "Test"
     ARTICLE_TEXT = "Test"
+    ARTICLE_IS_PUBLIC_BY_DEFAULT = False
 
     def create_article(self, **kwargs):
         kwargs.update(
             {"title": self.ARTICLE_TITLE, "text": self.ARTICLE_TEXT, "as_gestalt": True}
         )
+        kwargs.setdefault("public", self.ARTICLE_IS_PUBLIC_BY_DEFAULT)
         self.client.post(reverse("create-article"), kwargs)
         return Association.objects.get(content__title=self.ARTICLE_TITLE)
 
@@ -48,6 +50,7 @@ class GroupArticleMixin(ArticleMixin):
         kwargs.update(
             {"title": self.ARTICLE_TITLE, "text": self.ARTICLE_TEXT, "as_gestalt": True}
         )
+        kwargs.setdefault("public", self.ARTICLE_IS_PUBLIC_BY_DEFAULT)
         self.client.post(url, kwargs)
         return Association.objects.get(content__title=self.ARTICLE_TITLE)
 
