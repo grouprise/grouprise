@@ -3,9 +3,12 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from grouprise.features.articles.tests import ArticleMixin
+from grouprise.core.tests import Test
+from grouprise.features.articles.tests import ArticleMixin, GroupArticleMixin
 from grouprise.features.associations.models import Association
 from grouprise.features.conversations.models import Conversation
+from grouprise.features.imports.mails import ContributionMailProcessor
+from grouprise.features.gestalten.tests.mixins import OtherGestaltMixin
 from grouprise.features.memberships.test_mixins import AuthenticatedMemberMixin
 
 from . import models
@@ -89,3 +92,53 @@ class ReplyToAuthor(AuthenticatedMemberMixin, TestCase):
         r = self.client.post(reply_url, {"subject": "Reply", "text": "Test"})
         association = Conversation.objects.get(subject="Reply").associations.first()
         self.assertRedirects(r, reverse("conversation", args=[association.pk]))
+
+
+class GuestCommentVisibilityOnPublicArticle(
+    GroupArticleMixin, AuthenticatedMemberMixin, OtherGestaltMixin, Test
+):
+
+    ARTICLE_IS_PUBLIC_BY_DEFAULT = True
+    COMMENT_SUBJECT_MAIL = "Comment from a non-member via email"
+    COMMENT_SUBJECT_WEB = "Comment from a non-member via web"
+
+    def _create_comment_by_other_via_email(self, message, **kwargs):
+        EmailProcessor = ContributionMailProcessor()
+
+        class CustomMessage:
+            content = message
+            date = timezone.now()
+            attachments = []
+
+        EmailProcessor._create_contribution(
+            CustomMessage(), self.association.container, self.other_gestalt
+        )
+
+    def _create_comment_by_other_via_web(self, message, **kwargs):
+        kwargs.update({"text": message, "public": False})
+        response = self.client_other_gestalt.post(self.get_content_url(), kwargs)
+        self.assertIn(response.status_code, {200, 302})
+
+    def test_comment_via_mail_from_non_member_is_hidden_for_unauthenticated(self):
+        """a comment from a non-member is private if submitted via email"""
+        self._create_comment_by_other_via_email(self.COMMENT_SUBJECT_MAIL)
+        article_url = reverse(
+            "content", args=[self.association.entity.slug, self.association.slug]
+        )
+        r_member = self.client.get(article_url)
+        self.assertContains(r_member, self.COMMENT_SUBJECT_MAIL)
+        with self.temporary_client_login() as guest_client:
+            r_guest = guest_client.get(article_url)
+        self.assertNotContains(r_guest, self.COMMENT_SUBJECT_WEB)
+
+    def test_comment_via_web_from_non_member_is_hidden_for_unauthenticated(self):
+        """a comment from a non-member is public if submitted via the web interface"""
+        self._create_comment_by_other_via_web(self.COMMENT_SUBJECT_WEB)
+        article_url = reverse(
+            "content", args=[self.association.entity.slug, self.association.slug]
+        )
+        r_member = self.client.get(article_url)
+        self.assertContains(r_member, self.COMMENT_SUBJECT_WEB)
+        with self.temporary_client_login() as guest_client:
+            r_guest = guest_client.get(article_url)
+        self.assertContains(r_guest, self.COMMENT_SUBJECT_WEB)

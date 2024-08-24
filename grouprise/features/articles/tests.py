@@ -15,10 +15,15 @@ class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin)
     ARTICLE_TITLE = "Test"
     ARTICLE_TEXT = "Test"
     ARTICLE_IS_PUBLIC_BY_DEFAULT = False
+    ARTICLE_IS_PUBLISHED_AS_GESTALT = True
 
     def create_article(self, **kwargs):
         kwargs.update(
-            {"title": self.ARTICLE_TITLE, "text": self.ARTICLE_TEXT, "as_gestalt": True}
+            {
+                "title": self.ARTICLE_TITLE,
+                "text": self.ARTICLE_TEXT,
+                "as_gestalt": self.ARTICLE_IS_PUBLISHED_AS_GESTALT,
+            }
         )
         kwargs.setdefault("public", self.ARTICLE_IS_PUBLIC_BY_DEFAULT)
         self.client.post(reverse("create-article"), kwargs)
@@ -44,11 +49,16 @@ class ArticleMixin(grouprise.features.gestalten.tests.mixins.AuthenticatedMixin)
 
 class GroupArticleMixin(ArticleMixin):
     ARTICLE_TITLE = "Group Article"
+    ARTICLE_IS_PUBLISHED_AS_GESTALT = False
 
     def create_article(self, **kwargs):
         url = reverse("create-group-article", args=[self.group.slug])
         kwargs.update(
-            {"title": self.ARTICLE_TITLE, "text": self.ARTICLE_TEXT, "as_gestalt": True}
+            {
+                "title": self.ARTICLE_TITLE,
+                "text": self.ARTICLE_TEXT,
+                "as_gestalt": self.ARTICLE_IS_PUBLISHED_AS_GESTALT,
+            }
         )
         kwargs.setdefault("public", self.ARTICLE_IS_PUBLIC_BY_DEFAULT)
         self.client.post(url, kwargs)
