@@ -1,0 +1,23 @@
+{% load i18n %}
+<li id="{% ref contribution %}" class="anchor">
+    <div class="media media-comment" {% block media_style %}{% endblock %}>
+        {% include 'contributions/_contribution_avatar.html' %}
+        <div class="media-content">
+            {% block media_content %}
+                <div class="media-body"
+                     {% block media_content_attrs %}
+                     data-author="{{ contribution.author }}"
+                     data-permalink="{{ permalink_url }}#{% ref contribution %}"
+                     data-id="{{ contribution.id }}"
+                     {% endblock %}>
+                    {% block media_body %}
+                        <em>{% translate 'This contribution was submitted by email and is visible for group members only.' %}</em>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+            {% block media_footer %}
+                {% include 'contributions/_contribution_footer.html' %}
+            {% endblock %}
+        </div>
+    </div>
+</li>

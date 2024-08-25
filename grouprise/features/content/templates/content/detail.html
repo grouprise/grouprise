@@ -90,7 +90,11 @@
                 <ol class="medias">
                     {% for comment in view.get_contributions %}
                         {% url 'content-permalink' association.pk as permalink_url %}
-                        {% include 'contributions/_contribution.html' with contribution=comment permalink_url=permalink_url %}
+                        {% if comment.is_visible %}
+                            {% include 'contributions/_contribution.html' with contribution=comment permalink_url=permalink_url %}
+                        {% else %}
+                            {% include 'contributions/_contribution_hidden.html' with contribution=comment permalink_url=permalink_url %}
+                        {% endif %}
                     {% endfor %}
                     {% has_perm 'content.comment' user association as can_comment %}
                     {% if can_comment %}

@@ -2,7 +2,7 @@ import django.urls
 import django.views.generic
 from django import shortcuts
 from django.contrib.contenttypes import models as contenttypes
-from django.db.models import Q
+from django.db.models import BooleanField, ExpressionWrapper, Q, Value
 from django.views import generic
 
 import grouprise.core.views
@@ -56,7 +56,14 @@ class DetailBase(
         content = self.object.container
         qs = Contribution.objects_with_internal.filter(content=content)
         if not user.has_perm("contributions.view_internal", content):
-            qs = qs.filter(Q(public=True) | Q(author=gestalt))
+            is_visible_condition = Q(public=True) | Q(author=gestalt)
+        else:
+            is_visible_condition = Value(True)
+        qs = qs.annotate(
+            is_visible=ExpressionWrapper(
+                is_visible_condition, output_field=BooleanField()
+            )
+        )
         return qs
 
     def get_object(self, queryset=None):
