@@ -382,7 +382,7 @@ def get_contribution_by_url(url):
     if contribution_match:
         contribution_id = int(contribution_match.groups()[0])
         try:
-            return Contribution.objects.get(pk=contribution_id)
+            return Contribution.objects_with_internal.get(pk=contribution_id)
         except Contribution.DoesNotExist:
             raise not_found_exception
     else:
