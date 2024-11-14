@@ -7,3 +7,4 @@ Deployment
    architecture
    deb
    source
+   troubleshooting
