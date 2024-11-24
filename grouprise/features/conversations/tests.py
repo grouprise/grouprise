@@ -215,7 +215,7 @@ class CanViewGestaltConversation:
         response = self.client.get(
             self.get_url("conversation", key=self.association.pk)
         )
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class CanNotViewGestaltConversation:
@@ -230,7 +230,7 @@ class CanViewGroupConversation:
         response = self.client.get(
             self.get_url("conversation", key=self.association.pk)
         )
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class CanNotViewGroupConversation:

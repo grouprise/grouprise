@@ -15,7 +15,7 @@ class Membership(MemberMixin, Test):
         # join form renders ok
         join_request_url = reverse("join-request", args=(self.group.slug,))
         r = self.client.get(join_request_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # join succeeds with email address
         r = self.client.post(join_request_url, {"member": TEST_EMAIL})
@@ -29,7 +29,7 @@ class Membership(MemberMixin, Test):
 
         # join confirmation page renders ok
         r = self.client.get(join_confirm_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # join confirmation creates membership
         num_memberships = models.Membership.objects.count()
@@ -64,7 +64,7 @@ class Membership(MemberMixin, Test):
         # resign form (not used at the moment) renders ok
         resign_request_url = reverse("resign-request", args=(self.group.pk,))
         r = self.client.get(resign_request_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # resign succeeds with email address
         r = self.client.post(resign_request_url, {"member": TEST_EMAIL})
@@ -78,7 +78,7 @@ class Membership(MemberMixin, Test):
 
         # resign confirmation page renders ok
         r = self.client.get(resign_confirm_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # resign confirmation removes membership
         num_memberships = models.Membership.objects.count()

@@ -38,7 +38,7 @@ class SubscriptionTests(MemberMixin, Test):
 
         # subscribe form loads
         r = self.client.get(subscribe_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # subscription succeeds with email address
         r = self.client.post(subscribe_url, {"subscriber": TEST_EMAIL})
@@ -67,7 +67,7 @@ class SubscriptionTests(MemberMixin, Test):
 
         # unsubscribe form renders ok
         r = self.client.get(unsubscribe_request_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # unsubscription succeeds with email address
         r = self.client.post(unsubscribe_request_url, {"subscriber": TEST_EMAIL})
@@ -83,7 +83,7 @@ class SubscriptionTests(MemberMixin, Test):
 
         # unsubscription confirmation page renders ok
         r = self.client.get(unsubscribe_confirm_url)
-        self.assertEquals(r.status_code, 200)
+        self.assertEqual(r.status_code, 200)
 
         # unsubscription confirmation removes subscription
         num_subscriptions = models.Subscription.objects.count()
