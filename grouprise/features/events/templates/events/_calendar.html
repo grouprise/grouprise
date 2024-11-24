@@ -28,7 +28,7 @@
                     <td class="{% if day.today %} calendar-day-today {% endif %} {% if not day.in_month %} calendar-day-exclude {% endif %} {% if day.url %} calendar-day-has-events {% endif %}">
                         <div>
                             {% if day.url %}
-                                <a href="{{ day.url }}{% if not day.events|length_is:1 and group %}?group={{ group.slug }}{% endif %}"
+                                <a href="{{ day.url }}{% if group and day.events|length != 1 %}?group={{ group.slug }}{% endif %}"
                                    title="{{ day.events|day_preview|truncatechars:50 }}">
                                     {{ day.day }}
                                 </a>
