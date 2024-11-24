@@ -14,7 +14,7 @@ asgiref>=3.5.1              # debian: python3-asgiref
 bleach                      # debian: python3-bleach
 boltons                     # debian: python3-boltons
 # Django 3.2 or later is supported
-django>=3.2                 # debian: python3-django
+django>=3.2,<4              # debian: python3-django
 django-allauth              # debian: python3-django-allauth
 # previous versions had an issue with the django-taggit module
 django-cachalot>=2.4.4      # debian: python3-django-cachalot
