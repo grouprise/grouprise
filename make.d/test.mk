@@ -33,10 +33,7 @@ lint_packages:
 test: test_js
 
 # these test targets are provided by makefilet
-test-python: test_py_prepare
-test-python-django: test_py_prepare
-
-test-python-django: export GROUPRISE_CONFIG=$(abspath $(CONFIG_DEFAULT_SETUP))
+test-python-hatch: test_py_prepare
 
 .PHONY: test_py_prepare
 test_py_prepare: $(ASSETS_TEMPLATE)
@@ -86,10 +83,8 @@ test_js: $(STAMP_NODE_MODULES) lint_js
 	"$(BIN_NPM)" run test
 
 .PHONY: report-python-coverage
-coverage_py: $(ACTIVATE_VIRTUALENV) $(VIRTUALENV_UPDATE_STAMP)
-	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage run -m manage test )
-	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage report )
-	( . "$(ACTIVATE_VIRTUALENV)" && "$(PYTHON_BIN)" -m coverage html --directory="$(DIR_BUILD)/coverage-report" )
+coverage_py:
+	hatch test --cover
 	@echo "Coverage Report Location: file://$(realpath $(DIR_BUILD))/coverage-report/index.html"
 
 .PHONY: lint_spelling

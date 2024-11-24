@@ -22,8 +22,7 @@ RUN apt update -y \
       locales \
       make \
       nodejs npm \
-      python3-pip \
-      python3-venv \
+      pipx \
       wget
 
 # configure locales
@@ -35,7 +34,6 @@ RUN if [ -n "$DOCKER_IMAGE_EXTRA_DEPENDENCIES" ]; then apt-get install --yes $DO
 # install project dependencies
 COPY --from=build-deps build-deps.deb /tmp/build-deps.deb
 RUN gdebi --non-interactive /tmp/build-deps.deb
-ADD ./docker/tests/venv-python /usr/local/bin/
 
 # switch to working directory with appropriate permissions
 RUN adduser --home /build --gecos '' build
@@ -55,11 +53,12 @@ RUN ADBLOCK=true npm ci
 ADD --chown=build ./VERSION ./
 RUN mkdir debian docs grouprise grouprise.conf.d grouprise-dev.conf.d media offline-website res
 
+# install hatch
+RUN pipx install hatch
+
 # prepare virtualenv
-ENV VIRTUAL_ENV=/build/venv
-ADD --chown=build requirements.txt ./
-RUN python3 -m venv --system-site-packages "$VIRTUAL_ENV" \
-    && "$VIRTUAL_ENV/bin/pip3" install -r requirements.txt
+ADD --chown=build pyproject.toml ./
+RUN hatch env create
 
 # force makefilet initialization
 ADD --chown=build ./Makefile ./
@@ -74,5 +73,5 @@ RUN rm -f grouprise/core/templates/core/assets/_assets.html && touch grouprise/c
 FROM base AS test-python
 # work-around common IPv6 problems in docker environments that occur when binding to localhost
 ENV GROUPRISE_DEFAULT_LMTPD_HOST=127.0.0.1
-ENTRYPOINT ["/usr/local/bin/venv-python", "manage.py"]
+ENTRYPOINT ["hatch", "run", "manage"]
 CMD ["test", "--verbosity", "1"]

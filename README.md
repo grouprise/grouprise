@@ -65,8 +65,7 @@ about [docker-compose volumes](https://docs.docker.com/storage/volumes/#use-a-vo
 1. You will need [virtualenv](https://virtualenv.pypa.io/en/stable/),
    [node](https://nodejs.org/en/),
    [python3](https://www.python.org/),
-   [flake8](http://flake8.pycqa.org/en/latest/),
-   [pip](https://pip.pypa.io/en/stable/) and
+   [hatch](https://hatch.pypa.io/),
    [make](https://www.gnu.org/software/make/) to get started.
    If you have all of those, you may proceed :).
    Otherwise, see *Low-level tooling dependencies* below.
@@ -120,10 +119,10 @@ Depending on your distribution (we assume you’ll be using something like Linux
 
 ### Debian
 ```sh
-apt install make nodejs npm python3 virtualenv python3-flake8 python3-pip python3-sphinx python3-recommonmark python3-xapian
+apt install libgdal-dev make nodejs npm python3 python3-dev python3-xapian
 ```
 
 ### Arch Linux
 ```sh
-pacman -Sy make nodejs npm python python-virtualenv flake8 python-pip python-sphinx python-recommonmark python-xapian
+pacman -Sy gdal make nodejs npm python python3-xapian
 ```

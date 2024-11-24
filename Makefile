@@ -5,7 +5,6 @@
 # The various tasks are grouped into several files below make.d/.
 #
 # Features:
-#     * install python-based dependencies via virtualenv
 #     * prepare local django configuration and run the server
 #     * build and package nodejs-based dependencies
 #     * run tests
@@ -14,12 +13,8 @@
 
 # specify DESTDIR before makefilet sets its default
 DESTDIR ?= /
-# we need access to the site packages in order to use "xapian"
-VIRTUALENV_CREATE_ARGUMENTS ?= --system-site-packages
 SHELL_FILES_ALL ?= $(shell find debian/ -type f -perm /a+x | grep -vE "^debian/tests/" | xargs grep -lI '^\#!/bin/.*sh')
-# restrict black and flake8 checks to our own code
-BLACK_FILES ?= grouprise/
-FLAKE8_FILES ?= grouprise/
+PYTHON_VIRTUALENV_ENABLE = 0
 
 DJANGO_WANTED_LOCALES = de
 DIR_DJANGO_LOCALES ?= grouprise/locale

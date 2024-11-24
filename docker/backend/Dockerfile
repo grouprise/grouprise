@@ -27,7 +27,7 @@ RUN apt update -y && \
       git \
       inotify-tools \
       locales \
-      python3-pip \
+      pipx \
       wget \
       $(cat /tmp/depends) && \
     apt-get clean -y
@@ -37,9 +37,10 @@ RUN printf 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >/etc/locale.gen && \
     locale-gen && \
     update-locale LANG=de_DE.UTF-8 LC_MESSAGES=en_US.UTF-8
 
-# install custom dependencies not available in debian
-COPY requirements.txt /tmp
-RUN pip3 install --break-system-packages -r /tmp/requirements.txt
+# TODO: really use this virtualenv
+RUN pipx install hatch
+COPY pyproject.toml /tmp
+RUN cd /tmp && hatch env create
 
 # configure runtime environment
 RUN adduser --force-badname --gecos '' --disabled-password --shell /bin/bash --home /var/lib/grouprise _grouprise

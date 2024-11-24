@@ -1,30 +1,25 @@
 image: git-registry.hack-hro.de:443/grouprise/grouprise/build:bookworm
 variables:
-    # Do not use the 'build/' subdirectory, since this would get cleanup up during 'dist-deb'.
-    # This directory needs to be listed in debian/source/options in 'extend-diff-ignore'.
-    virtualenv_directory: "$CI_PROJECT_DIR/gitlab-ci-build-venv"
-    # force usage of "stdlib" due to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1003252
-    # TODO: remove after switching to Bookworm
-    SETUPTOOLS_USE_DISTUTILS: stdlib
-
-.populate_virtualenv: &populate_virtualenv
-    - python3 -m venv --system-site-packages "$virtualenv_directory"
-    - source "$virtualenv_directory/bin/activate"
-    - pip3 install -r requirements.txt
+  UNPRIVILEGED_USERNAME: "grouprise-tester"
 
 .generate_locales: &generate_locales
     - sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
     - locale-gen
 
+.install_hatch: &install_hatch
+  - apt-get update
+  - apt-get install --yes pipx python3-hatchling
+  - PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx install hatch
+
 .build_deb_package:
     script:
-        - *populate_virtualenv
         - *generate_locales
+        - *install_hatch
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage -sa --no-sign"
         # turn the symlink of the orig tarball into a real file
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
         # generate an export of the versions of the embedded python modules (helpful for a rebuild)
-        - pip freeze --local >build/debian/requirements-build.txt
+        - hatch run python3 -m pip freeze --local >build/debian/requirements-build.txt
     artifacts:
         name: grouprise-deb
         paths:
@@ -50,21 +45,21 @@ variables:
             --skip-tls-verify
 
 make_test:
-    stage: test
-    script:
-        - *populate_virtualenv
-        - *generate_locales
-        # stadt.settings is required for the tests
-        - make app_local_settings
-        - make lint
-        # finish the installation of dependencies (as root) before switching to a limited context
-        - make virtualenv-update
-        # avoid running the tests as root: the huey storage backend would be modified in that case
-        - runuser -u nobody -- make test
-    # disable artifacts: otherwise the deb package would be checked by lintian (and fail)
-    dependencies: []
-    # do not wait for the build jobs
-    needs: []
+  stage: test
+  before_script:
+    - *generate_locales
+    - *install_hatch
+    - apt-get update
+    - apt-get install --yes libgdal-dev python3-dev python3-xapian
+    - useradd --create-home --user-group "$UNPRIVILEGED_USERNAME"
+  script:
+    - runuser -u "$UNPRIVILEGED_USERNAME" -- make lint
+    # avoid running the tests as root: the huey storage backend would be modified in that case
+    - runuser -u "$UNPRIVILEGED_USERNAME" -- make -j1 test
+  # disable artifacts: otherwise the deb package would be checked by lintian (and fail)
+  dependencies: []
+  # do not wait for the build jobs
+  needs: []
 
 # The latest built deb package is available under the following URL:
 #   https://git.hack-hro.de/grouprise/grouprise/builds/artifacts/main/raw/build/debian/export/grouprise.deb?job=deb-package

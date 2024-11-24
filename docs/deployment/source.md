@@ -27,12 +27,12 @@ information about each package’s sources and website.
 
 The following software is required when installing from sources:
 
+* `hatch`
 * `make`
 * `nodejs`
 * `npm`
 * `pip`
 * `python3`
-* `virtualenv`
 * `wget`
 
 We recommend to pick a proper DBMS for running *grouprise*.

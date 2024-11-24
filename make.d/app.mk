@@ -1,11 +1,7 @@
-VIRTUALENV_UPDATE_STAMP = $(DIR_BUILD)/.virtualenv-update.stamp
-REQUIREMENTS_FILE = requirements.txt
+# This directory is configured via hatch as `GROUPRISE_CONFIG` in pyproject.toml.
 CONFIG_APP_SETUP ?= grouprise.conf.d/
 CONFIG_DEFAULT_SETUP ?= grouprise-dev.conf.d/
 
-
-$(VIRTUALENV_UPDATE_STAMP): $(REQUIREMENTS_FILE) virtualenv-update
-	touch "$@"
 
 .PHONY: $(CONFIG_APP_SETUP)
 $(CONFIG_APP_SETUP):
@@ -14,15 +10,12 @@ $(CONFIG_APP_SETUP):
 	fi
 
 .PHONY: app_migrate
-app_migrate: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP)
-	( . "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py migrate )
-
-# makefilet runs "manage.py check" during "virtualenv-check" - thus we need the settings beforehand
-virtualenv-check: app_local_settings
+app_migrate: $(CONFIG_APP_SETUP)
+	hatch run migrate
 
 .PHONY: _app_run_single_job
-_app_run_single_job:
-	. "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py runserver
+_app_run_single_job: $(CONFIG_APP_SETUP)
+	hatch run app
 
 .PHONY: app_run
 app_run: app_migrate app_collect_static app_compile_translations
@@ -31,8 +24,8 @@ app_run: app_migrate app_collect_static app_compile_translations
 	@$(MAKE) --jobs=1 _app_run_single_job
 
 .PHONY: app_collect_static
-app_collect_static: $(VIRTUALENV_UPDATE_STAMP) $(CONFIG_APP_SETUP) assets
-	( . "$(ACTIVATE_VIRTUALENV)" && GROUPRISE_CONFIG=$(abspath $(CONFIG_APP_SETUP)) "$(PYTHON_BIN)" manage.py collectstatic --no-input )
+app_collect_static: $(CONFIG_APP_SETUP) assets
+	hatch run collectstatic
 
 .PHONY: app_compile_translations
 app_compile_translations: PO_EDITOR=
