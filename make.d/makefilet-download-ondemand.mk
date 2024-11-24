@@ -4,7 +4,7 @@
 #   * on-demand download (temporarily stored in the local 'build/' directory)
 
 # alternative version: "main" (the tip of the current development branch)
-MAKEFILET_DOWNLOAD_VERSION ?= v0.14.2
+MAKEFILET_DOWNLOAD_VERSION ?= v0.16.3
 
 ifneq ($(MAKEFILET_DOWNLOAD_URL_TEMPLATE),)
 $(warning 'MAKEFILET_DOWNLOAD_URL_TEMPLATE' is deprecated. Use 'MAKEFILET_DOWNLOAD_URL_TEMPLATES' instead.)
