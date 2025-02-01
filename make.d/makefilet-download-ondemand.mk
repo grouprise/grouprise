@@ -25,18 +25,26 @@ endif
 # first attempt: system-wide installation (e.g. deb package) or submodule of this project?
 -include makefilet/main.mk
 ifndef DIR_MAKEFILET
-# we failed - it is not available globally or as a submodule
+# we failed to load makefilet - it is not available globally or as a submodule
 # second attempt: include a downloaded makefilet archive
 DIR_BUILD ?= build
 DIR_MAKEFILET_DOWNLOAD = $(DIR_BUILD)/makefilet
 -include $(DIR_MAKEFILET_DOWNLOAD)/main.mk
 ifndef DIR_MAKEFILET
+ifeq ($(MAKECMDGOALS),clean)
+# We are called for the "clean" target.
+# But we really do not want to download makefilet during "clean".
+# Thus, we just provide a dummy "clean" target and skip any makefilet-specific activities.
+.PHONY: clean
+clean:
+	@true
+else
 # third attempt: download and extract a known release
 $(info Downloading 'makefilet' ...)
 $(shell mkdir -p "$(DIR_MAKEFILET_DOWNLOAD)" \
 	&& for url in $(MAKEFILET_DOWNLOAD_URLS); do \
 		printf >&2 "Trying to download 'makefilet' from $$url ... "; \
-		if wget --quiet --output-document - "$$url"; then \
+		if wget --timeout=3 --tries=2 --quiet --output-document - "$$url"; then \
 			echo >&2 "OK"; \
 			break; \
 		else \
@@ -47,6 +55,7 @@ $(shell mkdir -p "$(DIR_MAKEFILET_DOWNLOAD)" \
 -include $(DIR_MAKEFILET_DOWNLOAD)/main.mk
 ifndef DIR_MAKEFILET
 $(error Failed to initialize 'makefilet'. It seems like it is neither installed system-wide, as a submodule or available via download.)
+endif
 endif
 endif
 endif
