@@ -12,6 +12,9 @@ class HasLocationFilter(django_filters.BooleanFilter):
 
     def filter(self, qs, value):
         if not GEO_SETTINGS.ENABLED:
+            # disabled geo feature: accept missing location, reject any other location
+            if value is None:
+                return qs
             return qs.none()
 
         from .models import Location

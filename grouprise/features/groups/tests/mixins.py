@@ -2,6 +2,9 @@ from .. import models
 
 
 class GroupMixin:
+
+    group: models.Group
+
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
