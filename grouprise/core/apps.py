@@ -45,6 +45,11 @@ class CoreConfig(AppConfig):
     name = "grouprise.core"
 
     def ready(self):
+        from .settings import CORE_SETTINGS
+
         self.module.autodiscover()
         _set_process_title_for_tasks()
         _configure_sentry()
+        # During the startup of management commands (e.g. matrix-commander) a sync/async context
+        # problem may occur.
+        CORE_SETTINGS.resolve_lazy_settings()
