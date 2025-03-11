@@ -218,9 +218,9 @@ class EmailNotification:
         for file_name in self.get_attachments():
             message.attach_file(file_name)
 
-        # we don't expect errors when sending mails because we just pass mails to
-        # django-mailer
-        message.send()
+        # The only kind of errors we could expect are non-resolvable email addresses (the local
+        # mail server could reject these).
+        message.send(fail_silently=True)
 
 
 class ContentOrContributionCreated(EmailNotification):
