@@ -15,6 +15,8 @@ variables:
     script:
         - *generate_locales
         - *install_hatch
+        # TODO: move to base image
+        - apt-get install --yes libgdal-dev
         - make dist-deb DEBIAN_BUILDPACKAGE_COMMAND="dpkg-buildpackage -sa --no-sign"
         # turn the symlink of the orig tarball into a real file
         - a=$(ls build/debian/grouprise_*.orig.tar.gz) && cp -L "$a" "$a.tmp" && mv "$a.tmp" "$a"
