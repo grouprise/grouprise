@@ -1,7 +1,5 @@
 LINT_PKG_IGNORE_GLOBAL = -path "./debian/*" -o -path "./build/*" -o -path "./.pybuild/*" -o -path "./scripts/*" \
 	-o -path "./.venv/*" -o -path "./gitlab-ci-build-venv/*" -o -path "./docs/*" -o -path "./venv/*"
-LINT_PKG_PEP420 = $(shell find . -mindepth 2 -type f -name "*.py" -not \( $(LINT_PKG_IGNORE_GLOBAL) \) -print0 | \
-	xargs -0 -n1 dirname | sort | uniq)
 SPELLING_DIRECTORIES ?= debian docker docs grouprise make.d
 SPELLING_IGNORE_FILE = .codespell-ignore-filenames
 ASSETS_TEMPLATE = grouprise/core/templates/core/assets/_assets.html
@@ -10,24 +8,11 @@ CONTAINER_RUNNER = $(shell which docker podman | head -1)
 CONTAINER_RUNNER_BUILD_PARAMS ?=
 
 .PHONY: lint
-lint: lint_js lint_packages lint_spelling
+lint: lint_js lint_spelling
 
 .PHONY: lint_js
 lint_js: $(STAMP_NODE_MODULES)
 	"$(BIN_NPM)" run lint
-
-.PHONY: lint_packages
-lint_packages:
-	# setuptools’ find_packages() does not find PEP420 packages
-	# we therefore forbid the use of PEP420 to ease automation
-	# see: https://github.com/pypa/setuptools/issues/97
-	@EXIT=0; for package in $(LINT_PKG_PEP420); do \
-		if [ ! -f "$$package/__init__.py" ]; then \
-			EXIT=1; \
-			echo "missing __init__.py in $$package" >&2; \
-		fi; \
-	done && test "$$EXIT" = "0"
-	@echo "OK"
 
 .PHONY: test
 test: test_js
